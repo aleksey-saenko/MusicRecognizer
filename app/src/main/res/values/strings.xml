@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MusicRecognizer</string>
+    <string name="tap_to_recognize">Tap to recognize</string>
+    <string name="listening">Listening</string>
+    <string name="recognizing">Recognizing</string>
+    <string name="tap_to_new_recognize">Tap to new recognize</string>
+
 </resources>

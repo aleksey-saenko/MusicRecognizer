@@ -1,0 +1,145 @@
+package com.mrsep.musicrecognizer.data.remote.audd.model
+
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+data class Deezer(
+    @Json(name = "id")
+    val id: Int,
+    @Json(name = "readable")
+    val readable: Boolean,
+    @Json(name = "title")
+    val title: String,
+    @Json(name = "title_short")
+    val titleShort: String,
+    @Json(name = "title_version")
+    val titleVersion: String,
+    @Json(name = "isrc")
+    val isrc: String,
+    @Json(name = "link")
+    val link: String,
+    @Json(name = "share")
+    val share: String,
+    @Json(name = "duration")
+    val duration: Int,
+    @Json(name = "track_position")
+    val trackPosition: Int,
+    @Json(name = "disk_number")
+    val diskNumber: Int,
+    @Json(name = "rank")
+    val rank: Int,
+    @Json(name = "release_date")
+    val releaseDate: String,
+    @Json(name = "explicit_lyrics")
+    val explicitLyrics: Boolean,
+    @Json(name = "explicit_content_lyrics")
+    val explicitContentLyrics: Int,
+    @Json(name = "explicit_content_cover")
+    val explicitContentCover: Int,
+    @Json(name = "preview")
+    val preview: String,
+    @Json(name = "bpm")
+    val bpm: Double,
+    @Json(name = "gain")
+    val gain: Double,
+    @Json(name = "available_countries")
+    val availableCountries: List<String>,
+    @Json(name = "contributors")
+    val contributors: List<Contributor>,
+    @Json(name = "md5_image")
+    val md5Image: String,
+    @Json(name = "artist")
+    val artist: Artist,
+    @Json(name = "album")
+    val album: Album,
+    @Json(name = "type")
+    val type: String
+) {
+
+    @JsonClass(generateAdapter = true)
+    data class Contributor(
+        @Json(name = "id")
+        val id: Int,
+        @Json(name = "name")
+        val name: String,
+        @Json(name = "link")
+        val link: String,
+        @Json(name = "share")
+        val share: String,
+        @Json(name = "picture")
+        val picture: String,
+        @Json(name = "picture_small")
+        val pictureSmall: String,
+        @Json(name = "picture_medium")
+        val pictureMedium: String,
+        @Json(name = "picture_big")
+        val pictureBig: String,
+        @Json(name = "picture_xl")
+        val pictureXl: String,
+        @Json(name = "radio")
+        val radio: Boolean,
+        @Json(name = "tracklist")
+        val tracklist: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "role")
+        val role: String
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Artist(
+        @Json(name = "id")
+        val id: Int,
+        @Json(name = "name")
+        val name: String,
+        @Json(name = "link")
+        val link: String,
+        @Json(name = "share")
+        val share: String,
+        @Json(name = "picture")
+        val picture: String,
+        @Json(name = "picture_small")
+        val pictureSmall: String,
+        @Json(name = "picture_medium")
+        val pictureMedium: String,
+        @Json(name = "picture_big")
+        val pictureBig: String,
+        @Json(name = "picture_xl")
+        val pictureXl: String,
+        @Json(name = "radio")
+        val radio: Boolean,
+        @Json(name = "tracklist")
+        val tracklist: String,
+        @Json(name = "type")
+        val type: String
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Album(
+        @Json(name = "id")
+        val id: Int,
+        @Json(name = "title")
+        val title: String,
+        @Json(name = "link")
+        val link: String,
+        @Json(name = "cover")
+        val cover: String,
+        @Json(name = "cover_small")
+        val coverSmall: String,
+        @Json(name = "cover_medium")
+        val coverMedium: String,
+        @Json(name = "cover_big")
+        val coverBig: String,
+        @Json(name = "cover_xl")
+        val coverXl: String,
+        @Json(name = "md5_image")
+        val md5Image: String,
+        @Json(name = "release_date")
+        val releaseDate: String,
+        @Json(name = "tracklist")
+        val tracklist: String,
+        @Json(name = "type")
+        val type: String
+    )
+}

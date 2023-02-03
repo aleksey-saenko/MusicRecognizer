@@ -9,7 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.mrsep.musicrecognizer.presentation.screens.home.HomeScreen
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,12 +37,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MusicRecognizerTheme {
+                val navController = rememberNavController()
                 Scaffold(
-                    bottomBar = { MainNavigationBar() }
-                ) { paddings ->
-                    MainScreen(
-                        modifier = Modifier.padding(paddings)
-                    )
+                    bottomBar = { AppNavigationBar(navController = navController) }
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Destination.HOME.route,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable(Destination.HOME.route) { HomeScreen() }
+                        composable(Destination.HISTORY.route) { Box(Modifier.fillMaxSize(), Alignment.Center) { Text(Destination.HISTORY.name) }  }
+                        composable(Destination.SETTINGS.route) { Box(Modifier.fillMaxSize(), Alignment.Center) { Text(Destination.SETTINGS.name) }  }
+                    }
                 }
             }
         }

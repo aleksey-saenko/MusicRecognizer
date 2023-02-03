@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.remote.audd
 
 import android.content.Context
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.data.recorder.MediaRecorderController
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponse
 import com.squareup.moshi.Moshi
@@ -26,7 +27,7 @@ class AuddRemoteDataSource @Inject constructor(
 ) {
     private val auddClient = retrofit.create<AuddApi>()
 
-    private val token = "your_api_key"
+    private val token = BuildConfig.AUDD_TOKEN
     private val returnParam =
         "lyrics,apple_music,spotify,deezer,napster,musicbrainz" //lyrics,apple_music,spotify,deezer,napster,musicbrainz
     private val mediaTypeString = "audio/mpeg; charset=utf-8"

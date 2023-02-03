@@ -23,6 +23,16 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        Properties properties = new Properties()
+        if (project.rootProject.file('local.properties').canRead()) {
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        }
+        buildConfigField 'String', 'AUDD_TOKEN', properties.getProperty("api.audd.token")
+
+//        def apiAuddToken = properties.getProperty('api.audd.token')
+//        resValue "string", "AUDD_TOKEN", apiAuddToken
+
     }
 
     buildTypes {

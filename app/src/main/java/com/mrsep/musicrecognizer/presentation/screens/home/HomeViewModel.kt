@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation
+package com.mrsep.musicrecognizer.presentation.screens.home
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val auddRemoteDataSource: AuddRemoteDataSource,
     private val mediaRecorderController: MediaRecorderController,
     private val audioRecorderController: AudioRecorderController,

@@ -4,5 +4,8 @@
     <string name="listening">Listening</string>
     <string name="recognizing">Recognizing</string>
     <string name="tap_to_new_recognize">Tap to new recognize</string>
+    <string name="home">Home</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
 
 </resources>

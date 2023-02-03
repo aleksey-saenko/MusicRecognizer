@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation
+package com.mrsep.musicrecognizer.presentation.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*

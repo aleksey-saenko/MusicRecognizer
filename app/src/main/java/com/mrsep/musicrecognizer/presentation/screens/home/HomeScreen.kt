@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation
+package com.mrsep.musicrecognizer.presentation.screens.home
 
 import android.content.res.Configuration
 import android.net.Uri
@@ -14,15 +14,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.util.parseYear
 
 @Composable
-fun MainScreen(
+fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = viewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
         modifier = modifier
@@ -104,7 +104,7 @@ fun DefaultPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            MainScreen()
+            HomeScreen()
         }
     }
 }

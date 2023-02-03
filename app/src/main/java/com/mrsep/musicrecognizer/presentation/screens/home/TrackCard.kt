@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation
+package com.mrsep.musicrecognizer.presentation.screens.home
 
 import android.net.Uri
 import androidx.compose.animation.animateContentSize

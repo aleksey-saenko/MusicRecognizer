@@ -8,4 +8,15 @@
     <string name="history">History</string>
     <string name="settings">Settings</string>
 
+<!--    Onboarding screen-->
+    <string name="token_requirement_start">"This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don\'t have one, you can sign up for a free API token "</string>
+    <string name="token_requirement_link">here</string>
+    <string name="token_requirement_end">.</string>
+    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
+    <string name="apply_api_token">Apply API Token</string>
+    <string name="audd_api_token">AudD API Token</string>
+    <string name="api_token">API Token</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcome_paragraph">Discover and enjoy music like never before with our advanced music recognition technology. Get the most out of your music experience with intuitive user interfaces. Thanks for joining us and enjoy the music!</string>
+
 </resources>

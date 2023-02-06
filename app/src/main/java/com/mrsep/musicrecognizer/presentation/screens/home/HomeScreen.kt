@@ -96,7 +96,7 @@ fun HomeScreen(
     }
 }
 
-@DevicePreviewNight
+@PreviewDeviceNight
 @Composable
 fun DefaultPreview() {
     MusicRecognizerTheme {
@@ -118,7 +118,7 @@ fun DefaultPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Dark theme variant"
 )
-annotation class DevicePreviewNight
+annotation class PreviewDeviceNight
 
 @Preview(
     showSystemUi = true,
@@ -128,4 +128,4 @@ annotation class DevicePreviewNight
     uiMode = Configuration.UI_MODE_NIGHT_NO,
     name = "Dark theme variant"
 )
-annotation class DevicePreviewLight
+annotation class PreviewDeviceLight

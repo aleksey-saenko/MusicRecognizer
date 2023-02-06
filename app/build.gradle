@@ -6,6 +6,12 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'com.google.protobuf'
+}
+
+ext {
+    navigation_compose_version = "2.5.3"
+    protobuf_version = "3.21.12"
 }
 
 android {
@@ -62,7 +68,6 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.5.3"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
@@ -80,8 +85,17 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha05"
-    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
+    //Proto DataStore
+    implementation "androidx.datastore:datastore:1.0.0"
+    implementation  "com.google.protobuf:protobuf-javalite:$protobuf_version"
+
+
+    //Accompanist
+//    implementation "com.google.accompanist:accompanist-pager:0.28.0"
+//    implementation "com.google.accompanist:accompanist-pager-indicators:0.28.0"
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -93,17 +107,32 @@ dependencies {
     //Hilt
     implementation "com.google.dagger:hilt-android:2.44.2"
     kapt "com.google.dagger:hilt-compiler:2.44.2"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     //Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
 
-    //this can solve the problem with hilt view model issue for composable previews
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
-    //https://developer.android.com/jetpack/compose/libraries#hilt-navigation
-    //https://proandroiddev.com/jetpack-compose-adding-a-hilt-viewmodel-to-navigation-28cdc95e28bb
-    //https://www.droidcon.com/2021/11/18/jetpack-compose-adding-a-hilt-viewmodel-to-the-navigation-graph/
 }
 
 kapt {
     correctErrorTypes true
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobuf_version"
+    }
+
+    // Generates the java Protobuf-lite code for the Protobufs in this project. See
+    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
+    // for more information.
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

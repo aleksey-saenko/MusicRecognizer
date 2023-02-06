@@ -131,7 +131,7 @@ fun TrackCard(
     }
 }
 
-@DevicePreviewNight
+@PreviewDeviceNight
 @Composable
 fun ResultCardPreview() {
     MusicRecognizerTheme {

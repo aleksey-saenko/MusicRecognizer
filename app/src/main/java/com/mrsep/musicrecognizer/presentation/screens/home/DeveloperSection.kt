@@ -103,7 +103,7 @@ fun DeveloperSection(
 
 }
 
-@DevicePreviewNight
+@PreviewDeviceNight
 @Composable
 fun DeveloperButtonsSectionPreview() {
     MusicRecognizerTheme {

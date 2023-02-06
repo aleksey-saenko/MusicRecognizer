@@ -85,7 +85,7 @@ fun SuperButtonSection(
 
 }
 
-@DevicePreviewNight
+@PreviewDeviceNight
 @Composable
 fun SuperButtonSectionPreview() {
     MusicRecognizerTheme {

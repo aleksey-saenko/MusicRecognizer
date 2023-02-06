@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val mediaRecorderController: MediaRecorderController,
     private val audioRecorderController: AudioRecorderController,
     private val mediaPlayerController: MediaPlayerController
-) : ViewModel(){
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MainUiState>(MainUiState.Ready)
     val uiState: StateFlow<MainUiState> get() = _uiState

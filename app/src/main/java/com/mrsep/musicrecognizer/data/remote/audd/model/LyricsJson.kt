@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Lyrics(
+data class LyricsJson(
     @Json(name = "song_id")
     val songId: String,
     @Json(name = "artist_id")

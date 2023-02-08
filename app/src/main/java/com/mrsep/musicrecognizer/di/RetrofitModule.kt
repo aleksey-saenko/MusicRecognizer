@@ -2,7 +2,11 @@ package com.mrsep.musicrecognizer.di
 
 import android.content.Context
 import android.widget.Toast
+import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddErrorJsonAdapter
+import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddSuccessJsonAdapter
+import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +33,16 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
+            .add(
+                PolymorphicJsonAdapterFactory.of(AuddResponseJson::class.java, "status")
+                    .withSubtype(AuddResponseJson.Success::class.java, "success")
+                    .withSubtype(AuddResponseJson.Error::class.java, "error")
+            )
+            .add(AuddSuccessJsonAdapter())
+            .add(AuddErrorJsonAdapter())
+            .build()
 
     @Provides
     @Singleton

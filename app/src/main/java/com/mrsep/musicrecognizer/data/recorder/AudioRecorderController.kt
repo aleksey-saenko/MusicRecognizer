@@ -9,7 +9,9 @@ import java.nio.ByteBuffer
 import android.os.Process
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -21,15 +23,28 @@ import javax.inject.Singleton
 * https://developer.android.com/reference/android/media/AudioRecord
 * https://developer.apple.com/shazamkit/android/
 */
+
+private const val TAG = "AudioRecorderController"
+
 @Singleton
 class AudioRecorderController @Inject constructor(
     @ApplicationContext private val applicationContext: Context
-) {
+) : RecorderController {
+
+    override val recordFile = File("${applicationContext.cacheDir.absolutePath}/$RECORD_FILE_NAME")
+
+    override fun startRecord() {
+        TODO("Not yet implemented")
+    }
+
+    override fun stopRecord() {
+        TODO("Not yet implemented")
+    }
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     @WorkerThread
-     fun simpleMicRecording() : ByteArray {
-        Toast.makeText(applicationContext, "recorder started", Toast.LENGTH_LONG).show()
+    fun simpleMicRecording(): ByteArray {
+        Log.d(TAG, "recorder started")
         val audioSource = MediaRecorder.AudioSource.UNPROCESSED
 
         val audioFormat = AudioFormat.Builder()
@@ -63,14 +78,14 @@ class AudioRecorderController @Inject constructor(
 
         audioRecord.startRecording()
         val readBuffer = ByteArray(bufferSize)
-        while (destination.remaining()>0) {
+        while (destination.remaining() > 0) {
             val actualRead = audioRecord.read(readBuffer, 0, bufferSize)
             val byteArray = readBuffer.sliceArray(0 until actualRead)
             destination.putTrimming(byteArray)
         }
         audioRecord.release()
         writeToCacheDir(destination.array())
-        Toast.makeText(applicationContext, "recorder stopped", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "recorder stopped")
         return destination.array()
     }
 
@@ -90,12 +105,11 @@ class AudioRecorderController @Inject constructor(
     }
 
     private fun writeToCacheDir(byteArray: ByteArray) {
-        getRecordFile(applicationContext).outputStream().buffered().use { it.write(byteArray) }
+        recordFile.outputStream().buffered().use { it.write(byteArray) }
     }
 
     companion object {
-        private const val recordFileName = "ar_record.raw"
-        fun getRecordFile(context: Context) = File("${context.cacheDir.absolutePath}/$recordFileName")
+        private const val RECORD_FILE_NAME = "ar_record.raw"
     }
 
 

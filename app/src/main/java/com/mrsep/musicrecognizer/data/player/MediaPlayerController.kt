@@ -4,23 +4,25 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
 import android.widget.Toast
+import com.mrsep.musicrecognizer.domain.PlayerController
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val TAG = "MediaPlayerController"
+
 @Singleton
 class MediaPlayerController @Inject constructor(
     @ApplicationContext private val appContext: Context
-) {
+): PlayerController {
     private var player: MediaPlayer? = null
 
-    private val fileName = "${appContext.cacheDir.absolutePath}/test_record.m4a"
-
-    fun playAudio() {
+    override fun startPlay(file: File) {
         player = MediaPlayer().apply {
             try {
-                setDataSource(fileName)
+                setDataSource(file.absolutePath)
                 setOnPreparedListener { it.start() }
                 prepareAsync()
             } catch (e: IOException) {
@@ -28,15 +30,16 @@ class MediaPlayerController @Inject constructor(
                 Log.e("PLAYER", "prepare() failed")
             }
         }
-        Toast.makeText(appContext, "player started", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "player started")
     }
 
-     fun stopPlay() {
+     override fun stopPlay() {
         player?.apply {
             stop()
             release()
         }
         player = null
-        Toast.makeText(appContext, "player stopped", Toast.LENGTH_LONG).show()
+         Log.d(TAG, "player stopped")
     }
+
 }

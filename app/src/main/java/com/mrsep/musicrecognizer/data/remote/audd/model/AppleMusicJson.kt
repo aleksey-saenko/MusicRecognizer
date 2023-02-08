@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AppleMusic(
+data class AppleMusicJson(
     @Json(name = "previews")
     val previews: List<Preview>,
     @Json(name = "artwork")

@@ -9,11 +9,6 @@ plugins {
     id 'com.google.protobuf'
 }
 
-ext {
-    navigation_compose_version = "2.5.3"
-    protobuf_version = "3.21.12"
-}
-
 android {
     namespace 'com.mrsep.musicrecognizer'
     compileSdk 33
@@ -39,6 +34,12 @@ android {
 //        def apiAuddToken = properties.getProperty('api.audd.token')
 //        resValue "string", "AUDD_TOKEN", apiAuddToken
 
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -67,6 +68,15 @@ android {
     }
 }
 
+ext {
+    compose_version = "1.3.3"
+    navigation_compose_version = "2.5.3"
+    protobuf_version = "3.21.12"
+    room_version = "2.5.0"
+    retrofit_version = "2.9.0"
+    moshi_version = "1.14.0"
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
@@ -92,17 +102,20 @@ dependencies {
     implementation "androidx.datastore:datastore:1.0.0"
     implementation  "com.google.protobuf:protobuf-javalite:$protobuf_version"
 
-
-    //Accompanist
-//    implementation "com.google.accompanist:accompanist-pager:0.28.0"
-//    implementation "com.google.accompanist:accompanist-pager-indicators:0.28.0"
+    //Room
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation "com.squareup.moshi:moshi:1.14.0"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    //Moshi
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     //Hilt
     implementation "com.google.dagger:hilt-android:2.44.2"

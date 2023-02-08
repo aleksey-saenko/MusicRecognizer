@@ -16,8 +16,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrsep.musicrecognizer.R
+import com.mrsep.musicrecognizer.domain.model.RecognizeResult
+import com.mrsep.musicrecognizer.domain.model.Track
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.util.parseYear
+import java.util.*
 
 @Composable
 fun HomeScreen(
@@ -32,18 +34,18 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState by viewModel.uiState.collectAsState(MainUiState.Ready)
         val superButtonTitle = when (uiState) {
-            MainUiState.Ready -> stringResource(R.string.tap_to_recognize)
-            MainUiState.Listening -> stringResource(R.string.listening)
-            MainUiState.Recognizing -> stringResource(R.string.recognizing)
-            is MainUiState.Success -> stringResource(R.string.tap_to_new_recognize)
+            is MainUiState.Ready, is MainUiState.Failure -> stringResource(R.string.tap_for_recognize)
+            is MainUiState.Listening -> stringResource(R.string.listening)
+            is MainUiState.Recognizing -> stringResource(R.string.recognizing)
+            is MainUiState.Success -> stringResource(R.string.tap_for_new_recognize)
         }
         DeveloperSection(
             modifier = Modifier,
             onRecordClickMR = { viewModel.startRecordMR() },
             onStopClickMR = { viewModel.stopRecordMR() },
-            onRecordClickAR = { viewModel.startRecordAR() },
+            onRecordClickAR = { },
             onStopClickAR = { },
             onPlayClickMP = { viewModel.startPlayAudio() },
             onStopClickMP = { viewModel.stopPlayAudio() },
@@ -63,32 +65,44 @@ fun HomeScreen(
                 MainUiState.Recognizing -> { /* nothing */
                 }
                 is MainUiState.Success -> {
-                    state.data.result?.let { model ->
-                        TrackCard(
+                    when (val model = state.result) {
+                        is RecognizeResult.InProgress -> { }
+                        is RecognizeResult.Error -> { }
+                        is RecognizeResult.NoMatches -> Surface(
+                            shape = MaterialTheme.shapes.medium,
+                            tonalElevation = 1.dp,
+                            shadowElevation = 1.dp,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "NoMatches",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        is RecognizeResult.Success -> TrackCard(
                             trackCardArgs = TrackCardArgs(
-                                author = model.artist,
-                                track = model.title,
-                                album = model.album,
-                                year = parseYear(model.releaseDate),
-                                lyrics = model.lyrics?.lyrics,
-                                imageUri = Uri.parse(model.deezer?.album?.coverBig)
+                                author = model.data.artist,
+                                track = model.data.title,
+                                album = model.data.album ?: "no album",
+                                year = model.data.releaseDate?.year.toString(),
+                                lyrics = model.data.lyrics,
+                                imageUri = Uri.parse(model.data.links.artwork ?: "")
                             ),
                             modifier = Modifier.padding(top = 24.dp)
                         )
-                    } ?: Surface(
-                        shape = MaterialTheme.shapes.medium,
-                        tonalElevation = 1.dp,
-                        shadowElevation = 1.dp,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = state.data.toString(),
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
                     }
+                }
+                is MainUiState.Failure -> {
+                    Text(
+                        text = "Failure",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

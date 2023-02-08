@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Spotify(
+data class SpotifyJson(
     @Json(name = "album")
     val album: Album,
     @Json(name = "artists")

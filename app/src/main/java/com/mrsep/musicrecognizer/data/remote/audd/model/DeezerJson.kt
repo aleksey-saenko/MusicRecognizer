@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Deezer(
+data class DeezerJson(
     @Json(name = "id")
     val id: Int,
     @Json(name = "readable")

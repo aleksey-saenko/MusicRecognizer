@@ -1,14 +1,15 @@
-package com.mrsep.musicrecognizer.data.database
+package com.mrsep.musicrecognizer.data.track
 
 import androidx.room.*
 
-@Entity(tableName = "track", indices = [Index(
-    value = ["title", "artist", "album"],
-    unique = true
-)])
+/*
+ * MusicBrainz Recording Identifier uses as id (mbId)
+ * https://musicbrainz.org/doc/MusicBrainz_Identifier
+ */
+@Entity(tableName = "track")
 data class TrackEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey @ColumnInfo(name = "mb_id")
+    val mbId: String,
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "artist")
@@ -20,7 +21,9 @@ data class TrackEntity(
     @ColumnInfo(name = "lyrics")
     val lyrics: String?,
     @Embedded(prefix = "link_")
-    val links: Links?,
+    val links: Links,
+    @Embedded
+    val metadata: Metadata
 ) {
 
     data class Links(
@@ -32,12 +35,19 @@ data class TrackEntity(
         val youtube: String?,
         @ColumnInfo(name = "apple_music")
         val appleMusic: String?,
-        @ColumnInfo(name = "music_brainz")
+        @ColumnInfo(name = "musicbrainz")
         val musicBrainz: String?,
         @ColumnInfo(name = "deezer")
         val deezer: String?,
         @ColumnInfo(name = "napster")
         val napster: String?
+    )
+
+    data class Metadata(
+        @ColumnInfo(name = "last_recognition_date")
+        val lastRecognitionDate: Long,
+        @ColumnInfo(name = "is_favorite")
+        val isFavorite: Boolean
     )
 
 }

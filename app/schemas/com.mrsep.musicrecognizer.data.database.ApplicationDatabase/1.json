@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "94fe4f262158a7e689804ed484f810b5",
+    "identityHash": "3e0025744c94e7bb3cf9bfc5948bac93",
     "entities": [
       {
         "tableName": "track",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `lyrics` TEXT, `link_artwork` TEXT, `link_spotify` TEXT, `link_youtube` TEXT, `link_apple_music` TEXT, `link_music_brainz` TEXT, `link_deezer` TEXT, `link_napster` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mb_id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `lyrics` TEXT, `link_artwork` TEXT, `link_spotify` TEXT, `link_youtube` TEXT, `link_apple_music` TEXT, `link_musicbrainz` TEXT, `link_deezer` TEXT, `link_napster` TEXT, `last_recognition_date` INTEGER NOT NULL, `is_favorite` INTEGER NOT NULL, PRIMARY KEY(`mb_id`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "mbId",
+            "columnName": "mb_id",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -70,7 +70,7 @@
           },
           {
             "fieldPath": "links.musicBrainz",
-            "columnName": "link_music_brainz",
+            "columnName": "link_musicbrainz",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -85,34 +85,34 @@
             "columnName": "link_napster",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "metadata.lastRecognitionDate",
+            "columnName": "last_recognition_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadata.isFavorite",
+            "columnName": "is_favorite",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "mb_id"
           ]
         },
-        "indices": [
-          {
-            "name": "index_track_title_artist_album",
-            "unique": true,
-            "columnNames": [
-              "title",
-              "artist",
-              "album"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_track_title_artist_album` ON `${TABLE_NAME}` (`title`, `artist`, `album`)"
-          }
-        ],
+        "indices": [],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '94fe4f262158a7e689804ed484f810b5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e0025744c94e7bb3cf9bfc5948bac93')"
     ]
   }
 }

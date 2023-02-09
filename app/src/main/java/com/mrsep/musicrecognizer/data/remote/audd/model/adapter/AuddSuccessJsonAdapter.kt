@@ -17,6 +17,7 @@ class AuddSuccessJsonAdapter {
             null -> RecognizeResult.NoMatches
             else -> RecognizeResult.Success(
                 data = Track(
+                    mbId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString(),
                     artist = json.result.artist,
                     title = json.result.title,
                     album = json.result.album,
@@ -30,6 +31,10 @@ class AuddSuccessJsonAdapter {
                         musicBrainz = null,
                         deezer = null,
                         napster = null
+                    ),
+                    metadata = Track.Metadata(
+                        lastRecognitionDate = System.currentTimeMillis(),
+                        isFavorite = false
                     )
                 )
             )
@@ -45,5 +50,7 @@ class AuddSuccessJsonAdapter {
 }
 
 private val dateParser = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
-private fun String.toLocalDate(): LocalDate? =
-    kotlin.runCatching { LocalDate.parse(this, dateParser) }.getOrNull()
+
+private fun String.toLocalDate() = runCatching { LocalDate.parse(this, dateParser) }.getOrNull()
+//private fun String.toEpochSeconds() =
+//    runCatching { LocalDate.parse(this, dateParser) }.getOrNull()?.toEpochDay()

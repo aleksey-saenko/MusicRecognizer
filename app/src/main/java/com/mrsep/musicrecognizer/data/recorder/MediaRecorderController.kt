@@ -4,11 +4,8 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
@@ -39,10 +36,10 @@ class MediaRecorderController @Inject constructor(
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setAudioEncodingBitRate(128_000)
             setAudioSamplingRate(44_100)
-            setOnInfoListener { recorder, what, extra ->
+            setOnInfoListener { _, what, extra ->
                 Log.d(TAG, "InfoListener: what=$what, extra=$extra")
             }
-            setOnErrorListener { recorder, what, extra ->
+            setOnErrorListener { _, what, extra ->
                 Log.d(TAG, "ErrorListener: what=$what, extra=$extra")
             }
             setMaxDuration(15_000)

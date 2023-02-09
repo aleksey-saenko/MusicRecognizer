@@ -1,15 +1,15 @@
 package com.mrsep.musicrecognizer.data.remote.audd.model.adapter
 
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
+import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.domain.model.RecognizeResult
-import com.mrsep.musicrecognizer.domain.model.Track
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
 class AuddErrorJsonAdapter {
 
     @FromJson
-    fun fromJson(json: AuddResponseJson.Error): RecognizeResult<Track> {
+    fun fromJson(json: AuddResponseJson.Error): RecognizeResult<TrackEntity> {
         return when (json.body.errorCode) {
             901 -> RecognizeResult.Error.LimitReached
             900 -> RecognizeResult.Error.WrongToken
@@ -23,7 +23,7 @@ class AuddErrorJsonAdapter {
 
     @ToJson
     fun toJson(
-        @Suppress("UNUSED_PARAMETER") recognizeResponse: RecognizeResult<Track>
+        @Suppress("UNUSED_PARAMETER") recognizeResponse: RecognizeResult<TrackEntity>
     ): AuddResponseJson.Error =
         throw IllegalStateException("Not implemented")
 

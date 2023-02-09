@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.domain
 
+import com.mrsep.musicrecognizer.domain.model.RecognizeResult
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -8,7 +9,8 @@ import javax.inject.Inject
 
 class RecognizeInteractor @Inject constructor(
     private val recorderController: RecorderController,
-    private val recognizeService: RecognizeService
+    private val recognizeService: RecognizeService,
+    private val trackRepository: TrackRepository
 ) {
 
     private val _statusFlow: MutableStateFlow<RecognizeStatus> =
@@ -31,8 +33,26 @@ class RecognizeInteractor @Inject constructor(
                 delay(12_000)
                 recorderController.stopRecord()
                 _statusFlow.update { RecognizeStatus.Recognizing }
-                val result = recognizeService.recognize(recorderController.recordFile)
-                _statusFlow.update { RecognizeStatus.Success(result) }
+
+                val recognizeResult = recognizeService.recognize(recorderController.recordFile)
+
+                val returnThis = when (recognizeResult) {
+                    is RecognizeResult.Success -> {
+                        val storedTrack = trackRepository.getUnique(recognizeResult.data.mbId)
+                        val newTrack = recognizeResult.data.run {
+                            if (storedTrack != null) {
+                                copy(metadata = this.metadata.copy(isFavorite = storedTrack.metadata.isFavorite))
+                            } else {
+                                this
+                            }
+                        }
+                        trackRepository.insertOrReplace(newTrack)
+                        RecognizeResult.Success(newTrack)
+                    }
+                    else -> recognizeResult
+                }
+
+                _statusFlow.update { RecognizeStatus.Success(returnThis) }
             }
         }
     }

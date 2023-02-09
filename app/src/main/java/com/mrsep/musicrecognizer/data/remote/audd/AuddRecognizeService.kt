@@ -65,7 +65,7 @@ class AuddRecognizeService @Inject constructor(
     override suspend fun fakeRecognize(): RecognizeResult<Track> {
         return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             delay(1_000)
-            val fakeJson = appContext.assets.open("fake_json.txt").bufferedReader().use {
+            val fakeJson = appContext.assets.open("fake_json_success.txt").bufferedReader().use {
                 it.readText()
             }
             val resultType = Types.newParameterizedType(

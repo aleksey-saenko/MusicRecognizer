@@ -6,8 +6,10 @@ import com.mrsep.musicrecognizer.domain.*
 import com.mrsep.musicrecognizer.domain.model.RecognizeResult
 import com.mrsep.musicrecognizer.domain.model.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.Duration
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,17 +29,28 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun recognize() = viewModelScope.launch { recognizeInteractor.recognizeRecordedFile(viewModelScope) }
-    fun fakeRecognize() = viewModelScope.launch { recognizeInteractor.fakeRecognize(viewModelScope) }
+    private var recordJob: Job? = null
+    fun startRecordMR() {
+        recordJob = viewModelScope.launch {
+            recorderController.recordAudioToFile(
+                recognizeInteractor.recordFile,
+                Duration.ofMillis(100_000)
+            )
+        }
+    }
+    fun stopRecordMR() = recordJob?.cancel()
 
-    fun startRecordMR() = recorderController.startRecord()
-    fun stopRecordMR() = recorderController.stopRecord()
+    fun recognize() =
+        viewModelScope.launch { recognizeInteractor.recognizeRecordedFile(viewModelScope) }
 
-    fun startPlayAudio() = playerController.startPlay(recorderController.recordFile)
+    fun fakeRecognize() =
+        viewModelScope.launch { recognizeInteractor.fakeRecognize(viewModelScope) }
+
+    fun startPlayAudio() = playerController.startPlay(recognizeInteractor.recordFile)
     fun stopPlayAudio() = playerController.stopPlay()
 
-    fun recognizeTap() = recognizeInteractor.recognize(viewModelScope)
-
+    //    fun recognizeTap() = recognizeInteractor.recognize(viewModelScope)
+    fun recognizeTap() = recognizeInteractor.launchRecognizeOrCancel(viewModelScope)
 }
 
 sealed interface MainUiState {

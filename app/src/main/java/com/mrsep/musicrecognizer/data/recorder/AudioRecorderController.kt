@@ -10,8 +10,6 @@ import android.os.Process
 import android.Manifest
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -29,17 +27,9 @@ private const val TAG = "AudioRecorderController"
 @Singleton
 class AudioRecorderController @Inject constructor(
     @ApplicationContext private val applicationContext: Context
-) : RecorderController {
+) {
 
-    override val recordFile = File("${applicationContext.cacheDir.absolutePath}/$RECORD_FILE_NAME")
-
-    override fun startRecord() {
-        TODO("Not yet implemented")
-    }
-
-    override fun stopRecord() {
-        TODO("Not yet implemented")
-    }
+    val recordFile = File("${applicationContext.cacheDir.absolutePath}/$RECORD_FILE_NAME")
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     @WorkerThread

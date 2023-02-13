@@ -4,14 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mrsep.musicrecognizer.R
 
-enum class Destination(
+enum class NavBarDestination(
     val route: String,
     @StringRes val titleId: Int,
     @DrawableRes val selectedIconId: Int,
     @DrawableRes val unselectedIconId: Int
 ) {
     HISTORY(
-        route = "history",
+        route = "recently",
         titleId = R.string.history,
         selectedIconId = R.drawable.baseline_history_24,
         unselectedIconId = R.drawable.baseline_history_24
@@ -23,10 +23,11 @@ enum class Destination(
         unselectedIconId = R.drawable.baseline_home_24
     ),
     SETTINGS(
-        route = "settings",
+        route = "preferences",
         titleId = R.string.settings,
         selectedIconId = R.drawable.baseline_settings_24,
         unselectedIconId = R.drawable.baseline_settings_24
     ),
 }
-val destinationList = Destination.values().asList()
+
+val navBarDestList = NavBarDestination.values().asList()

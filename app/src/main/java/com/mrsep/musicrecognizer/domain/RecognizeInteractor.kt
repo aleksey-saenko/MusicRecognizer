@@ -75,7 +75,7 @@ class RecognizeInteractor @Inject constructor(
     }
 
     private suspend fun saveTrackToStorage(track: Track): Track {
-        val storedTrack = trackRepository.getUnique(track.mbId)
+        val storedTrack = trackRepository.getByMbId(track.mbId)
         val newTrack = track.run {
             if (storedTrack != null) {
                 copy(

@@ -15,11 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.RecognizeResult
-import com.mrsep.musicrecognizer.domain.model.Track
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
-import java.util.*
 
 @Composable
 fun HomeScreen(
@@ -34,7 +33,7 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        val uiState by viewModel.uiState.collectAsState(MainUiState.Ready)
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle(MainUiState.Ready)
         val superButtonTitle = when (uiState) {
             is MainUiState.Ready, is MainUiState.Failure -> stringResource(R.string.tap_for_recognize)
             is MainUiState.Listening -> stringResource(R.string.listening)

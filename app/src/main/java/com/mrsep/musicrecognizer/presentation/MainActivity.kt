@@ -12,17 +12,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesRepository
-import com.mrsep.musicrecognizer.presentation.screens.home.HomeScreen
+import com.mrsep.musicrecognizer.presentation.screens.history.recentlyScreen
+import com.mrsep.musicrecognizer.presentation.screens.home.homeScreen
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.OnboardingScreen
+import com.mrsep.musicrecognizer.presentation.screens.onboarding.onboardingScreen
+import com.mrsep.musicrecognizer.presentation.screens.preferences.preferencesScreen
+import com.mrsep.musicrecognizer.presentation.screens.track.navigateToTrackScreen
+import com.mrsep.musicrecognizer.presentation.screens.track.trackScreen
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,8 +41,6 @@ class MainActivity : ComponentActivity() {
         ::onPermissionContractResult
     )
 
-//    private val viewModel by viewModels<HomeViewModel>()
-
     private fun onPermissionContractResult(granted: Boolean) {
         Log.d("onPermissionContractResult", "permissions granted = $granted")
     }
@@ -46,38 +49,49 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val onboardingCompletedInitial = runBlocking {
+            preferencesRepository.userPreferencesFlow.first().onboardingCompleted
+        }
+
         setContent {
-            val navController = rememberNavController()
+            var onboardingCompleted by remember { mutableStateOf(onboardingCompletedInitial) }
             MusicRecognizerTheme {
-                Scaffold(
-                    bottomBar = { AppNavigationBar(navController = navController) }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Destination.HOME.route,
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        composable(Destination.HOME.route) { HomeScreen() }
-                        composable(Destination.HISTORY.route) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) { Text(Destination.HISTORY.name) }
-                        }
-                        composable(Destination.SETTINGS.route) {
-                            OnboardingScreen(
+                if (onboardingCompleted) {
+                    val navController = rememberNavController()
+                    Scaffold(
+                        bottomBar = { AppNavigationBar(navController = navController) }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = "home",
+                            modifier = Modifier.padding(innerPadding)
+                        ) {
+                            recentlyScreen(onTrackClick = { mbId ->
+                                navController.navigateToTrackScreen(
+                                    mbId = mbId
+                                )
+                            })
+                            homeScreen()
+                            preferencesScreen()
+                            onboardingScreen(
                                 onSignUpClick = { link -> openUrlImplicitly(link) },
-                                navController = navController,
-                                modifier = Modifier
+                                onApplyTokenClick = { }
                             )
+                            trackScreen(onBackPressed = { navController.navigateUp() })
                         }
                     }
+                } else {
+                    Surface {
+                        OnboardingScreen(
+                            onSignUpClick = { link -> openUrlImplicitly(link) },
+                            onApplyTokenClick = { onboardingCompleted = true }
+                        )
+                    }
                 }
-
-
             }
         }
     }
+
 
     override fun onStart() {
         super.onStart()

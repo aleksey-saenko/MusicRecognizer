@@ -77,7 +77,7 @@ fun SuperButtonSection(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         SuperButton(onButtonClick = onButtonClick, activated = activated)

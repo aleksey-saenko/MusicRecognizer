@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.common.PageWithIndicator
 
 private const val TOTAL_PAGES = 4
@@ -21,8 +20,8 @@ private const val TOTAL_PAGES = 4
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
     viewModel: OnboardingViewModel = hiltViewModel(),
-    navController: NavController,
-    onSignUpClick: (String) -> Unit
+    onSignUpClick: (String) -> Unit,
+    onApplyTokenClick: () -> Unit
 ) {
     var availablePages by remember { mutableStateOf(2) }
     val pagerState = rememberPagerState()
@@ -59,7 +58,8 @@ fun OnboardingScreen(
                                 .verticalScroll(rememberScrollState()),
                             viewModel = viewModel,
                             onSignUpClick = { link -> onSignUpClick(link) },
-                            onApplyTokenClick = { }
+                            onApplyTokenClick = { onApplyTokenClick() }
+//                            onApplyTokenClick = { }
                         )
                     },
                     totalPages = TOTAL_PAGES,

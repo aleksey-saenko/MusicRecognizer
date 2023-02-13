@@ -34,7 +34,7 @@ class OnboardingViewModel @Inject constructor(
     fun applyToken() {
         viewModelScope.launch {
             preferencesRepository.saveApiToken(apiToken)
-//            preferencesRepository.setOnboardingCompleted(true)
+            preferencesRepository.setOnboardingCompleted(true)
         }
     }
 

@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-option java_package = "com.mrsep.musicrecognizer";
-option java_multiple_files = true;
-
-message UserPreferences {
-  bool onboarding_completed = 1;
-  string api_token = 2;
-}

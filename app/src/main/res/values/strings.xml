@@ -18,5 +18,14 @@
     <string name="api_token">API Token</string>
     <string name="welcome">Welcome</string>
     <string name="welcome_paragraph">Discover and enjoy music like never before with our advanced music recognition technology. Get the most out of your music experience with intuitive user interfaces. Thanks for joining us and enjoy the music!</string>
+    <string name="preferences">Preferences</string>
+    <string name="spotify">Spotify</string>
+    <string name="apple_music">Apple Music</string>
+    <string name="deezer">Deezer</string>
+    <string name="napster">Napster</string>
+    <string name="musicbrainz">MusicBrainz</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+    <string name="none">None</string>
 
 </resources>

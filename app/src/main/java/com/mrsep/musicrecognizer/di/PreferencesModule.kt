@@ -6,8 +6,8 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStore
 import androidx.datastore.dataStoreFile
-import com.mrsep.musicrecognizer.UserPreferences
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesSerializer
+import com.mrsep.musicrecognizer.UserPreferencesProto
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,11 +17,11 @@ import javax.inject.Singleton
 
 private const val USER_PREFERENCES_STORE = "USER_PREFERENCES_STORE"
 
-private val Context.userPreferencesDataStore: DataStore<UserPreferences> by dataStore(
+private val Context.userPreferencesDataStore: DataStore<UserPreferencesProto> by dataStore(
     fileName = USER_PREFERENCES_STORE,
-    serializer = UserPreferencesSerializer,
+    serializer = UserPreferencesProtoSerializer,
     corruptionHandler = ReplaceFileCorruptionHandler(
-        produceNewData = { UserPreferences.getDefaultInstance() }
+        produceNewData = { UserPreferencesProto.getDefaultInstance() }
     )
 )
 
@@ -31,11 +31,11 @@ class PreferencesModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferences(@ApplicationContext appContext: Context): DataStore<UserPreferences> {
+    fun provideUserPreferences(@ApplicationContext appContext: Context): DataStore<UserPreferencesProto> {
         return DataStoreFactory.create(
-            serializer = UserPreferencesSerializer,
+            serializer = UserPreferencesProtoSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler(
-                produceNewData = { UserPreferences.getDefaultInstance() }
+                produceNewData = { UserPreferencesProto.getDefaultInstance() }
             ),
             produceFile = { appContext.dataStoreFile(USER_PREFERENCES_STORE) }
         )

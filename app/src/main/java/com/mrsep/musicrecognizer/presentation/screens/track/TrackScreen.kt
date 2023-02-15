@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.R
+import com.mrsep.musicrecognizer.presentation.common.LoadingStub
 import com.mrsep.musicrecognizer.presentation.screens.home.PreviewDeviceNight
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.util.forwardingPainter
@@ -32,15 +33,12 @@ fun TrackScreen(
 //    val track = fakeTrackList[0]
     val track by viewModel.trackFlow.collectAsStateWithLifecycle()
     if (track == null) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            CircularProgressIndicator()
-        }
+        LoadingStub()
     } else {
         Column(
-            modifier = modifier.fillMaxSize().padding(PaddingValues(horizontal = 16.dp)),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(PaddingValues(horizontal = 16.dp)),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {

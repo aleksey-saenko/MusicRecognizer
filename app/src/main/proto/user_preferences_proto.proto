@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "com.mrsep.musicrecognizer";
+option java_multiple_files = true;
+
+message UserPreferencesProto {
+
+  bool onboarding_completed = 1;
+  string api_token = 2;
+
+  message VisibleLinksProto {
+
+    bool spotify = 3;
+    bool apple_music = 4;
+    bool deezer = 5;
+    bool napster = 6;
+    bool musicbrainz = 7;
+
+  }
+
+  VisibleLinksProto visible_links = 8;
+
+}

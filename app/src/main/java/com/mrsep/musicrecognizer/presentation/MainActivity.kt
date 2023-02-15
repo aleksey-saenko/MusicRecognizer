@@ -16,7 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesRepository
+import com.mrsep.musicrecognizer.MusicRecognizerApp
 import com.mrsep.musicrecognizer.presentation.screens.history.recentlyScreen
 import com.mrsep.musicrecognizer.presentation.screens.home.homeScreen
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.OnboardingScreen
@@ -27,14 +27,11 @@ import com.mrsep.musicrecognizer.presentation.screens.track.trackScreen
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var preferencesRepository: UserPreferencesRepository
+    private val musicRecognizerApp get() = application as MusicRecognizerApp
 
     private val permissionContract = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -49,12 +46,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val onboardingCompletedInitial = runBlocking {
-            preferencesRepository.userPreferencesFlow.first().onboardingCompleted
-        }
-
         setContent {
-            var onboardingCompleted by remember { mutableStateOf(onboardingCompletedInitial) }
+            var onboardingCompleted by remember {
+                mutableStateOf(musicRecognizerApp.onboardingCompleted)
+            }
             MusicRecognizerTheme {
                 if (onboardingCompleted) {
                     val navController = rememberNavController()

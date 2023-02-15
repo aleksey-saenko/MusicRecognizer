@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.BuildConfig
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesRepository
+import com.mrsep.musicrecognizer.domain.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val preferencesRepository: UserPreferencesRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     var apiToken by mutableStateOf("")

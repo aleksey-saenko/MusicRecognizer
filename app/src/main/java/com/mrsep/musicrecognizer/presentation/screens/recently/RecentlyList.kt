@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation.screens.history
+package com.mrsep.musicrecognizer.presentation.screens.recently
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,7 +34,7 @@ fun RecentlyList(
     LazyRow(
         modifier = modifier,
     ) {
-        items(recentTrackList) {track ->
+        items(items = recentTrackList, key = { it.mbId }) {track ->
             RecentTrackItem(
                 track = track,
                 onTrackClick = onTrackClick,

@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.update
 import java.io.File
 import java.time.Duration
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RecognizeInteractor @Inject constructor(
     @ApplicationContext appContext: Context,
     @ApplicationScope private val appScope: CoroutineScope,
@@ -74,6 +76,12 @@ class RecognizeInteractor @Inject constructor(
         }
     }
 
+    fun resetRecognizer() {
+        appScope.launch {
+            cancelRecognize()
+        }
+    }
+
     private suspend fun saveTrackToStorage(track: Track): Track {
         val storedTrack = trackRepository.getByMbId(track.mbId)
         val newTrack = track.run {
@@ -119,8 +127,14 @@ class RecognizeInteractor @Inject constructor(
                     delay(500)
                     _statusFlow.update { RecognizeStatus.Recognizing }
                     delay(500)
-                    val result = recognizeService.fakeRecognize()
-                    _statusFlow.update { RecognizeStatus.Success(result) }
+                    val savedTrack = when (val result = recognizeService.fakeRecognize()) {
+                        is RecognizeResult.Success -> {
+                            val newTrack = saveTrackToStorage(result.data)
+                            RecognizeResult.Success(newTrack)
+                        }
+                        else -> result
+                    }
+                    _statusFlow.update { RecognizeStatus.Success(savedTrack) }
                 }
             }
         }

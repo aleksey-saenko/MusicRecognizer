@@ -1,24 +1,28 @@
 <resources>
     <string name="app_name">MusicRecognizer</string>
     <string name="tap_for_recognize">Tap for recognize</string>
+    <string name="tap_for_new_recognize">Tap for new recognize</string>
+    <string name="recognize">Recognize</string>
+    <string name="new_recognize">New recognize</string>
     <string name="listening">Listening</string>
     <string name="recognizing">Recognizing</string>
-    <string name="tap_for_new_recognize">Tap for new recognize</string>
     <string name="home">Home</string>
-    <string name="history">History</string>
-    <string name="settings">Settings</string>
+    <string name="preferences">Preferences</string>
+    <string name="recently">Recently</string>
 
 <!--    Onboarding screen-->
-    <string name="token_requirement_start">"This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don\'t have one, you can sign up for a free API token "</string>
-    <string name="token_requirement_link">here</string>
-    <string name="token_requirement_end">.</string>
+    <string name="onboarding_token_message_start">"This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don\'t have one, you can sign up for a free API token "</string>
+    <string name="onboarding_token_message_link">here</string>
+    <string name="onboarding_token_message_end">.</string>
     <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
     <string name="apply_api_token">Apply API Token</string>
     <string name="audd_api_token">AudD API Token</string>
     <string name="api_token">API Token</string>
     <string name="welcome">Welcome</string>
-    <string name="welcome_paragraph">Discover and enjoy music like never before with our advanced music recognition technology. Get the most out of your music experience with intuitive user interfaces. Thanks for joining us and enjoy the music!</string>
-    <string name="preferences">Preferences</string>
+    <string name="onboarding_welcome_message">TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
+    <string name="onboarding_permission_message">The application requires permission to record audio in order to work properly. By enabling this permission, you agree that your recorded data will be used by remote servers for music recognition. The application does not use this data for any other purpose.</string>
+<!--    Common-->
+
     <string name="spotify">Spotify</string>
     <string name="apple_music">Apple Music</string>
     <string name="deezer">Deezer</string>
@@ -27,5 +31,18 @@
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="none">None</string>
+    <string name="permissions">Permissions</string>
+    <string name="allow_access">Allow Access</string>
+    <string name="permission_multiple_denied_message">You have denied permission request multiple times. You can change your decision in the application settings.\nWould you like to open settings?</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permissions_granted">Permissions Granted</string>
+    <string name="back">Back</string>
+    <string name="open_settings">Open settings</string>
+    <string name="token_applied">Token applied</string>
+    <string name="invalid_token">Invalid token</string>
+    <string name="ready">Ready</string>
+    <string name="service_notification_chanel_name">TuneSurfer service notification chanel</string>
+    <string name="service_notification_chanel_description">Allow to control recognition from notifications</string>
+
 
 </resources>

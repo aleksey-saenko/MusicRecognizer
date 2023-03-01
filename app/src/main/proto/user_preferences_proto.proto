@@ -20,4 +20,7 @@ message UserPreferencesProto {
 
   VisibleLinksProto visible_links = 8;
 
+  bool notification_service_enabled = 9;
+  bool dynamic_colors_enabled = 10;
+
 }

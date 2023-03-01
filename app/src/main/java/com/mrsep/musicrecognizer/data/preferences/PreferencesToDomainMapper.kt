@@ -12,6 +12,8 @@ class PreferencesToDomainMapper @Inject constructor() :
         return UserPreferences(
             onboardingCompleted = input.onboardingCompleted,
             apiToken = input.apiToken,
+            notificationServiceEnabled = input.notificationServiceEnabled,
+            dynamicColorsEnabled = input.dynamicColorsEnabled,
             visibleLinks = UserPreferences.VisibleLinks(
                 spotify = input.visibleLinks.spotify,
                 appleMusic = input.visibleLinks.appleMusic,

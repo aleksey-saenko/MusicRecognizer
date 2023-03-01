@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.presentation.screens.onboarding
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -10,33 +11,54 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.common.PageWithIndicator
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
-private const val TOTAL_PAGES = 4
+private enum class OnboardingPage(val index: Int) {
+    WELCOME(0),
+    PERMISSIONS(1),
+    TOKEN(2),
+    FINAL(3)
+}
+
+private val TOTAL_PAGES = OnboardingPage.values().size
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
-    viewModel: OnboardingViewModel = hiltViewModel(),
-    onSignUpClick: (String) -> Unit,
-    onApplyTokenClick: () -> Unit
+    onOnboardingCompleted: () -> Unit,
+    onOnboardingClose: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     var availablePages by remember { mutableStateOf(2) }
     val pagerState = rememberPagerState()
+
+    BackHandler {
+        scope.launch {
+            if (pagerState.canScrollBackward) {
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+            } else {
+                onOnboardingClose()
+            }
+        }
+    }
+
     HorizontalPager(
         pageCount = availablePages,
-        state = pagerState,
-        userScrollEnabled = true
+        beyondBoundsPageCount = 0,
+        state = pagerState
     ) { page ->
-        Log.d("Pager", "Page: $page")
+        if (BuildConfig.LOG_DEBUG_MODE) {
+            Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
+        }
         when (page) {
-            0 -> {
+            OnboardingPage.WELCOME.index -> {
                 PageWithIndicator(
                     PageContent = {
                         WelcomePage(
-                            viewModel = viewModel,
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxWidth()
@@ -48,18 +70,26 @@ fun OnboardingScreen(
                     modifier = modifier.fillMaxSize()
                 )
             }
-            1 -> {
+            OnboardingPage.PERMISSIONS.index -> {
                 PageWithIndicator(
                     PageContent = {
-                        TokenPage(
+                        PermissionsPage(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState()),
-                            viewModel = viewModel,
-                            onSignUpClick = { link -> onSignUpClick(link) },
-                            onApplyTokenClick = { onApplyTokenClick() }
-//                            onApplyTokenClick = { }
+                            onPermissionsGranted = {
+                                val minimumRequiredPages = OnboardingPage.TOKEN.index + 1
+                                if (availablePages < minimumRequiredPages) {
+                                    availablePages = minimumRequiredPages
+                                }
+                                scope.launch {
+                                    snapshotFlow { pagerState.canScrollForward }
+                                        .filter { it }
+                                        .take(1)
+                                        .collect { pagerState.animateScrollToPage(OnboardingPage.TOKEN.index) }
+                                }
+                            }
                         )
                     },
                     totalPages = TOTAL_PAGES,
@@ -67,38 +97,56 @@ fun OnboardingScreen(
                     modifier = modifier.fillMaxSize()
                 )
             }
-            2 -> {
+            OnboardingPage.TOKEN.index -> {
                 PageWithIndicator(
-                    PageContent = { SimplePage(page) },
+                    PageContent = {
+                        TokenPage(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState()),
+                            onTokenApplied = {
+                                val minimumRequiredPages = OnboardingPage.FINAL.index + 1
+                                if (availablePages < minimumRequiredPages) {
+                                    availablePages = minimumRequiredPages
+                                }
+                                scope.launch {
+                                    snapshotFlow { pagerState.canScrollForward }
+                                        .filter { it }
+                                        .take(1)
+                                        .collect { pagerState.animateScrollToPage(OnboardingPage.FINAL.index) }
+                                }
+                            }
+                        )
+                    },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
                     modifier = modifier.fillMaxSize()
                 )
             }
-            3 -> {
+            OnboardingPage.FINAL.index -> {
                 PageWithIndicator(
-                    PageContent = { SimplePage(page) },
+                    PageContent = {
+                        FinalPage(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState()),
+                            onOnboardingCompletedClick = {
+                                onOnboardingCompleted()
+                            }
+                        )
+                    },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
                     modifier = modifier.fillMaxSize()
                 )
             }
             else -> {
-                throw IllegalStateException("OnboardingScreen: unavailable page index")
+                throw IllegalStateException("OnboardingScreen: Unavailable page index")
             }
         }
 
     }
-}
-
-@Composable
-fun SimplePage(
-    page: Int,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = "Page: $page",
-        modifier = modifier
-    )
 }
 

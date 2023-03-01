@@ -4,6 +4,8 @@ data class UserPreferences(
     val onboardingCompleted: Boolean,
     val apiToken: String,
     val visibleLinks: VisibleLinks,
+    val notificationServiceEnabled: Boolean,
+    val dynamicColorsEnabled: Boolean,
 ) {
 
     data class VisibleLinks(

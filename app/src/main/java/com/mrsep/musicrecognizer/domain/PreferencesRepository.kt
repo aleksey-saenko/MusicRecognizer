@@ -8,7 +8,9 @@ interface PreferencesRepository {
     val userPreferencesFlow: Flow<UserPreferences>
 
     suspend fun saveApiToken(newToken: String)
-    suspend fun setOnboardingCompleted(onboardingCompleted: Boolean)
+    suspend fun setOnboardingCompleted(value: Boolean)
+    suspend fun setNotificationServiceEnabled(value: Boolean)
+    suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setVisibleLinks(visibleLinks: UserPreferences.VisibleLinks)
 
 }

@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 
-private const val ROOT_ROUTE = "home"
+const val HOME_ROUTE = "home"
 
 fun NavGraphBuilder.homeScreen() {
-    composable(ROOT_ROUTE) {
+    composable(HOME_ROUTE) {
         HomeScreen()
     }
 }
@@ -16,5 +16,5 @@ fun NavGraphBuilder.homeScreen() {
 fun NavController.navigateToHomeScreen(
     navOptions: NavOptions? = null
 ) {
-    this.navigate(route = ROOT_ROUTE, navOptions = navOptions)
+    this.navigate(route = HOME_ROUTE, navOptions = navOptions)
 }

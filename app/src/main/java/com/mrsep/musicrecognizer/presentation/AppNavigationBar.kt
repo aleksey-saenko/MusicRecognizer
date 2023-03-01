@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.presentation
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,13 +20,16 @@ fun AppNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     NavigationBar(
+//        containerColor = MaterialTheme.colorScheme.background,
+//        contentColor = MaterialTheme.colorScheme.onBackground,
+//        tonalElevation = 0.dp,
         modifier = modifier.height(64.dp),
     ) {
         navBarDestList.forEach { destination ->
             val selected =
                 currentDestination?.hierarchy?.any { it.route == destination.route } == true
             NavigationBarItem(
-                modifier = modifier,
+                modifier = Modifier,
 //                label = { Text(stringResource(id = destination.titleId)) },
                 icon = {
                     Icon(

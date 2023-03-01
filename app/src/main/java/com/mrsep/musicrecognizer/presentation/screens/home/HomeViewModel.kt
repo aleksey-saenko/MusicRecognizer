@@ -38,6 +38,7 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+
     fun stopRecordMR() = recordJob?.cancel()
 
     fun recognize() =
@@ -51,6 +52,7 @@ class HomeViewModel @Inject constructor(
 
     //    fun recognizeTap() = recognizeInteractor.recognize(viewModelScope)
     fun recognizeTap() = recognizeInteractor.launchRecognizeOrCancel(viewModelScope)
+
 }
 
 sealed interface MainUiState {

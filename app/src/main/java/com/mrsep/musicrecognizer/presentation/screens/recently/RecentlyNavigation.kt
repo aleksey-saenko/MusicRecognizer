@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation.screens.history
+package com.mrsep.musicrecognizer.presentation.screens.recently
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

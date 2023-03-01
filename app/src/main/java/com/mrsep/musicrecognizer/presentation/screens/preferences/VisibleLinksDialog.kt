@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.util.recompositionCounter
 
 class VisibleLinksDialogState(
     initialState: UserPreferences.VisibleLinks,
@@ -59,10 +60,12 @@ class VisibleLinksDialogState(
 @Composable
 fun rememberVisibleLinksDialogState(
     visibleLinks: UserPreferences.VisibleLinks,
-) = rememberSaveable(saver = VisibleLinksDialogState.Saver) {
-    VisibleLinksDialogState(
-        initialState = visibleLinks
-    )
+): VisibleLinksDialogState {
+    return rememberSaveable(inputs = arrayOf(visibleLinks), saver = VisibleLinksDialogState.Saver) {
+        VisibleLinksDialogState(
+            initialState = visibleLinks
+        )
+    }
 }
 
 @Composable
@@ -76,12 +79,12 @@ fun VisibleLinksDialog(
             Text(text = "Show links to")
         },
         confirmButton = {
-            Button(onClick = { onConfirmClick() }) {
+            Button(onClick = onConfirmClick) {
                 Text(text = stringResource(R.string.apply))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = { onDismissClick() }) {
+            OutlinedButton(onClick = onDismissClick) {
                 Text(text = stringResource(R.string.cancel))
             }
         },
@@ -90,6 +93,7 @@ fun VisibleLinksDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.spotify), modifier = Modifier.weight(1f))
                     Checkbox(
+                        modifier = Modifier.recompositionCounter("spotifyCheckBox"),
                         checked = dialogState.spotifyCheckBox,
                         onCheckedChange = { dialogState.spotifyCheckBox = it }
                     )
@@ -97,6 +101,7 @@ fun VisibleLinksDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.apple_music), modifier = Modifier.weight(1f))
                     Checkbox(
+                        modifier = Modifier.recompositionCounter("appleMusicCheckBox"),
                         checked = dialogState.appleMusicCheckBox,
                         onCheckedChange = { dialogState.appleMusicCheckBox = it }
                     )
@@ -104,6 +109,7 @@ fun VisibleLinksDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.deezer), modifier = Modifier.weight(1f))
                     Checkbox(
+                        modifier = Modifier.recompositionCounter("deezerCheckBox"),
                         checked = dialogState.deezerCheckBox,
                         onCheckedChange = { dialogState.deezerCheckBox = it }
                     )
@@ -111,6 +117,7 @@ fun VisibleLinksDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.napster), modifier = Modifier.weight(1f))
                     Checkbox(
+                        modifier = Modifier.recompositionCounter("napsterCheckBox"),
                         checked = dialogState.napsterCheckBox,
                         onCheckedChange = { dialogState.napsterCheckBox = it }
                     )
@@ -118,6 +125,7 @@ fun VisibleLinksDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = stringResource(R.string.musicbrainz), modifier = Modifier.weight(1f))
                     Checkbox(
+                        modifier = Modifier.recompositionCounter("musicBrainzCheckBox"),
                         checked = dialogState.musicBrainzCheckBox,
                         onCheckedChange = { dialogState.musicBrainzCheckBox = it }
                     )

@@ -44,8 +44,8 @@ fun TrackCard(
 ) {
     ElevatedCard(
         modifier = modifier
-            .fillMaxWidth()
             .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
+            .fillMaxWidth()
     ) {
         var lyricsExpanded by rememberSaveable { mutableStateOf(false) }
         Column {

@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 
-private const val ROOT_ROUTE = "preferences"
+const val PREFERENCES_ROUTE = "preferences"
 
 fun NavGraphBuilder.preferencesScreen() {
-    composable(ROOT_ROUTE) {
+    composable(PREFERENCES_ROUTE) {
         PreferencesScreen()
     }
 }
@@ -16,5 +16,5 @@ fun NavGraphBuilder.preferencesScreen() {
 fun NavController.navigateToPreferencesScreen(
     navOptions: NavOptions? = null
 ) {
-    this.navigate(route = ROOT_ROUTE, navOptions = navOptions)
+    this.navigate(route = PREFERENCES_ROUTE, navOptions = navOptions)
 }

@@ -23,6 +23,18 @@ class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setNotificationServiceEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setNotificationServiceEnabled(value)
+        }
+    }
+
+    fun setDynamicColorsEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setDynamicColorsEnabled(value)
+        }
+    }
+
     fun setVisibleLinks(visibleLinks: UserPreferences.VisibleLinks) {
         viewModelScope.launch {
             preferencesRepository.setVisibleLinks(visibleLinks)

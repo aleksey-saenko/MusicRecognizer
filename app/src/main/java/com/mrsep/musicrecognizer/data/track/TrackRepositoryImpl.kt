@@ -21,6 +21,10 @@ class TrackRepositoryImpl @Inject constructor(
         trackDao.insertOrReplace(*track.map { trackToDataMapper.map(it) }.toTypedArray())
     }
 
+    override suspend fun update(track: Track) {
+        trackDao.update(trackToDataMapper.map(track))
+    }
+
     override suspend fun getByMbId(mbId: String): Track? {
         return trackDao.getByMbId(mbId)?.let { trackToDomainMapper.map(it) }
     }
@@ -43,4 +47,8 @@ class TrackRepositoryImpl @Inject constructor(
             .map { list -> list.map { trackEntity -> trackToDomainMapper.map(trackEntity) } }
     }
 
+    override fun getFavoritesFlow(limit: Int): Flow<List<Track>> {
+        return trackDao.getFavoritesFlow(limit)
+            .map { list -> list.map { trackEntity -> trackToDomainMapper.map(trackEntity) } }
+    }
 }

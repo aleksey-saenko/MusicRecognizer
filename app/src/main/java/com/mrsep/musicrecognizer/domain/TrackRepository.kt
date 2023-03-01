@@ -9,6 +9,8 @@ interface TrackRepository {
 
     suspend fun getByMbId(mbId: String): Track?
 
+    suspend fun update(track: Track)
+
     fun getByMbIdFlow(mbId: String): Flow<Track?>
 
     suspend fun getAfterDate(date: Long, limit: Int): List<Track>
@@ -16,5 +18,8 @@ interface TrackRepository {
     suspend fun getLastRecognized(limit: Int): List<Track>
 
     fun getLastRecognizedFlow(limit: Int): Flow<List<Track>>
+
+    fun getFavoritesFlow(limit: Int): Flow<List<Track>>
+
 
 }

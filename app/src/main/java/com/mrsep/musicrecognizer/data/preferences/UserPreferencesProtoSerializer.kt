@@ -21,6 +21,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .setNapster(true)
                     .build()
             )
+//            .setNotificationServiceEnabled(true)
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

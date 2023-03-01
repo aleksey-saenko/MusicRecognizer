@@ -27,7 +27,7 @@ fun PreferenceSwitchItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Column(
-                modifier = modifier.weight(1f).run {
+                modifier = Modifier.weight(1f).run {
                     if (enabled) this else alpha(0.8f)
                 }
             ) {

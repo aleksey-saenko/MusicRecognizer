@@ -5,16 +5,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 
-private const val ROOT_ROUTE = "onboarding"
+const val ONBOARDING_ROUTE = "onboarding"
 
 fun NavGraphBuilder.onboardingScreen(
-    onSignUpClick: (link: String) -> Unit,
-    onApplyTokenClick: () -> Unit
+    onOnboardingCompleted: () -> Unit,
+    onOnboardingClose: () -> Unit
 ) {
-    composable(ROOT_ROUTE) {
+    composable(ONBOARDING_ROUTE) {
         OnboardingScreen(
-            onSignUpClick = onSignUpClick,
-            onApplyTokenClick = onApplyTokenClick
+            onOnboardingCompleted = onOnboardingCompleted,
+            onOnboardingClose = onOnboardingClose
         )
     }
 }
@@ -22,5 +22,5 @@ fun NavGraphBuilder.onboardingScreen(
 fun NavController.navigateToOnboardingScreen(
     navOptions: NavOptions? = null
 ) {
-    this.navigate(route = ROOT_ROUTE, navOptions = navOptions)
+    this.navigate(route = ONBOARDING_ROUTE, navOptions = navOptions)
 }

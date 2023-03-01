@@ -1,9 +1,6 @@
 package com.mrsep.musicrecognizer.data.track
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,6 +8,9 @@ interface TrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(vararg track: TrackEntity)
+
+    @Update
+    suspend fun update(track: TrackEntity)
 
     @Query("SELECT * FROM track WHERE mb_id=(:mbId) LIMIT 1")
     suspend fun getByMbId(mbId: String): TrackEntity?
@@ -27,6 +27,7 @@ interface TrackDao {
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>>
 
-
+    @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
+    fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
 
 }

@@ -30,10 +30,7 @@ android {
             properties.load(project.rootProject.file("local.properties").newDataInputStream())
         }
         buildConfigField 'String', 'AUDD_TOKEN', properties.getProperty("api.audd.token")
-
-//        def apiAuddToken = properties.getProperty('api.audd.token')
-//        resValue "string", "AUDD_TOKEN", apiAuddToken
-
+        buildConfigField "boolean", "LOG_DEBUG_MODE", "false"
     }
 
     kapt {
@@ -43,9 +40,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG_MODE", "true"
+        }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "LOG_DEBUG_MODE", "false"
         }
     }
     compileOptions {
@@ -54,6 +55,17 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+
+//        freeCompilerArgs += [
+//                "-P",
+//                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+//                        project.buildDir.absolutePath + "/compose_metrics"
+//        ]
+//        freeCompilerArgs += [
+//                "-P",
+//                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+//                        project.buildDir.absolutePath + "/compose_metrics"
+//        ]
     }
     buildFeatures {
         compose true
@@ -69,12 +81,15 @@ android {
 }
 
 ext {
-    compose_version = "1.4.0-beta01"
+    compose_version = "1.4.0-beta02"
+    accompanist_version = "0.29.1-alpha"
     navigation_compose_version = "2.5.3"
     protobuf_version = "3.21.12"
     room_version = "2.5.0"
     retrofit_version = "2.9.0"
     moshi_version = "1.14.0"
+    hilt_version = "2.44.2"
+    coil_version = "2.2.2"
 }
 
 dependencies {
@@ -84,7 +99,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.1.0-alpha06'
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha07'
     implementation 'androidx.core:core-ktx:1.9.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -93,8 +108,12 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-beta01"
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
+
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-rc01"
     implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
@@ -118,12 +137,12 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     //Hilt
-    implementation "com.google.dagger:hilt-android:2.44.2"
-    kapt "com.google.dagger:hilt-compiler:2.44.2"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     //Coil
-    implementation "io.coil-kt:coil-compose:2.2.2"
+    implementation "io.coil-kt:coil-compose:$coil_version"
 
 }
 

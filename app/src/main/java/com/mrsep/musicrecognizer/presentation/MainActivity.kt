@@ -1,104 +1,127 @@
 package com.mrsep.musicrecognizer.presentation
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mrsep.musicrecognizer.MusicRecognizerApp
-import com.mrsep.musicrecognizer.presentation.screens.history.recentlyScreen
+import com.mrsep.musicrecognizer.presentation.screens.recently.recentlyScreen
+import com.mrsep.musicrecognizer.presentation.screens.home.HOME_ROUTE
 import com.mrsep.musicrecognizer.presentation.screens.home.homeScreen
-import com.mrsep.musicrecognizer.presentation.screens.onboarding.OnboardingScreen
+import com.mrsep.musicrecognizer.presentation.screens.onboarding.ONBOARDING_ROUTE
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.onboardingScreen
 import com.mrsep.musicrecognizer.presentation.screens.preferences.preferencesScreen
 import com.mrsep.musicrecognizer.presentation.screens.track.navigateToTrackScreen
 import com.mrsep.musicrecognizer.presentation.screens.track.trackScreen
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val musicRecognizerApp get() = application as MusicRecognizerApp
+    private val viewModel: MainActivityViewModel by viewModels()
 
-    private val permissionContract = registerForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-        ::onPermissionContractResult
-    )
-
-    private fun onPermissionContractResult(granted: Boolean) {
-        Log.d("onPermissionContractResult", "permissions granted = $granted")
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            var onboardingCompleted by remember {
-                mutableStateOf(musicRecognizerApp.onboardingCompleted)
-            }
-            MusicRecognizerTheme {
-                if (onboardingCompleted) {
-                    val navController = rememberNavController()
-                    Scaffold(
-                        bottomBar = { AppNavigationBar(navController = navController) }
-                    ) { innerPadding ->
-                        NavHost(
-                            navController = navController,
-                            startDestination = "home",
-                            modifier = Modifier.padding(innerPadding)
-                        ) {
-                            recentlyScreen(onTrackClick = { mbId ->
-                                navController.navigateToTrackScreen(
-                                    mbId = mbId
-                                )
-                            })
-                            homeScreen()
-                            preferencesScreen()
-                            onboardingScreen(
-                                onSignUpClick = { link -> openUrlImplicitly(link) },
-                                onApplyTokenClick = { }
-                            )
-                            trackScreen(onBackPressed = { navController.navigateUp() })
-                        }
+            val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
+            MusicRecognizerTheme(
+                dynamicColor = isDynamicColorsEnabled(uiState)
+            ) {
+                Surface {
+                    val systemUiController = rememberSystemUiController()
+                    val useDarkIcons = !isSystemInDarkTheme()
+                    SideEffect {
+                        systemUiController.setStatusBarColor(
+                            color = Color.Transparent,
+                            darkIcons = useDarkIcons
+                        )
                     }
-                } else {
-                    Surface {
-                        OnboardingScreen(
-                            onSignUpClick = { link -> openUrlImplicitly(link) },
-                            onApplyTokenClick = { onboardingCompleted = true }
+                    AnimatedVisibility(visible = uiState is MainActivityUiState.Success) {
+                        ApplicationNavigation(
+                            onboardingCompleted = isOnboardingCompleted(uiState),
+                            onOnboardingClose = { this@MainActivity.finish() }
                         )
                     }
                 }
             }
+
         }
     }
 
+}
 
-    override fun onStart() {
-        super.onStart()
-        permissionContract.launch(Manifest.permission.RECORD_AUDIO)
+fun isDynamicColorsEnabled(uiState: MainActivityUiState): Boolean {
+    return when (uiState) {
+        MainActivityUiState.Loading -> false
+        is MainActivityUiState.Success -> uiState.userPreferences.dynamicColorsEnabled
     }
+}
 
-    private fun openUrlImplicitly(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        } else {
-            Toast.makeText(this, "Web browser not found", Toast.LENGTH_LONG).show()
+fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean {
+    return when (uiState) {
+        MainActivityUiState.Loading -> false
+        is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
+    }
+}
+
+@Composable
+fun ApplicationNavigation(
+    onboardingCompleted: Boolean,
+    onOnboardingClose: () -> Unit
+) {
+    val topNavController = rememberNavController()
+    NavHost(
+        navController = topNavController,
+        startDestination = if (onboardingCompleted) BOTTOM_BAR_HOST_ROUTE else ONBOARDING_ROUTE
+    ) {
+        onboardingScreen(
+            onOnboardingCompleted = { },
+            onOnboardingClose = onOnboardingClose
+        )
+        bottomBarNavHost()
+    }
+}
+
+const val BOTTOM_BAR_HOST_ROUTE = "bottom_bar_host"
+fun NavGraphBuilder.bottomBarNavHost(
+) {
+    composable(BOTTOM_BAR_HOST_ROUTE) {
+        val navController = rememberNavController()
+        Scaffold(
+            bottomBar = { AppNavigationBar(navController = navController) }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = HOME_ROUTE,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                recentlyScreen(onTrackClick = { mbId ->
+                    navController.navigateToTrackScreen(
+                        mbId = mbId
+                    )
+                })
+                homeScreen()
+                preferencesScreen()
+                trackScreen(onBackPressed = { navController.navigateUp() })
+            }
         }
     }
 

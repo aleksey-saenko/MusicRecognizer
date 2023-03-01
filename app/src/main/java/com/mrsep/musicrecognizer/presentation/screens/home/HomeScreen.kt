@@ -18,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.RecognizeResult
-import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 
 @Composable
 fun HomeScreen(
@@ -53,7 +52,7 @@ fun HomeScreen(
         )
         SuperButtonSection(
             title = superButtonTitle,
-            onButtonClick = { viewModel.recognizeTap() },
+            onButtonClick = viewModel::recognizeTap,
             activated = uiState is MainUiState.Listening || uiState is MainUiState.Recognizing,
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 16.dp)
         )
@@ -108,20 +107,6 @@ fun HomeScreen(
 
     }
 }
-
-@PreviewDeviceNight
-@Composable
-fun DefaultPreview() {
-    MusicRecognizerTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            HomeScreen()
-        }
-    }
-}
-
 
 @Preview(
     showSystemUi = true,

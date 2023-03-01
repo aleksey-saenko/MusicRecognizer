@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -18,7 +19,11 @@ fun PreferenceClickableItem(
     enabled: Boolean = true,
     onItemClick: () -> Unit
 ) {
-    PreferenceSurface(modifier = modifier.clickable { onItemClick() }) {
+    PreferenceSurface(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.extraLarge)
+            .clickable { onItemClick() }
+    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,

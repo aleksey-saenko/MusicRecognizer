@@ -33,8 +33,8 @@ fun DeveloperSection(
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     Surface(
-        tonalElevation = 1.dp,
-        shadowElevation = 1.dp,
+        tonalElevation = if (expanded) 1.dp else 0.dp,
+        shadowElevation = if (expanded) 1.dp else 0.dp,
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
             .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessLow))
@@ -44,22 +44,24 @@ fun DeveloperSection(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable { expanded = !expanded }
-                    .padding(top = 8.dp, bottom = 8.dp)
-            ) {
-                Text(
-                    text = "Developer section",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (expanded) {
+                    Text(
+                        text = "Developer section",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
                 Image(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .clickable { expanded = !expanded }
+                        .padding(8.dp)
                 )
             }
             if (expanded) {
@@ -105,7 +107,7 @@ fun DeveloperSection(
 
 @PreviewDeviceNight
 @Composable
-fun DeveloperButtonsSectionPreview() {
+private fun DeveloperButtonsSectionPreview() {
     MusicRecognizerTheme {
         Surface {
             Column(modifier = Modifier.padding(8.dp)) {

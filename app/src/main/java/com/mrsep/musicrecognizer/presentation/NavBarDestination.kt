@@ -10,11 +10,11 @@ enum class NavBarDestination(
     @DrawableRes val selectedIconId: Int,
     @DrawableRes val unselectedIconId: Int
 ) {
-    HISTORY(
+    Recently(
         route = "recently",
-        titleId = R.string.history,
-        selectedIconId = R.drawable.baseline_history_24,
-        unselectedIconId = R.drawable.baseline_history_24
+        titleId = R.string.recently,
+        selectedIconId = R.drawable.baseline_recently_24,
+        unselectedIconId = R.drawable.baseline_recently_24
     ),
     HOME(
         route = "home",
@@ -22,11 +22,11 @@ enum class NavBarDestination(
         selectedIconId = R.drawable.baseline_home_24,
         unselectedIconId = R.drawable.baseline_home_24
     ),
-    SETTINGS(
+    Preferences(
         route = "preferences",
-        titleId = R.string.settings,
-        selectedIconId = R.drawable.baseline_settings_24,
-        unselectedIconId = R.drawable.baseline_settings_24
+        titleId = R.string.preferences,
+        selectedIconId = R.drawable.baseline_preferences_24,
+        unselectedIconId = R.drawable.baseline_preferences_24
     ),
 }
 

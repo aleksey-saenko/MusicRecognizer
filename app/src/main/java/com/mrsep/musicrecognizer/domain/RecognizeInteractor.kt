@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.domain
 
 import android.content.Context
 import com.mrsep.musicrecognizer.di.ApplicationScope
-import com.mrsep.musicrecognizer.domain.model.RecognizeResult
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.domain.model.Track
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
@@ -57,20 +57,23 @@ class RecognizeInteractor @Inject constructor(
             )
             when (recordResult) {
                 is RecordResult.Error -> {
-                    _statusFlow.update { RecognizeStatus.Failure }
+                    _statusFlow.update { RecognizeStatus.Error.RecordError(recordResult) }
                 }
                 is RecordResult.Success -> {
                     _statusFlow.update { RecognizeStatus.Recognizing }
-
-                    val savedTrack = when (val result = recognizeService.recognize(recordFile)) {
-                        is RecognizeResult.Success -> {
+                    val newStatus = when (val result = recognizeService.recognize(recordFile)) {
+                        is RemoteRecognizeResult.Success -> {
                             val newTrack = saveTrackToStorage(result.data)
-                            RecognizeResult.Success(newTrack)
+                            RecognizeStatus.Success(newTrack)
                         }
-                        else -> result
+                        is RemoteRecognizeResult.NoMatches -> {
+                            RecognizeStatus.NoMatches
+                        }
+                        is RemoteRecognizeResult.Error -> {
+                            RecognizeStatus.Error.RemoteError(result)
+                        }
                     }
-
-                    _statusFlow.update { RecognizeStatus.Success(savedTrack) }
+                    _statusFlow.update { newStatus }
                 }
             }
         }
@@ -108,8 +111,19 @@ class RecognizeInteractor @Inject constructor(
             recognizeJob = scope.launch {
                 withContext(Dispatchers.IO) {
                     _statusFlow.update { RecognizeStatus.Recognizing }
-                    val result = recognizeService.recognize(recordFile)
-                    _statusFlow.update { RecognizeStatus.Success(result) }
+                    val newStatus = when (val result = recognizeService.recognize(recordFile)) {
+                        is RemoteRecognizeResult.Success -> {
+                            val newTrack = saveTrackToStorage(result.data)
+                            RecognizeStatus.Success(newTrack)
+                        }
+                        is RemoteRecognizeResult.NoMatches -> {
+                            RecognizeStatus.NoMatches
+                        }
+                        is RemoteRecognizeResult.Error -> {
+                            RecognizeStatus.Error.RemoteError(result)
+                        }
+                    }
+                    _statusFlow.update { newStatus }
                 }
             }
         }
@@ -127,14 +141,19 @@ class RecognizeInteractor @Inject constructor(
                     delay(500)
                     _statusFlow.update { RecognizeStatus.Recognizing }
                     delay(500)
-                    val savedTrack = when (val result = recognizeService.fakeRecognize()) {
-                        is RecognizeResult.Success -> {
+                    val newStatus = when (val result = recognizeService.fakeRecognize()) {
+                        is RemoteRecognizeResult.Success -> {
                             val newTrack = saveTrackToStorage(result.data)
-                            RecognizeResult.Success(newTrack)
+                            RecognizeStatus.Success(newTrack)
                         }
-                        else -> result
+                        is RemoteRecognizeResult.NoMatches -> {
+                            RecognizeStatus.NoMatches
+                        }
+                        is RemoteRecognizeResult.Error -> {
+                            RecognizeStatus.Error.RemoteError(result)
+                        }
                     }
-                    _statusFlow.update { RecognizeStatus.Success(savedTrack) }
+                    _statusFlow.update { newStatus }
                 }
             }
         }

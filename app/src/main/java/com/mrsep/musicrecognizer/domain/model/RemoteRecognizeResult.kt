@@ -1,16 +1,14 @@
 package com.mrsep.musicrecognizer.domain.model
 
-sealed class RecognizeResult<out T> {
+sealed class RemoteRecognizeResult<out T> {
 
-    object InProgress : RecognizeResult<Nothing>()
+    data class Success<out T>(val data: T) : RemoteRecognizeResult<T>()
 
-    data class Success<out T>(val data: T) : RecognizeResult<T>()
+    object NoMatches : RemoteRecognizeResult<Nothing>()
 
-    object NoMatches : RecognizeResult<Nothing>()
+    sealed class Error : RemoteRecognizeResult<Nothing>() {
 
-    sealed class Error : RecognizeResult<Nothing>() {
-
-        object NoConnection : Error()
+        object BadConnection : Error()
         object WrongToken : Error()
         object LimitReached : Error()
 
@@ -26,10 +24,9 @@ sealed class RecognizeResult<out T> {
 
     }
 
-    inline fun <R> map(transform: T.() -> R): RecognizeResult<R> {
+    inline fun <R> map(transform: T.() -> R): RemoteRecognizeResult<R> {
         return when (this) {
             is Success -> Success(this.data.transform())
-            is InProgress -> this
             is NoMatches -> this
             is Error -> this
         }

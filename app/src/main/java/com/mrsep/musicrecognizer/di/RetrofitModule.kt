@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.di
 
 import android.content.Context
 import android.widget.Toast
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddErrorJsonAdapter
 import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddSuccessJsonAdapter
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
@@ -22,7 +23,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val BASE_URL = "https://api.audd.io/"
@@ -48,14 +48,21 @@ object RetrofitModule {
     @Singleton
     fun provideRetrofit(
         moshi: Moshi,
-        httpFileLoggingInterceptor: HttpFileLoggingInterceptor
+        @ApplicationContext appContext: Context
     ): Retrofit {
-        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        }
+
         val client = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(httpFileLoggingInterceptor)
+            .run {
+                if ((BuildConfig.LOG_DEBUG_MODE)) {
+                    val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                        setLevel(HttpLoggingInterceptor.Level.BODY)
+                    }
+                    this.addInterceptor(httpLoggingInterceptor)
+                        .addInterceptor(HttpFileLoggingInterceptor(appContext))
+                } else {
+                    this
+                }
+            }
             .build()
 
         return Retrofit.Builder()
@@ -67,10 +74,8 @@ object RetrofitModule {
 
 }
 
-@Singleton
-class HttpFileLoggingInterceptor @Inject constructor(
-    @ApplicationContext private val appContext: Context
-) : Interceptor {
+class HttpFileLoggingInterceptor(private val appContext: Context) : Interceptor {
+
     @Suppress("SpellCheckingInspection")
     private val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
     private val rootDir = "${appContext.filesDir.absolutePath}/http_logger/"

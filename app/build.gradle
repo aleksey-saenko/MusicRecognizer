@@ -56,16 +56,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
 
-//        freeCompilerArgs += [
-//                "-P",
-//                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-//                        project.buildDir.absolutePath + "/compose_metrics"
-//        ]
-//        freeCompilerArgs += [
-//                "-P",
-//                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-//                        project.buildDir.absolutePath + "/compose_metrics"
-//        ]
+        freeCompilerArgs += [
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                        project.buildDir.absolutePath + "/compose_metrics"
+        ]
+        freeCompilerArgs += [
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                        project.buildDir.absolutePath + "/compose_metrics"
+        ]
     }
     buildFeatures {
         compose true
@@ -107,6 +107,8 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"

@@ -43,6 +43,14 @@
     <string name="ready">Ready</string>
     <string name="service_notification_chanel_name">TuneSurfer service notification chanel</string>
     <string name="service_notification_chanel_description">Allow to control recognition from notifications</string>
+    <string name="message_record_error">An error occurred while recording the audio. Please, check app permission to access the microphone and retry.</string>
+    <string name="message_bad_connection_error">Internet connection is not available. Please, check your network status and retry.</string>
+    <string name="message_http_error">An error occurred during internet request. Please, try again.</string>
+    <string name="message_api_limit_error">The limit of current API token was reached. Please, set a proper token in the app preferences and retry.</string>
+    <string name="message_unhandled_error">An internal error occurred. Please, try again.</string>
+    <string name="message_api_wrong_error">Wrong API token. Please, set a proper token in the app preferences and retry.</string>
+    <string name="not_implemented">Not implemented</string>
+    <string name="no_matches_found">No matches found</string>
 
 
 </resources>

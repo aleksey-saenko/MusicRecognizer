@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -29,9 +28,10 @@ fun EnhancedButton(
     val interactionSource = remember { MutableInteractionSource() }
     val interaction by interactionSource.interactions.collectAsState(initial = null)
     var buttonLongPressed by remember { mutableStateOf(false) }
+    val updatedOnClick by rememberUpdatedState(onClick)
     val updatedOnLongPress by rememberUpdatedState(onLongPress)
 
-    LaunchedEffect(interaction, enabled) {
+    LaunchedEffect(interaction, enabled, longPressDelay) {
         when (interaction) {
             is PressInteraction.Press -> {
                 if (enabled) {
@@ -45,11 +45,11 @@ fun EnhancedButton(
                     buttonLongPressed = false
                 } else {
                     if (enabled) {
-                        onClick()
+                        updatedOnClick()
                     }
                 }
             }
-            is PressInteraction.Cancel -> { }
+            is PressInteraction.Cancel -> {}
         }
     }
     Button(

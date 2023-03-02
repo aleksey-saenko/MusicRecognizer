@@ -13,7 +13,6 @@ import androidx.core.net.toUri
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.RecognizeInteractor
 import com.mrsep.musicrecognizer.domain.RecognizeStatus
-import com.mrsep.musicrecognizer.domain.model.RecognizeResult
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -146,7 +145,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            RecognizeStatus.Failure -> {
+            is RecognizeStatus.Error -> {
                 baseNotificationBuilder
                     .setContentTitle("Some error was occur, check logs")
                     .addAction(
@@ -161,73 +160,71 @@ class NotificationService : Service() {
                     )
                     .build()
             }
+            RecognizeStatus.NoMatches -> {
+                baseNotificationBuilder
+                    .setContentTitle(getString(R.string.no_matches_found))
+                    .addAction(
+                        android.R.drawable.ic_btn_speak_now,
+                        "Dismiss",
+                        PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(DISMISS_ACTION),
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
+                    .build()
+            }
             is RecognizeStatus.Success -> {
-
-                if (status.result is RecognizeResult.Success) {
-
-                    val bitmap = try {
-                        val inputStream = URL(status.result.data.links.artwork).openStream()
-                        BitmapFactory.decodeStream(inputStream)
-                    } catch (e: Exception) {
-                        Log.e(SERVICE_TAG,"Bitmap loading error", e)
-                        BitmapFactory.decodeResource(resources, R.drawable.meddle_album_cover)
-                    }
-
-                    baseNotificationBuilder
-                        .setOnlyAlertOnce(false)
-                        .setStyle(
-                            NotificationCompat.BigPictureStyle()
-                                .bigPicture(bitmap)
-                        )
-                        .setContentTitle(status.result.data.title)
-                        .setContentText("${status.result.data.artist} / ${status.result.data.album} / ${status.result.data.releaseDate?.year.toString()}")
-                        .setContentIntent(createTrackDeepLinkIntent(status.result.data.mbId))
-                        .addAction(
-                            android.R.drawable.ic_btn_speak_now,
-                            "Add to favs",
-                            PendingIntent.getBroadcast(
-                                this,
-                                0,
-                                Intent(ADD_TO_FAVORITE_ACTION),
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                        )
-                        .addAction(
-                            android.R.drawable.ic_btn_speak_now,
-                            "Dismiss",
-                            PendingIntent.getBroadcast(
-                                this,
-                                0,
-                                Intent(DISMISS_ACTION),
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                        )
-                        .addAction(
-                            android.R.drawable.ic_btn_speak_now,
-                            getString(R.string.new_recognize),
-                            PendingIntent.getBroadcast(
-                                this,
-                                0,
-                                Intent(RECOGNIZE_ACTION),
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                        )
-                        .build()
-                } else {
-                    baseNotificationBuilder
-                        .setContentTitle("Illegal state")
-                        .addAction(
-                            android.R.drawable.ic_btn_speak_now,
-                            "Dismiss",
-                            PendingIntent.getBroadcast(
-                                this,
-                                0,
-                                Intent(DISMISS_ACTION),
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                        )
-                        .build()
+                val bitmap = try {
+                    val inputStream = URL(status.track.links.artwork).openStream()
+                    BitmapFactory.decodeStream(inputStream)
+                } catch (e: Exception) {
+                    Log.e(SERVICE_TAG, "Bitmap loading error", e)
+                    BitmapFactory.decodeResource(resources, R.drawable.meddle_album_cover)
                 }
+
+                baseNotificationBuilder
+                    .setOnlyAlertOnce(false)
+                    .setStyle(
+                        NotificationCompat.BigPictureStyle()
+                            .bigPicture(bitmap)
+                    )
+                    .setContentTitle(status.track.title)
+                    .setContentText("${status.track.artist} / ${status.track.album} / ${status.track.releaseDate?.year.toString()}")
+                    .setContentIntent(createTrackDeepLinkIntent(status.track.mbId))
+                    .addAction(
+                        android.R.drawable.ic_btn_speak_now,
+                        "Add to favs",
+                        PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(ADD_TO_FAVORITE_ACTION),
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
+                    .addAction(
+                        android.R.drawable.ic_btn_speak_now,
+                        "Dismiss",
+                        PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(DISMISS_ACTION),
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
+                    .addAction(
+                        android.R.drawable.ic_btn_speak_now,
+                        getString(R.string.new_recognize),
+                        PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(RECOGNIZE_ACTION),
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
+                    .build()
+
             }
         }
     }
@@ -277,7 +274,8 @@ class NotificationService : Service() {
         private const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.RECOGNIZE_ACTION"
         private const val CANCEL_ACTION = "com.mrsep.musicrecognizer.action.CANCEL_ACTION"
         private const val DISMISS_ACTION = "com.mrsep.musicrecognizer.action.DISMISS_ACTION"
-        private const val ADD_TO_FAVORITE_ACTION = "com.mrsep.musicrecognizer.action.ADD_TO_FAVORITE_ACTION"
+        private const val ADD_TO_FAVORITE_ACTION =
+            "com.mrsep.musicrecognizer.action.ADD_TO_FAVORITE_ACTION"
 
         fun Context.setExampleServiceEnabled(value: Boolean) {
             if (value) {

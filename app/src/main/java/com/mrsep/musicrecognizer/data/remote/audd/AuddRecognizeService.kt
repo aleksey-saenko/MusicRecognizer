@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.remote.audd
 import android.content.Context
 import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.domain.RecognizeService
-import com.mrsep.musicrecognizer.domain.model.RecognizeResult
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.domain.model.Track
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -33,7 +33,7 @@ class AuddRecognizeService @Inject constructor(
 ) : RecognizeService {
     private val auddClient = retrofit.create<AuddApi>()
 
-    override suspend fun recognize(file: File): RecognizeResult<Track> {
+    override suspend fun recognize(file: File): RemoteRecognizeResult<Track> {
         return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("api_token", token)
@@ -48,28 +48,28 @@ class AuddRecognizeService @Inject constructor(
                 auddClient.recognize(multipartBody)
             } catch (e: HttpException) {
                 e.printStackTrace()
-                RecognizeResult.Error.HttpError(code = e.code(), message = e.message())
+                RemoteRecognizeResult.Error.HttpError(code = e.code(), message = e.message())
             } catch (e: IOException) {
                 e.printStackTrace()
-                RecognizeResult.Error.NoConnection
+                RemoteRecognizeResult.Error.BadConnection
             } catch (e: Exception) {
                 e.printStackTrace()
-                RecognizeResult.Error.UnhandledError(message = e.message ?: "", e = e)
+                RemoteRecognizeResult.Error.UnhandledError(message = e.message ?: "", e = e)
             }
         }
     }
 
-    override suspend fun fakeRecognize(): RecognizeResult<Track> {
+    override suspend fun fakeRecognize(): RemoteRecognizeResult<Track> {
         return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             delay(1_000)
             val fakeJson = appContext.assets.open("fake_json_success.txt").bufferedReader().use {
                 it.readText()
             }
             val resultType = Types.newParameterizedType(
-                RecognizeResult::class.java,
+                RemoteRecognizeResult::class.java,
                 Track::class.java
             )
-            moshi.adapter<RecognizeResult<Track>>(resultType).fromJson(fakeJson)!!
+            moshi.adapter<RemoteRecognizeResult<Track>>(resultType).fromJson(fakeJson)!!
         }
     }
 

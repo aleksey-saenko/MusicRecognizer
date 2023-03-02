@@ -2,18 +2,18 @@ package com.mrsep.musicrecognizer.data.remote.audd.model.adapter
 
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
 import com.mrsep.musicrecognizer.data.track.TrackEntity
-import com.mrsep.musicrecognizer.domain.model.RecognizeResult
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
 class AuddErrorJsonAdapter {
 
     @FromJson
-    fun fromJson(json: AuddResponseJson.Error): RecognizeResult<TrackEntity> {
+    fun fromJson(json: AuddResponseJson.Error): RemoteRecognizeResult<TrackEntity> {
         return when (json.body.errorCode) {
-            901 -> RecognizeResult.Error.LimitReached
-            900 -> RecognizeResult.Error.WrongToken
-            else -> RecognizeResult.Error.UnhandledError(
+            901 -> RemoteRecognizeResult.Error.LimitReached
+            900 -> RemoteRecognizeResult.Error.WrongToken
+            else -> RemoteRecognizeResult.Error.UnhandledError(
                 message = "Audd response error\n" +
                         "code=${json.body.errorCode}\n" +
                         "message=${json.body.errorMessage}"
@@ -23,7 +23,7 @@ class AuddErrorJsonAdapter {
 
     @ToJson
     fun toJson(
-        @Suppress("UNUSED_PARAMETER") recognizeResponse: RecognizeResult<TrackEntity>
+        @Suppress("UNUSED_PARAMETER") recognizeResponse: RemoteRecognizeResult<TrackEntity>
     ): AuddResponseJson.Error =
         throw IllegalStateException("Not implemented")
 

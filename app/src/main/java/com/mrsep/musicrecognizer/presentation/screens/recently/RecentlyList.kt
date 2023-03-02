@@ -20,14 +20,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.Track
+import com.mrsep.musicrecognizer.presentation.PreviewDeviceLight
 import com.mrsep.musicrecognizer.presentation.fakeTrackList
-import com.mrsep.musicrecognizer.presentation.screens.home.PreviewDeviceLight
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.util.forwardingPainter
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RecentlyList(
-    recentTrackList: List<Track>,
+    recentTrackList: ImmutableList<Track>,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -38,7 +40,7 @@ fun RecentlyList(
             RecentTrackItem(
                 track = track,
                 onTrackClick = onTrackClick,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier
             )
         }
     }
@@ -52,10 +54,10 @@ fun RecentTrackItem(
 ) {
     Column(
         modifier = modifier
-            .height(160.dp)
-            .width(96.dp)
             .clip(MaterialTheme.shapes.large)
-            .clickable { onTrackClick(track.mbId) },
+            .clickable { onTrackClick(track.mbId) }
+            .padding(8.dp)
+            .width(104.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -71,23 +73,22 @@ fun RecentTrackItem(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .size(96.dp)
                 .clip(MaterialTheme.shapes.large)
-
+                .aspectRatio(1f)
         )
         Text(
             text = track.title,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
+            modifier = Modifier.padding(top = 8.dp)
         )
         Text(
             text = track.artist,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 
@@ -113,7 +114,7 @@ private fun RecentlyListPreview() {
         Surface {
             RecentlyList(
                 modifier = Modifier.padding(16.dp),
-                recentTrackList = fakeTrackList,
+                recentTrackList = fakeTrackList.toImmutableList(),
                 onTrackClick = { }
             )
         }

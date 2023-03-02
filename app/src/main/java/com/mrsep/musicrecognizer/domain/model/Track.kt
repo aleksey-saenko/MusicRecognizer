@@ -1,11 +1,13 @@
 package com.mrsep.musicrecognizer.domain.model
 
+import androidx.compose.runtime.Immutable
 import java.time.LocalDate
 
 /*
  * MusicBrainz Recording Identifier uses as id (mbId)
  * https://musicbrainz.org/doc/MusicBrainz_Identifier
  */
+@Immutable
 data class Track(
     val mbId: String,
     val title: String,

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.presentation.PreviewDeviceNight
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 
 @Composable

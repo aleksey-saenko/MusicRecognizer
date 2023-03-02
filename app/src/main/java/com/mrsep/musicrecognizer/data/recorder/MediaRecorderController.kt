@@ -32,10 +32,17 @@ class MediaRecorderController @Inject constructor(
             }
             val onError = { errorCode: Int ->
                 val errorResult = when (errorCode) {
-                    MediaRecorder.MEDIA_RECORDER_ERROR_UNKNOWN -> { RecordResult.Error.Unknown }
-                    MediaRecorder.MEDIA_ERROR_SERVER_DIED -> { RecordResult.Error.ServerDied }
-                    MEDIA_RECORDER_ERROR_PREPARE_FAILED -> { RecordResult.Error.PrepareFailed }
-                    else -> { RecordResult.Error.Unknown }
+                    MediaRecorder.MEDIA_ERROR_SERVER_DIED -> {
+                        RecordResult.Error.ServerDied
+                    }
+                    MEDIA_RECORDER_ERROR_PREPARE_FAILED -> {
+                        RecordResult.Error.PrepareFailed
+                    }
+                    else -> {
+                        RecordResult.Error.UnhandledError(
+                            throwable = RuntimeException("MEDIA_RECORDER_ERROR(code:$errorCode)")
+                        )
+                    }
                 }
                 stopRecord()
                 continuation.resume(errorResult)
@@ -59,7 +66,8 @@ class MediaRecorderController @Inject constructor(
         } else {
             MediaRecorder()
         }.apply {
-            setAudioSource(MediaRecorder.AudioSource.UNPROCESSED)
+//            setAudioSource(MediaRecorder.AudioSource.UNPROCESSED)
+            setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(file.absolutePath)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
@@ -68,7 +76,9 @@ class MediaRecorderController @Inject constructor(
             setOnInfoListener { _, what, extra ->
                 Log.d(TAG, "InfoListener: what=$what, extra=$extra")
                 when (what) {
-                    MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED -> { onFinish() }
+                    MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED -> {
+                        onFinish()
+                    }
                 }
             }
             setOnErrorListener { _, what, extra ->

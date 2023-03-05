@@ -7,19 +7,20 @@ interface TrackRepository {
 
     suspend fun insertOrReplace(vararg track: Track)
 
+    suspend fun delete(vararg track: Track)
+    suspend fun deleteAll()
+    suspend fun deleteAllExceptFavorites()
+    suspend fun deleteAllFavorites()
+
     suspend fun getByMbId(mbId: String): Track?
-
     suspend fun update(track: Track)
-
     fun getByMbIdFlow(mbId: String): Flow<Track?>
-
     suspend fun getAfterDate(date: Long, limit: Int): List<Track>
-
     suspend fun getLastRecognized(limit: Int): List<Track>
-
     fun getLastRecognizedFlow(limit: Int): Flow<List<Track>>
-
     fun getFavoritesFlow(limit: Int): Flow<List<Track>>
 
+    suspend fun search(keyword: String, limit: Int): List<Track>
+    fun searchFlow(keyword: String, limit: Int): Flow<List<Track>>
 
 }

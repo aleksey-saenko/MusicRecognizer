@@ -3,6 +3,8 @@ package com.mrsep.musicrecognizer.presentation.screens.preferences
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,6 +48,7 @@ fun PreferencesScreen(
             Column(
                 modifier = modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start,
@@ -57,11 +60,19 @@ fun PreferencesScreen(
                 )
                 PreferenceGroup(title = "Developer options") {
                     PreferenceSwitchItem(
+                        title = "Enable developer mode",
+                        subtitle = "Only for dev purpose",
+                        onCheckedChange = { viewModel.setDeveloperModeEnabled(it) },
+                        checked = uiState.preferences.developerModeEnabled
+                    )
+                    PreferenceSwitchItem(
                         title = "Should show onboarding",
                         subtitle = "Only for dev purpose",
                         onCheckedChange = { viewModel.setOnboardingCompleted(!it) },
-                        checked = !uiState.preferences.onboardingCompleted
+                        checked = !uiState.preferences.onboardingCompleted,
+                        modifier = Modifier.padding(top = 16.dp)
                     )
+
                 }
                 PreferenceGroup(title = "UI", modifier = Modifier.padding(top = 16.dp)) {
                     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -137,6 +148,12 @@ fun PreferencesScreen(
                             checked = uiState.preferences.notificationServiceEnabled
                         )
                     }
+                }
+                PreferenceGroup(title = "Misc", modifier = Modifier.padding(top = 16.dp)) {
+                    PreferenceClickableItem(
+                        title = "About",
+                        onItemClick = {  }
+                    )
                 }
             }
         }

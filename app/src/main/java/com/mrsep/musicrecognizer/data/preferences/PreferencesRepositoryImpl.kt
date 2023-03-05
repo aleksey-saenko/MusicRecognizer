@@ -72,6 +72,9 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { setVisibleLinks(visibleLinksToProtoMapper.map(visibleLinks)) }
     }
 
+    override suspend fun setDeveloperModeEnabled(value: Boolean) {
+        safeWriter { setDeveloperModeEnabled(value) }
+    }
 }
 
 // DEPRECATED MAPPERS-EXTENSIONS (TO DELETE)

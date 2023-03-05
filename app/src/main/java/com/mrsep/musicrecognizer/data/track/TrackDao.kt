@@ -9,8 +9,22 @@ interface TrackDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(vararg track: TrackEntity)
 
+    @Delete
+    suspend fun delete(vararg track: TrackEntity)
+
+    @Query("DELETE FROM track")
+    suspend fun deleteAll()
+
+    @Query("DELETE FROM track WHERE NOT is_favorite")
+    suspend fun deleteAllExceptFavorites()
+
+    @Query("DELETE FROM track WHERE is_favorite")
+    suspend fun deleteAllFavorites()
+
+
     @Update
     suspend fun update(track: TrackEntity)
+
 
     @Query("SELECT * FROM track WHERE mb_id=(:mbId) LIMIT 1")
     suspend fun getByMbId(mbId: String): TrackEntity?
@@ -29,5 +43,24 @@ interface TrackDao {
 
     @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
+
+
+    @Query(
+        "SELECT * FROM track " +
+                "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
+                "ESCAPE (:escapeSymbol) " +
+                "ORDER BY last_recognition_date DESC " +
+                "LIMIT (:limit)"
+    )
+    fun search(key: String, escapeSymbol: String, limit: Int): List<TrackEntity>
+
+    @Query(
+        "SELECT * FROM track " +
+                "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
+                "ESCAPE (:escapeSymbol) " +
+                "ORDER BY last_recognition_date DESC " +
+                "LIMIT (:limit)"
+    )
+    fun searchFlow(key: String, escapeSymbol: String, limit: Int): Flow<List<TrackEntity>>
 
 }

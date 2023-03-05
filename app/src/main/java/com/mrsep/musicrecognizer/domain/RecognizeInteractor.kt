@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.domain
 
 import android.content.Context
+import android.util.Log
 import com.mrsep.musicrecognizer.di.ApplicationScope
 import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.domain.model.Track

@@ -2,22 +2,24 @@ package com.mrsep.musicrecognizer.presentation.screens.home
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,8 +27,7 @@ import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.RecognizeStatus
 import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -40,32 +41,55 @@ fun HomeScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         val context = LocalContext.current
+        val preferences by viewModel.preferencesFlow.collectAsStateWithLifecycle(initialValue = null)
         val recognizeStatus by viewModel.recognizeStatusFlow.collectAsStateWithLifecycle()
         val superButtonTitle = getButtonTitle(recognizeStatus)
-        DeveloperSection(
-            modifier = Modifier.padding(16.dp),
-            onRecordClickMR = { viewModel.startRecordMR() },
-            onStopClickMR = { viewModel.stopRecordMR() },
-            onRecordClickAR = { showStubToast(context) },
-            onStopClickAR = { showStubToast(context) },
-            onPlayClickMP = { viewModel.startPlayAudio() },
-            onStopClickMP = { viewModel.stopPlayAudio() },
-            onRecognizeClick = { viewModel.recognize() },
-            onFakeRecognizeClick = { viewModel.fakeRecognize() }
-        )
+        val developerMode = preferences?.developerModeEnabled ?: false
+        AnimatedContent(
+            targetState = developerMode,
+            modifier = Modifier.animateContentSize()
+        ) { devMode ->
+            if (devMode) {
+                DeveloperSection(
+                    modifier = Modifier.padding(16.dp),
+                    onRecordClickMR = { viewModel.startRecordMR() },
+                    onStopClickMR = { viewModel.stopRecordMR() },
+                    onRecordClickAR = { showStubToast(context) },
+                    onStopClickAR = { showStubToast(context) },
+                    onPlayClickMP = { viewModel.startPlayAudio() },
+                    onStopClickMP = { viewModel.stopPlayAudio() },
+                    onRecognizeClick = { viewModel.recognize() },
+                    onFakeRecognizeClick = { viewModel.fakeRecognize() },
+                    onClearDatabase = { viewModel.clearDatabase() },
+                    onPrepopulateDatabase = { viewModel.prepopulateDatabase() }
+                )
+            } else {
+                Spacer(Modifier.height(0.dp))
+            }
+        }
         SuperButtonSection(
             title = superButtonTitle,
             onButtonClick = viewModel::recognizeTap,
             activated = isStateActive(recognizeStatus),
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 16.dp)
         )
-        Crossfade(targetState = recognizeStatus) { status ->
+        AnimatedContent(
+            targetState = recognizeStatus,
+            modifier = Modifier.animateContentSize()
+        ) { status ->
             when (status) {
                 RecognizeStatus.NoMatches -> {
-                    DismissibleAnimatedContent(
-                        onDismissed = viewModel::resetRecognizer,
-                        positionalThreshold = { 120.dp.toPx() },
-                        content = {
+                    val dismissState = rememberDismissState(
+                        confirmValueChange = { dismissValue ->
+                            if (dismissValue != DismissValue.Default) viewModel.resetRecognizer()
+                            true
+                        },
+                        positionalThreshold = { totalDistance -> 0.3f * totalDistance }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = { },
+                        dismissContent = {
                             NotSuccessCard(
                                 title = stringResource(R.string.no_matches_found),
                                 modifier = Modifier.padding(16.dp)
@@ -74,10 +98,25 @@ fun HomeScreen(
                     )
                 }
                 is RecognizeStatus.Success -> {
-                    DismissibleAnimatedContent(
-                        onDismissed = viewModel::resetRecognizer,
-                        positionalThreshold = { 120.dp.toPx() },
-                        content = {
+                    val dismissState = rememberDismissState(
+                        confirmValueChange = { dismissValue ->
+                            when (dismissValue) {
+                                DismissValue.Default -> {}
+                                DismissValue.DismissedToEnd -> {
+                                    viewModel.toFavoritesAndResetRecognizer()
+                                }
+                                DismissValue.DismissedToStart -> {
+                                    viewModel.resetRecognizer()
+                                }
+                            }
+                            true
+                        },
+                        positionalThreshold = { totalDistance -> 0.3f * totalDistance }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = { TrackBackgroundForDismissible(dismissState) },
+                        dismissContent = {
                             TrackCard(
                                 track = status.track,
                                 modifier = Modifier.padding(16.dp)
@@ -86,10 +125,17 @@ fun HomeScreen(
                     )
                 }
                 is RecognizeStatus.Error -> {
-                    DismissibleAnimatedContent(
-                        onDismissed = viewModel::resetRecognizer,
-                        positionalThreshold = { 120.dp.toPx() },
-                        content = {
+                    val dismissState = rememberDismissState(
+                        confirmValueChange = { dismissValue ->
+                            if (dismissValue != DismissValue.Default) viewModel.resetRecognizer()
+                            true
+                        },
+                        positionalThreshold = { totalDistance -> 0.3f * totalDistance }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = { },
+                        dismissContent = {
                             NotSuccessCard(
                                 title = getErrorMessage(status),
                                 modifier = Modifier.padding(16.dp)
@@ -97,7 +143,9 @@ fun HomeScreen(
                         }
                     )
                 }
-                else -> {}
+                else -> {
+                    Spacer(modifier = Modifier)
+                }
             }
         }
 
@@ -106,32 +154,56 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DismissibleAnimatedContent(
-    onDismissed: () -> Unit,
-    modifier: Modifier = Modifier,
-    confirmValueChange: (DismissValue) -> Boolean = { true },
-    positionalThreshold: Density.(totalDistance: Float) -> Float = SwipeToDismissDefaults.FixedPositionalThreshold,
-    content: @Composable RowScope.() -> Unit
+fun RowScope.TrackBackgroundForDismissible(
+    dismissState: DismissState,
+    modifier: Modifier = Modifier
 ) {
-    val dismissState = rememberDismissState(
-        initialValue = DismissValue.Default,
-        confirmValueChange = confirmValueChange,
-        positionalThreshold = positionalThreshold
-    )
-    LaunchedEffect(dismissState.currentValue) {
-        if (dismissState.currentValue != DismissValue.Default) {
-            onDismissed()
+    val direction = dismissState.dismissDirection ?: return
+    val actionColor by animateColorAsState(
+        targetValue = when (dismissState.targetValue) {
+            DismissValue.Default -> Color.Transparent
+            DismissValue.DismissedToEnd -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+            DismissValue.DismissedToStart -> Color.Red.copy(alpha = 0.3f)
         }
+    )
+    val backgroundColors = when (direction) {
+        DismissDirection.StartToEnd -> listOf(
+            Color.Transparent,
+            actionColor
+        )
+        DismissDirection.EndToStart -> listOf(
+            actionColor,
+            Color.Transparent
+        )
     }
-    AnimatedVisibility(visible = dismissState.currentValue == DismissValue.Default) {
-        SwipeToDismiss(
-            state = dismissState,
-            background = { },
-            dismissContent = content,
-            modifier = modifier
+    val alignment = when (direction) {
+        DismissDirection.StartToEnd -> Alignment.CenterStart
+        DismissDirection.EndToStart -> Alignment.CenterEnd
+    }
+    val icon = when (direction) {
+        DismissDirection.StartToEnd -> Icons.Default.Favorite
+        DismissDirection.EndToStart -> Icons.Default.Close
+    }
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+    )
+
+    Box(
+        modifier
+            .fillMaxSize()
+            .padding(vertical = 16.dp)
+            .background(brush = Brush.horizontalGradient(colors = backgroundColors))
+            .padding(horizontal = 24.dp),
+        contentAlignment = alignment
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            modifier = Modifier.scale(scale)
         )
     }
 }
+
 
 @Composable
 fun NotSuccessCard(

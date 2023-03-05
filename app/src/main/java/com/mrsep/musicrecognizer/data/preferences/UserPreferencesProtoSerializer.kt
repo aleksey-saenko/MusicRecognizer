@@ -22,6 +22,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .build()
             )
 //            .setNotificationServiceEnabled(true)
+            .setDeveloperModeEnabled(true)
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

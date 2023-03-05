@@ -6,6 +6,7 @@ data class UserPreferences(
     val visibleLinks: VisibleLinks,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
+    val developerModeEnabled: Boolean,
 ) {
 
     data class VisibleLinks(

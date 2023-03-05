@@ -18,7 +18,7 @@ data class MusicbrainzJson(
     @Json(name = "video")
     val video: Any?,
     @Json(name = "artist-credit")
-    val artistCredit: List<ArtistCredit>,
+    val artistCredit: List<ArtistCredit?>?,
     @Json(name = "releases")
     val releases: List<Release>,
     @Json(name = "isrcs")
@@ -65,7 +65,7 @@ data class MusicbrainzJson(
         @Json(name = "media")
         val media: List<Media>,
         @Json(name = "artist-credit")
-        val artistCredit: List<ArtistCredit>,
+        val artistCredit: List<ArtistCredit?>?,
         @Json(name = "release-group")
         val releaseGroup: ReleaseGroup,
         @Json(name = "disambiguation")

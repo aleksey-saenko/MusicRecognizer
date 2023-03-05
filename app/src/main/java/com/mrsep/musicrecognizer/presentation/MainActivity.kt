@@ -45,7 +45,10 @@ class MainActivity : ComponentActivity() {
             MusicRecognizerTheme(
                 dynamicColor = isDynamicColorsEnabled(uiState)
             ) {
-                Surface {
+                Surface(
+                    color = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     val systemUiController = rememberSystemUiController()
                     val useDarkIcons = !isSystemInDarkTheme()
                     SideEffect {
@@ -101,8 +104,7 @@ fun ApplicationNavigation(
 }
 
 const val BOTTOM_BAR_HOST_ROUTE = "bottom_bar_host"
-fun NavGraphBuilder.bottomBarNavHost(
-) {
+fun NavGraphBuilder.bottomBarNavHost() {
     composable(BOTTOM_BAR_HOST_ROUTE) {
         val navController = rememberNavController()
         Scaffold(

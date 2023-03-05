@@ -145,7 +145,7 @@ private fun TrackScreenTopBar(
             text = "LYRICS",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
-                .padding(end = 16.dp)
+//                .padding(end = 16.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .run {
                     if (currentSection == LYRICS_SECTION) {
@@ -185,7 +185,7 @@ private fun LyricsSection(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun AboutTrackSection(
     track: Track,
@@ -220,11 +220,11 @@ private fun AboutTrackSection(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Top
                 ) {
                     Text(
                         text = track.title,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier
@@ -252,7 +252,7 @@ private fun AboutTrackSection(
 
                 Text(
                     text = track.artist,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -261,7 +261,7 @@ private fun AboutTrackSection(
                     Text(
                         text = track.releaseDate?.year?.let { "${track.album} ($it)" }
                             ?: track.album,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 24.dp)

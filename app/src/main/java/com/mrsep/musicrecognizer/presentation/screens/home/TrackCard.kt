@@ -114,7 +114,7 @@ fun TrackCard(
                     .padding(top = 0.dp, bottom = 8.dp)
                     .alpha(0.3f))
                 Text(
-                    text = "${track.lyrics})",
+                    text = "${track.lyrics}",
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge

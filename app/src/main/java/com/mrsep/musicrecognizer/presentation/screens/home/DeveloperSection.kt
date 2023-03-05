@@ -17,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.presentation.PreviewDeviceNight
-import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 
 @Composable
 fun DeveloperSection(
@@ -31,6 +29,8 @@ fun DeveloperSection(
     onStopClickMP: () -> Unit,
     onRecognizeClick: () -> Unit,
     onFakeRecognizeClick: () -> Unit,
+    onClearDatabase: () -> Unit,
+    onPrepopulateDatabase: () -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     Surface(
@@ -48,7 +48,7 @@ fun DeveloperSection(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (expanded) {
                     Text(
-                        text = "Developer section",
+                        text = "Developer options",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
@@ -66,7 +66,7 @@ fun DeveloperSection(
                 )
             }
             if (expanded) {
-                Divider(modifier.padding(top = 8.dp, bottom = 8.dp))
+                Divider(Modifier.padding(top = 8.dp, bottom = 8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -95,6 +95,14 @@ fun DeveloperSection(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    Text(text = "Database", modifier = Modifier.weight(1f))
+                    Button(onClick = onClearDatabase) { Text(text = "Clear") }
+                    Button(onClick = onPrepopulateDatabase) { Text(text = "Load") }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
                     Text(text = "Recognize", modifier = Modifier.weight(1f))
                     Button(onClick = onRecognizeClick) { Text(text = "Default") }
                     Button(onClick = onFakeRecognizeClick) { Text(text = "Fake") }
@@ -104,26 +112,5 @@ fun DeveloperSection(
         }
     }
 
-}
-
-@PreviewDeviceNight
-@Composable
-private fun DeveloperButtonsSectionPreview() {
-    MusicRecognizerTheme {
-        Surface {
-            Column(modifier = Modifier.padding(8.dp)) {
-                DeveloperSection(
-                    onRecordClickMR = { },
-                    onStopClickMR = { },
-                    onRecordClickAR = { },
-                    onStopClickAR = { },
-                    onPlayClickMP = { },
-                    onStopClickMP = { },
-                    onRecognizeClick = { },
-                    onFakeRecognizeClick = { },
-                )
-            }
-        }
-    }
 }
 

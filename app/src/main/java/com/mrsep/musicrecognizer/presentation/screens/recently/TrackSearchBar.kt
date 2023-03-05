@@ -23,6 +23,7 @@ import androidx.compose.ui.zIndex
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackSearchBar(
+    onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var text by rememberSaveable { mutableStateOf("") }
@@ -38,12 +39,22 @@ fun TrackSearchBar(
         // Talkback focus order sorts based on x and y position before considering z-index. The
         // extra Box with fillMaxWidth is a workaround to get the search bar to focus before the
         // content.
-        Box(modifier.semantics { isContainer = true }.zIndex(1f).fillMaxWidth()) {
+        Box(
+            modifier
+                .semantics { isContainer = true }
+                .zIndex(1f)
+                .fillMaxWidth()) {
             DockedSearchBar(
-                modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 query = text,
                 onQueryChange = { text = it },
-                onSearch = { closeSearchBar() },
+                onSearch = {
+                    closeSearchBar()
+                    onSearch(it)
+                },
                 active = false,
 //                active = active,
                 onActiveChange = {

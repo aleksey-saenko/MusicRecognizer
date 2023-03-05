@@ -14,6 +14,7 @@ class PreferencesToDomainMapper @Inject constructor() :
             apiToken = input.apiToken,
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
+            developerModeEnabled = input.developerModeEnabled,
             visibleLinks = UserPreferences.VisibleLinks(
                 spotify = input.visibleLinks.spotify,
                 appleMusic = input.visibleLinks.appleMusic,

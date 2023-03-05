@@ -3,9 +3,8 @@ package com.mrsep.musicrecognizer.di
 import android.content.Context
 import android.widget.Toast
 import com.mrsep.musicrecognizer.BuildConfig
-import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddErrorJsonAdapter
-import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddSuccessJsonAdapter
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
+import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddJsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
@@ -40,8 +39,7 @@ object RetrofitModule {
                     .withSubtype(AuddResponseJson.Success::class.java, "success")
                     .withSubtype(AuddResponseJson.Error::class.java, "error")
             )
-            .add(AuddSuccessJsonAdapter())
-            .add(AuddErrorJsonAdapter())
+            .add(AuddJsonAdapter())
             .build()
 
     @Provides

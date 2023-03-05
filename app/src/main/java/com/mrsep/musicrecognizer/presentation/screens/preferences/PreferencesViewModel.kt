@@ -35,6 +35,12 @@ class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setDeveloperModeEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setDeveloperModeEnabled(value)
+        }
+    }
+
     fun setVisibleLinks(visibleLinks: UserPreferences.VisibleLinks) {
         viewModelScope.launch {
             preferencesRepository.setVisibleLinks(visibleLinks)

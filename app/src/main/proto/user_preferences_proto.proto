@@ -22,5 +22,6 @@ message UserPreferencesProto {
 
   bool notification_service_enabled = 9;
   bool dynamic_colors_enabled = 10;
+  bool developer_mode_enabled = 11;
 
 }

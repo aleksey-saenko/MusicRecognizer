@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MusicRecognizer</string>
+    <string name="app_name">TuneSurfer</string>
     <string name="tap_for_recognize">Tap for recognize</string>
     <string name="tap_for_new_recognize">Tap for new recognize</string>
     <string name="recognize">Recognize</string>

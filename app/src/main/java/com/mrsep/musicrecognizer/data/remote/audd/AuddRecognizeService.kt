@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.remote.audd
 
 import android.content.Context
 import com.mrsep.musicrecognizer.BuildConfig
+import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.RecognizeService
 import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.domain.model.Track
@@ -28,13 +29,14 @@ private const val mediaTypeString = "audio/mpeg; charset=utf-8"
 @Singleton
 class AuddRecognizeService @Inject constructor(
     @ApplicationContext private val appContext: Context,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val moshi: Moshi,
     retrofit: Retrofit,
 ) : RecognizeService {
     private val auddClient = retrofit.create<AuddApi>()
 
     override suspend fun recognize(file: File): RemoteRecognizeResult<Track> {
-        return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+        return withContext(ioDispatcher) {
             val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("api_token", token)
                 .addFormDataPart("return", returnParam)
@@ -60,7 +62,7 @@ class AuddRecognizeService @Inject constructor(
     }
 
     override suspend fun fakeRecognize(): RemoteRecognizeResult<Track> {
-        return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+        return withContext(ioDispatcher) {
             delay(1_000)
             val fakeJson = appContext.assets.open("fake_json_success.txt").bufferedReader().use {
                 it.readText()

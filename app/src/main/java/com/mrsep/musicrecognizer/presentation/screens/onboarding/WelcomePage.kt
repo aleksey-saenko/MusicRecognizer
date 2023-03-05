@@ -27,12 +27,12 @@ fun WelcomePage(
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
         )
-        AsyncImage(
-            model = R.drawable.sample_icon,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+//        AsyncImage(
+//            model = R.drawable.sample_icon,
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier.padding(bottom = 24.dp)
+//        )
         Text(
             text = stringResource(R.string.onboarding_welcome_message),
             style = MaterialTheme.typography.bodyLarge,

@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.di
 
 import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.UserPreferencesProto.VisibleLinksProto
+import com.mrsep.musicrecognizer.UserPreferencesProto.RequiredServicesProto
 import com.mrsep.musicrecognizer.data.preferences.PreferencesToDomainMapper
-import com.mrsep.musicrecognizer.data.preferences.VisibleLinksToProtoMapper
+import com.mrsep.musicrecognizer.data.preferences.RequiredServicesToProtoMapper
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.data.track.TrackToDataMapper
 import com.mrsep.musicrecognizer.data.track.TrackToDomainMapper
@@ -30,7 +30,7 @@ interface MapperModule {
     fun providePreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
             Mapper<UserPreferencesProto, UserPreferences>
     @Binds
-    fun provideVisibleLinksToProtoMapper(implementation: VisibleLinksToProtoMapper):
-            Mapper<UserPreferences.VisibleLinks, VisibleLinksProto>
+    fun provideRequiredServicesToProtoMapper(implementation: RequiredServicesToProtoMapper):
+            Mapper<UserPreferences.RequiredServices, RequiredServicesProto>
 
 }

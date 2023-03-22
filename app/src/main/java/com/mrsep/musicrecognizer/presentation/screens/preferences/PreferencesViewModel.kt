@@ -41,9 +41,9 @@ class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setVisibleLinks(visibleLinks: UserPreferences.VisibleLinks) {
+    fun setRequiredServices(requiredServices: UserPreferences.RequiredServices) {
         viewModelScope.launch {
-            preferencesRepository.setVisibleLinks(visibleLinks)
+            preferencesRepository.setRequiredServices(requiredServices)
         }
     }
 

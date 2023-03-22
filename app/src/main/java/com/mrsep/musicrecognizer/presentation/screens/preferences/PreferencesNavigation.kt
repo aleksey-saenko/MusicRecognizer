@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 
 const val PREFERENCES_ROUTE = "preferences"
 
-fun NavGraphBuilder.preferencesScreen() {
+fun NavGraphBuilder.preferencesScreen(navController: NavController) {
     composable(PREFERENCES_ROUTE) {
-        PreferencesScreen()
+        PreferencesScreen(navController = navController)
     }
 }
 

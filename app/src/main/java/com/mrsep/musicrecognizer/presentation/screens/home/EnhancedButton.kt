@@ -1,8 +1,6 @@
 package com.mrsep.musicrecognizer.presentation.screens.home
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
@@ -75,8 +73,6 @@ fun EnhancedButton(
         interactionSource = interactionSource,
         content = content
     )
-
-
 }
 
 @Composable
@@ -91,7 +87,7 @@ fun AnimatedEnhancedButton(
     val buttonSize = remember { Animatable(1f) }
     LaunchedEffect(activated) {
         buttonSize.animateTo(
-            targetValue = 1.07f,
+            targetValue = 1.1f,
             animationSpec = SpringSpec(
                 dampingRatio = Spring.DampingRatioLowBouncy,
                 stiffness = Spring.StiffnessLow

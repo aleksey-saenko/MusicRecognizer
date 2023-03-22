@@ -8,7 +8,7 @@ message UserPreferencesProto {
   bool onboarding_completed = 1;
   string api_token = 2;
 
-  message VisibleLinksProto {
+  message RequiredServicesProto {
 
     bool spotify = 3;
     bool apple_music = 4;
@@ -18,7 +18,7 @@ message UserPreferencesProto {
 
   }
 
-  VisibleLinksProto visible_links = 8;
+  RequiredServicesProto required_services = 8;
 
   bool notification_service_enabled = 9;
   bool dynamic_colors_enabled = 10;

@@ -13,8 +13,9 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.delay
 
 @Composable
-fun RippleAnimation(
+fun RippleAnimated(
     activated: Boolean,
+    amplitudeFactor: Float,
     modifier: Modifier = Modifier,
     circlesCount: Int = 5,
     animationSpeed: Int = 5_000,
@@ -25,7 +26,10 @@ fun RippleAnimation(
         targetValue = if (activated) activatedColor else baseColor,
         animationSpec = tween(durationMillis = 300)
     )
-
+    val activatedFactor by animateFloatAsState(
+        targetValue = if (activated) 1.25f else 1f,
+        animationSpec = tween(durationMillis = 2000)
+    )
     val circles = List(circlesCount) { remember { Animatable(initialValue = 0f) } }
 
     circles.forEachIndexed { index, animatable ->
@@ -54,25 +58,10 @@ fun RippleAnimation(
         circles.forEach { animatable ->
             drawCircle(
                 color = currentColor,
-                radius = animatable.value * size.minDimension / 2.0f,
-                alpha = (1 - animatable.value),
-//                style = Stroke(width = 4.dp.toPx())
+                radius = animatable.value * size.minDimension / 2.0f * activatedFactor,
+                alpha = 1 - animatable.value,
+//                style = Stroke(width = 4.dp.toPx()
             )
         }
     }
-
-//    Box(
-//        modifier = modifier
-//    ) {
-//        circles.forEach { animatable ->
-//            Box(
-//                modifier = Modifier
-//                    .scale(scale = animatable.value)
-//                    .matchParentSize()
-//                    .clip(shape = CircleShape)
-//                    .background(color = color.copy(alpha = (1 - animatable.value)))
-//            ) {
-//            }
-//        }
-//    }
 }

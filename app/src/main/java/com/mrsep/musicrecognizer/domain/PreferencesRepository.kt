@@ -12,6 +12,6 @@ interface PreferencesRepository {
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setDeveloperModeEnabled(value: Boolean)
-    suspend fun setVisibleLinks(visibleLinks: UserPreferences.VisibleLinks)
+    suspend fun setRequiredServices(requiredServices: UserPreferences.RequiredServices)
 
 }

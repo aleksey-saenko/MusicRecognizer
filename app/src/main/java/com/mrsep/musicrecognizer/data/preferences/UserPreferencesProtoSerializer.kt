@@ -12,8 +12,8 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
     override val defaultValue: UserPreferencesProto
         get() = UserPreferencesProto.getDefaultInstance()
             .toBuilder()
-            .setVisibleLinks(
-                UserPreferencesProto.VisibleLinksProto.getDefaultInstance().toBuilder()
+            .setRequiredServices(
+                UserPreferencesProto.RequiredServicesProto.getDefaultInstance().toBuilder()
                     .setSpotify(true)
                     .setAppleMusic(true)
                     .setDeezer(true)

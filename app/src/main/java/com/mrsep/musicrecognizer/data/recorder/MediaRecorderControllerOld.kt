@@ -4,25 +4,62 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
-import com.mrsep.musicrecognizer.domain.RecorderController
+import com.mrsep.musicrecognizer.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.domain.RecordResult
+import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.IOException
 import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 private const val TAG = "MediaRecorderController"
 
 @Singleton
-class MediaRecorderController @Inject constructor(
-    @ApplicationContext private val applicationContext: Context
+class MediaRecorderControllerOld @Inject constructor(
+    @ApplicationContext private val applicationContext: Context,
+    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
 ) : RecorderController {
 
     private var recorder: MediaRecorder? = null
+
+    private val amplitudePollingEnabled = MutableStateFlow(false)
+
+    override val maxAmplitudeFlow = amplitudePollingEnabled
+        .transform { enabled ->
+            if (enabled) {
+                val fullChunkSize = 5
+                // Small amplitude polling rate (like 10 ms) can lead to unstable behaviour
+                // (maxAmplitude() sometimes return 0, even if there is some sound around)
+                val amplitudePollingRateInMs = 50L
+                val chunk = ArrayDeque<Float>(fullChunkSize)
+                while (true) {
+                    val relativeValue = recorder?.run {
+                        (maxAmplitude / 32_768f).coerceIn(0f..1f)
+                    } ?: 0f
+                    chunk.add(relativeValue)
+                    if (chunk.size == fullChunkSize) {
+                        val averageValue = (chunk.sum() / fullChunkSize).roundTo(1)
+                        emit(averageValue)
+                        chunk.removeFirst()
+                    }
+                    delay(amplitudePollingRateInMs)
+                }
+            } else {
+                emit(0f)
+            }
+        }
+        .distinctUntilChanged { old, new -> old.equalsDelta(new, 0.01f) }
+        .flowOn(defaultDispatcher)
+        .onEach { println("maxAmplitude=$it") } // debug purpose
+
 
     override suspend fun recordAudioToFile(file: File, duration: Duration): RecordResult {
         return suspendCancellableCoroutine { continuation ->
@@ -48,14 +85,16 @@ class MediaRecorderController @Inject constructor(
                 continuation.resume(errorResult)
             }
 
-            startRecordToFile(file, duration, onFinish, onError)
+            recordToFile(file, duration, onFinish, onError)
 
-            continuation.invokeOnCancellation { stopRecord() }
+            continuation.invokeOnCancellation {
+                stopRecord()
+            }
         }
     }
 
     @Suppress("DEPRECATION")
-    private fun startRecordToFile(
+    private fun recordToFile(
         file: File,
         duration: Duration,
         onFinish: () -> Unit,
@@ -90,16 +129,18 @@ class MediaRecorderController @Inject constructor(
 //            setPreferredMicrophoneDirection(MicrophoneDirection.MIC_DIRECTION_TOWARDS_USER)
             try {
                 prepare()
+                start()
+                amplitudePollingEnabled.update { true }
+                Log.d(TAG, "recorder started")
             } catch (e: IOException) {
                 Log.e(TAG, "prepare() failed", e)
                 onError(MEDIA_RECORDER_ERROR_PREPARE_FAILED)
             }
-            start()
-            Log.d(TAG, "recorder started")
         }
     }
 
     private fun stopRecord() {
+        amplitudePollingEnabled.update { false }
         recorder?.apply {
             try {
                 stop()
@@ -117,3 +158,12 @@ class MediaRecorderController @Inject constructor(
     }
 
 }
+
+
+private fun Float.roundTo(decimalPlaces: Int): Float {
+    check(decimalPlaces > 0) { "decimalPlaces must be > 0" }
+    val factor = 10f.pow(decimalPlaces)
+    return (this * factor).roundToInt() / factor
+}
+
+private fun Float.equalsDelta(other: Float, delta: Float) = abs(this - other) < delta

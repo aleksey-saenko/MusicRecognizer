@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'org.jetbrains.kotlin.kapt'
-    id 'androidx.navigation.safeargs'
+//    id 'androidx.navigation.safeargs'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
     id 'com.google.protobuf'
@@ -71,7 +71,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.3'
     }
     packagingOptions {
         resources {
@@ -81,7 +81,8 @@ android {
 }
 
 ext {
-    compose_version = "1.4.0-beta02"
+    compose_version = "1.4.0-rc01"
+//    lifecycle_version = "2.6.0"
     accompanist_version = "0.29.1-alpha"
     navigation_compose_version = "2.5.3"
     protobuf_version = "3.21.12"
@@ -95,7 +96,7 @@ ext {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0'
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -108,14 +109,15 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-rc01"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
     implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 

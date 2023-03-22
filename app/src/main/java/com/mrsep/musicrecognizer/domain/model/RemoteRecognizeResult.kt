@@ -9,8 +9,7 @@ sealed class RemoteRecognizeResult<out T> {
     sealed class Error : RemoteRecognizeResult<Nothing>() {
 
         object BadConnection : Error()
-        object WrongToken : Error()
-        object LimitReached : Error()
+        data class WrongToken(val isLimitReached: Boolean) : Error()
 
         data class HttpError(
             val code: Int,

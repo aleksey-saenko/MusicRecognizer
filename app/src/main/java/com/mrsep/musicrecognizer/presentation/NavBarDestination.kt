@@ -11,10 +11,10 @@ enum class NavBarDestination(
     @DrawableRes val unselectedIconId: Int
 ) {
     Recently(
-        route = "recently",
-        titleId = R.string.recently,
-        selectedIconId = R.drawable.baseline_recently_24,
-        unselectedIconId = R.drawable.baseline_recently_24
+        route = "library",
+        titleId = R.string.library,
+        selectedIconId = R.drawable.baseline_library_music_24,
+        unselectedIconId = R.drawable.baseline_library_music_24
     ),
     HOME(
         route = "home",

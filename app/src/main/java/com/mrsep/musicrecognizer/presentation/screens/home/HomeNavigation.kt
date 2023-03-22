@@ -7,9 +7,13 @@ import androidx.navigation.compose.composable
 
 const val HOME_ROUTE = "home"
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeScreen(
+    onNavigateToTrackScreen: (mbId: String) -> Unit
+) {
     composable(HOME_ROUTE) {
-        HomeScreen()
+        HomeScreen(
+            onNavigateToTrackScreen = onNavigateToTrackScreen
+        )
     }
 }
 

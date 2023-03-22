@@ -57,8 +57,8 @@ class AuddJsonAdapter {
 
     private fun fromErrorJson(json: AuddResponseJson.Error): RemoteRecognizeResult<Track> {
         return when (json.body.errorCode) {
-            901 -> RemoteRecognizeResult.Error.LimitReached
-            900 -> RemoteRecognizeResult.Error.WrongToken
+            901 -> RemoteRecognizeResult.Error.WrongToken(isLimitReached = true)
+            900 -> RemoteRecognizeResult.Error.WrongToken(isLimitReached = false)
             else -> RemoteRecognizeResult.Error.UnhandledError(
                 message = "Audd response error\n" +
                         "code=${json.body.errorCode}\n" +

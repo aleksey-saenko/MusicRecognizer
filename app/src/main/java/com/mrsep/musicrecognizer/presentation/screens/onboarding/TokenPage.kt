@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,55 +18,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.R
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.util.openUrlImplicitly
-import kotlinx.coroutines.launch
 
 private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_ANNOTATION_TAG"
-
-class TokenPageState(
-    initialTokenInput: String = ""
-) {
-    var tokenInput by mutableStateOf(initialTokenInput)
-
-    var validationState by mutableStateOf(TokenState.UNCHECKED)
-
-    val isValidating get() = validationState == TokenState.VALIDATING
-    val isError get() = validationState == TokenState.ERROR
-    val isSuccess get() = validationState == TokenState.SUCCESS
-    val isValidationAllowed get() = validationState == TokenState.UNCHECKED || validationState == TokenState.ERROR
-
-    enum class TokenState {
-        UNCHECKED, VALIDATING, SUCCESS, ERROR
-    }
-
-    companion object {
-        val Saver: Saver<TokenPageState, *> = listSaver(
-            save = {
-                listOf(
-                    it.tokenInput,
-                    it.validationState.ordinal
-                )
-            },
-            restore = {
-                TokenPageState(
-                    initialTokenInput = it[0] as String
-                ).apply {
-                    validationState = TokenState.values()[it[1] as Int]
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun rememberTokenPageState(
-    initialTokenInput: String = ""
-): TokenPageState {
-    return rememberSaveable(saver = TokenPageState.Saver) {
-        TokenPageState(initialTokenInput)
-    }
-}
 
 @Composable
 fun TokenPage(
@@ -78,13 +33,17 @@ fun TokenPage(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val state = rememberTokenPageState()
+    var tokenInput by rememberSaveable { mutableStateOf("") }
+    val tokenState by viewModel.tokenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         val savedToken = viewModel.getSavedToken()
         if (savedToken.isNotBlank()) {
-            state.tokenInput = savedToken
+            tokenInput = savedToken
         }
+    }
+    if (tokenState is TokenState.Success) {
+        LaunchedEffect(Unit) { onTokenApplied() }
     }
 
     Column(
@@ -141,20 +100,20 @@ fun TokenPage(
                 .widthIn(min = 56.dp, max = 488.dp)
                 .fillMaxWidth(0.9f)
                 .padding(bottom = 24.dp),
-            value = state.tokenInput,
+            value = tokenInput,
             onValueChange = {
-                state.tokenInput = it
-                state.validationState = TokenPageState.TokenState.UNCHECKED
+                tokenInput = it
+                viewModel.resetTokenState()
             },
             label = { Text(stringResource(R.string.audd_api_token)) },
             singleLine = true,
-            isError = state.isError,
+            isError = tokenState.isBadToken,
             supportingText = {
-                AnimatedVisibility(state.isError) {
+                AnimatedVisibility(tokenState.isBadToken) {
                     Text(stringResource(R.string.invalid_token))
                 }
             },
-            trailingIcon = if (state.isError) {
+            trailingIcon = if (tokenState.isBadToken) {
                 {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_error_filled_24),
@@ -169,24 +128,13 @@ fun TokenPage(
             modifier = Modifier
                 .padding(bottom = 24.dp)
                 .widthIn(min = 240.dp),
-            onClick = {
-                scope.launch {
-                    state.validationState = TokenPageState.TokenState.VALIDATING
-                    val isTokenValid = viewModel.validateAndSaveToken(state.tokenInput)
-                    if (isTokenValid) {
-                        state.validationState = TokenPageState.TokenState.SUCCESS
-                        onTokenApplied()
-                    } else {
-                        state.validationState = TokenPageState.TokenState.ERROR
-                    }
-                }
-            },
-            enabled = state.isValidationAllowed
+            onClick = { viewModel.testToken(tokenInput) },
+            enabled = tokenState.isValidationAllowed
         ) {
             Text(
-                text = if (state.isSuccess) {
+                text = if (tokenState.isSuccessToken) {
                     stringResource(R.string.token_applied)
-                } else if (state.isValidating) {
+                } else if (tokenState.isValidating) {
                     "Validating"
                 } else {
                     stringResource(R.string.apply_api_token)
@@ -195,10 +143,16 @@ fun TokenPage(
         }
 
         Row(modifier = Modifier.height(4.dp)) {
-            AnimatedVisibility(state.isValidating) {
+            AnimatedVisibility(tokenState.isValidating) {
                 LinearProgressIndicator(modifier = Modifier.clip(MaterialTheme.shapes.extraSmall))
             }
         }
     }
 
 }
+
+
+private fun TokenState.isValidating() = this is TokenState.Validating
+private fun TokenState.isBadToken() = this is TokenState.Wrong
+private fun TokenState.isSuccessToken() = this is TokenState.Success
+private fun TokenState.isValidationAllowed() = this !is TokenState.Validating && this !is TokenState.Success

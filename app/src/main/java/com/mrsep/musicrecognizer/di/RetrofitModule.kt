@@ -46,7 +46,8 @@ object RetrofitModule {
     @Singleton
     fun provideRetrofit(
         moshi: Moshi,
-        @ApplicationContext appContext: Context
+        @ApplicationContext appContext: Context,
+        @ApplicationScope appScope: CoroutineScope
     ): Retrofit {
 
         val client = OkHttpClient.Builder()
@@ -56,7 +57,7 @@ object RetrofitModule {
                         setLevel(HttpLoggingInterceptor.Level.BODY)
                     }
                     this.addInterceptor(httpLoggingInterceptor)
-                        .addInterceptor(HttpFileLoggingInterceptor(appContext))
+                        .addInterceptor(HttpFileLoggingInterceptor(appContext, appScope))
                 } else {
                     this
                 }
@@ -72,7 +73,10 @@ object RetrofitModule {
 
 }
 
-class HttpFileLoggingInterceptor(private val appContext: Context) : Interceptor {
+class HttpFileLoggingInterceptor(
+    private val appContext: Context,
+    private val scope: CoroutineScope
+) : Interceptor {
 
     @Suppress("SpellCheckingInspection")
     private val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
@@ -85,7 +89,7 @@ class HttpFileLoggingInterceptor(private val appContext: Context) : Interceptor 
                 root.mkdir()
             }
         } catch (e: Exception) {
-            handleError(e)
+            e.printStackTrace()
         }
     }
 
@@ -106,23 +110,21 @@ class HttpFileLoggingInterceptor(private val appContext: Context) : Interceptor 
     }
 
     private fun writeLogFile(logFile: File, record: String) {
-        try {
-            logFile.outputStream().bufferedWriter().use { writer ->
-                writer.write(record)
+        scope.launch(Dispatchers.IO) {
+            try {
+                logFile.outputStream().bufferedWriter().use { writer ->
+                    writer.write(record)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        appContext,
+                        "LogToStorage failed, check stacktrace",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        } catch (e: Exception) {
-            handleError(e)
-        }
-    }
-
-    private fun handleError(e: Exception) {
-        e.printStackTrace()
-        CoroutineScope(Dispatchers.Main + SupervisorJob()).launch {
-            Toast.makeText(
-                appContext,
-                "LogToStorage failed, check stacktrace",
-                Toast.LENGTH_LONG
-            ).show()
         }
     }
 

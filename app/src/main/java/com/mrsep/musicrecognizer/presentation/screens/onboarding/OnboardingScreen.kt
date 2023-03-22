@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.presentation.screens.onboarding
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -11,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.common.PageWithIndicator
 import kotlinx.coroutines.flow.*
@@ -28,7 +30,6 @@ private val TOTAL_PAGES = OnboardingPage.values().size
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    modifier: Modifier = Modifier,
     onOnboardingCompleted: () -> Unit,
     onOnboardingClose: () -> Unit
 ) {
@@ -49,7 +50,8 @@ fun OnboardingScreen(
     HorizontalPager(
         pageCount = availablePages,
         beyondBoundsPageCount = 0,
-        state = pagerState
+        state = pagerState,
+        modifier = Modifier.statusBarsPadding()
     ) { page ->
         if (BuildConfig.LOG_DEBUG_MODE) {
             Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
@@ -67,7 +69,7 @@ fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             OnboardingPage.PERMISSIONS.index -> {
@@ -94,7 +96,7 @@ fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             OnboardingPage.TOKEN.index -> {
@@ -121,7 +123,7 @@ fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             OnboardingPage.FINAL.index -> {
@@ -139,7 +141,7 @@ fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             else -> {

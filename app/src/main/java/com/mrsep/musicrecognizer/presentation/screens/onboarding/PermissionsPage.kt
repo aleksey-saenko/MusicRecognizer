@@ -99,7 +99,7 @@ fun PermissionsPage(
 }
 
 @Composable
-private fun DialogForOpeningAppSettings(
+fun DialogForOpeningAppSettings(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit
 ) {

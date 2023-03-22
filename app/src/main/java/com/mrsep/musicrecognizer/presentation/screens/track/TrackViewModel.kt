@@ -16,7 +16,8 @@ class TrackViewModel @Inject constructor(
     private val trackRepository: TrackRepository
 ) : ViewModel() {
 
-    private val args = TrackScreenArguments(savedStateHandle)
+//    private val args = TrackScreenArguments(savedStateHandle)
+    private val args = Screen.Track.Args(savedStateHandle)
 
     val uiStateStream = trackRepository.getByMbIdFlow(args.mbId)
         .map { track ->

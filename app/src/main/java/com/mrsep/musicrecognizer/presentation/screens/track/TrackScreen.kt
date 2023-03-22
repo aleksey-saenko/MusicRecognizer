@@ -36,7 +36,7 @@ private const val LYRICS_SECTION = 2
 
 @Composable
 fun TrackScreen(
-    onBackClick: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TrackViewModel = hiltViewModel()
 ) {
@@ -55,7 +55,7 @@ fun TrackScreen(
                     modifier = Modifier.padding(8.dp)
                 )
                 Button(
-                    onClick = onBackClick,
+                    onClick = onBackPressed,
                     modifier = Modifier.padding(8.dp)
                 ) {
                     Text("Back")
@@ -68,26 +68,30 @@ fun TrackScreen(
             Column(
                 modifier = modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(PaddingValues(horizontal = 16.dp)),
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
                 TrackScreenTopBar(
                     currentSection = currentSection,
-                    onBackClick = onBackClick,
+                    onBackPressed = onBackPressed,
                     onAboutTrackClick = { currentSection = ABOUT_TRACK_SECTION },
-                    onLyricsClick = { currentSection = LYRICS_SECTION }
+                    onLyricsClick = { currentSection = LYRICS_SECTION },
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 when (currentSection) {
                     ABOUT_TRACK_SECTION -> {
                         AboutTrackSection(
                             track = uiState.data,
-                            onFavoriteIconClick = viewModel::onFavoriteClick
+                            onFavoriteIconClick = viewModel::onFavoriteClick,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
                     LYRICS_SECTION -> {
-                        LyricsSection(lyrics = uiState.data.lyrics ?: "not found")
+                        LyricsSection(
+                            lyrics = uiState.data.lyrics ?: "not found",
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                     else -> throw IllegalStateException("Wrong section of the track screen")
                 }
@@ -100,14 +104,15 @@ fun TrackScreen(
 @Composable
 private fun TrackScreenTopBar(
     currentSection: Int,
-    onBackClick: () -> Unit,
+    onBackPressed: () -> Unit,
     onAboutTrackClick: () -> Unit,
     onLyricsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier
     ) {
         Icon(
             imageVector = Icons.Default.ArrowBack,
@@ -116,7 +121,7 @@ private fun TrackScreenTopBar(
                 .padding(PaddingValues(vertical = 16.dp))
                 .size(32.dp)
                 .clip(MaterialTheme.shapes.small)
-                .clickable { onBackClick() }
+                .clickable { onBackPressed() }
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(

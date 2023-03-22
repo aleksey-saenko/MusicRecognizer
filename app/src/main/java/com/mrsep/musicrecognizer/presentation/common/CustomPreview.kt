@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation
+package com.mrsep.musicrecognizer.presentation.common
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview

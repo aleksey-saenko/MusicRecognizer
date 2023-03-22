@@ -9,22 +9,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SuperButton(
     activated: Boolean,
+    amplitudeFactor: Float,
     enabled: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
-        RippleAnimation(
+        RippleAnimated(
             activated = activated,
+            amplitudeFactor = amplitudeFactor,
             modifier = Modifier.size(220.dp),
-            baseColor = MaterialTheme.colorScheme.secondary,
+            baseColor = MaterialTheme.colorScheme.primary,
             activatedColor = MaterialTheme.colorScheme.primary,
             circlesCount = 9,
             animationSpeed = 12_000
@@ -36,8 +37,9 @@ fun SuperButton(
             onClick = onClick,
             onLongPress = onLongPress
         ) {
-            AnimatedWaveIcon(
+            WaveAnimated(
                 activated = activated,
+                amplitudeFactor = amplitudeFactor,
                 baseColor = MaterialTheme.colorScheme.secondary,
                 activatedColor = MaterialTheme.colorScheme.primary
             )
@@ -50,6 +52,8 @@ fun SuperButton(
 fun SuperButtonSection(
     title: String,
     activated: Boolean,
+    amplitudeFactor: Float,
+    enabled: Boolean,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -64,24 +68,26 @@ fun SuperButtonSection(
             transitionSpec = {
                 slideIntoContainer(
                     towards = AnimatedContentScope.SlideDirection.Up,
-                    animationSpec = tween(durationMillis = 250)
+                    animationSpec = tween(durationMillis = 250, delayMillis = 90)
                 ) + fadeIn(
-                    animationSpec = tween(durationMillis = 200)
+                    animationSpec = tween(durationMillis = 200, delayMillis = 90)
                 ) with slideOutOfContainer(
                     towards = AnimatedContentScope.SlideDirection.Up,
-                    animationSpec = tween(durationMillis = 250)
+                    animationSpec = tween(durationMillis = 250, delayMillis = 90)
                 ) + fadeOut(
-                    animationSpec = tween(durationMillis = 200)
+                    animationSpec = tween(durationMillis = 200, delayMillis = 90)
                 )
             }
         ) {
             Text(
                 text = it,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Medium),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Medium
+                ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 24.dp)
             )
         }
 
@@ -89,7 +95,8 @@ fun SuperButtonSection(
             onClick = onButtonClick,
             onLongPress = onButtonClick,
             activated = activated,
-            enabled = true
+            amplitudeFactor = amplitudeFactor,
+            enabled = enabled
         )
     }
 }

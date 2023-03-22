@@ -14,8 +14,8 @@ import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.util.recompositionCounter
 
-class VisibleLinksDialogState(
-    initialState: UserPreferences.VisibleLinks,
+class RequiredServicesDialogState(
+    initialState: UserPreferences.RequiredServices,
 ) {
     var spotifyCheckBox by mutableStateOf(initialState.spotify)
     var appleMusicCheckBox by mutableStateOf(initialState.appleMusic)
@@ -23,8 +23,8 @@ class VisibleLinksDialogState(
     var napsterCheckBox by mutableStateOf(initialState.napster)
     var musicBrainzCheckBox by mutableStateOf(initialState.musicbrainz)
 
-    val currentState: UserPreferences.VisibleLinks
-        get() = UserPreferences.VisibleLinks(
+    val currentState: UserPreferences.RequiredServices
+        get() = UserPreferences.RequiredServices(
             spotify = spotifyCheckBox,
             appleMusic = appleMusicCheckBox,
             deezer = deezerCheckBox,
@@ -33,7 +33,7 @@ class VisibleLinksDialogState(
         )
 
     companion object {
-        val Saver: Saver<VisibleLinksDialogState, *> = listSaver(
+        val Saver: Saver<RequiredServicesDialogState, *> = listSaver(
             save = { listOf(
                 it.spotifyCheckBox,
                 it.appleMusicCheckBox,
@@ -42,8 +42,8 @@ class VisibleLinksDialogState(
                 it.musicBrainzCheckBox
             ) },
             restore = {
-                VisibleLinksDialogState(
-                    initialState = UserPreferences.VisibleLinks(
+                RequiredServicesDialogState(
+                    initialState = UserPreferences.RequiredServices(
                         spotify = it[0],
                         appleMusic = it[1],
                         deezer = it[2],
@@ -58,21 +58,21 @@ class VisibleLinksDialogState(
 }
 
 @Composable
-fun rememberVisibleLinksDialogState(
-    visibleLinks: UserPreferences.VisibleLinks,
-): VisibleLinksDialogState {
-    return rememberSaveable(inputs = arrayOf(visibleLinks), saver = VisibleLinksDialogState.Saver) {
-        VisibleLinksDialogState(
-            initialState = visibleLinks
+fun rememberRequiredServicesDialogState(
+    requiredServices: UserPreferences.RequiredServices,
+): RequiredServicesDialogState {
+    return rememberSaveable(inputs = arrayOf(requiredServices), saver = RequiredServicesDialogState.Saver) {
+        RequiredServicesDialogState(
+            initialState = requiredServices
         )
     }
 }
 
 @Composable
-fun VisibleLinksDialog(
+fun RequiredServicesDialog(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
-    dialogState: VisibleLinksDialogState,
+    dialogState: RequiredServicesDialogState,
 ) {
     AlertDialog(
         title = {

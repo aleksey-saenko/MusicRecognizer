@@ -16,8 +16,9 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.sin
 
 @Composable
-fun AnimatedWaveIcon(
+fun WaveAnimated(
     activated: Boolean,
+    amplitudeFactor: Float,
     modifier: Modifier = Modifier,
     linesCount: Int = 9,
     lineWidth: Dp = 4.dp,
@@ -30,6 +31,16 @@ fun AnimatedWaveIcon(
     val currentColor by animateColorAsState(
         targetValue = if (activated) activatedColor else baseColor,
         animationSpec = tween(durationMillis = 50)
+    )
+
+    val smoothedAmplitudeFactor by animateFloatAsState(
+        targetValue = when (amplitudeFactor) {
+            0f -> 0.25f
+            in 0.1f..0.3f -> 0.5f
+            in 0.3f..0.5f -> 0.75f
+            else -> 1f
+        },
+        animationSpec = tween(easing = EaseInQuart, durationMillis = 500) //EaseInQuart
     )
 
     val infiniteTransition = rememberInfiniteTransition()
@@ -69,7 +80,7 @@ fun AnimatedWaveIcon(
                     else -> 1f
                 }
                 val xOffset = centerX - (index - linesCount / 2) * (lineWidth + spaceWidth).toPx()
-                val calcHalfLength = (currentLineLength / 2) * boundFactor * activatedFactor
+                val calcHalfLength = (currentLineLength / 2) * boundFactor * smoothedAmplitudeFactor
                 drawLine(
                     color = currentColor,
                     start = Offset(x = xOffset, y = centerY + calcHalfLength),

@@ -1,11 +1,14 @@
 package com.mrsep.musicrecognizer.domain
 
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 import java.time.Duration
 
 interface RecorderController {
 
     suspend fun recordAudioToFile(file: File, duration: Duration): RecordResult
+
+    val maxAmplitudeFlow: Flow<Float>
 
 }
 

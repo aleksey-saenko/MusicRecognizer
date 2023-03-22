@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.presentation.screens.onboarding
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -14,7 +16,7 @@ fun NavGraphBuilder.onboardingScreen(
     composable(ONBOARDING_ROUTE) {
         OnboardingScreen(
             onOnboardingCompleted = onOnboardingCompleted,
-            onOnboardingClose = onOnboardingClose
+            onOnboardingClose = onOnboardingClose,
         )
     }
 }

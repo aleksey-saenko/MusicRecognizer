@@ -25,7 +25,7 @@ import javax.inject.Singleton
 private const val TAG = "AudioRecorderController"
 
 @Singleton
-class AudioRecorderController @Inject constructor(
+class AudioRecorderControllerOld @Inject constructor(
     @ApplicationContext private val applicationContext: Context
 ) {
 

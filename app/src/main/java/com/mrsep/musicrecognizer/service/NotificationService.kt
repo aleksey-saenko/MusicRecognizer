@@ -7,13 +7,19 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.mrsep.musicrecognizer.R
+import com.mrsep.musicrecognizer.di.DefaultDispatcher
+import com.mrsep.musicrecognizer.di.IoDispatcher
+import com.mrsep.musicrecognizer.di.MainDispatcher
 import com.mrsep.musicrecognizer.domain.RecognizeInteractor
 import com.mrsep.musicrecognizer.domain.RecognizeStatus
+import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.presentation.MainActivity
+import com.mrsep.musicrecognizer.presentation.screens.track.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.net.URL
@@ -28,8 +34,23 @@ class NotificationService : Service() {
     @Inject
     lateinit var recognizeInteractor: RecognizeInteractor
 
+    @Inject
+    lateinit var trackRepository: TrackRepository
+
+    @Inject
+    @MainDispatcher
+    lateinit var mainDispatcher: CoroutineDispatcher
+
+    @Inject
+    @IoDispatcher
+    lateinit var ioDispatcher: CoroutineDispatcher
+
+    @Inject
+    @DefaultDispatcher
+    lateinit var defaultDispatcher: CoroutineDispatcher
+
     private val actionReceiver = ActionBroadcastReceiver()
-    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
     private val notificationManager get() = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private var notificationDeliveryJob: Job? = null
 
@@ -58,7 +79,37 @@ class NotificationService : Service() {
         }
     }
 
-    private fun resetRecognizer() = recognizeInteractor.resetRecognizer()
+    private fun resetStatusToReady() = recognizeInteractor.resetStatusToReady()
+
+    private fun cancelRecognition() = recognizeInteractor.cancelRecognize()
+
+    private fun addResultTrackToFavs() {
+        val track = when (val status = recognizeInteractor.statusFlow.value) {
+            is RecognizeStatus.Success -> status.track
+            else -> {
+                showToast("Track not found")
+                return
+            }
+        }
+        serviceScope.launch {
+            trackRepository.update(
+                track.copy(
+                    metadata = track.metadata.copy(isFavorite = !track.metadata.isFavorite)
+                )
+            )
+            showToast("Added to favorites")
+        }
+
+    }
+
+    // useless because toast is not visible if notification feed is expanded
+    // should be replaced by pushing an intermediate message notification
+    private fun showToast(text: String) {
+        serviceScope.launch(mainDispatcher) {
+            Toast.makeText(this@NotificationService, text, Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(SERVICE_TAG, "onStartCommand: flags=$flags, startId=$startId")
@@ -67,7 +118,7 @@ class NotificationService : Service() {
 
     override fun onDestroy() {
         Log.d(SERVICE_TAG, "onDestroy")
-        notificationDeliveryJob?.cancel()
+        serviceScope.cancel()
         unregisterReceiver(actionReceiver)
         super.onDestroy()
     }
@@ -85,6 +136,10 @@ class NotificationService : Service() {
             vibrationPattern = longArrayOf(100, 100, 100, 100)
         }
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun createMessageNotification(text: String): Notification {
+        TODO()
     }
 
     private fun createNotificationForStatus(status: RecognizeStatus): Notification {
@@ -237,7 +292,7 @@ class NotificationService : Service() {
     private fun createTrackDeepLinkIntent(mbId: String): PendingIntent {
         val deepLinkIntent = Intent(
             Intent.ACTION_VIEW,
-            "https://www.mrsep.com/track/$mbId".toUri(),
+            Screen.Track.createDeepLink(mbId).toUri(),
             this,
             MainActivity::class.java
         )
@@ -255,13 +310,13 @@ class NotificationService : Service() {
                     launchRecognizeOrCancel()
                 }
                 CANCEL_ACTION -> {
-                    launchRecognizeOrCancel()
+                    cancelRecognition()
                 }
                 DISMISS_ACTION -> {
-                    resetRecognizer()
+                    resetStatusToReady()
                 }
                 ADD_TO_FAVORITE_ACTION -> {
-                    // not implemented
+                    addResultTrackToFavs()
                 }
             }
         }
@@ -277,19 +332,13 @@ class NotificationService : Service() {
         private const val ADD_TO_FAVORITE_ACTION =
             "com.mrsep.musicrecognizer.action.ADD_TO_FAVORITE_ACTION"
 
-        fun Context.setExampleServiceEnabled(value: Boolean) {
-            if (value) {
+        fun Context.toggleNotificationService(shouldStart: Boolean) {
+            if (shouldStart) {
                 startForegroundService(Intent(this, NotificationService::class.java))
             } else {
                 stopService(Intent(this, NotificationService::class.java))
             }
         }
-
-        fun Context.startExampleService() =
-            startForegroundService(Intent(this, NotificationService::class.java))
-
-        fun Context.stopExampleService() =
-            stopService(Intent(this, NotificationService::class.java))
     }
 
 

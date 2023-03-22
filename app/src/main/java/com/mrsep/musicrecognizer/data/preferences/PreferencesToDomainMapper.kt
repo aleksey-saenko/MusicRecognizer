@@ -15,12 +15,12 @@ class PreferencesToDomainMapper @Inject constructor() :
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             developerModeEnabled = input.developerModeEnabled,
-            visibleLinks = UserPreferences.VisibleLinks(
-                spotify = input.visibleLinks.spotify,
-                appleMusic = input.visibleLinks.appleMusic,
-                deezer = input.visibleLinks.deezer,
-                napster = input.visibleLinks.napster,
-                musicbrainz = input.visibleLinks.musicbrainz
+            requiredServices = UserPreferences.RequiredServices(
+                spotify = input.requiredServices.spotify,
+                appleMusic = input.requiredServices.appleMusic,
+                deezer = input.requiredServices.deezer,
+                napster = input.requiredServices.napster,
+                musicbrainz = input.requiredServices.musicbrainz
             )
         )
     }

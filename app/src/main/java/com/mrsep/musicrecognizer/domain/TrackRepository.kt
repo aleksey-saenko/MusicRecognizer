@@ -23,4 +23,22 @@ interface TrackRepository {
     suspend fun search(keyword: String, limit: Int): List<Track>
     fun searchFlow(keyword: String, limit: Int): Flow<List<Track>>
 
+    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult<Track>>
+
+}
+
+sealed class SearchResult<T> {
+    abstract val keyword: String
+
+    data class Processing<T>(
+        override val keyword: String
+    ) : SearchResult<T>()
+
+    data class Success<T>(
+        override val keyword: String,
+        val data: List<T>
+    ) : SearchResult<T>() {
+        val isEmpty get() = data.isEmpty()
+    }
+
 }

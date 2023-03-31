@@ -59,7 +59,7 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
-    <string name="save_record_message">You can save the record to retry recognition later. The remote music library is always updating.</string>
+    <string name="save_record_message">You can save the record in recognition queue to retry later. The remote music library is always updating.</string>
     <string name="recording_error">Recording error</string>
     <string name="check_permission">Check permission</string>
     <string name="token_limit_reached">API token limit reached</string>
@@ -69,6 +69,17 @@
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>
     <string name="empty_library_message">Your recently recognized and favorite songs will be shown here</string>
+    <string name="untitled_recognition">Untitled recognition</string>
+    <string name="enqueue_recognition">Enqueue recognition</string>
+    <string name="cancel_recognition">Cancel recognition</string>
+    <string name="show_track">Show track</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="illegal_state">Illegal state</string>
+    <string name="record_deletion_failed">Record file deletion failed</string>
+    <string name="search_track">Search track</string>
+    <string name="about">About</string>
 
 
 </resources>

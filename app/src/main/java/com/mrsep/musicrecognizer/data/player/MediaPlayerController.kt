@@ -1,45 +1,88 @@
 package com.mrsep.musicrecognizer.data.player
 
-import android.content.Context
 import android.media.MediaPlayer
-import android.util.Log
-import android.widget.Toast
 import com.mrsep.musicrecognizer.domain.PlayerController
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.mrsep.musicrecognizer.domain.PlayerStatus
+import kotlinx.coroutines.flow.*
 import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "MediaPlayerController"
 
 @Singleton
-class MediaPlayerController @Inject constructor(
-    @ApplicationContext private val appContext: Context
-): PlayerController {
+class MediaPlayerController @Inject constructor() : PlayerController {
+
     private var player: MediaPlayer? = null
 
-    override fun startPlay(file: File) {
+    private val _statusFlow = MutableStateFlow<PlayerStatus>(PlayerStatus.Idle)
+    override val statusFlow = _statusFlow.asStateFlow()
+
+    override fun start(file: File) {
+        stop()
         player = MediaPlayer().apply {
-            try {
-                setDataSource(file.absolutePath)
-                setOnPreparedListener { it.start() }
-                prepareAsync()
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.e("PLAYER", "prepare() failed")
+            isLooping = false
+            setDataSource(file.absolutePath)
+            setOnCompletionListener {
+                _statusFlow.update { PlayerStatus.Idle }
             }
+            setOnErrorListener { _, what, extra ->
+                _statusFlow.update { PlayerStatus.Error(file, "what=$what, extra=$extra") }
+                true
+            }
+            setOnPreparedListener {
+                player?.start()
+                _statusFlow.update { PlayerStatus.Started(file) }
+            }
+            prepareAsync()
         }
-        Log.d(TAG, "player started")
     }
 
-     override fun stopPlay() {
+    override fun pause() {
+        val currentStatus = _statusFlow.value
+        if (currentStatus is PlayerStatus.Started) {
+            player?.pause()
+            _statusFlow.update { PlayerStatus.Paused(currentStatus.record) }
+        }
+    }
+
+    override fun resume() {
+        val currentStatus = _statusFlow.value
+        if (currentStatus is PlayerStatus.Paused) {
+            player?.start()
+            _statusFlow.update { PlayerStatus.Started(currentStatus.record) }
+        }
+    }
+
+    override fun stop() {
         player?.apply {
             stop()
             release()
         }
         player = null
-         Log.d(TAG, "player stopped")
+        _statusFlow.update { PlayerStatus.Idle }
     }
 
 }
+
+//data class PlayerPosition(
+//    val currentPositionMs: Int,
+//    val totalDurationMs: Int
+//)
+//
+//@OptIn(ExperimentalCoroutinesApi::class)
+//val positionFlow = _statusFlow.transformLatest { status ->
+//    when (status) {
+//        is PlayerStatus.Error ->
+//        PlayerStatus.Idle ->
+//        is PlayerStatus.Paused ->
+//        is PlayerStatus.Started -> {
+//            while (true) {
+//                player?.let { mp ->
+//                    emit(PlayerPosition(mp.currentPosition, mp.duration))
+//                }
+//                delay(500)
+//            }
+//        }
+//    }
+//}

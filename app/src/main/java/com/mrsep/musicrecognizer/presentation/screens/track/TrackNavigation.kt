@@ -74,17 +74,17 @@ sealed class Screen(val route: String) {
 
 
     object Preferences : Screen("preferences") {
-        fun NavGraphBuilder.preferencesScreen(navController: NavController) {
-            composable(route = this@Preferences.route) {
-                PreferencesScreen(navController = navController)
-            }
-        }
-
-        fun NavController.navigateToPreferencesScreen(
-            navOptions: NavOptions? = null
-        ) {
-            this.navigate(route = this@Preferences.route, navOptions = navOptions)
-        }
+//        fun NavGraphBuilder.preferencesScreen(navController: NavController) {
+//            composable(route = this@Preferences.route) {
+//                PreferencesScreen(navController = navController)
+//            }
+//        }
+//
+//        fun NavController.navigateToPreferencesScreen(
+//            navOptions: NavOptions? = null
+//        ) {
+//            this.navigate(route = this@Preferences.route, navOptions = navOptions)
+//        }
     }
 
 

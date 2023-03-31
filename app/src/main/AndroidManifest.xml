@@ -34,6 +34,15 @@
             android:exported="false"
             android:foregroundServiceType="microphone">
         </service>
+
+        <!-- https://developer.android.com/guide/background/persistent/configuration/custom-configuration -->
+        <!-- If you want to disable android.startup completely. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
+
     </application>
 
     <queries>
@@ -43,6 +52,9 @@
             <data android:scheme="https" />
         </intent>
     </queries>
+
+
+
 
 
 </manifest>

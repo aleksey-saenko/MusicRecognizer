@@ -27,7 +27,7 @@ enum class NavBarDestination(
         titleId = R.string.preferences,
         selectedIconId = R.drawable.baseline_preferences_24,
         unselectedIconId = R.drawable.baseline_preferences_24
-    ),
+    )
 }
 
 val navBarDestList = NavBarDestination.values().asList()

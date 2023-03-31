@@ -5,6 +5,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import com.mrsep.musicrecognizer.di.DefaultDispatcher
+import com.mrsep.musicrecognizer.domain.FileRecordRepository
 import com.mrsep.musicrecognizer.domain.RecordResult
 import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,11 +24,13 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 private const val TAG = "MediaRecorderController"
+private const val FILE_EXTENSION = "m4a"
 
 @Singleton
 class MediaRecorderControllerNew @Inject constructor(
-    @ApplicationContext private val applicationContext: Context,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
+    @ApplicationContext private val appContext: Context,
+    private val fileRecordRepository: FileRecordRepository,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : RecorderController {
 
     private var recorder: MediaRecorder? = null
@@ -66,10 +69,13 @@ class MediaRecorderControllerNew @Inject constructor(
         }
     }
 
-    override suspend fun recordAudioToFile(file: File, duration: Duration): RecordResult {
+    override suspend fun recordAudioToFile(duration: Duration): RecordResult {
         return coroutineScope {
             val lazyAmplitudePollingJob = getLazyAmplitudePollingJob()
+
             suspendCancellableCoroutine { continuation ->
+                val resultFile = fileRecordRepository.getFileForNewRecord(FILE_EXTENSION)
+
                 val onStart = {
                     lazyAmplitudePollingJob.start()
                     Unit
@@ -77,48 +83,38 @@ class MediaRecorderControllerNew @Inject constructor(
                 val onFinish = {
                     stopRecord()
                     lazyAmplitudePollingJob.cancel()
-                    continuation.resume(RecordResult.Success)
+                    continuation.resume(RecordResult.Success(resultFile))
                 }
-                val onError = { errorCode: Int ->
-                    val errorResult = when (errorCode) {
-                        MediaRecorder.MEDIA_ERROR_SERVER_DIED -> {
-                            RecordResult.Error.ServerDied
-                        }
-                        MEDIA_RECORDER_ERROR_PREPARE_FAILED -> {
-                            RecordResult.Error.PrepareFailed
-                        }
-                        else -> {
-                            RecordResult.Error.UnhandledError(
-                                throwable = RuntimeException("MEDIA_RECORDER_ERROR(code:$errorCode)")
-                            )
-                        }
-                    }
+                val onError = { throwable: Throwable ->
                     stopRecord()
                     lazyAmplitudePollingJob.cancel()
-                    continuation.resume(errorResult)
+                    fileRecordRepository.delete(resultFile)
+                    continuation.resume(RecordResult.Error(throwable))
                 }
 
-                recordToFile(file, duration, onStart, onFinish, onError)
+                recordToFile(resultFile, duration, onStart, onFinish, onError)
+
 
                 continuation.invokeOnCancellation {
                     stopRecord()
+                    fileRecordRepository.delete(resultFile)
                 }
             }
         }
     }
 
 
-    @Suppress("DEPRECATION")
     private fun recordToFile(
         file: File,
         duration: Duration,
         onStart: () -> Unit,
         onFinish: () -> Unit,
-        onError: (errorCode: Int) -> Unit
+        onError: (throwable: Throwable) -> Unit
     ) {
         recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            MediaRecorder(applicationContext)
+            MediaRecorder(appContext)
         } else {
+            @Suppress("DEPRECATION")
             MediaRecorder()
         }.apply {
 //            setAudioSource(MediaRecorder.AudioSource.UNPROCESSED)
@@ -138,7 +134,7 @@ class MediaRecorderControllerNew @Inject constructor(
             }
             setOnErrorListener { _, what, extra ->
                 Log.d(TAG, "ErrorListener: what=$what, extra=$extra")
-                onError(what)
+                onError(RuntimeException("Media recorder error, code:$what, extra=$extra"))
             }
             setMaxDuration(duration.toMillis().toInt())
 //            setPreferredMicrophoneDirection(MicrophoneDirection.MIC_DIRECTION_AWAY_FROM_USER)
@@ -147,10 +143,10 @@ class MediaRecorderControllerNew @Inject constructor(
                 prepare()
                 start()
                 onStart()
-                Log.d(TAG, "recorder started")
+                Log.d(TAG, "Recorder started")
             } catch (e: IOException) {
-                Log.e(TAG, "prepare() failed", e)
-                onError(MEDIA_RECORDER_ERROR_PREPARE_FAILED)
+                Log.e(TAG, "Recorder prepare fails", e)
+                onError(e)
             }
         }
     }
@@ -160,16 +156,12 @@ class MediaRecorderControllerNew @Inject constructor(
             try {
                 stop()
             } catch (e: RuntimeException) {
-                Log.e(TAG, "too early stop, output file is corrupted", e)
+                Log.w(TAG, "Too early stop, the output file is corrupted", e)
             }
             release()
         }
         recorder = null
-        Log.d(TAG, "recorder stopped")
-    }
-
-    companion object {
-        private const val MEDIA_RECORDER_ERROR_PREPARE_FAILED = -1
+        Log.d(TAG, "Recorder stopped")
     }
 
 }

@@ -42,7 +42,7 @@ fun TrackLazyGrid(
                 track = trackList[index],
                 onTrackClick = onTrackClick,
                 modifier = Modifier.animateItemPlacement(
-                    tween(3000)
+                    tween(300)
                 )
 
             )

@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 
 private const val ABOUT_ROUTE = "about"
 
-fun NavGraphBuilder.aboutScreen() {
+fun NavGraphBuilder.aboutScreen(onBackPressed: () -> Unit) {
     composable(ABOUT_ROUTE) {
-        AboutScreen()
+        AboutScreen(onBackPressed = onBackPressed)
     }
 }
 

@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val recognizeInteractor: RecognizeInteractor,
+    private val recognitionInteractor: RecognitionInteractor,
     private val recorderController: RecorderController,
     private val playerController: PlayerController,
     private val trackRepository: TrackRepository,
@@ -26,18 +26,15 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val preferencesFlow = preferencesRepository.userPreferencesFlow
-    val recognizeStatusFlow = recognizeInteractor.statusFlow
+    val recognizeStatusFlow = recognitionInteractor.statusFlow
 
-    val ampFlow get() = recognizeInteractor.maxAmplitudeFlow
+    val ampFlow get() = recognitionInteractor.maxAmplitudeFlow
 
     private var recordJob: Job? = null
 
     fun startRecordMR() {
         recordJob = viewModelScope.launch(ioDispatcher) {//
-            recorderController.recordAudioToFile(
-                recognizeInteractor.recordFile,
-                Duration.ofMillis(100_000)
-            )
+            recorderController.recordAudioToFile(Duration.ofMillis(100_000))
         }
     }
 
@@ -46,23 +43,20 @@ class HomeViewModel @Inject constructor(
     fun startRecordAR() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                audioRecorderController.recordAudioToFile("ar_record.raw", Duration.ofSeconds(12L))
+//                audioRecorderController.recordAudioToFile("ar_record.raw", Duration.ofSeconds(12L))
             }
         }
     }
 
-    fun stopRecordAR() {
+    fun stopRecordAR() { TODO("on demand") }
 
-    }
-
-    fun recognize() =
-        viewModelScope.launch { recognizeInteractor.recognizeRecordedFile(viewModelScope) }
+    fun recognize() { TODO("on demand") } // viewModelScope.launch { recognizeInteractor.recognizeRecordedFile(viewModelScope) }
 
     fun fakeRecognize() =
-        viewModelScope.launch { recognizeInteractor.fakeRecognize(viewModelScope) }
+        viewModelScope.launch { recognitionInteractor.fakeRecognize(viewModelScope) }
 
-    fun startPlayAudio() = playerController.startPlay(recognizeInteractor.recordFile)
-    fun stopPlayAudio() = playerController.stopPlay()
+    fun startPlayAudio() { TODO("on demand") } //playerController.startPlay(recognizeInteractor.recordFile)
+    fun stopPlayAudio() = playerController.stop()
 
     fun prepopulateDatabase() {
         viewModelScope.launch(defaultDispatcher) {
@@ -73,7 +67,7 @@ class HomeViewModel @Inject constructor(
 
     fun clearDatabase() = viewModelScope.launch { trackRepository.deleteAll() }
 
-    fun recognizeTap() = recognizeInteractor.launchRecognizeOrCancel(viewModelScope)
+    fun recognizeTap() = recognitionInteractor.launchRecognitionOrCancel(viewModelScope)
 //    fun recognizeTap() {
 //        viewModelScope.launch {
 //            recognizeInteractor.setStatus(RecognizeStatus.Listening)
@@ -88,6 +82,6 @@ class HomeViewModel @Inject constructor(
 //        }
 //    }
 
-    fun resetStatusToReady() = recognizeInteractor.resetStatusToReady()
+    fun resetStatusToReady(addRecordToQueue: Boolean) = recognitionInteractor.resetStatusToReady(addRecordToQueue)
 
 }

@@ -59,7 +59,7 @@ fun LibraryScreen(
                 )
             } else {
                 Column {
-                    LibraryTopBar(
+                    LibraryScreenTopBar(
                         topAppBarScrollBehavior = topBarBehaviour,
                         onSearchIconClick = { searchActive = true },
                         modifier = Modifier.animateEnterExit(

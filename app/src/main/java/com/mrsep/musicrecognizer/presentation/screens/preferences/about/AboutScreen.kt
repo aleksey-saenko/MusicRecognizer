@@ -6,16 +6,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -23,15 +27,11 @@ fun AboutScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = "About",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
-        )
+        AboutScreenTopBar(onBackPressed = onBackPressed)
         Text(
             text = "Powered by AudD®",
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
+            modifier = Modifier.padding(PaddingValues(24.dp))
         )
     }
 }

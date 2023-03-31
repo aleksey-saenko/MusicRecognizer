@@ -5,6 +5,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import com.mrsep.musicrecognizer.di.DefaultDispatcher
+import com.mrsep.musicrecognizer.domain.FileRecordRepository
 import com.mrsep.musicrecognizer.domain.RecordResult
 import com.mrsep.musicrecognizer.domain.RecorderController
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -13,27 +14,32 @@ import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.IOException
 import java.time.Duration
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayDeque
 import kotlin.coroutines.resume
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
 private const val TAG = "MediaRecorderController"
+private const val FILE_EXTENSION = "m4a"
 
 @Singleton
 class MediaRecorderControllerOld @Inject constructor(
-    @ApplicationContext private val applicationContext: Context,
-    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
+    @ApplicationContext private val appContext: Context,
+    private val fileRecordRepository: FileRecordRepository,
+    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
 ) : RecorderController {
 
     private var recorder: MediaRecorder? = null
 
     private val amplitudePollingEnabled = MutableStateFlow(false)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val maxAmplitudeFlow = amplitudePollingEnabled
-        .transform { enabled ->
+        .transformLatest { enabled ->
             if (enabled) {
                 val fullChunkSize = 5
                 // Small amplitude polling rate (like 10 ms) can lead to unstable behaviour
@@ -42,7 +48,7 @@ class MediaRecorderControllerOld @Inject constructor(
                 val chunk = ArrayDeque<Float>(fullChunkSize)
                 while (true) {
                     val relativeValue = recorder?.run {
-                        (maxAmplitude / 32_768f).coerceIn(0f..1f)
+                        (maxAmplitude / 32_768f).coerceIn(0f..1f) //FIXME still throw IllegalStateException coz race with recorder stop method
                     } ?: 0f
                     chunk.add(relativeValue)
                     if (chunk.size == fullChunkSize) {
@@ -61,48 +67,40 @@ class MediaRecorderControllerOld @Inject constructor(
         .onEach { println("maxAmplitude=$it") } // debug purpose
 
 
-    override suspend fun recordAudioToFile(file: File, duration: Duration): RecordResult {
+    override suspend fun recordAudioToFile(duration: Duration): RecordResult {
         return suspendCancellableCoroutine { continuation ->
+            val resultFile = fileRecordRepository.getFileForNewRecord(FILE_EXTENSION)
+
             val onFinish = {
                 stopRecord()
-                continuation.resume(RecordResult.Success)
+                continuation.resume(RecordResult.Success(resultFile))
             }
-            val onError = { errorCode: Int ->
-                val errorResult = when (errorCode) {
-                    MediaRecorder.MEDIA_ERROR_SERVER_DIED -> {
-                        RecordResult.Error.ServerDied
-                    }
-                    MEDIA_RECORDER_ERROR_PREPARE_FAILED -> {
-                        RecordResult.Error.PrepareFailed
-                    }
-                    else -> {
-                        RecordResult.Error.UnhandledError(
-                            throwable = RuntimeException("MEDIA_RECORDER_ERROR(code:$errorCode)")
-                        )
-                    }
-                }
+            val onError = { throwable: Throwable ->
                 stopRecord()
-                continuation.resume(errorResult)
+                fileRecordRepository.delete(resultFile)
+                continuation.resume(RecordResult.Error(throwable))
             }
 
-            recordToFile(file, duration, onFinish, onError)
+            recordToFile(resultFile, duration, onFinish, onError)
 
             continuation.invokeOnCancellation {
                 stopRecord()
+                fileRecordRepository.delete(resultFile)
             }
         }
     }
 
-    @Suppress("DEPRECATION")
+    //FIXME add stop-release to prev recorder (see PlayerController)
     private fun recordToFile(
         file: File,
         duration: Duration,
         onFinish: () -> Unit,
-        onError: (errorCode: Int) -> Unit
+        onError: (throwable: Throwable) -> Unit
     ) {
         recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            MediaRecorder(applicationContext)
+            MediaRecorder(appContext)
         } else {
+            @Suppress("DEPRECATION")
             MediaRecorder()
         }.apply {
 //            setAudioSource(MediaRecorder.AudioSource.UNPROCESSED)
@@ -122,7 +120,7 @@ class MediaRecorderControllerOld @Inject constructor(
             }
             setOnErrorListener { _, what, extra ->
                 Log.d(TAG, "ErrorListener: what=$what, extra=$extra")
-                onError(what)
+                onError(RuntimeException("Media recorder error, code:$what, extra=$extra"))
             }
             setMaxDuration(duration.toMillis().toInt())
 //            setPreferredMicrophoneDirection(MicrophoneDirection.MIC_DIRECTION_AWAY_FROM_USER)
@@ -131,10 +129,10 @@ class MediaRecorderControllerOld @Inject constructor(
                 prepare()
                 start()
                 amplitudePollingEnabled.update { true }
-                Log.d(TAG, "recorder started")
+                Log.d(TAG, "Recorder started")
             } catch (e: IOException) {
-                Log.e(TAG, "prepare() failed", e)
-                onError(MEDIA_RECORDER_ERROR_PREPARE_FAILED)
+                Log.e(TAG, "Recorder prepare fails", e)
+                onError(e)
             }
         }
     }
@@ -145,17 +143,14 @@ class MediaRecorderControllerOld @Inject constructor(
             try {
                 stop()
             } catch (e: RuntimeException) {
-                Log.e(TAG, "too early stop, output file is corrupted", e)
+                Log.w(TAG, "Too early stop, the output file is corrupted", e)
             }
             release()
         }
         recorder = null
-        Log.d(TAG, "recorder stopped")
+        Log.d(TAG, "Recorder stopped")
     }
 
-    companion object {
-        private const val MEDIA_RECORDER_ERROR_PREPARE_FAILED = -1
-    }
 
 }
 

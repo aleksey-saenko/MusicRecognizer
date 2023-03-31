@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.data.track
 
 import androidx.room.*
+import java.time.Instant
+import java.time.LocalDate
 
 /*
  * MusicBrainz Recording Identifier uses as id (mbId)
@@ -17,7 +19,7 @@ data class TrackEntity(
     @ColumnInfo(name = "album")
     val album: String?,
     @ColumnInfo(name = "release_date")
-    val releaseDate: Long?,
+    val releaseDate: LocalDate?,
     @ColumnInfo(name = "lyrics")
     val lyrics: String?,
     @Embedded(prefix = "link_")
@@ -45,7 +47,7 @@ data class TrackEntity(
 
     data class Metadata(
         @ColumnInfo(name = "last_recognition_date")
-        val lastRecognitionDate: Long,
+        val lastRecognitionDate: Instant,
         @ColumnInfo(name = "is_favorite")
         val isFavorite: Boolean
     )

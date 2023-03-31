@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface TrackRepository {
 
     suspend fun insertOrReplace(vararg track: Track)
+    suspend fun insertOrReplaceSaveMetadata(vararg track: Track): List<Track>
 
     suspend fun delete(vararg track: Track)
     suspend fun deleteAll()

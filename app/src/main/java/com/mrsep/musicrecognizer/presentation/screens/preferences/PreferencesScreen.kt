@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
@@ -31,37 +32,43 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PreferencesScreen(
     modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel = hiltViewModel(),
-    navController: NavController
+    onNavigateToAboutScreen: () -> Unit,
+    onNavigateToQueueScreen: () -> Unit
 ) {
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle(PreferencesUiState.Loading)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     when (val uiState = uiStateInFlow) {
         is PreferencesUiState.Loading -> LoadingStub()
         is PreferencesUiState.Success -> {
-            Column(
-                modifier = modifier.fillMaxSize()
-            ) {
+            Column {
+                PreferencesTopBar(topAppBarScrollBehavior = topBarBehaviour)
                 Column(
                     modifier = modifier
-//                        .fillMaxSize()
-                        .weight(weight = 1f, fill = false)
+                        .fillMaxSize()
+                        .nestedScroll(topBarBehaviour.nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start,
                 ) {
-                    Text(
-                        text = stringResource(R.string.preferences).toUpperCase(Locale.current),
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    PreferenceGroup(title = "Developer options") {
+                    PreferenceGroup(title = "Recognition") {
+                        PreferenceClickableItem(
+                            title = "Recognition queue",
+                            subtitle = "Manage your saved recognitions",
+                            onItemClick = onNavigateToQueueScreen
+                        )
+                    }
+                    PreferenceGroup(title = "Developer options",
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
                         PreferenceSwitchItem(
                             title = "Enable developer mode",
                             subtitle = "Only for dev purpose",
@@ -154,15 +161,13 @@ fun PreferencesScreen(
                     PreferenceGroup(title = "Misc", modifier = Modifier.padding(top = 16.dp)) {
                         PreferenceClickableItem(
                             title = "About",
-                            onItemClick = { }
+                            onItemClick = onNavigateToAboutScreen
                         )
                     }
                 }
-//                AppNavigationBar(
-//                    visible = true,
-//                    navController = navController
-//                )
             }
+
+
 
         }
     }

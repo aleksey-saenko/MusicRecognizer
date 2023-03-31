@@ -2,10 +2,11 @@ package com.mrsep.musicrecognizer.data.remote.audd.model.adapter
 
 import android.text.Html
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
-import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.domain.model.Track
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -13,7 +14,7 @@ import java.util.*
 class AuddJsonAdapter {
 
     @FromJson
-    fun fromJson(json: AuddResponseJson): RemoteRecognizeResult<Track> {
+    fun fromJson(json: AuddResponseJson): RemoteRecognitionResult<Track> {
         return when (json) {
             is AuddResponseJson.Error -> fromErrorJson(json)
             is AuddResponseJson.Success -> fromSuccessJson(json)
@@ -22,14 +23,15 @@ class AuddJsonAdapter {
 
     @ToJson
     fun toJson(
-        @Suppress("UNUSED_PARAMETER") recognizeResponse: RemoteRecognizeResult<Track>
+        @Suppress("UNUSED_PARAMETER") recognizeResponse: RemoteRecognitionResult<Track>
     ): AuddResponseJson =
         throw IllegalStateException("Not implemented")
 
-    private fun fromSuccessJson(json: AuddResponseJson.Success): RemoteRecognizeResult<Track> {
+
+    private fun fromSuccessJson(json: AuddResponseJson.Success): RemoteRecognitionResult<Track> {
         return when (json.result) {
-            null -> RemoteRecognizeResult.NoMatches
-            else -> RemoteRecognizeResult.Success(
+            null -> RemoteRecognitionResult.NoMatches
+            else -> RemoteRecognitionResult.Success(
                 data = Track(
                     mbId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString(),
                     artist = json.result.artist,
@@ -47,7 +49,7 @@ class AuddJsonAdapter {
                         napster = null
                     ),
                     metadata = Track.Metadata(
-                        lastRecognitionDate = System.currentTimeMillis(),
+                        lastRecognitionDate = Instant.now(),
                         isFavorite = false
                     )
                 )
@@ -55,11 +57,11 @@ class AuddJsonAdapter {
         }
     }
 
-    private fun fromErrorJson(json: AuddResponseJson.Error): RemoteRecognizeResult<Track> {
+    private fun fromErrorJson(json: AuddResponseJson.Error): RemoteRecognitionResult<Track> {
         return when (json.body.errorCode) {
-            901 -> RemoteRecognizeResult.Error.WrongToken(isLimitReached = true)
-            900 -> RemoteRecognizeResult.Error.WrongToken(isLimitReached = false)
-            else -> RemoteRecognizeResult.Error.UnhandledError(
+            901 -> RemoteRecognitionResult.Error.WrongToken(isLimitReached = true)
+            900 -> RemoteRecognitionResult.Error.WrongToken(isLimitReached = false)
+            else -> RemoteRecognitionResult.Error.UnhandledError(
                 message = "Audd response error\n" +
                         "code=${json.body.errorCode}\n" +
                         "message=${json.body.errorMessage}"
@@ -74,10 +76,7 @@ private fun String.decodeHtml(): String {
     return Html.fromHtml(preparedString, Html.FROM_HTML_MODE_COMPACT).toString()
 }
 
-private val dateParser = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
-private fun String.toLocalDate() = runCatching { LocalDate.parse(this, dateParser) }.getOrNull()
-//private fun String.toEpochSeconds() =
-//    runCatching { LocalDate.parse(this, dateParser) }.getOrNull()?.toEpochDay()
+private fun String.toLocalDate() = runCatching { LocalDate.parse(this, DateTimeFormatter.ISO_DATE) }.getOrNull()
 
 /*
 https://docs.audd.io/#common-errors

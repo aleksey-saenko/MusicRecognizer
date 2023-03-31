@@ -3,9 +3,11 @@ package com.mrsep.musicrecognizer.data.preferences
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import java.io.InputStream
 import java.io.OutputStream
+
 
 object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
 
@@ -21,6 +23,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .setNapster(true)
                     .build()
             )
+            .setApiToken(BuildConfig.AUDD_TOKEN)
 //            .setNotificationServiceEnabled(true)
             .setDeveloperModeEnabled(true)
             .build()

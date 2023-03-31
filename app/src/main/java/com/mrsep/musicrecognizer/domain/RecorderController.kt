@@ -6,17 +6,14 @@ import java.time.Duration
 
 interface RecorderController {
 
-    suspend fun recordAudioToFile(file: File, duration: Duration): RecordResult
-
     val maxAmplitudeFlow: Flow<Float>
+    suspend fun recordAudioToFile(duration: Duration): RecordResult
 
 }
 
-sealed interface RecordResult {
-    object Success : RecordResult
-    sealed interface Error : RecordResult {
-        object PrepareFailed : Error
-        object ServerDied : Error
-        data class UnhandledError(val throwable: Throwable? = null) : Error
-    }
+sealed class RecordResult {
+
+    data class Success(val file: File) : RecordResult()
+    data class Error(val throwable: Throwable) : RecordResult()
+
 }

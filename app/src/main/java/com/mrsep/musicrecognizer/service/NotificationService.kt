@@ -15,8 +15,8 @@ import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.di.MainDispatcher
-import com.mrsep.musicrecognizer.domain.RecognizeInteractor
-import com.mrsep.musicrecognizer.domain.RecognizeStatus
+import com.mrsep.musicrecognizer.domain.RecognitionInteractor
+import com.mrsep.musicrecognizer.domain.RecognitionStatus
 import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import com.mrsep.musicrecognizer.presentation.screens.track.Screen
@@ -32,7 +32,7 @@ private const val RECEIVER_TAG = "NotService.Receiver"
 class NotificationService : Service() {
 
     @Inject
-    lateinit var recognizeInteractor: RecognizeInteractor
+    lateinit var recognitionInteractor: RecognitionInteractor
 
     @Inject
     lateinit var trackRepository: TrackRepository
@@ -60,7 +60,7 @@ class NotificationService : Service() {
         Log.d(SERVICE_TAG, "onCreate")
         super.onCreate()
         createNotificationChannel()
-        startForeground(NOTIFY_ID, createNotificationForStatus(RecognizeStatus.Ready))
+        startForeground(NOTIFY_ID, createNotificationForStatus(RecognitionStatus.Ready))
         ContextCompat.registerReceiver(
             this,
             actionReceiver,
@@ -73,19 +73,19 @@ class NotificationService : Service() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         notificationDeliveryJob = serviceScope.launch {
-            recognizeInteractor.statusFlow.collect { status ->
+            recognitionInteractor.statusFlow.collect { status ->
                 notificationManager.notify(NOTIFY_ID, createNotificationForStatus(status))
             }
         }
     }
 
-    private fun resetStatusToReady() = recognizeInteractor.resetStatusToReady()
+    private fun resetStatusToReady() = recognitionInteractor.resetStatusToReady(false)
 
-    private fun cancelRecognition() = recognizeInteractor.cancelRecognize()
+    private fun cancelRecognition() = recognitionInteractor.cancelRecognition()
 
     private fun addResultTrackToFavs() {
-        val track = when (val status = recognizeInteractor.statusFlow.value) {
-            is RecognizeStatus.Success -> status.track
+        val track = when (val status = recognitionInteractor.statusFlow.value) {
+            is RecognitionStatus.Success -> status.track
             else -> {
                 showToast("Track not found")
                 return
@@ -142,7 +142,7 @@ class NotificationService : Service() {
         TODO()
     }
 
-    private fun createNotificationForStatus(status: RecognizeStatus): Notification {
+    private fun createNotificationForStatus(status: RecognitionStatus): Notification {
 
         val baseNotificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
@@ -154,7 +154,7 @@ class NotificationService : Service() {
 //            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
 
         return when (status) {
-            RecognizeStatus.Ready -> {
+            RecognitionStatus.Ready -> {
                 baseNotificationBuilder
                     .setContentTitle("TuneSurfer")
                     .setContentText(getString(R.string.ready))
@@ -170,7 +170,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            RecognizeStatus.Listening -> {
+            RecognitionStatus.Listening -> {
                 baseNotificationBuilder
                     .setContentTitle(getString(R.string.listening))
                     .addAction(
@@ -185,7 +185,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            RecognizeStatus.Recognizing -> {
+            RecognitionStatus.Recognizing -> {
                 baseNotificationBuilder
                     .setContentTitle(getString(R.string.recognizing))
                     .addAction(
@@ -200,7 +200,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            is RecognizeStatus.Error -> {
+            is RecognitionStatus.Error -> {
                 baseNotificationBuilder
                     .setContentTitle("Some error was occur, check logs")
                     .addAction(
@@ -215,7 +215,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            RecognizeStatus.NoMatches -> {
+            is RecognitionStatus.NoMatches -> {
                 baseNotificationBuilder
                     .setContentTitle(getString(R.string.no_matches_found))
                     .addAction(
@@ -230,7 +230,7 @@ class NotificationService : Service() {
                     )
                     .build()
             }
-            is RecognizeStatus.Success -> {
+            is RecognitionStatus.Success -> {
                 val bitmap = try {
                     val inputStream = URL(status.track.links.artwork).openStream()
                     BitmapFactory.decodeStream(inputStream)
@@ -286,7 +286,7 @@ class NotificationService : Service() {
 
     private fun launchRecognizeOrCancel() {
 //        recognizeInteractor.fakeRecognize(serviceScope)
-        recognizeInteractor.launchRecognizeOrCancel(serviceScope)
+        recognitionInteractor.launchRecognitionOrCancel(serviceScope)
     }
 
     private fun createTrackDeepLinkIntent(mbId: String): PendingIntent {

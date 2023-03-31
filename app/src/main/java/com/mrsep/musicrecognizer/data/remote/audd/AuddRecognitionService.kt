@@ -2,8 +2,8 @@ package com.mrsep.musicrecognizer.data.remote.audd
 
 import android.content.Context
 import com.mrsep.musicrecognizer.di.IoDispatcher
-import com.mrsep.musicrecognizer.domain.RecognizeService
-import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
+import com.mrsep.musicrecognizer.domain.RecognitionService
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.domain.model.Track
 import com.mrsep.musicrecognizer.domain.model.UserPreferences
 import com.squareup.moshi.Moshi
@@ -23,24 +23,22 @@ import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val returnParam =
-    "lyrics,apple_music,spotify,deezer,napster,musicbrainz" //lyrics,apple_music,spotify,deezer,napster,musicbrainz
 private const val mediaTypeString = "audio/mpeg; charset=utf-8"
 
 @Singleton
-class AuddRecognizeService @Inject constructor(
+class AuddRecognitionService @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val moshi: Moshi,
     retrofit: Retrofit,
-) : RecognizeService {
+) : RecognitionService {
     private val auddClient = retrofit.create<AuddApi>()
 
     override suspend fun recognize(
         token: String,
         requiredServices: UserPreferences.RequiredServices,
         file: File
-    ): RemoteRecognizeResult<Track> {
+    ): RemoteRecognitionResult<Track> {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -54,7 +52,7 @@ class AuddRecognizeService @Inject constructor(
         token: String,
         requiredServices: UserPreferences.RequiredServices,
         byteArray: ByteArray
-    ): RemoteRecognizeResult<Track> {
+    ): RemoteRecognitionResult<Track> {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -68,7 +66,7 @@ class AuddRecognizeService @Inject constructor(
         token: String,
         requiredServices: UserPreferences.RequiredServices,
         url: URL
-    ): RemoteRecognizeResult<Track> {
+    ): RemoteRecognitionResult<Track> {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -106,7 +104,7 @@ class AuddRecognizeService @Inject constructor(
         token: String,
         requiredServices: UserPreferences.RequiredServices,
         dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
-    ): RemoteRecognizeResult<Track> {
+    ): RemoteRecognitionResult<Track> {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("api_token", token)
             .addFormDataPart("return", requiredServices.toAuddReturnParameter())
@@ -116,28 +114,28 @@ class AuddRecognizeService @Inject constructor(
             auddClient.recognize(multipartBody)
         } catch (e: HttpException) {
             e.printStackTrace()
-            RemoteRecognizeResult.Error.HttpError(code = e.code(), message = e.message())
+            RemoteRecognitionResult.Error.HttpError(code = e.code(), message = e.message())
         } catch (e: IOException) {
             e.printStackTrace()
-            RemoteRecognizeResult.Error.BadConnection
+            RemoteRecognitionResult.Error.BadConnection
         } catch (e: Exception) {
             e.printStackTrace()
-            RemoteRecognizeResult.Error.UnhandledError(message = e.message ?: "", e = e)
+            RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
 
 
-    override suspend fun fakeRecognize(): RemoteRecognizeResult<Track> {
+    override suspend fun fakeRecognize(): RemoteRecognitionResult<Track> {
         return withContext(ioDispatcher) {
             delay(1_000)
             val fakeJson = appContext.assets.open("fake_json_success.txt").bufferedReader().use {
                 it.readText()
             }
             val resultType = Types.newParameterizedType(
-                RemoteRecognizeResult::class.java,
+                RemoteRecognitionResult::class.java,
                 Track::class.java
             )
-            moshi.adapter<RemoteRecognizeResult<Track>>(resultType).fromJson(fakeJson)!!
+            moshi.adapter<RemoteRecognitionResult<Track>>(resultType).fromJson(fakeJson)!!
         }
     }
 

@@ -11,7 +11,7 @@ class TrackToDataMapper @Inject constructor() : Mapper<Track, TrackEntity> {
             mbId = input.mbId,
             title = input.title,
             artist = input.artist,
-            releaseDate = input.releaseDate?.toEpochDay(),
+            releaseDate = input.releaseDate,
             album = input.album,
             lyrics = input.lyrics,
             links = TrackEntity.Links(

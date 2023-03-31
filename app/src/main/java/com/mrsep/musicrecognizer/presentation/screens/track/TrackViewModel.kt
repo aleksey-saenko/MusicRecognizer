@@ -3,9 +3,11 @@ package com.mrsep.musicrecognizer.presentation.screens.track
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.domain.model.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val trackRepository: TrackRepository
+    private val trackRepository: TrackRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
 //    private val args = TrackScreenArguments(savedStateHandle)
@@ -30,7 +33,7 @@ class TrackViewModel @Inject constructor(
         )
 
     fun onFavoriteClick() {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             val currentState = uiStateStream.value
             if (currentState is TrackUiState.Success) {
                 val track = currentState.data

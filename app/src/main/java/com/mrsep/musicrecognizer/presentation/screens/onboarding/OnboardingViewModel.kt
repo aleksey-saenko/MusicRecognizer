@@ -3,11 +3,13 @@ package com.mrsep.musicrecognizer.presentation.screens.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.BuildConfig
+import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.domain.RecognizeService
-import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
+import com.mrsep.musicrecognizer.domain.RecognitionService
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.domain.model.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,11 +22,12 @@ private const val AUDIO_SAMPLE_URL = "https://audd.tech/example.mp3"
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val recognizeService: RecognizeService
+    private val recognitionService: RecognitionService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _tokenState = MutableStateFlow<TokenState>(TokenState.Unchecked)
-    val tokenState get() = _tokenState as StateFlow<TokenState>
+    val tokenState = _tokenState.asStateFlow()
 
     suspend fun getSavedToken(): String {
         return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -35,16 +38,18 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun testToken(testToken: String) {
+        _tokenState.update { TokenState.Success }
+        return
 //        if (testToken.isBlank()) {
 //            _tokenState.update { MyTokenState.Wrong }
 //            return
 //        }
 //        _tokenState.update { MyTokenState.Success }
 //        return
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             _tokenState.update { TokenState.Validating }
 
-            val remoteResult = recognizeService.recognize(
+            val remoteResult = recognitionService.recognize(
                 token = testToken,
                 requiredServices = UserPreferences.RequiredServices(
                     spotify = true,
@@ -57,10 +62,10 @@ class OnboardingViewModel @Inject constructor(
             )
 //            Log.w("remoteResult", remoteResult.toString())
             val newState = when (remoteResult) {
-                is RemoteRecognizeResult.Error.WrongToken -> TokenState.Wrong(
+                is RemoteRecognitionResult.Error.WrongToken -> TokenState.Wrong(
                     isLimitReached = remoteResult.isLimitReached
                 )
-                is RemoteRecognizeResult.Error -> TokenState.Error(remoteResult)
+                is RemoteRecognitionResult.Error -> TokenState.Error(remoteResult)
                 else -> TokenState.Success
             }
             if (newState is TokenState.Success) {
@@ -113,7 +118,7 @@ sealed class TokenState {
         override val isValidationAllowed = true
     }
 
-    data class Error(val rec: RemoteRecognizeResult.Error) : TokenState() {
+    data class Error(val rec: RemoteRecognitionResult.Error) : TokenState() {
         override val isValidating = false
         override val isSuccessToken = false
         override val isBadToken = false

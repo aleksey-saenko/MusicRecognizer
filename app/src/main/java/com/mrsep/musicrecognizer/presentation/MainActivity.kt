@@ -21,14 +21,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mrsep.musicrecognizer.presentation.common.NavigationBarCustom
+import com.mrsep.musicrecognizer.presentation.screens.preferences.queue.navigateToQueueScreen
+import com.mrsep.musicrecognizer.presentation.screens.preferences.queue.queueScreen
 import com.mrsep.musicrecognizer.presentation.screens.library.libraryScreen
 import com.mrsep.musicrecognizer.presentation.screens.home.HOME_ROUTE
 import com.mrsep.musicrecognizer.presentation.screens.home.homeScreen
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.ONBOARDING_ROUTE
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.onboardingScreen
+import com.mrsep.musicrecognizer.presentation.screens.preferences.about.aboutScreen
+import com.mrsep.musicrecognizer.presentation.screens.preferences.about.navigateToAboutScreen
 import com.mrsep.musicrecognizer.presentation.screens.preferences.preferencesScreen
 import com.mrsep.musicrecognizer.presentation.screens.track.Screen.Track.navigateToTrackScreen
 import com.mrsep.musicrecognizer.presentation.screens.track.Screen.Track.trackScreen
+import com.mrsep.musicrecognizer.presentation.screens.workshop.workshopScreen
 import com.mrsep.musicrecognizer.service.NotificationService.Companion.toggleNotificationService
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,12 +125,19 @@ private fun AppNavigation(
             onOnboardingCompleted = { },
             onOnboardingClose = onOnboardingClose
         )
-        trackScreen(
-            onBackPressed = topNavController::navigateUp
-        )
         bottomBarNavHost(
             topNavController = topNavController
         )
+        trackScreen(
+            onBackPressed = topNavController::navigateUp
+        )
+        queueScreen(
+            onBackPressed = topNavController::navigateUp,
+            onNavigateToTrackScreen = { mbId ->
+                topNavController.navigateToTrackScreen(mbId = mbId)
+            }
+        )
+        aboutScreen(onBackPressed = topNavController::navigateUp)
     }
 }
 
@@ -155,9 +167,21 @@ private fun NavGraphBuilder.bottomBarNavHost(
                 homeScreen(
                     onNavigateToTrackScreen = { mbId ->
                         topNavController.navigateToTrackScreen(mbId = mbId)
+                    },
+                    onNavigateToQueueScreen = {
+                        topNavController.navigateToQueueScreen()
                     }
                 )
-                preferencesScreen(navController = innerNavController)
+                preferencesScreen(
+                    onNavigateToAboutScreen = {
+                        topNavController.navigateToAboutScreen()
+                    },
+                    onNavigateToQueueScreen = {
+                        topNavController.navigateToQueueScreen()
+                    }
+                )
+                workshopScreen() //FIXME delete after debug
+
             }
             NavigationBarCustom(navController = innerNavController)
         }

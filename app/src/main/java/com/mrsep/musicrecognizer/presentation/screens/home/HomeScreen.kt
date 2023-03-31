@@ -22,8 +22,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.mrsep.musicrecognizer.R
-import com.mrsep.musicrecognizer.domain.RecognizeStatus
-import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
+import com.mrsep.musicrecognizer.domain.RecognitionStatus
+import com.mrsep.musicrecognizer.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.presentation.screens.home.components.*
 import com.mrsep.musicrecognizer.presentation.screens.onboarding.DialogForOpeningAppSettings
 import kotlinx.coroutines.Job
@@ -36,7 +36,8 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToTrackScreen: (mbId: String) -> Unit
+    onNavigateToTrackScreen: (mbId: String) -> Unit,
+    onNavigateToQueueScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -114,61 +115,67 @@ fun HomeScreen(
     }
 
     when (val status = recognizeStatus) {
-        RecognizeStatus.NoMatches -> {
+        is RecognitionStatus.NoMatches -> {
             NoMatchFoundDialog(
-                onDismissClick = viewModel::resetStatusToReady,
-                onSaveClick = { showStubToast(context) }, //FIXME
+                onDismissClick = { viewModel.resetStatusToReady(false) },
+                onSaveClick = {
+                    viewModel.resetStatusToReady(true)
+                    Toast.makeText(context, "Added to recognition queue", Toast.LENGTH_SHORT).show() //FIXME
+                },
                 onRetryClick = viewModel::recognizeTap
             )
         }
-        is RecognizeStatus.Error.RemoteError -> {
+        is RecognitionStatus.Error.RemoteError -> {
             when (status.error) {
-                RemoteRecognizeResult.Error.BadConnection -> {
+                RemoteRecognitionResult.Error.BadConnection -> {
                     BadConnectionDialog(
-                        onDismissClick = viewModel::resetStatusToReady,
-                        onNavigateToQueue = { showStubToast(context) } //FIXME
+                        onDismissClick = { viewModel.resetStatusToReady(true) },
+                        onNavigateToQueue = {
+                            viewModel.resetStatusToReady(true)
+                            onNavigateToQueueScreen()
+                        }
                     )
                 }
-                is RemoteRecognizeResult.Error.WrongToken -> {
+                is RemoteRecognitionResult.Error.WrongToken -> {
                     WrongTokenDialog(
                         isLimitReached = status.error.isLimitReached,
-                        onDismissClick = viewModel::resetStatusToReady,
+                        onDismissClick = { viewModel.resetStatusToReady(false) },
                         onNavigateToPreferences = { showStubToast(context) } //FIXME
                     )
                 }
-                is RemoteRecognizeResult.Error.HttpError -> {
+                is RemoteRecognitionResult.Error.HttpError -> {
                     HttpErrorDialog(
                         code = status.error.code,
                         message = status.error.message,
-                        onDismissClick = viewModel::resetStatusToReady,
+                        onDismissClick = { viewModel.resetStatusToReady(false) },
                         onSendReportClick = { showStubToast(context) } //FIXME
                     )
                 }
-                is RemoteRecognizeResult.Error.UnhandledError -> {
+                is RemoteRecognitionResult.Error.UnhandledError -> {
                     UnhandledErrorDialog(
                         throwable = status.error.e,
-                        onDismissClick = viewModel::resetStatusToReady,
+                        onDismissClick = { viewModel.resetStatusToReady(false) },
                         onSendReportClick = { showStubToast(context) } //FIXME
                     )
                 }
             }
         }
-        is RecognizeStatus.Error.RecordError -> {
+        is RecognitionStatus.Error.RecordError -> {
             RecordErrorDialog(
-                onDismissClick = viewModel::resetStatusToReady,
-                onNavigateToAppInfo = { showStubToast(context) } //FIXME
+                onDismissClick = { viewModel.resetStatusToReady(false) },
+                onNavigateToAppInfo = { showStubToast(context) } //FIXME unnecessary because the permission was checked before (replace with report button)
             )
         }
-        RecognizeStatus.Ready,
-        RecognizeStatus.Listening,
-        RecognizeStatus.Recognizing -> { /* no dialog & actions */
+        RecognitionStatus.Ready,
+        RecognitionStatus.Listening,
+        RecognitionStatus.Recognizing -> { /* no dialog & actions */
         }
 
-        is RecognizeStatus.Success -> {
+        is RecognitionStatus.Success -> {
             DisposableEffect(status) {
                 onNavigateToTrackScreen(status.track.mbId)
                 onDispose {
-                    viewModel.resetStatusToReady()
+                    viewModel.resetStatusToReady(false)
                 }
             }
         }
@@ -176,11 +183,11 @@ fun HomeScreen(
 }
 
 @Composable
-private fun getButtonTitle(recognizeStatus: RecognizeStatus): String {
-    return when (recognizeStatus) {
-        RecognizeStatus.Ready -> stringResource(R.string.tap_for_recognize)
-        RecognizeStatus.Listening -> stringResource(R.string.listening)
-        RecognizeStatus.Recognizing -> stringResource(R.string.recognizing)
+private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
+    return when (recognitionStatus) {
+        RecognitionStatus.Ready -> stringResource(R.string.tap_for_recognize)
+        RecognitionStatus.Listening -> stringResource(R.string.listening)
+        RecognitionStatus.Recognizing -> stringResource(R.string.recognizing)
         else -> stringResource(R.string.tap_for_recognize)
     }
 }

@@ -7,9 +7,15 @@ import androidx.navigation.compose.composable
 
 const val PREFERENCES_ROUTE = "preferences"
 
-fun NavGraphBuilder.preferencesScreen(navController: NavController) {
+fun NavGraphBuilder.preferencesScreen(
+    onNavigateToAboutScreen: () -> Unit,
+    onNavigateToQueueScreen: () -> Unit
+) {
     composable(PREFERENCES_ROUTE) {
-        PreferencesScreen(navController = navController)
+        PreferencesScreen(
+            onNavigateToAboutScreen = onNavigateToAboutScreen,
+            onNavigateToQueueScreen = onNavigateToQueueScreen
+        )
     }
 }
 

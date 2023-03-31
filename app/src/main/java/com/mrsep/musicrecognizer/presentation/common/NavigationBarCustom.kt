@@ -52,11 +52,6 @@ fun NavigationBarCustom(
                 currentDestination?.hierarchy?.any { it.route == destination.route } == true
             val iconSize by animateDpAsState(if (selected) 32.dp else 26.dp)
 
-            val bounceHeightAnimated by animateDpAsState(
-                targetValue = if (selected) 0.dp else 8.dp,
-                animationSpec = tween(easing = EaseInBounce)
-            )
-
             val bounceHeightAnimatable by remember { mutableStateOf(Animatable(0f)) }
 
             LaunchedEffect(selected) {
@@ -141,7 +136,7 @@ private fun RowScope.CustomNavBarItem(
         this@CustomNavBarItem.AnimatedVisibility(
             visible = selected,
             modifier = Modifier
-                .width(80.dp)
+                .width(64.dp)
                 .height(4.dp)
                 .align(Alignment.TopCenter)
         ) {

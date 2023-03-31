@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.presentation
 
 import com.mrsep.musicrecognizer.domain.model.Track
+import java.time.Instant
 import java.time.LocalDate
 
 val fakeTrackList = (1..10).map { index ->
@@ -21,7 +22,7 @@ val fakeTrackList = (1..10).map { index ->
             napster = "",
         ),
         metadata = Track.Metadata(
-            lastRecognitionDate = 0L,
+            lastRecognitionDate = Instant.now(),
             isFavorite = true
         )
     )

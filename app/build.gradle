@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'org.jetbrains.kotlin.kapt'
-//    id 'androidx.navigation.safeargs'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
     id 'com.google.protobuf'
@@ -71,55 +70,77 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
+        kotlinCompilerExtensionVersion '1.4.4'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            resources.excludes += "DebugProbesKt.bin"
         }
     }
 }
 
 ext {
-    compose_version = "1.4.0-rc01"
+//    compose_version = "1.5.0-alpha01"
+//    compose_version = "1.4.0-rc01"
 //    lifecycle_version = "2.6.0"
-    accompanist_version = "0.29.1-alpha"
+    accompanist_version = "0.30.0"
     navigation_compose_version = "2.5.3"
     protobuf_version = "3.21.12"
-    room_version = "2.5.0"
+    room_version = "2.5.1"
     retrofit_version = "2.9.0"
     moshi_version = "1.14.0"
     hilt_version = "2.44.2"
-    coil_version = "2.2.2"
+    coil_version = "2.3.0"
+    work_manager_version = "2.8.1"
+
 }
 
 dependencies {
 
+    def okhttpBom = platform("com.squareup.okhttp3:okhttp-bom:4.10.0")
+    implementation okhttpBom
+
+    def composeBom = platform('androidx.compose:compose-bom:2023.03.00')
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
+    // Android Studio Preview support
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0'
-    implementation 'androidx.activity:activity-compose:1.6.1'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.1.0-alpha07'
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1' //for info of work manager
+
+    implementation 'androidx.activity:activity-compose:1.7.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+//    implementation "androidx.compose.ui:ui:$compose_version"
+//    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+//    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
+
+//    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+//    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+//    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
-    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     //Proto DataStore
     implementation "androidx.datastore:datastore:1.0.0"
@@ -131,10 +152,12 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    //Retrofit
+    //OkHttp & Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
     //Moshi
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
@@ -147,6 +170,12 @@ dependencies {
 
     //Coil
     implementation "io.coil-kt:coil-compose:$coil_version"
+
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_manager_version"
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
 
 }
 

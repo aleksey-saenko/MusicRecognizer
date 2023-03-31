@@ -32,6 +32,22 @@ class TrackRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertOrReplaceSaveMetadata(vararg track: Track): List<Track> {
+        return withContext(ioDispatcher) {
+            val trackList = track.map { newTrack ->
+                getByMbId(newTrack.mbId)?.run {
+                    newTrack.copy(
+                        metadata = newTrack.metadata.copy(
+                            isFavorite = this.metadata.isFavorite
+                        )
+                    )
+                } ?: newTrack
+            }
+            trackDao.insertOrReplace(*trackList.map { trackToDataMapper.map(it) }.toTypedArray())
+            trackList
+        }
+    }
+
     override suspend fun update(track: Track) {
         withContext(ioDispatcher) {
             trackDao.update(trackToDataMapper.map(track))

@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.data.track
 
 import com.mrsep.musicrecognizer.domain.model.Mapper
 import com.mrsep.musicrecognizer.domain.model.Track
-import java.time.LocalDate
 import javax.inject.Inject
 
 class TrackToDomainMapper @Inject constructor() : Mapper<TrackEntity, Track> {
@@ -12,7 +11,7 @@ class TrackToDomainMapper @Inject constructor() : Mapper<TrackEntity, Track> {
             mbId = input.mbId,
             title = input.title,
             artist = input.artist,
-            releaseDate = input.releaseDate?.let { LocalDate.ofEpochDay(it) },
+            releaseDate = input.releaseDate,
             album = input.album,
             lyrics = input.lyrics,
             links = Track.Links(

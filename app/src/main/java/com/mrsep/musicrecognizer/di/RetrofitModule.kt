@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Singleton
 
+
 private const val BASE_URL = "https://api.audd.io/"
 
 @Module
@@ -32,8 +33,8 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi =
-        Moshi.Builder()
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
             .add(
                 PolymorphicJsonAdapterFactory.of(AuddResponseJson::class.java, "status")
                     .withSubtype(AuddResponseJson.Success::class.java, "success")
@@ -41,31 +42,38 @@ object RetrofitModule {
             )
             .add(AuddJsonAdapter())
             .build()
+    }
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        moshi: Moshi,
+    fun provideOkHttpClient(
         @ApplicationContext appContext: Context,
         @ApplicationScope appScope: CoroutineScope
-    ): Retrofit {
-
-        val client = OkHttpClient.Builder()
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
             .run {
                 if ((BuildConfig.LOG_DEBUG_MODE)) {
                     val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
                         setLevel(HttpLoggingInterceptor.Level.BODY)
                     }
+                    val httpFileLoggingInterceptor = HttpFileLoggingInterceptor(appContext, appScope)
                     this.addInterceptor(httpLoggingInterceptor)
-                        .addInterceptor(HttpFileLoggingInterceptor(appContext, appScope))
+                        .addInterceptor(httpFileLoggingInterceptor)
                 } else {
                     this
                 }
             }
             .build()
+    }
 
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        moshi: Moshi,
+        okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
-            .client(client)
+            .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .baseUrl(BASE_URL)
             .build()
@@ -84,10 +92,7 @@ class HttpFileLoggingInterceptor(
 
     init {
         try {
-            val root = File("${appContext.filesDir.absolutePath}/http_logger/")
-            if (!root.exists()) {
-                root.mkdir()
-            }
+            File("${appContext.filesDir.absolutePath}/http_logger/").run { if (!exists()) mkdir() }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -102,7 +107,9 @@ class HttpFileLoggingInterceptor(
 
         val body = response.body!!
         val json = body.string()
-        writeLogFile(responseFile, JSONObject(json).toString(4))
+        if (json.isNotBlank()) {
+            writeLogFile(responseFile, JSONObject(json).toString(4))
+        }
 
         return response.newBuilder()
             .body(json.toResponseBody(body.contentType()))

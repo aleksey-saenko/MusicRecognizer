@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.R
-import com.mrsep.musicrecognizer.domain.model.RemoteRecognizeResult
 import com.mrsep.musicrecognizer.util.openUrlImplicitly
 
 private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_ANNOTATION_TAG"

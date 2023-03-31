@@ -26,12 +26,6 @@ class AudioRecorderControllerNew @Inject constructor(
 
     private var recorder: AudioRecord? = null
 
-    suspend fun recordAudioToFile(filename: String, duration: Duration): RecordResult {
-        val byteArrayResult = recordToByteArray(duration)
-        writeToFile(byteArrayResult, filename)
-        return RecordResult.Success
-    }
-
     @SuppressLint("MissingPermission")
 //    @WorkerThread
     fun recordToByteArray(duration: Duration): ByteArray {

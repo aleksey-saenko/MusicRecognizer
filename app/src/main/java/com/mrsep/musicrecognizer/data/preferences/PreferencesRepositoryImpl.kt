@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.RequiredServicesProto
-import com.mrsep.musicrecognizer.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.domain.model.Mapper
@@ -26,8 +25,7 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<UserPreferencesProto>,
     private val preferencesToDomainMapper: Mapper<UserPreferencesProto, UserPreferences>,
     private val requiredServicesToProtoMapper: Mapper<UserPreferences.RequiredServices, RequiredServicesProto>,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : PreferencesRepository {
 
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {
@@ -58,9 +56,8 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override val userPreferencesFlow: Flow<UserPreferences> = dataStore.data
         .ioExceptionCatcherOnRead()
-        .flowOn(ioDispatcher)
         .map { preferencesProto -> preferencesToDomainMapper.map(preferencesProto) }
-        .flowOn(defaultDispatcher)
+        .flowOn(ioDispatcher)
 
     override suspend fun saveApiToken(newToken: String) {
         safeWriter { setApiToken(newToken) }
@@ -86,4 +83,5 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun setDeveloperModeEnabled(value: Boolean) {
         safeWriter { setDeveloperModeEnabled(value) }
     }
+
 }

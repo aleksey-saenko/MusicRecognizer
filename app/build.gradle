@@ -4,7 +4,7 @@ plugins {
 
     id 'org.jetbrains.kotlin.kapt'
     id 'com.google.dagger.hilt.android'
-    id 'kotlin-parcelize'
+//    id 'kotlin-parcelize'
     id 'com.google.protobuf'
 }
 
@@ -80,114 +80,77 @@ android {
     }
 }
 
-ext {
-//    compose_version = "1.5.0-alpha01"
-//    compose_version = "1.4.0-rc01"
-//    lifecycle_version = "2.6.0"
-    accompanist_version = "0.30.0"
-    navigation_compose_version = "2.5.3"
-    protobuf_version = "3.21.12"
-    room_version = "2.5.1"
-    retrofit_version = "2.9.0"
-    moshi_version = "1.14.0"
-    hilt_version = "2.44.2"
-    coil_version = "2.3.0"
-    work_manager_version = "2.8.1"
-    paging_version = "3.1.1"
-
+kapt {
+    correctErrorTypes true
 }
+
+//hilt {
+//    enableAggregatingTask = true
+//}
 
 dependencies {
 
-    def okhttpBom = platform("com.squareup.okhttp3:okhttp-bom:4.10.0")
-    implementation okhttpBom
+    implementation platform(Libs.Compose.Bom)
+    androidTestImplementation platform(Libs.Compose.Bom)
 
-    def composeBom = platform('androidx.compose:compose-bom:2023.03.00')
-    implementation composeBom
-    androidTestImplementation composeBom
+    implementation Libs.Compose.Material3
+    implementation Libs.Compose.ToolingPreview
+    debugImplementation Libs.Compose.DebugTooling
+    androidTestImplementation Libs.Compose.AndroidTestJUnit
+    debugImplementation Libs.Compose.DebugManifest
 
-    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
-    // Android Studio Preview support
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    // UI Tests
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation Libs.Compose.Navigation
+    implementation Libs.Compose.HiltNavigation
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1' //for info of work manager
+    implementation Libs.Android.CoreKtx
+    implementation Libs.Android.LifecycleRuntime
+    implementation Libs.Android.LifecycleLiveData //for info of work manager
+    implementation Libs.Android.ActivityCompose
+    implementation Libs.Android.LifecycleRuntimeCompose
+    implementation Libs.Android.LifecycleViewModelCompose
 
-    implementation 'androidx.activity:activity-compose:1.7.0'
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-
-//    implementation "androidx.compose.ui:ui:$compose_version"
-//    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-//    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
-
-//    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-//    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-//    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    // Accompanist
-    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
-
-    //Proto DataStore
-    implementation "androidx.datastore:datastore:1.0.0"
-    implementation  "com.google.protobuf:protobuf-javalite:$protobuf_version"
-
-    //Room
-    implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
-    //OkHttp & Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.squareup.okhttp3:logging-interceptor")
-
-    //Moshi
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
-
-    //Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-
-    //Coil
-    implementation "io.coil-kt:coil-compose:$coil_version"
-
-    //WorkManager
-    implementation "androidx.work:work-runtime-ktx:$work_manager_version"
-    implementation 'androidx.hilt:hilt-work:1.0.0'
-    kapt 'androidx.hilt:hilt-compiler:1.0.0'
-
-    //Paging 3
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    //implementation("androidx.paging:paging-common:$paging_version") //can be used in domain layer
-    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
-    implementation "androidx.room:room-paging:$room_version"
+    testImplementation Libs.Test.JUnit
+    androidTestImplementation Libs.AndroidTest.JUnitExt
+    androidTestImplementation Libs.AndroidTest.EspressoCore
 
 
-}
+    implementation Libs.Accompanist.SystemUiController
+    implementation Libs.Accompanist.Permissions
 
-kapt {
-    correctErrorTypes true
+    implementation Libs.JetBrains.CoroutinesAndroid
+    implementation Libs.JetBrains.CollectionImmutable
+
+    implementation Libs.DataStore.Core
+    implementation Libs.DataStore.ProtobufJavalite
+
+    implementation Libs.Room.CoreKtx
+    implementation Libs.Room.Runtime
+    annotationProcessor Libs.Room.Compiler
+    kapt Libs.Room.Kapt
+
+    implementation platform(Libs.OkHttp.Bom)
+    implementation Libs.OkHttp.Core
+    implementation Libs.OkHttp.LoggingInterceptor
+    implementation Libs.Retrofit.Core
+    implementation Libs.Retrofit.ConverterMoshi
+
+    implementation Libs.Moshi.Core
+    implementation Libs.Moshi.Adapters
+    kapt Libs.Moshi.Kapt
+
+    implementation Libs.Hilt.Core
+    kapt Libs.Hilt.Kapt
+
+    implementation Libs.Coil.Core
+
+    implementation Libs.WorkManager.RuntimeKtx
+    implementation Libs.WorkManager.HiltWorkManager
+    kapt Libs.WorkManager.Kapt
+
+    implementation Libs.Paging3.RuntimeKtx
+    implementation Libs.Paging3.Compose
+    implementation Libs.Paging3.Room
+
 }
 
 protobuf {

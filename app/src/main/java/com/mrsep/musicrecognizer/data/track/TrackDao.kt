@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.track
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
@@ -62,5 +63,14 @@ interface TrackDao {
                 "LIMIT (:limit)"
     )
     fun searchFlow(key: String, escapeSymbol: String, limit: Int): Flow<List<TrackEntity>>
+
+
+
+    @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit) OFFSET (:offset)")
+    suspend fun getWihOffset(limit: Int, offset: Int): List<TrackEntity>
+
+    @Query("SELECT * FROM track ORDER BY last_recognition_date DESC")
+    fun pagingSource(): PagingSource<Int, TrackEntity>
+
 
 }

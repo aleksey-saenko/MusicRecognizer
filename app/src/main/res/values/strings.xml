@@ -28,6 +28,7 @@
     <string name="deezer">Deezer</string>
     <string name="napster">Napster</string>
     <string name="musicbrainz">MusicBrainz</string>
+    <string name="youtube">Youtube</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="none">None</string>
@@ -80,6 +81,9 @@
     <string name="record_deletion_failed">Record file deletion failed</string>
     <string name="search_track">Search track</string>
     <string name="about">About</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="error_and_message">Error: %s</string>
+    <string name="soundcloud">SoundCloud</string>
 
 
 </resources>

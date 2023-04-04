@@ -21,8 +21,6 @@ import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.Track
 import com.mrsep.musicrecognizer.util.forwardingPainter
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

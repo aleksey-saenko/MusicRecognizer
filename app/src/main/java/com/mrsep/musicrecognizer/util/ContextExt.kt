@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Patterns
 import android.widget.Toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,6 +12,10 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+fun validateUrl(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
+fun validUrlOrNull(potentialUrl: String) = if (validateUrl(potentialUrl)) potentialUrl else null
+
+/** Validate URL before try to open  */
 fun Context.openUrlImplicitly(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     if (intent.resolveActivity(packageManager) != null) {
@@ -18,6 +23,16 @@ fun Context.openUrlImplicitly(url: String) {
     } else {
         Toast.makeText(this, "Web browser not found", Toast.LENGTH_LONG).show()
     }
+}
+
+fun Context.shareText(subject: String, body: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+    }
+    val wrappedIntent = Intent.createChooser(intent, null)
+    startActivity(wrappedIntent)
 }
 
 suspend fun Context.getFileFromAssets(fileName: String): File =

@@ -18,6 +18,7 @@ class TrackToDataMapper @Inject constructor() : Mapper<Track, TrackEntity> {
                 artwork = input.links.artwork,
                 spotify = input.links.spotify,
                 youtube = input.links.youtube,
+                soundCloud = input.links.soundCloud,
                 appleMusic = input.links.appleMusic,
                 musicBrainz = input.links.musicBrainz,
                 deezer = input.links.deezer,

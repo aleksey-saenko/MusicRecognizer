@@ -17,6 +17,8 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setRequiredServices(
                 UserPreferencesProto.RequiredServicesProto.getDefaultInstance().toBuilder()
                     .setSpotify(true)
+                    .setYoutube(true)
+                    .setSoundcloud(true)
                     .setAppleMusic(true)
                     .setDeezer(true)
                     .setMusicbrainz(true)

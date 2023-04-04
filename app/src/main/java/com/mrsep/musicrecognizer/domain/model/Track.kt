@@ -24,6 +24,7 @@ data class Track(
         val artwork: String?,
         val spotify: String?,
         val youtube: String?,
+        val soundCloud: String?,
         val appleMusic: String?,
         val musicBrainz: String?,
         val deezer: String?,
@@ -34,5 +35,14 @@ data class Track(
         val lastRecognitionDate: Instant,
         val isFavorite: Boolean
     )
+
+    fun getSharedBody(): String {
+        val albumAndYear = album?.let {
+                alb -> releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
+        }
+        return albumAndYear?.let { albAndYear ->
+            "$title / $artist / $albAndYear"
+        } ?: "$title / $artist"
+    }
 
 }

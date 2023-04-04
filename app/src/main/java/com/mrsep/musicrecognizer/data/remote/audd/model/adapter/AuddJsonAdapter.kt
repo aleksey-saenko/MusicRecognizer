@@ -2,14 +2,17 @@ package com.mrsep.musicrecognizer.data.remote.audd.model.adapter
 
 import android.text.Html
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
+import com.mrsep.musicrecognizer.data.remote.audd.model.LyricsJson
+import com.mrsep.musicrecognizer.data.remote.audd.model.parseMediaItems
 import com.mrsep.musicrecognizer.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.domain.model.Track
-import com.squareup.moshi.FromJson
-import com.squareup.moshi.ToJson
+import com.mrsep.musicrecognizer.util.validUrlOrNull
+import com.squareup.moshi.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 class AuddJsonAdapter {
 
@@ -31,29 +34,52 @@ class AuddJsonAdapter {
     private fun fromSuccessJson(json: AuddResponseJson.Success): RemoteRecognitionResult<Track> {
         return when (json.result) {
             null -> RemoteRecognitionResult.NoMatches
-            else -> RemoteRecognitionResult.Success(
-                data = Track(
-                    mbId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString(),
-                    artist = json.result.artist,
-                    title = json.result.title,
-                    album = json.result.album,
-                    releaseDate = json.result.releaseDate?.toLocalDate(),
-                    lyrics = json.result.lyricsJson?.lyrics?.decodeHtml(),
-                    links = Track.Links(
-                        artwork = json.result.deezerJson?.album?.coverBig, //FIXME write logic for priority artwork parsing
-                        spotify = null,
-                        appleMusic = null,
-                        youtube = null,
-                        musicBrainz = null,
-                        deezer = null,
-                        napster = null
-                    ),
-                    metadata = Track.Metadata(
-                        lastRecognitionDate = Instant.now(),
-                        isFavorite = false
+            else -> {
+                val mediaItems = json.result.lyricsJson?.media?.let { parseMediaItems(it) }
+                RemoteRecognitionResult.Success(
+                    data = Track(
+                        mbId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID()
+                            .toString(),
+                        artist = json.result.artist,
+                        title = json.result.title,
+                        album = json.result.album,
+                        releaseDate = json.result.releaseDate?.toLocalDate(),
+                        lyrics = json.result.lyricsJson?.lyrics?.decodeHtml(),
+                        links = Track.Links(
+                            artwork = json.result.deezerJson?.album?.coverBig?.let { url ->
+                                validUrlOrNull(url)
+                            }, //FIXME write logic for priority artwork parsing
+                            spotify = json.result.spotify?.externalUrls?.spotify?.let { url ->
+                                validUrlOrNull(url)
+                            },
+                            appleMusic = json.result.appleMusic?.url?.let { url ->
+                                validUrlOrNull(url)
+                            },
+                            youtube = mediaItems?.parseYoutubeLink()?.let { url ->
+                                validUrlOrNull(url)
+                            },
+                            soundCloud = mediaItems?.parseSoundCloudLink()?.let { url ->
+                                validUrlOrNull(url)
+                            },
+                            musicBrainz = json.result.musicbrainz?.firstOrNull()?.id
+                                ?.let { makeMusicBrainzRecordingUrl(it) }?.let { url ->
+                                    validUrlOrNull(url)
+                                },
+                            deezer = json.result.deezerJson?.link?.let { url ->
+                                validUrlOrNull(url)
+                            },
+                            napster = json.result.napster?.id?.let { makeNapsterUrl(it) }
+                                ?.let { url ->
+                                    validUrlOrNull(url)
+                                }
+                        ),
+                        metadata = Track.Metadata(
+                            lastRecognitionDate = Instant.now(),
+                            isFavorite = false
+                        )
                     )
                 )
-            )
+            }
         }
     }
 
@@ -76,7 +102,19 @@ private fun String.decodeHtml(): String {
     return Html.fromHtml(preparedString, Html.FROM_HTML_MODE_COMPACT).toString()
 }
 
-private fun String.toLocalDate() = runCatching { LocalDate.parse(this, DateTimeFormatter.ISO_DATE) }.getOrNull()
+private fun String.toLocalDate() =
+    runCatching { LocalDate.parse(this, DateTimeFormatter.ISO_DATE) }.getOrNull()
+
+private fun makeMusicBrainzRecordingUrl(mbId: String) = "https://musicbrainz.org/recording/$mbId"
+
+private fun makeNapsterUrl(id: String) = "https://web.napster.com/track/$id"
+
+private fun List<LyricsJson.MediaItem>.parseYoutubeLink() =
+    firstOrNull { item -> item.provider == "youtube" }?.url
+
+private fun List<LyricsJson.MediaItem>.parseSoundCloudLink() =
+    firstOrNull { item -> item.provider == "soundcloud" }?.url
+
 
 /*
 https://docs.audd.io/#common-errors

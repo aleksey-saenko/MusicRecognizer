@@ -1,9 +1,12 @@
 package com.mrsep.musicrecognizer.domain
 
+import androidx.paging.PagingData
 import com.mrsep.musicrecognizer.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
+
+    fun getPagedFlow(): Flow<PagingData<Track>>
 
     suspend fun insertOrReplace(vararg track: Track)
     suspend fun insertOrReplaceSaveMetadata(vararg track: Track): List<Track>

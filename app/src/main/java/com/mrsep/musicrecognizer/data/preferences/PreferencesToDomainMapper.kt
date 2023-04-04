@@ -17,6 +17,8 @@ class PreferencesToDomainMapper @Inject constructor() :
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = UserPreferences.RequiredServices(
                 spotify = input.requiredServices.spotify,
+                youtube = input.requiredServices.youtube,
+                soundCloud = input.requiredServices.soundcloud,
                 appleMusic = input.requiredServices.appleMusic,
                 deezer = input.requiredServices.deezer,
                 napster = input.requiredServices.napster,

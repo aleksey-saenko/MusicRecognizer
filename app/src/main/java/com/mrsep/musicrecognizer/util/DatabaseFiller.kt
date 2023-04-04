@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.util
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.TrackRepository
@@ -23,6 +24,18 @@ class DatabaseFiller @Inject constructor(
 ) {
     private val defaultAssetsDirectory = "success_json_responses"
 
+    suspend fun prepopulateByFaker(count: Int) {
+        withContext(ioDispatcher) {
+            getFakeTrackList(
+                startIndex = 0,
+                endIndex = count,
+                inclusive = false,
+                favorites = false
+            ).toTypedArray().run { trackRepository.insertOrReplace(*this) }
+            Log.d(TAG, "Database filling completed")
+        }
+    }
+
     suspend fun prepopulateDatabaseFromAssets(assetsDirectory: String = defaultAssetsDirectory) {
         withContext(ioDispatcher) {
             val trackList = parseJsonFilesFromAssets(assetsDirectory)
@@ -37,6 +50,7 @@ class DatabaseFiller @Inject constructor(
                     }
                 }.toTypedArray()
             trackRepository.insertOrReplace(*trackList)
+            Log.d(TAG, "Database filling completed")
         }
     }
 
@@ -56,6 +70,7 @@ class DatabaseFiller @Inject constructor(
                 return@withContext emptyList()
             }
             fileNamesArray.mapNotNull { fileName ->
+                delay(1) //for individual timestamps
                 try {
                     jsonAdapter.fromJson(
                         appContext.assets.open("${assetsDirectory}/${fileName}")

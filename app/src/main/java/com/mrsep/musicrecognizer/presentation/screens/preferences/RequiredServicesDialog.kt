@@ -18,6 +18,8 @@ class RequiredServicesDialogState(
     initialState: UserPreferences.RequiredServices,
 ) {
     var spotifyCheckBox by mutableStateOf(initialState.spotify)
+    var youtubeCheckBox by mutableStateOf(initialState.youtube)
+    var soundCloudCheckBox by mutableStateOf(initialState.soundCloud)
     var appleMusicCheckBox by mutableStateOf(initialState.appleMusic)
     var deezerCheckBox by mutableStateOf(initialState.deezer)
     var napsterCheckBox by mutableStateOf(initialState.napster)
@@ -26,6 +28,8 @@ class RequiredServicesDialogState(
     val currentState: UserPreferences.RequiredServices
         get() = UserPreferences.RequiredServices(
             spotify = spotifyCheckBox,
+            youtube = youtubeCheckBox,
+            soundCloud = soundCloudCheckBox,
             appleMusic = appleMusicCheckBox,
             deezer = deezerCheckBox,
             napster = napsterCheckBox,
@@ -36,6 +40,8 @@ class RequiredServicesDialogState(
         val Saver: Saver<RequiredServicesDialogState, *> = listSaver(
             save = { listOf(
                 it.spotifyCheckBox,
+                it.youtubeCheckBox,
+                it.soundCloudCheckBox,
                 it.appleMusicCheckBox,
                 it.deezerCheckBox,
                 it.napsterCheckBox,
@@ -45,10 +51,12 @@ class RequiredServicesDialogState(
                 RequiredServicesDialogState(
                     initialState = UserPreferences.RequiredServices(
                         spotify = it[0],
-                        appleMusic = it[1],
-                        deezer = it[2],
-                        napster = it[3],
-                        musicbrainz = it[4]
+                        youtube = it[1],
+                        soundCloud = it[2],
+                        appleMusic = it[3],
+                        deezer = it[4],
+                        napster = it[5],
+                        musicbrainz = it[6]
                     )
                 )
             }
@@ -96,6 +104,22 @@ fun RequiredServicesDialog(
                         modifier = Modifier.recompositionCounter("spotifyCheckBox"),
                         checked = dialogState.spotifyCheckBox,
                         onCheckedChange = { dialogState.spotifyCheckBox = it }
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = stringResource(R.string.youtube), modifier = Modifier.weight(1f))
+                    Checkbox(
+                        modifier = Modifier.recompositionCounter("youtubeCheckBox"),
+                        checked = dialogState.youtubeCheckBox,
+                        onCheckedChange = { dialogState.youtubeCheckBox = it }
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = stringResource(R.string.soundcloud), modifier = Modifier.weight(1f))
+                    Checkbox(
+                        modifier = Modifier.recompositionCounter("soundcloudCheckBox"),
+                        checked = dialogState.soundCloudCheckBox,
+                        onCheckedChange = { dialogState.soundCloudCheckBox = it }
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {

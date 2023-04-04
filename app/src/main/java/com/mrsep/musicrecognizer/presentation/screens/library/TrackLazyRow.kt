@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -18,17 +17,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.R
 import com.mrsep.musicrecognizer.domain.model.Track
-import com.mrsep.musicrecognizer.presentation.common.PreviewDeviceLight
-import com.mrsep.musicrecognizer.presentation.fakeTrackList
-import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.util.forwardingPainter
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun TrackLazyRow(

@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.di.IoDispatcher
+import com.mrsep.musicrecognizer.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.domain.model.Track
+import com.mrsep.musicrecognizer.domain.model.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
@@ -16,15 +18,16 @@ import javax.inject.Inject
 class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val trackRepository: TrackRepository,
+    preferencesRepository: PreferencesRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-//    private val args = TrackScreenArguments(savedStateHandle)
+    //    private val args = TrackScreenArguments(savedStateHandle)
     private val args = Screen.Track.Args(savedStateHandle)
 
     val uiStateStream = trackRepository.getByMbIdFlow(args.mbId)
-        .map { track ->
-            track?.let { TrackUiState.Success(track) } ?: TrackUiState.TrackNotFound
+        .combine(preferencesRepository.userPreferencesFlow) { track, preferences ->
+            track?.let { TrackUiState.Success(track, preferences) } ?: TrackUiState.TrackNotFound
         }
         .stateIn(
             scope = viewModelScope,
@@ -51,5 +54,8 @@ class TrackViewModel @Inject constructor(
 sealed interface TrackUiState {
     object Loading : TrackUiState
     object TrackNotFound : TrackUiState
-    data class Success(val data: Track) : TrackUiState
+    data class Success(
+        val data: Track,
+        val preferences: UserPreferences
+    ) : TrackUiState
 }

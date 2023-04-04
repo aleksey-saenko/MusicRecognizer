@@ -1,13 +1,12 @@
 package com.mrsep.musicrecognizer.presentation.common
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 private const val DELAY_BEFORE_SHOW_INDICATOR_IN_MS = 500L
@@ -25,8 +24,11 @@ fun LoadingStub(
             delay(DELAY_BEFORE_SHOW_INDICATOR_IN_MS)
             delayPassed = true
         }
-        AnimatedVisibility(visible = delayPassed) {
-            CircularProgressIndicator()
+        if (delayPassed) {
+            VinylAnimated(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(64.dp)
+            )
         }
     }
 }

@@ -120,7 +120,8 @@ fun HomeScreen(
                 onDismissClick = { viewModel.resetStatusToReady(false) },
                 onSaveClick = {
                     viewModel.resetStatusToReady(true)
-                    Toast.makeText(context, "Added to recognition queue", Toast.LENGTH_SHORT).show() //FIXME
+                    Toast.makeText(context, "Added to recognition queue", Toast.LENGTH_SHORT)
+                        .show() //FIXME
                 },
                 onRetryClick = viewModel::recognizeTap
             )

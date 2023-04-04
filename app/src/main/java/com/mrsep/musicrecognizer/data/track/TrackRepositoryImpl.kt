@@ -1,5 +1,9 @@
 package com.mrsep.musicrecognizer.data.track
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.di.IoDispatcher
@@ -8,10 +12,7 @@ import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.domain.model.Mapper
 import com.mrsep.musicrecognizer.domain.model.Track
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,33 @@ class TrackRepositoryImpl @Inject constructor(
     database: ApplicationDatabase
 ) : TrackRepository {
     private val trackDao = database.trackDao()
+
+    override fun getPagedFlow(): Flow<PagingData<Track>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = TRACK_PAGE_SIZE,
+                enablePlaceholders = false,
+//                maxSize = 100
+            ),
+            pagingSourceFactory = {
+                trackDao.pagingSource()
+//                TrackPagingSource(
+//                    loadTracks = ::getWithOffset,
+//                    TRACK_PAGE_SIZE
+//                )
+            }
+        ).flow
+            .map { pagingData -> pagingData.map { entity -> trackToDomainMapper.map(entity) } }
+            .flowOn(ioDispatcher)
+    }
+
+    private suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<Track>  {
+        return withContext(ioDispatcher) {
+            trackDao.getWihOffset(limit = pageSize, offset = pageIndex * pageSize)
+                .map { trackToDomainMapper.map(it) }
+        }
+    }
+
 
     override suspend fun insertOrReplace(vararg track: Track) {
         withContext(ioDispatcher) {
@@ -150,6 +178,7 @@ class TrackRepositoryImpl @Inject constructor(
 
     companion object {
         private const val ESCAPE_SYMBOL = "/"
+        private const val TRACK_PAGE_SIZE = 30
     }
 
 }

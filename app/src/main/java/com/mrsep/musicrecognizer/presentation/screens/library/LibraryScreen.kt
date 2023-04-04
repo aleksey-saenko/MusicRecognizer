@@ -17,6 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.R
 
+private const val animationDuration = 300
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun LibraryScreen(
@@ -26,14 +28,26 @@ fun LibraryScreen(
 ) {
     val resentsList by viewModel.recentTracksFlow.collectAsStateWithLifecycle()
     val favoritesList by viewModel.favoriteTracksFlow.collectAsStateWithLifecycle()
-//    val foundList by viewModel.foundTracksFlow.collectAsStateWithLifecycle()
+//    val pagingRecents = viewModel.recentTracksPagedFlow.collectAsLazyPagingItems()
     val searchResult by viewModel.trackSearchResultFlow.collectAsStateWithLifecycle()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
     var searchActive by rememberSaveable { mutableStateOf(false) }
-    val animationDuration = 300
+//    val total = pagingRecents.itemCount
+//    val first: String?
+//    val last: String?
+//    if (total != 0) {
+//        first = pagingRecents.peek(0)?.mbId
+//        last = pagingRecents.peek(total - 1)?.mbId
+//    } else {
+//        first = "total = 0"
+//        last = "total = 0"
+//    }
+//    LaunchedEffect(total) {
+//        Log.d("123", "total=$total, first=$first, last=$last")
+//    }
 
     val isLibraryEmpty = resentsList.isEmpty() && favoritesList.isEmpty()
+//    val isLibraryEmpty = pagingRecents.itemCount == 0
 
     Column(
         modifier = modifier
@@ -57,6 +71,7 @@ fun LibraryScreen(
                     searchResult = searchResult,
                     onTrackClick = onTrackClick
                 )
+//                DisposableEffect(Unit) { onDispose { searchActive = false } }
             } else {
                 Column {
                     LibraryScreenTopBar(
@@ -91,13 +106,13 @@ fun LibraryScreen(
                             EmptyLibraryMessage(modifier = Modifier.weight(1f))
                         } else {
                             if (resentsList.isNotEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.recently),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    modifier = Modifier
-                                        .padding(start = 16.dp)
-                                        .align(Alignment.Start)
-                                )
+                            Text(
+                                text = stringResource(R.string.recently),
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .align(Alignment.Start)
+                            )
                                 TrackLazyGrid(
                                     trackList = resentsList,
                                     onTrackClick = onTrackClick,
@@ -105,6 +120,15 @@ fun LibraryScreen(
                                         .padding(top = 16.dp)
                                         .nestedScroll(topBarBehaviour.nestedScrollConnection)
                                 )
+//                            TrackPagingLazyGrid(
+//                                pagingTracks = pagingRecents,
+//                                onTrackClick = onTrackClick,
+//                                toggleTrackFavoriteStatus = { viewModel.toggleTrackFavoriteStatus(it) },
+//                                deleteTrack = { viewModel.deleteTrack(it) },
+//                                modifier = Modifier
+//                                    .padding(top = 16.dp)
+//                                    .nestedScroll(topBarBehaviour.nestedScrollConnection)
+//                            )
                             }
                         }
                     }

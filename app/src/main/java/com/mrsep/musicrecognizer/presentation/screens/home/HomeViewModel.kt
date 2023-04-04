@@ -60,8 +60,9 @@ class HomeViewModel @Inject constructor(
 
     fun prepopulateDatabase() {
         viewModelScope.launch(defaultDispatcher) {
-            delay(2000)
-            databaseFiller.prepopulateDatabaseFromAssets()
+//            delay(2000)
+//            databaseFiller.prepopulateDatabaseFromAssets()
+            databaseFiller.prepopulateByFaker(1000)
         }
     }
 

@@ -13,12 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -177,6 +174,8 @@ fun PreferencesScreen(
 private fun UserPreferences.RequiredServices.getNames() =
     listOf(
         stringResource(R.string.spotify) to spotify,
+        stringResource(R.string.youtube) to youtube,
+        stringResource(R.string.soundcloud) to soundCloud,
         stringResource(R.string.apple_music) to appleMusic,
         stringResource(R.string.deezer) to deezer,
         stringResource(R.string.napster) to napster,

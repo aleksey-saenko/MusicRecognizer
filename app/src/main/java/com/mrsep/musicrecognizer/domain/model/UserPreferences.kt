@@ -11,6 +11,8 @@ data class UserPreferences(
 
     data class RequiredServices(
         val spotify: Boolean,
+        val youtube: Boolean,
+        val soundCloud: Boolean,
         val appleMusic: Boolean,
         val deezer: Boolean,
         val napster: Boolean,

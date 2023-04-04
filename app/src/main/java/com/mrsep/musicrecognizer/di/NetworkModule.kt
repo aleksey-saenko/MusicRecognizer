@@ -29,7 +29,7 @@ private const val BASE_URL = "https://api.audd.io/"
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+object NetworkModule {
 
     @Provides
     @Singleton

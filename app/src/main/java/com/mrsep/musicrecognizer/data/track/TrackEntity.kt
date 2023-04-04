@@ -35,6 +35,8 @@ data class TrackEntity(
         val spotify: String?,
         @ColumnInfo(name = "youtube")
         val youtube: String?,
+        @ColumnInfo(name = "soundcloud")
+        val soundCloud: String?,
         @ColumnInfo(name = "apple_music")
         val appleMusic: String?,
         @ColumnInfo(name = "musicbrainz")

@@ -35,10 +35,12 @@ sealed interface AuddResponseJson {
             val lyricsJson: LyricsJson?,
             @Json(name = "musicbrainz")
             val musicbrainz: List<MusicbrainzJson>?,
-//            @Json(name = "napster")
-//            val napster: NapsterJson?,
-//            @Json(name = "spotify")
-//            val spotify: SpotifyJson?
+            @Json(name = "napster")
+            val napster: NapsterJson?,
+            @Json(name = "spotify")
+            val spotify: SpotifyJson?,
+            @Json(name = "apple_music")
+            val appleMusic: AppleMusicJson?,
         )
 
     }

@@ -11,6 +11,8 @@ class RequiredServicesToProtoMapper @Inject constructor() :
     override fun map(input: UserPreferences.RequiredServices): RequiredServicesProto {
         return RequiredServicesProto.newBuilder()
             .setSpotify(input.spotify)
+            .setYoutube(input.youtube)
+            .setSoundcloud(input.soundCloud)
             .setAppleMusic(input.appleMusic)
             .setDeezer(input.deezer)
             .setNapster(input.napster)

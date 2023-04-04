@@ -11,17 +11,19 @@ message UserPreferencesProto {
   message RequiredServicesProto {
 
     bool spotify = 3;
-    bool apple_music = 4;
-    bool deezer = 5;
-    bool napster = 6;
-    bool musicbrainz = 7;
+    bool youtube = 4;
+    bool soundcloud = 5;
+    bool apple_music = 6;
+    bool deezer = 7;
+    bool napster = 8;
+    bool musicbrainz = 9;
 
   }
 
-  RequiredServicesProto required_services = 8;
+  RequiredServicesProto required_services = 10;
 
-  bool notification_service_enabled = 9;
-  bool dynamic_colors_enabled = 10;
-  bool developer_mode_enabled = 11;
+  bool notification_service_enabled = 11;
+  bool dynamic_colors_enabled = 12;
+  bool developer_mode_enabled = 13;
 
 }

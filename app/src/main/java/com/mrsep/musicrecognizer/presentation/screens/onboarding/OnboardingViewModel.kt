@@ -52,11 +52,13 @@ class OnboardingViewModel @Inject constructor(
             val remoteResult = recognitionService.recognize(
                 token = testToken,
                 requiredServices = UserPreferences.RequiredServices(
-                    spotify = true,
-                    appleMusic = true,
-                    deezer = true,
-                    napster = true,
-                    musicbrainz = true
+                    spotify = false,
+                    youtube = false,
+                    soundCloud = false,
+                    appleMusic = false,
+                    deezer = false,
+                    napster = false,
+                    musicbrainz = false
                 ),
                 url = URL(AUDIO_SAMPLE_URL)
             )

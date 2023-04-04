@@ -6,125 +6,125 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SpotifyJson(
     @Json(name = "album")
-    val album: Album,
+    val album: Album?,
     @Json(name = "artists")
-    val artists: List<Artist>,
+    val artists: List<Artist?> = emptyList(),
     @Json(name = "duration_ms")
-    val durationMs: Int,
+    val durationMs: Int?,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrls,
+    val externalUrls: ExternalUrls?,
     @Json(name = "id")
-    val id: String,
+    val id: String?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "popularity")
-    val popularity: Int,
+    val popularity: Int?,
     @Json(name = "track_number")
-    val trackNumber: Int,
+    val trackNumber: Int?,
     @Json(name = "type")
-    val type: String,
+    val type: String?,
     @Json(name = "uri")
-    val uri: String
+    val uri: String?
 ) {
     @JsonClass(generateAdapter = true)
     data class Album(
         @Json(name = "album_type")
-        val albumType: String,
+        val albumType: String?,
         @Json(name = "artists")
-        val artists: List<Artist>,
+        val artists: List<Artist?> = emptyList(),
         @Json(name = "available_markets")
-        val availableMarkets: Any,
+        val availableMarkets: Any?,
         @Json(name = "external_urls")
-        val externalUrls: ExternalUrls,
+        val externalUrls: ExternalUrls?,
         @Json(name = "href")
-        val href: String,
+        val href: String?,
         @Json(name = "id")
-        val id: String,
+        val id: String?,
         @Json(name = "images")
-        val images: List<Image>,
+        val images: List<Image?> = emptyList(),
         @Json(name = "name")
-        val name: String,
+        val name: String?,
         @Json(name = "release_date")
-        val releaseDate: String,
+        val releaseDate: String?,
         @Json(name = "release_date_precision")
-        val releaseDatePrecision: String,
+        val releaseDatePrecision: String?,
         @Json(name = "total_tracks")
-        val totalTracks: Int,
+        val totalTracks: Int?,
         @Json(name = "type")
-        val type: String,
+        val type: String?,
         @Json(name = "uri")
-        val uri: String
+        val uri: String?
     ) {
         @JsonClass(generateAdapter = true)
         data class Artist(
             @Json(name = "external_urls")
-            val externalUrls: ExternalUrls,
+            val externalUrls: ExternalUrls?,
             @Json(name = "href")
-            val href: String,
+            val href: String?,
             @Json(name = "id")
-            val id: String,
+            val id: String?,
             @Json(name = "name")
-            val name: String,
+            val name: String?,
             @Json(name = "type")
-            val type: String,
+            val type: String?,
             @Json(name = "uri")
-            val uri: String
+            val uri: String?
         ) {
             @JsonClass(generateAdapter = true)
             data class ExternalUrls(
                 @Json(name = "spotify")
-                val spotify: String
+                val spotify: String?
             )
         }
 
         @JsonClass(generateAdapter = true)
         data class ExternalUrls(
             @Json(name = "spotify")
-            val spotify: String
+            val spotify: String?
         )
 
         @JsonClass(generateAdapter = true)
         data class Image(
             @Json(name = "height")
-            val height: Int,
+            val height: Int?,
             @Json(name = "url")
-            val url: String,
+            val url: String?,
             @Json(name = "width")
-            val width: Int
+            val width: Int?
         )
     }
 
     @JsonClass(generateAdapter = true)
     data class Artist(
         @Json(name = "external_urls")
-        val externalUrls: ExternalUrls,
+        val externalUrls: ExternalUrls?,
         @Json(name = "href")
-        val href: String,
+        val href: String?,
         @Json(name = "id")
-        val id: String,
+        val id: String?,
         @Json(name = "name")
-        val name: String,
+        val name: String?,
         @Json(name = "type")
-        val type: String,
+        val type: String?,
         @Json(name = "uri")
-        val uri: String
+        val uri: String?
     ) {
         @JsonClass(generateAdapter = true)
         data class ExternalUrls(
             @Json(name = "spotify")
-            val spotify: String
+            val spotify: String?
         )
     }
 
     @JsonClass(generateAdapter = true)
     data class ExternalIds(
         @Json(name = "isrc")
-        val isrc: String
+        val isrc: String?
     )
 
     @JsonClass(generateAdapter = true)
     data class ExternalUrls(
         @Json(name = "spotify")
-        val spotify: String
+        val spotify: String?
     )
 }

@@ -3,15 +3,19 @@ package com.mrsep.musicrecognizer.presentation.screens.library
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.mrsep.musicrecognizer.di.IoDispatcher
 import com.mrsep.musicrecognizer.domain.SearchResult
 import com.mrsep.musicrecognizer.domain.TrackRepository
 import com.mrsep.musicrecognizer.domain.model.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val RECENTLY_ITEMS_LIMIT = 50
@@ -21,7 +25,8 @@ private const val SEARCH_INPUT_DEBOUNCE_IN_MS = 300L
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    private val trackRepository: TrackRepository
+    private val trackRepository: TrackRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     val recentTracksFlow = trackRepository.getLastRecognizedFlow(RECENTLY_ITEMS_LIMIT)
@@ -31,6 +36,8 @@ class LibraryViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList<Track>().toImmutableList()
         )
+
+    val recentTracksPagedFlow = trackRepository.getPagedFlow().cachedIn(viewModelScope)
 
     val favoriteTracksFlow = trackRepository.getFavoritesFlow(FAVORITE_ITEMS_LIMIT)
         .map { it.toImmutableList() }
@@ -70,14 +77,15 @@ class LibraryViewModel @Inject constructor(
         .debounce(SEARCH_INPUT_DEBOUNCE_IN_MS)
         .distinctUntilChanged()
         .flatMapLatest { keyword ->
-        if (keyword.isBlank()) {
-            flow { emit(SearchResult.Success("", emptyList())) }
-        } else {
-            trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
+            if (keyword.isBlank()) {
+                flow { emit(SearchResult.Success("", emptyList())) }
+            } else {
+                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
+            }
         }
-    }
         .onEach { result -> //debug purpose
-            val logMessage = "Search result type: ${result::class.simpleName} for keyword=${result.keyword}"
+            val logMessage =
+                "Search result type: ${result::class.simpleName} for keyword=${result.keyword}"
             val addInfo = if (result is SearchResult.Success<Track>)
                 "\n" + result.data.joinToString { "${it.title} - ${it.artist}" } else ""
             Log.d("SEARCH", logMessage + addInfo)
@@ -90,6 +98,26 @@ class LibraryViewModel @Inject constructor(
                 emptyList()
             )
         )
+
+    fun toggleTrackFavoriteStatus(trackMbId: String) {
+        viewModelScope.launch(ioDispatcher) {
+            trackRepository.getByMbId(trackMbId)?.let { track ->
+                trackRepository.update(
+                    track.copy(
+                        metadata = track.metadata.copy(isFavorite = !track.metadata.isFavorite)
+                    )
+                )
+            }
+        }
+    }
+
+    fun deleteTrack(trackMbId: String) {
+        viewModelScope.launch(ioDispatcher) {
+            trackRepository.getByMbId(trackMbId)?.let { track ->
+                trackRepository.delete(track)
+            }
+        }
+    }
 
 }
 

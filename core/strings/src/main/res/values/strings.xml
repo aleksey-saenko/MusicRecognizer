@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TuneSurfer</string>
+    <string name="tap_to_recognize">Tap to recognize</string>
+    <string name="recognize">Recognize</string>
+    <string name="new_recognition">New recognition</string>
+    <string name="listening">Listening</string>
+    <string name="recognizing">Recognizing</string>
+    <string name="home">Home</string>
+    <string name="preferences">Preferences</string>
+    <string name="recently">Recently</string>
+
+    <!--    Onboarding screen-->
+    <string name="onboarding_token_message_start">"This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don\'t have one, you can sign up for a free API token "</string>
+    <string name="onboarding_token_message_link">here</string>
+    <string name="onboarding_token_message_end">.</string>
+    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
+    <string name="apply_api_token">Apply API Token</string>
+    <string name="audd_api_token">AudD API Token</string>
+    <string name="api_token">API Token</string>
+    <string name="welcome">Welcome</string>
+    <string name="onboarding_welcome_message">TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
+    <string name="onboarding_permission_message">The application requires permission to record audio in order to work properly. By enabling this permission, you agree that your recorded data will be used by remote servers for music recognition. The application does not use this data for any other purpose.</string>
+    <!--    Common-->
+
+    <string name="spotify">Spotify</string>
+    <string name="apple_music">Apple Music</string>
+    <string name="deezer">Deezer</string>
+    <string name="napster">Napster</string>
+    <string name="musicbrainz">MusicBrainz</string>
+    <string name="youtube">Youtube</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+    <string name="none">None</string>
+    <string name="permissions">Permissions</string>
+    <string name="allow_access">Allow Access</string>
+    <string name="permission_multiple_denied_message">Previous requests for permission have been denied. You can change your decision in the application settings.\nWould you like to open settings?</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permissions_granted">Permissions Granted</string>
+    <string name="back">Back</string>
+    <string name="open_settings">Open settings</string>
+    <string name="token_applied">Token applied</string>
+    <string name="invalid_token">Invalid token</string>
+    <string name="ready">Ready</string>
+    <string name="service_notification_main_channel_name">TuneSurfer main notification channel</string>
+    <string name="service_notification_result_channel_name">TuneSurfer result notification channel</string>
+    <string name="service_notification_main_channel_desc">Allow to control recognition process from notifications</string>
+    <string name="service_notification_result_channel_desc">Allow to receive recognition results from notifications</string>
+    <string name="message_record_error">An error occurred while recording the audio. Please, check app permission to access the microphone and retry.</string>
+    <string name="notification_message_recording_error">An error occurred while recording the audio, try again</string>
+    <string name="internet_not_available">Please, check your network status.\nWhen you get back online, the app will try to identify current song.</string>
+    <string name="notification_message_internet_not_available">When you get back online, the app will try to identify current song</string>
+    <string name="backup007">Internet connection is not available. Please, check your network status. When you get back online, the app will try to identify current song.</string>
+    <string name="please_check_network_status">Please, check your network status.</string>
+    <string name="app_will_try_identify">The application will try to identify this song when you get back online.</string>
+    <string name="message_http_error">An error occurred during internet request. Please, try again.</string>
+    <string name="message_unhandled_error">An internal error occurred. Please, try again.</string>
+    <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
+    <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry.</string>
+    <string name="notification_message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
+    <string name="not_implemented">Not implemented</string>
+    <string name="no_matches_found">No matches found</string>
+    <string name="library">Library</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="recognition_queue">Recognition queue</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="retry">Retry</string>
+    <string name="save">Save</string>
+    <string name="save_record_message">You can save the record in recognition queue to retry later. The remote music library is always updating.</string>
+    <string name="notification_message_no_matches_found">The record was added in recognition queue to retry later</string>
+    <string name="recording_error">Recording error</string>
+    <string name="check_permission">Check permission</string>
+    <string name="token_limit_reached">API token limit reached</string>
+    <string name="wrong_token">Wrong API token</string>
+    <string name="send_report">Send report</string>
+    <string name="internal_error">Internal error</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
+    <string name="empty_library_message">Your recently recognized and favorite songs will be shown here</string>
+    <string name="untitled_recognition">Untitled recognition</string>
+    <string name="enqueue_recognition">Enqueue recognition</string>
+    <string name="cancel_recognition">Cancel recognition</string>
+    <string name="show_track">Show track</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="illegal_state">Illegal state</string>
+    <string name="record_deletion_failed">Record file deletion failed</string>
+    <string name="search_track">Search track</string>
+    <string name="about">About</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="error_and_message">Error: %s</string>
+    <string name="soundcloud">SoundCloud</string>
+    <string name="recognition">Recognition</string>
+    <string name="share">Share</string>
+    <string name="web_browser_not_found_toast">Web browser not found</string>
+    <string name="cannot_share_toast">Can\'t find any application to share</string>
+
+
+</resources>

@@ -1,43 +1,62 @@
 package com.mrsep.musicrecognizer.di
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStore
-import androidx.datastore.dataStoreFile
 import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
+import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
+import com.mrsep.musicrecognizer.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.domain.UserPreferences
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-private const val USER_PREFERENCES_STORE = "USER_PREFERENCES_STORE"
-
-private val Context.userPreferencesDataStore: DataStore<UserPreferencesProto> by dataStore(
-    fileName = USER_PREFERENCES_STORE,
-    serializer = UserPreferencesProtoSerializer,
-    corruptionHandler = ReplaceFileCorruptionHandler(
-        produceNewData = { UserPreferencesProto.getDefaultInstance() }
-    )
-)
-
+@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-class PreferencesModule {
+interface PreferencesModule {
 
-    @Provides
-    @Singleton
-    fun provideUserPreferences(@ApplicationContext appContext: Context): DataStore<UserPreferencesProto> {
-        return DataStoreFactory.create(
-            serializer = UserPreferencesProtoSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler(
-                produceNewData = { UserPreferencesProto.getDefaultInstance() }
-            ),
-            produceFile = { appContext.dataStoreFile(USER_PREFERENCES_STORE) }
+    @Binds
+    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
+            Mapper<UserPreferencesProto, UserPreferences>
+
+    @Binds
+    fun bindPreferencesRepository(implementation: AdapterPreferencesRepository):
+            PreferencesRepository
+
+}
+
+class AdapterPreferencesRepository @Inject constructor(
+    private val preferencesDataRepository: PreferencesDataRepository,
+    private val mapperPreferencesToDomain: Mapper<UserPreferencesProto, UserPreferences>
+): PreferencesRepository {
+
+    override val userPreferencesFlow: Flow<UserPreferences>
+        get() = preferencesDataRepository.userPreferencesFlow
+            .map { mapperPreferencesToDomain.map(it) }
+}
+
+class PreferencesToDomainMapper @Inject constructor() :
+    Mapper<UserPreferencesProto, UserPreferences> {
+
+    override fun map(input: UserPreferencesProto): UserPreferences {
+        return UserPreferences(
+            onboardingCompleted = input.onboardingCompleted,
+            apiToken = input.apiToken,
+            notificationServiceEnabled = input.notificationServiceEnabled,
+            dynamicColorsEnabled = input.dynamicColorsEnabled,
+            developerModeEnabled = input.developerModeEnabled,
+            requiredServices = UserPreferences.RequiredServices(
+                spotify = input.requiredServices.spotify,
+                youtube = input.requiredServices.youtube,
+                soundCloud = input.requiredServices.soundcloud,
+                appleMusic = input.requiredServices.appleMusic,
+                deezer = input.requiredServices.deezer,
+                napster = input.requiredServices.napster,
+                musicbrainz = input.requiredServices.musicbrainz
+            )
         )
     }
 

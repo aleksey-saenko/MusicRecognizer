@@ -1,0 +1,123 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.protobuf'
+}
+
+android {
+    namespace 'com.mrsep.musicrecognizer.data'
+    compileSdk targetAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        Properties properties = new Properties()
+        if (project.rootProject.file('local.properties').canRead()) {
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        }
+        buildConfigField 'String', 'AUDD_TOKEN', properties.getProperty("api.audd.token")
+        buildConfigField "boolean", "LOG_DEBUG_MODE", "false"
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG_MODE", "true"
+        }
+        release {
+            minifyEnabled false
+            buildConfigField "boolean", "LOG_DEBUG_MODE", "false"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            resources.excludes += "DebugProbesKt.bin"
+        }
+    }
+
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+
+    implementation Libs.JetBrains.CoroutinesAndroid
+    implementation Libs.JetBrains.CollectionImmutable
+
+    implementation Libs.DataStore.Core
+    implementation Libs.DataStore.ProtobufJavalite
+
+    implementation Libs.Hilt.Core
+    kapt Libs.Hilt.Kapt
+
+    implementation Libs.Room.CoreKtx
+    implementation Libs.Room.Runtime
+    annotationProcessor Libs.Room.Compiler
+    kapt Libs.Room.Kapt
+
+    implementation platform(Libs.OkHttp.Bom)
+    implementation Libs.OkHttp.Core
+    implementation Libs.OkHttp.LoggingInterceptor
+    implementation Libs.Retrofit.Core
+    implementation Libs.Retrofit.ConverterMoshi
+
+    implementation Libs.Moshi.Core
+    implementation Libs.Moshi.Adapters
+    kapt Libs.Moshi.Kapt
+
+    implementation Libs.WorkManager.RuntimeKtx
+    implementation Libs.WorkManager.HiltWorkManager
+    kapt Libs.WorkManager.Kapt
+
+    implementation Libs.Paging3.RuntimeKtx
+    implementation Libs.Paging3.Room
+
+    implementation project(Modules.Core.Common)
+    implementation project(Modules.Core.Strings)
+
+    testImplementation Libs.Test.JUnit
+    androidTestImplementation Libs.AndroidTest.JUnitExt
+    androidTestImplementation Libs.AndroidTest.EspressoCore
+
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobuf_version"
+    }
+
+    // Generates the java Protobuf-lite code for the Protobufs in this project. See
+    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
+    // for more information.
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}

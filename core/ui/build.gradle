@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.mrsep.musicrecognizer.core.ui'
+    compileSdk targetAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion composeCompilerVersion
+    }
+}
+
+dependencies {
+
+    implementation platform(Libs.Compose.Bom)
+    androidTestImplementation platform(Libs.Compose.Bom)
+
+    implementation Libs.Compose.Material3
+    implementation Libs.Compose.ToolingPreview
+    debugImplementation Libs.Compose.DebugTooling
+    androidTestImplementation Libs.Compose.AndroidTestJUnit
+    debugImplementation Libs.Compose.DebugManifest
+
+    implementation Libs.Compose.Navigation
+
+    implementation Libs.Coil.Core
+
+    implementation project(Modules.Core.Strings)
+
+}

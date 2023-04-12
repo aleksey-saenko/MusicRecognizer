@@ -1,5 +1,9 @@
 buildscript {
     ext {
+        targetAndroidSdk = 33
+        minAndroidSdk = 26
+        composeCompilerVersion = "1.4.4"
+
         accompanist_version = "0.30.0"
         protobuf_version = "3.21.12"
         room_version = "2.5.1"
@@ -23,7 +27,7 @@ buildscript {
                 Android: [
                         CoreKtx: "androidx.core:core-ktx:1.9.0",
                         LifecycleRuntime: "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1",
-                        LifecycleLiveData: "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1", //converting WorkInfo (WorkManager) to flow
+//                        LifecycleLiveData: "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1", //converting WorkInfo (WorkManager) to flow
                         ActivityCompose: "androidx.activity:activity-compose:1.7.0",
                         LifecycleRuntimeCompose: "androidx.lifecycle:lifecycle-runtime-compose:2.6.1",
                         LifecycleViewModelCompose: "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1",
@@ -87,18 +91,25 @@ buildscript {
                 ],
         ]
 
+
         Modules = [
                 Data: ":data",
                 Core: [
+                        Strings: ":core:strings",
+                        Ui: ":core:ui",
                         Common: ":core:common",
-                        Presentation: ":core:presentation",
                         Theme: ":core:theme",
                 ],
-                Features: [
-                        Library: ":features:library",
+                Feature: [
+                        Recognition: ":feature:recognition",
+                        RecognitionQueue: ":feature:recognition-queue",
+                        Library: ":feature:library",
+                        Preferences: ":feature:preferences",
+                        Track: ":feature:track",
+                        Onboarding: ":feature:onboarding",
+                        DeveloperMode: ":feature:developer-mode",
                 ],
         ]
-
     }
     repositories {
         google()

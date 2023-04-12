@@ -1,0 +1,83 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    namespace 'com.mrsep.musicrecognizer.feature.library'
+    compileSdk targetAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion composeCompilerVersion
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+
+    implementation platform(Libs.Compose.Bom)
+    androidTestImplementation platform(Libs.Compose.Bom)
+
+    implementation Libs.Compose.Material3
+    implementation Libs.Compose.ToolingPreview
+    debugImplementation Libs.Compose.DebugTooling
+    androidTestImplementation Libs.Compose.AndroidTestJUnit
+    debugImplementation Libs.Compose.DebugManifest
+
+    implementation Libs.Compose.Navigation
+    implementation Libs.Compose.HiltNavigation
+
+    implementation Libs.Android.CoreKtx
+    implementation Libs.Android.LifecycleRuntime
+    implementation Libs.Android.ActivityCompose
+    implementation Libs.Android.LifecycleRuntimeCompose
+    implementation Libs.Android.LifecycleViewModelCompose
+
+    testImplementation Libs.Test.JUnit
+    androidTestImplementation Libs.AndroidTest.JUnitExt
+    androidTestImplementation Libs.AndroidTest.EspressoCore
+
+    implementation Libs.JetBrains.CoroutinesAndroid
+    implementation Libs.JetBrains.CollectionImmutable
+
+    implementation Libs.Hilt.Core
+    kapt Libs.Hilt.Kapt
+
+    implementation Libs.Coil.Core
+
+    implementation Libs.Paging3.RuntimeKtx
+    implementation Libs.Paging3.Compose
+    implementation Libs.Paging3.Room
+
+    implementation project(Modules.Core.Ui)
+    implementation project(Modules.Core.Strings)
+
+}

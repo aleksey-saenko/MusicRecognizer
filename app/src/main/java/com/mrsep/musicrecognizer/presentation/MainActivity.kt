@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,21 +23,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mrsep.musicrecognizer.presentation.common.NavigationBarCustom
-import com.mrsep.musicrecognizer.presentation.screens.preferences.queue.navigateToQueueScreen
-import com.mrsep.musicrecognizer.presentation.screens.preferences.queue.queueScreen
-import com.mrsep.musicrecognizer.presentation.screens.library.libraryScreen
-import com.mrsep.musicrecognizer.presentation.screens.home.HOME_ROUTE
-import com.mrsep.musicrecognizer.presentation.screens.home.homeScreen
-import com.mrsep.musicrecognizer.presentation.screens.onboarding.ONBOARDING_ROUTE
-import com.mrsep.musicrecognizer.presentation.screens.onboarding.onboardingScreen
-import com.mrsep.musicrecognizer.presentation.screens.preferences.about.aboutScreen
-import com.mrsep.musicrecognizer.presentation.screens.preferences.about.navigateToAboutScreen
-import com.mrsep.musicrecognizer.presentation.screens.preferences.preferencesScreen
-import com.mrsep.musicrecognizer.presentation.screens.track.Screen.Track.navigateToTrackScreen
-import com.mrsep.musicrecognizer.presentation.screens.track.Screen.Track.trackScreen
-import com.mrsep.musicrecognizer.presentation.screens.workshop.workshopScreen
-import com.mrsep.musicrecognizer.service.NotificationService.Companion.toggleNotificationService
+import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen.libraryScreen
+import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen
+import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen.onboardingScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen.recognitionScreen
+import com.mrsep.musicrecognizer.presentation.navigationbar.NavigationBarCustom
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
+import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.navigateToQueueScreen
+import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.queueScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.navigateToTrackScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.trackScreen
 import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -55,22 +57,29 @@ class MainActivity : ComponentActivity() {
             MusicRecognizerTheme(
                 dynamicColor = isDynamicColorsEnabled(uiState)
             ) {
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = !isSystemInDarkTheme()
+                SideEffect {
+                    systemUiController.setStatusBarColor(
+                        color = Color.Transparent,
+                        darkIcons = useDarkIcons
+                    )
+                }
                 Surface(
-                    color = MaterialTheme.colorScheme.background,
+                    color = Color.Unspecified,
+                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(
+                            color = MaterialTheme.colorScheme.background
+                        )
                         .systemBarsPadding(),
                 ) {
-                    val systemUiController = rememberSystemUiController()
-                    val useDarkIcons = !isSystemInDarkTheme()
-                    val backgroundColor = MaterialTheme.colorScheme.background
-                    SideEffect {
-                        systemUiController.setStatusBarColor(
-                            color = backgroundColor,
-                            darkIcons = useDarkIcons
-                        )
-                    }
-                    AnimatedVisibility(visible = uiState is MainActivityUiState.Success) {
+                    AnimatedVisibility(
+                        visible = uiState is MainActivityUiState.Success,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
                         AppNavigation(
                             onboardingCompleted = isOnboardingCompleted(uiState),
                             onOnboardingClose = { this@MainActivity.finish() }
@@ -119,7 +128,7 @@ private fun AppNavigation(
 //    printBackStack(topNavController, tag = "outer")
     NavHost(
         navController = topNavController,
-        startDestination = if (onboardingCompleted) BOTTOM_BAR_HOST_ROUTE else ONBOARDING_ROUTE
+        startDestination = if (onboardingCompleted) BOTTOM_BAR_HOST_ROUTE else OnboardingScreen.ROUTE
     ) {
         onboardingScreen(
             onOnboardingCompleted = { },
@@ -150,21 +159,19 @@ private fun NavGraphBuilder.bottomBarNavHost(
         val innerNavController = rememberNavController()
 //        printBackStack(innerNavController, tag = "inner")
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             NavHost(
                 navController = innerNavController,
-                startDestination = HOME_ROUTE,
+                startDestination = RecognitionScreen.ROUTE,
                 modifier = Modifier.weight(1f, false)
             ) {
                 libraryScreen(onTrackClick = { mbId ->
                     topNavController.navigateToTrackScreen(mbId = mbId)
                 })
-                homeScreen(
+                recognitionScreen(
                     onNavigateToTrackScreen = { mbId ->
                         topNavController.navigateToTrackScreen(mbId = mbId)
                     },
@@ -180,8 +187,6 @@ private fun NavGraphBuilder.bottomBarNavHost(
                         topNavController.navigateToQueueScreen()
                     }
                 )
-                workshopScreen() //FIXME delete after debug
-
             }
             NavigationBarCustom(navController = innerNavController)
         }

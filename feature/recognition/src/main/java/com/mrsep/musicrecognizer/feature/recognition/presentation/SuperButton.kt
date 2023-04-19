@@ -25,7 +25,7 @@ internal fun SuperButton(
             activated = activated,
 //            amplitudeFactor = amplitudeFactor,
             modifier = Modifier.size(240.dp),
-            startOffset = 0.7f, //should be a bit less then buttonSize/rippleSize
+            startOffset = 0.5f, //should be a bit less then buttonSize/rippleSize
             baseColor = MaterialTheme.colorScheme.primary,
             activatedColor = MaterialTheme.colorScheme.primary,
             circlesCount = 9,
@@ -41,8 +41,13 @@ internal fun SuperButton(
             WaveAnimated(
                 activated = activated,
                 amplitudeFactor = amplitudeFactor,
-                baseColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f),
-                activatedColor = MaterialTheme.colorScheme.onPrimaryContainer
+                properties = WaveAnimatedProperties(
+                    baseColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f),
+                    activatedColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                modifier = Modifier
+                    .fillMaxHeight(0.65f)
+                    .fillMaxWidth(0.9f)
             )
         }
     }

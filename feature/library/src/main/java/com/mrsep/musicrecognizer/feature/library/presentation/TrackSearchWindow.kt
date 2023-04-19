@@ -11,31 +11,37 @@ import androidx.compose.material3.*
 import androidx.compose.material3.SearchBarDefaults.inputFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
-import com.mrsep.musicrecognizer.feature.library.R
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-internal fun TrackSearchBar(
+internal fun TrackSearchWindow(
     onSearch: (query: String) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClose: () -> Unit,
     searchResult: SearchResult<Track>,
     onTrackClick: (mbId: String) -> Unit
 ) {
-    var text by rememberSaveable { mutableStateOf("") }
+    var text by rememberSaveable {
+        mutableStateOf((searchResult as? SearchResult.Success)?.keyword ?: "")
+    }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
+
+    fun clearFocusAndCloseSearch() {
+        focusManager.clearFocus()
+        onSearchClose()
+    }
 
     Box(
         modifier
@@ -57,17 +63,13 @@ internal fun TrackSearchBar(
                 onSearch(text)
             },
             active = true,
-            onActiveChange = {},
-            placeholder = { Text("Search track...") },
+            onActiveChange = { active -> if (!active) clearFocusAndCloseSearch() },
+            placeholder = { Text(stringResource(StringsR.string.search_track_hint)) },
             leadingIcon = {
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = null,
-                    modifier = Modifier.clickable {
-                        focusManager.clearFocus()
-                        onSearch("")
-                        onSearchClose()
-                    }
+                    modifier = Modifier.clickable(onClick = ::clearFocusAndCloseSearch)
                 )
             },
             trailingIcon = {
@@ -88,7 +90,7 @@ internal fun TrackSearchBar(
             },
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.background,
-                dividerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                dividerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 inputFieldColors = inputFieldColors(),
             ),
             tonalElevation = 0.dp
@@ -114,10 +116,12 @@ internal fun TrackSearchBar(
             }
         }
     }
-
-    LaunchedEffect(searchResult) {
-        if ((searchResult as? SearchResult.Success)?.isEmpty == true) {
+    var focusRequested by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(focusRequested, searchResult) {
+        if ((searchResult as? SearchResult.Success)?.isEmpty == true && !focusRequested) {
             focusRequester.requestFocus()
+            focusRequested = true
         }
     }
+
 }

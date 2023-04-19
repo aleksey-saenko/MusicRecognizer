@@ -14,6 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +25,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
+import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
+import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen.libraryScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen.onboardingScreen
@@ -31,15 +36,14 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScr
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen.recognitionScreen
-import com.mrsep.musicrecognizer.presentation.navigationbar.NavigationBarCustom
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
 import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.navigateToQueueScreen
 import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.queueScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.trackScreen
-import com.mrsep.musicrecognizer.ui.theme.MusicRecognizerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
@@ -49,7 +53,11 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        splashScreen.setKeepOnScreenCondition {
+            viewModel.uiStateStream.value is MainActivityUiState.Loading
+        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupApplicationWithPreferences()
         setContent {
@@ -59,9 +67,15 @@ class MainActivity : ComponentActivity() {
             ) {
                 val systemUiController = rememberSystemUiController()
                 val useDarkIcons = !isSystemInDarkTheme()
+                val statusBarColor = Color.Transparent
+                val navigationBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 SideEffect {
                     systemUiController.setStatusBarColor(
-                        color = Color.Transparent,
+                        color = statusBarColor,
+                        darkIcons = useDarkIcons
+                    )
+                    systemUiController.setNavigationBarColor(
+                        color = navigationBarColor,
                         darkIcons = useDarkIcons
                     )
                 }
@@ -70,9 +84,7 @@ class MainActivity : ComponentActivity() {
                     contentColor = contentColorFor(MaterialTheme.colorScheme.background),
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(
-                            color = MaterialTheme.colorScheme.background
-                        )
+                        .background(color = MaterialTheme.colorScheme.background)
                         .systemBarsPadding(),
                 ) {
                     AnimatedVisibility(
@@ -160,7 +172,7 @@ private fun NavGraphBuilder.bottomBarNavHost(
 //        printBackStack(innerNavController, tag = "inner")
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             NavHost(
@@ -185,7 +197,13 @@ private fun NavGraphBuilder.bottomBarNavHost(
                     },
                     onNavigateToQueueScreen = {
                         topNavController.navigateToQueueScreen()
+                    },
+                    onNavigateToDeveloperScreen = {
+                        innerNavController.navigateToDeveloperScreen()
                     }
+                )
+                developerScreen(
+                    onBackPressed = innerNavController::navigateUp
                 )
             }
             NavigationBarCustom(navController = innerNavController)

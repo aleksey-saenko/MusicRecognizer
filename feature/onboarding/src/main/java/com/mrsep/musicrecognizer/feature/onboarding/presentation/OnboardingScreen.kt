@@ -48,7 +48,7 @@ internal fun OnboardingScreen(
         pageCount = availablePages,
         beyondBoundsPageCount = 0,
         state = pagerState,
-        modifier = Modifier.statusBarsPadding()
+//        modifier = Modifier.statusBarsPadding()
     ) { page ->
         Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
         when (page) {

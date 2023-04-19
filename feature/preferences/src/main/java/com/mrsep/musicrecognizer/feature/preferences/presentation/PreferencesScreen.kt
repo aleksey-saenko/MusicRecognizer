@@ -35,7 +35,8 @@ internal fun PreferencesScreen(
     modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel = hiltViewModel(),
     onNavigateToAboutScreen: () -> Unit,
-    onNavigateToQueueScreen: () -> Unit
+    onNavigateToQueueScreen: () -> Unit,
+    onNavigateToDeveloperScreen: () -> Unit
 ) {
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle(PreferencesUiState.Loading)
     val scope = rememberCoroutineScope()
@@ -66,11 +67,17 @@ internal fun PreferencesScreen(
                     PreferenceGroup(title = "Developer options",
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
+                        PreferenceClickableItem(
+                            title = "Developer options",
+                            subtitle = "Only for dev purpose",
+                            onItemClick = onNavigateToDeveloperScreen
+                        )
                         PreferenceSwitchItem(
                             title = "Enable developer mode",
                             subtitle = "Only for dev purpose",
                             onCheckedChange = { viewModel.setDeveloperModeEnabled(it) },
-                            checked = uiState.preferences.developerModeEnabled
+                            checked = uiState.preferences.developerModeEnabled,
+                            modifier = Modifier.padding(top = 16.dp)
                         )
                         PreferenceSwitchItem(
                             title = "Should show onboarding",

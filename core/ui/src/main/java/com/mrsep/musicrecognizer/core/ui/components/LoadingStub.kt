@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
-private const val DELAY_BEFORE_SHOW_INDICATOR_IN_MS = 500L
+private const val DELAY_BEFORE_SHOW_INDICATOR_IN_MS = 1000L
 
 @Composable
 fun LoadingStub(

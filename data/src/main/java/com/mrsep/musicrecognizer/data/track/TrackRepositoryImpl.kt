@@ -1,8 +1,11 @@
 package com.mrsep.musicrecognizer.data.track
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
@@ -17,6 +20,12 @@ class TrackRepositoryImpl @Inject constructor(
     database: ApplicationDatabase
 ) : TrackDataRepository {
     private val trackDao = database.trackDao()
+
+    override fun isEmptyFlow(): Flow<Boolean> {
+        return trackDao.isEmptyFlow()
+            .distinctUntilChanged()
+            .flowOn(ioDispatcher)
+    }
 
     override fun getPagedFlow(): Flow<PagingData<TrackEntity>> {
         return Pager(
@@ -97,6 +106,16 @@ class TrackRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun countAllFlow(): Flow<Int> {
+        return trackDao.countAllFlow()
+            .flowOn(ioDispatcher)
+    }
+
+    override fun countFavoritesFlow(): Flow<Int> {
+        return trackDao.countFavoritesFlow()
+            .flowOn(ioDispatcher)
+    }
+
     override suspend fun getByMbId(mbId: String): TrackEntity? {
         return withContext(ioDispatcher) {
             trackDao.getByMbId(mbId)
@@ -107,6 +126,11 @@ class TrackRepositoryImpl @Inject constructor(
         return trackDao.getByMbIdFlow(mbId)
             .flowOn(ioDispatcher)
 
+    }
+
+    override fun getFilteredFlow(filter: TrackDataFilter): Flow<List<TrackEntity>> {
+        return trackDao.getFlowByCustomQuery(filter.toSQLiteQuery())
+            .flowOn(ioDispatcher)
     }
 
     override suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity> {
@@ -123,6 +147,11 @@ class TrackRepositoryImpl @Inject constructor(
 
     override fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>> {
         return trackDao.getLastRecognizedFlow(limit)
+            .flowOn(ioDispatcher)
+    }
+
+    override fun getNotFavoriteRecentsFlow(limit: Int): Flow<List<TrackEntity>> {
+        return trackDao.getNotFavoriteRecentsFlow(limit)
             .flowOn(ioDispatcher)
     }
 
@@ -168,4 +197,43 @@ class TrackRepositoryImpl @Inject constructor(
         private const val TRACK_PAGE_SIZE = 30
     }
 
+}
+
+private fun TrackDataFilter.toSQLiteQuery(): SupportSQLiteQuery {
+    val builder = StringBuilder("SELECT * FROM track")
+    val params = mutableListOf<Any>()
+    var whereUsed = false
+    when (this.favoritesMode) {
+        DataFavoritesMode.All -> {}
+        DataFavoritesMode.OnlyFavorites -> {
+            builder.append(" WHERE is_favorite")
+            whereUsed = true
+        }
+        DataFavoritesMode.ExcludeFavorites -> {
+            builder.append(" WHERE NOT(is_favorite)")
+            whereUsed = true
+        }
+    }
+    when (val range = this.dateRange) {
+        DataRecognitionDateRange.Empty -> {}
+        is DataRecognitionDateRange.Selected -> {
+            builder.append(if (whereUsed) " AND" else " WHERE")
+            builder.append(" last_recognition_date BETWEEN ? and ?")
+            params.add(range.startDate)
+            params.add(range.endDate)
+        }
+    }
+    val sortByColumn = when (this.sortBy) {
+        DataSortBy.RecognitionDate -> "last_recognition_date"
+        DataSortBy.Title -> "title"
+        DataSortBy.Artist -> "artist"
+        DataSortBy.ReleaseDate -> "release_date"
+    }
+    builder.append(" ORDER BY $sortByColumn")
+    val orderBy = when (this.orderBy) {
+        DataOrderBy.Asc -> "ASC"
+        DataOrderBy.Desc -> "DESC"
+    }
+    builder.append(" $orderBy")
+    return SimpleSQLiteQuery(builder.toString(), params.toTypedArray())
 }

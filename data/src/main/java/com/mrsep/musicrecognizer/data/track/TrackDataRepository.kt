@@ -4,6 +4,9 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 
 interface TrackDataRepository {
+
+    fun isEmptyFlow(): Flow<Boolean>
+
     fun getPagedFlow(): Flow<PagingData<TrackEntity>>
 
     suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<TrackEntity>
@@ -22,13 +25,17 @@ interface TrackDataRepository {
 
     suspend fun deleteAllFavorites()
 
+    fun countAllFlow(): Flow<Int>
+    fun countFavoritesFlow(): Flow<Int>
+
     suspend fun getByMbId(mbId: String): TrackEntity?
     fun getByMbIdFlow(mbId: String): Flow<TrackEntity?>
 
+    fun getFilteredFlow(filter: TrackDataFilter): Flow<List<TrackEntity>>
     suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity>
-
     suspend fun getLastRecognized(limit: Int): List<TrackEntity>
     fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>>
+    fun getNotFavoriteRecentsFlow(limit: Int): Flow<List<TrackEntity>>
     fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
 
     suspend fun search(keyword: String, limit: Int): List<TrackEntity>

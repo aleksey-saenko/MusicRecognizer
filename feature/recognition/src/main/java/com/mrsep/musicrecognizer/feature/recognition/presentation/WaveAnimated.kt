@@ -3,92 +3,124 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import kotlin.math.sin
+import kotlin.math.exp
+import kotlin.math.pow
+
+/**
+ * Properties used to customize the appearance of a [WaveAnimated].
+ *
+ * @property lineWidthFactor specifies the width of a single line in percents of
+ * min composable constraints.
+ * @property spaceWidthFactor specifies the width of a space between two lines in percents of
+ * single line width.
+ * @property periods sets the number of periods visible at the same time
+ * @property animationSpeed sets animation speed in milliseconds
+ * (the time it takes to pass the full width by each period)
+ * @property inverseDirection set the wave direction, if true - RTL, otherwise LTR
+ * @property baseColor primary color of lines
+ * @property activatedColor secondary color of lines
+ */
+@Immutable
+data class WaveAnimatedProperties(
+    val lineWidthFactor: Float = 0.045f,
+    val spaceWidthFactor: Float = 1.3f,
+    val periods: Int = 2,
+    val animationSpeed: Int = 2_500,
+    val inverseDirection: Boolean = false,
+    val baseColor: Color = Color.Blue,
+    val activatedColor: Color = Color.Red
+)
 
 @Composable
 internal fun WaveAnimated(
     activated: Boolean,
     amplitudeFactor: Float,
     modifier: Modifier = Modifier,
-    linesCount: Int = 9,
-    lineWidth: Dp = 4.dp,
-    lineLength: Dp = 88.dp,
-    spaceWidth: Dp = 6.dp,
-    animationSpeed: Int = 7_000,
-    baseColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-    activatedColor: Color = MaterialTheme.colorScheme.primary
+    properties: WaveAnimatedProperties = WaveAnimatedProperties()
 ) {
-    val currentColor by animateColorAsState(
-        targetValue = if (activated) activatedColor else baseColor,
-        animationSpec = tween(durationMillis = 50)
-    )
+    BoxWithConstraints(
+        modifier = modifier
+//            .border(width = 1.dp, color = Color.White.copy(alpha = 0.8f))
+    ) {
+        val minSizePx = constraints.maxWidth.coerceAtMost(constraints.maxHeight)
+        val maxWidthPx = constraints.maxWidth
+        val maxHeightPx = constraints.maxHeight
+        val lineWidthPx = (minSizePx * properties.lineWidthFactor).toInt()
+        val spaceWidthPx = (lineWidthPx * properties.spaceWidthFactor).toInt()
+        val lineSpaceWidthPx = lineWidthPx + spaceWidthPx
+        val linesCount = (maxWidthPx - spaceWidthPx) / lineSpaceWidthPx
+        val spaceCount = linesCount - 1
+        val lineLengthPx = maxHeightPx - lineWidthPx // * 0.5f
 
-    val smoothedAmplitudeFactor by animateFloatAsState(
-        targetValue = when (amplitudeFactor) {
-            0f -> 0.25f
-            in 0.1f..0.3f -> 0.5f
-            in 0.3f..0.5f -> 0.75f
-            else -> 1f
-        },
-        animationSpec = tween(easing = EaseInQuart, durationMillis = 500) //EaseInQuart
-    )
-
-    val infiniteTransition = rememberInfiniteTransition()
-    val animatables = List(linesCount) { index ->
-        infiniteTransition.animateFloat(
-            initialValue = 0f, //-1 for full period of sinus
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(animationSpeed, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse,
-                initialStartOffset = StartOffset(
-                    offsetMillis = (animationSpeed / linesCount * index),
-                    offsetType = StartOffsetType.FastForward
+        val currentColor by animateColorAsState(
+            targetValue = if (activated) properties.activatedColor else properties.baseColor,
+            animationSpec = tween(durationMillis = 50)
+        )
+        val smoothAmplFactor by animateFloatAsState(
+            targetValue = when (amplitudeFactor) {
+                0f -> 0.25f
+                in 0.1f..0.3f -> 0.5f
+                in 0.3f..0.5f -> 0.75f
+                else -> 1f
+            },
+            animationSpec = tween(easing = EaseInQuart, durationMillis = 500)
+        )
+        val infiniteTransition = rememberInfiniteTransition()
+        val animatables = List(linesCount) { index ->
+            infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(properties.animationSpeed, easing = EaseInOutSine),
+                    repeatMode = RepeatMode.Reverse,
+                    initialStartOffset = StartOffset(
+                        offsetMillis = properties.animationSpeed / (linesCount - 1)
+                                * index * properties.periods,
+                        offsetType = StartOffsetType.FastForward
+                    )
                 )
             )
-        )
-    }
-    val activatedFactor by animateFloatAsState(if (activated) 1f else 0.25f)
-
-    Canvas(
-        modifier = modifier.fillMaxSize()
-//            .border(width = 1.dp, color = Color.Yellow.copy(alpha = 0.3f))
-    ) {
-        val centerX = this.size.width / 2
-        val centerY = this.size.height / 2
-        val maxIndex = animatables.lastIndex
-        val lineLengthPx = lineLength.toPx()
-
-        animatables.map {
-            lineLengthPx * sin(it.value * 2 * 3.14).toFloat()
         }
-            .forEachIndexed { index, currentLineLength ->
-                val boundFactor = when (maxIndex - index) {
-                    0, maxIndex -> 0.25f
-                    1, (maxIndex - 1) -> 0.5f
-                    2, (maxIndex - 2) -> 0.75f
-                    else -> 1f
-                }
-                val xOffset = centerX - (index - linesCount / 2) * (lineWidth + spaceWidth).toPx()
-                val calcHalfLength = (currentLineLength / 2) * boundFactor * smoothedAmplitudeFactor
+        val gaussianFactors = generateGaussianList(linesCount)
+
+        val startXOffset = lineWidthPx / 2 +
+                (maxWidthPx - linesCount * lineWidthPx - spaceCount * spaceWidthPx) / 2
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val centerY = this.size.height / 2
+            animatables.map { lineLengthPx * it.value }.forEachIndexed { index, thisLineLength ->
+                val xOffset = if (properties.inverseDirection)
+                    startXOffset + lineSpaceWidthPx * index * 1f
+                else
+                    maxWidthPx - startXOffset - lineSpaceWidthPx * index * 1f
+                val calcHalfLength = (thisLineLength / 2) * gaussianFactors[index] * smoothAmplFactor
                 drawLine(
                     color = currentColor,
                     start = Offset(x = xOffset, y = centerY + calcHalfLength),
                     end = Offset(x = xOffset, y = centerY - calcHalfLength),
-                    strokeWidth = lineWidth.toPx(),
+                    strokeWidth = lineWidthPx.toFloat(),
                     cap = StrokeCap.Round
                 )
             }
+        }
     }
 
+}
+
+private fun generateGaussianList(size: Int): List<Float> {
+    val mean = (size - 1) / 2.0
+    val stdDev = size / 4.5
+    val gaussianList = mutableListOf<Float>()
+    for (i in 0 until size) {
+        val x = ((i - mean) / stdDev).pow(2.0)
+        val y = exp(-x / 2.0)
+        gaussianList.add(y.toFloat())
+    }
+    return gaussianList
 }

@@ -3,7 +3,10 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun TrackLazyRow(
     trackList: ImmutableList<Track>,
+    restCount: Int,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -41,6 +45,27 @@ internal fun TrackLazyRow(
                 modifier = Modifier
             )
         }
+        if (restCount > 0) {
+            restCountLabel(
+                restCount = restCount,
+                onLabelClick = {},
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    }
+}
+
+private fun LazyListScope.restCountLabel(
+    modifier: Modifier = Modifier,
+    restCount: Int,
+    onLabelClick: () -> Unit
+) {
+    item {
+        RestCountLabel(
+            modifier = modifier,
+            restCount = restCount,
+            onLabelClick = onLabelClick
+        )
     }
 }
 
@@ -55,7 +80,7 @@ internal fun LazyRowTrackItem(
             .clip(MaterialTheme.shapes.large)
             .clickable { onTrackClick(track.mbId) }
             .padding(8.dp)
-            .width(104.dp),
+            .width(IntrinsicSize.Min),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -73,13 +98,15 @@ internal fun LazyRowTrackItem(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.large)
                 .aspectRatio(1f)
+                .weight(1f, false)
         )
         Text(
             text = track.title,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier
+                .padding(top = 12.dp)
         )
         Text(
             text = track.artist,

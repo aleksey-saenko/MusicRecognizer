@@ -15,7 +15,7 @@ buildscript {
         Libs = [
                 Compose: [
                         Bom: "androidx.compose:compose-bom:2023.03.00",
-                        Material3: "androidx.compose.material3:material3:1.1.0-beta01",
+                        Material3: "androidx.compose.material3:material3:1.1.0-beta02",
                         ToolingPreview: "androidx.compose.ui:ui-tooling-preview",
                         Navigation: "androidx.navigation:navigation-compose:2.5.3",
                         HiltNavigation: "androidx.hilt:hilt-navigation-compose:1.0.0",
@@ -31,6 +31,7 @@ buildscript {
                         ActivityCompose: "androidx.activity:activity-compose:1.7.0",
                         LifecycleRuntimeCompose: "androidx.lifecycle:lifecycle-runtime-compose:2.6.1",
                         LifecycleViewModelCompose: "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1",
+                        SplashScreenCore: "androidx.core:core-splashscreen:1.0.0",
                 ],
                 Accompanist: [
                         SystemUiController: "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version",

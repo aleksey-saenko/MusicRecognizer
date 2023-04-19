@@ -5,21 +5,22 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
+import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutScreenTopBar(
     modifier: Modifier = Modifier,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
+    topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onBackPressed: () -> Unit
 ) {
-    CenterAlignedTopAppBar(
+    ScreenScrollableTopBar(
+        modifier = modifier,
         title = {
             Text(
                 text = stringResource(StringsR.string.about).toUpperCase(Locale.current),
@@ -36,13 +37,6 @@ internal fun AboutScreenTopBar(
                 )
             }
         },
-        actions = {},
-        scrollBehavior = topAppBarScrollBehavior,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Unspecified,
-            scrolledContainerColor = Color.Unspecified,
-        ),
-        modifier = modifier
+        topAppBarScrollBehavior = topAppBarScrollBehavior
     )
-
 }

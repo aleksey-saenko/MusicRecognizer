@@ -2,10 +2,14 @@ package com.mrsep.musicrecognizer.data.track
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrackDao {
+
+    @Query("SELECT (SELECT COUNT(*) FROM track) == 0")
+    fun isEmptyFlow(): Flow<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(vararg track: TrackEntity)
@@ -22,9 +26,15 @@ interface TrackDao {
     @Query("DELETE FROM track WHERE is_favorite")
     suspend fun deleteAllFavorites()
 
-
     @Update
     suspend fun update(track: TrackEntity)
+
+
+    @Query("SELECT COUNT(*) FROM track")
+    fun countAllFlow(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM track WHERE is_favorite")
+    fun countFavoritesFlow(): Flow<Int>
 
 
     @Query("SELECT * FROM track WHERE mb_id=(:mbId) LIMIT 1")
@@ -41,6 +51,9 @@ interface TrackDao {
 
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>>
+
+    @Query("SELECT * FROM track WHERE NOT is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
+    fun getNotFavoriteRecentsFlow(limit: Int): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
@@ -65,12 +78,13 @@ interface TrackDao {
     fun searchFlow(key: String, escapeSymbol: String, limit: Int): Flow<List<TrackEntity>>
 
 
-
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit) OFFSET (:offset)")
     suspend fun getWihOffset(limit: Int, offset: Int): List<TrackEntity>
 
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC")
     fun pagingSource(): PagingSource<Int, TrackEntity>
 
+    @RawQuery(observedEntities = [TrackEntity::class])
+    fun getFlowByCustomQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
 
 }

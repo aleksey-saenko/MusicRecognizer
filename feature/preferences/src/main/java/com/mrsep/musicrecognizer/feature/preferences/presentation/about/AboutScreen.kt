@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,13 +19,17 @@ internal fun AboutScreen(
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit,
 ) {
+    val topBarBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        AboutScreenTopBar(onBackPressed = onBackPressed)
+        AboutScreenTopBar(
+            onBackPressed = onBackPressed,
+            topAppBarScrollBehavior = topBarBehavior
+        )
         Text(
             text = "Powered by AudD®",
             style = MaterialTheme.typography.bodySmall,
@@ -32,7 +37,9 @@ internal fun AboutScreen(
         )
         VinylAnimated(
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(240.dp).padding(24.dp)
+            modifier = Modifier
+                .size(240.dp)
+                .padding(24.dp)
         )
     }
 }

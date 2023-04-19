@@ -114,10 +114,10 @@ private fun LazyColumnEnqueuedItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
+            .clip(MaterialTheme.shapes.extraLarge)
             .background(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.extraLarge
             )
             .padding(16.dp),
         horizontalArrangement = Arrangement.Start,

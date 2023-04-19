@@ -25,6 +25,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .build()
             )
             .setApiToken(BuildConfig.AUDD_TOKEN)
+            .setOnboardingCompleted(true)
 //            .setNotificationServiceEnabled(true)
             .setDeveloperModeEnabled(true)
             .build()

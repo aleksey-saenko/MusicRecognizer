@@ -95,6 +95,25 @@
     <string name="share">Share</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
+    <string name="favorites">Favorites</string>
+    <string name="recents">Recents</string>
+    <string name="more">MORE</string>
+    <string name="reset_all">Reset all</string>
+    <string name="filters">Filters</string>
+    <string name="favorite_status">Favorite Status</string>
+    <string name="all">All</string>
+    <string name="only_favorites">Only favorites</string>
+    <string name="exclude_favorites">Exclude favorites</string>
+    <string name="sort_by">Sort By</string>
+    <string name="recognition_date">Recognition date</string>
+    <string name="track_title">Track title</string>
+    <string name="artist">Artist</string>
+    <string name="release_date">Release date</string>
+    <string name="order_By">Order By</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="search_track_hint">Search track...</string>
+    <string name="no_tracks_match_filter">No tracks matching selected filters</string>
 
 
 </resources>

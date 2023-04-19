@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.ui.theme
+package com.mrsep.musicrecognizer.core.ui.theme
 
 import android.app.Activity
 import android.os.Build

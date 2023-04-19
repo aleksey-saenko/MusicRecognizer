@@ -1,11 +1,11 @@
-package com.mrsep.musicrecognizer.feature.recognitionqueue.presentation
+package com.mrsep.musicrecognizer.feature.developermode.presentation
 
+import androidx.compose.animation.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
@@ -14,7 +14,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun QueueScreenTopBar(
+internal fun DeveloperScreenTopBar(
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onBackPressed: () -> Unit
@@ -23,7 +23,7 @@ internal fun QueueScreenTopBar(
         modifier = modifier,
         title = {
             Text(
-                text = stringResource(StringsR.string.recognition_queue).toUpperCase(Locale.current),
+                text = "Developer options".toUpperCase(Locale.current),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.headlineSmall

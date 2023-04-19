@@ -42,7 +42,7 @@ class DatabaseFiller @Inject constructor(
                 .filterIsInstance<RemoteRecognitionDataResult.Success<TrackEntity>>()
                 .mapIndexed { index, result ->
                     result.data.run {
-                        if (index < 4) { // make first 5 tracks favorites
+                        if (index < 9) { // make first 9 tracks favorites
                             copy(metadata = result.data.metadata.copy(isFavorite = true))
                         } else {
                             this

@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,153 +16,167 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
+import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
+
 private const val animationDuration = 300
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun LibraryScreen(
-    modifier: Modifier = Modifier,
     viewModel: LibraryViewModel = hiltViewModel(),
     onTrackClick: (mbId: String) -> Unit
 ) {
-    val resentsList by viewModel.recentTracksFlow.collectAsStateWithLifecycle()
-    val favoritesList by viewModel.favoriteTracksFlow.collectAsStateWithLifecycle()
-//    val pagingRecents = viewModel.recentTracksPagedFlow.collectAsLazyPagingItems()
-    val searchResult by viewModel.trackSearchResultFlow.collectAsStateWithLifecycle()
-    val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    var searchActive by rememberSaveable { mutableStateOf(false) }
-//    val total = pagingRecents.itemCount
-//    val first: String?
-//    val last: String?
-//    if (total != 0) {
-//        first = pagingRecents.peek(0)?.mbId
-//        last = pagingRecents.peek(total - 1)?.mbId
-//    } else {
-//        first = "total = 0"
-//        last = "total = 0"
-//    }
-//    LaunchedEffect(total) {
-//        Log.d("123", "total=$total, first=$first, last=$last")
-//    }
+    val scope = rememberCoroutineScope()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiStateTransition = updateTransition(uiState, label = "LibraryUiState")
+    val isLibraryEmpty = uiState !is LibraryUiState.Success
+    var searchWindowActive by rememberSaveable { mutableStateOf(false) }
+    var filterSheetActive by rememberSaveable { mutableStateOf(false) }
 
-    val isLibraryEmpty = resentsList.isEmpty() && favoritesList.isEmpty()
-//    val isLibraryEmpty = pagingRecents.itemCount == 0
-
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        AnimatedContent(
-            targetState = searchActive,
-            contentAlignment = Alignment.Center,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(animationDuration)) with
-                        fadeOut(animationSpec = tween(animationDuration))
-            },
-        ) { isSearchActive ->
-            if (isSearchActive) {
-                TrackSearchBar(
-                    onSearch = { query -> viewModel.submitSearchKeyword(query) },
-                    onSearchClose = { searchActive = false },
-                    searchResult = searchResult,
-                    onTrackClick = onTrackClick
-                )
-//                DisposableEffect(Unit) { onDispose { searchActive = false } }
-            } else {
-                Column {
-                    LibraryScreenTopBar(
-                        topAppBarScrollBehavior = topBarBehaviour,
-                        onSearchIconClick = { searchActive = true },
-                        modifier = Modifier.animateEnterExit(
-                            enter = slideInVertically(
-                                animationSpec = tween(animationDuration),
-                                initialOffsetY = { -it / 2 }
-                            ),
-                            exit = slideOutVertically(
-                                animationSpec = tween(animationDuration),
-                                targetOffsetY = { -it / 2 }
-                            )
-                        )
-                    )
-                    Column(
-                        modifier = Modifier.animateEnterExit(
-                            enter = slideInVertically(
-                                animationSpec = tween(animationDuration),
-                                initialOffsetY = { it / 2 }
-                            ),
-                            exit = slideOutVertically(
-                                animationSpec = tween(animationDuration),
-                                targetOffsetY = { it / 2 }
-                            )
+    AnimatedContent(
+        targetState = searchWindowActive,
+        contentAlignment = Alignment.Center,
+        transitionSpec = {
+            fadeIn(tween(animationDuration)) with fadeOut(tween(animationDuration))
+        },
+    ) { isSearchActive ->
+        if (isSearchActive) {
+            val searchResult by viewModel.trackSearchResultFlow.collectAsStateWithLifecycle()
+            TrackSearchWindow(
+                onSearch = { query -> viewModel.submitSearchKeyword(query) },
+                onSearchClose = {
+                    searchWindowActive = false
+                    viewModel.resetSearch()
+                },
+                searchResult = searchResult,
+                onTrackClick = onTrackClick
+            )
+//                DisposableEffect(Unit) { onDispose { searchWindowActive = false } }
+        } else {
+            val topAppBarBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                LibraryScreenTopBar(
+                    modifier = Modifier.animateEnterExit(
+                        enter = slideInVertically(
+                            animationSpec = tween(animationDuration),
+                            initialOffsetY = { -it / 2 }
                         ),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        if (isLibraryEmpty) {
-                            EmptyLibraryMessage(modifier = Modifier.weight(1f))
-                        } else {
-                            if (resentsList.isNotEmpty()) {
-                                Text(
-                                    text = stringResource(StringsR.string.recently),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    modifier = Modifier
-                                        .padding(start = 16.dp)
-                                        .align(Alignment.Start)
-                                )
-                                TrackLazyGrid(
-                                    trackList = resentsList,
-                                    onTrackClick = onTrackClick,
-                                    modifier = Modifier
-                                        .padding(top = 16.dp)
-                                        .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                                )
-//                            TrackPagingLazyGrid(
-//                                pagingTracks = pagingRecents,
-//                                onTrackClick = onTrackClick,
-//                                toggleTrackFavoriteStatus = { viewModel.toggleTrackFavoriteStatus(it) },
-//                                deleteTrack = { viewModel.deleteTrack(it) },
-//                                modifier = Modifier
-//                                    .padding(top = 16.dp)
-//                                    .nestedScroll(topBarBehaviour.nestedScrollConnection)
-//                            )
+                        exit = slideOutVertically(
+                            animationSpec = tween(animationDuration),
+                            targetOffsetY = { -it / 2 }
+                        )
+                    ),
+                    onSearchIconClick = { searchWindowActive = true },
+                    onFilterIconClick = { filterSheetActive = !filterSheetActive },
+                    isLibraryEmpty = isLibraryEmpty,
+                    isFilterApplied = isFilterApplied(uiState),
+                    topAppBarScrollBehavior = topAppBarBehavior
+                )
+                uiStateTransition.AnimatedContent(
+                    contentKey = { stateObject -> stateObject::class.simpleName },
+                    transitionSpec = {
+                        fadeIn(tween(animationDuration)) with fadeOut(tween(animationDuration))
+                    },
+                    modifier = Modifier.animateEnterExit(
+                        enter = slideInVertically(
+                            animationSpec = tween(animationDuration),
+                            initialOffsetY = { it / 2 }
+                        ),
+                        exit = slideOutVertically(
+                            animationSpec = tween(animationDuration),
+                            targetOffsetY = { it / 2 }
+                        )
+                    ),
+                ) { state ->
+                    when (state) {
+                        LibraryUiState.Loading -> LoadingStub()
+                        LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+                        )
+                        is LibraryUiState.Success -> {
+
+                            val appliedFilter by viewModel.appliedFilterFlow.collectAsStateWithLifecycle()
+                            val filterSheetState = rememberModalBottomSheetState(
+                                skipPartiallyExpanded = true
+                            )
+
+                            fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
+                                scope.launch { filterSheetState.hide() }.invokeOnCompletion {
+                                    if (!filterSheetState.isVisible) filterSheetActive = false
+                                    newTrackFilter?.let(viewModel::applyFilter)
+                                }
                             }
+
+                            TrackLazyGrid(
+                                trackList = state.trackList,
+                                onTrackClick = onTrackClick,
+                                modifier = Modifier.nestedScroll(
+                                    topAppBarBehavior.nestedScrollConnection
+                                )
+                            )
+                            if (filterSheetActive) {
+                                val filterState = rememberTrackFilterState(
+                                    initialTrackFilter = appliedFilter
+                                )
+                                TrackFilterBottomSheet(
+                                    sheetState = filterSheetState,
+                                    filterState = filterState,
+                                    onDismissRequest = { hideFilterSheet() },
+                                    onApplyClick = {
+                                        hideFilterSheet(filterState.makeFilter())
+                                    }
+                                )
+                            }
+
                         }
                     }
                 }
             }
+
         }
     }
 }
 
+private fun isFilterApplied(state: LibraryUiState): Boolean {
+    return when (state) {
+        is LibraryUiState.Success -> state.isFilterApplied
+        else -> false
+    }
+}
 
 @Composable
-private fun EmptyLibraryMessage(
+fun EmptyLibraryMessage(
     modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .padding(start = 24.dp, end = 24.dp)
     ) {
+        Icon(
+            painter = painterResource(UiR.drawable.baseline_recently_24),
+            contentDescription = null,
+            modifier = Modifier.size(80.dp),
+            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+        )
         Text(
             text = stringResource(StringsR.string.empty_library_message),
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
-        Icon(
-            painter = painterResource(UiR.drawable.baseline_album_24),
-            contentDescription = null,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(24.dp)
-                .size(80.dp),
-            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                .fillMaxWidth(0.75f)
+                .padding(top = 24.dp)
         )
     }
 

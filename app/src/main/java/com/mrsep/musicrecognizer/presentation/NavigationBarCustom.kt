@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.presentation.navigationbar
+package com.mrsep.musicrecognizer.presentation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -73,9 +73,7 @@ fun NavigationBarCustom(
             CustomNavBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(
-                            if (selected) destination.selectedIconId else destination.unselectedIconId
-                        ),
+                        painter = painterResource(destination.iconResId),
                         contentDescription = null,
                         tint = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
                             alpha = 0.85f

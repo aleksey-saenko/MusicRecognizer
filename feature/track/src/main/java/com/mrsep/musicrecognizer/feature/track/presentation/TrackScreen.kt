@@ -284,9 +284,6 @@ private fun AboutTrackSection(
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
                 }
-                LaunchedEffect(track.links) {
-                    println(track.links)
-                }
                 MusicServiceChipSection(
                     links = track.links,
                     required = preferences.requiredServices

@@ -13,7 +13,9 @@ object LibraryScreen {
         onTrackClick: (mbId: String) -> Unit
     ) {
         composable(ROUTE) {
-            LibraryScreen(onTrackClick = onTrackClick)
+            LibraryScreen(
+                onTrackClick = onTrackClick
+            )
         }
     }
 
@@ -22,6 +24,7 @@ object LibraryScreen {
     ) {
         this.navigate(route = ROUTE, navOptions = navOptions)
     }
+
 
 }
 

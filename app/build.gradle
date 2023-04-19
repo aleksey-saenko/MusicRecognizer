@@ -100,13 +100,13 @@ dependencies {
     implementation Libs.Android.ActivityCompose
     implementation Libs.Android.LifecycleRuntimeCompose
     implementation Libs.Android.LifecycleViewModelCompose
+    implementation Libs.Android.SplashScreenCore
 
     testImplementation Libs.Test.JUnit
     androidTestImplementation Libs.AndroidTest.JUnitExt
     androidTestImplementation Libs.AndroidTest.EspressoCore
 
     implementation Libs.Accompanist.SystemUiController
-//    implementation Libs.Accompanist.Permissions
 
     implementation Libs.JetBrains.CoroutinesAndroid
     implementation Libs.JetBrains.CollectionImmutable
@@ -123,7 +123,6 @@ dependencies {
     implementation Libs.WorkManager.RuntimeKtx
     implementation Libs.WorkManager.HiltWorkManager
     kapt Libs.WorkManager.Kapt
-
 
 
 

@@ -11,12 +11,14 @@ object PreferencesScreen {
 
     fun NavGraphBuilder.preferencesScreen(
         onNavigateToAboutScreen: () -> Unit,
-        onNavigateToQueueScreen: () -> Unit
+        onNavigateToQueueScreen: () -> Unit,
+        onNavigateToDeveloperScreen: () -> Unit
     ) {
         composable(ROUTE) {
             PreferencesScreen(
                 onNavigateToAboutScreen = onNavigateToAboutScreen,
-                onNavigateToQueueScreen = onNavigateToQueueScreen
+                onNavigateToQueueScreen = onNavigateToQueueScreen,
+                onNavigateToDeveloperScreen = onNavigateToDeveloperScreen
             )
         }
     }

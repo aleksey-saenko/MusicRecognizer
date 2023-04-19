@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.ui.theme
+package com.mrsep.musicrecognizer.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -57,9 +57,10 @@ val md_theme_dark_error = Color(0xFFFFB4AB)
 val md_theme_dark_errorContainer = Color(0xFF93000A)
 val md_theme_dark_onError = Color(0xFF690005)
 val md_theme_dark_onErrorContainer = Color(0xFFFFDAD6)
-val md_theme_dark_background = Color(0xFF001B3D)
+val md_theme_dark_background = Color(0xFF300A24)
+//val md_theme_dark_background = Color(0xFF001B3D)
 val md_theme_dark_onBackground = Color(0xFFD6E3FF)
-val md_theme_dark_surface = Color(0xFF001B3D)
+val md_theme_dark_surface = Color(0xFF300A24)
 val md_theme_dark_onSurface = Color(0xFFD6E3FF)
 val md_theme_dark_surfaceVariant = Color(0xFF44464F)
 val md_theme_dark_onSurfaceVariant = Color(0xFFC5C6D0)

@@ -10,9 +10,10 @@ object DeveloperScreenNavigation {
     private const val ROUTE = "developer"
 
     fun NavGraphBuilder.developerScreen(
+        onBackPressed: () -> Unit,
     ) {
         composable(ROUTE) {
-            DeveloperScreen()
+            DeveloperScreen(onBackPressed = onBackPressed)
         }
     }
 

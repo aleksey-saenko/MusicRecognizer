@@ -2,11 +2,11 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -31,10 +32,21 @@ internal fun TrackLazyGrid(
     modifier: Modifier = Modifier
 ) {
     val state = rememberLazyGridState()
+    if (trackList.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(StringsR.string.no_tracks_match_filter),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+    }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 104.dp),
         state = state,
-        modifier = modifier,
+        modifier = modifier
     ) {
         items(count = trackList.size, key = { trackList[it].mbId }) { index ->
             LazyGridTrackItem(
@@ -53,28 +65,77 @@ internal fun TrackLazyGrid(
 @Composable
 internal fun TrackLazyGridHorizontal(
     trackList: ImmutableList<Track>,
+    restCount: Int,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = rememberLazyGridState()
     LazyHorizontalGrid(
-        rows = GridCells.Fixed(2),
+//        rows = GridCells.Fixed(2),
+        rows = GridCells.Adaptive(minSize = 160.dp),
         state = state,
-        modifier = modifier.height(250.dp),
-        userScrollEnabled = false
+        modifier = modifier, //.height(250.dp)
+        userScrollEnabled = true
     ) {
-        items(count = 4, key = { trackList[it].mbId }) { index ->
+        items(count = trackList.size, key = { trackList[it].mbId }) { index ->
+            LazyRowTrackItem(
+                track = trackList[index],
+                onTrackClick = onTrackClick,
+                modifier = Modifier.animateItemPlacement(tween(300))
+            )
             LazyRowTrackItemHorizontal(
                 track = trackList[index],
                 onTrackClick = onTrackClick,
-                modifier = Modifier.animateItemPlacement(
-                    tween(3000)
-                )
-
+                modifier = Modifier.animateItemPlacement(tween(300))
+            )
+        }
+        if (restCount > 0) {
+            restCountLabel(
+                restCount = restCount,
+                onLabelClick = {},
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
 }
+
+private fun LazyGridScope.restCountLabel(
+    modifier: Modifier = Modifier,
+    restCount: Int,
+    onLabelClick: () -> Unit
+) {
+    item(span = { GridItemSpan(this.maxLineSpan) }) {
+        RestCountLabel(
+            modifier = modifier,
+            restCount = restCount,
+            onLabelClick = onLabelClick
+        )
+    }
+}
+
+@Composable
+internal fun RestCountLabel(
+    modifier: Modifier = Modifier,
+    restCount: Int,
+    onLabelClick: () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize()
+    ) {
+        Text(
+            text = "+$restCount",
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.large)
+                .background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))
+                .clickable(onClick = onLabelClick)
+                .padding(vertical = 8.dp, horizontal = 12.dp)
+        )
+    }
+}
+
 
 @Composable
 internal fun LazyGridTrackItem(
@@ -111,7 +172,7 @@ internal fun LazyGridTrackItem(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         Text(
             text = track.artist,

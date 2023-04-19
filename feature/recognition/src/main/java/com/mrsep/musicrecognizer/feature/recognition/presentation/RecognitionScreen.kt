@@ -40,9 +40,7 @@ internal fun RecognitionScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val preferences by viewModel.preferencesFlow.collectAsStateWithLifecycle(initialValue = null)
     val recognizeStatus by viewModel.recognizeStatusFlow.collectAsStateWithLifecycle()
-    val developerMode = preferences?.developerModeEnabled ?: false
 
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
 
@@ -52,6 +50,7 @@ internal fun RecognitionScreen(
     )
 
     // permission logic block
+    var firstAsked by rememberSaveable { mutableStateOf(true) }
     var scheduledJob: Job? by remember { mutableStateOf(null) }
     var permissionDialogVisible by rememberSaveable { mutableStateOf(false) }
     val recorderPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO)
@@ -74,7 +73,8 @@ internal fun RecognitionScreen(
             onButtonClick = {
                 if (recorderPermissionState.status.isGranted) {
                     viewModel.recognizeTap()
-                } else if (recorderPermissionState.status.shouldShowRationale) {
+                } else if (recorderPermissionState.status.shouldShowRationale || firstAsked) {
+                    firstAsked = false
                     recorderPermissionState.launchPermissionRequest()
                     scheduledJob?.cancel()
                     scheduledJob = scope.launch {

@@ -10,11 +10,9 @@ import javax.inject.Inject
 @HiltViewModel
 internal class RecognitionViewModel @Inject constructor(
     private val recognitionInteractor: RecognitionInteractor,
-    private val recorderController: RecorderController,
-    preferencesRepository: PreferencesRepository,
+    private val recorderController: RecorderController
 ) : ViewModel() {
 
-    val preferencesFlow = preferencesRepository.userPreferencesFlow
     val recognizeStatusFlow = recognitionInteractor.statusFlow
 
     val maxAmplitudeFlow = recorderController.maxAmplitudeFlow

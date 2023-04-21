@@ -11,7 +11,7 @@ class SearchResultToDomainMapper @Inject constructor() :
 
     override fun map(input: SearchDataResult<Track>): SearchResult<Track> {
         return when (input) {
-            is SearchDataResult.Processing -> SearchResult.Processing(input.keyword)
+            is SearchDataResult.Pending -> SearchResult.Pending(input.keyword)
             is SearchDataResult.Success -> SearchResult.Success(input.keyword, input.data)
         }
     }

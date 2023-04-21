@@ -112,8 +112,9 @@
     <string name="order_By">Order By</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
-    <string name="search_track_hint">Search track...</string>
-    <string name="no_tracks_match_filter">No tracks matching selected filters</string>
+    <string name="search_track_hint">Search track…</string>
+    <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
+    <string name="no_tracks_match_search">No tracks matching your search criteria</string>
 
 
 </resources>

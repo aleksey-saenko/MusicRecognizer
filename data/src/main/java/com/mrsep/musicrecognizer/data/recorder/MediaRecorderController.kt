@@ -7,13 +7,13 @@ import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.RENDEZVOUS
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.IOException
 import java.time.Duration
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayDeque
 import kotlin.coroutines.resume
 import kotlin.math.abs
 import kotlin.math.pow
@@ -22,87 +22,85 @@ import kotlin.math.roundToInt
 private const val TAG = "MediaRecorderController"
 private const val FILE_EXTENSION = "m4a"
 
-class MediaRecorderControllerNew @Inject constructor(
+@OptIn(ExperimentalCoroutinesApi::class)
+class MediaRecorderController @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val fileRecordRepository: FileRecordDataRepository,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
 ) : RecorderDataController {
 
     private var recorder: MediaRecorder? = null
 
-    private val amplitudeChannel = Channel<Float>(RENDEZVOUS)
-    override val maxAmplitudeFlow = amplitudeChannel.receiveAsFlow()
-        .onEach { println("maxAmplitude=$it") } // debug purpose
+    private val amplitudePollingEnabled = MutableStateFlow(false)
 
-    private fun CoroutineScope.getLazyAmplitudePollingJob(): Job {
-        return launch(defaultDispatcher, CoroutineStart.LAZY) {
-            val fullChunkSize = 5
+    private val maxAmplitudeRawFlow = flow {
+        while (true) {
+            // 32_767 is the maximum output value
+            val relativeValue = try {
+                recorder?.maxAmplitude?.div(32_767f)?.coerceIn(0f..1f) ?: 0f
+            } catch (e: IllegalStateException) {
+                0f
+            }
+            emit(relativeValue)
             // Small amplitude polling rate (like 10 ms) can lead to unstable behaviour
             // (maxAmplitude() sometimes return 0, even if there is some sound around)
-            val amplitudePollingRateInMs = 50L
-            val chunk = ArrayDeque<Float>(fullChunkSize)
-            var previousSent = 0f
-            try {
-                while (true) {
-                    val relativeValue = recorder?.run {
-                        (maxAmplitude / 32_768f).coerceIn(0f..1f)
-                    } ?: 0f
-                    chunk.add(relativeValue)
-                    if (chunk.size == fullChunkSize) {
-                        val averageValue = (chunk.sum() / fullChunkSize).roundTo(1)
-                        if (averageValue.equalsDelta(previousSent, 0.01f).not()) {
-                            amplitudeChannel.send(averageValue)
-                            previousSent = averageValue
-                        }
-                        chunk.removeFirst()
-                    }
-                    delay(amplitudePollingRateInMs)
-                }
-            } finally {
-                withContext(NonCancellable) { amplitudeChannel.send(0f) }
+            delay(50L)
+        }
+    }
+
+    override val maxAmplitudeFlow = amplitudePollingEnabled
+        .flatMapLatest { enabled ->
+            if (enabled) {
+                maxAmplitudeRawFlow
+                    .transformToMovingAverage(5)
+                    .map { average -> average.roundTo(1) }
+            } else {
+                flow { emit(0f) }
+            }
+        }
+        .distinctUntilChanged { old, new -> old.equalsDelta(new, 0.01f) }
+        .flowOn(defaultDispatcher)
+        .onEach { println("maxAmplitude=$it") } // debug purpose
+
+
+    private fun Flow<Float>.transformToMovingAverage(windowSize: Int) = flow {
+        val chunk = ArrayDeque<Float>(windowSize)
+        collect { maxAmplitude ->
+            chunk.add(maxAmplitude)
+            if (chunk.size == windowSize) {
+                emit(chunk.sum() / windowSize)
+                chunk.removeFirst()
             }
         }
     }
 
     override suspend fun recordAudioToFile(duration: Duration): RecordDataResult {
-        return coroutineScope {
-            val lazyAmplitudePollingJob = getLazyAmplitudePollingJob()
+        return suspendCancellableCoroutine { continuation ->
+            val resultFile = fileRecordRepository.getFileForNewRecord(FILE_EXTENSION)
 
-            suspendCancellableCoroutine { continuation ->
-                val resultFile = fileRecordRepository.getFileForNewRecord(FILE_EXTENSION)
+            val onFinish = {
+                stopRecord()
+                continuation.resume(RecordDataResult.Success(resultFile))
+            }
+            val onError = { throwable: Throwable ->
+                stopRecord()
+                fileRecordRepository.delete(resultFile)
+                continuation.resume(RecordDataResult.Error(throwable))
+            }
 
-                val onStart = {
-                    lazyAmplitudePollingJob.start()
-                    Unit
-                }
-                val onFinish = {
-                    stopRecord()
-                    lazyAmplitudePollingJob.cancel()
-                    continuation.resume(RecordDataResult.Success(resultFile))
-                }
-                val onError = { throwable: Throwable ->
-                    stopRecord()
-                    lazyAmplitudePollingJob.cancel()
-                    fileRecordRepository.delete(resultFile)
-                    continuation.resume(RecordDataResult.Error(throwable))
-                }
+            recordToFile(resultFile, duration, onFinish, onError)
 
-                recordToFile(resultFile, duration, onStart, onFinish, onError)
-
-
-                continuation.invokeOnCancellation {
-                    stopRecord()
-                    fileRecordRepository.delete(resultFile)
-                }
+            continuation.invokeOnCancellation {
+                stopRecord()
+                fileRecordRepository.delete(resultFile)
             }
         }
     }
 
-
+    //FIXME add stop-release to prev recorder (see PlayerController)
     private fun recordToFile(
         file: File,
         duration: Duration,
-        onStart: () -> Unit,
         onFinish: () -> Unit,
         onError: (throwable: Throwable) -> Unit
     ) {
@@ -137,7 +135,7 @@ class MediaRecorderControllerNew @Inject constructor(
             try {
                 prepare()
                 start()
-                onStart()
+                amplitudePollingEnabled.update { true }
                 Log.d(TAG, "Recorder started")
             } catch (e: IOException) {
                 Log.e(TAG, "Recorder prepare fails", e)
@@ -147,6 +145,7 @@ class MediaRecorderControllerNew @Inject constructor(
     }
 
     private fun stopRecord() {
+        amplitudePollingEnabled.update { false }
         recorder?.apply {
             try {
                 stop()
@@ -158,6 +157,7 @@ class MediaRecorderControllerNew @Inject constructor(
         recorder = null
         Log.d(TAG, "Recorder stopped")
     }
+
 
 }
 

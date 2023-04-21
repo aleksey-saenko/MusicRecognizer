@@ -2,8 +2,7 @@ package com.mrsep.musicrecognizer.data.di
 
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
 import com.mrsep.musicrecognizer.data.player.PlayerDataController
-import com.mrsep.musicrecognizer.data.recorder.MediaRecorderControllerNew
-import com.mrsep.musicrecognizer.data.recorder.MediaRecorderControllerOld
+import com.mrsep.musicrecognizer.data.recorder.MediaRecorderController
 import com.mrsep.musicrecognizer.data.recorder.RecorderDataController
 import dagger.Binds
 import dagger.Module
@@ -18,7 +17,7 @@ interface AudioControllerModule {
 
     @Binds
     @Singleton
-    fun bindRecorderDataController(implementation: MediaRecorderControllerOld): RecorderDataController
+    fun bindRecorderDataController(implementation: MediaRecorderController): RecorderDataController
 
     @Binds
     @Singleton

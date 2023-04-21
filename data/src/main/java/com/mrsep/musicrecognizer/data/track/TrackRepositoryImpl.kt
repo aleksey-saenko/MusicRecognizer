@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.data.track
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -183,7 +182,7 @@ class TrackRepositoryImpl @Inject constructor(
                     data = list
                 )
             }
-            .onStart { emit(SearchDataResult.Processing(keyword)) }
+            .onStart { emit(SearchDataResult.Pending(keyword)) }
             .flowOn(ioDispatcher)
     }
 

@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.feature.library.domain.model
 sealed class SearchResult<T> {
     abstract val keyword: String
 
-    data class Processing<T>(
+    data class Pending<T>(
         override val keyword: String
     ) : SearchResult<T>()
 

@@ -4,7 +4,6 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -190,15 +189,12 @@ private fun LazyColumnEnqueuedItem(
         var menuExpanded by remember { mutableStateOf(false) }
         var renameDialogVisible by remember { mutableStateOf(false) }
         Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable { menuExpanded = !menuExpanded }
-                    .padding(4.dp)
-                    .size(24.dp)
-            )
+            IconButton(onClick = { menuExpanded = !menuExpanded }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = null
+                )
+            }
             DropdownMenu(
                 expanded = menuExpanded,
                 onDismissRequest = { menuExpanded = false }

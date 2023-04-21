@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.remote.audd.model
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
 
-sealed interface AuddResponseJson {
+sealed class AuddResponseJson {
 
     @JsonClass(generateAdapter = true)
     data class Success(
@@ -11,7 +11,7 @@ sealed interface AuddResponseJson {
         val status: String,
         @Json(name = "result")
         val result: Result?
-    ) : AuddResponseJson {
+    ) : AuddResponseJson() {
 
         @JsonClass(generateAdapter = true)
         data class Result(
@@ -52,7 +52,7 @@ sealed interface AuddResponseJson {
         val status: String,
         @Json(name = "error")
         val body: Body
-    ) : AuddResponseJson {
+    ) : AuddResponseJson() {
 
         @JsonClass(generateAdapter = true)
         data class Body(
@@ -61,8 +61,8 @@ sealed interface AuddResponseJson {
             @Json(name = "error_message")
             val errorMessage: String
         )
-
     }
+
 }
 
 

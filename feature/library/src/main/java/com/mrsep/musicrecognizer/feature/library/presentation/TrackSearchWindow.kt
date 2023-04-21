@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -66,11 +65,12 @@ internal fun TrackSearchWindow(
             onActiveChange = { active -> if (!active) clearFocusAndCloseSearch() },
             placeholder = { Text(stringResource(StringsR.string.search_track_hint)) },
             leadingIcon = {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    modifier = Modifier.clickable(onClick = ::clearFocusAndCloseSearch)
-                )
+                IconButton(onClick = ::clearFocusAndCloseSearch) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             },
             trailingIcon = {
                 AnimatedVisibility(
@@ -78,14 +78,17 @@ internal fun TrackSearchWindow(
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = null,
-                        modifier = Modifier.clickable {
+                    IconButton(
+                        onClick = {
                             text = ""
                             onSearch(text)
                         }
-                    )
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = null
+                        )
+                    }
                 }
             },
             colors = SearchBarDefaults.colors(
@@ -95,21 +98,40 @@ internal fun TrackSearchWindow(
             ),
             tonalElevation = 0.dp
         ) {
-            AnimatedContent(targetState = searchResult) { localSearchResult ->
-                when (localSearchResult) {
-                    is SearchResult.Processing -> LinearProgressIndicator(
+            AnimatedContent(targetState = searchResult) { thisSearchResult ->
+                when (thisSearchResult) {
+                    is SearchResult.Pending -> LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()
                     )
-                    is SearchResult.Success -> LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(localSearchResult.data.size) { index ->
-                            TrackSearchItem(
-                                track = localSearchResult.data[index],
-                                onTrackClick = onTrackClick
-                            )
+                    is SearchResult.Success -> {
+                        if (thisSearchResult.keyword == text) {
+                            if (thisSearchResult.isEmpty && thisSearchResult.keyword.isNotBlank()) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.TopCenter
+                                ) {
+                                    Text(
+                                        text = stringResource(StringsR.string.no_tracks_match_search),
+                                        modifier = Modifier
+                                            .padding(24.dp)
+                                            .padding(top = 24.dp)
+                                    )
+                                }
+                            } else {
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentPadding = PaddingValues(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(thisSearchResult.data.size) { index ->
+                                        TrackSearchItem(
+                                            track = thisSearchResult.data[index],
+                                            onTrackClick = onTrackClick
+                                        )
+                                    }
+                                }
+                            }
+
                         }
                     }
                 }

@@ -2,20 +2,20 @@ buildscript {
     ext {
         targetAndroidSdk = 33
         minAndroidSdk = 26
-        composeCompilerVersion = "1.4.4"
+        composeCompilerVersion = "1.4.6"
 
         accompanist_version = "0.30.0"
-        protobuf_version = "3.21.12"
+        protobuf_version = "3.22.3"
         room_version = "2.5.1"
         retrofit_version = "2.9.0"
         moshi_version = "1.14.0"
-        hilt_version = "2.44.2"
+        hilt_version = "2.45"
         paging_version = "3.1.1"
 
         Libs = [
                 Compose: [
                         Bom: "androidx.compose:compose-bom:2023.03.00",
-                        Material3: "androidx.compose.material3:material3:1.1.0-beta02",
+                        Material3: "androidx.compose.material3:material3:1.1.0-rc01",
                         ToolingPreview: "androidx.compose.ui:ui-tooling-preview",
                         Navigation: "androidx.navigation:navigation-compose:2.5.3",
                         HiltNavigation: "androidx.hilt:hilt-navigation-compose:1.0.0",
@@ -25,7 +25,7 @@ buildscript {
                         AndroidTestJUnit: "androidx.compose.ui:ui-test-junit4",
                 ],
                 Android: [
-                        CoreKtx: "androidx.core:core-ktx:1.9.0",
+                        CoreKtx: "androidx.core:core-ktx:1.10.0",
                         LifecycleRuntime: "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1",
 //                        LifecycleLiveData: "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1", //converting WorkInfo (WorkManager) to flow
                         ActivityCompose: "androidx.activity:activity-compose:1.7.0",
@@ -118,11 +118,20 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
+    id 'com.android.application' version '8.0.0' apply false
+    id 'com.android.library' version '8.0.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
 
-    id 'org.jetbrains.kotlin.kapt' version '1.8.10' apply false
-    id 'com.google.dagger.hilt.android' version '2.44' apply false
-    id "com.google.protobuf" version "0.8.17" apply false
+    id 'org.jetbrains.kotlin.kapt' version '1.8.20' apply false
+    id 'com.google.dagger.hilt.android' version '2.45' apply false
+    id "com.google.protobuf" version '0.9.0' apply false
+}
+
+//gradle 8.0 uses jdk 17 while kapt requires same as jvmTarget (1.8 in this project)
+allprojects {
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }

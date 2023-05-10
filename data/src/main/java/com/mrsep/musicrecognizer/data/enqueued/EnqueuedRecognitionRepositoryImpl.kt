@@ -13,31 +13,29 @@ import java.time.Instant
 import javax.inject.Inject
 
 class EnqueuedRecognitionRepositoryImpl @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val enqueuedWorkManager: EnqueuedRecognitionWorkDataManager,
+    private val recordingFileDataSource: RecordingFileDataSource,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
 ) : EnqueuedRecognitionDataRepository {
 
     private val dao = database.enqueuedRecognitionDao()
 
-    override suspend fun createEnqueuedRecognition(recordFile: File, launch: Boolean) {
-        withContext(ioDispatcher) {
-            val enqueued = EnqueuedRecognitionEntity(
-                id = 0,
-                title = "",
-                recordFile = recordFile,
-                creationDate = Instant.now()
-            )
-            val id = insertOrReplace(enqueued)
-            if (launch) {
-                enqueuedWorkManager.enqueueRecognitionWorker(id)
-            }
-        }
-    }
-
-    override suspend fun insertOrReplace(enqueuedRecognition: EnqueuedRecognitionEntity): Int {
+    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Boolean {
         return withContext(ioDispatcher) {
-            dao.insertOrReplace(enqueuedRecognition).toInt()
+            recordingFileDataSource.write(audioRecording)?.let { recordingFile ->
+                val enqueued = EnqueuedRecognitionEntity(
+                    id = 0,
+                    title = "",
+                    recordFile = recordingFile,
+                    creationDate = Instant.now()
+                )
+                val id = dao.insertOrReplace(enqueued).toInt()
+                if (launch) {
+                    enqueuedWorkManager.enqueueRecognitionWorker(id)
+                }
+                true
+            } ?: false
         }
     }
 
@@ -68,13 +66,10 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun cancelAndDeleteById(enqueuedId: Int) {
-        enqueuedWorkManager.cancelRecognitionWorker(enqueuedId)
-        deleteById(enqueuedId)
-    }
-
-    override suspend fun deleteById(id: Int) {
-        withContext(ioDispatcher) {
-            dao.deleteById(id)
+        getById(enqueuedId)?.let { enqueued ->
+            enqueuedWorkManager.cancelRecognitionWorker(enqueuedId)
+            dao.deleteById(enqueuedId)
+            recordingFileDataSource.delete(enqueued.recordFile)
         }
     }
 

@@ -3,7 +3,6 @@ package com.mrsep.musicrecognizer.feature.recognitionqueue.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.FileRecordRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,8 +14,7 @@ private const val ENQUEUED_FLOW_LIMIT = 50
 @HiltViewModel
 internal class QueueScreenViewModel @Inject constructor(
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
-    private val playerController: PlayerController,
-    private val fileRecordRepository: FileRecordRepository,
+    private val playerController: PlayerController
 ) : ViewModel() {
 
     val enqueuedRecognitionUiFlow = enqueuedRecognitionRepository
@@ -32,9 +30,6 @@ internal class QueueScreenViewModel @Inject constructor(
     fun deleteEnqueuedRecognition(enqueuedId: Int) {
         viewModelScope.launch {
             enqueuedRecognitionRepository.cancelAndDeleteById(enqueuedId)
-            enqueuedRecognitionRepository.getRecordById(enqueuedId)?.let { recordFile ->
-                fileRecordRepository.delete(recordFile)
-            }
         }
     }
 

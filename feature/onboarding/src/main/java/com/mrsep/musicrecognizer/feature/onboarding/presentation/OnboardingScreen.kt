@@ -67,6 +67,7 @@ internal fun OnboardingScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             OnboardingPage.PERMISSIONS.index -> {
                 PageWithIndicator(
                     PageContent = {
@@ -80,12 +81,11 @@ internal fun OnboardingScreen(
                                 if (availablePages < minimumRequiredPages) {
                                     availablePages = minimumRequiredPages
                                 }
-                                scope.launch {
-                                    snapshotFlow { pagerState.canScrollForward }
-                                        .filter { it }
-                                        .take(1)
-                                        .collect { pagerState.animateScrollToPage(OnboardingPage.TOKEN.index) }
-                                }
+                                snapshotFlow { pagerState.canScrollForward }
+                                    .filter { it }
+                                    .take(1)
+                                    .onEach { pagerState.animateScrollToPage(OnboardingPage.TOKEN.index) }
+                                    .launchIn(scope)
                             }
                         )
                     },
@@ -94,6 +94,7 @@ internal fun OnboardingScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             OnboardingPage.TOKEN.index -> {
                 PageWithIndicator(
                     PageContent = {
@@ -107,12 +108,11 @@ internal fun OnboardingScreen(
                                 if (availablePages < minimumRequiredPages) {
                                     availablePages = minimumRequiredPages
                                 }
-                                scope.launch {
-                                    snapshotFlow { pagerState.canScrollForward }
-                                        .filter { it }
-                                        .take(1)
-                                        .collect { pagerState.animateScrollToPage(OnboardingPage.FINAL.index) }
-                                }
+                                snapshotFlow { pagerState.canScrollForward }
+                                    .filter { it }
+                                    .take(1)
+                                    .onEach { pagerState.animateScrollToPage(OnboardingPage.FINAL.index) }
+                                    .launchIn(scope)
                             }
                         )
                     },
@@ -121,6 +121,7 @@ internal fun OnboardingScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             OnboardingPage.FINAL.index -> {
                 PageWithIndicator(
                     PageContent = {
@@ -139,6 +140,7 @@ internal fun OnboardingScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             else -> {
                 throw IllegalStateException("OnboardingScreen: Unavailable page index")
             }

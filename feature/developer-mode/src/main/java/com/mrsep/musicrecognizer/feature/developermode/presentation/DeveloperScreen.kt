@@ -9,15 +9,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.strings.R
+import com.mrsep.musicrecognizer.core.ui.components.workshop.AmplitudeVisualizerDirect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,10 +27,11 @@ internal fun DeveloperScreen(
     onBackPressed: () -> Unit,
     viewModel: DeveloperViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+//    val context = LocalContext.current
+//    val scope = rememberCoroutineScope()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
+    val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
 
     Column(
         modifier = Modifier
@@ -61,10 +64,37 @@ internal fun DeveloperScreen(
                 }
             )
             ButtonGroup(
-                title = "RECOGNITION",
+                title = "Audio Chain Test (with encoder)",
                 content = {
-                    Button(onClick = { showStubToast(context) }) { Text(text = "Fake impl") }
-                    Button(onClick = { showStubToast(context) }) { Text(text = "Real impl") }
+                    Button(onClick = viewModel::testAudioChain) { Text(text = "start chain") }
+                    Button(onClick = viewModel::stopTestAudioChain) { Text(text = "stop chain") }
+                    Button(onClick = viewModel::writeChainResult) { Text(text = "write result") }
+                    Button(onClick = viewModel::playChainResult) { Text(text = "play result") }
+                }
+            )
+            Text(
+                text = "AmplitudeVisualizerDirect",
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+            )
+            AmplitudeVisualizerDirect(
+                modifier = Modifier.height(48.dp),
+                currentValue = amplitude
+            )
+            ButtonGroup(
+                title = "WebSocket Test PureOkHttp",
+                content = {
+                    Button(onClick = viewModel::startWebSocketConnection) { Text(text = "start WS") }
+                    Button(onClick = viewModel::stopWebSocketConnection) { Text(text = "stop WS") }
+                }
+            )
+            ButtonGroup(
+                title = "WebSocket Test Scarlet",
+                content = {
+                    Button(onClick = viewModel::startScarletTest) { Text(text = "start WS") }
+                    Button(onClick = viewModel::stopScarletTest) { Text(text = "stop WS") }
                 }
             )
 

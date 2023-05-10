@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.data.remote.audd
 
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.data.remote.audd.model.TokenValidationDataStatus
 import java.io.File
 import java.net.URL
 
@@ -12,18 +12,21 @@ interface RecognitionDataService {
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         file: File
-    ): RemoteRecognitionDataResult<TrackEntity>
+    ): RemoteRecognitionDataResult
 
     suspend fun recognize(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         byteArray: ByteArray
-    ): RemoteRecognitionDataResult<TrackEntity>
+    ): RemoteRecognitionDataResult
 
     suspend fun recognize(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         url: URL
-    ): RemoteRecognitionDataResult<TrackEntity>
+    ): RemoteRecognitionDataResult
+
+
+    suspend fun validateToken(token: String): TokenValidationDataStatus
 
 }

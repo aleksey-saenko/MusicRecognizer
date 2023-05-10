@@ -21,13 +21,15 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.presentation.components.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -40,12 +42,13 @@ internal fun RecognitionScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val recognizeStatus by viewModel.recognizeStatusFlow.collectAsStateWithLifecycle()
-
+    val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
 
+    LaunchedEffect(key1 = ampFlow, block = { println(ampFlow) })
+
     val superButtonSectionOpacity by animateFloatAsState(
-        targetValue = if (recognizeStatus.isFinalState) 0f else 1f,
+        targetValue = if (recognizeStatus is RecognitionStatus.Done) 0f else 1f,
         animationSpec = tween(durationMillis = 100)
     )
 
@@ -54,6 +57,9 @@ internal fun RecognitionScreen(
     var scheduledJob: Job? by remember { mutableStateOf(null) }
     var permissionDialogVisible by rememberSaveable { mutableStateOf(false) }
     val recorderPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO)
+    val canShowPermissionRequest = recorderPermissionState.status.shouldShowRationale || firstAsked
+    val isPermissionNotBlocked =
+        recorderPermissionState.status.isGranted || canShowPermissionRequest
     if (permissionDialogVisible) {
         scheduledJob?.cancel()
         DialogForOpeningAppSettings(
@@ -70,94 +76,86 @@ internal fun RecognitionScreen(
     ) {
         SuperButtonSection(
             title = getButtonTitle(recognizeStatus),
-            onButtonClick = {
+            onButtonClick = { //TODO() add dialog for forever blocked
                 if (recorderPermissionState.status.isGranted) {
                     viewModel.recognizeTap()
-                } else if (recorderPermissionState.status.shouldShowRationale || firstAsked) {
+                } else if (canShowPermissionRequest) {
                     firstAsked = false
                     recorderPermissionState.launchPermissionRequest()
                     scheduledJob?.cancel()
-                    scheduledJob = scope.launch {
-                        snapshotFlow { recorderPermissionState.status.isGranted }
-                            .filter { it }.take(1)
-                            .collect { viewModel.recognizeTap() }
-                    }
+                    scheduledJob = snapshotFlow { recorderPermissionState.status.isGranted }
+                        .filter { it }.take(1)
+                        .onEach { viewModel.recognizeTap() }
+                        .launchIn(scope)
                 } else {
                     permissionDialogVisible = true
                 }
             },
-            activated = recognizeStatus.isInProcessState,
+            activated = recognizeStatus is RecognitionStatus.Recognizing,
             amplitudeFactor = ampFlow,
-            enabled = true, //recorderPermissionState.status.isGranted
+            enabled = true, //isPermissionNotBlocked TODO() can conflict with the dialog for forever blocked
             modifier = Modifier
                 .alpha(superButtonSectionOpacity)
                 .padding(horizontal = 0.dp, vertical = 16.dp)
         )
     }
-
-    when (val status = recognizeStatus) {
-        is RecognitionStatus.NoMatches -> {
-            NoMatchFoundDialog(
-                onDismissClick = { viewModel.resetStatusToReady(false) },
+    val status = recognizeStatus
+    if (status is RecognitionStatus.Done) {
+        when (status.result) {
+            is RecognitionResult.NoMatches -> NoMatchFoundDialog(
+                onDismissClick = { viewModel.resetRecognitionResult() },
                 onSaveClick = {
-                    viewModel.resetStatusToReady(true)
+                    viewModel.enqueueRecognitionAndResetResult()
                     Toast.makeText(context, "Added to recognition queue", Toast.LENGTH_SHORT)
                         .show() //FIXME
                 },
                 onRetryClick = viewModel::recognizeTap
             )
-        }
-        is RecognitionStatus.Error.RemoteError -> {
-            when (status.error) {
-                RemoteRecognitionResult.Error.BadConnection -> {
-                    BadConnectionDialog(
-                        onDismissClick = { viewModel.resetStatusToReady(true) },
+
+            is RecognitionResult.Error -> {
+                when (status.result.remoteError) {
+                    RemoteRecognitionResult.Error.BadConnection -> BadConnectionDialog(
+                        onDismissClick = {
+                            viewModel.enqueueRecognitionAndResetResult()
+                        },
                         onNavigateToQueue = {
-                            viewModel.resetStatusToReady(true)
+                            viewModel.enqueueRecognitionAndResetResult()
                             onNavigateToQueueScreen()
                         }
                     )
-                }
-                is RemoteRecognitionResult.Error.WrongToken -> {
-                    WrongTokenDialog(
-                        isLimitReached = status.error.isLimitReached,
-                        onDismissClick = { viewModel.resetStatusToReady(false) },
+
+                    RemoteRecognitionResult.Error.BadRecording -> RecordErrorDialog(
+                        onDismissClick = { viewModel.resetRecognitionResult() },
+                        onNavigateToAppInfo = { showStubToast(context) } //FIXME unnecessary because the permission was checked before (replace with report button)
+                    )
+
+                    is RemoteRecognitionResult.Error.HttpError -> HttpErrorDialog(
+                        code = status.result.remoteError.code,
+                        message = status.result.remoteError.message,
+                        onDismissClick = { viewModel.resetRecognitionResult() },
+                        onSendReportClick = { showStubToast(context) } //FIXME
+                    )
+
+                    is RemoteRecognitionResult.Error.UnhandledError -> UnhandledErrorDialog(
+                        throwable = status.result.remoteError.t,
+                        onDismissClick = { viewModel.resetRecognitionResult() },
+                        onSendReportClick = { showStubToast(context) } //FIXME
+                    )
+
+                    is RemoteRecognitionResult.Error.WrongToken -> WrongTokenDialog(
+                        isLimitReached = status.result.remoteError.isLimitReached,
+                        onDismissClick = { viewModel.resetRecognitionResult() },
                         onNavigateToPreferences = { showStubToast(context) } //FIXME
                     )
                 }
-                is RemoteRecognitionResult.Error.HttpError -> {
-                    HttpErrorDialog(
-                        code = status.error.code,
-                        message = status.error.message,
-                        onDismissClick = { viewModel.resetStatusToReady(false) },
-                        onSendReportClick = { showStubToast(context) } //FIXME
-                    )
-                }
-                is RemoteRecognitionResult.Error.UnhandledError -> {
-                    UnhandledErrorDialog(
-                        throwable = status.error.e,
-                        onDismissClick = { viewModel.resetStatusToReady(false) },
-                        onSendReportClick = { showStubToast(context) } //FIXME
-                    )
-                }
             }
-        }
-        is RecognitionStatus.Error.RecordError -> {
-            RecordErrorDialog(
-                onDismissClick = { viewModel.resetStatusToReady(false) },
-                onNavigateToAppInfo = { showStubToast(context) } //FIXME unnecessary because the permission was checked before (replace with report button)
-            )
-        }
-        RecognitionStatus.Ready,
-        RecognitionStatus.Listening,
-        RecognitionStatus.Recognizing -> { /* no dialog & actions */
-        }
 
-        is RecognitionStatus.Success -> {
-            DisposableEffect(status) {
-                onNavigateToTrackScreen(status.track.mbId)
-                onDispose {
-                    viewModel.resetStatusToReady(false)
+            is RecognitionResult.Success -> {
+                DisposableEffect(status) {
+                    onNavigateToTrackScreen(status.result.track.mbId)
+                    onDispose {
+                        viewModel.resetRecognitionResult()
+                    }
                 }
             }
         }
@@ -167,8 +165,7 @@ internal fun RecognitionScreen(
 @Composable
 private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
     return when (recognitionStatus) {
-        RecognitionStatus.Listening -> stringResource(StringsR.string.listening)
-        RecognitionStatus.Recognizing -> stringResource(StringsR.string.recognizing)
+        is RecognitionStatus.Recognizing -> stringResource(StringsR.string.listening)
         else -> stringResource(StringsR.string.tap_to_recognize)
     }
 }

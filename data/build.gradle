@@ -2,9 +2,9 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 
+    id 'org.jetbrains.kotlin.kapt'
     id 'com.google.dagger.hilt.android'
     id 'com.google.protobuf'
-    id 'org.jetbrains.kotlin.kapt'
 }
 
 android {
@@ -89,10 +89,18 @@ dependencies {
 
     implementation Libs.WorkManager.RuntimeKtx
     implementation Libs.WorkManager.HiltWorkManager
+    implementation Libs.Android.LifecycleLiveData
     kapt Libs.WorkManager.Kapt
 
     implementation Libs.Paging3.RuntimeKtx
     implementation Libs.Paging3.Room
+
+    //probe scarlet
+    implementation Libs.Scarlet.Main
+    implementation Libs.Scarlet.WebSocketOkHttp
+    implementation Libs.Scarlet.Lifecycle
+    implementation Libs.Scarlet.AdapterMoshi
+    implementation Libs.Scarlet.AdapterCoroutines
 
     implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Strings)

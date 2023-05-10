@@ -6,9 +6,8 @@ import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
-import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.squareup.moshi.adapter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -39,7 +38,7 @@ class DatabaseFiller @Inject constructor(
     suspend fun prepopulateFromAssets(assetsDirectory: String = defaultAssetsDirectory) {
         withContext(ioDispatcher) {
             val trackList = parseJsonFilesFromAssets(assetsDirectory)
-                .filterIsInstance<RemoteRecognitionDataResult.Success<TrackEntity>>()
+                .filterIsInstance<RemoteRecognitionDataResult.Success>()
                 .mapIndexed { index, result ->
                     result.data.run {
                         if (index < 9) { // make first 9 tracks favorites
@@ -54,13 +53,10 @@ class DatabaseFiller @Inject constructor(
         }
     }
 
-    private suspend fun parseJsonFilesFromAssets(assetsDirectory: String): List<RemoteRecognitionDataResult<TrackEntity>> {
+    @OptIn(ExperimentalStdlibApi::class)
+    private suspend fun parseJsonFilesFromAssets(assetsDirectory: String): List<RemoteRecognitionDataResult> {
         return withContext(ioDispatcher) {
-            val resultType = Types.newParameterizedType(
-                RemoteRecognitionDataResult::class.java,
-                TrackEntity::class.java
-            )
-            val jsonAdapter = moshi.adapter<RemoteRecognitionDataResult<TrackEntity>>(resultType)
+            val jsonAdapter = moshi.adapter<RemoteRecognitionDataResult>()
 
             val fileNamesArray = try {
                 appContext.assets.list(assetsDirectory) ?: emptyArray()

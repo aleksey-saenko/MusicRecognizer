@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.remote.audd
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.data.remote.audd.model.TokenValidationDataStatus
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -18,6 +18,7 @@ import java.net.URL
 import javax.inject.Inject
 
 private const val mediaTypeString = "audio/mpeg; charset=utf-8"
+private const val AUDIO_SAMPLE_URL = "https://audd.tech/example.mp3"
 
 class AuddRecognitionService @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
@@ -29,7 +30,7 @@ class AuddRecognitionService @Inject constructor(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         file: File
-    ): RemoteRecognitionDataResult<TrackEntity> {
+    ): RemoteRecognitionDataResult {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -43,7 +44,7 @@ class AuddRecognitionService @Inject constructor(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         byteArray: ByteArray
-    ): RemoteRecognitionDataResult<TrackEntity> {
+    ): RemoteRecognitionDataResult {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -57,7 +58,7 @@ class AuddRecognitionService @Inject constructor(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         url: URL
-    ): RemoteRecognitionDataResult<TrackEntity> {
+    ): RemoteRecognitionDataResult {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -95,7 +96,7 @@ class AuddRecognitionService @Inject constructor(
         token: String,
         requiredServices: UserPreferencesProto.RequiredServicesProto,
         dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
-    ): RemoteRecognitionDataResult<TrackEntity> {
+    ): RemoteRecognitionDataResult {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("api_token", token)
             .addFormDataPart("return", requiredServices.toAuddReturnParameter())
@@ -115,17 +116,18 @@ class AuddRecognitionService @Inject constructor(
         }
     }
 
+    override suspend fun validateToken(token: String): TokenValidationDataStatus {
+        val sampleUrlRecognitionResult = recognize(
+            token = token,
+            requiredServices = UserPreferencesProto.RequiredServicesProto.getDefaultInstance(),
+            url = URL(AUDIO_SAMPLE_URL)
+        )
+        return when (sampleUrlRecognitionResult) {
+            is RemoteRecognitionDataResult.Error ->
+                TokenValidationDataStatus.Error(sampleUrlRecognitionResult)
+            RemoteRecognitionDataResult.NoMatches,
+            is RemoteRecognitionDataResult.Success -> TokenValidationDataStatus.Success
+        }
+    }
+
 }
-
-
-private fun UserPreferencesProto.RequiredServicesProto.toAuddReturnParameter(): String {
-    return "lyrics"
-        .plusIf(this.spotify, "spotify")
-        .plusIf(this.appleMusic, "apple_music")
-        .plusIf(this.deezer, "deezer")
-        .plusIf(this.napster, "napster")
-        .plusIf(this.musicbrainz, "musicbrainz")
-}
-
-private fun String.plusIf(conditional: Boolean, adjunct: String, separator: String = ",") =
-    if (conditional) "$this$separator$adjunct" else this

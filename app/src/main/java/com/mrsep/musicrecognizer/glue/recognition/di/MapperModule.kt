@@ -1,11 +1,12 @@
 package com.mrsep.musicrecognizer.glue.recognition.di
 
 import com.mrsep.musicrecognizer.UserPreferencesProto
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.recorder.RecordDataResult
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingDataStrategy
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import com.mrsep.musicrecognizer.data.track.TrackEntity
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecordResult
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
@@ -21,27 +22,23 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
+    fun bindUserPreferencesMapper(implementation: UserPreferencesMapper):
             Mapper<UserPreferencesProto, UserPreferences>
     @Binds
-    fun bindTrackToDomainMapper(implementation: TrackToDomainMapper):
-            Mapper<TrackEntity, Track>
+    fun bindTrackMapper(implementation: TrackMapper): BidirectionalMapper<TrackEntity, Track>
 
     @Binds
-    fun bindTrackToDataMapper(implementation: TrackToDataMapper):
-            Mapper<Track, TrackEntity>
+    fun bindRemoteResultMapper(implementation: RemoteResultMapper):
+            Mapper<RemoteRecognitionDataResult, RemoteRecognitionResult>
 
     @Binds
-    fun bindRemoteTrackResultToDomainMapper(implementation: RemoteTrackResultToDomainMapper):
-            Mapper<RemoteRecognitionDataResult<Track>, RemoteRecognitionResult<Track>>
-
-    @Binds
-    fun bindRequiredServicesToProtoMapper(implementation: RequiredServicesToProtoMapper):
+    fun bindRequiredServicesMapper(implementation: RequiredServicesMapper):
             Mapper<UserPreferences.RequiredServices, UserPreferencesProto.RequiredServicesProto>
 
     @Binds
-    fun bindRecordResultToDomainMapper(implementation: RecordResultToDomainMapper):
-            Mapper<RecordDataResult, RecordResult>
+    fun bindAudioRecordingMapper(implementation: AudioRecordingMapper):
+            Mapper<AudioRecordingStrategy, AudioRecordingDataStrategy>
+
 
 
 }

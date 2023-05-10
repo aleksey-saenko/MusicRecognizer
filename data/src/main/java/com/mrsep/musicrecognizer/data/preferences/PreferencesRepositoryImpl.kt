@@ -30,8 +30,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun safeWriter(
-        action: UserPreferencesProto.Builder.() -> UserPreferencesProto.Builder
+    private suspend inline fun safeWriter(
+        crossinline action: UserPreferencesProto.Builder.() -> UserPreferencesProto.Builder
     ) {
         withContext(ioDispatcher) {
             try {

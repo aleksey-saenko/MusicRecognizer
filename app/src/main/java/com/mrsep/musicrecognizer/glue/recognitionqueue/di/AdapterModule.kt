@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.glue.recognitionqueue.di
 
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.FileRecordRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
 import com.mrsep.musicrecognizer.glue.recognitionqueue.adapters.*
 import com.mrsep.musicrecognizer.glue.recognitionqueue.adapters.AdapterEnqueuedRepository
@@ -20,8 +19,5 @@ interface AdapterModule {
 
     @Binds
     fun bindPlayerController(implementation: AdapterPlayerController): PlayerController
-
-    @Binds
-    fun bindFileRecordRepository(implementation: AdapterFileRecordRepository): FileRecordRepository
 
 }

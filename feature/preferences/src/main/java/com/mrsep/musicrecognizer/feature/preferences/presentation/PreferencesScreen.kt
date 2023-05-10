@@ -25,8 +25,9 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.common.Prefere
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
@@ -64,7 +65,8 @@ internal fun PreferencesScreen(
                             onItemClick = onNavigateToQueueScreen
                         )
                     }
-                    PreferenceGroup(title = "Developer options",
+                    PreferenceGroup(
+                        title = "Developer options",
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
                         PreferenceClickableItem(
@@ -136,14 +138,13 @@ internal fun PreferencesScreen(
                                             viewModel.setNotificationServiceEnabled(true)
                                         } else {
                                             notificationPermissionState.launchPermissionRequest()
-                                            scope.launch {
-                                                snapshotFlow { notificationPermissionState.status.isGranted }
-                                                    .filter { it }
-                                                    .take(1)
-                                                    .collect {
-                                                        viewModel.setNotificationServiceEnabled(true)
-                                                    }
-                                            }
+                                            snapshotFlow { notificationPermissionState.status.isGranted }
+                                                .filter { it }
+                                                .take(1)
+                                                .onEach {
+                                                    viewModel.setNotificationServiceEnabled(true)
+                                                }
+                                                .launchIn(scope)
                                         }
                                     } else {
                                         viewModel.setNotificationServiceEnabled(false)
@@ -170,7 +171,6 @@ internal fun PreferencesScreen(
                     }
                 }
             }
-
 
 
         }

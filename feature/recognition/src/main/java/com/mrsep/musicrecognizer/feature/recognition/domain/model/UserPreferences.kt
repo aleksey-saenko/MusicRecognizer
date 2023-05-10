@@ -20,8 +20,3 @@ data class UserPreferences(
     )
 
 }
-
-// save as list as a variant
-//enum class MusicService {
-//    SPOTIFY, APPLE_MUSIC, DEEZER, NAPSTER, MUSICBRAINZ
-//}

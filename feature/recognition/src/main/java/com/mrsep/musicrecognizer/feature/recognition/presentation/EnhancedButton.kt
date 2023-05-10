@@ -58,7 +58,7 @@ fun EnhancedButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = Color.Unspecified,
-            disabledContainerColor = Color.Unspecified,
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
             disabledContentColor = Color.Unspecified,
         ),
         elevation = ButtonDefaults.buttonElevation(

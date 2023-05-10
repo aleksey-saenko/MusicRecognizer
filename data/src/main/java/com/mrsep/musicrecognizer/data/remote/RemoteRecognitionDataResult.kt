@@ -1,14 +1,17 @@
 package com.mrsep.musicrecognizer.data.remote
 
-sealed class RemoteRecognitionDataResult<out T> {
+import com.mrsep.musicrecognizer.data.track.TrackEntity
 
-    data class Success<out T>(val data: T) : RemoteRecognitionDataResult<T>()
+sealed class RemoteRecognitionDataResult {
 
-    object NoMatches : RemoteRecognitionDataResult<Nothing>()
+    data class Success(val data: TrackEntity) : RemoteRecognitionDataResult()
 
-    sealed class Error : RemoteRecognitionDataResult<Nothing>() {
+    object NoMatches : RemoteRecognitionDataResult()
+
+    sealed class Error : RemoteRecognitionDataResult() {
 
         object BadConnection : Error()
+        object BadRecording: Error()
         data class WrongToken(val isLimitReached: Boolean) : Error()
 
         data class HttpError(
@@ -22,14 +25,5 @@ sealed class RemoteRecognitionDataResult<out T> {
         ) : Error()
 
     }
-
-    inline fun <R> map(transform: (T) -> R): RemoteRecognitionDataResult<R> {
-        return when (this) {
-            is Success -> Success(transform(this.data))
-            is NoMatches -> this
-            is Error -> this
-        }
-    }
-
 
 }

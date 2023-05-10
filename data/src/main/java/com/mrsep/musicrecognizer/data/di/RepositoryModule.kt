@@ -2,10 +2,10 @@ package com.mrsep.musicrecognizer.data.di
 
 import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionDataRepository
 import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionRepositoryImpl
+import com.mrsep.musicrecognizer.data.enqueued.RecordingFileDataSource
+import com.mrsep.musicrecognizer.data.enqueued.RecordingFileDataSourceImpl
 import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
 import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryImpl
-import com.mrsep.musicrecognizer.data.recorder.FileRecordDataRepository
-import com.mrsep.musicrecognizer.data.recorder.FileRecordRepositoryImpl
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryImpl
 import dagger.Binds
@@ -33,6 +33,6 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindFileRecordRepository(implementation: FileRecordRepositoryImpl): FileRecordDataRepository
+    fun bindRecordingFileDataSource(implementation: RecordingFileDataSourceImpl): RecordingFileDataSource
 
 }

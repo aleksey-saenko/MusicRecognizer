@@ -4,16 +4,28 @@ import android.content.Context
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.data.BuildConfig
+import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
+import com.mrsep.musicrecognizer.data.remote.audd.AuddScarletApi
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
 import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddJsonAdapter
+import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.FlowStreamAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import com.tinder.scarlet.Scarlet
+import com.tinder.scarlet.WebSocket
+import com.tinder.scarlet.messageadapter.moshi.MoshiMessageAdapter
+import com.tinder.scarlet.retry.LinearBackoffStrategy
+import com.tinder.scarlet.websocket.okhttp.OkHttpClientWebSocketConnectionEstablisher
+import com.tinder.scarlet.websocket.okhttp.OkHttpWebSocket
+import com.tinder.scarlet.websocket.okhttp.request.RequestFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import okhttp3.*
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,10 +35,13 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.system.measureTimeMillis
 
 
-private const val BASE_URL = "https://api.audd.io/"
+private const val AUDD_REST_BASE_URL = "https://api.audd.io/"
+private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -51,20 +66,24 @@ object NetworkModule {
         @ApplicationContext appContext: Context,
         @ApplicationScope appScope: CoroutineScope
     ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .run {
-                if ((BuildConfig.LOG_DEBUG_MODE)) {
-                    val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-                        setLevel(HttpLoggingInterceptor.Level.BODY)
+        val okHttpClient: OkHttpClient
+        measureTimeMillis {
+            okHttpClient = OkHttpClient.Builder()
+                .run {
+                    if ((BuildConfig.LOG_DEBUG_MODE)) {
+                        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                            setLevel(HttpLoggingInterceptor.Level.BODY)
+                        }
+                        val httpFileLoggingInterceptor = HttpFileLoggingInterceptor(appContext, appScope)
+                        this.addInterceptor(httpLoggingInterceptor)
+                            .addInterceptor(httpFileLoggingInterceptor)
+                    } else {
+                        this
                     }
-                    val httpFileLoggingInterceptor = HttpFileLoggingInterceptor(appContext, appScope)
-                    this.addInterceptor(httpLoggingInterceptor)
-                        .addInterceptor(httpFileLoggingInterceptor)
-                } else {
-                    this
                 }
-            }
-            .build()
+                .build()
+        }.run { println("TIME OkHttpClient=$this") }
+        return okHttpClient
     }
 
     @Provides
@@ -76,7 +95,58 @@ object NetworkModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(BASE_URL)
+            .baseUrl(AUDD_REST_BASE_URL)
+            .build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesAuddScarletApi(
+        @ApplicationContext appContext: Context,
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        auddRequestFactory: AuddRequestFactory
+    ): AuddScarletApi {
+        val scarlet: Scarlet
+        val api: AuddScarletApi
+        measureTimeMillis {
+            scarlet = Scarlet.Builder()
+                .backoffStrategy(LinearBackoffStrategy(5_000))
+//            .lifecycle(AndroidLifecycle.ofApplicationForeground(appContext as Application))
+                .webSocketFactory(okHttpClient.auddWebSocketFactory(auddRequestFactory))
+                .addStreamAdapterFactory(FlowStreamAdapter.Factory)
+                .addMessageAdapterFactory(MoshiMessageAdapter.Factory(moshi))
+                .build()
+        }.run { println("TIME Scarlet=$this") }
+        measureTimeMillis {
+            api = scarlet.create()
+        }.run { println("TIME Scarlet Api=$this") }
+        return api
+    }
+
+
+    private fun OkHttpClient.auddWebSocketFactory(requestFactory: RequestFactory): WebSocket.Factory {
+        return OkHttpWebSocket.Factory(
+            OkHttpClientWebSocketConnectionEstablisher(this, requestFactory)
+        )
+    }
+
+}
+
+class AuddRequestFactory @Inject constructor(
+    private val preferencesRepository: PreferencesDataRepository
+): RequestFactory {
+
+    override fun createRequest(): Request {
+
+        val userPreferences = runBlocking {// main thread!
+            preferencesRepository.userPreferencesFlow.first()
+        }
+        val token = userPreferences.apiToken
+        val returnParam = userPreferences.requiredServices.toAuddReturnParameter()
+        return Request.Builder()
+            .url(AUDD_WEB_SOCKET_URL.format(returnParam, token))
             .build()
     }
 

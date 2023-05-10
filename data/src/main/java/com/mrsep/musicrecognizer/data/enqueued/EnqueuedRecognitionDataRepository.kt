@@ -7,9 +7,7 @@ import java.io.File
 
 interface EnqueuedRecognitionDataRepository {
 
-    suspend fun createEnqueuedRecognition(recordFile: File, launch: Boolean)
-
-    suspend fun insertOrReplace(enqueuedRecognition: EnqueuedRecognitionEntity): Int
+    suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Boolean
 
     suspend fun update(enqueuedRecognition: EnqueuedRecognitionEntity)
 
@@ -23,8 +21,6 @@ interface EnqueuedRecognitionDataRepository {
 
     suspend fun cancelAndDeleteById(enqueuedId: Int)
 
-    suspend fun deleteById(id: Int)
-
     suspend fun getById(id: Int): EnqueuedRecognitionEntity?
 
     fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?>
@@ -34,4 +30,6 @@ interface EnqueuedRecognitionDataRepository {
     fun getUniqueFlowWithStatus(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?>
 
     fun getAllFlowWithStatus(limit: Int): Flow<List<EnqueuedRecognitionEntityWithStatus>>
+
+
 }

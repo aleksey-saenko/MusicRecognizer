@@ -17,7 +17,7 @@ import java.util.*
 class AuddJsonAdapter {
 
     @FromJson
-    fun fromJson(json: AuddResponseJson): RemoteRecognitionDataResult<TrackEntity> {
+    fun fromJson(json: AuddResponseJson): RemoteRecognitionDataResult {
         return when (json) {
             is AuddResponseJson.Error -> fromErrorJson(json)
             is AuddResponseJson.Success -> fromSuccessJson(json)
@@ -26,12 +26,12 @@ class AuddJsonAdapter {
 
     @ToJson
     fun toJson(
-        @Suppress("UNUSED_PARAMETER") recognizeResponse: RemoteRecognitionDataResult<TrackEntity>
+        @Suppress("UNUSED_PARAMETER") recognizeResponse: RemoteRecognitionDataResult
     ): AuddResponseJson =
         throw IllegalStateException("Not implemented")
 
 
-    private fun fromSuccessJson(json: AuddResponseJson.Success): RemoteRecognitionDataResult<TrackEntity> {
+    private fun fromSuccessJson(json: AuddResponseJson.Success): RemoteRecognitionDataResult {
         return when (json.result) {
             null -> RemoteRecognitionDataResult.NoMatches
             else -> {
@@ -44,7 +44,7 @@ class AuddJsonAdapter {
                         title = json.result.title,
                         album = json.result.album,
                         releaseDate = json.result.releaseDate?.toLocalDate(),
-                        lyrics = json.result.lyricsJson?.lyrics?.decodeHtml(),
+                        lyrics = json.result.lyricsJson?.lyrics?.decodeHtml()?.trim(),
                         links = TrackEntity.Links(
                             artwork = json.result.deezerJson?.album?.coverBig?.let { url ->
                                 validUrlOrNull(url)
@@ -83,8 +83,9 @@ class AuddJsonAdapter {
         }
     }
 
-    private fun fromErrorJson(json: AuddResponseJson.Error): RemoteRecognitionDataResult<TrackEntity> {
+    private fun fromErrorJson(json: AuddResponseJson.Error): RemoteRecognitionDataResult {
         return when (json.body.errorCode) {
+            300, 400, 500 -> RemoteRecognitionDataResult.Error.BadRecording
             901 -> RemoteRecognitionDataResult.Error.WrongToken(isLimitReached = true)
             900 -> RemoteRecognitionDataResult.Error.WrongToken(isLimitReached = false)
             else -> RemoteRecognitionDataResult.Error.UnhandledError(
@@ -115,9 +116,8 @@ private fun List<LyricsJson.MediaItem>.parseYoutubeLink() =
 private fun List<LyricsJson.MediaItem>.parseSoundCloudLink() =
     firstOrNull { item -> item.provider == "soundcloud" }?.url
 
-//FIXME remove to util module
-fun validateUrl(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
-fun validUrlOrNull(potentialUrl: String) = if (validateUrl(potentialUrl)) potentialUrl else null
+fun isUrlValid(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
+fun validUrlOrNull(potentialUrl: String) = if (isUrlValid(potentialUrl)) potentialUrl else null
 
 
 /*

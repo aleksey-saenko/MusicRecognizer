@@ -18,13 +18,17 @@ import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueueRecognitionUseCase
+import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -34,7 +38,8 @@ private const val SERVICE_TAG = "NotificationService"
 @AndroidEntryPoint
 internal class NotificationService : Service() {
 
-    @Inject lateinit var recognitionInteractor: RecognitionInteractor
+    @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
+    @Inject lateinit var enqueueRecognitionUseCase: EnqueueRecognitionUseCase
     @Inject lateinit var trackRepository: TrackRepository
     @Inject lateinit var serviceRouter: NotificationServiceRouter
 
@@ -45,7 +50,8 @@ internal class NotificationService : Service() {
     private val actionReceiver = ActionBroadcastReceiver()
     private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
     private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
-    private var notificationDeliveryJob: Job? = null
+
+    private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
 
     override fun onBind(intent: Intent?) = null
 
@@ -69,11 +75,17 @@ internal class NotificationService : Service() {
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
-        notificationDeliveryJob = serviceScope.launch {
-            recognitionInteractor.statusFlow.collect { status ->
-                handleRecognitionStatus(status)
+        recognitionState.onEach { status ->
+            if (status is RecognitionStatus.Done &&
+                status.result is RecognitionResult.Error
+            ) {
+                enqueueRecognitionUseCase(
+                    audioRecording = status.result.audioRecording,
+                    launch = true
+                )
             }
-        }
+            handleRecognitionStatus(status)
+        }.launchIn(serviceScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -87,7 +99,6 @@ internal class NotificationService : Service() {
         unregisterReceiver(actionReceiver)
         super.onDestroy()
     }
-
 
     private fun createStatusNotificationChannel() {
         val name = getString(StringsR.string.service_notification_main_channel_name)
@@ -128,84 +139,87 @@ internal class NotificationService : Service() {
 
                 notificationManager.cancel(RESULT_NOTIFICATION_ID)
             }
-            RecognitionStatus.Listening -> {
+            is RecognitionStatus.Recognizing -> { //TODO() add extra try message
                 statusNotificationBuilder()
                     .setContentTitle(getString(StringsR.string.listening))
                     .addCancelButton()
                     .buildAndNotifyAsStatus()
             }
-            RecognitionStatus.Recognizing -> {
-                statusNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.recognizing))
-                    .addCancelButton()
-                    .buildAndNotifyAsStatus()
-            }
-            is RecognitionStatus.Error.RemoteError -> {
-                when (status.error) {
-                    RemoteRecognitionResult.Error.BadConnection -> {
+
+            is RecognitionStatus.Done -> {
+                when (status.result) {
+                    is RecognitionResult.Error -> when (status.result.remoteError) {
+                        RemoteRecognitionResult.Error.BadConnection -> {
+                            resultNotificationBuilder()
+                                .setContentTitle(getString(StringsR.string.no_internet_connection))
+                                .setContentText(getString(StringsR.string.notification_message_internet_not_available))
+                                .addDismissIntent()
+                                .buildAndNotifyAsResult()
+
+                            notifyReadyAsStatus()
+                        }
+
+                        RemoteRecognitionResult.Error.BadRecording -> {
+                            resultNotificationBuilder()
+                                .setContentTitle(getString(StringsR.string.recording_error))
+                                .setContentText(getString(StringsR.string.notification_message_recording_error))
+                                .addDismissIntent()
+                                .buildAndNotifyAsResult()
+
+                            notifyReadyAsStatus()
+                        }
+
+                        is RemoteRecognitionResult.Error.HttpError,
+                        is RemoteRecognitionResult.Error.UnhandledError -> {
+                            resultNotificationBuilder()
+                                .setContentTitle(getString(StringsR.string.internal_error))
+                                .setContentText(getString(StringsR.string.notification_message_unhandled_error))
+                                .addDismissIntent()
+                                .buildAndNotifyAsResult()
+
+                            notifyReadyAsStatus()
+                        }
+
+                        is RemoteRecognitionResult.Error.WrongToken -> {
+                            resultNotificationBuilder()
+                                .setContentTitle(
+                                    if (status.result.remoteError.isLimitReached)
+                                        getString(StringsR.string.token_limit_reached)
+                                    else
+                                        getString(StringsR.string.wrong_token)
+                                )
+                                .setContentText(getString(StringsR.string.notification_message_token_wrong_error))
+                                .addDismissIntent()
+                                .buildAndNotifyAsResult()
+
+                            notifyReadyAsStatus()
+                        }
+                    }
+
+                    is RecognitionResult.NoMatches -> {
                         resultNotificationBuilder()
-                            .setContentTitle(getString(StringsR.string.no_internet_connection))
-                            .setContentText(getString(StringsR.string.notification_message_internet_not_available))
+                            .setContentTitle(getString(StringsR.string.no_matches_found))
+                            .setContentText(getString(StringsR.string.notification_message_no_matches_found))
+                            .addQueueButton()
                             .addDismissIntent()
                             .buildAndNotifyAsResult()
 
                         notifyReadyAsStatus()
                     }
-                    is RemoteRecognitionResult.Error.WrongToken -> {
-                        resultNotificationBuilder()
-                            .setContentTitle(
-                                if (status.error.isLimitReached)
-                                    getString(StringsR.string.token_limit_reached)
-                                else
-                                    getString(StringsR.string.wrong_token)
-                            )
-                            .setContentText(getString(StringsR.string.notification_message_token_wrong_error))
-                            .addDismissIntent()
-                            .buildAndNotifyAsResult()
 
-                        notifyReadyAsStatus()
-                    }
-                    else -> {
+                    is RecognitionResult.Success -> {
                         resultNotificationBuilder()
-                            .setContentTitle(getString(StringsR.string.internal_error))
-                            .setContentText(getString(StringsR.string.notification_message_unhandled_error))
+                            .setContentTitle(status.result.track.title)
+                            .setContentText(status.result.track.artistWithAlbumFormatted())
+                            .addBigPicture(status.result.track.links.artwork)
+                            .addTrackDeepLinkIntent(status.result.track.mbId)
                             .addDismissIntent()
+                            .addShareButton(status.result.track)
                             .buildAndNotifyAsResult()
 
                         notifyReadyAsStatus()
                     }
                 }
-            }
-            is RecognitionStatus.Error.RecordError -> {
-                resultNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.recording_error))
-                    .setContentText(getString(StringsR.string.notification_message_recording_error))
-                    .addDismissIntent()
-                    .buildAndNotifyAsResult()
-
-                notifyReadyAsStatus()
-            }
-            is RecognitionStatus.NoMatches -> {
-                resultNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.no_matches_found))
-                    .setContentText(getString(StringsR.string.notification_message_no_matches_found))
-                    .addQueueButton()
-                    .addDismissIntent()
-                    .buildAndNotifyAsResult()
-
-                notifyReadyAsStatus()
-            }
-            is RecognitionStatus.Success -> {
-                resultNotificationBuilder()
-                    .setContentTitle(status.track.title)
-                    .setContentText(status.track.artistWithAlbumFormatted())
-                    .addBigPicture(status.track.links.artwork)
-                    .addTrackDeepLinkIntent(status.track.mbId)
-                    .addDismissIntent()
-                    .addShareButton(status.track)
-                    .buildAndNotifyAsResult()
-
-                notifyReadyAsStatus()
             }
         }
     }
@@ -340,16 +354,20 @@ internal class NotificationService : Service() {
         }
     }
 
-    private fun resetStatusToReady(addLastRecordToQueue: Boolean) {
-        serviceScope.launch { recognitionInteractor.resetStatusToReady(addLastRecordToQueue) }
+    private fun resetStatusToReady() {
+        recognitionInteractor.cancelAndResetStatus()
     }
 
     private fun cancelRecognition() {
-        recognitionInteractor.cancelRecognition()
+        recognitionInteractor.cancelAndResetStatus()
     }
 
     private fun launchRecognizeOrCancel() {
-        recognitionInteractor.launchRecognitionOrCancel(serviceScope)
+        if (recognitionState.value is RecognitionStatus.Recognizing) {
+            recognitionInteractor.cancelAndResetStatus()
+        } else {
+            recognitionInteractor.launchRecognition(serviceScope)
+        }
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(mbId: String): NotificationCompat.Builder {
@@ -378,21 +396,15 @@ internal class NotificationService : Service() {
                 RECOGNIZE_ACTION -> {
                     launchRecognizeOrCancel()
                 }
+
                 CANCEL_ACTION -> {
                     cancelRecognition()
                 }
+
                 DISMISS_ACTION -> {
-                    val shouldEnqueueRecognition = when (recognitionInteractor.statusFlow.value) {
-                        RecognitionStatus.Ready,
-                        RecognitionStatus.Listening,
-                        RecognitionStatus.Recognizing -> return
-                        is RecognitionStatus.Error.RecordError -> false
-                        is RecognitionStatus.Error.RemoteError -> true
-                        is RecognitionStatus.NoMatches -> true
-                        is RecognitionStatus.Success -> false
-                    }
-                    resetStatusToReady(shouldEnqueueRecognition)
+                    resetStatusToReady()
                 }
+
                 SHARE_TRACK_ACTION -> {
                     TODO()
                 }

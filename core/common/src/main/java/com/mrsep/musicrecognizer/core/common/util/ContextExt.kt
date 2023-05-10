@@ -11,10 +11,8 @@ package com.mrsep.musicrecognizer.core.common.util
 //import java.io.FileOutputStream
 //import java.text.SimpleDateFormat
 //import java.util.*
-//
-//fun validateUrl(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
-//fun validUrlOrNull(potentialUrl: String) = if (validateUrl(potentialUrl)) potentialUrl else null
-//
+
+
 ///** Validate URL before try to open  */
 //fun Context.openUrlImplicitly(url: String) {
 //    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

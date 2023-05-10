@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.protobuf'
     id 'com.google.dagger.hilt.android'
 }
 
@@ -15,6 +16,12 @@ android {
         targetSdk targetAndroidSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        if (project.rootProject.file('local.properties').canRead()) {
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        }
+        buildConfigField 'String', 'AUDD_TOKEN', properties.getProperty("api.audd.token")
     }
 
     buildTypes {
@@ -71,7 +78,20 @@ dependencies {
     implementation Libs.Hilt.Core
     kapt Libs.Hilt.Kapt
 
+    implementation Libs.DataStore.Core
+    implementation Libs.DataStore.ProtobufJavalite
+
+    //probe scarlet
+    implementation Libs.Scarlet.Main
+    implementation Libs.Scarlet.WebSocketOkHttp
+    implementation Libs.Scarlet.Lifecycle
+    implementation Libs.Scarlet.AdapterMoshi
+    implementation Libs.Scarlet.AdapterCoroutines
+
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)
+    implementation project(Modules.Data)
+
+
 
 }

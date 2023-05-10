@@ -6,11 +6,22 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface RecognitionInteractor {
 
-    val statusFlow: StateFlow<RecognitionStatus>
+    fun launchRecognition(scope: CoroutineScope)
 
-    fun launchRecognitionOrCancel(scope: CoroutineScope)
+    fun launchOfflineRecognition(scope: CoroutineScope)
 
-    fun cancelRecognition()
-    suspend fun resetStatusToReady(addLastRecordToQueue: Boolean)
+    fun cancelAndResetStatus()
+
+}
+
+interface ScreenRecognitionInteractor : RecognitionInteractor {
+
+    val screenRecognitionStatus: StateFlow<RecognitionStatus>
+
+}
+
+interface ServiceRecognitionInteractor : RecognitionInteractor {
+
+    val serviceRecognitionStatus: StateFlow<RecognitionStatus>
 
 }

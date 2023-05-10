@@ -11,11 +11,11 @@ import javax.inject.Inject
 
 class AdapterPreferencesRepository @Inject constructor(
     private val preferencesDataRepository: PreferencesDataRepository,
-    private val preferencesToDomainMapper: Mapper<UserPreferencesProto, UserPreferences>
+    private val userPreferencesMapper: Mapper<UserPreferencesProto, UserPreferences>
 ) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
         get() = preferencesDataRepository.userPreferencesFlow
-            .map { proto -> preferencesToDomainMapper.map(proto) }
+            .map { proto -> userPreferencesMapper.map(proto) }
 
 }

@@ -1,33 +1,37 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
 object PreferencesScreen {
 
     const val ROUTE = "preferences"
 
     fun NavGraphBuilder.preferencesScreen(
-        onNavigateToAboutScreen: () -> Unit,
-        onNavigateToQueueScreen: () -> Unit,
-        onNavigateToDeveloperScreen: () -> Unit
+        onNavigateToAboutScreen: (from: NavBackStackEntry) -> Unit,
+        onNavigateToQueueScreen: (from: NavBackStackEntry) -> Unit,
+        onNavigateToDeveloperScreen: (from: NavBackStackEntry) -> Unit
     ) {
-        composable(ROUTE) {
+        composable(ROUTE) { backStackEntry ->
             PreferencesScreen(
-                onNavigateToAboutScreen = onNavigateToAboutScreen,
-                onNavigateToQueueScreen = onNavigateToQueueScreen,
-                onNavigateToDeveloperScreen = onNavigateToDeveloperScreen
+                onNavigateToAboutScreen = { onNavigateToAboutScreen(backStackEntry) },
+                onNavigateToQueueScreen = { onNavigateToQueueScreen(backStackEntry) },
+                onNavigateToDeveloperScreen = { onNavigateToDeveloperScreen(backStackEntry) }
             )
         }
     }
 
     fun NavController.navigateToPreferencesScreen(
+        from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {
-        this.navigate(route = ROUTE, navOptions = navOptions)
+        if (from.lifecycleIsResumed) {
+            this.navigate(route = ROUTE, navOptions = navOptions)
+        }
     }
 
 }
-

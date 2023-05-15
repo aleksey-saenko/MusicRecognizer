@@ -11,7 +11,7 @@ sealed class RemoteRecognitionDataResult {
     sealed class Error : RemoteRecognitionDataResult() {
 
         object BadConnection : Error()
-        object BadRecording: Error()
+        data class BadRecording(val message: String): Error()
         data class WrongToken(val isLimitReached: Boolean) : Error()
 
         data class HttpError(

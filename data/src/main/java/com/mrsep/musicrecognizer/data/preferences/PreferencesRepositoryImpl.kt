@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.preferences
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.mrsep.musicrecognizer.UserPreferencesProto
+import com.mrsep.musicrecognizer.UserPreferencesProto.SchedulePolicyProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.RequiredServicesProto
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -50,8 +51,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         .ioExceptionCatcherOnRead()
         .flowOn(ioDispatcher)
 
-    override suspend fun saveApiToken(newToken: String) {
-        safeWriter { setApiToken(newToken) }
+    override suspend fun saveApiToken(value: String) {
+        safeWriter { setApiToken(value) }
     }
 
     override suspend fun setOnboardingCompleted(value: Boolean) {
@@ -67,12 +68,16 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { setDynamicColorsEnabled(value) }
     }
 
-    override suspend fun setRequiredServices(requiredServices: RequiredServicesProto) {
-        safeWriter { setRequiredServices(requiredServices) }
+    override suspend fun setRequiredServices(value: RequiredServicesProto) {
+        safeWriter { setRequiredServices(value) }
     }
 
     override suspend fun setDeveloperModeEnabled(value: Boolean) {
         safeWriter { setDeveloperModeEnabled(value) }
+    }
+
+    override suspend fun setSchedulePolicy(value: SchedulePolicyProto) {
+        safeWriter { setSchedulePolicy(value) }
     }
 
 }

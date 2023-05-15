@@ -8,7 +8,7 @@ class AdapterEnqueuedRepository @Inject constructor(
     private val enqueuedRecognitionDataRepository: EnqueuedRecognitionDataRepository
 ) : EnqueuedRecognitionRepository {
 
-    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Boolean {
+    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Int? {
         return enqueuedRecognitionDataRepository.createEnqueuedRecognition(
             audioRecording = audioRecording,
             launch = launch

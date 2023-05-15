@@ -18,7 +18,7 @@ class RemoteResultMapper @Inject constructor(
             RemoteRecognitionDataResult.NoMatches -> RemoteRecognitionResult.NoMatches
             is RemoteRecognitionDataResult.Success -> RemoteRecognitionResult.Success(trackMapper.map(input.data))
             RemoteRecognitionDataResult.Error.BadConnection -> RemoteRecognitionResult.Error.BadConnection
-            RemoteRecognitionDataResult.Error.BadRecording -> RemoteRecognitionResult.Error.BadRecording
+            is RemoteRecognitionDataResult.Error.BadRecording -> RemoteRecognitionResult.Error.BadRecording(RuntimeException(input.message))
             is RemoteRecognitionDataResult.Error.HttpError -> RemoteRecognitionResult.Error.HttpError(input.code, input.message)
             is RemoteRecognitionDataResult.Error.UnhandledError -> RemoteRecognitionResult.Error.UnhandledError(input.message, input.e)
             is RemoteRecognitionDataResult.Error.WrongToken -> RemoteRecognitionResult.Error.WrongToken(input.isLimitReached)

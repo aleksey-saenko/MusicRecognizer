@@ -73,6 +73,7 @@ dependencies {
 
     implementation Libs.Coil.Core
 
+    implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)
 

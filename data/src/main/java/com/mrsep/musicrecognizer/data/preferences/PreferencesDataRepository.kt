@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface PreferencesDataRepository {
     val userPreferencesFlow: Flow<UserPreferencesProto>
 
-    suspend fun saveApiToken(newToken: String)
+    suspend fun saveApiToken(value: String)
 
     suspend fun setOnboardingCompleted(value: Boolean)
 
@@ -14,7 +14,9 @@ interface PreferencesDataRepository {
 
     suspend fun setDynamicColorsEnabled(value: Boolean)
 
-    suspend fun setRequiredServices(requiredServices: UserPreferencesProto.RequiredServicesProto)
+    suspend fun setRequiredServices(value: UserPreferencesProto.RequiredServicesProto)
 
     suspend fun setDeveloperModeEnabled(value: Boolean)
+
+    suspend fun setSchedulePolicy(value: UserPreferencesProto.SchedulePolicyProto)
 }

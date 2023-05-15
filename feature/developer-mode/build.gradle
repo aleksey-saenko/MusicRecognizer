@@ -88,6 +88,7 @@ dependencies {
     implementation Libs.Scarlet.AdapterMoshi
     implementation Libs.Scarlet.AdapterCoroutines
 
+    implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)
     implementation project(Modules.Data)

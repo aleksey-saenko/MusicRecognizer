@@ -16,7 +16,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun EnhancedButton(
     activated: Boolean,
-    enabled: Boolean,
+    permissionBlocked: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -29,23 +29,18 @@ fun EnhancedButton(
     val updatedOnClick by rememberUpdatedState(onClick)
     val updatedOnLongPress by rememberUpdatedState(onLongPress)
 
-    LaunchedEffect(interaction, enabled, longPressDelay) {
+    LaunchedEffect(interaction, longPressDelay) {
         when (interaction) {
             is PressInteraction.Press -> {
-                if (enabled) {
-                    delay(longPressDelay)
-                    buttonLongPressed = true
-                    updatedOnLongPress()
-                }
+                delay(longPressDelay)
+                buttonLongPressed = true
+                updatedOnLongPress()
             }
             is PressInteraction.Release -> {
-                if (buttonLongPressed) {
+                if (buttonLongPressed)
                     buttonLongPressed = false
-                } else {
-                    if (enabled) {
-                        updatedOnClick()
-                    }
-                }
+                else
+                    updatedOnClick()
             }
             is PressInteraction.Cancel -> {}
         }
@@ -53,7 +48,7 @@ fun EnhancedButton(
     Button(
         onClick = { },
         modifier = modifier,
-        enabled = enabled,
+        enabled = true,
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -78,7 +73,7 @@ fun EnhancedButton(
 @Composable
 fun AnimatedEnhancedButton(
     activated: Boolean,
-    enabled: Boolean,
+    permissionBlocked: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +99,7 @@ fun AnimatedEnhancedButton(
     EnhancedButton(
         modifier = modifier.scale(buttonSize.value),
         activated = activated,
-        enabled = enabled,
+        permissionBlocked = permissionBlocked,
         onClick = onClick,
         onLongPress = onLongPress,
         content = content,

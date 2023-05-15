@@ -1,11 +1,13 @@
 package com.mrsep.musicrecognizer.feature.track.presentation
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
 object TrackScreen {
 
@@ -29,16 +31,20 @@ object TrackScreen {
             deepLinks = listOf(navDeepLink {
                 uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
             })
-        ) {
+        ) { backStackEntry ->
             TrackScreen(onBackPressed = onBackPressed)
         }
     }
 
     fun NavController.navigateToTrackScreen(
         mbId: String,
+        from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {
-        this.navigate(route = routeWithArgs(mbId), navOptions = navOptions)
+        if (from.lifecycleIsResumed) {
+            this.navigate(route = routeWithArgs(mbId), navOptions = navOptions)
+        }
+
     }
 
     fun createDeepLink(mbId: String): String {

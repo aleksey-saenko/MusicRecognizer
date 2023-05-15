@@ -18,7 +18,6 @@ import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueueRecognitionUseCase
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
@@ -39,7 +38,6 @@ private const val SERVICE_TAG = "NotificationService"
 internal class NotificationService : Service() {
 
     @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
-    @Inject lateinit var enqueueRecognitionUseCase: EnqueueRecognitionUseCase
     @Inject lateinit var trackRepository: TrackRepository
     @Inject lateinit var serviceRouter: NotificationServiceRouter
 
@@ -76,14 +74,14 @@ internal class NotificationService : Service() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         recognitionState.onEach { status ->
-            if (status is RecognitionStatus.Done &&
-                status.result is RecognitionResult.Error
-            ) {
-                enqueueRecognitionUseCase(
-                    audioRecording = status.result.audioRecording,
-                    launch = true
-                )
-            }
+//            if (status is RecognitionStatus.Done &&
+//                status.result is RecognitionResult.Error
+//            ) {
+//                enqueueRecognitionUseCase(
+//                    audioRecording = status.result.audioRecording,
+//                    launch = true
+//                )
+//            }
             handleRecognitionStatus(status)
         }.launchIn(serviceScope)
     }
@@ -152,14 +150,14 @@ internal class NotificationService : Service() {
                         RemoteRecognitionResult.Error.BadConnection -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.no_internet_connection))
-                                .setContentText(getString(StringsR.string.notification_message_internet_not_available))
+                                .setContentText(getString(StringsR.string.please_check_network_status))
                                 .addDismissIntent()
                                 .buildAndNotifyAsResult()
 
                             notifyReadyAsStatus()
                         }
 
-                        RemoteRecognitionResult.Error.BadRecording -> {
+                        is RemoteRecognitionResult.Error.BadRecording -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.recording_error))
                                 .setContentText(getString(StringsR.string.notification_message_recording_error))

@@ -7,7 +7,7 @@ import java.io.File
 
 interface EnqueuedRecognitionDataRepository {
 
-    suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Boolean
+    suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Int?
 
     suspend fun update(enqueuedRecognition: EnqueuedRecognitionEntity)
 

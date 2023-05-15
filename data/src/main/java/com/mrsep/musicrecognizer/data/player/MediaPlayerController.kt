@@ -7,6 +7,7 @@ import javax.inject.Inject
 
 private const val TAG = "MediaPlayerController"
 
+//TODO() need to handle exceptions
 class MediaPlayerController @Inject constructor() : PlayerDataController {
 
     private var player: MediaPlayer? = null

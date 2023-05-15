@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
+import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionResultDelegator
 import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
@@ -10,7 +11,9 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -38,7 +41,8 @@ class RecognitionInteractorImpl @Inject constructor(
     private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    private val resultDelegator: RecognitionResultDelegator
+    private val resultDelegator: RecognitionResultDelegator,
+    private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository
 ) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
 
     override val screenRecognitionStatus get() = resultDelegator.screenState
@@ -69,7 +73,7 @@ class RecognitionInteractorImpl @Inject constructor(
                     .transform { recordingResult ->
                         recordingResult.onFailure { cause ->
                             fullRecordingChannel.close(cause)
-                            emit(RemoteRecognitionResult.Error.BadRecording)
+                            emit(RemoteRecognitionResult.Error.BadRecording(cause))
                         }.onSuccess { recording ->
                             val isExtraTry = (recordingIndex >= extraTryStartIndex)
                             when (recordingIndex) {
@@ -117,25 +121,34 @@ class RecognitionInteractorImpl @Inject constructor(
             val recognitionResult = when (result) {
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     recordingJob.cancelAndJoin()
-                    RecognitionStatus.Done(
-                        RecognitionResult.Error(result, ByteArray(0))
+                    RecognitionStatus.Done(RecognitionResult.Error(result, RecognitionTask.Ignored))
+                }
+
+                is RemoteRecognitionResult.Error.BadConnection -> {
+                    val recognitionTask = handleEnqueuedRecognition(
+                        userPreferences.schedulePolicy.badConnection,
+                        fullRecordingChannel,
+                        recordingJob
                     )
+                    RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
 
                 is RemoteRecognitionResult.Error -> {
-                    val wrappedResult =
-                        fullRecordingChannel.wrappedOrBadRecordingResult { fullRecord ->
-                            RecognitionResult.Error(result, fullRecord)
-                        }
-                    RecognitionStatus.Done(wrappedResult)
+                    val recognitionTask = handleEnqueuedRecognition(
+                        userPreferences.schedulePolicy.anotherFailure,
+                        fullRecordingChannel,
+                        recordingJob
+                    )
+                    RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
 
                 RemoteRecognitionResult.NoMatches -> {
-                    val wrappedResult =
-                        fullRecordingChannel.wrappedOrBadRecordingResult { fullRecord ->
-                            RecognitionResult.NoMatches(fullRecord)
-                        }
-                    RecognitionStatus.Done(wrappedResult)
+                    val recognitionTask = handleEnqueuedRecognition(
+                        userPreferences.schedulePolicy.noMatches,
+                        fullRecordingChannel,
+                        recordingJob
+                    )
+                    RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
                 }
 
                 is RemoteRecognitionResult.Success -> {
@@ -149,16 +162,48 @@ class RecognitionInteractorImpl @Inject constructor(
         }.setCancellationHandler()
     }
 
+    private suspend fun enqueueRecognition(
+        audioRecord: ByteArray,
+        launch: Boolean
+    ): RecognitionTask {
+        return enqueuedRecognitionRepository.createEnqueuedRecognition(
+            audioRecord,
+            launch
+        )?.let { enqueuedId ->
+            RecognitionTask.Created(enqueuedId, launch)
+        } ?: RecognitionTask.Error
+    }
+
+    private suspend fun handleEnqueuedRecognition(
+        scheduleAction: ScheduleAction,
+        fullRecordingChannel: ReceiveChannel<ByteArray>,
+        recordingJob: Job
+    ): RecognitionTask {
+        val (saveEnqueued, launchEnqueued) = scheduleAction
+        return if (saveEnqueued) {
+            runCatching {
+                val fullRecord = fullRecordingChannel.receive()
+                enqueueRecognition(fullRecord, launchEnqueued)
+            }.getOrElse { cause ->
+                RecognitionTask.Error
+            }
+        } else {
+            recordingJob.cancelAndJoin()
+            RecognitionTask.Ignored
+        }
+    }
+
     private suspend fun ReceiveChannel<ByteArray>.wrappedOrBadRecordingResult(
-        wrapper: (ByteArray) -> RecognitionResult
+        wrapper: suspend (ByteArray) -> RecognitionResult
     ): RecognitionResult {
         return runCatching {
             val fullRecord = receive()
+            if (fullRecord.isEmpty()) throw IllegalStateException("Audio recording must not be empty")
             wrapper(fullRecord)
         }.getOrElse { cause ->
             RecognitionResult.Error(
-                RemoteRecognitionResult.Error.BadRecording,
-                ByteArray(0)
+                RemoteRecognitionResult.Error.BadRecording(cause),
+                RecognitionTask.Ignored
             )
         }
     }
@@ -177,10 +222,9 @@ class RecognitionInteractorImpl @Inject constructor(
 
     private fun Job.setCancellationHandler() = apply {
         invokeOnCompletion { cause ->
-            println("CancellationHandler invoked, cause=$cause")
             when (cause) {
                 is CancellationException -> {
-                    recognitionJob = null
+//                    recognitionJob = null
                     resultDelegator.notify(RecognitionStatus.Ready)
                 }
             }
@@ -189,24 +233,18 @@ class RecognitionInteractorImpl @Inject constructor(
 
 
     companion object {
-        private const val extraTryStartIndex = 3
+        private const val extraTryStartIndex = 2
 
         private val strategy = AudioRecordingStrategy.Builder()
 //            .addStep(3_500.milliseconds)
             .addStep(6_000.milliseconds)
             .addStep(9_000.milliseconds)
             .addSplitter()
-            .addStep(12_500.milliseconds)
+//            .addStep(12_500.milliseconds)
             .addStep(15_000.milliseconds)
 //            .addStep(18_000.milliseconds)
             .sendTotalAtEnd(true)
             .build()
-//        private val strategy = AudioRecordingStrategy.Builder()
-//            .addStep(6_000.milliseconds)
-//            .addStep(10_000.milliseconds)
-//            .addStep(18_000.milliseconds)
-//            .sendTotalAtEnd(true)
-//            .build()
     }
 
 }

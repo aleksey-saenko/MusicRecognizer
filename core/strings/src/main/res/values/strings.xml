@@ -46,27 +46,34 @@
     <string name="service_notification_result_channel_name">TuneSurfer result notification channel</string>
     <string name="service_notification_main_channel_desc">Allow to control recognition process from notifications</string>
     <string name="service_notification_result_channel_desc">Allow to receive recognition results from notifications</string>
-    <string name="message_record_error">An error occurred while recording the audio. Please, check app permission to access the microphone and retry.</string>
+    <string name="message_record_error">An error occurred while recording the audio</string>
     <string name="notification_message_recording_error">An error occurred while recording the audio, try again</string>
-    <string name="internet_not_available">Please, check your network status.\nWhen you get back online, the app will try to identify current song.</string>
-    <string name="notification_message_internet_not_available">When you get back online, the app will try to identify current song</string>
-    <string name="backup007">Internet connection is not available. Please, check your network status. When you get back online, the app will try to identify current song.</string>
-    <string name="please_check_network_status">Please, check your network status.</string>
-    <string name="app_will_try_identify">The application will try to identify this song when you get back online.</string>
-    <string name="message_http_error">An error occurred during internet request. Please, try again.</string>
-    <string name="message_unhandled_error">An internal error occurred. Please, try again.</string>
+
+
+    <string name="please_check_network_status">Please, check your network status</string>
+    <string name="saved_recording_message">The audio sample was saved</string>
+    <string name="manual_recognition_message">you can launch recognition whenever you want manually</string>
+    <string name="auto_recognition_message_network">when you get back online, the app will try to identify this song</string>
+
+    <string name="bad_network_response">Bad network response</string>
+    <string name="message_http_error">An error occurred during internet request</string>
+    <string name="message_unhandled_error">An internal error occurred</string>
+    <string name="please_try_again">Please, try again</string>
     <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
-    <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry.</string>
+    <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
     <string name="notification_message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
     <string name="not_implemented">Not implemented</string>
     <string name="no_matches_found">No matches found</string>
     <string name="library">Library</string>
     <string name="dismiss">Dismiss</string>
     <string name="recognition_queue">Recognition queue</string>
+    <string name="open_queue">Open queue</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
     <string name="save_record_message">You can save the record in recognition queue to retry later. The remote music library is always updating.</string>
+    <string name="no_matches_message">Sorry, the app couldn\'t recognize this song</string>
+    <string name="surrounding_noise_message">Surrounding noise can interfere with song recognition</string>
     <string name="notification_message_no_matches_found">The record was added in recognition queue to retry later</string>
     <string name="recording_error">Recording error</string>
     <string name="check_permission">Check permission</string>
@@ -115,6 +122,7 @@
     <string name="search_track_hint">Search track…</string>
     <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
     <string name="no_tracks_match_search">No tracks matching your search criteria</string>
+    <string name="close">Close</string>
 
 
 </resources>

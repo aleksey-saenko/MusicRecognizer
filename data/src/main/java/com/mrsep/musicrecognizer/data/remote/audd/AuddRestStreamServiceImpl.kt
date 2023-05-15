@@ -22,7 +22,11 @@ class AuddRestStreamServiceImpl @Inject constructor(
         audioRecordingFlow: Flow<ByteArray>
     ): RemoteRecognitionDataResult {
 
-        var lastResult: RemoteRecognitionDataResult? = null
+        // bad recording by default in case if audioRecordingFlow is empty
+        var lastResult: RemoteRecognitionDataResult =
+            RemoteRecognitionDataResult.Error.BadRecording(
+                "Recognition process failed due to empty audio recording stream"
+            )
         audioRecordingFlow.flatMapMerge { recording ->
             flow {
                 emit(
@@ -46,7 +50,7 @@ class AuddRestStreamServiceImpl @Inject constructor(
             }
             .collect()
 
-        return lastResult ?: RemoteRecognitionDataResult.Error.BadRecording
+        return lastResult
     }
 
 }

@@ -71,6 +71,7 @@ dependencies {
     implementation Libs.Hilt.Core
     kapt Libs.Hilt.Kapt
 
+    implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)
 

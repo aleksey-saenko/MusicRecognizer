@@ -28,6 +28,13 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setOnboardingCompleted(true)
 //            .setNotificationServiceEnabled(true)
             .setDeveloperModeEnabled(true)
+            .setSchedulePolicy(
+                UserPreferencesProto.SchedulePolicyProto.getDefaultInstance().toBuilder()
+                    .setNoMatchesValue(UserPreferencesProto.ScheduleActionProto.IGNORE_VALUE)
+                    .setBadConnectionValue(UserPreferencesProto.ScheduleActionProto.SAVE_AND_LAUNCH_VALUE)
+                    .setAnotherFailureValue(UserPreferencesProto.ScheduleActionProto.SAVE_VALUE)
+                    .build()
+            )
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

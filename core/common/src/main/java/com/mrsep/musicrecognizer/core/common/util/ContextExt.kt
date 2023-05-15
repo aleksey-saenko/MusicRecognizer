@@ -1,4 +1,9 @@
 package com.mrsep.musicrecognizer.core.common.util
+
+import android.content.Context
+import android.widget.Toast
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
+
 //
 //import android.content.Context
 //import android.content.Intent
@@ -12,6 +17,9 @@ package com.mrsep.musicrecognizer.core.common.util
 //import java.text.SimpleDateFormat
 //import java.util.*
 
+fun Context.showStubToast() = Toast
+    .makeText(this, getString(StringsR.string.not_implemented), Toast.LENGTH_LONG)
+    .show()
 
 ///** Validate URL before try to open  */
 //fun Context.openUrlImplicitly(url: String) {

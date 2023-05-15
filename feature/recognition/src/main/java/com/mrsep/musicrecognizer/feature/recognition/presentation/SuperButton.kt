@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 internal fun SuperButton(
     activated: Boolean,
     amplitudeFactor: Float,
-    enabled: Boolean,
+    permissionBlocked: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier
@@ -34,7 +34,7 @@ internal fun SuperButton(
         AnimatedEnhancedButton(
             modifier = Modifier.size(170.dp),
             activated = activated,
-            enabled = enabled,
+            permissionBlocked = permissionBlocked,
             onClick = onClick,
             onLongPress = onLongPress
         ) {
@@ -59,7 +59,7 @@ internal fun SuperButtonSection(
     title: String,
     activated: Boolean,
     amplitudeFactor: Float,
-    enabled: Boolean,
+    permissionBlocked: Boolean,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -102,7 +102,7 @@ internal fun SuperButtonSection(
             onLongPress = onButtonClick,
             activated = activated,
             amplitudeFactor = amplitudeFactor,
-            enabled = enabled
+            permissionBlocked = permissionBlocked
         )
     }
 }

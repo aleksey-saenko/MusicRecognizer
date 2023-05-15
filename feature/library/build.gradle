@@ -77,6 +77,7 @@ dependencies {
     implementation Libs.Paging3.Compose
     implementation Libs.Paging3.Room
 
+    implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)
 

@@ -9,7 +9,7 @@ sealed class RemoteRecognitionResult {
     sealed class Error : RemoteRecognitionResult() {
 
         object BadConnection : Error()
-        object BadRecording : Error()
+        data class BadRecording(val cause: Throwable) : Error()
         data class WrongToken(val isLimitReached: Boolean) : Error()
 
         data class HttpError(

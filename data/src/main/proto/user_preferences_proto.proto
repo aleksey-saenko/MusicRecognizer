@@ -9,7 +9,6 @@ message UserPreferencesProto {
   string api_token = 2;
 
   message RequiredServicesProto {
-
     bool spotify = 3;
     bool youtube = 4;
     bool soundcloud = 5;
@@ -17,7 +16,6 @@ message UserPreferencesProto {
     bool deezer = 7;
     bool napster = 8;
     bool musicbrainz = 9;
-
   }
 
   RequiredServicesProto required_services = 10;
@@ -25,5 +23,19 @@ message UserPreferencesProto {
   bool notification_service_enabled = 11;
   bool dynamic_colors_enabled = 12;
   bool developer_mode_enabled = 13;
+
+  enum ScheduleActionProto {
+    IGNORE = 0;
+    SAVE = 1;
+    SAVE_AND_LAUNCH = 2;
+  }
+
+  message SchedulePolicyProto {
+    ScheduleActionProto no_matches = 14;
+    ScheduleActionProto bad_connection = 15;
+    ScheduleActionProto another_failure = 16;
+  }
+
+  SchedulePolicyProto schedule_policy = 17;
 
 }

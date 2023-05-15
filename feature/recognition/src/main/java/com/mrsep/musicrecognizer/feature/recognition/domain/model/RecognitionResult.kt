@@ -4,11 +4,11 @@ sealed class RecognitionResult {
 
     data class Success(val track: Track) : RecognitionResult()
 
-    class NoMatches(val audioRecording: ByteArray) : RecognitionResult()
+    class NoMatches(val recognitionTask: RecognitionTask) : RecognitionResult()
 
     class Error(
         val remoteError: RemoteRecognitionResult.Error,
-        val audioRecording: ByteArray
+        val recognitionTask: RecognitionTask
     ) : RecognitionResult()
 
 }

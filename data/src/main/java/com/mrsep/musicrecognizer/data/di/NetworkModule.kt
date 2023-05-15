@@ -66,24 +66,21 @@ object NetworkModule {
         @ApplicationContext appContext: Context,
         @ApplicationScope appScope: CoroutineScope
     ): OkHttpClient {
-        val okHttpClient: OkHttpClient
-        measureTimeMillis {
-            okHttpClient = OkHttpClient.Builder()
-                .run {
-                    if ((BuildConfig.LOG_DEBUG_MODE)) {
-                        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-                            setLevel(HttpLoggingInterceptor.Level.BODY)
-                        }
-                        val httpFileLoggingInterceptor = HttpFileLoggingInterceptor(appContext, appScope)
-                        this.addInterceptor(httpLoggingInterceptor)
-                            .addInterceptor(httpFileLoggingInterceptor)
-                    } else {
-                        this
+        return OkHttpClient.Builder()
+            .run {
+                if ((BuildConfig.LOG_DEBUG_MODE)) {
+                    val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                        setLevel(HttpLoggingInterceptor.Level.BODY)
                     }
+                    val httpFileLoggingInterceptor =
+                        HttpFileLoggingInterceptor(appContext, appScope)
+                    this.addInterceptor(httpLoggingInterceptor)
+                        .addInterceptor(httpFileLoggingInterceptor)
+                } else {
+                    this
                 }
-                .build()
-        }.run { println("TIME OkHttpClient=$this") }
-        return okHttpClient
+            }
+            .build()
     }
 
     @Provides
@@ -136,7 +133,7 @@ object NetworkModule {
 
 class AuddRequestFactory @Inject constructor(
     private val preferencesRepository: PreferencesDataRepository
-): RequestFactory {
+) : RequestFactory {
 
     override fun createRequest(): Request {
 

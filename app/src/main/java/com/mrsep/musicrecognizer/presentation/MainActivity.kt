@@ -31,6 +31,7 @@ import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScr
 import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen.libraryScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen.onboardingScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.navigateToPreferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
@@ -43,7 +44,6 @@ import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.navigate
 import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.trackScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
@@ -154,8 +154,8 @@ private fun AppNavigation(
         )
         queueScreen(
             onBackPressed = topNavController::navigateUp,
-            onNavigateToTrackScreen = { mbId ->
-                topNavController.navigateToTrackScreen(mbId = mbId)
+            onNavigateToTrackScreen = { mbId, from ->
+                topNavController.navigateToTrackScreen(mbId = mbId, from = from)
             }
         )
         aboutScreen(onBackPressed = topNavController::navigateUp)
@@ -180,26 +180,30 @@ private fun NavGraphBuilder.bottomBarNavHost(
                 startDestination = RecognitionScreen.ROUTE,
                 modifier = Modifier.weight(1f, false)
             ) {
-                libraryScreen(onTrackClick = { mbId ->
-                    topNavController.navigateToTrackScreen(mbId = mbId)
+                libraryScreen(onTrackClick = { mbId, from ->
+                    topNavController.navigateToTrackScreen(mbId = mbId, from = from)
                 })
                 recognitionScreen(
-                    onNavigateToTrackScreen = { mbId ->
-                        topNavController.navigateToTrackScreen(mbId = mbId)
+                    onNavigateToTrackScreen = { mbId, from ->
+                        topNavController.navigateToTrackScreen(mbId = mbId, from = from)
                     },
-                    onNavigateToQueueScreen = {
-                        topNavController.navigateToQueueScreen()
+                    //TODO() implement navigation with highlighting enqueuedId
+                    onNavigateToQueueScreen = { enqueuedId, from ->
+                        topNavController.navigateToQueueScreen(from = from)
+                    },
+                    onNavigateToPreferencesScreen = { from ->
+                        innerNavController.navigateToPreferencesScreen(from)
                     }
                 )
                 preferencesScreen(
-                    onNavigateToAboutScreen = {
-                        topNavController.navigateToAboutScreen()
+                    onNavigateToAboutScreen = { from ->
+                        topNavController.navigateToAboutScreen(from)
                     },
-                    onNavigateToQueueScreen = {
-                        topNavController.navigateToQueueScreen()
+                    onNavigateToQueueScreen = { from ->
+                        topNavController.navigateToQueueScreen(from)
                     },
-                    onNavigateToDeveloperScreen = {
-                        innerNavController.navigateToDeveloperScreen()
+                    onNavigateToDeveloperScreen = { from ->
+                        innerNavController.navigateToDeveloperScreen(from)
                     }
                 )
                 developerScreen(

@@ -35,11 +35,16 @@ dependencies {
 
     implementation Libs.JetBrains.CoroutinesAndroid
 
+    implementation Libs.Compose.Navigation
+
     implementation Libs.Hilt.Core
     kapt Libs.Hilt.Kapt
 
     testImplementation Libs.Test.JUnit
     androidTestImplementation Libs.AndroidTest.JUnitExt
     androidTestImplementation Libs.AndroidTest.EspressoCore
+
+    implementation project(Modules.Core.Ui)
+    implementation project(Modules.Core.Strings)
 
 }

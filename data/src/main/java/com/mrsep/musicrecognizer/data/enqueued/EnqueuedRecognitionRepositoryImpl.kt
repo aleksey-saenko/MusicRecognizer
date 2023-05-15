@@ -21,7 +21,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
 
     private val dao = database.enqueuedRecognitionDao()
 
-    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Boolean {
+    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Int? {
         return withContext(ioDispatcher) {
             recordingFileDataSource.write(audioRecording)?.let { recordingFile ->
                 val enqueued = EnqueuedRecognitionEntity(
@@ -34,8 +34,8 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
                 if (launch) {
                     enqueuedWorkManager.enqueueRecognitionWorker(id)
                 }
-                true
-            } ?: false
+                id
+            }
         }
     }
 

@@ -15,13 +15,11 @@ import coil.imageLoader
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,16 +32,20 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val SERVICE_TAG = "NotificationService"
 
+/**
+ * When designing behavior, consider these restrictions:
+ * https://issuetracker.google.com/issues/36961721
+ * https://developer.android.com/guide/components/activities/background-starts
+ * https://developer.android.com/about/versions/12/behavior-changes-12#notification-trampolines
+ */
+
 @AndroidEntryPoint
 internal class NotificationService : Service() {
 
     @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
-    @Inject lateinit var trackRepository: TrackRepository
     @Inject lateinit var serviceRouter: NotificationServiceRouter
 
-    @Inject @MainDispatcher lateinit var mainDispatcher: CoroutineDispatcher
     @Inject @IoDispatcher lateinit var ioDispatcher: CoroutineDispatcher
-    @Inject @DefaultDispatcher lateinit var defaultDispatcher: CoroutineDispatcher
 
     private val actionReceiver = ActionBroadcastReceiver()
     private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
@@ -69,19 +71,10 @@ internal class NotificationService : Service() {
                 addAction(RECOGNIZE_ACTION)
                 addAction(CANCEL_ACTION)
                 addAction(DISMISS_ACTION)
-                addAction(SHARE_TRACK_ACTION)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         recognitionState.onEach { status ->
-//            if (status is RecognitionStatus.Done &&
-//                status.result is RecognitionResult.Error
-//            ) {
-//                enqueueRecognitionUseCase(
-//                    audioRecording = status.result.audioRecording,
-//                    launch = true
-//                )
-//            }
             handleRecognitionStatus(status)
         }.launchIn(serviceScope)
     }
@@ -134,24 +127,27 @@ internal class NotificationService : Service() {
                     .addRecognizeButton()
                     .addRecognizeIntent()
                     .buildAndNotifyAsStatus()
-
-                notificationManager.cancel(RESULT_NOTIFICATION_ID)
             }
-            is RecognitionStatus.Recognizing -> { //TODO() add extra try message
+
+            is RecognitionStatus.Recognizing -> {
+                notificationManager.cancel(RESULT_NOTIFICATION_ID)
+
                 statusNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.listening))
+                    .setContentTitle(getListeningMessage(status.extraTry))
                     .addCancelButton()
                     .buildAndNotifyAsStatus()
             }
 
             is RecognitionStatus.Done -> {
+                resetStatusToReady()
+
                 when (status.result) {
                     is RecognitionResult.Error -> when (status.result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.no_internet_connection))
                                 .setContentText(getString(StringsR.string.please_check_network_status))
-                                .addDismissIntent()
+                                .addOptionalQueueButton(status.result.recognitionTask)
                                 .buildAndNotifyAsResult()
 
                             notifyReadyAsStatus()
@@ -161,7 +157,6 @@ internal class NotificationService : Service() {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.recording_error))
                                 .setContentText(getString(StringsR.string.notification_message_recording_error))
-                                .addDismissIntent()
                                 .buildAndNotifyAsResult()
 
                             notifyReadyAsStatus()
@@ -172,7 +167,7 @@ internal class NotificationService : Service() {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.internal_error))
                                 .setContentText(getString(StringsR.string.notification_message_unhandled_error))
-                                .addDismissIntent()
+                                .addOptionalQueueButton(status.result.recognitionTask)
                                 .buildAndNotifyAsResult()
 
                             notifyReadyAsStatus()
@@ -180,14 +175,9 @@ internal class NotificationService : Service() {
 
                         is RemoteRecognitionResult.Error.WrongToken -> {
                             resultNotificationBuilder()
-                                .setContentTitle(
-                                    if (status.result.remoteError.isLimitReached)
-                                        getString(StringsR.string.token_limit_reached)
-                                    else
-                                        getString(StringsR.string.wrong_token)
-                                )
+                                .setContentTitle(getWrongTokenTitle(status.result.remoteError.isLimitReached))
                                 .setContentText(getString(StringsR.string.notification_message_token_wrong_error))
-                                .addDismissIntent()
+                                .addOptionalQueueButton(status.result.recognitionTask)
                                 .buildAndNotifyAsResult()
 
                             notifyReadyAsStatus()
@@ -197,9 +187,8 @@ internal class NotificationService : Service() {
                     is RecognitionResult.NoMatches -> {
                         resultNotificationBuilder()
                             .setContentTitle(getString(StringsR.string.no_matches_found))
-                            .setContentText(getString(StringsR.string.notification_message_no_matches_found))
-                            .addQueueButton()
-                            .addDismissIntent()
+                            .setContentText(getString(StringsR.string.no_matches_message))
+                            .addOptionalQueueButton(status.result.recognitionTask)
                             .buildAndNotifyAsResult()
 
                         notifyReadyAsStatus()
@@ -211,7 +200,6 @@ internal class NotificationService : Service() {
                             .setContentText(status.result.track.artistWithAlbumFormatted())
                             .addBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
-                            .addDismissIntent()
                             .addShareButton(status.result.track)
                             .buildAndNotifyAsResult()
 
@@ -220,6 +208,20 @@ internal class NotificationService : Service() {
                 }
             }
         }
+    }
+
+    private fun getWrongTokenTitle(isLimitReached: Boolean): String {
+        return if (isLimitReached)
+            getString(StringsR.string.token_limit_reached)
+        else
+            getString(StringsR.string.wrong_token)
+    }
+
+    private fun getListeningMessage(extraTry: Boolean): String {
+        return if (extraTry)
+            getString(StringsR.string.listening_with_last_try)
+        else
+            getString(StringsR.string.listening_with_ellipsis)
     }
 
     private fun Track.artistWithAlbumFormatted(): String {
@@ -247,7 +249,6 @@ internal class NotificationService : Service() {
             .setSmallIcon(UiR.drawable.baseline_album_24)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-//            .setAutoCancel(false)
             .setOngoing(true)
             .setCategory(Notification.CATEGORY_STATUS)
 //        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
@@ -259,7 +260,7 @@ internal class NotificationService : Service() {
             .setSmallIcon(UiR.drawable.baseline_album_24)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
-//            .setAutoCancel(false)
+            .setAutoCancel(false)
             .setOngoing(false)
             .setCategory(Notification.CATEGORY_MESSAGE)
 //        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
@@ -303,12 +304,20 @@ internal class NotificationService : Service() {
         )
     }
 
-    private fun NotificationCompat.Builder.addQueueButton(): NotificationCompat.Builder {
-        return addAction(
-            android.R.drawable.ic_menu_preferences,
-            getString(StringsR.string.recognition_queue),
-            createQueueDeepLinkIntent()
-        )
+    private fun NotificationCompat.Builder.addOptionalQueueButton(
+        task: RecognitionTask
+    ): NotificationCompat.Builder {
+        return when (task) {
+            is RecognitionTask.Created -> addAction(
+                android.R.drawable.ic_menu_preferences,
+                getString(StringsR.string.recognition_queue),
+                createQueueDeepLinkIntent()
+            )
+
+            RecognitionTask.Error,
+            RecognitionTask.Ignored -> this
+        }
+
     }
 
     private fun NotificationCompat.Builder.addDismissIntent(): NotificationCompat.Builder {
@@ -341,14 +350,12 @@ internal class NotificationService : Service() {
     }
 
     private suspend fun getCoilBitmapOrNull(url: String): Bitmap? {
-        return withContext(ioDispatcher) {
-            val context = this@NotificationService
-            val request = ImageRequest.Builder(context).data(url)
-                .allowHardware(false).build()
-            when (val result = context.imageLoader.execute(request)) {
-                is SuccessResult -> (result.drawable as BitmapDrawable).bitmap
-                is ErrorResult -> null
-            }
+        val context = this@NotificationService
+        val request = ImageRequest.Builder(context).data(url)
+            .allowHardware(false).build()
+        return when (val result = context.imageLoader.execute(request)) {
+            is SuccessResult -> (result.drawable as BitmapDrawable).bitmap
+            is ErrorResult -> null
         }
     }
 
@@ -403,9 +410,6 @@ internal class NotificationService : Service() {
                     resetStatusToReady()
                 }
 
-                SHARE_TRACK_ACTION -> {
-                    TODO()
-                }
             }
         }
     }
@@ -437,7 +441,6 @@ internal class NotificationService : Service() {
         private const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.recognize"
         private const val CANCEL_ACTION = "com.mrsep.musicrecognizer.action.cancel"
         private const val DISMISS_ACTION = "com.mrsep.musicrecognizer.action.dismiss_notification"
-        private const val SHARE_TRACK_ACTION = "com.mrsep.musicrecognizer.action.share_track"
     }
 
 }

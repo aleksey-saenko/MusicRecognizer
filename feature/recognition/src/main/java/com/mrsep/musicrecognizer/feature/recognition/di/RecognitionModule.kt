@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorFakeImpl
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorImpl
 import dagger.Binds
 import dagger.Module

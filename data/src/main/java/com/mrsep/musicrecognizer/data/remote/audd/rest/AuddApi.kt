@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.data.remote.audd
+package com.mrsep.musicrecognizer.data.remote.audd.rest
 
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import okhttp3.MultipartBody

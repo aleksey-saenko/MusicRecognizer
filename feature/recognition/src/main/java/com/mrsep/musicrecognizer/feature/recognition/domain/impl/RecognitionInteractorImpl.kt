@@ -236,13 +236,13 @@ class RecognitionInteractorImpl @Inject constructor(
         private const val extraTryStartIndex = 2
 
         private val strategy = AudioRecordingStrategy.Builder()
-//            .addStep(3_500.milliseconds)
+            .addStep(3_500.milliseconds)
             .addStep(6_000.milliseconds)
             .addStep(9_000.milliseconds)
             .addSplitter()
-//            .addStep(12_500.milliseconds)
+            .addStep(12_500.milliseconds)
             .addStep(15_000.milliseconds)
-//            .addStep(18_000.milliseconds)
+            .addStep(18_000.milliseconds)
             .sendTotalAtEnd(true)
             .build()
     }

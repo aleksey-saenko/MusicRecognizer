@@ -9,7 +9,7 @@ import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoderController
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
-import com.mrsep.musicrecognizer.data.remote.audd.RecognitionDataService
+import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import dagger.hilt.android.lifecycle.HiltViewModel

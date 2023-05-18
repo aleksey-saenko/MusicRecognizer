@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation
 
 import android.Manifest
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -50,6 +51,8 @@ internal fun RecognitionScreen(
     val scope = rememberCoroutineScope()
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
+
+    LaunchedEffect(key1 = recognizeStatus, block = { Log.d("screen", recognizeStatus.javaClass.simpleName) })
 
     // permission logic block
     var firstAsked by rememberSaveable { mutableStateOf(true) }

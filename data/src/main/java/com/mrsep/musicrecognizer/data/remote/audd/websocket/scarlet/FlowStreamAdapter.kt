@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.data.remote.audd.websocket
+package com.mrsep.musicrecognizer.data.remote.audd.websocket.scarlet
 
 import com.tinder.scarlet.Stream
 import com.tinder.scarlet.StreamAdapter

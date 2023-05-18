@@ -5,11 +5,11 @@ import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
-import com.mrsep.musicrecognizer.data.remote.audd.AuddScarletApi
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.scarlet.AuddScarletApi
 import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
 import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddJsonAdapter
 import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.FlowStreamAdapter
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.scarlet.FlowStreamAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.tinder.scarlet.Scarlet

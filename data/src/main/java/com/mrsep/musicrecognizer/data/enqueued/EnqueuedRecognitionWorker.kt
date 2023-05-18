@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
 import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.remote.audd.RecognitionDataService
+import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 

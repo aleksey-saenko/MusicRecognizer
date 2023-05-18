@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorFakeImpl
+import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,10 +15,10 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindScreenRecognitionInteractor(implementation: RecognitionInteractorFakeImpl): ScreenRecognitionInteractor
+    fun bindScreenRecognitionInteractor(implementation: RecognitionInteractorImpl): ScreenRecognitionInteractor
 
     @Binds
     @Singleton
-    fun bindServiceRecognitionInteractor(implementation: RecognitionInteractorFakeImpl): ServiceRecognitionInteractor
+    fun bindServiceRecognitionInteractor(implementation: RecognitionInteractorImpl): ServiceRecognitionInteractor
 
 }

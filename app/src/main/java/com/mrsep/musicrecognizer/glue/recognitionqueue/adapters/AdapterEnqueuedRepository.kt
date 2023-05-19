@@ -35,8 +35,8 @@ class AdapterEnqueuedRepository @Inject constructor(
         enqueuedDataRepository.cancelAndDeleteById(enqueuedId)
     }
 
-    override fun getAllFlowWithStatus(limit: Int): Flow<List<EnqueuedRecognitionWithStatus>> {
-        return enqueuedDataRepository.getAllFlowWithStatus(limit)
+    override fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionWithStatus>> {
+        return enqueuedDataRepository.getAllFlowWithStatus()
             .map { list -> list.map { entityWithStatus -> enqueuedToDomainMapper.map(entityWithStatus) } }
     }
 

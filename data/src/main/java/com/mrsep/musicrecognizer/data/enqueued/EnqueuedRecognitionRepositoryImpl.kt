@@ -84,8 +84,8 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getAllFlow(limit: Int): Flow<List<EnqueuedRecognitionEntity>> {
-        return dao.getFlow(limit)
+    override fun getAllFlow(): Flow<List<EnqueuedRecognitionEntity>> {
+        return dao.getFlow()
             .flowOn(ioDispatcher)
     }
 
@@ -106,8 +106,8 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAllFlowWithStatus(limit: Int): Flow<List<EnqueuedRecognitionEntityWithStatus>> {
-        return getAllFlow(limit)
+    override fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionEntityWithStatus>> {
+        return getAllFlow()
             .flatMapLatest { listEntities ->
                 if (listEntities.isEmpty()) {
                     flow { emit(emptyList()) }

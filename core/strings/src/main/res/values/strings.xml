@@ -72,6 +72,7 @@
     <string name="recognition_queue">Recognition queue</string>
     <string name="open_queue">Open queue</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="bad_internet_connection">Bad internet connection</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
     <string name="save_record_message">You can save the record in recognition queue to retry later. The remote music library is always updating.</string>
@@ -126,6 +127,23 @@
     <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
     <string name="no_tracks_match_search">No tracks matching your search criteria</string>
     <string name="close">Close</string>
+    <string name="save_the_recording_and_launch_retry">Save the recording and launch retry</string>
+    <string name="save_the_recording">Save the recording</string>
+    <string name="ignore">Ignore</string>
+    <string name="schedule_policy">Schedule policy</string>
+    <string name="schedule_policy_dialog_message">Set the default action to create a scheduled recognition for each type of unsuccessful result.</string>
+    <string name="other_failures">Other failures</string>
+    <string name="schedule_policy_pref_subtitle">Set schedule actions after unsuccessful recognitions</string>
+    <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
+    <string name="notification_service">Notification service</string>
+    <string name="notification_service_pref_subtitle">Allow to control recognition from notifications</string>
+    <string name="notifications">Notifications</string>
+    <string name="dynamic_colors_pref_title">Use dynamic colors</string>
+    <string name="misc">Misc</string>
+    <string name="developer_options">Developer options</string>
+    <string name="appearance">Appearance</string>
+    <string name="empty_recognition_queue_message">No queued recognitions</string>
+    <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
 
 
 </resources>

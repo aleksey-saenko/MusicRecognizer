@@ -156,7 +156,7 @@ private fun isFilterApplied(state: LibraryUiState): Boolean {
 }
 
 @Composable
-fun EmptyLibraryMessage(
+private fun EmptyLibraryMessage(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -165,18 +165,15 @@ fun EmptyLibraryMessage(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_recently_24),
+            painter = painterResource(UiR.drawable.baseline_list_24),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
-            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
         Text(
             text = stringResource(StringsR.string.empty_library_message),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(0.75f)
-                .padding(top = 24.dp)
+            modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
         )
     }
 

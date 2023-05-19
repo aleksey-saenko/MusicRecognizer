@@ -27,7 +27,7 @@ internal fun PreferenceClickableItem(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,
-            modifier = modifier.padding(16.dp).run {
+            modifier = Modifier.padding(16.dp).run {
                 if (enabled) this else alpha(0.8f)
             }
         ) {
@@ -35,7 +35,7 @@ internal fun PreferenceClickableItem(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 20.sp),
             )
-            if (subtitle != null && subtitle.isNotBlank()) {
+            if (!subtitle.isNullOrBlank()) {
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,

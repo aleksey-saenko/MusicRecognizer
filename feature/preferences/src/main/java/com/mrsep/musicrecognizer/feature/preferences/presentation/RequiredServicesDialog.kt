@@ -8,9 +8,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.mrsep.musicrecognizer.core.ui.util.recompositionCounter
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -84,7 +82,7 @@ internal fun RequiredServicesDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = "Show links to")
+            Text(text = "Select music services")
         },
         confirmButton = {
             Button(onClick = onConfirmClick) {
@@ -99,60 +97,53 @@ internal fun RequiredServicesDialog(
         text = {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.spotify), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("spotifyCheckBox"),
                         checked = dialogState.spotifyCheckBox,
                         onCheckedChange = { dialogState.spotifyCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.spotify))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.youtube), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("youtubeCheckBox"),
                         checked = dialogState.youtubeCheckBox,
                         onCheckedChange = { dialogState.youtubeCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.youtube))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.soundcloud), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("soundcloudCheckBox"),
                         checked = dialogState.soundCloudCheckBox,
                         onCheckedChange = { dialogState.soundCloudCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.soundcloud))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.apple_music), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("appleMusicCheckBox"),
                         checked = dialogState.appleMusicCheckBox,
                         onCheckedChange = { dialogState.appleMusicCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.apple_music))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.deezer), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("deezerCheckBox"),
                         checked = dialogState.deezerCheckBox,
                         onCheckedChange = { dialogState.deezerCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.deezer))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.napster), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("napsterCheckBox"),
                         checked = dialogState.napsterCheckBox,
                         onCheckedChange = { dialogState.napsterCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.napster))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = stringResource(StringsR.string.musicbrainz), modifier = Modifier.weight(1f))
                     Checkbox(
-                        modifier = Modifier.recompositionCounter("musicBrainzCheckBox"),
                         checked = dialogState.musicBrainzCheckBox,
                         onCheckedChange = { dialogState.musicBrainzCheckBox = it }
                     )
+                    Text(text = stringResource(StringsR.string.musicbrainz))
                 }
             }
         },

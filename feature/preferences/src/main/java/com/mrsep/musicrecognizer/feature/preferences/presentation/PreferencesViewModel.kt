@@ -47,6 +47,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setSchedulePolicy(schedulePolicy: UserPreferences.SchedulePolicy) {
+        viewModelScope.launch {
+            preferencesRepository.setSchedulePolicy(schedulePolicy)
+        }
+    }
+
 }
 
 internal sealed interface PreferencesUiState {

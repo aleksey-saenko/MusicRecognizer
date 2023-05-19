@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-private const val ENQUEUED_FLOW_LIMIT = 50
 
 @HiltViewModel
 internal class QueueScreenViewModel @Inject constructor(
@@ -18,11 +18,12 @@ internal class QueueScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val enqueuedRecognitionUiFlow = enqueuedRecognitionRepository
-        .getAllFlowWithStatus(ENQUEUED_FLOW_LIMIT)
+        .getAllFlowWithStatus()
+        .map { list -> list.toImmutableList() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            initialValue = persistentListOf()
         )
 
     val playerStatusFlow = playerController.statusFlow

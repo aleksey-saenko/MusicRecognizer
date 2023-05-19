@@ -32,7 +32,7 @@ interface EnqueuedRecognitionDao {
     @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
     fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?>
 
-    @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC LIMIT (:limit)")
-    fun getFlow(limit: Int): Flow<List<EnqueuedRecognitionEntity>>
+    @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
+    fun getFlow(): Flow<List<EnqueuedRecognitionEntity>>
 
 }

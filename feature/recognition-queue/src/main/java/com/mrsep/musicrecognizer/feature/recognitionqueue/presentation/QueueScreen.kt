@@ -18,9 +18,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,41 +57,44 @@ internal fun QueueScreen(
             topAppBarScrollBehavior = topBarBehaviour,
             onBackPressed = onBackPressed
         )
-        LazyColumn(
-            modifier = Modifier,
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(
-                count = enqueuedWithStatusList.size,
-                key = { index -> enqueuedWithStatusList[index].id }
-            ) { index ->
-                LazyColumnEnqueuedItem(
-                    enqueued = enqueuedWithStatusList[index],
-                    isPlaying = enqueuedWithStatusList[index].isPlaying(playerStatus),
-                    onDeleteEnqueued = { enqueuedId ->
-                        viewModel.deleteEnqueuedRecognition(enqueuedId)
-                    },
-                    onRenameEnqueued = { enqueuedId, newName ->
-                        viewModel.renameEnqueuedRecognition(enqueuedId, newName)
-                    },
-                    onStartPlayRecord = { enqueuedId ->
-                        viewModel.startPlayRecord(enqueuedId)
-                    },
-                    onStopPlayRecord = {
-                        viewModel.stopPlayer()
-                    },
-                    onEnqueueRecognition = { enqueuedId ->
-                        viewModel.enqueueRecognition(enqueuedId)
-                    },
-                    onCancelRecognition = { enqueuedId ->
-                        viewModel.cancelRecognition(enqueuedId)
-                    },
-                    onNavigateToTrackScreen = onNavigateToTrackScreen,
-                    modifier = Modifier.animateItemPlacement(
-                        tween(300)
+        if (enqueuedWithStatusList.isEmpty()) {
+            EmptyQueueMessage(modifier = Modifier.fillMaxSize())
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    count = enqueuedWithStatusList.size,
+                    key = { index -> enqueuedWithStatusList[index].id }
+                ) { index ->
+                    LazyColumnEnqueuedItem(
+                        enqueued = enqueuedWithStatusList[index],
+                        isPlaying = enqueuedWithStatusList[index].isPlaying(playerStatus),
+                        onDeleteEnqueued = { enqueuedId ->
+                            viewModel.deleteEnqueuedRecognition(enqueuedId)
+                        },
+                        onRenameEnqueued = { enqueuedId, newName ->
+                            viewModel.renameEnqueuedRecognition(enqueuedId, newName)
+                        },
+                        onStartPlayRecord = { enqueuedId ->
+                            viewModel.startPlayRecord(enqueuedId)
+                        },
+                        onStopPlayRecord = {
+                            viewModel.stopPlayer()
+                        },
+                        onEnqueueRecognition = { enqueuedId ->
+                            viewModel.enqueueRecognition(enqueuedId)
+                        },
+                        onCancelRecognition = { enqueuedId ->
+                            viewModel.cancelRecognition(enqueuedId)
+                        },
+                        onNavigateToTrackScreen = onNavigateToTrackScreen,
+                        modifier = Modifier.animateItemPlacement(
+                            tween(300)
+                        )
                     )
-                )
+                }
             }
         }
     }
@@ -248,6 +253,7 @@ private fun LazyColumnEnqueuedItem(
                             }
                         )
                     }
+
                     EnqueuedRecognitionStatus.Enqueued,
                     EnqueuedRecognitionStatus.Running -> {
                         DropdownMenuItem(
@@ -269,6 +275,7 @@ private fun LazyColumnEnqueuedItem(
                             }
                         )
                     }
+
                     is EnqueuedRecognitionStatus.Finished.Success -> {
                         DropdownMenuItem(
                             text = {
@@ -354,5 +361,38 @@ private fun getStatusMessage(status: EnqueuedRecognitionStatus): String {
         EnqueuedRecognitionStatus.Inactive -> "Status: Inactive"
         EnqueuedRecognitionStatus.Running -> "Status: Running"
     }
+}
+
+@Composable
+private fun EmptyQueueMessage(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(UiR.drawable.baseline_list_24),
+            contentDescription = null,
+            modifier = Modifier.size(80.dp),
+//            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+        )
+        Text(
+            text = stringResource(StringsR.string.empty_recognition_queue_message),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Text(
+            text = stringResource(StringsR.string.empty_recognition_queue_sub_message),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .alpha(0.85f)
+                .padding(top = 16.dp, bottom = 48.dp, start = 24.dp, end = 24.dp)
+        )
+    }
+
 }
 

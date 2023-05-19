@@ -58,80 +58,85 @@ internal fun PreferencesScreen(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start,
                 ) {
-                    PreferenceGroup(title = "Recognition") {
+                    PreferenceGroup(title = stringResource(StringsR.string.recognition)) {
                         PreferenceClickableItem(
-                            title = "Recognition queue",
-                            subtitle = "Manage your saved recognitions",
+                            title = stringResource(StringsR.string.recognition_queue),
+                            subtitle = stringResource(StringsR.string.recognition_queue_pref_subtitle),
                             onItemClick = onNavigateToQueueScreen
                         )
+
+                        var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.schedule_policy),
+                            subtitle = stringResource(StringsR.string.schedule_policy_pref_subtitle),
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
+                            showPolicyDialog = true
+                        }
+                        if (showPolicyDialog) {
+
+                            val dialogState = rememberSchedulePolicyDialogState(
+                                schedulePolicy = uiState.preferences.schedulePolicy
+                            )
+                            SchedulePolicyDialog(
+                                onConfirmClick = {
+                                    showPolicyDialog = false
+                                    viewModel.setSchedulePolicy(dialogState.currentState)
+                                },
+                                onDismissClick = { showPolicyDialog = false },
+                                dialogState = dialogState
+                            )
+
+                        }
                     }
+
                     PreferenceGroup(
-                        title = "Developer options",
+                        title = stringResource(StringsR.string.appearance),
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
-                        PreferenceClickableItem(
-                            title = "Developer options",
-                            subtitle = "Only for dev purpose",
-                            onItemClick = onNavigateToDeveloperScreen
-                        )
-                        PreferenceSwitchItem(
-                            title = "Enable developer mode",
-                            subtitle = "Only for dev purpose",
-                            onCheckedChange = { viewModel.setDeveloperModeEnabled(it) },
-                            checked = uiState.preferences.developerModeEnabled,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                        PreferenceSwitchItem(
-                            title = "Should show onboarding",
-                            subtitle = "Only for dev purpose",
-                            onCheckedChange = { viewModel.setOnboardingCompleted(!it) },
-                            checked = !uiState.preferences.onboardingCompleted,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-
-                    }
-                    PreferenceGroup(title = "UI", modifier = Modifier.padding(top = 16.dp)) {
-                        var showDialog by rememberSaveable { mutableStateOf(false) }
+                        var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = "Show links to music services",
                             subtitle = uiState.preferences.requiredServices.getNames()
                         ) {
-                            showDialog = true
+                            showServicesDialog = true
                         }
-                        if (showDialog) {
+                        if (showServicesDialog) {
 
                             val dialogState = rememberRequiredServicesDialogState(
                                 requiredServices = uiState.preferences.requiredServices
                             )
                             RequiredServicesDialog(
                                 onConfirmClick = {
-                                    showDialog = false
+                                    showServicesDialog = false
                                     viewModel.setRequiredServices(dialogState.currentState)
                                 },
-                                onDismissClick = { showDialog = false },
+                                onDismissClick = { showServicesDialog = false },
                                 dialogState = dialogState
                             )
 
                         }
-                        PreferenceSwitchItem(
-                            title = "Use dynamic colors",
-                            onCheckedChange = { viewModel.setDynamicColorsEnabled(it) },
-                            checked = uiState.preferences.dynamicColorsEnabled,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            PreferenceSwitchItem(
+                                title = stringResource(StringsR.string.dynamic_colors_pref_title),
+                                onCheckedChange = { viewModel.setDynamicColorsEnabled(it) },
+                                checked = uiState.preferences.dynamicColorsEnabled,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+                        }
                     }
                     PreferenceGroup(
-                        title = "Notifications",
+                        title = stringResource(StringsR.string.notifications),
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             val notificationPermissionState = rememberPermissionState(
                                 Manifest.permission.POST_NOTIFICATIONS
                             )
                             PreferenceSwitchItem(
-                                title = "Notification service",
-                                subtitle = "Allow to control recognition from notifications",
+                                title = stringResource(StringsR.string.notification_service),
+                                subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
                                 onCheckedChange = { checked ->
                                     if (checked) {
                                         if (notificationPermissionState.status.isGranted) {
@@ -154,8 +159,8 @@ internal fun PreferencesScreen(
                             )
                         } else {
                             PreferenceSwitchItem(
-                                title = "Notification service",
-                                subtitle = "Allow to control recognition from notifications",
+                                title = stringResource(StringsR.string.notification_service),
+                                subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
                                 onCheckedChange = { checked ->
                                     viewModel.setNotificationServiceEnabled(checked)
                                 },
@@ -163,10 +168,18 @@ internal fun PreferencesScreen(
                             )
                         }
                     }
-                    PreferenceGroup(title = "Misc", modifier = Modifier.padding(top = 16.dp)) {
+                    PreferenceGroup(
+                        title = stringResource(StringsR.string.misc),
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
                         PreferenceClickableItem(
-                            title = "About",
+                            title = stringResource(StringsR.string.about),
                             onItemClick = onNavigateToAboutScreen
+                        )
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.developer_options),
+                            onItemClick = onNavigateToDeveloperScreen,
+                            modifier = Modifier.padding(top = 16.dp)
                         )
                     }
                 }

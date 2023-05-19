@@ -25,11 +25,11 @@ interface EnqueuedRecognitionDataRepository {
 
     fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?>
 
-    fun getAllFlow(limit: Int): Flow<List<EnqueuedRecognitionEntity>>
+    fun getAllFlow(): Flow<List<EnqueuedRecognitionEntity>>
 
     fun getUniqueFlowWithStatus(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?>
 
-    fun getAllFlowWithStatus(limit: Int): Flow<List<EnqueuedRecognitionEntityWithStatus>>
+    fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionEntityWithStatus>>
 
 
 }

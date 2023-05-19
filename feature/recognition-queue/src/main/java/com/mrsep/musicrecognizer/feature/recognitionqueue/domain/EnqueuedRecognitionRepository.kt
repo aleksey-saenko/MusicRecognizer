@@ -16,6 +16,6 @@ interface EnqueuedRecognitionRepository {
 
     suspend fun cancelAndDeleteById(enqueuedId: Int)
 
-    fun getAllFlowWithStatus(limit: Int): Flow<List<EnqueuedRecognitionWithStatus>>
+    fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionWithStatus>>
 
 }

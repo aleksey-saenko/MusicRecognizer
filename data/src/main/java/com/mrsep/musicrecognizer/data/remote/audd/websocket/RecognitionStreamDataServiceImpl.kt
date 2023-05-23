@@ -155,6 +155,7 @@ class RecognitionStreamDataServiceImpl @Inject constructor(
                                     }
 
                                     else -> {
+                                        Log.d(TAG, "sendingJob.isCompleted=${sendingJob.isCompleted}, responseCounter=$responseCounter, sentCounter=$sentCounter")
                                         if (sendingJob.isCompleted && responseCounter == sentCounter) {
                                             emit(socketEvent.response)
                                         } else {

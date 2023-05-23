@@ -144,6 +144,8 @@
     <string name="appearance">Appearance</string>
     <string name="empty_recognition_queue_message">No queued recognitions</string>
     <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
+    <string name="recognition_scheduled">Recognition scheduled</string>
+    <string name="offline_mode">Offline mode</string>
 
 
 </resources>

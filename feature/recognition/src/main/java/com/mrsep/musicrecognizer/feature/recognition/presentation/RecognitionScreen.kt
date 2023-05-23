@@ -1,12 +1,15 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation
 
 import android.Manifest
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -26,6 +29,7 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.components.*
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.NoMatchesShield
+import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.ScheduledOfflineShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.WrongTokenShield
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -51,8 +55,12 @@ internal fun RecognitionScreen(
     val scope = rememberCoroutineScope()
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
+    val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = recognizeStatus, block = { Log.d("screen", recognizeStatus.javaClass.simpleName) })
+//    LaunchedEffect(
+//        key1 = recognizeStatus,
+//        block = { Log.d("screen", recognizeStatus.javaClass.simpleName) }
+//    )
 
     // permission logic block
     var firstAsked by rememberSaveable { mutableStateOf(true) }
@@ -70,8 +78,7 @@ internal fun RecognitionScreen(
         )
     }
     AnimatedVisibility(
-        visible = recognizeStatus is RecognitionStatus.Ready ||
-                recognizeStatus is RecognitionStatus.Recognizing,
+        visible = recognizeStatus.isNotDone(),
         enter = enterTransitionButton,
         exit = exitTransitionButton,
     ) {
@@ -102,13 +109,17 @@ internal fun RecognitionScreen(
                 activated = recognizeStatus is RecognitionStatus.Recognizing,
                 amplitudeFactor = ampFlow,
                 permissionBlocked = isPermissionBlocked,
-                modifier = Modifier.padding(horizontal = 0.dp, vertical = 16.dp)
+                modifier = Modifier.padding(horizontal = 0.dp, vertical = 24.dp)
+            )
+            OfflineModePopup(
+                visible = isOffline,
+                modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
             )
         }
     }
 
     BackHandler(
-        enabled = recognizeStatus is RecognitionStatus.Done,
+        enabled = recognizeStatus.isDone(),
         onBack = viewModel::resetRecognitionResult
     )
     AnimatedContent(
@@ -181,6 +192,15 @@ internal fun RecognitionScreen(
                         onNavigateToPreferences = onNavigateToPreferencesScreen
                     )
                 }
+
+                is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
+                    recognitionTask = thisStatus.result.recognitionTask,
+                    onDismissClick = viewModel::resetRecognitionResult,
+                    onNavigateToQueue = { enqueuedId ->
+                        viewModel.resetRecognitionResult()
+                        onNavigateToQueueScreen(enqueuedId)
+                    }
+                )
 
                 is RecognitionResult.NoMatches -> NoMatchesShield(
                     recognitionTask = thisStatus.result.recognitionTask,
@@ -266,12 +286,41 @@ private val transitionSpecShield: AnimatedContentScope<RecognitionStatus>.() -> 
     )
 }
 
+private fun RecognitionStatus.isDone() = this is RecognitionStatus.Done
+private fun RecognitionStatus.isNotDone() = !isDone()
+
 @Composable
 private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
     return when (recognitionStatus) {
         RecognitionStatus.Ready -> stringResource(StringsR.string.tap_to_recognize)
         is RecognitionStatus.Recognizing -> stringResource(StringsR.string.listening)
         is RecognitionStatus.Done -> ""
+
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun OfflineModePopup(
+    modifier: Modifier = Modifier,
+    visible: Boolean
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn() + scaleIn(),
+        exit = fadeOut() + scaleOut(),
+        modifier = modifier
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
+            shape = CircleShape,
+        ) {
+            Text(
+                text = stringResource(StringsR.string.offline_mode),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(24.dp)
+            )
+        }
 
     }
 }

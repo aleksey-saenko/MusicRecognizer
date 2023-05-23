@@ -1,11 +1,14 @@
 package com.mrsep.musicrecognizer.feature.recognitionqueue.presentation
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,16 +20,18 @@ internal class QueueScreenViewModel @Inject constructor(
     private val playerController: PlayerController
 ) : ViewModel() {
 
-    val enqueuedRecognitionUiFlow = enqueuedRecognitionRepository
+    val screenUiStateFlow = enqueuedRecognitionRepository
         .getAllFlowWithStatus()
-        .map { list -> list.toImmutableList() }
-        .stateIn(
+        .combine(playerController.statusFlow) { enqueuedList, playerStatus ->
+            QueueScreenUiState.Success(
+                enqueuedList = enqueuedList.toImmutableList(),
+                playerStatus = playerStatus
+            )
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = persistentListOf()
+            initialValue = QueueScreenUiState.Loading
         )
-
-    val playerStatusFlow = playerController.statusFlow
 
     fun deleteEnqueuedRecognition(enqueuedId: Int) {
         viewModelScope.launch {
@@ -63,5 +68,17 @@ internal class QueueScreenViewModel @Inject constructor(
             enqueuedRecognitionRepository.cancelById(enqueuedId)
         }
     }
+
+}
+
+@Immutable
+sealed class QueueScreenUiState {
+
+    object Loading : QueueScreenUiState()
+
+    data class Success(
+        val enqueuedList: ImmutableList<EnqueuedRecognitionWithStatus>,
+        val playerStatus: PlayerStatus
+    ) : QueueScreenUiState()
 
 }

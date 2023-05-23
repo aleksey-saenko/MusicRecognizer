@@ -57,7 +57,7 @@ internal class LibraryViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { keyword ->
             if (keyword.isBlank()) {
-                flow { emit(SearchResult.Success("", emptyList())) }
+                flowOf(SearchResult.Success("", emptyList()))
             } else {
                 trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
             }

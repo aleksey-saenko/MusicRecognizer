@@ -83,20 +83,6 @@ internal fun DeveloperScreen(
                 modifier = Modifier.height(48.dp),
                 currentValue = amplitude
             )
-            ButtonGroup(
-                title = "WebSocket Test PureOkHttp",
-                content = {
-                    Button(onClick = viewModel::startWebSocketConnection) { Text(text = "start WS") }
-                    Button(onClick = viewModel::stopWebSocketConnection) { Text(text = "stop WS") }
-                }
-            )
-            ButtonGroup(
-                title = "WebSocket Test Scarlet",
-                content = {
-                    Button(onClick = viewModel::startScarletTest) { Text(text = "start WS") }
-                    Button(onClick = viewModel::stopScarletTest) { Text(text = "stop WS") }
-                }
-            )
 
         }
     }

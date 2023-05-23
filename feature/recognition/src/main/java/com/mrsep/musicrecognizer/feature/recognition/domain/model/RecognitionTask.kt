@@ -9,11 +9,12 @@ sealed class RecognitionTask {
         override fun getEnqueuedIdOrNull() = id
     }
 
+    // corresponds "do not schedule after bad recognition result"
     object Ignored: RecognitionTask() {
         override fun getEnqueuedIdOrNull() = null
     }
 
-    object Error: RecognitionTask() {
+    data class Error(val cause: Throwable? = null): RecognitionTask() {
         override fun getEnqueuedIdOrNull() = null
     }
 

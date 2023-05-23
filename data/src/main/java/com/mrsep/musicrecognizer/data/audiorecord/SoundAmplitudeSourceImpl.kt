@@ -1,8 +1,9 @@
 package com.mrsep.musicrecognizer.data.audiorecord
 
 import android.media.AudioFormat
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -26,7 +27,8 @@ import kotlin.math.sqrt
  * correlation with a sample value and a real decibel level.
  */
 class SoundAmplitudeSourceImpl @Inject constructor(
-    soundSource: SoundSource
+    soundSource: SoundSource,
+    @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
 ) : SoundAmplitudeSource {
 
     override val amplitudeFlow = (soundSource.params?.let { params ->
@@ -62,7 +64,7 @@ class SoundAmplitudeSourceImpl @Inject constructor(
         .transformToMovingAverage(MOVING_AVERAGE_WINDOW_SIZE)
         .map { float -> float.roundTo(1) }
         .distinctUntilChanged { old, new -> old.equalsDelta(new, 0.01f) }
-        .flowOn(Dispatchers.Default)
+        .flowOn(defaultDispatcher)
 
     private fun ByteArray.toShortArray(): ShortArray {
         val output = ShortArray(size.div(Short.SIZE_BYTES))

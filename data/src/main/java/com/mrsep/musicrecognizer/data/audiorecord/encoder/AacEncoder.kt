@@ -8,16 +8,18 @@ import android.util.Log
 import com.mrsep.musicrecognizer.data.audiorecord.AudioEncoderDispatcher
 import com.mrsep.musicrecognizer.data.audiorecord.AudioEncoderHandler
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.produceIn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +32,6 @@ class AacEncoder @Inject constructor(
     private val audioSource: SoundSource
 ) {
 
-    @OptIn(FlowPreview::class)
     val aacPacketsFlow: Flow<Result<AacPacket>> = channelFlow<Result<AacPacket>> {
         try {
             val audioSourceParams = checkNotNull(audioSource.params)
@@ -61,35 +62,36 @@ class AacEncoder @Inject constructor(
             )
             codec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
 
-            val pcmChunkBufferedChannel = audioSource.pcmChunkFlow.transform { pcmChunkResult ->
-                pcmChunkResult.onSuccess {
-                    emit(it)
-                }.onFailure {
-                    close(it)
+            val pcmChunkChannel = audioSource.pcmChunkFlow.transform { pcmChunkResult ->
+                pcmChunkResult.onSuccess { pcmChunk ->
+                    emit(pcmChunk)
+                }.onFailure { cause ->
+                    close(cause)
                 }
             }.produceIn(this)
 
-            var lastTimestampPosition = 0.0
+            var lastTimestampSec = 0.0
+
+            val inputBufferIdChannel = Channel<Int>(Channel.UNLIMITED)
+            inputBufferIdChannel.receiveAsFlow().onEach { bufferId ->
+                codec.getInputBuffer(bufferId)?.let { inputBuffer ->
+                    val pcmChunk = pcmChunkChannel.receive()
+                    inputBuffer.put(pcmChunk)
+                    codec.queueInputBuffer(
+                        bufferId,
+                        0,
+                        pcmChunk.size,
+                        (lastTimestampSec * 1_000_000).roundToLong(),
+                        0
+                    )
+                    lastTimestampSec += audioSourceParams.chunkSizeInSeconds
+                }
+            }.launchIn(this)
 
             val callback = object : MediaCodec.Callback() {
                 private val callbackTag = "MediaCodec.Callback"
                 override fun onInputBufferAvailable(codec: MediaCodec, bufferId: Int) {
-                    if (bufferId >= 0) {
-                        launch {
-                            codec.getInputBuffer(bufferId)?.let { inputBuffer ->
-                                val pcmChunk = pcmChunkBufferedChannel.receive()
-                                inputBuffer.put(pcmChunk)
-                                codec.queueInputBuffer(
-                                    bufferId,
-                                    0,
-                                    pcmChunk.size,
-                                    (lastTimestampPosition * 1_000_000).roundToLong(),
-                                    0
-                                )
-                                lastTimestampPosition += audioSourceParams.chunkSizeInSeconds
-                            }
-                        }
-                    }
+                    if (bufferId >= 0) inputBufferIdChannel.trySendBlocking(bufferId)
                 }
 
                 override fun onOutputBufferAvailable(

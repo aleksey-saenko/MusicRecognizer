@@ -4,9 +4,11 @@ sealed class RecognitionResult {
 
     data class Success(val track: Track) : RecognitionResult()
 
-    class NoMatches(val recognitionTask: RecognitionTask) : RecognitionResult()
+    data class NoMatches(val recognitionTask: RecognitionTask) : RecognitionResult()
 
-    class Error(
+    data class ScheduledOffline(val recognitionTask: RecognitionTask) : RecognitionResult()
+
+    data class Error(
         val remoteError: RemoteRecognitionResult.Error,
         val recognitionTask: RecognitionTask
     ) : RecognitionResult()

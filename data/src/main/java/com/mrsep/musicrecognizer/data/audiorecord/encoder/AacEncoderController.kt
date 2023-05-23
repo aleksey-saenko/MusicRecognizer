@@ -1,8 +1,9 @@
 package com.mrsep.musicrecognizer.data.audiorecord.encoder
 
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordDispatcher
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingController
 import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingDataStrategy
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -11,7 +12,8 @@ import java.nio.ByteBuffer
 import javax.inject.Inject
 
 class AacEncoderController @Inject constructor(
-    private val aacEncoder: AacEncoder
+    private val aacEncoder: AacEncoder,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) : AudioRecordingController {
 
     override fun audioRecordingFlow(strategy: AudioRecordingDataStrategy) = flow {
@@ -52,7 +54,7 @@ class AacEncoderController @Inject constructor(
             }
 
     }
-        .flowOn(AudioRecordDispatcher)
+        .flowOn(defaultDispatcher)
 
     private suspend fun FlowCollector<Result<ByteArray>>.combineAndEmit(packets: List<ByteArray>) {
         val totalSize = packets.fold(0) { acc, array -> acc + array.size }

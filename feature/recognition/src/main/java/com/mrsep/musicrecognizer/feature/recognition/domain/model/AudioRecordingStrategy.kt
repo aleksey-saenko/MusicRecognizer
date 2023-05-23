@@ -25,7 +25,8 @@ import kotlin.time.Duration
 
 class AudioRecordingStrategy(
     val steps: List<Step>,
-    val sendTotalAtEnd: Boolean
+    val sendTotalAtEnd: Boolean,
+    val extraTryIndex: Int
 ) {
 
     /**
@@ -37,6 +38,9 @@ class AudioRecordingStrategy(
      * If true, the start time of the next recording will be counted from this splitter.
      */
 
+    val lastStepIndex = steps.lastIndex
+    val lastRecordingIndex = if (sendTotalAtEnd) lastStepIndex + 1 else lastStepIndex
+
     class Step(
         val timestamp: Duration,
         val splitter: Boolean
@@ -46,15 +50,17 @@ class AudioRecordingStrategy(
 
         private val steps = mutableListOf<Step>()
         private var sendTotalAtEnd = true
+        private var extraTryIndex = -1
 
         fun addStep(timestamp: Duration) = apply {
             steps.add(Step(timestamp, false))
         }
 
-        fun addSplitter() = apply {
+        fun addSplitter(startOfExtraTry: Boolean = false) = apply {
             steps.lastOrNull()?.let { lastStep ->
                 steps.removeLast()
                 steps.add(Step(lastStep.timestamp, true))
+                if (startOfExtraTry) extraTryIndex = steps.lastIndex
             }
         }
 
@@ -62,7 +68,11 @@ class AudioRecordingStrategy(
             sendTotalAtEnd = value
         }
 
-        fun build() = AudioRecordingStrategy(steps.toList(), sendTotalAtEnd)
+        fun build() = AudioRecordingStrategy(
+            steps = steps.toList(),
+            sendTotalAtEnd= sendTotalAtEnd,
+            extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
+        )
 
     }
 

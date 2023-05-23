@@ -18,17 +18,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 
 @Composable
-internal fun AnimatedVisibilityScope.BadConnectionShield(
+internal fun AnimatedVisibilityScope.ScheduledOfflineShield(
     modifier: Modifier = Modifier,
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
-    onRetryClick: () -> Unit,
     onNavigateToQueue: (enqueuedId: Int?) -> Unit
 ) {
     BaseShield(
@@ -36,19 +34,14 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_cloud_off_24),
+            painter = painterResource(UiR.drawable.baseline_playlist_add_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.no_internet_connection),
+            text = stringResource(StringsR.string.recognition_scheduled),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(top = 16.dp)
-        )
-        Text(
-            text = stringResource(StringsR.string.please_check_network_status),
-            textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
         RecognitionTaskNetworkMessage(
@@ -69,29 +62,6 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
                     Text(text = stringResource(StringsR.string.recognition_queue))
                 }
             }
-            FilledTonalButton(
-                onClick = onRetryClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(StringsR.string.retry))
-            }
         }
-    }
-}
-
-@Composable
-internal fun RecognitionTaskNetworkMessage(
-    recognitionTask: RecognitionTask,
-    modifier: Modifier = Modifier
-) {
-    if (recognitionTask is RecognitionTask.Created) {
-        RecognitionTaskMessageBase(
-            extraMessage = if (recognitionTask.launched) {
-                stringResource(R.string.auto_recognition_message_network)
-            } else {
-                stringResource(R.string.manual_recognition_message)
-            },
-            modifier = modifier
-        )
     }
 }

@@ -110,7 +110,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         return getAllFlow()
             .flatMapLatest { listEntities ->
                 if (listEntities.isEmpty()) {
-                    flow { emit(emptyList()) }
+                    flowOf(emptyList())
                 } else {
                     val listOfFlow = listEntities.map { entity ->
                         enqueuedWorkManager.getUniqueWorkInfoFlow(entity.id)

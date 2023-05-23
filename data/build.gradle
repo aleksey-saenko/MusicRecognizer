@@ -96,15 +96,16 @@ dependencies {
     implementation Libs.Paging3.Room
 
     //probe scarlet
-    implementation Libs.Scarlet.Main
-    implementation Libs.Scarlet.WebSocketOkHttp
-    implementation Libs.Scarlet.Lifecycle
-    implementation Libs.Scarlet.AdapterMoshi
-    implementation Libs.Scarlet.AdapterCoroutines
+//    implementation Libs.Scarlet.Main
+//    implementation Libs.Scarlet.WebSocketOkHttp
+//    implementation Libs.Scarlet.Lifecycle
+//    implementation Libs.Scarlet.AdapterMoshi
+//    implementation Libs.Scarlet.AdapterCoroutines
 
     implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Strings)
 
+    testImplementation Libs.JetBrains.CoroutinesTest
     testImplementation Libs.Test.JUnit
     androidTestImplementation Libs.AndroidTest.JUnitExt
     androidTestImplementation Libs.AndroidTest.EspressoCore

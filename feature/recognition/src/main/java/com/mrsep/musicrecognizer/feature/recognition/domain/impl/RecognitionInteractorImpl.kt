@@ -21,17 +21,19 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformWhile
+import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "RecognitionInteractorImplNew"
 
@@ -48,17 +50,39 @@ class RecognitionInteractorImpl @Inject constructor(
     override val screenRecognitionStatus get() = resultDelegator.screenState
     override val serviceRecognitionStatus get() = resultDelegator.serviceState
 
+    private val onlineStrategy = AudioRecordingStrategy.Builder()
+        .addStep(3_500.milliseconds)
+        .addStep(6_000.milliseconds)
+        .addStep(9_000.milliseconds)
+        .addSplitter(true)
+        .addStep(12_500.milliseconds)
+        .addStep(15_000.milliseconds)
+        .addStep(18_000.milliseconds)
+        .sendTotalAtEnd(true)
+        .build()
+
+    private val offlineStrategy = AudioRecordingStrategy.Builder()
+        .addStep(10.seconds)
+        .sendTotalAtEnd(false)
+        .build()
+
     private var recognitionJob: Job? = null
 
+    private fun launchRecognitionIfPreviousCompleted(
+        scope: CoroutineScope,
+        block: suspend CoroutineScope.() -> Unit
+    ) {
+        if (recognitionJob == null || recognitionJob?.isCompleted == true) {
+            recognitionJob = scope.launch(block = block).setCancellationHandler()
+        }
+    }
+
     override fun launchRecognition(scope: CoroutineScope) {
-        if (recognitionJob?.isCompleted == false) return
-        recognitionJob = scope.launch {
+        launchRecognitionIfPreviousCompleted(scope) {
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-
-            val fullRecordingChannel = Channel<ByteArray>(Channel.CONFLATED)
-            val eachRecordingChannel = Channel<ByteArray>(strategy.steps.size)
-
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
+
+            val eachRecordingChannel = Channel<ByteArray>(onlineStrategy.steps.size)
             val remoteResult = async {
                 recognitionService.recognize(
                     token = userPreferences.apiToken,
@@ -67,68 +91,48 @@ class RecognitionInteractorImpl @Inject constructor(
                 )
             }
 
-            val recordingJob: Deferred<RemoteRecognitionResult?> = async {
-                var recordingIndex = 0
-                recorderController.audioRecordingFlow(strategy)
-                    .transform { recordingResult ->
-                        recordingResult.onFailure { cause ->
-                            fullRecordingChannel.close(cause)
-                            emit(RemoteRecognitionResult.Error.BadRecording(cause))
-                        }.onSuccess { recording ->
-                            val isExtraTry = (recordingIndex >= extraTryStartIndex)
-                            when (recordingIndex) {
-                                in 0..strategy.steps.lastIndex -> {
-                                    eachRecordingChannel.send(recording)
-                                    resultDelegator.notify(RecognitionStatus.Recognizing(isExtraTry))
-                                    if (recordingIndex == strategy.steps.lastIndex && !strategy.sendTotalAtEnd) {
-                                        fullRecordingChannel.send(recording)
-                                    }
-                                }
-
-                                strategy.steps.lastIndex + 1 -> {
-                                    if (strategy.sendTotalAtEnd) {
-                                        fullRecordingChannel.send(recording)
-                                    }
-                                }
-
-                                else -> throw IllegalStateException(
-                                    "AudioRecorderController must not emit more than (steps.lastIndex + 1) records"
-                                )
+            // send each recording step to eachRecordingChannel, return full (last) recording or failure
+            val recordingAsync = async {
+                recorderController.audioRecordingFlow(onlineStrategy)
+                    .withIndex()
+                    .transformWhile { (index, result) ->
+                        result.onSuccess { recording ->
+                            val isExtraTry = (index >= onlineStrategy.extraTryIndex)
+                            if (index <= onlineStrategy.lastStepIndex) {
+                                eachRecordingChannel.send(recording)
+                                resultDelegator.notify(RecognitionStatus.Recognizing(isExtraTry))
                             }
-                            recordingIndex++
                         }
-                    }.firstOrNull()
-            }.apply {
-                invokeOnCompletion {
-                    fullRecordingChannel.close()
-                    eachRecordingChannel.close()
-                }
+                        if (result.isFailure || index == onlineStrategy.lastStepIndex) {
+                            eachRecordingChannel.close()
+                        }
+                        emit(result)
+                        result.isSuccess && index <= onlineStrategy.lastRecordingIndex
+                    }.last()
             }
 
-
             val result = select {
-                remoteResult.onAwait { remoteRecognitionResult ->
-                    remoteRecognitionResult
-                }
-                recordingJob.onAwait { badRecording ->
-                    badRecording?.let {
-                        remoteResult.cancelAndJoin()
-                        badRecording
+                remoteResult.onAwait { remoteRecognitionResult -> remoteRecognitionResult }
+                recordingAsync.onAwait { recordingResult: Result<ByteArray> ->
+                    recordingResult.exceptionOrNull()?.let { cause ->
+                        RemoteRecognitionResult.Error.BadRecording(cause)
                     } ?: remoteResult.await()
                 }
             }
 
             val recognitionResult = when (result) {
                 is RemoteRecognitionResult.Error.BadRecording -> {
-                    recordingJob.cancelAndJoin()
+                    // bad recording result can be sent by server or by recording job,
+                    // so we should stop both job manually
+                    remoteResult.cancelAndJoin()
+                    recordingAsync.cancelAndJoin()
                     RecognitionStatus.Done(RecognitionResult.Error(result, RecognitionTask.Ignored))
                 }
 
                 is RemoteRecognitionResult.Error.BadConnection -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.badConnection,
-                        fullRecordingChannel,
-                        recordingJob
+                        recordingAsync
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
@@ -136,8 +140,7 @@ class RecognitionInteractorImpl @Inject constructor(
                 is RemoteRecognitionResult.Error -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.anotherFailure,
-                        fullRecordingChannel,
-                        recordingJob
+                        recordingAsync
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
@@ -145,21 +148,20 @@ class RecognitionInteractorImpl @Inject constructor(
                 RemoteRecognitionResult.NoMatches -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.noMatches,
-                        fullRecordingChannel,
-                        recordingJob
+                        recordingAsync
                     )
                     RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
                 }
 
                 is RemoteRecognitionResult.Success -> {
-                    recordingJob.cancelAndJoin()
+                    recordingAsync.cancelAndJoin()
                     val newTrack =
                         trackRepository.insertOrReplaceSaveMetadata(result.track).first()
                     RecognitionStatus.Done(RecognitionResult.Success(newTrack))
                 }
             }
             resultDelegator.notify(recognitionResult)
-        }.setCancellationHandler()
+        }
     }
 
     private suspend fun enqueueRecognition(
@@ -171,45 +173,46 @@ class RecognitionInteractorImpl @Inject constructor(
             launch
         )?.let { enqueuedId ->
             RecognitionTask.Created(enqueuedId, launch)
-        } ?: RecognitionTask.Error
+        } ?: RecognitionTask.Error()
     }
 
+    // depending on the selected policy, waits for a full recording and creates a RecognitionTask
+    // or cancels the recording job
     private suspend fun handleEnqueuedRecognition(
         scheduleAction: ScheduleAction,
-        fullRecordingChannel: ReceiveChannel<ByteArray>,
-        recordingJob: Job
+        fullRecordingAsync: Deferred<Result<ByteArray>>
     ): RecognitionTask {
         val (saveEnqueued, launchEnqueued) = scheduleAction
         return if (saveEnqueued) {
             runCatching {
-                val fullRecord = fullRecordingChannel.receive()
+                val fullRecord = fullRecordingAsync.await().getOrThrow()
                 enqueueRecognition(fullRecord, launchEnqueued)
             }.getOrElse { cause ->
-                RecognitionTask.Error
+                RecognitionTask.Error(cause)
             }
         } else {
-            recordingJob.cancelAndJoin()
+            fullRecordingAsync.cancelAndJoin()
             RecognitionTask.Ignored
         }
     }
 
-    private suspend fun ReceiveChannel<ByteArray>.wrappedOrBadRecordingResult(
-        wrapper: suspend (ByteArray) -> RecognitionResult
-    ): RecognitionResult {
-        return runCatching {
-            val fullRecord = receive()
-            if (fullRecord.isEmpty()) throw IllegalStateException("Audio recording must not be empty")
-            wrapper(fullRecord)
-        }.getOrElse { cause ->
-            RecognitionResult.Error(
-                RemoteRecognitionResult.Error.BadRecording(cause),
-                RecognitionTask.Ignored
-            )
-        }
-    }
-
     override fun launchOfflineRecognition(scope: CoroutineScope) {
-        TODO("Not yet implemented")
+        launchRecognitionIfPreviousCompleted(scope) {
+            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            val fullRecording = recorderController.audioRecordingFlow(offlineStrategy).firstOrNull()
+                ?: Result.failure(IllegalStateException("Empty audio recording flow"))
+            fullRecording.onSuccess { recording ->
+                val task = enqueueRecognition(recording, true)
+                val result = RecognitionResult.ScheduledOffline(task)
+                resultDelegator.notify(RecognitionStatus.Done(result))
+            }.onFailure { cause ->
+                val error = RecognitionResult.Error(
+                    RemoteRecognitionResult.Error.BadRecording(cause),
+                    RecognitionTask.Ignored
+                )
+                resultDelegator.notify(RecognitionStatus.Done(error))
+            }
+        }
     }
 
     override fun cancelAndResetStatus() {
@@ -223,28 +226,9 @@ class RecognitionInteractorImpl @Inject constructor(
     private fun Job.setCancellationHandler() = apply {
         invokeOnCompletion { cause ->
             when (cause) {
-                is CancellationException -> {
-//                    recognitionJob = null
-                    resultDelegator.notify(RecognitionStatus.Ready)
-                }
+                is CancellationException -> resultDelegator.notify(RecognitionStatus.Ready)
             }
         }
-    }
-
-
-    companion object {
-        private const val extraTryStartIndex = 2
-
-        private val strategy = AudioRecordingStrategy.Builder()
-            .addStep(3_500.milliseconds)
-            .addStep(6_000.milliseconds)
-            .addStep(9_000.milliseconds)
-            .addSplitter()
-            .addStep(12_500.milliseconds)
-            .addStep(15_000.milliseconds)
-            .addStep(18_000.milliseconds)
-            .sendTotalAtEnd(true)
-            .build()
     }
 
 }

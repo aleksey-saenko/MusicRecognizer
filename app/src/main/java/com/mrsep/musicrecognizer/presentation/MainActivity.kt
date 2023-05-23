@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition {
-            viewModel.uiStateStream.value is MainActivityUiState.Loading
+            viewModel.isLoadingState()
         }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupApplicationWithPreferences()

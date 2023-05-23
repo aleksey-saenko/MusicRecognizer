@@ -16,6 +16,7 @@ import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
@@ -24,8 +25,11 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognit
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -44,8 +48,10 @@ internal class NotificationService : Service() {
 
     @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
     @Inject lateinit var serviceRouter: NotificationServiceRouter
+    @Inject lateinit var networkMonitor: NetworkMonitor
 
     @Inject @IoDispatcher lateinit var ioDispatcher: CoroutineDispatcher
+    private lateinit var isOffline: StateFlow<Boolean>
 
     private val actionReceiver = ActionBroadcastReceiver()
     private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
@@ -73,6 +79,11 @@ internal class NotificationService : Service() {
                 addAction(DISMISS_ACTION)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+        isOffline = networkMonitor.isOffline.stateIn(
+            scope = serviceScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false
         )
         recognitionState.onEach { status ->
             handleRecognitionStatus(status)
@@ -182,6 +193,15 @@ internal class NotificationService : Service() {
 
                             notifyReadyAsStatus()
                         }
+                    }
+
+                    is RecognitionResult.ScheduledOffline -> {
+                        resultNotificationBuilder()
+                            .setContentTitle(getString(StringsR.string.recognition_scheduled))
+                            .addOptionalQueueButton(status.result.recognitionTask)
+                            .buildAndNotifyAsResult()
+
+                        notifyReadyAsStatus()
                     }
 
                     is RecognitionResult.NoMatches -> {
@@ -314,7 +334,7 @@ internal class NotificationService : Service() {
                 createQueueDeepLinkIntent()
             )
 
-            RecognitionTask.Error,
+            is RecognitionTask.Error,
             RecognitionTask.Ignored -> this
         }
 
@@ -371,7 +391,11 @@ internal class NotificationService : Service() {
         if (recognitionState.value is RecognitionStatus.Recognizing) {
             recognitionInteractor.cancelAndResetStatus()
         } else {
-            recognitionInteractor.launchRecognition(serviceScope)
+            if (isOffline.value) {
+                recognitionInteractor.launchOfflineRecognition(serviceScope)
+            } else {
+                recognitionInteractor.launchRecognition(serviceScope)
+            }
         }
     }
 

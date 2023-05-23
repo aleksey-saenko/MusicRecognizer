@@ -6,23 +6,32 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.*
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class RecognitionViewModel @Inject constructor(
     private val recognitionInteractor: ScreenRecognitionInteractor,
-    private val recorderController: AudioRecorderController
+    private val recorderController: AudioRecorderController,
+    networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     val recognitionState = recognitionInteractor.screenRecognitionStatus
 
+    val isOffline = networkMonitor.isOffline.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
+
     val maxAmplitudeFlow = recognitionState.flatMapLatest { state ->
         when (state) {
             is RecognitionStatus.Done,
-            RecognitionStatus.Ready -> flow { emit(0f) }
+            RecognitionStatus.Ready -> flowOf(0f)
 
             is RecognitionStatus.Recognizing -> recorderController.maxAmplitudeFlow
         }
@@ -32,7 +41,11 @@ internal class RecognitionViewModel @Inject constructor(
         if (recognitionState.value is RecognitionStatus.Recognizing) {
             recognitionInteractor.cancelAndResetStatus()
         } else {
-            recognitionInteractor.launchRecognition(viewModelScope)
+            if (isOffline.value) {
+                recognitionInteractor.launchOfflineRecognition(viewModelScope)
+            } else {
+                recognitionInteractor.launchRecognition(viewModelScope)
+            }
         }
     }
 

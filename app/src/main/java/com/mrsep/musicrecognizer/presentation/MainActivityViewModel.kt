@@ -23,6 +23,8 @@ class MainActivityViewModel @Inject constructor(
             initialValue = MainActivityUiState.Loading
         )
 
+    fun isLoadingState() = uiStateStream.value is MainActivityUiState.Loading
+
 }
 
 sealed interface MainActivityUiState {

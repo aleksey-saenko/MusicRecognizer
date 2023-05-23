@@ -27,4 +27,7 @@ interface AdapterModule {
     @Binds
     fun bindRecorderController(implementation: AdapterRecorderController): AudioRecorderController
 
+    @Binds
+    fun bindNetworkMonitor(implementation: AdapterNetworkMonitor): NetworkMonitor
+
 }

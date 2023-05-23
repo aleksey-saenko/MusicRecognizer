@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
@@ -43,57 +44,61 @@ internal fun QueueScreen(
     onBackPressed: () -> Unit,
     onNavigateToTrackScreen: (trackMbId: String) -> Unit
 ) {
-    val enqueuedWithStatusList by viewModel.enqueuedRecognitionUiFlow.collectAsStateWithLifecycle()
-    val playerStatus by viewModel.playerStatusFlow.collectAsStateWithLifecycle(PlayerStatus.Idle)
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val screenState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        QueueScreenTopBar(
-            topAppBarScrollBehavior = topBarBehaviour,
-            onBackPressed = onBackPressed
-        )
-        if (enqueuedWithStatusList.isEmpty()) {
-            EmptyQueueMessage(modifier = Modifier.fillMaxSize())
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+    when (val state = screenState) {
+        QueueScreenUiState.Loading -> LoadingStub()
+        is QueueScreenUiState.Success -> {
+            Column(
+                modifier = modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(
-                    count = enqueuedWithStatusList.size,
-                    key = { index -> enqueuedWithStatusList[index].id }
-                ) { index ->
-                    LazyColumnEnqueuedItem(
-                        enqueued = enqueuedWithStatusList[index],
-                        isPlaying = enqueuedWithStatusList[index].isPlaying(playerStatus),
-                        onDeleteEnqueued = { enqueuedId ->
-                            viewModel.deleteEnqueuedRecognition(enqueuedId)
-                        },
-                        onRenameEnqueued = { enqueuedId, newName ->
-                            viewModel.renameEnqueuedRecognition(enqueuedId, newName)
-                        },
-                        onStartPlayRecord = { enqueuedId ->
-                            viewModel.startPlayRecord(enqueuedId)
-                        },
-                        onStopPlayRecord = {
-                            viewModel.stopPlayer()
-                        },
-                        onEnqueueRecognition = { enqueuedId ->
-                            viewModel.enqueueRecognition(enqueuedId)
-                        },
-                        onCancelRecognition = { enqueuedId ->
-                            viewModel.cancelRecognition(enqueuedId)
-                        },
-                        onNavigateToTrackScreen = onNavigateToTrackScreen,
-                        modifier = Modifier.animateItemPlacement(
-                            tween(300)
-                        )
-                    )
+                QueueScreenTopBar(
+                    topAppBarScrollBehavior = topBarBehaviour,
+                    onBackPressed = onBackPressed
+                )
+                if (state.enqueuedList.isEmpty()) {
+                    EmptyQueueMessage(modifier = Modifier.fillMaxSize())
+                } else {
+                    LazyColumn(
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(
+                            count = state.enqueuedList.size,
+                            key = { index -> state.enqueuedList[index].id }
+                        ) { index ->
+                            LazyColumnEnqueuedItem(
+                                enqueued = state.enqueuedList[index],
+                                isPlaying = state.enqueuedList[index].isPlaying(state.playerStatus),
+                                onDeleteEnqueued = { enqueuedId ->
+                                    viewModel.deleteEnqueuedRecognition(enqueuedId)
+                                },
+                                onRenameEnqueued = { enqueuedId, newName ->
+                                    viewModel.renameEnqueuedRecognition(enqueuedId, newName)
+                                },
+                                onStartPlayRecord = { enqueuedId ->
+                                    viewModel.startPlayRecord(enqueuedId)
+                                },
+                                onStopPlayRecord = {
+                                    viewModel.stopPlayer()
+                                },
+                                onEnqueueRecognition = { enqueuedId ->
+                                    viewModel.enqueueRecognition(enqueuedId)
+                                },
+                                onCancelRecognition = { enqueuedId ->
+                                    viewModel.cancelRecognition(enqueuedId)
+                                },
+                                onNavigateToTrackScreen = onNavigateToTrackScreen,
+                                modifier = Modifier.animateItemPlacement(
+                                    tween(300)
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }

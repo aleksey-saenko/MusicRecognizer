@@ -82,11 +82,11 @@ dependencies {
     implementation Libs.DataStore.ProtobufJavalite
 
     //probe scarlet
-    implementation Libs.Scarlet.Main
-    implementation Libs.Scarlet.WebSocketOkHttp
-    implementation Libs.Scarlet.Lifecycle
-    implementation Libs.Scarlet.AdapterMoshi
-    implementation Libs.Scarlet.AdapterCoroutines
+//    implementation Libs.Scarlet.Main
+//    implementation Libs.Scarlet.WebSocketOkHttp
+//    implementation Libs.Scarlet.Lifecycle
+//    implementation Libs.Scarlet.AdapterMoshi
+//    implementation Libs.Scarlet.AdapterCoroutines
 
     implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Ui)

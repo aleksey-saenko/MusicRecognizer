@@ -31,8 +31,6 @@ internal class DeveloperViewModel @Inject constructor(
     private val audioSource: SoundSource,
     private val amplitudeSource: SoundAmplitudeSource,
     private val encoder: AacEncoder,
-//    private val auddWsService: AuddRecognitionWsService,
-//    private val auddScarletApi: AuddScarletApi,
     private val aacEncoderController: AacEncoderController,
     private val playerController: MediaPlayerController
 ) : ViewModel() {
@@ -95,33 +93,6 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun stopTestAudioChain() = _audioChainJob?.cancel()
 
-    //OKHTTP WEB SOCKET
-    private var _webSocketJob: Job? = null
-    fun startWebSocketConnection() {
-        val token = com.mrsep.musicrecognizer.data.BuildConfig.AUDD_TOKEN
-        val services = UserPreferencesProto.RequiredServicesProto.getDefaultInstance()
-        TODO("not implemented")
-//        _webSocketJob = viewModelScope.launch {
-////            auddWsService.startSession(token, services, recordingFlow, strategy.size).collect {
-////                println(it)
-////            }
-//        }
-    }
-    fun stopWebSocketConnection() = _webSocketJob?.cancel()
-
-    //SCARLET WEB SOCKET
-    private var _scarletJob: Job? = null
-    fun startScarletTest() {
-        val token = com.mrsep.musicrecognizer.data.BuildConfig.AUDD_TOKEN
-        val services = UserPreferencesProto.RequiredServicesProto.getDefaultInstance()
-        TODO("not implemented")
-//        _scarletJob = viewModelScope.launch {
-//            auddScarletApi.observeEvents().collect { webSocketEvent ->
-//                println("webSocketEvent=${webSocketEvent}")
-//            }
-//        }
-    }
-    fun stopScarletTest() = _scarletJob?.cancel()
 
 
 }

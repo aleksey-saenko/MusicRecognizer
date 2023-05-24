@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 }
 
 android {
@@ -30,24 +30,24 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion composeCompilerVersion
+        kotlinCompilerExtensionVersion libs.versions.androidxComposeCompiler.get()
     }
 }
 
 dependencies {
 
-    implementation platform(Libs.Compose.Bom)
-    androidTestImplementation platform(Libs.Compose.Bom)
+    implementation platform(libs.androidx.compose.bom)
+    androidTestImplementation platform(libs.androidx.compose.bom)
 
-    implementation Libs.Compose.Material3
-    implementation Libs.Compose.ToolingPreview
-    debugImplementation Libs.Compose.DebugTooling
-    androidTestImplementation Libs.Compose.AndroidTestJUnit
-    debugImplementation Libs.Compose.DebugManifest
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.ui.toolingPreview
+    implementation libs.androidx.navigation.compose
 
-    implementation Libs.Compose.Navigation
+    debugImplementation libs.androidx.compose.ui.tooling
+    debugImplementation libs.androidx.compose.ui.testManifest
+    androidTestImplementation libs.androidx.compose.ui.testJunit
 
-    implementation Libs.Coil.Core
+    implementation libs.coil.compose
 
     implementation project(Modules.Core.Strings)
 

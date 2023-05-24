@@ -293,7 +293,12 @@ private fun RecognitionStatus.isNotDone() = !isDone()
 private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
     return when (recognitionStatus) {
         RecognitionStatus.Ready -> stringResource(StringsR.string.tap_to_recognize)
-        is RecognitionStatus.Recognizing -> stringResource(StringsR.string.listening)
+        is RecognitionStatus.Recognizing -> {
+            if (recognitionStatus.extraTry)
+                stringResource(StringsR.string.trying_one_more_time)
+            else
+                stringResource(StringsR.string.listening)
+        }
         is RecognitionStatus.Done -> ""
 
     }

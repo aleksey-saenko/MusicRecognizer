@@ -2,109 +2,6 @@ buildscript {
     ext {
         targetAndroidSdk = 33
         minAndroidSdk = 26
-        composeCompilerVersion = "1.4.7"
-
-        lifecycle_version = "2.6.1"
-        lifecycle_viewmodel_compose_version = "2.6.1"
-        accompanist_version = "0.30.1"
-        protobuf_version = "3.23.0"
-        room_version = "2.5.1"
-        retrofit_version = "2.9.0"
-        moshi_version = "1.14.0"
-        hilt_version = "2.45"
-        paging_version = "3.1.1"
-//        scarlet_version = "0.1.12"
-        coroutines_version = "1.7.0"
-
-        Libs = [
-                Compose: [
-                        Bom: "androidx.compose:compose-bom:2023.05.01",
-                        Material3: "androidx.compose.material3:material3:1.1.0",
-                        ToolingPreview: "androidx.compose.ui:ui-tooling-preview",
-                        Navigation: "androidx.navigation:navigation-compose:2.5.3",
-                        HiltNavigation: "androidx.hilt:hilt-navigation-compose:1.0.0",
-
-                        DebugTooling: "androidx.compose.ui:ui-tooling",
-                        DebugManifest: "androidx.compose.ui:ui-test-manifest",
-                        AndroidTestJUnit: "androidx.compose.ui:ui-test-junit4",
-                ],
-                Android: [
-                        CoreKtx: "androidx.core:core-ktx:1.10.1",
-                        LifecycleRuntime: "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
-                        LifecycleLiveData: "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1", //converting WorkInfo (WorkManager) to flow
-//                        LifecycleService: "androidx.lifecycle:lifecycle-service:$lifecycle_version",
-                        ActivityCompose: "androidx.activity:activity-compose:1.7.1",
-                        LifecycleRuntimeCompose: "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version",
-                        LifecycleViewModelCompose: "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_viewmodel_compose_version",
-                        SplashScreenCore: "androidx.core:core-splashscreen:1.0.1",
-                ],
-                Accompanist: [
-                        SystemUiController: "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version",
-                        Permissions: "com.google.accompanist:accompanist-permissions:$accompanist_version",
-                ],
-                JetBrains: [
-                        CoroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version",
-                        CoroutinesTest: "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version",
-                        CollectionImmutable: "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5",
-                ],
-                DataStore: [
-                        Core: "androidx.datastore:datastore:1.0.0",
-                        ProtobufJavalite: "com.google.protobuf:protobuf-javalite:$protobuf_version",
-                ],
-                Room: [
-                        CoreKtx: "androidx.room:room-ktx:$room_version",
-                        Runtime: "androidx.room:room-runtime:$room_version",
-                        Compiler: "androidx.room:room-compiler:$room_version",
-                        Kapt: "androidx.room:room-compiler:$room_version",
-                ],
-                OkHttp: [
-                        Bom: "com.squareup.okhttp3:okhttp-bom:4.11.0",
-                        Core: "com.squareup.okhttp3:okhttp",
-                        LoggingInterceptor: "com.squareup.okhttp3:logging-interceptor",
-                ],
-                Retrofit: [
-                        Core: "com.squareup.retrofit2:retrofit:$retrofit_version",
-                        ConverterMoshi: "com.squareup.retrofit2:converter-moshi:$retrofit_version",
-                ],
-                Moshi: [
-                        Core: "com.squareup.moshi:moshi:$moshi_version",
-                        Adapters: "com.squareup.moshi:moshi-adapters:$moshi_version",
-                        Kapt: "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version",
-                ],
-//                Scarlet: [
-//                        Main: "com.tinder.scarlet:scarlet:$scarlet_version",
-//                        WebSocketOkHttp: "com.tinder.scarlet:websocket-okhttp:$scarlet_version",
-//                        Lifecycle: "com.tinder.scarlet:lifecycle-android:$scarlet_version",
-//                        AdapterMoshi: "com.tinder.scarlet:message-adapter-moshi:$scarlet_version",
-//                        AdapterCoroutines: "com.tinder.scarlet:stream-adapter-coroutines:$scarlet_version",
-//                ],
-                Hilt: [
-                        Core: "com.google.dagger:hilt-android:$hilt_version",
-                        Kapt: "com.google.dagger:hilt-compiler:$hilt_version",
-                ],
-                Coil: [
-                        Core: "io.coil-kt:coil-compose:2.3.0",
-                ],
-                WorkManager: [
-                        RuntimeKtx: "androidx.work:work-runtime-ktx:2.8.1",
-                        HiltWorkManager: "androidx.hilt:hilt-work:1.0.0",
-                        Kapt: "androidx.hilt:hilt-compiler:1.0.0",
-                ],
-                Paging3: [
-                        RuntimeKtx: "androidx.paging:paging-runtime-ktx:$paging_version",
-                        Common: "androidx.paging:paging-common:$paging_version",
-                        Compose: "androidx.paging:paging-compose:1.0.0-alpha19",
-                        Room: "androidx.room:room-paging:$room_version",
-                ],
-                Test: [
-                        JUnit: "junit:junit:4.13.2",
-                ],
-                AndroidTest: [
-                        JUnitExt: "androidx.test.ext:junit:1.1.5",
-                        EspressoCore: "androidx.test.espresso:espresso-core:3.5.1",
-                ],
-        ]
-
 
         Modules = [
                 Data: ":data",
@@ -122,7 +19,7 @@ buildscript {
                         Track: ":feature:track",
                         Onboarding: ":feature:onboarding",
                         DeveloperMode: ":feature:developer-mode",
-                ],
+                ]
         ]
     }
     repositories {
@@ -131,13 +28,14 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '8.0.1' apply false
-    id 'com.android.library' version '8.0.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.21' apply false
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.android.library apply false
+    alias libs.plugins.kotlin.android apply false
 
-    id 'org.jetbrains.kotlin.kapt' version '1.8.21' apply false
-    id 'com.google.dagger.hilt.android' version '2.45' apply false
-    id "com.google.protobuf" version '0.9.3' apply false
+    alias libs.plugins.ksp apply false
+    alias libs.plugins.kapt apply false
+    alias libs.plugins.hilt apply false
+    alias libs.plugins.protobuf apply false
 }
 
 //gradle 8.0 uses jdk 17 while kapt requires same as jvmTarget (1.8 in this project)

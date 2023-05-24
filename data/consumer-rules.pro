@@ -13,5 +13,5 @@
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
 
-# TODO() there is a problem with RemoteRecognitionDataResult when R8 full mode enabled, detete this stub after fix
--keep class com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult { *; }
+# when R8 full mode enabled, can be a problem with generic moshi class adapter
+#-keep class com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult { *; }

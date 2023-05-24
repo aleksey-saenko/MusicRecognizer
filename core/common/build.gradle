@@ -1,9 +1,9 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 
-    id 'org.jetbrains.kotlin.kapt'
-    id 'com.google.dagger.hilt.android'
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt
 }
 
 android {
@@ -33,16 +33,16 @@ android {
 
 dependencies {
 
-    implementation Libs.JetBrains.CoroutinesAndroid
+    implementation libs.kotlinx.coroutinesAndroid
 
-    implementation Libs.Compose.Navigation
+    implementation libs.androidx.navigation.compose
 
-    implementation Libs.Hilt.Core
-    kapt Libs.Hilt.Kapt
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 
-    testImplementation Libs.Test.JUnit
-    androidTestImplementation Libs.AndroidTest.JUnitExt
-    androidTestImplementation Libs.AndroidTest.EspressoCore
+    testImplementation libs.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.androidx.test.espresso.core
 
     implementation project(Modules.Core.Ui)
     implementation project(Modules.Core.Strings)

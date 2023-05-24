@@ -1,10 +1,11 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 
-    id 'org.jetbrains.kotlin.kapt'
-    id 'com.google.dagger.hilt.android'
-    id 'com.google.protobuf'
+    alias libs.plugins.ksp
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt
+    alias libs.plugins.protobuf
 }
 
 android {
@@ -26,10 +27,8 @@ android {
         buildConfigField "boolean", "LOG_DEBUG_MODE", "false"
     }
 
-    kapt {
-        arguments {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     buildTypes {
@@ -63,58 +62,51 @@ kapt {
 
 dependencies {
 
-    implementation Libs.JetBrains.CoroutinesAndroid
-    implementation Libs.JetBrains.CollectionImmutable
+    implementation libs.kotlinx.coroutinesAndroid
+    implementation libs.kotlinx.collectionImmutable
 
-    implementation Libs.DataStore.Core
-    implementation Libs.DataStore.ProtobufJavalite
+    implementation libs.androidx.datastoreCore
+    implementation libs.protobuf.javalite
 
-    implementation Libs.Hilt.Core
-    kapt Libs.Hilt.Kapt
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 
-    implementation Libs.Room.CoreKtx
-    implementation Libs.Room.Runtime
-    annotationProcessor Libs.Room.Compiler
-    kapt Libs.Room.Kapt
+    implementation libs.room.ktx
+    implementation libs.room.runtime
+    implementation libs.room.paging3
+    ksp libs.room.compiler
 
-    implementation platform(Libs.OkHttp.Bom)
-    implementation Libs.OkHttp.Core
-    implementation Libs.OkHttp.LoggingInterceptor
-    implementation Libs.Retrofit.Core
-    implementation Libs.Retrofit.ConverterMoshi
+    implementation platform(libs.okhttp.bom)
+    implementation libs.okhttp.core
+    implementation libs.okhttp.loggingInterceptor
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.moshi
 
-    implementation Libs.Moshi.Core
-    implementation Libs.Moshi.Adapters
-    kapt Libs.Moshi.Kapt
+    implementation libs.moshi.core
+    implementation libs.moshi.adapters
+    ksp libs.moshi.codegen
 
-    implementation Libs.WorkManager.RuntimeKtx
-    implementation Libs.WorkManager.HiltWorkManager
-    implementation Libs.Android.LifecycleLiveData
-    kapt Libs.WorkManager.Kapt
+    implementation libs.androidx.workKtx
+    implementation libs.androidx.lifecycle.livedataKtx
+    implementation libs.hilt.ext.work
+    kapt libs.hilt.ext.compiler
 
-    implementation Libs.Paging3.RuntimeKtx
-    implementation Libs.Paging3.Room
+    implementation libs.androidx.paging3.runtimeKtx
 
-    //probe scarlet
-//    implementation Libs.Scarlet.Main
-//    implementation Libs.Scarlet.WebSocketOkHttp
-//    implementation Libs.Scarlet.Lifecycle
-//    implementation Libs.Scarlet.AdapterMoshi
-//    implementation Libs.Scarlet.AdapterCoroutines
+    testImplementation libs.junit4
+    testImplementation libs.kotlinx.coroutinesTest
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.androidx.test.espresso.core
+
 
     implementation project(Modules.Core.Common)
     implementation project(Modules.Core.Strings)
-
-    testImplementation Libs.JetBrains.CoroutinesTest
-    testImplementation Libs.Test.JUnit
-    androidTestImplementation Libs.AndroidTest.JUnitExt
-    androidTestImplementation Libs.AndroidTest.EspressoCore
 
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:$protobuf_version"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobufJavalite.get()}"
     }
 
     // Generates the java Protobuf-lite code for the Protobufs in this project. See

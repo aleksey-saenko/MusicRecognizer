@@ -1,10 +1,9 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.android.application
+    alias libs.plugins.kotlin.android
 
-    id 'org.jetbrains.kotlin.kapt'
-    id 'com.google.dagger.hilt.android'
-
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt
 }
 
 android {
@@ -63,7 +62,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion composeCompilerVersion
+        kotlinCompilerExtensionVersion libs.versions.androidxComposeCompiler.get()
     }
     packagingOptions {
         resources {
@@ -83,46 +82,47 @@ hilt {
 
 dependencies {
 
-    implementation platform(Libs.Compose.Bom)
-    androidTestImplementation platform(Libs.Compose.Bom)
+    implementation platform(libs.androidx.compose.bom)
+    androidTestImplementation platform(libs.androidx.compose.bom)
 
-    implementation Libs.Compose.Material3
-    implementation Libs.Compose.ToolingPreview
-    debugImplementation Libs.Compose.DebugTooling
-    androidTestImplementation Libs.Compose.AndroidTestJUnit
-    debugImplementation Libs.Compose.DebugManifest
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.ui.toolingPreview
+    implementation libs.androidx.navigation.compose
+    implementation libs.androidx.hilt.navigation.compose
 
-    implementation Libs.Compose.Navigation
-    implementation Libs.Compose.HiltNavigation
+    debugImplementation libs.androidx.compose.ui.tooling
+    debugImplementation libs.androidx.compose.ui.testManifest
+    androidTestImplementation libs.androidx.compose.ui.testJunit
 
-    implementation Libs.Android.CoreKtx
-    implementation Libs.Android.LifecycleRuntime
-    implementation Libs.Android.ActivityCompose
-    implementation Libs.Android.LifecycleRuntimeCompose
-    implementation Libs.Android.LifecycleViewModelCompose
-    implementation Libs.Android.SplashScreenCore
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.core.splashscreen
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.lifecycle.runtimeKtx
+    implementation libs.androidx.lifecycle.runtime.compose
+    implementation libs.androidx.lifecycle.viewmodel.compose
 
-    testImplementation Libs.Test.JUnit
-    androidTestImplementation Libs.AndroidTest.JUnitExt
-    androidTestImplementation Libs.AndroidTest.EspressoCore
+    implementation libs.accompanist.systemuicontroller
 
-    implementation Libs.Accompanist.SystemUiController
+    implementation libs.kotlinx.coroutinesAndroid
+    implementation libs.kotlinx.collectionImmutable
 
-    implementation Libs.JetBrains.CoroutinesAndroid
-    implementation Libs.JetBrains.CollectionImmutable
+    // FIXME: should be deleted when proto model will be replaced by data model in data module
+    implementation libs.androidx.datastoreCore
+    implementation libs.protobuf.javalite
 
-    implementation Libs.DataStore.Core // FIXME should be deleted when proto model will be replaced by data model in module data
-    implementation Libs.DataStore.ProtobufJavalite
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 
-    implementation Libs.Hilt.Core
-    kapt Libs.Hilt.Kapt
+    implementation libs.coil.compose
+    implementation libs.androidx.paging3.common
 
-    implementation Libs.Coil.Core
-    implementation Libs.Paging3.Common
+    implementation libs.androidx.workKtx
+    implementation libs.hilt.ext.work
+    kapt libs.hilt.ext.compiler
 
-    implementation Libs.WorkManager.RuntimeKtx
-    implementation Libs.WorkManager.HiltWorkManager
-    kapt Libs.WorkManager.Kapt
+    testImplementation libs.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.androidx.test.espresso.core
 
 
     implementation project(Modules.Data)

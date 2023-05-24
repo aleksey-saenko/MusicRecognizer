@@ -6,7 +6,7 @@
     <string name="new_recognition">New recognition</string>
     <string name="listening">Listening</string>
     <string name="listening_with_ellipsis">Listening…</string>
-    <string name="trying_one_more_time">Trying one more time…</string>
+    <string name="trying_one_more_time">Trying one more time</string>
     <string name="listening_with_last_try">Listening… The last try…</string>
     <string name="recognizing">Recognizing</string>
     <string name="home">Home</string>

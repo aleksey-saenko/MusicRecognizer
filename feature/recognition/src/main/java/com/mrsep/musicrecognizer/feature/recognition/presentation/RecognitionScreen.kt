@@ -57,17 +57,27 @@ internal fun RecognitionScreen(
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
+//    val lifecycle = LocalLifecycleOwner.current.lifecycle
+//    DisposableEffect(Unit) {
+//        val observer = LifecycleEventObserver { source, event -> Log.d("2505", event.name) }
+//        lifecycle.addObserver(observer)
+//        onDispose {
+//            lifecycle.removeObserver(observer)
+//        }
+//
+//    }
+
 //    LaunchedEffect(
 //        key1 = recognizeStatus,
 //        block = { Log.d("screen", recognizeStatus.javaClass.simpleName) }
 //    )
 
     // permission logic block
-    var firstAsked by rememberSaveable { mutableStateOf(true) }
+    var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
     var scheduledJob: Job? by remember { mutableStateOf(null) }
     var permissionDialogVisible by rememberSaveable { mutableStateOf(false) }
     val recorderPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO)
-    val canShowPermissionRequest = recorderPermissionState.status.shouldShowRationale || firstAsked
+    val canShowPermissionRequest = recorderPermissionState.status.shouldShowRationale || isFirstTimeRequest
     val isPermissionBlocked =
         !(recorderPermissionState.status.isGranted || canShowPermissionRequest)
     if (permissionDialogVisible) {
@@ -95,7 +105,7 @@ internal fun RecognitionScreen(
                     if (recorderPermissionState.status.isGranted) {
                         viewModel.recognizeTap()
                     } else if (canShowPermissionRequest) {
-                        firstAsked = false
+                        isFirstTimeRequest = false
                         recorderPermissionState.launchPermissionRequest()
                         scheduledJob?.cancel()
                         scheduledJob = snapshotFlow { recorderPermissionState.status.isGranted }

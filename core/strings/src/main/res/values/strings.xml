@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">TuneSurfer</string>
     <string name="tap_to_recognize">Tap to recognize</string>
+    <string name="tap_to_recognize_the_song">Tap to recognize the song</string>
+    <string name="tap_to_schedule_song_recognition">Tap to schedule a song recognition</string>
     <string name="recognize">Recognize</string>
     <string name="new_recognition">New recognition</string>
     <string name="listening">Listening</string>
@@ -146,6 +148,8 @@
     <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
     <string name="recognition_scheduled">Recognition scheduled</string>
     <string name="offline_mode">Offline mode</string>
+    <string name="allow_the_app_to_access_the_microphone">Allow the app to access the microphone</string>
+    <string name="notification_service_initializing">Notification service is initializing</string>
 
 
 </resources>

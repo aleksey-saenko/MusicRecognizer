@@ -1,13 +1,19 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.service
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +22,7 @@ import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.feature.recognition.NotificationServiceActivity
 import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
@@ -41,6 +48,7 @@ private const val SERVICE_TAG = "NotificationService"
  * https://issuetracker.google.com/issues/36961721
  * https://developer.android.com/guide/components/activities/background-starts
  * https://developer.android.com/about/versions/12/behavior-changes-12#notification-trampolines
+ * https://developer.android.com/guide/components/foreground-services#bg-access-restrictions
  */
 
 @AndroidEntryPoint
@@ -49,57 +57,79 @@ internal class NotificationService : Service() {
     @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
     @Inject lateinit var serviceRouter: NotificationServiceRouter
     @Inject lateinit var networkMonitor: NetworkMonitor
-
     @Inject @IoDispatcher lateinit var ioDispatcher: CoroutineDispatcher
-    private lateinit var isOffline: StateFlow<Boolean>
 
     private val actionReceiver = ActionBroadcastReceiver()
     private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
     private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
 
+    private lateinit var isOffline: StateFlow<Boolean>
     private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
+    // can be used to design background startup behaviour, not used now
+    private var microphoneRestricted = true
 
     override fun onBind(intent: Intent?) = null
 
     override fun onCreate() {
         Log.d(SERVICE_TAG, "onCreate")
-        super.onCreate()
+        super.onCreate() // required by hilt injection
         createStatusNotificationChannel()
         createResultNotificationChannel()
         val initialNotification = statusNotificationBuilder()
-            .setContentTitle(getString(StringsR.string.tap_to_recognize))
-            .addRecognizeButton().addRecognizeIntent().build()
-        startForeground(STATUS_NOTIFICATION_ID, initialNotification)
+            .setContentTitle(getString(StringsR.string.notification_service_initializing))
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            startForeground(
+                STATUS_NOTIFICATION_ID,
+                initialNotification,
+                FOREGROUND_SERVICE_TYPE_MICROPHONE
+            )
+        } else {
+            startForeground(STATUS_NOTIFICATION_ID, initialNotification)
+        }
+
         ContextCompat.registerReceiver(
             this,
             actionReceiver,
             IntentFilter().apply {
                 addAction(RECOGNIZE_ACTION)
-                addAction(CANCEL_ACTION)
-                addAction(DISMISS_ACTION)
+                addAction(CANCEL_RECOGNITION_ACTION)
+                addAction(DISMISS_STATUS_ACTION)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
+
         isOffline = networkMonitor.isOffline.stateIn(
             scope = serviceScope,
             started = SharingStarted.Eagerly,
             initialValue = false
         )
+
+        isOffline.onEach { offline ->
+            if (recognitionState.value is RecognitionStatus.Ready) {
+                notifyReadyAsStatus(offline)
+            }
+        }.launchIn(serviceScope)
+
         recognitionState.onEach { status ->
             handleRecognitionStatus(status)
         }.launchIn(serviceScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         Log.d(SERVICE_TAG, "onStartCommand: flags=$flags, startId=$startId")
+        intent?.run {
+            microphoneRestricted = getBooleanExtra(KEY_BACKGROUND_LAUNCH, true)
+        }
         return START_STICKY
     }
 
     override fun onDestroy() {
         Log.d(SERVICE_TAG, "onDestroy")
-        serviceScope.cancel()
-        unregisterReceiver(actionReceiver)
         super.onDestroy()
+        unregisterReceiver(actionReceiver)
+        serviceScope.cancel()
     }
 
     private fun createStatusNotificationChannel() {
@@ -133,44 +163,35 @@ internal class NotificationService : Service() {
     private suspend fun handleRecognitionStatus(status: RecognitionStatus) {
         when (status) {
             RecognitionStatus.Ready -> {
-                statusNotificationBuilder()
-                    .setContentText(getString(StringsR.string.tap_to_recognize))
-                    .addRecognizeButton()
-                    .addRecognizeIntent()
-                    .buildAndNotifyAsStatus()
+                // cancel last final result notification if it exists
+                notificationManager.cancel(RESULT_NOTIFICATION_ID)
+                notifyReadyAsStatus(isOffline.value)
             }
 
             is RecognitionStatus.Recognizing -> {
+                // cancel notification about microphone permission if it exists
                 notificationManager.cancel(RESULT_NOTIFICATION_ID)
 
                 statusNotificationBuilder()
-                    .setContentTitle(getListeningMessage(status.extraTry))
+                    .setContentText(getListeningMessage(status.extraTry))
                     .addCancelButton()
                     .buildAndNotifyAsStatus()
             }
 
             is RecognitionStatus.Done -> {
-                resetStatusToReady()
-
-                when (status.result) {
+                val builder = when (status.result) {
                     is RecognitionResult.Error -> when (status.result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.no_internet_connection))
                                 .setContentText(getString(StringsR.string.please_check_network_status))
                                 .addOptionalQueueButton(status.result.recognitionTask)
-                                .buildAndNotifyAsResult()
-
-                            notifyReadyAsStatus()
                         }
 
                         is RemoteRecognitionResult.Error.BadRecording -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getString(StringsR.string.recording_error))
                                 .setContentText(getString(StringsR.string.notification_message_recording_error))
-                                .buildAndNotifyAsResult()
-
-                            notifyReadyAsStatus()
                         }
 
                         is RemoteRecognitionResult.Error.HttpError,
@@ -179,9 +200,6 @@ internal class NotificationService : Service() {
                                 .setContentTitle(getString(StringsR.string.internal_error))
                                 .setContentText(getString(StringsR.string.notification_message_unhandled_error))
                                 .addOptionalQueueButton(status.result.recognitionTask)
-                                .buildAndNotifyAsResult()
-
-                            notifyReadyAsStatus()
                         }
 
                         is RemoteRecognitionResult.Error.WrongToken -> {
@@ -189,9 +207,6 @@ internal class NotificationService : Service() {
                                 .setContentTitle(getWrongTokenTitle(status.result.remoteError.isLimitReached))
                                 .setContentText(getString(StringsR.string.notification_message_token_wrong_error))
                                 .addOptionalQueueButton(status.result.recognitionTask)
-                                .buildAndNotifyAsResult()
-
-                            notifyReadyAsStatus()
                         }
                     }
 
@@ -199,9 +214,6 @@ internal class NotificationService : Service() {
                         resultNotificationBuilder()
                             .setContentTitle(getString(StringsR.string.recognition_scheduled))
                             .addOptionalQueueButton(status.result.recognitionTask)
-                            .buildAndNotifyAsResult()
-
-                        notifyReadyAsStatus()
                     }
 
                     is RecognitionResult.NoMatches -> {
@@ -209,9 +221,6 @@ internal class NotificationService : Service() {
                             .setContentTitle(getString(StringsR.string.no_matches_found))
                             .setContentText(getString(StringsR.string.no_matches_message))
                             .addOptionalQueueButton(status.result.recognitionTask)
-                            .buildAndNotifyAsResult()
-
-                        notifyReadyAsStatus()
                     }
 
                     is RecognitionResult.Success -> {
@@ -221,11 +230,11 @@ internal class NotificationService : Service() {
                             .addBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
                             .addShareButton(status.result.track)
-                            .buildAndNotifyAsResult()
-
-                        notifyReadyAsStatus()
                     }
                 }
+                builder.addDismissIntent().buildAndNotifyAsResult()
+                notifyReadyAsStatus(isOffline.value)
+                // interactor still has final status, will be reset by notification dismiss
             }
         }
     }
@@ -255,12 +264,16 @@ internal class NotificationService : Service() {
 
     private fun Track.getSharedBody() = "$title / ${this.artistWithAlbumFormatted()}"
 
-    private fun notifyReadyAsStatus() {
-        statusNotificationBuilder()
-            .setContentText(getString(StringsR.string.tap_to_recognize))
-            .addRecognizeButton()
-            .addRecognizeIntent()
-            .buildAndNotifyAsStatus()
+
+    private fun createPendingIntent(intent: Intent): PendingIntent {
+        return TaskStackBuilder.create(this@NotificationService).run {
+            addNextIntentWithParentStack(intent)
+            // FLAG_UPDATE_CURRENT to update track mbId key on each result
+            getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
     }
 
     private fun statusNotificationBuilder(): NotificationCompat.Builder {
@@ -280,35 +293,68 @@ internal class NotificationService : Service() {
             .setSmallIcon(UiR.drawable.baseline_album_24)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
+            // service should detect dismiss action and reset interactor status
             .setAutoCancel(false)
             .setOngoing(false)
             .setCategory(Notification.CATEGORY_MESSAGE)
 //        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
     }
 
-    @SuppressLint("LaunchActivityFromNotification")
-    private fun NotificationCompat.Builder.addRecognizeIntent(): NotificationCompat.Builder {
-        return setContentIntent(
-            PendingIntent.getBroadcast(
-                this@NotificationService,
-                0,
-                Intent(RECOGNIZE_ACTION),
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        )
+    private fun notifyReadyAsStatus(isOffline: Boolean) {
+        val message = if (isOffline)
+            getString(StringsR.string.tap_to_schedule_song_recognition)
+        else
+            getString(StringsR.string.tap_to_recognize_the_song)
+        statusNotificationBuilder()
+            .setContentText(message)
+            .addRecognizeButtonAndIntent()
+            .buildAndNotifyAsStatus()
     }
 
-    private fun NotificationCompat.Builder.addRecognizeButton(): NotificationCompat.Builder {
+    @SuppressLint("LaunchActivityFromNotification")
+    private fun NotificationCompat.Builder.addAppPreferencesButtonAndIntent(): NotificationCompat.Builder {
+        val appSettingsIntent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null)
+        )
+        val pendingIntent = createPendingIntent(appSettingsIntent)
+        return addAction(
+            android.R.drawable.ic_menu_preferences,
+            getString(StringsR.string.open_settings),
+            pendingIntent
+        ).setContentIntent(pendingIntent)
+    }
+
+    @SuppressLint("LaunchActivityFromNotification")
+    private fun NotificationCompat.Builder.addRecognizeButtonAndIntent(): NotificationCompat.Builder {
+//        can be implemented by transparent activity to grant microphone access,
+//        but it leads to minimizing previous launched app
+
+//        val mediateActivityIntent = Intent(
+//            this@NotificationService,
+//            NotificationServiceActivity::class.java
+//        ).apply {
+//            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            action = RECOGNIZE_ACTION
+//        }
+//        val pendingIntent = createPendingIntent(mediateActivityIntent)
+//        return addAction(
+//            android.R.drawable.ic_menu_search,
+//            getString(StringsR.string.recognize),
+//            pendingIntent
+//        ).setContentIntent(pendingIntent)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this@NotificationService,
+            0,
+            Intent(RECOGNIZE_ACTION),
+            PendingIntent.FLAG_IMMUTABLE
+        )
         return addAction(
             android.R.drawable.ic_menu_search,
             getString(StringsR.string.recognize),
-            PendingIntent.getBroadcast(
-                this@NotificationService,
-                0,
-                Intent(RECOGNIZE_ACTION),
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        )
+            pendingIntent
+        ).setContentIntent(pendingIntent)
     }
 
     private fun NotificationCompat.Builder.addCancelButton(): NotificationCompat.Builder {
@@ -318,7 +364,7 @@ internal class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(CANCEL_ACTION),
+                Intent(CANCEL_RECOGNITION_ACTION),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -328,16 +374,19 @@ internal class NotificationService : Service() {
         task: RecognitionTask
     ): NotificationCompat.Builder {
         return when (task) {
-            is RecognitionTask.Created -> addAction(
-                android.R.drawable.ic_menu_preferences,
-                getString(StringsR.string.recognition_queue),
-                createQueueDeepLinkIntent()
-            )
+            is RecognitionTask.Created -> {
+                val deepLinkIntent = serviceRouter.getDeepLinkIntentToRecognitionQueue()
+                val pendingIntent = createPendingIntent(deepLinkIntent)
+                return addAction(
+                    android.R.drawable.ic_menu_preferences,
+                    getString(StringsR.string.recognition_queue),
+                    pendingIntent
+                )
+            }
 
             is RecognitionTask.Error,
             RecognitionTask.Ignored -> this
         }
-
     }
 
     private fun NotificationCompat.Builder.addDismissIntent(): NotificationCompat.Builder {
@@ -345,28 +394,10 @@ internal class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(DISMISS_ACTION),
+                Intent(DISMISS_STATUS_ACTION),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
-    }
-
-    private fun NotificationCompat.Builder.buildAndNotifyAsStatus() {
-        notificationManager.notify(STATUS_NOTIFICATION_ID, this.build())
-    }
-
-    private fun NotificationCompat.Builder.buildAndNotifyAsResult() {
-        notificationManager.notify(RESULT_NOTIFICATION_ID, this.build())
-    }
-
-    private suspend fun NotificationCompat.Builder.addBigPicture(url: String?): NotificationCompat.Builder {
-        return url?.let {
-            getCoilBitmapOrNull(url)?.let { bitmap ->
-                setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(bitmap)
-                )
-            }
-        } ?: this
     }
 
     private suspend fun getCoilBitmapOrNull(url: String): Bitmap? {
@@ -379,63 +410,28 @@ internal class NotificationService : Service() {
         }
     }
 
-    private fun resetStatusToReady() {
-        recognitionInteractor.cancelAndResetStatus()
-    }
-
-    private fun cancelRecognition() {
-        recognitionInteractor.cancelAndResetStatus()
-    }
-
-    private fun launchRecognizeOrCancel() {
-        if (recognitionState.value is RecognitionStatus.Recognizing) {
-            recognitionInteractor.cancelAndResetStatus()
-        } else {
-            if (isOffline.value) {
-                recognitionInteractor.launchOfflineRecognition(serviceScope)
-            } else {
-                recognitionInteractor.launchRecognition(serviceScope)
+    private suspend fun NotificationCompat.Builder.addBigPicture(url: String?): NotificationCompat.Builder {
+        return url?.let {
+            getCoilBitmapOrNull(url)?.let { bitmap ->
+                setStyle(
+                    NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+                )
             }
-        }
+        } ?: this
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(mbId: String): NotificationCompat.Builder {
-        val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(mbId)
-
-        val pendingIntent = TaskStackBuilder.create(this@NotificationService).run {
-            addNextIntentWithParentStack(deepLinkIntent)
-            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
+        Log.d("TA", "creating activity extra with mbId=$mbId")
+        val mediateActivityIntent = Intent(
+            this@NotificationService,
+            NotificationServiceActivity::class.java
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            action = SHOW_TRACK_ACTION
+            putExtra(MB_ID_EXTRA_KEY, mbId)
         }
+        val pendingIntent = createPendingIntent(mediateActivityIntent)
         return setContentIntent(pendingIntent)
-    }
-
-    private fun createQueueDeepLinkIntent(): PendingIntent {
-        val deepLinkIntent = serviceRouter.getDeepLinkIntentToRecognitionQueue()
-
-        return TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(deepLinkIntent)
-            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
-        }
-    }
-
-
-    private inner class ActionBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                RECOGNIZE_ACTION -> {
-                    launchRecognizeOrCancel()
-                }
-
-                CANCEL_ACTION -> {
-                    cancelRecognition()
-                }
-
-                DISMISS_ACTION -> {
-                    resetStatusToReady()
-                }
-
-            }
-        }
     }
 
     private fun NotificationCompat.Builder.addShareButton(track: Track): NotificationCompat.Builder {
@@ -456,24 +452,91 @@ internal class NotificationService : Service() {
         )
     }
 
+    private fun NotificationCompat.Builder.buildAndNotifyAsStatus() {
+        notificationManager.notify(STATUS_NOTIFICATION_ID, this.build())
+    }
+
+    private fun NotificationCompat.Builder.buildAndNotifyAsResult() {
+        notificationManager.notify(RESULT_NOTIFICATION_ID, this.build())
+    }
+
+    private fun cancelAndResetStatus() {
+        recognitionInteractor.cancelAndResetStatus()
+    }
+
+    private fun launchRecognizeOrCancel() {
+        if (recognitionState.value is RecognitionStatus.Recognizing) {
+            recognitionInteractor.cancelAndResetStatus()
+        } else {
+            if (isOffline.value) {
+                recognitionInteractor.launchOfflineRecognition(serviceScope)
+            } else {
+                recognitionInteractor.launchRecognition(serviceScope)
+            }
+        }
+    }
+
+    private inner class ActionBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                RECOGNIZE_ACTION -> {
+                    val permissionGranted = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.RECORD_AUDIO
+                    )
+                    if (permissionGranted == PackageManager.PERMISSION_GRANTED) {
+                        launchRecognizeOrCancel()
+                    } else {
+                        serviceScope.launch {
+                            // wait for the end of notification drawer closing animation
+                            // to see notification bubble
+                            val drawerAnimationDuration =
+                                resources.getInteger(android.R.integer.config_longAnimTime)
+                            delay(drawerAnimationDuration.toLong())
+                            resultNotificationBuilder()
+                                .setContentTitle(context.getString(StringsR.string.app_name))
+                                .setContentText(getString(StringsR.string.allow_the_app_to_access_the_microphone))
+                                .setAutoCancel(true)
+                                .addAppPreferencesButtonAndIntent()
+                                .buildAndNotifyAsResult()
+                        }
+                    }
+                }
+
+                CANCEL_RECOGNITION_ACTION -> {
+                    cancelAndResetStatus()
+                }
+
+                DISMISS_STATUS_ACTION -> {
+                    cancelAndResetStatus()
+                }
+
+            }
+        }
+    }
+
     companion object {
         private const val NOTIFICATION_STATUS_CHANNEL_ID = "music_recognizer_notification_ch_status"
         private const val NOTIFICATION_RESULT_CHANNEL_ID = "music_recognizer_notification_ch_result"
         private const val STATUS_NOTIFICATION_ID = 1
         private const val RESULT_NOTIFICATION_ID = 2
 
-        private const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.recognize"
-        private const val CANCEL_ACTION = "com.mrsep.musicrecognizer.action.cancel"
-        private const val DISMISS_ACTION = "com.mrsep.musicrecognizer.action.dismiss_notification"
+        const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.recognize"
+        const val CANCEL_RECOGNITION_ACTION = "com.mrsep.musicrecognizer.action.cancel_recognition"
+        const val DISMISS_STATUS_ACTION = "com.mrsep.musicrecognizer.action.dismiss_notification"
+        const val SHOW_TRACK_ACTION = "com.mrsep.musicrecognizer.action.show_track"
+
+        const val KEY_BACKGROUND_LAUNCH = "KEY_BACKGROUND_LAUNCH"
+
+        const val MB_ID_EXTRA_KEY = "KEY_MB_ID"
     }
 
 }
 
-fun Context.toggleNotificationService(shouldStart: Boolean) {
-    if (shouldStart) {
-        startForegroundService(Intent(this, NotificationService::class.java))
-    } else {
-        stopService(Intent(this, NotificationService::class.java))
+fun Context.toggleNotificationService(shouldStart: Boolean, backgroundLaunch: Boolean = false) {
+    val intent = Intent(this, NotificationService::class.java).apply {
+        putExtra(NotificationService.KEY_BACKGROUND_LAUNCH, backgroundLaunch)
     }
+    if (shouldStart) startForegroundService(intent) else stopService(intent)
 }
 

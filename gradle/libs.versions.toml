@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.30.1"
-androidGradlePlugin = "8.0.1"
+androidGradlePlugin = "8.0.2"
 androidxActivity = "1.7.1"
 androidxComposeBom = "2023.05.01"
 androidxComposeCompiler = "1.4.7"
@@ -32,6 +32,7 @@ protobufJavalite = "3.23.0"
 protobufPlugin = "0.9.3"
 retrofit = "2.9.0"
 room = "2.5.1"
+turbine = "0.13.0"
 
 [libraries]
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
@@ -84,6 +85,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-paging3 = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

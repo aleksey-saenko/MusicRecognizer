@@ -6,5 +6,4 @@
         <item name="android:windowBackground">@color/compose_background_light</item>
     </style>
 
-
 </resources>

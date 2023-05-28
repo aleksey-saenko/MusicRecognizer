@@ -5,9 +5,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-<!--    <uses-permission android:name="android.permission.VIBRATE" />-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<!--    Uncomment when migrating to API 34-->
+<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" /> -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--    <uses-permission android:name="android.permission.VIBRATE" />-->
 
     <application
         android:name=".MusicRecognizerApp"
@@ -19,6 +22,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicRecognizer"
         tools:targetApi="33">
+
+<!--    Disabled due to microphone restriction of foreground service that was launched from background-->
+        <receiver
+            android:name=".BootCompletedReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
@@ -29,29 +44,37 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="app" android:host="mrsep.musicrecognizer.com" />
+
+                <data
+                    android:host="mrsep.musicrecognizer.com"
+                    android:scheme="app" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".feature.recognition.NotificationServiceActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoDisplay" />
+
         <service
             android:name=".feature.recognition.presentation.service.NotificationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="microphone">
-        </service>
+            android:foregroundServiceType="microphone" />
 
         <!-- https://developer.android.com/guide/background/persistent/configuration/custom-configuration -->
-        <!-- If you want to disable android.startup completely. -->
+        <!-- Disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove" />
 
     </application>
 
-<!-- App intends to open links to music services -->
+    <!-- App intends to open links to music services -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />

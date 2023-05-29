@@ -23,20 +23,24 @@ class AdapterEnqueuedRepository @Inject constructor(
         return enqueuedDataRepository.getRecordById(enqueuedId)
     }
 
-    override suspend fun enqueueById(enqueuedId: Int) {
-        enqueuedDataRepository.enqueueById(enqueuedId)
+    override suspend fun enqueueById(vararg enqueuedId: Int) {
+        enqueuedDataRepository.enqueueById(*enqueuedId)
     }
 
-    override suspend fun cancelById(enqueuedId: Int) {
-        enqueuedDataRepository.cancelById(enqueuedId)
+    override suspend fun cancelById(vararg enqueuedId: Int) {
+        enqueuedDataRepository.cancelById(*enqueuedId)
     }
 
-    override suspend fun cancelAndDeleteById(enqueuedId: Int) {
-        enqueuedDataRepository.cancelAndDeleteById(enqueuedId)
+    override suspend fun cancelAndDeleteById(vararg enqueuedId: Int) {
+        enqueuedDataRepository.cancelAndDeleteById(*enqueuedId)
+    }
+
+    override suspend fun cancelAndDeleteAll() {
+        enqueuedDataRepository.cancelAndDeleteAll()
     }
 
     override fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionWithStatus>> {
-        return enqueuedDataRepository.getAllFlowWithStatus()
+        return enqueuedDataRepository.getFlowWithStatusAll()
             .map { list -> list.map { entityWithStatus -> enqueuedToDomainMapper.map(entityWithStatus) } }
     }
 

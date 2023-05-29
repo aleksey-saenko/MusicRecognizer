@@ -147,9 +147,15 @@
     <string name="empty_recognition_queue_message">No queued recognitions</string>
     <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
     <string name="recognition_scheduled">Recognition scheduled</string>
-    <string name="offline_mode">Offline mode</string>
+    <string name="offline_mode">Offline Mode</string>
     <string name="allow_the_app_to_access_the_microphone">Allow the app to access the microphone</string>
     <string name="notification_service_initializing">Notification service is initializing</string>
+    <string name="close_multi_selection_mode">Close multi selection mode</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="select_all">Select all</string>
+    <string name="cancel_selected">Cancel selected</string>
+    <string name="delete_selected">Delete selected</string>
+    <string name="queue">Queue</string>
 
 
 </resources>

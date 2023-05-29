@@ -20,8 +20,14 @@ interface EnqueuedRecognitionDao {
     @Query("SELECT record_file FROM enqueued_recognition WHERE id=(:id)")
     suspend fun getFileRecord(id: Int): File?
 
+    @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:id)")
+    suspend fun getFileRecords(id: IntArray): List<File>
+
     @Query("DELETE FROM enqueued_recognition WHERE id=(:id)")
     suspend fun deleteById(id: Int)
+
+    @Query("DELETE FROM enqueued_recognition WHERE id in (:id)")
+    suspend fun deleteByIds(id: IntArray)
 
     @Query("DELETE FROM enqueued_recognition")
     suspend fun deleteAll()
@@ -30,9 +36,9 @@ interface EnqueuedRecognitionDao {
     suspend fun getById(id: Int): EnqueuedRecognitionEntity?
 
     @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
-    fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?>
+    fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?>
 
     @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
-    fun getFlow(): Flow<List<EnqueuedRecognitionEntity>>
+    fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
 
 }

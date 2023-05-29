@@ -6,10 +6,6 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -310,32 +306,6 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
                 stringResource(StringsR.string.listening)
         }
         is RecognitionStatus.Done -> ""
-
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-private fun OfflineModePopup(
-    modifier: Modifier = Modifier,
-    visible: Boolean
-) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn() + scaleIn(),
-        exit = fadeOut() + scaleOut(),
-        modifier = modifier
-    ) {
-        Surface(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
-            shape = CircleShape,
-        ) {
-            Text(
-                text = stringResource(StringsR.string.offline_mode),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(24.dp)
-            )
-        }
 
     }
 }

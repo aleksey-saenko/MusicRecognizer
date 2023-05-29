@@ -33,19 +33,37 @@ internal class QueueScreenViewModel @Inject constructor(
             initialValue = QueueScreenUiState.Loading
         )
 
-    fun deleteEnqueuedRecognition(enqueuedId: Int) {
+    fun enqueueRecognition(vararg enqueuedId: Int) {
         viewModelScope.launch {
-            enqueuedRecognitionRepository.cancelAndDeleteById(enqueuedId)
+            enqueuedRecognitionRepository.enqueueById(*enqueuedId)
         }
     }
 
-    fun renameEnqueuedRecognition(enqueuedId: Int, newTitle: String) {
+    fun cancelRecognition(vararg enqueuedId: Int) {
+        viewModelScope.launch {
+            enqueuedRecognitionRepository.cancelById(*enqueuedId)
+        }
+    }
+
+    fun cancelAndDeleteRecognition(vararg enqueuedId: Int) {
+        viewModelScope.launch {
+            enqueuedRecognitionRepository.cancelAndDeleteById(*enqueuedId)
+        }
+    }
+
+    fun renameRecognition(enqueuedId: Int, newTitle: String) {
         viewModelScope.launch {
             enqueuedRecognitionRepository.updateTitle(enqueuedId, newTitle)
         }
     }
 
-    fun startPlayRecord(enqueuedId: Int) {
+    fun cancelAndDeleteRecognitionAll() {
+        viewModelScope.launch {
+            enqueuedRecognitionRepository.cancelAndDeleteAll()
+        }
+    }
+
+    fun startAudioPlayer(enqueuedId: Int) {
         viewModelScope.launch {
             enqueuedRecognitionRepository.getRecordById(enqueuedId)?.let { recordFile ->
                 playerController.start(recordFile)
@@ -53,21 +71,10 @@ internal class QueueScreenViewModel @Inject constructor(
         }
     }
 
-    fun stopPlayer() {
+    fun stopAudioPlayer() {
         playerController.stop()
     }
 
-    fun enqueueRecognition(enqueuedId: Int) {
-        viewModelScope.launch {
-            enqueuedRecognitionRepository.enqueueById(enqueuedId)
-        }
-    }
-
-    fun cancelRecognition(enqueuedId: Int) {
-        viewModelScope.launch {
-            enqueuedRecognitionRepository.cancelById(enqueuedId)
-        }
-    }
 
 }
 

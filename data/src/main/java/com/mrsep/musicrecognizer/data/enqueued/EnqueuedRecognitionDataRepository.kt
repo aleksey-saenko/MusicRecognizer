@@ -15,21 +15,23 @@ interface EnqueuedRecognitionDataRepository {
 
     suspend fun getRecordById(enqueuedId: Int): File?
 
-    suspend fun enqueueById(enqueuedId: Int)
+    suspend fun enqueueById(vararg enqueuedId: Int)
 
-    suspend fun cancelById(enqueuedId: Int)
+    suspend fun cancelById(vararg enqueuedId: Int)
 
-    suspend fun cancelAndDeleteById(enqueuedId: Int)
+    suspend fun cancelAndDeleteById(vararg enqueuedId: Int)
+
+    suspend fun cancelAndDeleteAll()
 
     suspend fun getById(id: Int): EnqueuedRecognitionEntity?
 
-    fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?>
+    fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?>
 
-    fun getAllFlow(): Flow<List<EnqueuedRecognitionEntity>>
+    fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
 
-    fun getUniqueFlowWithStatus(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?>
+    fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?>
 
-    fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionEntityWithStatus>>
+    fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionEntityWithStatus>>
 
 
 }

@@ -58,7 +58,7 @@ internal fun LibraryScreen(
             )
 //                DisposableEffect(Unit) { onDispose { searchWindowActive = false } }
         } else {
-            val topAppBarBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+            val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
             Column(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,7 +79,7 @@ internal fun LibraryScreen(
                     onFilterIconClick = { filterSheetActive = !filterSheetActive },
                     isLibraryEmpty = isLibraryEmpty,
                     isFilterApplied = isFilterApplied(uiState),
-                    topAppBarScrollBehavior = topAppBarBehavior
+                    topAppBarScrollBehavior = topBarBehaviour
                 )
                 uiStateTransition.AnimatedContent(
                     contentKey = { stateObject -> stateObject::class.simpleName },
@@ -122,7 +122,7 @@ internal fun LibraryScreen(
                                 trackList = state.trackList,
                                 onTrackClick = onTrackClick,
                                 modifier = Modifier.nestedScroll(
-                                    topAppBarBehavior.nestedScrollConnection
+                                    topBarBehaviour.nestedScrollConnection
                                 )
                             )
                             if (filterSheetActive) {

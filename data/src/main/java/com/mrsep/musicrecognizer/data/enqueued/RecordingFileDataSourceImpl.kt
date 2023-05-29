@@ -56,10 +56,20 @@ class RecordingFileDataSourceImpl @Inject constructor(
                     numTries++
                     delay(500L)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Record file deletion failed", e)
+                    Log.e(TAG, "Failed to delete recording file ${file.path}", e)
                 }
             }
             false
+        }
+    }
+
+    override suspend fun deleteAll(): Boolean {
+        return withContext(ioDispatcher) {
+            var allDeleted = true
+            File(recordsDirPath).listFiles()?.forEach { file ->
+                if (!delete(file)) allDeleted = false
+            }
+            allDeleted
         }
     }
 

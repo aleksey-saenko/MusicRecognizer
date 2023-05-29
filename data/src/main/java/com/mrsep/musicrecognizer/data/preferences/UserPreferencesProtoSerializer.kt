@@ -26,7 +26,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             )
             .setApiToken(BuildConfig.AUDD_TOKEN)
             .setOnboardingCompleted(true)
-            .setNotificationServiceEnabled(true)
+            .setNotificationServiceEnabled(false)
             .setDeveloperModeEnabled(true)
             .setSchedulePolicy(
                 UserPreferencesProto.SchedulePolicyProto.getDefaultInstance().toBuilder()

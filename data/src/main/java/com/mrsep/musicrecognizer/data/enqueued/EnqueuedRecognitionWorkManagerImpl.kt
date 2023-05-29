@@ -17,18 +17,27 @@ class EnqueuedRecognitionWorkManagerImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
 ) : EnqueuedRecognitionWorkDataManager {
     private val workManager get() = WorkManager.getInstance(appContext)
+
     private fun getUniqueWorkName(enqueuedId: Int) = UNIQUE_NAME_MASK.plus(enqueuedId)
 
-    override fun enqueueRecognitionWorker(enqueuedId: Int) {
-        workManager.enqueueUniqueWork(
-            getUniqueWorkName(enqueuedId),
-            ExistingWorkPolicy.REPLACE,
-            EnqueuedRecognitionWorker.getOneTimeWorkRequest(enqueuedId)
-        )
+    override fun enqueueRecognitionWorkers(vararg enqueuedId: Int) {
+        enqueuedId.forEach { id ->
+            workManager.enqueueUniqueWork(
+                getUniqueWorkName(id),
+                ExistingWorkPolicy.REPLACE,
+                EnqueuedRecognitionWorker.getOneTimeWorkRequest(id)
+            )
+        }
     }
 
-    override fun cancelRecognitionWorker(enqueuedId: Int) {
-        workManager.cancelUniqueWork(getUniqueWorkName(enqueuedId))
+    override fun cancelRecognitionWorkers(vararg enqueuedId: Int) {
+        enqueuedId.forEach { id ->
+            workManager.cancelUniqueWork(getUniqueWorkName(id))
+        }
+    }
+
+    override fun cancelAllRecognitionWorkers() {
+        workManager.cancelAllWorkByTag(EnqueuedRecognitionWorker.TAG)
     }
 
     override fun getUniqueWorkInfoFlow(enqueuedId: Int): Flow<EnqueuedRecognitionDataStatus> {

@@ -10,11 +10,13 @@ interface EnqueuedRecognitionRepository {
 
     suspend fun getRecordById(enqueuedId: Int): File?
 
-    suspend fun enqueueById(enqueuedId: Int)
+    suspend fun enqueueById(vararg enqueuedId: Int)
 
-    suspend fun cancelById(enqueuedId: Int)
+    suspend fun cancelById(vararg enqueuedId: Int)
 
-    suspend fun cancelAndDeleteById(enqueuedId: Int)
+    suspend fun cancelAndDeleteById(vararg enqueuedId: Int)
+
+    suspend fun cancelAndDeleteAll()
 
     fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionWithStatus>>
 

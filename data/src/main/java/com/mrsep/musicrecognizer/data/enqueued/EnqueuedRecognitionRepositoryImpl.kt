@@ -32,7 +32,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
                 )
                 val id = dao.insertOrReplace(enqueued).toInt()
                 if (launch) {
-                    enqueuedWorkManager.enqueueRecognitionWorker(id)
+                    enqueuedWorkManager.enqueueRecognitionWorkers(id)
                 }
                 id
             }
@@ -57,19 +57,28 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun enqueueById(enqueuedId: Int) {
-        enqueuedWorkManager.enqueueRecognitionWorker(enqueuedId)
+    override suspend fun enqueueById(vararg enqueuedId: Int) {
+        enqueuedWorkManager.enqueueRecognitionWorkers(*enqueuedId)
     }
 
-    override suspend fun cancelById(enqueuedId: Int) {
-        enqueuedWorkManager.cancelRecognitionWorker(enqueuedId)
+    override suspend fun cancelById(vararg enqueuedId: Int) {
+        enqueuedWorkManager.cancelRecognitionWorkers(*enqueuedId)
     }
 
-    override suspend fun cancelAndDeleteById(enqueuedId: Int) {
-        getById(enqueuedId)?.let { enqueued ->
-            enqueuedWorkManager.cancelRecognitionWorker(enqueuedId)
-            dao.deleteById(enqueuedId)
-            recordingFileDataSource.delete(enqueued.recordFile)
+    override suspend fun cancelAndDeleteById(vararg enqueuedId: Int) {
+        enqueuedWorkManager.cancelRecognitionWorkers(*enqueuedId)
+        withContext(ioDispatcher) {
+            val files = dao.getFileRecords(enqueuedId)
+            dao.deleteByIds(enqueuedId)
+            files.forEach { file -> recordingFileDataSource.delete(file) }
+        }
+    }
+
+    override suspend fun cancelAndDeleteAll() {
+        enqueuedWorkManager.cancelAllRecognitionWorkers()
+        withContext(ioDispatcher) {
+            recordingFileDataSource.deleteAll()
+            dao.deleteAll()
         }
     }
 
@@ -79,18 +88,18 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUniqueFlow(id: Int): Flow<EnqueuedRecognitionEntity?> {
-        return dao.getUniqueFlow(id)
+    override fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?> {
+        return dao.getFlowById(id)
             .flowOn(ioDispatcher)
     }
 
-    override fun getAllFlow(): Flow<List<EnqueuedRecognitionEntity>> {
-        return dao.getFlow()
+    override fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>> {
+        return dao.getFlowAll()
             .flowOn(ioDispatcher)
     }
 
-    override fun getUniqueFlowWithStatus(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?> {
-        return dao.getUniqueFlow(id)
+    override fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?> {
+        return dao.getFlowById(id)
             .combine(enqueuedWorkManager.getUniqueWorkInfoFlow(id)) { entity, status ->
                 entity?.let {
                     EnqueuedRecognitionEntityWithStatus(
@@ -106,8 +115,8 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionEntityWithStatus>> {
-        return getAllFlow()
+    override fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionEntityWithStatus>> {
+        return getFlowAll()
             .flatMapLatest { listEntities ->
                 if (listEntities.isEmpty()) {
                     flowOf(emptyList())
@@ -129,6 +138,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
             }
             .flowOn(ioDispatcher)
     }
+
 }
 
 

@@ -24,11 +24,11 @@ internal fun SuperButton(
         RippleAnimated(
             activated = activated,
 //            amplitudeFactor = amplitudeFactor,
-            modifier = Modifier.size(240.dp),
+            modifier = Modifier.size(256.dp),
             startOffset = 0.5f, //should be a bit less then buttonSize/rippleSize
             baseColor = MaterialTheme.colorScheme.primary,
             activatedColor = MaterialTheme.colorScheme.primary,
-            circlesCount = 9,
+            circlesCount = 7,
             animationSpeed = 12_000
         )
         AnimatedEnhancedButton(

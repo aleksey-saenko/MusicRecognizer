@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+enum class SoundLevel {
+    Silence, TooQuiet, Normal
+}
+
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class RecognitionViewModel @Inject constructor(

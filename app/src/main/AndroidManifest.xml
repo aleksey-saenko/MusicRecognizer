@@ -55,7 +55,7 @@
         </activity>
 
         <activity
-            android:name=".feature.recognition.NotificationServiceActivity"
+            android:name=".feature.recognition.presentation.service.NotificationServiceActivity"
             android:exported="false"
             android:theme="@android:style/Theme.NoDisplay" />
 

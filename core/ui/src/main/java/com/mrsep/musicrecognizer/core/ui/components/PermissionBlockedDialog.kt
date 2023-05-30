@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.recognition.presentation.components
+package com.mrsep.musicrecognizer.core.ui.components
 
 import android.content.Intent
 import android.net.Uri
@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
-internal fun DialogForOpeningAppSettings(
+fun PermissionBlockedDialog(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit
 ) {

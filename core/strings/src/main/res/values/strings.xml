@@ -133,7 +133,7 @@
     <string name="save_the_recording">Save the recording</string>
     <string name="ignore">Ignore</string>
     <string name="schedule_policy">Schedule policy</string>
-    <string name="schedule_policy_dialog_message">Set the default action to create a scheduled recognition for each type of unsuccessful result.</string>
+    <string name="schedule_policy_dialog_message">Set the default action to create a scheduled recognition for each type of unsuccessful result:</string>
     <string name="other_failures">Other failures</string>
     <string name="schedule_policy_pref_subtitle">Set schedule actions after unsuccessful recognitions</string>
     <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
@@ -147,7 +147,7 @@
     <string name="empty_recognition_queue_message">No queued recognitions</string>
     <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
     <string name="recognition_scheduled">Recognition scheduled</string>
-    <string name="offline_mode">Offline Mode</string>
+    <string name="offline_mode">Offline mode</string>
     <string name="allow_the_app_to_access_the_microphone">Allow the app to access the microphone</string>
     <string name="notification_service_initializing">Notification service is initializing</string>
     <string name="close_multi_selection_mode">Close multi selection mode</string>

@@ -5,12 +5,9 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.delay
 
 @Composable
 internal fun RippleAnimated(
@@ -42,26 +39,24 @@ internal fun RippleAnimated(
         targetValue = if (activated) 1.25f else 1f,
         animationSpec = tween(durationMillis = 2000)
     )
-    val circles = List(circlesCount) { remember { Animatable(initialValue = 0f) } }
 
-    circles.forEachIndexed { index, animatable ->
-        LaunchedEffect(Unit) {
-            delay((animationSpeed.toLong() / circlesCount) * (index + 1))
-            animatable.animateTo(
-                targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        durationMillis = animationSpeed,
-                        easing = LinearEasing
-                    ),
-                    repeatMode = RepeatMode.Restart,
-                    initialStartOffset = StartOffset(
-                        (animationSpeed * startOffset).toInt(),
-                        offsetType = StartOffsetType.FastForward
-                    )
+    val infiniteTransition = rememberInfiniteTransition()
+    val circles = List(circlesCount) { index ->
+        infiniteTransition.animateFloat(
+            initialValue = startOffset,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = animationSpeed,
+                    easing = LinearEasing
+                ),
+                repeatMode = RepeatMode.Restart,
+                initialStartOffset = StartOffset(
+                    offsetMillis = (animationSpeed / circlesCount) * (index + 1),
+                    offsetType = StartOffsetType.FastForward
                 )
             )
-        }
+        )
     }
 
     Canvas(

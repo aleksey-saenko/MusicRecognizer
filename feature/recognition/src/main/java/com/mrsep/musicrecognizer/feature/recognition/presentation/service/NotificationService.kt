@@ -22,7 +22,6 @@ import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.feature.recognition.NotificationServiceActivity
 import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult

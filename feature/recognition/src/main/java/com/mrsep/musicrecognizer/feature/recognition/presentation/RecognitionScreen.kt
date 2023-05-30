@@ -18,21 +18,16 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.mrsep.musicrecognizer.core.ui.components.PermissionBlockedDialog
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.presentation.components.*
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.NoMatchesShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.ScheduledOfflineShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.shields.WrongTokenShield
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.take
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 internal const val animationDurationButton = 600
@@ -47,192 +42,187 @@ internal fun RecognitionScreen(
     onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
     onNavigateToPreferencesScreen: () -> Unit
 ) {
-//    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
-//    val lifecycle = LocalLifecycleOwner.current.lifecycle
-//    DisposableEffect(Unit) {
-//        val observer = LifecycleEventObserver { source, event -> Log.d("2505", event.name) }
-//        lifecycle.addObserver(observer)
-//        onDispose {
-//            lifecycle.removeObserver(observer)
-//        }
-//
-//    }
-
-//    LaunchedEffect(
-//        key1 = recognizeStatus,
-//        block = { Log.d("screen", recognizeStatus.javaClass.simpleName) }
-//    )
-
-    // permission logic block
+    //region <permission handling block>
+    val recorderPermissionState = rememberPermissionState(
+        Manifest.permission.RECORD_AUDIO
+    ) { granted ->
+        if (granted) viewModel.recognizeTap()
+    }
     var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
-    var scheduledJob: Job? by remember { mutableStateOf(null) }
-    var permissionDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val recorderPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO)
-    val canShowPermissionRequest = recorderPermissionState.status.shouldShowRationale || isFirstTimeRequest
+    var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
+    val canShowPermissionRequest =
+        recorderPermissionState.status.shouldShowRationale || isFirstTimeRequest
     val isPermissionBlocked =
         !(recorderPermissionState.status.isGranted || canShowPermissionRequest)
-    if (permissionDialogVisible) {
-        scheduledJob?.cancel()
-        DialogForOpeningAppSettings(
-            onConfirmClick = { permissionDialogVisible = false },
-            onDismissClick = { permissionDialogVisible = false }
-        )
-    }
-    AnimatedVisibility(
-        visible = recognizeStatus.isNotDone(),
-        enter = enterTransitionButton,
-        exit = exitTransitionButton,
+    //endregion
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        if (permissionBlockedDialogVisible) PermissionBlockedDialog(
+            onConfirmClick = { permissionBlockedDialogVisible = false },
+            onDismissClick = { permissionBlockedDialogVisible = false }
+        )
+
+        AnimatedVisibility(
+            visible = recognizeStatus.isNotDone(),
+            enter = enterTransitionButton,
+            exit = exitTransitionButton,
         ) {
-            SuperButtonSection(
-                title = getButtonTitle(recognizeStatus),
-                onButtonClick = {
-                    if (recorderPermissionState.status.isGranted) {
-                        viewModel.recognizeTap()
-                    } else if (canShowPermissionRequest) {
-                        isFirstTimeRequest = false
-                        recorderPermissionState.launchPermissionRequest()
-                        scheduledJob?.cancel()
-                        scheduledJob = snapshotFlow { recorderPermissionState.status.isGranted }
-                            .filter { it }.take(1)
-                            .onEach { viewModel.recognizeTap() }
-                            .launchIn(scope)
-                    } else {
-                        permissionDialogVisible = true
-                    }
-                },
-                activated = recognizeStatus is RecognitionStatus.Recognizing,
-                amplitudeFactor = ampFlow,
-                permissionBlocked = isPermissionBlocked,
-                modifier = Modifier.padding(horizontal = 0.dp, vertical = 24.dp)
-            )
-            OfflineModePopup(
-                visible = isOffline,
-                modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
-            )
-        }
-    }
-
-    BackHandler(
-        enabled = recognizeStatus.isDone(),
-        onBack = viewModel::resetRecognitionResult
-    )
-    AnimatedContent(
-        targetState = recognizeStatus,
-        contentAlignment = Alignment.Center,
-        transitionSpec = transitionSpecShield
-    ) { thisStatus ->
-        when (thisStatus) {
-            is RecognitionStatus.Done -> when (thisStatus.result) {
-                is RecognitionResult.Error -> when (thisStatus.result.remoteError) {
-                    RemoteRecognitionResult.Error.BadConnection -> BadConnectionShield(
-                        recognitionTask = thisStatus.result.recognitionTask,
-                        onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = viewModel::recognizeTap,
-                        onNavigateToQueue = { enqueuedId ->
-                            viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+//                .verticalScroll(rememberScrollState())
+                ,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                SuperButtonSection(
+                    title = getButtonTitle(recognizeStatus),
+                    onButtonClick = {
+                        if (recorderPermissionState.status.isGranted) {
+                            viewModel.recognizeTap()
+                        } else if (canShowPermissionRequest) {
+                            recorderPermissionState.launchPermissionRequest()
+                            isFirstTimeRequest = false
+                        } else {
+                            permissionBlockedDialogVisible = true
                         }
-                    )
-
-                    is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
-                        title = stringResource(StringsR.string.recording_error),
-                        message = stringResource(StringsR.string.message_record_error),
-                        moreInfo = thisStatus.result.remoteError.cause.stackTraceToString(),
-                        recognitionTask = thisStatus.result.recognitionTask,
-                        onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = viewModel::recognizeTap,
-                        onNavigateToQueue = { enqueuedId ->
-                            viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
-                        }
-                    )
-
-                    is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
-                        title = stringResource(StringsR.string.bad_network_response),
-                        message = stringResource(StringsR.string.message_http_error),
-                        moreInfo = "Code: ${thisStatus.result.remoteError.code}\n" +
-                                "Message: ${thisStatus.result.remoteError.message}",
-                        recognitionTask = thisStatus.result.recognitionTask,
-                        onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = viewModel::recognizeTap,
-                        onNavigateToQueue = { enqueuedId ->
-                            viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
-                        }
-                    )
-
-                    is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
-                        title = stringResource(StringsR.string.internal_error),
-                        message = stringResource(StringsR.string.message_unhandled_error),
-                        moreInfo = thisStatus.result.remoteError.t?.stackTraceToString()
-                            ?: thisStatus.result.remoteError.message,
-                        recognitionTask = thisStatus.result.recognitionTask,
-                        onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = viewModel::recognizeTap,
-                        onNavigateToQueue = { enqueuedId ->
-                            viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
-                        }
-                    )
-
-                    is RemoteRecognitionResult.Error.WrongToken -> WrongTokenShield(
-                        isLimitReached = thisStatus.result.remoteError.isLimitReached,
-                        recognitionTask = thisStatus.result.recognitionTask,
-                        onDismissClick = viewModel::resetRecognitionResult,
-                        onNavigateToQueue = { enqueuedId ->
-                            viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
-                        },
-                        onNavigateToPreferences = onNavigateToPreferencesScreen
-                    )
-                }
-
-                is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
-                    recognitionTask = thisStatus.result.recognitionTask,
-                    onDismissClick = viewModel::resetRecognitionResult,
-                    onNavigateToQueue = { enqueuedId ->
-                        viewModel.resetRecognitionResult()
-                        onNavigateToQueueScreen(enqueuedId)
-                    }
+                    },
+                    activated = recognizeStatus is RecognitionStatus.Recognizing,
+                    amplitudeFactor = ampFlow,
+                    permissionBlocked = isPermissionBlocked,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(
+                            horizontal = 24.dp,
+                            vertical = 24.dp
+                        ) //.fillMaxSize().background(Color.Green)
                 )
-
-                is RecognitionResult.NoMatches -> NoMatchesShield(
-                    recognitionTask = thisStatus.result.recognitionTask,
-                    onDismissClick = viewModel::resetRecognitionResult,
-                    onRetryClick = viewModel::recognizeTap,
-                    onNavigateToQueue = { enqueuedId ->
-                        viewModel.resetRecognitionResult()
-                        onNavigateToQueueScreen(enqueuedId)
-                    }
+                OfflineModePopup(
+                    visible = isOffline,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
-
-                is RecognitionResult.Success -> {
-                    LaunchedEffect(thisStatus.result) {
-                        delay(animationDurationButton.toLong())
-                        onNavigateToTrackScreen(thisStatus.result.track.mbId)
-                    }
-                    DisposableEffect(thisStatus.result) {
-                        onDispose(viewModel::resetRecognitionResult)
-                    }
-                }
-            }
-
-            RecognitionStatus.Ready,
-            is RecognitionStatus.Recognizing -> {
             }
         }
+
+        BackHandler(
+            enabled = recognizeStatus.isDone(),
+            onBack = viewModel::resetRecognitionResult
+        )
+        AnimatedContent(
+            targetState = recognizeStatus,
+            contentAlignment = Alignment.Center,
+            transitionSpec = transitionSpecShield
+        ) { thisStatus ->
+            when (thisStatus) {
+                is RecognitionStatus.Done -> when (thisStatus.result) {
+                    is RecognitionResult.Error -> when (thisStatus.result.remoteError) {
+                        RemoteRecognitionResult.Error.BadConnection -> BadConnectionShield(
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onRetryClick = viewModel::recognizeTap,
+                            onNavigateToQueue = { enqueuedId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(enqueuedId)
+                            }
+                        )
+
+                        is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
+                            title = stringResource(StringsR.string.recording_error),
+                            message = stringResource(StringsR.string.message_record_error),
+                            moreInfo = thisStatus.result.remoteError.cause.stackTraceToString(),
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onRetryClick = viewModel::recognizeTap,
+                            onNavigateToQueue = { enqueuedId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(enqueuedId)
+                            }
+                        )
+
+                        is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
+                            title = stringResource(StringsR.string.bad_network_response),
+                            message = stringResource(StringsR.string.message_http_error),
+                            moreInfo = "Code: ${thisStatus.result.remoteError.code}\n" +
+                                    "Message: ${thisStatus.result.remoteError.message}",
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onRetryClick = viewModel::recognizeTap,
+                            onNavigateToQueue = { enqueuedId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(enqueuedId)
+                            }
+                        )
+
+                        is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
+                            title = stringResource(StringsR.string.internal_error),
+                            message = stringResource(StringsR.string.message_unhandled_error),
+                            moreInfo = thisStatus.result.remoteError.t?.stackTraceToString()
+                                ?: thisStatus.result.remoteError.message,
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onRetryClick = viewModel::recognizeTap,
+                            onNavigateToQueue = { enqueuedId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(enqueuedId)
+                            }
+                        )
+
+                        is RemoteRecognitionResult.Error.WrongToken -> WrongTokenShield(
+                            isLimitReached = thisStatus.result.remoteError.isLimitReached,
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onNavigateToQueue = { enqueuedId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(enqueuedId)
+                            },
+                            onNavigateToPreferences = onNavigateToPreferencesScreen
+                        )
+                    }
+
+                    is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
+                        recognitionTask = thisStatus.result.recognitionTask,
+                        onDismissClick = viewModel::resetRecognitionResult,
+                        onNavigateToQueue = { enqueuedId ->
+                            viewModel.resetRecognitionResult()
+                            onNavigateToQueueScreen(enqueuedId)
+                        }
+                    )
+
+                    is RecognitionResult.NoMatches -> NoMatchesShield(
+                        recognitionTask = thisStatus.result.recognitionTask,
+                        onDismissClick = viewModel::resetRecognitionResult,
+                        onRetryClick = viewModel::recognizeTap,
+                        onNavigateToQueue = { enqueuedId ->
+                            viewModel.resetRecognitionResult()
+                            onNavigateToQueueScreen(enqueuedId)
+                        }
+                    )
+
+                    is RecognitionResult.Success -> {
+                        LaunchedEffect(thisStatus.result) {
+                            delay(animationDurationButton.toLong())
+                            onNavigateToTrackScreen(thisStatus.result.track.mbId)
+                        }
+                        DisposableEffect(thisStatus.result) {
+                            onDispose(viewModel::resetRecognitionResult)
+                        }
+                    }
+                }
+
+                RecognitionStatus.Ready,
+                is RecognitionStatus.Recognizing -> {
+                }
+            }
+        }
+
+
     }
 
 }
@@ -305,6 +295,7 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
             else
                 stringResource(StringsR.string.listening)
         }
+
         is RecognitionStatus.Done -> ""
 
     }

@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.recognition
+package com.mrsep.musicrecognizer.feature.recognition.presentation.service
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,6 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionIn
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.MB_ID_EXTRA_KEY
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.RECOGNIZE_ACTION
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.SHOW_TRACK_ACTION
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceRouter
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

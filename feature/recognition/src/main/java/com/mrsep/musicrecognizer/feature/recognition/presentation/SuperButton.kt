@@ -32,7 +32,17 @@ internal fun SuperButton(
             animationSpeed = 12_000
         )
         AnimatedEnhancedButton(
-            modifier = Modifier.size(170.dp),
+            modifier = Modifier
+                .size(176.dp)
+//                .drawBehindRippleAnimation(
+//                    activated = activated,
+//                    startOffset = 0.5f, //should be a bit less then buttonSize/rippleSize
+//                    baseColor = MaterialTheme.colorScheme.primary,
+//                    activatedColor = MaterialTheme.colorScheme.primary,
+//                    circlesCount = 7,
+//                    animationSpeed = 12_000
+//                )
+            ,
             activated = activated,
             permissionBlocked = permissionBlocked,
             onClick = onClick,

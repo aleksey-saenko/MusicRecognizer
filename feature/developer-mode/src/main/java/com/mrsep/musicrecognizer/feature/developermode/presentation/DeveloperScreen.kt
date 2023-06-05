@@ -12,14 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.strings.R
-import com.mrsep.musicrecognizer.core.ui.components.workshop.AmplitudeVisualizerDirect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +27,7 @@ internal fun DeveloperScreen(
 //    val scope = rememberCoroutineScope()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
-    val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
+//    val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
 
     Column(
         modifier = Modifier
@@ -59,7 +55,7 @@ internal fun DeveloperScreen(
                 title = "DATABASE",
                 content = {
                     Button(onClick = viewModel::clearDb) { Text(text = "Clear") }
-                    Button(onClick = viewModel::prepopulateDbFakes) { Text(text = "Load fake") }
+//                    Button(onClick = viewModel::prepopulateDbFakes) { Text(text = "Load fake") }
                     Button(onClick = viewModel::prepopulateDbAssets) { Text(text = "Load real") }
                 }
             )
@@ -72,17 +68,17 @@ internal fun DeveloperScreen(
                     Button(onClick = viewModel::playChainResult) { Text(text = "play result") }
                 }
             )
-            Text(
-                text = "AmplitudeVisualizerDirect",
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
-            )
-            AmplitudeVisualizerDirect(
-                modifier = Modifier.height(48.dp),
-                currentValue = amplitude
-            )
+//            Text(
+//                text = "AmplitudeVisualizerDirect",
+//                fontFamily = FontFamily.Monospace,
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 12.sp,
+//                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+//            )
+//            AmplitudeVisualizerDirect(
+//                modifier = Modifier.height(48.dp),
+//                currentValue = amplitude
+//            )
 
         }
     }

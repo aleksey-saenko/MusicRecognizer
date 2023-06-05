@@ -50,7 +50,7 @@ fun NavigationBarCustom(
                 currentDestination?.hierarchy?.any { it.route == destination.route } == true
             val iconSize by animateDpAsState(if (selected) 32.dp else 26.dp)
 
-            val bounceHeightAnimatable by remember { mutableStateOf(Animatable(0f)) }
+            val bounceHeightAnimatable = remember { Animatable(0f) }
 
             LaunchedEffect(selected) {
                 if (selected) {

@@ -6,10 +6,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 
 /**
- * Coil Recipes: Transforming Painters
  * Create and return a new [Painter] that wraps [painter] with its [alpha], [colorFilter], or [onDraw] overwritten.
  */
-
 fun forwardingPainter(
     painter: Painter,
     alpha: Float = DefaultAlpha,
@@ -35,7 +33,7 @@ private class ForwardingPainter(
     override val intrinsicSize get() = painter.intrinsicSize
 
     override fun applyAlpha(alpha: Float): Boolean {
-        if (alpha == DefaultAlpha) {
+        if (alpha != DefaultAlpha) {
             this.alpha = alpha
             this.info = newInfo()
         }
@@ -43,8 +41,8 @@ private class ForwardingPainter(
     }
 
     override fun applyColorFilter(colorFilter: ColorFilter?): Boolean {
-        if (colorFilter == null) {
-            this.colorFilter = null
+        if (colorFilter != null) {
+            this.colorFilter = colorFilter
             this.info = newInfo()
         }
         return true

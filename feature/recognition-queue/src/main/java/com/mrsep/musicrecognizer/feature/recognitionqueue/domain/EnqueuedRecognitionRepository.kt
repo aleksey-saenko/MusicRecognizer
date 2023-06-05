@@ -1,6 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognitionqueue.domain
 
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -8,7 +8,7 @@ interface EnqueuedRecognitionRepository {
 
     suspend fun updateTitle(enqueuedId: Int, newTitle: String)
 
-    suspend fun getRecordById(enqueuedId: Int): File?
+    suspend fun getRecordingById(enqueuedId: Int): File?
 
     suspend fun enqueueById(vararg enqueuedId: Int)
 
@@ -18,6 +18,6 @@ interface EnqueuedRecognitionRepository {
 
     suspend fun cancelAndDeleteAll()
 
-    fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognitionWithStatus>>
+    fun getAllFlowWithStatus(): Flow<List<EnqueuedRecognition>>
 
 }

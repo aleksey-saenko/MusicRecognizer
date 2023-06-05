@@ -7,7 +7,58 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+
+internal fun Modifier.drawBehindRippleAnimation(
+    activated: Boolean,
+//    amplitudeFactor: Float,
+    startOffset: Float,
+    circlesCount: Int,
+    animationSpeed: Int,
+    baseColor: Color,
+    activatedColor: Color
+) = composed {
+    val currentColor by animateColorAsState(
+        targetValue = if (activated) activatedColor else baseColor,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val scaleFactor by animateFloatAsState(
+        targetValue = if (activated) 1.25f else 1f,
+        animationSpec = tween(durationMillis = 2000)
+    )
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val circles = List(circlesCount) { index ->
+        infiniteTransition.animateFloat(
+            initialValue = startOffset,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = animationSpeed,
+                    easing = LinearEasing
+                ),
+                repeatMode = RepeatMode.Restart,
+                initialStartOffset = StartOffset(
+                    offsetMillis = (animationSpeed / circlesCount) * (index + 1),
+                    offsetType = StartOffsetType.FastForward
+                )
+            )
+        )
+    }
+    drawBehind {
+        // 1.45f makes it visible under button, should be fixed with adaptive sizes
+        circles.forEach { animatable ->
+            drawCircle(
+                color = currentColor,
+                radius = animatable.value * size.minDimension * 1.45f / 2.0f * scaleFactor,
+                alpha = 1 - animatable.value,
+//                style = Stroke(width = 4.dp.toPx()
+            )
+        }
+    }
+}
 
 @Composable
 internal fun RippleAnimated(

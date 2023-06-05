@@ -156,6 +156,12 @@
     <string name="cancel_selected">Cancel selected</string>
     <string name="delete_selected">Delete selected</string>
     <string name="queue">Queue</string>
+    <string name="status_colon">Status: %s</string>
+    <string name="enqueued">Enqueued</string>
+    <string name="failed">Failed</string>
+    <string name="track_found">Track found</string>
+    <string name="idle">Idle</string>
+    <string name="running">Running</string>
 
 
 </resources>

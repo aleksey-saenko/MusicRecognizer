@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import javax.inject.Inject
 
-class TrackToDomainMapper @Inject constructor() : Mapper<TrackEntity, Track> {
+class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
 
     override fun map(input: TrackEntity): Track {
         return Track(
@@ -14,17 +14,7 @@ class TrackToDomainMapper @Inject constructor() : Mapper<TrackEntity, Track> {
             artist = input.artist,
             album = input.album,
             releaseDate = input.releaseDate,
-            lyrics = input.lyrics,
-            links = Track.Links(
-                artwork = input.links.artwork,
-                spotify = input.links.spotify,
-                youtube = input.links.youtube,
-                soundCloud = input.links.soundCloud,
-                appleMusic = input.links.appleMusic,
-                musicBrainz = input.links.musicBrainz,
-                deezer = input.links.deezer,
-                napster = input.links.napster
-            ),
+            artworkUrl = input.links.artwork,
             metadata = Track.Metadata(
                 lastRecognitionDate = input.metadata.lastRecognitionDate,
                 isFavorite = input.metadata.isFavorite

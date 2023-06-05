@@ -212,7 +212,7 @@ private fun AboutTrackSection(
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.baseline_album_24),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-            alpha = 0.3f
+            alpha = 0.2f
         )
         AsyncImage(
             model = track.links.artwork,

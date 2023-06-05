@@ -7,9 +7,9 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
-import com.mrsep.musicrecognizer.glue.library.mapper.SearchResultToDomainMapper
-import com.mrsep.musicrecognizer.glue.library.mapper.TrackFilterToDataMapper
-import com.mrsep.musicrecognizer.glue.library.mapper.TrackToDomainMapper
+import com.mrsep.musicrecognizer.glue.library.mapper.SearchResultMapper
+import com.mrsep.musicrecognizer.glue.library.mapper.TrackFilterMapper
+import com.mrsep.musicrecognizer.glue.library.mapper.TrackMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,15 +21,14 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindTrackToDomainMapper(implementation: TrackToDomainMapper):
-            Mapper<TrackEntity, Track>
+    fun bindTrackMapper(implementation: TrackMapper): Mapper<TrackEntity, Track>
 
     @Binds
-    fun bindRemoteTrackResultToDomainMapper(implementation: SearchResultToDomainMapper):
+    fun bindRemoteTrackResultMapper(implementation: SearchResultMapper):
             Mapper<SearchDataResult<Track>, SearchResult<Track>>
 
     @Binds
-    fun bindTrackFilterToDataMapper(implementation: TrackFilterToDataMapper):
+    fun bindTrackFilterMapper(implementation: TrackFilterMapper):
             Mapper<TrackFilter, TrackDataFilter>
 
 }

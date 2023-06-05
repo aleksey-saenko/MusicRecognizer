@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -130,6 +130,6 @@ internal fun QueueScreen(
 
 }
 
-private fun EnqueuedRecognitionWithStatus.isPlaying(playerStatus: PlayerStatus) =
+private fun EnqueuedRecognition.isPlaying(playerStatus: PlayerStatus) =
     playerStatus is PlayerStatus.Started && playerStatus.record == this.recordFile
 

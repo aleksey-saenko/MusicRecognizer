@@ -5,8 +5,7 @@ import com.mrsep.musicrecognizer.data.player.PlayerDataStatus
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
 import javax.inject.Inject
 
-class PlayerStatusToDomainMapper @Inject constructor() :
-    Mapper<PlayerDataStatus, PlayerStatus> {
+class PlayerStatusMapper @Inject constructor() : Mapper<PlayerDataStatus, PlayerStatus> {
 
     override fun map(input: PlayerDataStatus): PlayerStatus {
         return when (input) {

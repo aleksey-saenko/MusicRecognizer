@@ -33,15 +33,15 @@ internal fun TrackLazyGrid(
 ) {
     val state = rememberLazyGridState()
     if (trackList.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(StringsR.string.no_tracks_match_filter),
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(StringsR.string.no_tracks_match_filter),
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 104.dp),
@@ -155,10 +155,10 @@ internal fun LazyGridTrackItem(
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.baseline_album_24),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-            alpha = 0.3f
+            alpha = 0.2f
         )
         AsyncImage(
-            model = track.links.artwork,
+            model = track.artworkUrl,
             placeholder = placeholder,
             error = placeholder,
             contentDescription = null,

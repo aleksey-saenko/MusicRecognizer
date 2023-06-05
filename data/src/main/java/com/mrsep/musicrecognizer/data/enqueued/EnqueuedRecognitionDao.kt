@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.enqueued
 
 import androidx.room.*
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedWithOptionalTrack
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -12,22 +13,19 @@ interface EnqueuedRecognitionDao {
     suspend fun insertOrReplace(enqueued: EnqueuedRecognitionEntity): Long
 
     @Update
-    suspend fun update(enqueued: EnqueuedRecognitionEntity)
+    suspend fun update(vararg enqueued: EnqueuedRecognitionEntity)
 
     @Query("UPDATE enqueued_recognition SET title=(:newTitle) WHERE id=(:id)")
     suspend fun updateTitle(id: Int, newTitle: String)
 
     @Query("SELECT record_file FROM enqueued_recognition WHERE id=(:id)")
-    suspend fun getFileRecord(id: Int): File?
+    suspend fun getRecordingFile(id: Int): File?
 
     @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:id)")
-    suspend fun getFileRecords(id: IntArray): List<File>
-
-    @Query("DELETE FROM enqueued_recognition WHERE id=(:id)")
-    suspend fun deleteById(id: Int)
+    suspend fun getRecordingFiles(vararg id: Int): List<File>
 
     @Query("DELETE FROM enqueued_recognition WHERE id in (:id)")
-    suspend fun deleteByIds(id: IntArray)
+    suspend fun deleteById(vararg id: Int)
 
     @Query("DELETE FROM enqueued_recognition")
     suspend fun deleteAll()
@@ -35,10 +33,21 @@ interface EnqueuedRecognitionDao {
     @Query("SELECT * FROM enqueued_recognition WHERE id=(:id)")
     suspend fun getById(id: Int): EnqueuedRecognitionEntity?
 
+    @Query("SELECT * FROM enqueued_recognition WHERE id in (:id)")
+    suspend fun getByIds(vararg id: Int): List<EnqueuedRecognitionEntity>
+
     @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
     fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?>
 
     @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
     fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM enqueued_recognition WHERE id in (:id)")
+    fun getEnqueuedWithOptionalTrackById(vararg id: Int): List<EnqueuedWithOptionalTrack>
+
+    @Transaction
+    @Query("SELECT * FROM enqueued_recognition")
+    fun getEnqueuedWithOptionalTrackAll(): List<EnqueuedWithOptionalTrack>
 
 }

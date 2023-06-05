@@ -10,12 +10,13 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
+import com.mrsep.musicrecognizer.data.enqueued.model.RemoteRecognitionResultType
 import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import java.time.Instant
 
 @HiltWorker
 class EnqueuedRecognitionWorker @AssistedInject constructor(
@@ -35,36 +36,44 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
 
         return withContext(ioDispatcher) {
             val enqueued = enqueuedRecognitionRepository.getById(enqueuedRecognitionId) ?: run {
-                Log.w(TAG, "$TAG finished with fatal error, enqueuedRecognition id=$id not found")
-                return@withContext Result.failure(
-                    getFailureData(appContext.getString(StringsR.string.illegal_state))
-                )
+                val message = "$TAG finished with fatal error, " +
+                        "enqueuedRecognition with id=$id was not found"
+                Log.w(TAG, message)
+                return@withContext Result.failure()
             }
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            when (val result = recognitionService.recognize(
+            val result = recognitionService.recognize(
                 token = userPreferences.apiToken,
                 requiredServices = userPreferences.requiredServices,
                 file = enqueued.recordFile
-            )) {
+            )
+            when (result) {
                 is RemoteRecognitionDataResult.Success -> {
-                    val newTrack = trackRepository.insertOrReplaceSaveMetadata(result.data)[0]
-                    Result.success(getSuccessData(newTrack.mbId))
+                    val updatedTrack = trackRepository.insertOrReplaceSaveMetadata(result.data)[0]
+                    val updatedResult = result.copy(data = updatedTrack)
+                    updateEnqueuedWithResult(enqueued, updatedResult)
+                    Result.success()
                 }
+
                 is RemoteRecognitionDataResult.NoMatches -> {
-                    Result.success(getSuccessData(""))
+                    updateEnqueuedWithResult(enqueued, result)
+                    Result.success()
                 }
-                is RemoteRecognitionDataResult.Error -> {
-                    val message = when (result) {
-                        RemoteRecognitionDataResult.Error.BadConnection ->
-                            appContext.getString(StringsR.string.no_internet_connection)
-                        is RemoteRecognitionDataResult.Error.WrongToken ->
-                            appContext.getString(StringsR.string.invalid_token)
-                        else -> appContext.getString(StringsR.string.unknown_error)
-                    }
+
+                is RemoteRecognitionDataResult.Error.WrongToken,
+                is RemoteRecognitionDataResult.Error.BadRecording -> {
+                    updateEnqueuedWithResult(enqueued, result)
+                    Result.failure()
+                }
+
+                RemoteRecognitionDataResult.Error.BadConnection,
+                is RemoteRecognitionDataResult.Error.HttpError,
+                is RemoteRecognitionDataResult.Error.UnhandledError -> {
                     if (runAttemptCount >= MAX_ATTEMPTS) {
                         Log.w(TAG, "$TAG canceled, runAttemptCount > max=$MAX_ATTEMPTS")
-                        Result.failure(getFailureData(message))
+                        updateEnqueuedWithResult(enqueued, result)
+                        Result.failure()
                     } else {
                         Result.retry()
                     }
@@ -74,16 +83,75 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
 
     }
 
-    private fun getFailureData(message: String) = workDataOf(OUTPUT_KEY_FAILURE_MESSAGE to message)
-    private fun getSuccessData(trackMbId: String) = workDataOf(OUTPUT_KEY_TRACK_MB_ID to trackMbId)
+    private suspend fun updateEnqueuedWithResult(
+        enqueued: EnqueuedRecognitionEntity,
+        remoteResult: RemoteRecognitionDataResult
+    ) {
+        val currentDate = Instant.now()
+        val updatedEnqueued = when (remoteResult) {
+            is RemoteRecognitionDataResult.Success -> enqueued.copy(
+                resultType = RemoteRecognitionResultType.Success,
+                resultMbId = remoteResult.data.mbId,
+                resultMessage = null,
+                resultDate = currentDate
+            )
+
+            RemoteRecognitionDataResult.NoMatches -> enqueued.copy(
+                resultType = RemoteRecognitionResultType.NoMatches,
+                resultMbId = null,
+                resultMessage = null,
+                resultDate = null
+            )
+
+            RemoteRecognitionDataResult.Error.BadConnection -> enqueued.copy(
+                resultType = RemoteRecognitionResultType.BadConnection,
+                resultMbId = null,
+                resultMessage = null,
+                resultDate = null
+            )
+
+            is RemoteRecognitionDataResult.Error.WrongToken -> enqueued.copy(
+                resultType = if (remoteResult.isLimitReached)
+                    RemoteRecognitionResultType.LimitedToken
+                else
+                    RemoteRecognitionResultType.WrongToken,
+                resultMbId = null,
+                resultMessage = null,
+                resultDate = null
+            )
+
+            is RemoteRecognitionDataResult.Error.BadRecording -> enqueued.copy(
+                resultType = RemoteRecognitionResultType.BadRecording,
+                resultMbId = null,
+                resultMessage = remoteResult.message,
+                resultDate = null
+            )
+
+            is RemoteRecognitionDataResult.Error.HttpError ->
+                enqueued.copy(
+                    resultType = RemoteRecognitionResultType.HttpError,
+                    resultMbId = null,
+                    resultMessage = "${remoteResult.code}\n${remoteResult.message}",
+                    resultDate = null
+                )
+
+            is RemoteRecognitionDataResult.Error.UnhandledError ->
+                enqueued.copy(
+                    resultType = RemoteRecognitionResultType.UnhandledError,
+                    resultMbId = null,
+                    resultMessage = remoteResult.message,
+                    resultDate = null
+                )
+        }
+
+        enqueuedRecognitionRepository.update(updatedEnqueued)
+    }
+
 
     companion object {
         const val TAG = "EnqueuedRecognitionWorker"
         private const val MAX_ATTEMPTS = 3
         private const val INPUT_KEY_ENQUEUED_RECOGNITION_ID = "ENQUEUED_RECOGNITION_ID"
-
-        private const val OUTPUT_KEY_TRACK_MB_ID = "TRACK_MB_ID"
-        private const val OUTPUT_KEY_FAILURE_MESSAGE = "FAILURE_MESSAGE"
 
         fun getOneTimeWorkRequest(enqueuedRecognitionId: Int): OneTimeWorkRequest {
             val data = Data.Builder()
@@ -105,33 +173,6 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
                 .build()
         }
 
-        fun getWorkerStatus(workInfo: WorkInfo?): EnqueuedRecognitionDataStatus {
-            return workInfo?.let {
-                when (it.state) {
-                    WorkInfo.State.ENQUEUED -> EnqueuedRecognitionDataStatus.Enqueued
-                    WorkInfo.State.RUNNING -> EnqueuedRecognitionDataStatus.Running
-                    WorkInfo.State.CANCELLED -> EnqueuedRecognitionDataStatus.Canceled
-                    WorkInfo.State.SUCCEEDED -> {
-                        val trackMbId = checkNotNull(
-                            workInfo.outputData.getString(OUTPUT_KEY_TRACK_MB_ID)
-                        )
-                        if (trackMbId.isEmpty()) {
-                            EnqueuedRecognitionDataStatus.Finished.NotFound
-                        } else {
-                            EnqueuedRecognitionDataStatus.Finished.Success(trackMbId)
-                        }
-                    }
-                    WorkInfo.State.FAILED -> {
-                        val message =
-                            workInfo.outputData.getString(OUTPUT_KEY_FAILURE_MESSAGE) ?: ""
-                        EnqueuedRecognitionDataStatus.Finished.Error(message)
-                    }
-                    WorkInfo.State.BLOCKED -> throw IllegalStateException(
-                        "EnqueuedRecognitionWorkerStatus doesn't support chain of workers"
-                    )
-                }
-            } ?: EnqueuedRecognitionDataStatus.Inactive
-        }
     }
 
 }

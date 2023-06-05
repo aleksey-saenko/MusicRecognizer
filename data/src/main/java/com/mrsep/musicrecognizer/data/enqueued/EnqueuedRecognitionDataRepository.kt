@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.data.enqueued
 
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithStatus
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionData
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -13,7 +13,7 @@ interface EnqueuedRecognitionDataRepository {
 
     suspend fun updateTitle(enqueuedId: Int, newTitle: String)
 
-    suspend fun getRecordById(enqueuedId: Int): File?
+    suspend fun getRecordingById(enqueuedId: Int): File?
 
     suspend fun enqueueById(vararg enqueuedId: Int)
 
@@ -29,9 +29,9 @@ interface EnqueuedRecognitionDataRepository {
 
     fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
 
-    fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?>
+    fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionData?>
 
-    fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionEntityWithStatus>>
+    fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionData>>
 
 
 }

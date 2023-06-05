@@ -2,10 +2,14 @@ package com.mrsep.musicrecognizer.glue.recognitionqueue.mapper
 
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.RemoteRecognitionResult
 import javax.inject.Inject
 
-class EnqueuedStatusToDomainMapper @Inject constructor() :
+class EnqueuedStatusMapper @Inject constructor(
+    private val remoteResultMapper: Mapper<RemoteRecognitionDataResult, RemoteRecognitionResult>
+) :
     Mapper<EnqueuedRecognitionDataStatus, EnqueuedRecognitionStatus> {
 
     override fun map(input: EnqueuedRecognitionDataStatus): EnqueuedRecognitionStatus {
@@ -13,10 +17,9 @@ class EnqueuedStatusToDomainMapper @Inject constructor() :
             EnqueuedRecognitionDataStatus.Inactive -> EnqueuedRecognitionStatus.Inactive
             EnqueuedRecognitionDataStatus.Enqueued -> EnqueuedRecognitionStatus.Enqueued
             EnqueuedRecognitionDataStatus.Running -> EnqueuedRecognitionStatus.Running
-            EnqueuedRecognitionDataStatus.Canceled -> EnqueuedRecognitionStatus.Canceled
-            EnqueuedRecognitionDataStatus.Finished.NotFound -> EnqueuedRecognitionStatus.Finished.NotFound
-            is EnqueuedRecognitionDataStatus.Finished.Error -> EnqueuedRecognitionStatus.Finished.Error(input.message)
-            is EnqueuedRecognitionDataStatus.Finished.Success -> EnqueuedRecognitionStatus.Finished.Success(input.trackMbId)
+            is EnqueuedRecognitionDataStatus.Finished -> EnqueuedRecognitionStatus.Finished(
+                remoteResultMapper.map(input.remoteResult)
+            )
         }
     }
 

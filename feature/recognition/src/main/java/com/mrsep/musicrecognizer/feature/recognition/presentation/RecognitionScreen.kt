@@ -182,7 +182,10 @@ internal fun RecognitionScreen(
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(enqueuedId)
                             },
-                            onNavigateToPreferences = onNavigateToPreferencesScreen
+                            onNavigateToPreferences = {
+                                viewModel.resetRecognitionResult()
+                                onNavigateToPreferencesScreen()
+                            }
                         )
                     }
 

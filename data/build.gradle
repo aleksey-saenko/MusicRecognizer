@@ -79,8 +79,10 @@ dependencies {
     implementation platform(libs.okhttp.bom)
     implementation libs.okhttp.core
     implementation libs.okhttp.loggingInterceptor
+    implementation libs.okhttp.coroutines
     implementation libs.retrofit.core
     implementation libs.retrofit.converter.moshi
+    implementation libs.retrofit.converter.scalars
 
     implementation libs.moshi.core
     implementation libs.moshi.adapters

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f6d3cc2fdef5af8843b4a84775beef69",
+    "identityHash": "509738f38da0f9cacb5447533cf5108f",
     "entities": [
       {
         "tableName": "track",
@@ -116,7 +116,7 @@
       },
       {
         "tableName": "enqueued_recognition",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `record_file` TEXT NOT NULL, `creation_date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `record_file` TEXT NOT NULL, `creation_date` INTEGER NOT NULL, `result_type` TEXT, `result_mb_id` TEXT, `result_message` TEXT, `result_date` INTEGER, FOREIGN KEY(`result_mb_id`) REFERENCES `track`(`mb_id`) ON UPDATE CASCADE ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -141,6 +141,30 @@
             "columnName": "creation_date",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "resultType",
+            "columnName": "result_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultMbId",
+            "columnName": "result_mb_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultMessage",
+            "columnName": "result_message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultDate",
+            "columnName": "result_date",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -149,14 +173,36 @@
             "id"
           ]
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_enqueued_recognition_result_mb_id",
+            "unique": false,
+            "columnNames": [
+              "result_mb_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_enqueued_recognition_result_mb_id` ON `${TABLE_NAME}` (`result_mb_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "track",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "result_mb_id"
+            ],
+            "referencedColumns": [
+              "mb_id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f6d3cc2fdef5af8843b4a84775beef69')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '509738f38da0f9cacb5447533cf5108f')"
     ]
   }
 }

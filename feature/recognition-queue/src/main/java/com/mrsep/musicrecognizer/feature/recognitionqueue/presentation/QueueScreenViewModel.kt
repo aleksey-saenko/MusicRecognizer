@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -47,6 +47,7 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun cancelAndDeleteRecognition(vararg enqueuedId: Int) {
         viewModelScope.launch {
+            stopAudioPlayer()
             enqueuedRecognitionRepository.cancelAndDeleteById(*enqueuedId)
         }
     }
@@ -59,13 +60,14 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun cancelAndDeleteRecognitionAll() {
         viewModelScope.launch {
+            stopAudioPlayer()
             enqueuedRecognitionRepository.cancelAndDeleteAll()
         }
     }
 
     fun startAudioPlayer(enqueuedId: Int) {
         viewModelScope.launch {
-            enqueuedRecognitionRepository.getRecordById(enqueuedId)?.let { recordFile ->
+            enqueuedRecognitionRepository.getRecordingById(enqueuedId)?.let { recordFile ->
                 playerController.start(recordFile)
             }
         }
@@ -84,7 +86,7 @@ sealed class QueueScreenUiState {
     object Loading : QueueScreenUiState()
 
     data class Success(
-        val enqueuedList: ImmutableList<EnqueuedRecognitionWithStatus>,
+        val enqueuedList: ImmutableList<EnqueuedRecognition>,
         val playerStatus: PlayerStatus
     ) : QueueScreenUiState()
 

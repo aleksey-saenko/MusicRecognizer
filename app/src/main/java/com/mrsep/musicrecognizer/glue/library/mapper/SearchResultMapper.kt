@@ -6,7 +6,7 @@ import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import javax.inject.Inject
 
-class SearchResultToDomainMapper @Inject constructor() :
+class SearchResultMapper @Inject constructor() :
     Mapper<SearchDataResult<@JvmSuppressWildcards Track>, SearchResult<@JvmSuppressWildcards Track>> {
 
     override fun map(input: SearchDataResult<Track>): SearchResult<Track> {

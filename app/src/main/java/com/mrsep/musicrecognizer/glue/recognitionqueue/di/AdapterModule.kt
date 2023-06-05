@@ -15,7 +15,8 @@ import dagger.hilt.components.SingletonComponent
 interface AdapterModule {
 
     @Binds
-    fun bindEnqueuedRecognitionRepository(implementation: AdapterEnqueuedRepository): EnqueuedRecognitionRepository
+    fun bindEnqueuedRecognitionRepository(implementation: AdapterEnqueuedRepository):
+            EnqueuedRecognitionRepository
 
     @Binds
     fun bindPlayerController(implementation: AdapterPlayerController): PlayerController

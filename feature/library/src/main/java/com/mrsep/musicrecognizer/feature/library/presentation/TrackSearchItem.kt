@@ -45,7 +45,7 @@ internal fun TrackSearchItem(
             alpha = 0.3f
         )
         AsyncImage(
-            model = track.links.artwork,
+            model = track.artworkUrl,
             placeholder = placeholder,
             error = placeholder,
             contentDescription = null,

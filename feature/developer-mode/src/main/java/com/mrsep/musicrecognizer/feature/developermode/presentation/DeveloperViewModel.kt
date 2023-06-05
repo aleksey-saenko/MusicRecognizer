@@ -1,13 +1,12 @@
 package com.mrsep.musicrecognizer.feature.developermode.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSource
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
-import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoderController
-import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
 import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
 import com.mrsep.musicrecognizer.data.track.TrackDataRepository
@@ -23,16 +22,18 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressLint("StaticFieldLeak")
 internal class DeveloperViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val databaseFiller: DatabaseFiller,
     private val trackDataRepository: TrackDataRepository,
     private val recognitionDataService: RecognitionDataService,
-    private val audioSource: SoundSource,
+//    private val audioSource: SoundSource,
     private val amplitudeSource: SoundAmplitudeSource,
     private val encoder: AacEncoder,
-    private val aacEncoderController: AacEncoderController,
-    private val playerController: MediaPlayerController
+//    private val aacEncoderController: AacEncoderController,
+    private val playerController: MediaPlayerController,
+//    private val soundSourceImpl: SoundSourceImpl
 ) : ViewModel() {
 
     private var counter = MutableStateFlow(0)
@@ -53,7 +54,7 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun clearDb() = processSuspend { trackDataRepository.deleteAll() }
 
-    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(1000) }
+    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 1000) }
 
     fun prepopulateDbAssets() = processSuspend { databaseFiller.prepopulateFromAssets() }
 

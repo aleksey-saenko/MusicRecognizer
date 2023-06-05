@@ -5,15 +5,18 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TrackRepositoryImpl @Inject constructor(
+    @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
@@ -82,25 +85,25 @@ class TrackRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(vararg track: TrackEntity) {
-        withContext(ioDispatcher) {
+        withContext(appScope.coroutineContext + ioDispatcher) {
             trackDao.delete(*track)
         }
     }
 
     override suspend fun deleteAll() {
-        withContext(ioDispatcher) {
+        withContext(appScope.coroutineContext + ioDispatcher) {
             trackDao.deleteAll()
         }
     }
 
     override suspend fun deleteAllExceptFavorites() {
-        withContext(ioDispatcher) {
+        withContext(appScope.coroutineContext + ioDispatcher) {
             trackDao.deleteAllExceptFavorites()
         }
     }
 
     override suspend fun deleteAllFavorites() {
-        withContext(ioDispatcher) {
+        withContext(appScope.coroutineContext + ioDispatcher) {
             trackDao.deleteAllFavorites()
         }
     }

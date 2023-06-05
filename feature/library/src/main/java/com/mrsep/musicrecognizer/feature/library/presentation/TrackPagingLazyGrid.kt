@@ -154,7 +154,7 @@ private fun LazyGridTrackTestItem(
             )
         }
         AsyncImage(
-            model = track.links.artwork,
+            model = track.artworkUrl,
             placeholder = placeholder,
             error = placeholder,
             contentDescription = null,

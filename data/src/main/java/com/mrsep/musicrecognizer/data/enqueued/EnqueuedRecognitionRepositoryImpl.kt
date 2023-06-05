@@ -1,10 +1,15 @@
 package com.mrsep.musicrecognizer.data.enqueued
 
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithStatus
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionData
+import com.mrsep.musicrecognizer.data.enqueued.model.RemoteRecognitionResultType
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
@@ -15,13 +20,17 @@ import javax.inject.Inject
 class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     private val enqueuedWorkManager: EnqueuedRecognitionWorkDataManager,
     private val recordingFileDataSource: RecordingFileDataSource,
+    @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
 ) : EnqueuedRecognitionDataRepository {
 
     private val dao = database.enqueuedRecognitionDao()
 
-    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Int? {
+    override suspend fun createEnqueuedRecognition(
+        audioRecording: ByteArray,
+        launch: Boolean
+    ): Int? {
         return withContext(ioDispatcher) {
             recordingFileDataSource.write(audioRecording)?.let { recordingFile ->
                 val enqueued = EnqueuedRecognitionEntity(
@@ -32,7 +41,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
                 )
                 val id = dao.insertOrReplace(enqueued).toInt()
                 if (launch) {
-                    enqueuedWorkManager.enqueueRecognitionWorkers(id)
+                    enqueuedWorkManager.enqueueWorkers(id)
                 }
                 id
             }
@@ -51,32 +60,43 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getRecordById(enqueuedId: Int): File? {
+    override suspend fun getRecordingById(enqueuedId: Int): File? {
         return withContext(ioDispatcher) {
-            dao.getFileRecord(enqueuedId)
+            dao.getRecordingFile(enqueuedId)
         }
     }
 
     override suspend fun enqueueById(vararg enqueuedId: Int) {
-        enqueuedWorkManager.enqueueRecognitionWorkers(*enqueuedId)
+        withContext(appScope.coroutineContext + ioDispatcher) {
+            val enqueuedWithResetResult = dao.getByIds(*enqueuedId).map { enqueued ->
+                enqueued.copy(
+                    resultType = null,
+                    resultMbId = null,
+                    resultMessage = null,
+                    resultDate = null
+                )
+            }.toTypedArray()
+            dao.update(*enqueuedWithResetResult)
+            enqueuedWorkManager.enqueueWorkers(*enqueuedId)
+        }
     }
 
     override suspend fun cancelById(vararg enqueuedId: Int) {
-        enqueuedWorkManager.cancelRecognitionWorkers(*enqueuedId)
+        enqueuedWorkManager.cancelWorkers(*enqueuedId)
     }
 
     override suspend fun cancelAndDeleteById(vararg enqueuedId: Int) {
-        enqueuedWorkManager.cancelRecognitionWorkers(*enqueuedId)
-        withContext(ioDispatcher) {
-            val files = dao.getFileRecords(enqueuedId)
-            dao.deleteByIds(enqueuedId)
+        withContext(appScope.coroutineContext + ioDispatcher) {
+            enqueuedWorkManager.cancelWorkers(*enqueuedId)
+            val files = dao.getRecordingFiles(*enqueuedId)
+            dao.deleteById(*enqueuedId)
             files.forEach { file -> recordingFileDataSource.delete(file) }
         }
     }
 
     override suspend fun cancelAndDeleteAll() {
-        enqueuedWorkManager.cancelAllRecognitionWorkers()
-        withContext(ioDispatcher) {
+        withContext(appScope.coroutineContext + ioDispatcher) {
+            enqueuedWorkManager.cancelWorkersAll()
             recordingFileDataSource.deleteAll()
             dao.deleteAll()
         }
@@ -98,11 +118,11 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionEntityWithStatus?> {
+    override fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionData?> {
         return dao.getFlowById(id)
-            .combine(enqueuedWorkManager.getUniqueWorkInfoFlow(id)) { entity, status ->
+            .combine(enqueuedWorkManager.getWorkInfoFlowById(id)) { entity, status ->
                 entity?.let {
-                    EnqueuedRecognitionEntityWithStatus(
+                    EnqueuedRecognitionData(
                         id = entity.id,
                         title = entity.title,
                         recordFile = entity.recordFile,
@@ -115,22 +135,21 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionEntityWithStatus>> {
+    override fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionData>> {
         return getFlowAll()
             .flatMapLatest { listEntities ->
                 if (listEntities.isEmpty()) {
                     flowOf(emptyList())
                 } else {
-                    val listOfFlow = listEntities.map { entity ->
-                        enqueuedWorkManager.getUniqueWorkInfoFlow(entity.id)
-                            .mapLatest { status ->
-                                EnqueuedRecognitionEntityWithStatus(
-                                    id = entity.id,
-                                    title = entity.title,
-                                    recordFile = entity.recordFile,
-                                    creationDate = entity.creationDate,
-                                    status = status
-                                )
+                    val listOfFlow = listEntities.map { enqueuedEntity ->
+                        enqueuedWorkManager.getWorkInfoFlowById(enqueuedEntity.id)
+                            .mapLatest { workerStatus ->
+                                if (workerStatus is EnqueuedRecognitionDataStatus.Inactive) {
+                                    val storedStatus = enqueuedEntity.getStatusOrNull()
+                                    enqueuedEntity.combineEnqueued(storedStatus ?: workerStatus)
+                                } else {
+                                    enqueuedEntity.combineEnqueued(workerStatus)
+                                }
                             }
                     }
                     combine(*listOfFlow.toTypedArray()) { array -> array.toList() }
@@ -138,6 +157,71 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
             }
             .flowOn(ioDispatcher)
     }
+
+    private fun EnqueuedRecognitionEntity.combineEnqueued(
+        status: EnqueuedRecognitionDataStatus
+    ): EnqueuedRecognitionData {
+        return EnqueuedRecognitionData(
+            id = this.id,
+            title = this.title,
+            recordFile = this.recordFile,
+            creationDate = this.creationDate,
+            status = status
+        )
+    }
+
+    //FIXME: should be replace by mapper + see function in worker
+    private fun EnqueuedRecognitionEntity.getStatusOrNull(): EnqueuedRecognitionDataStatus? {
+        val remoteResult = resultType?.let { resultType ->
+            when (resultType) {
+                RemoteRecognitionResultType.Success -> {
+                    dao.getEnqueuedWithOptionalTrackById(id).firstOrNull()
+                        ?.let { enqueuedWithTrack ->
+                            enqueuedWithTrack.track?.let { track ->
+                                RemoteRecognitionDataResult.Success(track)
+                            }
+                        }
+                }
+
+                RemoteRecognitionResultType.NoMatches -> {
+                    RemoteRecognitionDataResult.NoMatches
+                }
+
+                RemoteRecognitionResultType.BadConnection -> {
+                    RemoteRecognitionDataResult.Error.BadConnection
+                }
+
+                RemoteRecognitionResultType.BadRecording -> {
+                    RemoteRecognitionDataResult.Error.BadRecording(resultMessage ?: "")
+                }
+
+                RemoteRecognitionResultType.WrongToken -> {
+                    RemoteRecognitionDataResult.Error.WrongToken(false)
+                }
+
+                RemoteRecognitionResultType.LimitedToken -> {
+                    RemoteRecognitionDataResult.Error.WrongToken(true)
+                }
+
+                RemoteRecognitionResultType.HttpError -> {
+                    // assuming the pattern "${code}\n${message}"
+                    val data = resultMessage?.split("\n", limit = 2)
+                    RemoteRecognitionDataResult.Error.HttpError(
+                        code = data?.get(0)?.toIntOrNull() ?: -1,
+                        message = data?.get(1) ?: ""
+                    )
+                }
+
+                RemoteRecognitionResultType.UnhandledError -> {
+                    RemoteRecognitionDataResult.Error.UnhandledError(
+                        message = resultMessage ?: ""
+                    )
+                }
+            }
+        }
+        return remoteResult?.let { result -> EnqueuedRecognitionDataStatus.Finished(result) }
+    }
+
 
 }
 

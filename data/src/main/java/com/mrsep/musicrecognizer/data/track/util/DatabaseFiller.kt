@@ -10,6 +10,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import java.io.IOException
 import javax.inject.Inject
 
@@ -23,33 +24,40 @@ class DatabaseFiller @Inject constructor(
 ) {
     private val defaultAssetsDirectory = "success_json_responses"
 
-    suspend fun prepopulateByFaker(count: Int) {
+    suspend fun prepopulateByFaker(force: Boolean = true, count: Int) {
         withContext(ioDispatcher) {
-            getFakeTrackList(
-                startIndex = 0,
-                endIndex = count,
-                inclusive = false,
-                favorites = false
-            ).toTypedArray().run { trackRepository.insertOrReplace(*this) }
-            Log.d(TAG, "Database filling completed")
+            if (force || trackRepository.isEmptyFlow().first()) {
+                getFakeTrackList(
+                    startIndex = 0,
+                    endIndex = count,
+                    inclusive = false,
+                    favorites = false
+                ).toTypedArray().run { trackRepository.insertOrReplace(*this) }
+                Log.d(TAG, "Database filling completed")
+            }
         }
     }
 
-    suspend fun prepopulateFromAssets(assetsDirectory: String = defaultAssetsDirectory) {
+    suspend fun prepopulateFromAssets(
+        force: Boolean = true,
+        assetsDirectory: String = defaultAssetsDirectory
+    ) {
         withContext(ioDispatcher) {
-            val trackList = parseJsonFilesFromAssets(assetsDirectory)
-                .filterIsInstance<RemoteRecognitionDataResult.Success>()
-                .mapIndexed { index, result ->
-                    result.data.run {
-                        if (index < 9) { // make first 9 tracks favorites
-                            copy(metadata = result.data.metadata.copy(isFavorite = true))
-                        } else {
-                            this
+            if (force || trackRepository.isEmptyFlow().first()) {
+                val trackList = parseJsonFilesFromAssets(assetsDirectory)
+                    .filterIsInstance<RemoteRecognitionDataResult.Success>()
+                    .mapIndexed { index, result ->
+                        result.data.run {
+                            if (index < 9) { // make first 9 tracks favorites
+                                copy(metadata = result.data.metadata.copy(isFavorite = true))
+                            } else {
+                                this
+                            }
                         }
-                    }
-                }.toTypedArray()
-            trackRepository.insertOrReplace(*trackList)
-            Log.d(TAG, "Database filling completed")
+                    }.toTypedArray()
+                trackRepository.insertOrReplace(*trackList)
+                Log.d(TAG, "Database filling completed")
+            }
         }
     }
 

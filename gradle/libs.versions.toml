@@ -14,7 +14,7 @@ androidxLifecycle = "2.6.1"
 androidxLifecycleViewmodelCompose = "2.6.1"
 androidxNavigation = "2.5.3"
 androidxWork = "2.8.1"
-coil = "2.3.0"
+coil = "2.4.0"
 hilt = "2.45"
 hiltExt = "1.0.0"
 junit4 = "4.13.2"
@@ -26,8 +26,10 @@ kotlinxDatetime = "0.4.0"
 ksp = "1.8.21-1.0.11"
 moshi = "1.15.0"
 okhttpBom = "4.11.0"
+okhttpCoroutines = "1.0"
 paging3 = "3.1.1"
 paging3Compose = "1.0.0-alpha19"
+palette = "1.0.0"
 protobufJavalite = "3.23.0"
 protobufPlugin = "0.9.3"
 retrofit = "2.9.0"
@@ -59,6 +61,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-paging3-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging3" }
 androidx-paging3-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging3" }
 androidx-paging3-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging3Compose" }
+androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette"  }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
 androidx-workKtx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWork" }
@@ -78,9 +81,11 @@ moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", v
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+okhttp-coroutines = { group = "ru.gildor.coroutines", name = "kotlin-coroutines-okhttp", version.ref = "okhttpCoroutines" }
 protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufJavalite" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

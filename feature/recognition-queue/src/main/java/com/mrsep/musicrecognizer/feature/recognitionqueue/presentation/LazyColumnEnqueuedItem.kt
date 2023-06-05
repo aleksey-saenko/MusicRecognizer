@@ -58,7 +58,8 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
+import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.RemoteRecognitionResult
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -66,7 +67,7 @@ import java.time.format.FormatStyle
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun LazyColumnEnqueuedItem(
-    enqueued: EnqueuedRecognitionWithStatus,
+    enqueued: EnqueuedRecognition,
     isPlaying: Boolean,
     modifier: Modifier = Modifier,
     onDeleteEnqueued: (enqueuedId: Int) -> Unit,
@@ -214,10 +215,8 @@ internal fun LazyColumnEnqueuedItem(
                     })
                 Divider()
                 when (enqueued.status) {
-                    is EnqueuedRecognitionStatus.Finished.Error,
-                    EnqueuedRecognitionStatus.Finished.NotFound,
-                    EnqueuedRecognitionStatus.Canceled,
                     EnqueuedRecognitionStatus.Inactive -> {
+                        //FIXME: code duplicating
                         DropdownMenuItem(
                             text = {
                                 Text(
@@ -237,7 +236,6 @@ internal fun LazyColumnEnqueuedItem(
                             }
                         )
                     }
-
                     EnqueuedRecognitionStatus.Enqueued,
                     EnqueuedRecognitionStatus.Running -> {
                         DropdownMenuItem(
@@ -259,26 +257,53 @@ internal fun LazyColumnEnqueuedItem(
                             }
                         )
                     }
-
-                    is EnqueuedRecognitionStatus.Finished.Success -> {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(StringsR.string.show_track),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            },
-                            onClick = {
-                                onNavigateToTrackScreen(enqueued.status.trackMbId)
-                                menuExpanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_audio_file_24),
-                                    contentDescription = null
+                    is EnqueuedRecognitionStatus.Finished -> {
+                        when (enqueued.status.remoteResult) {
+                            RemoteRecognitionResult.NoMatches,
+                            is RemoteRecognitionResult.Error -> {
+                                //FIXME: code duplicating
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(StringsR.string.enqueue_recognition),
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    },
+                                    onClick = {
+                                        onEnqueueRecognition(enqueued.id)
+                                        menuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Refresh,
+                                            contentDescription = null
+                                        )
+                                    }
                                 )
                             }
-                        )
+                            is RemoteRecognitionResult.Success -> {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(StringsR.string.show_track),
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    },
+                                    onClick = {
+                                        onNavigateToTrackScreen(
+                                            enqueued.status.remoteResult.track.mbId
+                                        )
+                                        menuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(UiR.drawable.baseline_audio_file_24),
+                                            contentDescription = null
+                                        )
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -328,18 +353,29 @@ internal fun LazyColumnEnqueuedItem(
 }
 
 @Composable
-private fun getTitle(enqueued: EnqueuedRecognitionWithStatus) =
+private fun getTitle(enqueued: EnqueuedRecognition) =
     enqueued.title.ifBlank { stringResource(StringsR.string.untitled_recognition) }
 
 @Composable
 private fun getStatusMessage(status: EnqueuedRecognitionStatus): String {
-    return when (status) {
-        EnqueuedRecognitionStatus.Canceled -> "Status: Canceled"
-        EnqueuedRecognitionStatus.Enqueued -> "Status: Enqueued"
-        is EnqueuedRecognitionStatus.Finished.Error -> "Status: Failed (${status.message})"
-        EnqueuedRecognitionStatus.Finished.NotFound -> "Status: No matches found"
-        is EnqueuedRecognitionStatus.Finished.Success -> "Status: Track found"
-        EnqueuedRecognitionStatus.Inactive -> "Status: Inactive"
-        EnqueuedRecognitionStatus.Running -> "Status: Running"
+    val appendix = when (status) {
+        EnqueuedRecognitionStatus.Inactive -> stringResource(StringsR.string.idle)
+        EnqueuedRecognitionStatus.Enqueued -> stringResource(StringsR.string.enqueued)
+        EnqueuedRecognitionStatus.Running -> stringResource(StringsR.string.running)
+        is EnqueuedRecognitionStatus.Finished -> when (status.remoteResult) {
+            RemoteRecognitionResult.NoMatches -> stringResource(StringsR.string.no_matches_found)
+            is RemoteRecognitionResult.Success -> stringResource(StringsR.string.track_found)
+            is RemoteRecognitionResult.Error -> when (status.remoteResult) {
+                RemoteRecognitionResult.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
+                is RemoteRecognitionResult.Error.BadRecording -> stringResource(StringsR.string.recording_error)
+                is RemoteRecognitionResult.Error.HttpError -> stringResource(StringsR.string.bad_network_response)
+                is RemoteRecognitionResult.Error.UnhandledError -> stringResource(StringsR.string.internal_error)
+                is RemoteRecognitionResult.Error.WrongToken -> if (status.remoteResult.isLimitReached)
+                    stringResource(StringsR.string.token_limit_reached)
+                else
+                    stringResource(StringsR.string.wrong_token)
+            }
+        }
     }
+    return stringResource(StringsR.string.status_colon, appendix)
 }

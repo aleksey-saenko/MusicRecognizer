@@ -25,7 +25,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
+import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen.libraryScreen
@@ -45,9 +47,13 @@ import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.trackScr
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+//    @Inject lateinit var databaseFiller: DatabaseFiller
+//    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     //    private val musicRecognizerApp get() = application as MusicRecognizerApp
     private val viewModel: MainActivityViewModel by viewModels()
@@ -101,6 +107,13 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+//        appScope.launch {
+//            databaseFiller.prepopulateFromAssets(force = false)
+//        }
     }
 
     private fun setupApplicationWithPreferences() {

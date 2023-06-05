@@ -60,6 +60,7 @@ dependencies {
     implementation libs.androidx.lifecycle.runtimeKtx
     implementation libs.androidx.lifecycle.runtime.compose
     implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.palette
 
     implementation libs.kotlinx.coroutinesAndroid
     implementation libs.kotlinx.collectionImmutable

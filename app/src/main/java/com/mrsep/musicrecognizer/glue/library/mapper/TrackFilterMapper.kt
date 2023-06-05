@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.data.track.*
 import com.mrsep.musicrecognizer.feature.library.domain.model.*
 import javax.inject.Inject
 
-class TrackFilterToDataMapper @Inject constructor() : Mapper<TrackFilter, TrackDataFilter> {
+class TrackFilterMapper @Inject constructor() : Mapper<TrackFilter, TrackDataFilter> {
 
     override fun map(input: TrackFilter): TrackDataFilter {
         return TrackDataFilter(

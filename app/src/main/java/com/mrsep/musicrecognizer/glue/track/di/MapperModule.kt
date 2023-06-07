@@ -1,7 +1,8 @@
 package com.mrsep.musicrecognizer.glue.track.di
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
@@ -17,15 +18,11 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
-            Mapper<UserPreferencesProto, UserPreferences>
+    fun bindPreferencesMapper(implementation: PreferencesMapper):
+            Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
-    fun bindTrackToDomainMapper(implementation: TrackToDomainMapper):
-            Mapper<TrackEntity, Track>
-
-    @Binds
-    fun bindTrackToDataMapper(implementation: TrackToDataMapper):
-            Mapper<Track, TrackEntity>
+    fun bindTrackMapper(implementation: TrackMapper):
+            BidirectionalMapper<TrackEntity, Track>
 
 }

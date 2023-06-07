@@ -1,10 +1,10 @@
 package com.mrsep.musicrecognizer.glue.recognitionqueue.di
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionData
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
-import com.mrsep.musicrecognizer.data.player.PlayerDataStatus
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDo
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionStatusDo
+import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
@@ -24,22 +24,22 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindEnqueuedStatusToDomainMapper(implementation: EnqueuedStatusMapper):
-            Mapper<EnqueuedRecognitionDataStatus, EnqueuedRecognitionStatus>
+    fun bindEnqueuedStatusMapper(implementation: EnqueuedStatusMapper):
+            Mapper<EnqueuedRecognitionStatusDo, EnqueuedRecognitionStatus>
 
     @Binds
-    fun bindEnqueuedToDomainMapper(implementation: EnqueuedMapper):
-            Mapper<EnqueuedRecognitionData, EnqueuedRecognition>
+    fun bindEnqueuedMapper(implementation: EnqueuedMapper):
+            Mapper<EnqueuedRecognitionDo, EnqueuedRecognition>
 
     @Binds
-    fun bindPlayerStatusToDomainMapper(implementation: PlayerStatusMapper):
-            Mapper<PlayerDataStatus, PlayerStatus>
+    fun bindPlayerStatusMapper(implementation: PlayerStatusMapper):
+            Mapper<PlayerStatusDo, PlayerStatus>
 
     @Binds
     fun bindTrackMapper(implementation: TrackMapper): Mapper<TrackEntity, Track>
 
     @Binds
     fun bindRemoteResultMapper(implementation: RemoteResultMapper):
-            Mapper<RemoteRecognitionDataResult, RemoteRecognitionResult>
+            Mapper<RemoteRecognitionResultDo, RemoteRecognitionResult>
 
 }

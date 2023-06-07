@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.data.remote.audd.rest
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.remote.audd.model.TokenValidationDataStatus
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.TokenValidationStatusDo
 import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -30,16 +30,16 @@ class AuddRecognitionServicePure @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val okHttpClient: OkHttpClient,
     moshi: Moshi
-) : RecognitionDataService {
+) : RecognitionServiceDo {
 
     @OptIn(ExperimentalStdlibApi::class)
-    private val moshiAdapter = moshi.adapter<RemoteRecognitionDataResult>()
+    private val moshiAdapter = moshi.adapter<RemoteRecognitionResultDo>()
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         file: File
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -51,9 +51,9 @@ class AuddRecognitionServicePure @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         byteArray: ByteArray
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -65,9 +65,9 @@ class AuddRecognitionServicePure @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         url: URL
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -103,9 +103,9 @@ class AuddRecognitionServicePure @Inject constructor(
 
     private suspend fun baseCallFunction(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         val multipartBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("api_token", token)
@@ -121,31 +121,39 @@ class AuddRecognitionServicePure @Inject constructor(
             if (response.isSuccessful) {
                 moshiAdapter.fromJson(response.body!!.source())!!
             } else {
-                RemoteRecognitionDataResult.Error.HttpError(
+                RemoteRecognitionResultDo.Error.HttpError(
                     code = response.code,
                     message = response.message
                 )
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            RemoteRecognitionDataResult.Error.BadConnection
+            RemoteRecognitionResultDo.Error.BadConnection
         } catch (e: Exception) {
             e.printStackTrace()
-            RemoteRecognitionDataResult.Error.UnhandledError(message = e.message ?: "", e = e)
+            RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
 
-    override suspend fun validateToken(token: String): TokenValidationDataStatus {
+    override suspend fun validateToken(token: String): TokenValidationStatusDo {
         val sampleUrlRecognitionResult = recognize(
             token = token,
-            requiredServices = UserPreferencesProto.RequiredServicesProto.getDefaultInstance(),
+            requiredServices = UserPreferencesDo.RequiredServicesDo(
+                spotify = true,
+                youtube = false,
+                soundCloud = false,
+                appleMusic = false,
+                deezer = false,
+                napster = false,
+                musicbrainz = false
+            ),
             url = URL(AUDIO_SAMPLE_URL)
         )
         return when (sampleUrlRecognitionResult) {
-            is RemoteRecognitionDataResult.Error ->
-                TokenValidationDataStatus.Error(sampleUrlRecognitionResult)
-            RemoteRecognitionDataResult.NoMatches,
-            is RemoteRecognitionDataResult.Success -> TokenValidationDataStatus.Success
+            is RemoteRecognitionResultDo.Error ->
+                TokenValidationStatusDo.Error(sampleUrlRecognitionResult)
+            RemoteRecognitionResultDo.NoMatches,
+            is RemoteRecognitionResultDo.Success -> TokenValidationStatusDo.Success
         }
     }
 

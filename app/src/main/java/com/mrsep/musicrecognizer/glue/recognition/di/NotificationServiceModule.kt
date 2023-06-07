@@ -13,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 interface NotificationServiceModule {
 
     @Binds
-    fun bindNotificationServiceRouter(implementation: NotificationServiceRouterImpl): NotificationServiceRouter
+    fun bindNotificationServiceRouter(implementation: NotificationServiceRouterImpl):
+            NotificationServiceRouter
 
 }

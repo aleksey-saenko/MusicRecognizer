@@ -29,7 +29,7 @@ import kotlin.math.sqrt
 class SoundAmplitudeSourceImpl @Inject constructor(
     soundSource: SoundSource,
     @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
-) : SoundAmplitudeSource {
+) : SoundAmplitudeSourceDo {
 
     override val amplitudeFlow = (soundSource.params?.let { params ->
         if (params.audioFormat.channelCount != 1)

@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.di
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
+import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.domain.UserPreferences
 import dagger.Binds
@@ -19,8 +19,8 @@ import javax.inject.Inject
 interface PreferencesModule {
 
     @Binds
-    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
-            Mapper<UserPreferencesProto, UserPreferences>
+    fun bindPreferencesMapper(implementation: PreferencesMapper):
+            Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
     fun bindPreferencesRepository(implementation: AdapterPreferencesRepository):
@@ -29,19 +29,19 @@ interface PreferencesModule {
 }
 
 class AdapterPreferencesRepository @Inject constructor(
-    private val preferencesDataRepository: PreferencesDataRepository,
-    private val mapperPreferencesToDomain: Mapper<UserPreferencesProto, UserPreferences>
+    private val preferencesRepositoryDo: PreferencesRepositoryDo,
+    private val preferencesMapper: Mapper<UserPreferencesDo, UserPreferences>
 ): PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
-        get() = preferencesDataRepository.userPreferencesFlow
-            .map { mapperPreferencesToDomain.map(it) }
+        get() = preferencesRepositoryDo.userPreferencesFlow
+            .map { preferencesMapper.map(it) }
 }
 
-class PreferencesToDomainMapper @Inject constructor() :
-    Mapper<UserPreferencesProto, UserPreferences> {
+class PreferencesMapper @Inject constructor() :
+    Mapper<UserPreferencesDo, UserPreferences> {
 
-    override fun map(input: UserPreferencesProto): UserPreferences {
+    override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
             onboardingCompleted = input.onboardingCompleted,
             apiToken = input.apiToken,
@@ -51,7 +51,7 @@ class PreferencesToDomainMapper @Inject constructor() :
             requiredServices = UserPreferences.RequiredServices(
                 spotify = input.requiredServices.spotify,
                 youtube = input.requiredServices.youtube,
-                soundCloud = input.requiredServices.soundcloud,
+                soundCloud = input.requiredServices.soundCloud,
                 appleMusic = input.requiredServices.appleMusic,
                 deezer = input.requiredServices.deezer,
                 napster = input.requiredServices.napster,

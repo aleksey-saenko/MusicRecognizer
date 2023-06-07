@@ -31,15 +31,6 @@ class TrackPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, TrackEntity>): Int? {
-//        Log.d("getRefreshKey", "anchorPosition=${state.anchorPosition}, closestPage=${state.anchorPosition?.let { state.closestPageToPosition(it) }}")
-//        // get the most recently accessed index in the users list:
-//        val anchorPosition = state.anchorPosition ?: return null
-//        // convert item index to page index:
-//        val page = state.closestPageToPosition(anchorPosition) ?: return null
-//        // page doesn't have 'currentKey' property, so need to calculate it manually:
-//        val a =  page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
-//        Log.d("getRefreshKey", "return=$a")
-//        return a
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

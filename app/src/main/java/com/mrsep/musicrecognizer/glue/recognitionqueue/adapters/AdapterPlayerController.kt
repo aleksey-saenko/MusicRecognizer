@@ -1,6 +1,6 @@
 package com.mrsep.musicrecognizer.glue.recognitionqueue.adapters
 
-import com.mrsep.musicrecognizer.data.player.PlayerDataController
+import com.mrsep.musicrecognizer.data.player.PlayerControllerDo
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.PlayerController
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.glue.recognitionqueue.mapper.PlayerStatusMapper
@@ -10,20 +10,20 @@ import java.io.File
 import javax.inject.Inject
 
 class AdapterPlayerController @Inject constructor(
-    private val playerDataController: PlayerDataController,
-    private val statusToDomainMapper: PlayerStatusMapper
+    private val playerControllerDo: PlayerControllerDo,
+    private val statusMapper: PlayerStatusMapper
 ) : PlayerController {
 
     override val statusFlow: Flow<PlayerStatus>
-        get() = playerDataController.statusFlow
-            .map { status -> statusToDomainMapper.map(status) }
+        get() = playerControllerDo.statusFlow
+            .map { status -> statusMapper.map(status) }
 
     override fun start(file: File) {
-        playerDataController.start(file)
+        playerControllerDo.start(file)
     }
 
     override fun stop() {
-        playerDataController.stop()
+        playerControllerDo.stop()
     }
 
 }

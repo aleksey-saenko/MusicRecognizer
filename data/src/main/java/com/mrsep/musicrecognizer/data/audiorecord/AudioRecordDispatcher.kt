@@ -10,19 +10,19 @@ import kotlinx.coroutines.android.asCoroutineDispatcher
  * and elevates its priority to [android.os.Process.THREAD_PRIORITY_URGENT_AUDIO].
  */
 
-val AudioRecordHandler = HandlerThread(
+internal val AudioRecordHandler = HandlerThread(
     "myRecordThread",
     Process.THREAD_PRIORITY_URGENT_AUDIO
 )
     .apply { start() }
     .run { Handler(this.looper) }
-val AudioRecordDispatcher = AudioRecordHandler.asCoroutineDispatcher()
+internal val AudioRecordDispatcher = AudioRecordHandler.asCoroutineDispatcher()
 
 
-val AudioEncoderHandler = HandlerThread(
+internal val AudioEncoderHandler = HandlerThread(
     "myEncoderThread",
     Process.THREAD_PRIORITY_URGENT_AUDIO
 )
     .apply { start() }
     .run { Handler(this.looper) }
-val AudioEncoderDispatcher = AudioEncoderHandler.asCoroutineDispatcher()
+internal val AudioEncoderDispatcher = AudioEncoderHandler.asCoroutineDispatcher()

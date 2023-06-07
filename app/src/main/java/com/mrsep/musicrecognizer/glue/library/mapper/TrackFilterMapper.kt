@@ -5,31 +5,31 @@ import com.mrsep.musicrecognizer.data.track.*
 import com.mrsep.musicrecognizer.feature.library.domain.model.*
 import javax.inject.Inject
 
-class TrackFilterMapper @Inject constructor() : Mapper<TrackFilter, TrackDataFilter> {
+class TrackFilterMapper @Inject constructor() : Mapper<TrackFilter, TrackFilterDo> {
 
-    override fun map(input: TrackFilter): TrackDataFilter {
-        return TrackDataFilter(
+    override fun map(input: TrackFilter): TrackFilterDo {
+        return TrackFilterDo(
             favoritesMode = when (input.favoritesMode) {
-                FavoritesMode.All -> DataFavoritesMode.All
-                FavoritesMode.OnlyFavorites -> DataFavoritesMode.OnlyFavorites
-                FavoritesMode.ExcludeFavorites -> DataFavoritesMode.ExcludeFavorites
+                FavoritesMode.All -> DataFavoritesModeDo.All
+                FavoritesMode.OnlyFavorites -> DataFavoritesModeDo.OnlyFavorites
+                FavoritesMode.ExcludeFavorites -> DataFavoritesModeDo.ExcludeFavorites
             },
             dateRange = when (val range = input.dateRange) {
-                RecognitionDateRange.Empty -> DataRecognitionDateRange.Empty
-                is RecognitionDateRange.Selected -> DataRecognitionDateRange.Selected(
+                RecognitionDateRange.Empty -> DataRecognitionDateRangeDo.Empty
+                is RecognitionDateRange.Selected -> DataRecognitionDateRangeDo.Selected(
                     startDate = range.startDate,
                     endDate = range.endDate
                 )
             },
             sortBy = when (input.sortBy) {
-                SortBy.RecognitionDate -> DataSortBy.RecognitionDate
-                SortBy.Title -> DataSortBy.Title
-                SortBy.Artist -> DataSortBy.Artist
-                SortBy.ReleaseDate -> DataSortBy.ReleaseDate
+                SortBy.RecognitionDate -> DataSortByDo.RecognitionDate
+                SortBy.Title -> DataSortByDo.Title
+                SortBy.Artist -> DataSortByDo.Artist
+                SortBy.ReleaseDate -> DataSortByDo.ReleaseDate
             },
             orderBy = when (input.orderBy) {
-                OrderBy.Asc -> DataOrderBy.Asc
-                OrderBy.Desc -> DataOrderBy.Desc
+                OrderBy.Asc -> DataOrderByDo.Asc
+                OrderBy.Desc -> DataOrderByDo.Desc
             }
         )
     }

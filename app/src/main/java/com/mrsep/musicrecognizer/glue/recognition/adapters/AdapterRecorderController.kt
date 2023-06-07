@@ -1,24 +1,24 @@
 package com.mrsep.musicrecognizer.glue.recognition.adapters
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingController
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingDataStrategy
-import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSource
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingControllerDo
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingStrategyDo
+import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AdapterRecorderController @Inject constructor(
-    private val audioRecordingController: AudioRecordingController,
-    private val soundAmplitudeSource: SoundAmplitudeSource,
-    private val recordingStrategyMapper: Mapper<AudioRecordingStrategy, AudioRecordingDataStrategy>
+    private val audioRecordingControllerDo: AudioRecordingControllerDo,
+    private val soundAmplitudeSourceDo: SoundAmplitudeSourceDo,
+    private val recordingStrategyMapper: Mapper<AudioRecordingStrategy, AudioRecordingStrategyDo>
 ) : AudioRecorderController {
 
-    override val maxAmplitudeFlow get() = soundAmplitudeSource.amplitudeFlow
+    override val maxAmplitudeFlow get() = soundAmplitudeSourceDo.amplitudeFlow
 
     override suspend fun audioRecordingFlow(strategy: AudioRecordingStrategy): Flow<Result<ByteArray>> {
-        return audioRecordingController.audioRecordingFlow(recordingStrategyMapper.map(strategy))
+        return audioRecordingControllerDo.audioRecordingFlow(recordingStrategyMapper.map(strategy))
     }
 
 

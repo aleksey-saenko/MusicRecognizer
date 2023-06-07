@@ -1,13 +1,13 @@
 package com.mrsep.musicrecognizer.data.di
 
-import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSource
+import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceImpl
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingController
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingControllerDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoderController
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSourceImpl
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
-import com.mrsep.musicrecognizer.data.player.PlayerDataController
+import com.mrsep.musicrecognizer.data.player.PlayerControllerDo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,7 +21,7 @@ interface AudioModule {
 
     @Binds
     @Singleton
-    fun bindMediaPlayerController(implementation: MediaPlayerController): PlayerDataController
+    fun bindMediaPlayerController(implementation: MediaPlayerController): PlayerControllerDo
 
     @Binds
     @Singleton
@@ -29,10 +29,10 @@ interface AudioModule {
 
     @Binds
     @Singleton
-    fun bindSoundAmplitudeSource(implementation: SoundAmplitudeSourceImpl): SoundAmplitudeSource
+    fun bindSoundAmplitudeSource(implementation: SoundAmplitudeSourceImpl): SoundAmplitudeSourceDo
 
     @Binds
     @Singleton
-    fun bindAudioRecordingController(implementation: AacEncoderController): AudioRecordingController
+    fun bindAudioRecordingController(implementation: AacEncoderController): AudioRecordingControllerDo
 
 }

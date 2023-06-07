@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.glue.recognitionqueue.adapters
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionDataRepository
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionData
+import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionRepositoryDo
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDo
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
 import kotlinx.coroutines.flow.Flow
@@ -11,8 +11,8 @@ import java.io.File
 import javax.inject.Inject
 
 class AdapterEnqueuedRepository @Inject constructor(
-    private val enqueuedDataRepository: EnqueuedRecognitionDataRepository,
-    private val enqueuedToDomainMapper: Mapper<EnqueuedRecognitionData, EnqueuedRecognition>
+    private val enqueuedDataRepository: EnqueuedRecognitionRepositoryDo,
+    private val enqueuedMapper: Mapper<EnqueuedRecognitionDo, EnqueuedRecognition>
 ) : EnqueuedRecognitionRepository {
 
     override suspend fun updateTitle(enqueuedId: Int, newTitle: String) {
@@ -43,7 +43,7 @@ class AdapterEnqueuedRepository @Inject constructor(
         return enqueuedDataRepository.getFlowWithStatusAll()
             .map { list ->
                 list.map { entityWithStatus ->
-                    enqueuedToDomainMapper.map(entityWithStatus)
+                    enqueuedMapper.map(entityWithStatus)
                 }
             }
     }

@@ -1,12 +1,13 @@
 package com.mrsep.musicrecognizer.glue.preferences.di
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.feature.preferences.domain.ScheduleAction
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
-import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesToDomainMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RequiredServicesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.ScheduleActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.SchedulePolicyMapper
@@ -21,20 +22,20 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
-            Mapper<UserPreferencesProto, UserPreferences>
+    fun bindPreferencesMapper(implementation: PreferencesMapper):
+            Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
     fun bindRequiredServicesMapper(implementation: RequiredServicesMapper):
-            BidirectionalMapper<RequiredServicesProto, UserPreferences.RequiredServices>
+            BidirectionalMapper<RequiredServicesDo, UserPreferences.RequiredServices>
 
     @Binds
     fun bindScheduleActionMapper(implementation: ScheduleActionMapper):
-            BidirectionalMapper<ScheduleActionProto, ScheduleAction>
+            BidirectionalMapper<ScheduleActionDo, ScheduleAction>
 
     @Binds
     fun bindSchedulePolicyMapper(implementation: SchedulePolicyMapper):
-            BidirectionalMapper<SchedulePolicyProto, UserPreferences.SchedulePolicy>
+            BidirectionalMapper<SchedulePolicyDo, UserPreferences.SchedulePolicy>
 
 
 }

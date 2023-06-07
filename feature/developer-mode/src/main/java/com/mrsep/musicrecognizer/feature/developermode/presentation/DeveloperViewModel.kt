@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSource
+import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
-import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
-import com.mrsep.musicrecognizer.data.track.TrackDataRepository
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
+import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,10 +26,10 @@ import javax.inject.Inject
 internal class DeveloperViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val databaseFiller: DatabaseFiller,
-    private val trackDataRepository: TrackDataRepository,
-    private val recognitionDataService: RecognitionDataService,
+    private val trackRepositoryDo: TrackRepositoryDo,
+    private val recognitionServiceDo: RecognitionServiceDo,
 //    private val audioSource: SoundSource,
-    private val amplitudeSource: SoundAmplitudeSource,
+    private val amplitudeSource: SoundAmplitudeSourceDo,
     private val encoder: AacEncoder,
 //    private val aacEncoderController: AacEncoderController,
     private val playerController: MediaPlayerController,
@@ -52,7 +52,7 @@ internal class DeveloperViewModel @Inject constructor(
         }
     }
 
-    fun clearDb() = processSuspend { trackDataRepository.deleteAll() }
+    fun clearDb() = processSuspend { trackRepositoryDo.deleteAll() }
 
     fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 1000) }
 
@@ -61,9 +61,17 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun recognizeTestFile() {
         viewModelScope.launch {
-            val result = recognitionDataService.recognize(
+            val result = recognitionServiceDo.recognize(
                 token = "",
-                requiredServices = UserPreferencesProto.RequiredServicesProto.getDefaultInstance(),
+                requiredServices = UserPreferencesDo.RequiredServicesDo(
+                    spotify = true,
+                    youtube = false,
+                    soundCloud = false,
+                    appleMusic = false,
+                    deezer = false,
+                    napster = false,
+                    musicbrainz = false
+                ),
                 file = File("${appContext.filesDir.absolutePath}/testAudioChain")
             )
             println(result)

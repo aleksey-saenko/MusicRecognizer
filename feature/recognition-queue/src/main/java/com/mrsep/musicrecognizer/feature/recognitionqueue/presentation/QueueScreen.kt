@@ -10,8 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.recognitionqueue.domain.model.EnqueuedRecognition
@@ -31,6 +34,15 @@ internal fun QueueScreen(
     when (val state = screenState) {
         QueueScreenUiState.Loading -> LoadingStub()
         is QueueScreenUiState.Success -> {
+
+            val lifecycle = LocalLifecycleOwner.current.lifecycle
+            DisposableEffect(Unit) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_STOP) viewModel.stopAudioPlayer()
+                }
+                lifecycle.addObserver(observer)
+                onDispose { lifecycle.removeObserver(observer) }
+            }
 
             val selectedSet = remember(state.enqueuedList) { mutableStateMapOf<Int, Unit>() }
             var multiselectEnabled by remember(state.enqueuedList) { mutableStateOf(false) }
@@ -65,14 +77,14 @@ internal fun QueueScreen(
                     onSelectAll = {
                         selectedSet.putAll(state.enqueuedList.map { it.id to Unit })
                     },
-                    onDeselectAll = { selectedSet.clear() },
+                    onDeselectAll = selectedSet::clear,
                     onCancelSelected = {
                         viewModel.cancelRecognition(*selectedSet.keys.toIntArray())
                     },
                     onDeleteSelected = {
                         viewModel.cancelAndDeleteRecognition(*selectedSet.keys.toIntArray())
                     },
-                    onDeleteAll = { viewModel.cancelAndDeleteRecognitionAll() },
+                    onDeleteAll = viewModel::cancelAndDeleteRecognitionAll,
                     onDisableSelectionMode = ::disableMultiselect
                 )
                 if (state.enqueuedList.isEmpty()) {
@@ -90,33 +102,19 @@ internal fun QueueScreen(
                             LazyColumnEnqueuedItem(
                                 enqueued = state.enqueuedList[index],
                                 isPlaying = state.enqueuedList[index].isPlaying(state.playerStatus),
-                                onDeleteEnqueued = { enqueuedId ->
-                                    viewModel.cancelAndDeleteRecognition(enqueuedId)
-                                },
-                                onRenameEnqueued = { enqueuedId, newName ->
-                                    viewModel.renameRecognition(enqueuedId, newName)
-                                },
-                                onStartPlayRecord = { enqueuedId ->
-                                    viewModel.startAudioPlayer(enqueuedId)
-                                },
-                                onStopPlayRecord = {
-                                    viewModel.stopAudioPlayer()
-                                },
-                                onEnqueueRecognition = { enqueuedId ->
-                                    viewModel.enqueueRecognition(enqueuedId)
-                                },
-                                onCancelRecognition = { enqueuedId ->
-                                    viewModel.cancelRecognition(enqueuedId)
-                                },
+                                onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
+                                onRenameEnqueued = viewModel::renameRecognition,
+                                onStartPlayRecord = viewModel::startAudioPlayer,
+                                onStopPlayRecord = viewModel::stopAudioPlayer,
+                                onEnqueueRecognition = viewModel::enqueueRecognition,
+                                onCancelRecognition = viewModel::cancelRecognition,
                                 onNavigateToTrackScreen = onNavigateToTrackScreen,
                                 menuEnabled = !multiselectEnabled,
                                 selected = selectedSet.containsKey(state.enqueuedList[index].id),
                                 onClick = { enqueuedId ->
                                     if (multiselectEnabled) toggleSelected(enqueuedId)
                                 },
-                                onLongClick = { enqueuedId ->
-                                    toggleSelected(enqueuedId)
-                                },
+                                onLongClick = ::toggleSelected,
                                 modifier = Modifier.animateItemPlacement(
                                     tween(300)
                                 )

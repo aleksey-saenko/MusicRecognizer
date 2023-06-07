@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.glue.library.di
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.track.SearchDataResult
-import com.mrsep.musicrecognizer.data.track.TrackDataFilter
+import com.mrsep.musicrecognizer.data.track.SearchResultDo
+import com.mrsep.musicrecognizer.data.track.TrackFilterDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
@@ -25,10 +25,10 @@ interface MapperModule {
 
     @Binds
     fun bindRemoteTrackResultMapper(implementation: SearchResultMapper):
-            Mapper<SearchDataResult<Track>, SearchResult<Track>>
+            Mapper<SearchResultDo<Track>, SearchResult<Track>>
 
     @Binds
     fun bindTrackFilterMapper(implementation: TrackFilterMapper):
-            Mapper<TrackFilter, TrackDataFilter>
+            Mapper<TrackFilter, TrackFilterDo>
 
 }

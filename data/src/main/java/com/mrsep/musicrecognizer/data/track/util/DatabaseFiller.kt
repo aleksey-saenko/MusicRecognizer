@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.track.TrackDataRepository
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,7 +19,7 @@ private const val TAG = "DatabaseFiller"
 class DatabaseFiller @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val trackRepository: TrackDataRepository,
+    private val trackRepository: TrackRepositoryDo,
     private val moshi: Moshi
 ) {
     private val defaultAssetsDirectory = "success_json_responses"
@@ -45,7 +45,7 @@ class DatabaseFiller @Inject constructor(
         withContext(ioDispatcher) {
             if (force || trackRepository.isEmptyFlow().first()) {
                 val trackList = parseJsonFilesFromAssets(assetsDirectory)
-                    .filterIsInstance<RemoteRecognitionDataResult.Success>()
+                    .filterIsInstance<RemoteRecognitionResultDo.Success>()
                     .mapIndexed { index, result ->
                         result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
@@ -62,9 +62,9 @@ class DatabaseFiller @Inject constructor(
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private suspend fun parseJsonFilesFromAssets(assetsDirectory: String): List<RemoteRecognitionDataResult> {
+    private suspend fun parseJsonFilesFromAssets(assetsDirectory: String): List<RemoteRecognitionResultDo> {
         return withContext(ioDispatcher) {
-            val jsonAdapter = moshi.adapter<RemoteRecognitionDataResult>()
+            val jsonAdapter = moshi.adapter<RemoteRecognitionResultDo>()
 
             val fileNamesArray = try {
                 appContext.assets.list(assetsDirectory) ?: emptyArray()

@@ -8,7 +8,9 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionSer
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.audioRecognitionStrategy
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.splitter
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.step
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
@@ -35,7 +37,8 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-private const val TAG = "RecognitionInteractorImplNew"
+@Suppress("unused")
+private const val TAG = "RecognitionInteractorImpl"
 
 @Singleton
 class RecognitionInteractorImpl @Inject constructor(
@@ -50,21 +53,19 @@ class RecognitionInteractorImpl @Inject constructor(
     override val screenRecognitionStatus get() = resultDelegator.screenState
     override val serviceRecognitionStatus get() = resultDelegator.serviceState
 
-    private val onlineStrategy = AudioRecordingStrategy.Builder()
-        .addStep(3_500.milliseconds)
-        .addStep(6_000.milliseconds)
-        .addStep(9_000.milliseconds)
-        .addSplitter(true)
-        .addStep(12_500.milliseconds)
-        .addStep(15_000.milliseconds)
-        .addStep(18_000.milliseconds)
-        .sendTotalAtEnd(true)
-        .build()
+    private val onlineStrategy = audioRecognitionStrategy(true) {
+        step(3_500.milliseconds)
+        step(6_000.milliseconds)
+        step(9_000.milliseconds)
+        splitter(true)
+        step(12_500.milliseconds)
+        step(15_000.milliseconds)
+        step(18_000.milliseconds)
+    }
 
-    private val offlineStrategy = AudioRecordingStrategy.Builder()
-        .addStep(10.seconds)
-        .sendTotalAtEnd(false)
-        .build()
+    private val offlineStrategy = audioRecognitionStrategy(false) {
+        step(10.seconds)
+    }
 
     private var recognitionJob: Job? = null
 

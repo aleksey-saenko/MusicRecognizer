@@ -1,18 +1,18 @@
 package com.mrsep.musicrecognizer.glue.recognition.mapper
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.UserPreferencesProto.ScheduleActionProto
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import javax.inject.Inject
 
 class UserPreferencesMapper @Inject constructor(
-    private val scheduleActionMapper: Mapper<ScheduleActionProto, ScheduleAction>
+    private val scheduleActionMapper: Mapper<ScheduleActionDo, ScheduleAction>
 ) :
-    Mapper<UserPreferencesProto, UserPreferences> {
+    Mapper<UserPreferencesDo, UserPreferences> {
 
-    override fun map(input: UserPreferencesProto): UserPreferences {
+    override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
             onboardingCompleted = input.onboardingCompleted,
             apiToken = input.apiToken,
@@ -22,7 +22,7 @@ class UserPreferencesMapper @Inject constructor(
             requiredServices = UserPreferences.RequiredServices(
                 spotify = input.requiredServices.spotify,
                 youtube = input.requiredServices.youtube,
-                soundCloud = input.requiredServices.soundcloud,
+                soundCloud = input.requiredServices.soundCloud,
                 appleMusic = input.requiredServices.appleMusic,
                 deezer = input.requiredServices.deezer,
                 napster = input.requiredServices.napster,

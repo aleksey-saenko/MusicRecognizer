@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.data.audiorecord.encoder
 
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingController
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingDataStrategy
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingControllerDo
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingStrategyDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
@@ -14,9 +14,9 @@ import javax.inject.Inject
 class AacEncoderController @Inject constructor(
     private val aacEncoder: AacEncoder,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
-) : AudioRecordingController {
+) : AudioRecordingControllerDo {
 
-    override fun audioRecordingFlow(strategy: AudioRecordingDataStrategy) = flow {
+    override fun audioRecordingFlow(strategy: AudioRecordingStrategyDo) = flow {
         var currentRecStepIndex = 0
         var nextPacketIndexAfterSplitter = 0
         val packetsList = mutableListOf<ByteArray>()

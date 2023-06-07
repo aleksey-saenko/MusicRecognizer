@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.data.remote.audd
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 
-fun UserPreferencesProto.RequiredServicesProto.toAuddReturnParameter(): String {
+internal fun UserPreferencesDo.RequiredServicesDo.toAuddReturnParameter(): String {
     return "lyrics"
         .plusIf(this.spotify, "spotify")
         .plusIf(this.appleMusic, "apple_music")

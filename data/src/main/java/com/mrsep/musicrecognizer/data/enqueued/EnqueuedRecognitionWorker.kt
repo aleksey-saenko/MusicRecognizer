@@ -12,20 +12,20 @@ import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
 import com.mrsep.musicrecognizer.data.enqueued.model.RemoteRecognitionResultType
-import com.mrsep.musicrecognizer.data.preferences.PreferencesDataRepository
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
-import com.mrsep.musicrecognizer.data.track.TrackDataRepository
+import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
+import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import java.time.Instant
 
 @HiltWorker
 class EnqueuedRecognitionWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val trackRepository: TrackDataRepository,
-    private val preferencesRepository: PreferencesDataRepository,
-    private val enqueuedRecognitionRepository: EnqueuedRecognitionDataRepository,
-    private val recognitionService: RecognitionDataService,
+    private val trackRepository: TrackRepositoryDo,
+    private val preferencesRepository: PreferencesRepositoryDo,
+    private val enqueuedRecognitionRepository: EnqueuedRecognitionRepositoryDo,
+    private val recognitionService: RecognitionServiceDo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -49,27 +49,27 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
                 file = enqueued.recordFile
             )
             when (result) {
-                is RemoteRecognitionDataResult.Success -> {
+                is RemoteRecognitionResultDo.Success -> {
                     val updatedTrack = trackRepository.insertOrReplaceSaveMetadata(result.data)[0]
                     val updatedResult = result.copy(data = updatedTrack)
                     updateEnqueuedWithResult(enqueued, updatedResult)
                     Result.success()
                 }
 
-                is RemoteRecognitionDataResult.NoMatches -> {
+                is RemoteRecognitionResultDo.NoMatches -> {
                     updateEnqueuedWithResult(enqueued, result)
                     Result.success()
                 }
 
-                is RemoteRecognitionDataResult.Error.WrongToken,
-                is RemoteRecognitionDataResult.Error.BadRecording -> {
+                is RemoteRecognitionResultDo.Error.WrongToken,
+                is RemoteRecognitionResultDo.Error.BadRecording -> {
                     updateEnqueuedWithResult(enqueued, result)
                     Result.failure()
                 }
 
-                RemoteRecognitionDataResult.Error.BadConnection,
-                is RemoteRecognitionDataResult.Error.HttpError,
-                is RemoteRecognitionDataResult.Error.UnhandledError -> {
+                RemoteRecognitionResultDo.Error.BadConnection,
+                is RemoteRecognitionResultDo.Error.HttpError,
+                is RemoteRecognitionResultDo.Error.UnhandledError -> {
                     if (runAttemptCount >= MAX_ATTEMPTS) {
                         Log.w(TAG, "$TAG canceled, runAttemptCount > max=$MAX_ATTEMPTS")
                         updateEnqueuedWithResult(enqueued, result)
@@ -85,32 +85,32 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
 
     private suspend fun updateEnqueuedWithResult(
         enqueued: EnqueuedRecognitionEntity,
-        remoteResult: RemoteRecognitionDataResult
+        remoteResult: RemoteRecognitionResultDo
     ) {
         val currentDate = Instant.now()
         val updatedEnqueued = when (remoteResult) {
-            is RemoteRecognitionDataResult.Success -> enqueued.copy(
+            is RemoteRecognitionResultDo.Success -> enqueued.copy(
                 resultType = RemoteRecognitionResultType.Success,
                 resultMbId = remoteResult.data.mbId,
                 resultMessage = null,
                 resultDate = currentDate
             )
 
-            RemoteRecognitionDataResult.NoMatches -> enqueued.copy(
+            RemoteRecognitionResultDo.NoMatches -> enqueued.copy(
                 resultType = RemoteRecognitionResultType.NoMatches,
                 resultMbId = null,
                 resultMessage = null,
                 resultDate = null
             )
 
-            RemoteRecognitionDataResult.Error.BadConnection -> enqueued.copy(
+            RemoteRecognitionResultDo.Error.BadConnection -> enqueued.copy(
                 resultType = RemoteRecognitionResultType.BadConnection,
                 resultMbId = null,
                 resultMessage = null,
                 resultDate = null
             )
 
-            is RemoteRecognitionDataResult.Error.WrongToken -> enqueued.copy(
+            is RemoteRecognitionResultDo.Error.WrongToken -> enqueued.copy(
                 resultType = if (remoteResult.isLimitReached)
                     RemoteRecognitionResultType.LimitedToken
                 else
@@ -120,14 +120,14 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
                 resultDate = null
             )
 
-            is RemoteRecognitionDataResult.Error.BadRecording -> enqueued.copy(
+            is RemoteRecognitionResultDo.Error.BadRecording -> enqueued.copy(
                 resultType = RemoteRecognitionResultType.BadRecording,
                 resultMbId = null,
                 resultMessage = remoteResult.message,
                 resultDate = null
             )
 
-            is RemoteRecognitionDataResult.Error.HttpError ->
+            is RemoteRecognitionResultDo.Error.HttpError ->
                 enqueued.copy(
                     resultType = RemoteRecognitionResultType.HttpError,
                     resultMbId = null,
@@ -135,7 +135,7 @@ class EnqueuedRecognitionWorker @AssistedInject constructor(
                     resultDate = null
                 )
 
-            is RemoteRecognitionDataResult.Error.UnhandledError ->
+            is RemoteRecognitionResultDo.Error.UnhandledError ->
                 enqueued.copy(
                     resultType = RemoteRecognitionResultType.UnhandledError,
                     resultMbId = null,

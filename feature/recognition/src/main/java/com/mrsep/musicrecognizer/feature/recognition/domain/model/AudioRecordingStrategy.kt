@@ -43,7 +43,7 @@ class AudioRecordingStrategy(
 
     class Step(
         val timestamp: Duration,
-        val splitter: Boolean
+        val splitter: Boolean = false
     )
 
     class Builder {
@@ -53,6 +53,11 @@ class AudioRecordingStrategy(
         private var extraTryIndex = -1
 
         fun addStep(timestamp: Duration) = apply {
+            steps.lastOrNull()?.timestamp?.let { lastTimestamp ->
+                check(lastTimestamp < timestamp) {
+                    "Each strategy step must have timestamp greater than the previous one"
+                }
+            }
             steps.add(Step(timestamp, false))
         }
 
@@ -68,12 +73,37 @@ class AudioRecordingStrategy(
             sendTotalAtEnd = value
         }
 
-        fun build() = AudioRecordingStrategy(
-            steps = steps.toList(),
-            sendTotalAtEnd= sendTotalAtEnd,
-            extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
-        )
+        fun build(): AudioRecordingStrategy {
+            check(steps.isNotEmpty()) { "AudioRecordingStrategy must have at least 1 step" }
+            return AudioRecordingStrategy(
+                steps = steps,
+                sendTotalAtEnd= sendTotalAtEnd,
+                extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
+            )
+        }
 
     }
+
+    companion object {
+
+        inline fun audioRecognitionStrategy(
+            sendTotalAtEnd: Boolean,
+            init: Builder.() -> Unit
+        ): AudioRecordingStrategy {
+            return Builder()
+                .apply(init)
+                .sendTotalAtEnd(sendTotalAtEnd)
+                .build()
+        }
+
+        fun Builder.step(timestamp: Duration) {
+            addStep(timestamp)
+        }
+        fun Builder.splitter(startOfExtraTry: Boolean = false) {
+            addSplitter(startOfExtraTry)
+        }
+
+    }
+
 
 }

@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
-import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,9 +17,8 @@ import javax.inject.Inject
 class TrackRepositoryImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
-) : TrackDataRepository {
+) : TrackRepositoryDo {
     private val trackDao = database.trackDao()
 
     override fun isEmptyFlow(): Flow<Boolean> {
@@ -130,7 +128,7 @@ class TrackRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getFilteredFlow(filter: TrackDataFilter): Flow<List<TrackEntity>> {
+    override fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>> {
         return trackDao.getFlowByCustomQuery(filter.toSQLiteQuery())
             .flowOn(ioDispatcher)
     }
@@ -175,17 +173,17 @@ class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchDataResult<TrackEntity>> {
+    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo<TrackEntity>> {
         val searchKey = createSearchKeyForSQLite(keyword)
         return trackDao.searchFlow(searchKey, ESCAPE_SYMBOL, limit)
-            .map<List<TrackEntity>, SearchDataResult<TrackEntity>> { list ->
+            .map<List<TrackEntity>, SearchResultDo<TrackEntity>> { list ->
 //                delay(3000) //debug purpose
-                SearchDataResult.Success(
+                SearchResultDo.Success(
                     keyword = keyword,
                     data = list
                 )
             }
-            .onStart { emit(SearchDataResult.Pending(keyword)) }
+            .onStart { emit(SearchResultDo.Pending(keyword)) }
             .flowOn(ioDispatcher)
     }
 
@@ -201,24 +199,24 @@ class TrackRepositoryImpl @Inject constructor(
 
 }
 
-private fun TrackDataFilter.toSQLiteQuery(): SupportSQLiteQuery {
+private fun TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery {
     val builder = StringBuilder("SELECT * FROM track")
     val params = mutableListOf<Any>()
     var whereUsed = false
     when (this.favoritesMode) {
-        DataFavoritesMode.All -> {}
-        DataFavoritesMode.OnlyFavorites -> {
+        DataFavoritesModeDo.All -> {}
+        DataFavoritesModeDo.OnlyFavorites -> {
             builder.append(" WHERE is_favorite")
             whereUsed = true
         }
-        DataFavoritesMode.ExcludeFavorites -> {
+        DataFavoritesModeDo.ExcludeFavorites -> {
             builder.append(" WHERE NOT(is_favorite)")
             whereUsed = true
         }
     }
     when (val range = this.dateRange) {
-        DataRecognitionDateRange.Empty -> {}
-        is DataRecognitionDateRange.Selected -> {
+        DataRecognitionDateRangeDo.Empty -> {}
+        is DataRecognitionDateRangeDo.Selected -> {
             builder.append(if (whereUsed) " AND" else " WHERE")
             builder.append(" last_recognition_date BETWEEN ? and ?")
             params.add(range.startDate)
@@ -226,15 +224,15 @@ private fun TrackDataFilter.toSQLiteQuery(): SupportSQLiteQuery {
         }
     }
     val sortByColumn = when (this.sortBy) {
-        DataSortBy.RecognitionDate -> "last_recognition_date"
-        DataSortBy.Title -> "title"
-        DataSortBy.Artist -> "artist"
-        DataSortBy.ReleaseDate -> "release_date"
+        DataSortByDo.RecognitionDate -> "last_recognition_date"
+        DataSortByDo.Title -> "title"
+        DataSortByDo.Artist -> "artist"
+        DataSortByDo.ReleaseDate -> "release_date"
     }
     builder.append(" ORDER BY $sortByColumn")
     val orderBy = when (this.orderBy) {
-        DataOrderBy.Asc -> "ASC"
-        DataOrderBy.Desc -> "DESC"
+        DataOrderByDo.Asc -> "ASC"
+        DataOrderByDo.Desc -> "DESC"
     }
     builder.append(" $orderBy")
     return SimpleSQLiteQuery(builder.toString(), params.toTypedArray())

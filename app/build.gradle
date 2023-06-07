@@ -106,10 +106,6 @@ dependencies {
     implementation libs.kotlinx.coroutinesAndroid
     implementation libs.kotlinx.collectionImmutable
 
-    // FIXME: should be deleted when proto model will be replaced by data model in data module
-    implementation libs.androidx.datastoreCore
-    implementation libs.protobuf.javalite
-
     implementation libs.hilt.android
     kapt libs.hilt.compiler
 

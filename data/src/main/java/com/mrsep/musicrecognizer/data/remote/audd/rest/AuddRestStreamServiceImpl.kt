@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.data.remote.audd.rest
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamDataService
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceDo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -12,19 +12,19 @@ import kotlinx.coroutines.flow.takeWhile
 import javax.inject.Inject
 
 class AuddRestStreamServiceImpl @Inject constructor(
-    private val recognitionService: RecognitionDataService
-) : RecognitionStreamDataService {
+    private val recognitionService: RecognitionServiceDo
+) : RecognitionStreamServiceDo {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         audioRecordingFlow: Flow<ByteArray>
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
 
         // bad recording by default in case if audioRecordingFlow is empty
-        var lastResult: RemoteRecognitionDataResult =
-            RemoteRecognitionDataResult.Error.BadRecording(
+        var lastResult: RemoteRecognitionResultDo =
+            RemoteRecognitionResultDo.Error.BadRecording(
                 "Recognition process failed due to empty audio recording stream"
             )
         audioRecordingFlow.flatMapMerge { recording ->
@@ -41,9 +41,9 @@ class AuddRestStreamServiceImpl @Inject constructor(
             .takeWhile { result ->
                 lastResult = result
                 when (result) {
-                    is RemoteRecognitionDataResult.Success,
-                    is RemoteRecognitionDataResult.Error.BadRecording,
-                    is RemoteRecognitionDataResult.Error.WrongToken -> false
+                    is RemoteRecognitionResultDo.Success,
+                    is RemoteRecognitionResultDo.Error.BadRecording,
+                    is RemoteRecognitionResultDo.Error.WrongToken -> false
 
                     else -> true
                 }

@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.data.di
 
 import com.mrsep.musicrecognizer.data.remote.audd.rest.AuddRecognitionServicePure
-import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionDataService
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamDataService
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamDataServiceImpl
+import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceDo
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,11 +18,11 @@ interface RecognitionModule {
     @Binds
     @Singleton
 //    fun bindRecognitionService(implementation: AuddRecognitionService): RecognitionDataService
-    fun bindRecognitionService(implementation: AuddRecognitionServicePure): RecognitionDataService
+    fun bindRecognitionService(implementation: AuddRecognitionServicePure): RecognitionServiceDo
 
     @Binds
     @Singleton
 //    fun bindRemoteRecognitionStreamService(implementation: AuddRestStreamServiceImpl): RecognitionStreamDataService
-    fun bindRemoteRecognitionStreamService(implementation: RecognitionStreamDataServiceImpl): RecognitionStreamDataService
+    fun bindRemoteRecognitionStreamService(implementation: RecognitionStreamServiceImpl): RecognitionStreamServiceDo
 
 }

@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.data.remote.audd.rest
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
-import com.mrsep.musicrecognizer.data.remote.audd.model.TokenValidationDataStatus
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.TokenValidationStatusDo
 import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -25,14 +25,14 @@ private const val AUDIO_SAMPLE_URL = "https://audd.tech/example.mp3"
 class AuddRecognitionService @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     retrofit: Retrofit,
-) : RecognitionDataService {
+) : RecognitionServiceDo {
     private val auddClient = retrofit.create<AuddApi>()
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         file: File
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -44,9 +44,9 @@ class AuddRecognitionService @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         byteArray: ByteArray
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -58,9 +58,9 @@ class AuddRecognitionService @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         url: URL
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             baseCallFunction(
                 token = token,
@@ -96,9 +96,9 @@ class AuddRecognitionService @Inject constructor(
 
     private suspend fun baseCallFunction(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto,
+        requiredServices: UserPreferencesDo.RequiredServicesDo,
         dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
-    ): RemoteRecognitionDataResult {
+    ): RemoteRecognitionResultDo {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("api_token", token)
             .addFormDataPart("return", requiredServices.toAuddReturnParameter())
@@ -108,27 +108,35 @@ class AuddRecognitionService @Inject constructor(
             auddClient.recognize(multipartBody)
         } catch (e: HttpException) {
             e.printStackTrace()
-            RemoteRecognitionDataResult.Error.HttpError(code = e.code(), message = e.message())
+            RemoteRecognitionResultDo.Error.HttpError(code = e.code(), message = e.message())
         } catch (e: IOException) {
             e.printStackTrace()
-            RemoteRecognitionDataResult.Error.BadConnection
+            RemoteRecognitionResultDo.Error.BadConnection
         } catch (e: Exception) {
             e.printStackTrace()
-            RemoteRecognitionDataResult.Error.UnhandledError(message = e.message ?: "", e = e)
+            RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
 
-    override suspend fun validateToken(token: String): TokenValidationDataStatus {
+    override suspend fun validateToken(token: String): TokenValidationStatusDo {
         val sampleUrlRecognitionResult = recognize(
             token = token,
-            requiredServices = UserPreferencesProto.RequiredServicesProto.getDefaultInstance(),
+            requiredServices = UserPreferencesDo.RequiredServicesDo(
+                spotify = true,
+                youtube = false,
+                soundCloud = false,
+                appleMusic = false,
+                deezer = false,
+                napster = false,
+                musicbrainz = false
+            ),
             url = URL(AUDIO_SAMPLE_URL)
         )
         return when (sampleUrlRecognitionResult) {
-            is RemoteRecognitionDataResult.Error ->
-                TokenValidationDataStatus.Error(sampleUrlRecognitionResult)
-            RemoteRecognitionDataResult.NoMatches,
-            is RemoteRecognitionDataResult.Success -> TokenValidationDataStatus.Success
+            is RemoteRecognitionResultDo.Error ->
+                TokenValidationStatusDo.Error(sampleUrlRecognitionResult)
+            RemoteRecognitionResultDo.NoMatches,
+            is RemoteRecognitionResultDo.Success -> TokenValidationStatusDo.Success
         }
     }
 

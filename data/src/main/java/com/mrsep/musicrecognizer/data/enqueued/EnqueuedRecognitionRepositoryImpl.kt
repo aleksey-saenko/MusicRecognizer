@@ -3,11 +3,11 @@ package com.mrsep.musicrecognizer.data.enqueued
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDataStatus
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionStatusDo
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionData
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDo
 import com.mrsep.musicrecognizer.data.enqueued.model.RemoteRecognitionResultType
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,12 +18,12 @@ import java.time.Instant
 import javax.inject.Inject
 
 class EnqueuedRecognitionRepositoryImpl @Inject constructor(
-    private val enqueuedWorkManager: EnqueuedRecognitionWorkDataManager,
+    private val enqueuedWorkManager: EnqueuedRecognitionWorkManager,
     private val recordingFileDataSource: RecordingFileDataSource,
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
-) : EnqueuedRecognitionDataRepository {
+) : EnqueuedRecognitionRepositoryDo {
 
     private val dao = database.enqueuedRecognitionDao()
 
@@ -118,11 +118,11 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionData?> {
+    override fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionDo?> {
         return dao.getFlowById(id)
             .combine(enqueuedWorkManager.getWorkInfoFlowById(id)) { entity, status ->
                 entity?.let {
-                    EnqueuedRecognitionData(
+                    EnqueuedRecognitionDo(
                         id = entity.id,
                         title = entity.title,
                         recordFile = entity.recordFile,
@@ -135,7 +135,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionData>> {
+    override fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionDo>> {
         return getFlowAll()
             .flatMapLatest { listEntities ->
                 if (listEntities.isEmpty()) {
@@ -144,7 +144,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
                     val listOfFlow = listEntities.map { enqueuedEntity ->
                         enqueuedWorkManager.getWorkInfoFlowById(enqueuedEntity.id)
                             .mapLatest { workerStatus ->
-                                if (workerStatus is EnqueuedRecognitionDataStatus.Inactive) {
+                                if (workerStatus is EnqueuedRecognitionStatusDo.Inactive) {
                                     val storedStatus = enqueuedEntity.getStatusOrNull()
                                     enqueuedEntity.combineEnqueued(storedStatus ?: workerStatus)
                                 } else {
@@ -159,9 +159,9 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     private fun EnqueuedRecognitionEntity.combineEnqueued(
-        status: EnqueuedRecognitionDataStatus
-    ): EnqueuedRecognitionData {
-        return EnqueuedRecognitionData(
+        status: EnqueuedRecognitionStatusDo
+    ): EnqueuedRecognitionDo {
+        return EnqueuedRecognitionDo(
             id = this.id,
             title = this.title,
             recordFile = this.recordFile,
@@ -171,55 +171,55 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     }
 
     //FIXME: should be replace by mapper + see function in worker
-    private fun EnqueuedRecognitionEntity.getStatusOrNull(): EnqueuedRecognitionDataStatus? {
+    private fun EnqueuedRecognitionEntity.getStatusOrNull(): EnqueuedRecognitionStatusDo? {
         val remoteResult = resultType?.let { resultType ->
             when (resultType) {
                 RemoteRecognitionResultType.Success -> {
                     dao.getEnqueuedWithOptionalTrackById(id).firstOrNull()
                         ?.let { enqueuedWithTrack ->
                             enqueuedWithTrack.track?.let { track ->
-                                RemoteRecognitionDataResult.Success(track)
+                                RemoteRecognitionResultDo.Success(track)
                             }
                         }
                 }
 
                 RemoteRecognitionResultType.NoMatches -> {
-                    RemoteRecognitionDataResult.NoMatches
+                    RemoteRecognitionResultDo.NoMatches
                 }
 
                 RemoteRecognitionResultType.BadConnection -> {
-                    RemoteRecognitionDataResult.Error.BadConnection
+                    RemoteRecognitionResultDo.Error.BadConnection
                 }
 
                 RemoteRecognitionResultType.BadRecording -> {
-                    RemoteRecognitionDataResult.Error.BadRecording(resultMessage ?: "")
+                    RemoteRecognitionResultDo.Error.BadRecording(resultMessage ?: "")
                 }
 
                 RemoteRecognitionResultType.WrongToken -> {
-                    RemoteRecognitionDataResult.Error.WrongToken(false)
+                    RemoteRecognitionResultDo.Error.WrongToken(false)
                 }
 
                 RemoteRecognitionResultType.LimitedToken -> {
-                    RemoteRecognitionDataResult.Error.WrongToken(true)
+                    RemoteRecognitionResultDo.Error.WrongToken(true)
                 }
 
                 RemoteRecognitionResultType.HttpError -> {
                     // assuming the pattern "${code}\n${message}"
                     val data = resultMessage?.split("\n", limit = 2)
-                    RemoteRecognitionDataResult.Error.HttpError(
+                    RemoteRecognitionResultDo.Error.HttpError(
                         code = data?.get(0)?.toIntOrNull() ?: -1,
                         message = data?.get(1) ?: ""
                     )
                 }
 
                 RemoteRecognitionResultType.UnhandledError -> {
-                    RemoteRecognitionDataResult.Error.UnhandledError(
+                    RemoteRecognitionResultDo.Error.UnhandledError(
                         message = resultMessage ?: ""
                     )
                 }
             }
         }
-        return remoteResult?.let { result -> EnqueuedRecognitionDataStatus.Finished(result) }
+        return remoteResult?.let { result -> EnqueuedRecognitionStatusDo.Finished(result) }
     }
 
 

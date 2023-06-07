@@ -1,26 +1,26 @@
 package com.mrsep.musicrecognizer.glue.preferences.mapper
 
-import com.mrsep.musicrecognizer.UserPreferencesProto.ScheduleActionProto
+import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.feature.preferences.domain.ScheduleAction
 import javax.inject.Inject
 
-class ScheduleActionMapper @Inject constructor(): BidirectionalMapper<ScheduleActionProto, ScheduleAction> {
+class ScheduleActionMapper @Inject constructor() :
+    BidirectionalMapper<ScheduleActionDo, ScheduleAction> {
 
-    override fun map(input: ScheduleActionProto): ScheduleAction {
+    override fun map(input: ScheduleActionDo): ScheduleAction {
         return when (input) {
-            ScheduleActionProto.IGNORE -> ScheduleAction.Ignore
-            ScheduleActionProto.SAVE -> ScheduleAction.Save
-            ScheduleActionProto.SAVE_AND_LAUNCH -> ScheduleAction.SaveAndLaunch
-            ScheduleActionProto.UNRECOGNIZED -> ScheduleAction.Ignore
+            ScheduleActionDo.Ignore -> ScheduleAction.Ignore
+            ScheduleActionDo.Save -> ScheduleAction.Save
+            ScheduleActionDo.SaveAndLaunch -> ScheduleAction.SaveAndLaunch
         }
     }
 
-    override fun reverseMap(input: ScheduleAction): ScheduleActionProto {
+    override fun reverseMap(input: ScheduleAction): ScheduleActionDo {
         return when (input) {
-            ScheduleAction.Ignore -> ScheduleActionProto.IGNORE
-            ScheduleAction.Save -> ScheduleActionProto.SAVE
-            ScheduleAction.SaveAndLaunch -> ScheduleActionProto.SAVE_AND_LAUNCH
+            ScheduleAction.Ignore -> ScheduleActionDo.Ignore
+            ScheduleAction.Save -> ScheduleActionDo.Save
+            ScheduleAction.SaveAndLaunch -> ScheduleActionDo.SaveAndLaunch
         }
     }
 

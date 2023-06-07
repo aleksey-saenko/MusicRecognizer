@@ -3,9 +3,9 @@ package com.mrsep.musicrecognizer.glue.library.adapter
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.track.SearchDataResult
-import com.mrsep.musicrecognizer.data.track.TrackDataFilter
-import com.mrsep.musicrecognizer.data.track.TrackDataRepository
+import com.mrsep.musicrecognizer.data.track.SearchResultDo
+import com.mrsep.musicrecognizer.data.track.TrackFilterDo
+import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
@@ -16,33 +16,33 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AdapterTrackRepository @Inject constructor(
-    private val trackDataRepository: TrackDataRepository,
+    private val trackRepositoryDo: TrackRepositoryDo,
     private val trackMapper: Mapper<TrackEntity, Track>,
-    private val searchResultMapper: Mapper<SearchDataResult<Track>, SearchResult<Track>>,
-    private val trackFilterMapper: Mapper<TrackFilter, TrackDataFilter>
+    private val searchResultMapper: Mapper<SearchResultDo<Track>, SearchResult<Track>>,
+    private val trackFilterMapper: Mapper<TrackFilter, TrackFilterDo>
 ) : TrackRepository {
 
     override fun isEmptyFlow(): Flow<Boolean> {
-        return trackDataRepository.isEmptyFlow()
+        return trackRepositoryDo.isEmptyFlow()
     }
 
     override fun getPagedFlow(): Flow<PagingData<Track>> {
-        return trackDataRepository.getPagedFlow()
+        return trackRepositoryDo.getPagedFlow()
             .map { paging -> paging.map { entity -> trackMapper.map(entity) } }
     }
 
     override fun getFilteredFlow(filter: TrackFilter): Flow<List<Track>> {
-        return trackDataRepository.getFilteredFlow(trackFilterMapper.map(filter))
+        return trackRepositoryDo.getFilteredFlow(trackFilterMapper.map(filter))
             .map { list -> list.map { entity -> trackMapper.map(entity) } }
     }
 
     override suspend fun search(keyword: String, limit: Int): List<Track> {
-        return trackDataRepository.search(keyword, limit)
+        return trackRepositoryDo.search(keyword, limit)
             .map { entity -> trackMapper.map(entity) }
     }
 
     override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult<Track>> {
-        return trackDataRepository.searchResultFlow(keyword, limit).map { searchResult ->
+        return trackRepositoryDo.searchResultFlow(keyword, limit).map { searchResult ->
             searchResultMapper.map(
                 searchResult.map { entity -> trackMapper.map(entity) }
             )

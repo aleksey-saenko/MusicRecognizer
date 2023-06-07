@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.data.remote.audd.websocket
 
 import android.util.Log
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -31,7 +31,7 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
 
     private fun buildRequest(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto
+        requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Request {
         val returnParam = requiredServices.toAuddReturnParameter()
         return Request.Builder()
@@ -41,7 +41,7 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
 
     override suspend fun startSession(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto
+        requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Flow<SocketEvent> = flow {
         while (true) {
             Log.d(TAG, "Starting new single session")
@@ -51,7 +51,7 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
 
     private suspend fun startSingleSession(
         token: String,
-        requiredServices: UserPreferencesProto.RequiredServicesProto
+        requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Flow<SocketEvent> = callbackFlow {
 
         val eventsListener = object : WebSocketListener() {
@@ -96,11 +96,11 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
 
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun parseServerResponse(json: String): RemoteRecognitionDataResult {
+    private fun parseServerResponse(json: String): RemoteRecognitionResultDo {
         return try {
-            moshi.adapter<RemoteRecognitionDataResult>().fromJson(json)!!
+            moshi.adapter<RemoteRecognitionResultDo>().fromJson(json)!!
         } catch (e: Exception) {
-            RemoteRecognitionDataResult.Error.UnhandledError(message = e.message ?: "", e = e)
+            RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
 

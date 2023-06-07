@@ -1,11 +1,11 @@
 package com.mrsep.musicrecognizer.glue.recognition.di
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.UserPreferencesProto.ScheduleActionProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingDataStrategy
-import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionDataResult
+import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingStrategyDo
+import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
@@ -25,24 +25,24 @@ interface MapperModule {
 
     @Binds
     fun bindUserPreferencesMapper(implementation: UserPreferencesMapper):
-            Mapper<UserPreferencesProto, UserPreferences>
+            Mapper<UserPreferencesDo, UserPreferences>
     @Binds
     fun bindTrackMapper(implementation: TrackMapper): BidirectionalMapper<TrackEntity, Track>
 
     @Binds
     fun bindRemoteResultMapper(implementation: RemoteResultMapper):
-            Mapper<RemoteRecognitionDataResult, RemoteRecognitionResult>
+            Mapper<RemoteRecognitionResultDo, RemoteRecognitionResult>
 
     @Binds
     fun bindRequiredServicesMapper(implementation: RequiredServicesMapper):
-            Mapper<UserPreferences.RequiredServices, UserPreferencesProto.RequiredServicesProto>
+            BidirectionalMapper<UserPreferencesDo.RequiredServicesDo, UserPreferences.RequiredServices>
 
     @Binds
     fun bindAudioRecordingMapper(implementation: AudioRecordingMapper):
-            Mapper<AudioRecordingStrategy, AudioRecordingDataStrategy>
+            Mapper<AudioRecordingStrategy, AudioRecordingStrategyDo>
 
     @Binds
     fun bindScheduleActionMapper(implementation: ScheduleActionMapper):
-            Mapper<ScheduleActionProto, ScheduleAction>
+            Mapper<ScheduleActionDo, ScheduleAction>
 
 }

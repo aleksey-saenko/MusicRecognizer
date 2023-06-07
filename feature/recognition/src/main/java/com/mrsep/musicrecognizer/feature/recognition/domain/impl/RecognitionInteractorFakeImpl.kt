@@ -22,6 +22,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("unused")
 private const val TAG = "RecognitionInteractorFakeImpl"
 
 @Singleton

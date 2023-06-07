@@ -5,9 +5,9 @@ import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.data.ConnectivityManagerNetworkMonitor
-import com.mrsep.musicrecognizer.data.NetworkMonitorData
-import com.mrsep.musicrecognizer.data.remote.audd.model.AuddResponseJson
-import com.mrsep.musicrecognizer.data.remote.audd.model.adapter.AuddJsonAdapter
+import com.mrsep.musicrecognizer.data.NetworkMonitorDo
+import com.mrsep.musicrecognizer.data.remote.audd.json.AuddResponseJson
+import com.mrsep.musicrecognizer.data.remote.audd.json.adapter.AuddJsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Binds
@@ -30,7 +30,7 @@ import javax.inject.Singleton
 
 
 private const val AUDD_REST_BASE_URL = "https://api.audd.io/"
-private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
+//private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -94,7 +94,7 @@ object NetworkModule {
 interface NetworkMonitorModule {
 
     @Binds
-    fun bindNetworkMonitor(implementation: ConnectivityManagerNetworkMonitor): NetworkMonitorData
+    fun bindNetworkMonitor(implementation: ConnectivityManagerNetworkMonitor): NetworkMonitorDo
 
 }
 

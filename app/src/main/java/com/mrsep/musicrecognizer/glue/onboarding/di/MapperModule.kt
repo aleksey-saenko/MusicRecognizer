@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.glue.onboarding.di
 
-import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.feature.onboarding.domain.model.UserPreferences
-import com.mrsep.musicrecognizer.glue.onboarding.mapper.PreferencesToDomainMapper
+import com.mrsep.musicrecognizer.glue.onboarding.mapper.PreferencesMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindPreferencesToDomainMapper(implementation: PreferencesToDomainMapper):
-            Mapper<UserPreferencesProto, UserPreferences>
+    fun bindPreferencesMapper(implementation: PreferencesMapper):
+            Mapper<UserPreferencesDo, UserPreferences>
 
 }

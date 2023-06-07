@@ -5,14 +5,15 @@ import kotlinx.coroutines.flow.*
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("unused")
 private const val TAG = "MediaPlayerController"
 
-//TODO() need to handle exceptions
-class MediaPlayerController @Inject constructor() : PlayerDataController {
+//TODO: need to handle exceptions
+class MediaPlayerController @Inject constructor() : PlayerControllerDo {
 
     private var player: MediaPlayer? = null
 
-    private val _statusFlow = MutableStateFlow<PlayerDataStatus>(PlayerDataStatus.Idle)
+    private val _statusFlow = MutableStateFlow<PlayerStatusDo>(PlayerStatusDo.Idle)
     override val statusFlow = _statusFlow.asStateFlow()
 
     override fun start(file: File) {
@@ -21,15 +22,15 @@ class MediaPlayerController @Inject constructor() : PlayerDataController {
             isLooping = false
             setDataSource(file.absolutePath)
             setOnCompletionListener {
-                _statusFlow.update { PlayerDataStatus.Idle }
+                _statusFlow.update { PlayerStatusDo.Idle }
             }
             setOnErrorListener { _, what, extra ->
-                _statusFlow.update { PlayerDataStatus.Error(file, "what=$what, extra=$extra") }
+                _statusFlow.update { PlayerStatusDo.Error(file, "what=$what, extra=$extra") }
                 true
             }
             setOnPreparedListener {
                 player?.start()
-                _statusFlow.update { PlayerDataStatus.Started(file) }
+                _statusFlow.update { PlayerStatusDo.Started(file) }
             }
             prepareAsync()
         }
@@ -37,17 +38,17 @@ class MediaPlayerController @Inject constructor() : PlayerDataController {
 
     override fun pause() {
         val currentStatus = _statusFlow.value
-        if (currentStatus is PlayerDataStatus.Started) {
+        if (currentStatus is PlayerStatusDo.Started) {
             player?.pause()
-            _statusFlow.update { PlayerDataStatus.Paused(currentStatus.record) }
+            _statusFlow.update { PlayerStatusDo.Paused(currentStatus.record) }
         }
     }
 
     override fun resume() {
         val currentStatus = _statusFlow.value
-        if (currentStatus is PlayerDataStatus.Paused) {
+        if (currentStatus is PlayerStatusDo.Paused) {
             player?.start()
-            _statusFlow.update { PlayerDataStatus.Started(currentStatus.record) }
+            _statusFlow.update { PlayerStatusDo.Started(currentStatus.record) }
         }
     }
 
@@ -57,7 +58,7 @@ class MediaPlayerController @Inject constructor() : PlayerDataController {
             release()
         }
         player = null
-        _statusFlow.update { PlayerDataStatus.Idle }
+        _statusFlow.update { PlayerStatusDo.Idle }
     }
 
 }

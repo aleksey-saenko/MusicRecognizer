@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -25,17 +24,17 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScr
 import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen.recognitionScreen
 import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.navigateToQueueScreen
 import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.queueScreen
-import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.navigateToTrackScreen
-import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen.trackScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.lyricsScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.navigateToLyricsScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
 
 @Composable
 internal fun AppNavigation(
+    isExpandedScreen: Boolean,
     onboardingCompleted: Boolean,
     onOnboardingClose: () -> Unit
 ) {
-    LaunchedEffect(onboardingCompleted) {
-        println("onboardingCompleted=$onboardingCompleted")
-    }
     val topNavController = rememberNavController()
 //    printBackStack(topNavController, tag = "outer")
     NavHost(
@@ -50,6 +49,13 @@ internal fun AppNavigation(
             topNavController = topNavController
         )
         trackScreen(
+            isExpandedScreen = isExpandedScreen,
+            onBackPressed = topNavController::navigateUp,
+            onNavigateToLyricsScreen = { mbId, from ->
+                topNavController.navigateToLyricsScreen(mbId = mbId, from = from)
+            }
+        )
+        lyricsScreen(
             onBackPressed = topNavController::navigateUp
         )
         queueScreen(

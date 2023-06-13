@@ -1,34 +1,60 @@
 package com.mrsep.musicrecognizer.core.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-private const val DELAY_BEFORE_SHOW_INDICATOR_IN_MS = 1000L
+private const val appearanceDelay = 1500
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LoadingStub(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentSize: Dp = 64.dp
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
     ) {
-        var delayPassed by rememberSaveable { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            delay(DELAY_BEFORE_SHOW_INDICATOR_IN_MS)
-            delayPassed = true
+        val visibleState = remember {
+            MutableTransitionState(false).apply { targetState = true }
         }
-        if (delayPassed) {
-            VinylAnimated(
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(64.dp)
-            )
+        AnimatedVisibility(
+            visibleState = visibleState,
+            enter = fadeIn(tween(delayMillis = appearanceDelay)) +
+                    scaleIn(tween(delayMillis = appearanceDelay)),
+            exit = fadeOut(tween(delayMillis = appearanceDelay)) +
+                    scaleOut(tween(delayMillis = appearanceDelay)),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                VinylRotating(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(contentSize)
+                )
+                Text(
+                    text = stringResource(StringsR.string.loading),
+                    modifier = Modifier.alpha(0.9f),
+                )
+            }
         }
     }
 }

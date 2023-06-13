@@ -13,15 +13,18 @@ interface TrackRepositoryDo {
     suspend fun insertOrReplaceSaveMetadata(vararg track: TrackEntity): List<TrackEntity>
     suspend fun update(track: TrackEntity)
     suspend fun delete(vararg track: TrackEntity)
+    suspend fun deleteByMbId(vararg mbId: String)
     suspend fun deleteAll()
     suspend fun deleteAllExceptFavorites()
     suspend fun deleteAllFavorites()
+    suspend fun toggleFavoriteMark(mbId: String)
 
     fun countAllFlow(): Flow<Int>
     fun countFavoritesFlow(): Flow<Int>
 
     suspend fun getByMbId(mbId: String): TrackEntity?
     fun getByMbIdFlow(mbId: String): Flow<TrackEntity?>
+    fun getLyricsFlowById(mbId: String): Flow<String?>
 
     fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>>
     suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity>

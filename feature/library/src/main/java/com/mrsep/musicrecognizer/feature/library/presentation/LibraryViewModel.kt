@@ -17,6 +17,7 @@ import javax.inject.Inject
 
 private const val SEARCH_ITEMS_LIMIT = 30
 private const val SEARCH_INPUT_DEBOUNCE_IN_MS = 300L
+private const val SEARCH_QUERY_MIN_LENGTH = 2
 
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -71,7 +72,11 @@ internal class LibraryViewModel @Inject constructor(
             )
         )
 
-    fun submitSearchKeyword(keyword: String) = searchKeywordChannel.trySend(keyword)
+    fun submitSearchKeyword(keyword: String) {
+        searchKeywordChannel.trySend(
+            keyword.takeIf { it.length >= SEARCH_QUERY_MIN_LENGTH } ?: ""
+        )
+    }
 
     fun resetSearch() = searchKeywordChannel.trySend("")
 

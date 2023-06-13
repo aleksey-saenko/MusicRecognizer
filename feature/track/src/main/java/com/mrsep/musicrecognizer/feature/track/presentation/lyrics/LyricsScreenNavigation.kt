@@ -1,17 +1,19 @@
-package com.mrsep.musicrecognizer.feature.track.presentation
+package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
-object TrackScreen {
+object LyricsScreen {
 
-    private const val ROOT_ROUTE = "track"
+    private const val ROOT_ROUTE = "lyrics"
     private const val ROOT_DEEP_LINK = "app://mrsep.musicrecognizer.com"
     private const val ARG_MB_ID = "mbId"
 
@@ -25,18 +27,24 @@ object TrackScreen {
 
     private fun routeWithArgs(mbId: String) = "$ROOT_ROUTE/$mbId"
 
-    fun NavGraphBuilder.trackScreen(onBackPressed: () -> Unit) {
+    fun NavGraphBuilder.lyricsScreen(
+        onBackPressed: () -> Unit
+    ) {
         composable(
             route = ROUTE,
+            arguments = listOf(navArgument(ARG_MB_ID) { type = NavType.StringType }),
             deepLinks = listOf(navDeepLink {
                 uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
             })
         ) { backStackEntry ->
-            TrackScreen(onBackPressed = onBackPressed)
+            LyricsScreen(
+                onBackPressed = onBackPressed
+            )
+
         }
     }
 
-    fun NavController.navigateToTrackScreen(
+    fun NavController.navigateToLyricsScreen(
         mbId: String,
         from: NavBackStackEntry,
         navOptions: NavOptions? = null

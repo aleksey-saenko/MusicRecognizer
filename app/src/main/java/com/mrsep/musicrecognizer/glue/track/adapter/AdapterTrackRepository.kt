@@ -14,8 +14,16 @@ class AdapterTrackRepository @Inject constructor(
     private val trackMapper: BidirectionalMapper<TrackEntity, Track>
 ) : TrackRepository {
 
-    override suspend fun update(track: Track) {
-        trackRepositoryDo.update(trackMapper.reverseMap(track))
+    override suspend fun toggleFavoriteMark(mbId: String) {
+        trackRepositoryDo.toggleFavoriteMark(mbId)
+    }
+
+    override suspend fun deleteByMbId(mbId: String) {
+        trackRepositoryDo.deleteByMbId(mbId)
+    }
+
+    override fun getLyricsFlowById(mbId: String): Flow<String?> {
+        return trackRepositoryDo.getLyricsFlowById(mbId)
     }
 
     override fun getByMbIdFlow(mbId: String): Flow<Track?> {

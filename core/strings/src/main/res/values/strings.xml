@@ -162,6 +162,15 @@
     <string name="track_found">Track found</string>
     <string name="idle">Idle</string>
     <string name="running">Running</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="unmark_as_favorite">Unmark as favorite</string>
+    <string name="show_lyrics">Show lyrics</string>
+    <string name="show_metainfo">Show MetaInfo</string>
+    <string name="track_metainfo">Track MetaInfo</string>
+    <string name="date_of_last_recognition">Date of last recognition:%n%s</string>
+    <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
+    <string name="track_not_found">The track not found</string>
+    <string name="loading">Loading</string>
 
 
 </resources>

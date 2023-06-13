@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ScreenScrollableTopBar(
-    title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    title: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     topAppBarScrollBehavior: TopAppBarScrollBehavior

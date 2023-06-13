@@ -32,7 +32,9 @@ internal fun QueueScreen(
     val screenState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
 
     when (val state = screenState) {
-        QueueScreenUiState.Loading -> LoadingStub()
+        QueueScreenUiState.Loading -> LoadingStub(
+            modifier = Modifier.fillMaxSize()
+        )
         is QueueScreenUiState.Success -> {
 
             val lifecycle = LocalLifecycleOwner.current.lifecycle

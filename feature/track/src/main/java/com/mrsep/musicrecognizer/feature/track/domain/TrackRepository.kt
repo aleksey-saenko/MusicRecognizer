@@ -5,7 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
 
-    suspend fun update(track: Track)
+    suspend fun toggleFavoriteMark(mbId: String)
+
+    suspend fun deleteByMbId(mbId: String)
+
     fun getByMbIdFlow(mbId: String): Flow<Track?>
+
+    fun getLyricsFlowById(mbId: String): Flow<String?>
 
 }

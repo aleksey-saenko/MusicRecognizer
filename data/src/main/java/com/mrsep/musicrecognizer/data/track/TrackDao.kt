@@ -17,6 +17,9 @@ interface TrackDao {
     @Delete
     suspend fun delete(vararg track: TrackEntity)
 
+    @Query("DELETE FROM track WHERE mb_id in (:mbId)")
+    suspend fun deleteByMbId(vararg mbId: String)
+
     @Query("DELETE FROM track")
     suspend fun deleteAll()
 
@@ -25,6 +28,9 @@ interface TrackDao {
 
     @Query("DELETE FROM track WHERE is_favorite")
     suspend fun deleteAllFavorites()
+
+    @Query("UPDATE track SET is_favorite = NOT is_favorite WHERE mb_id=(:mbId)")
+    suspend fun toggleFavoriteMark(mbId: String)
 
     @Update
     suspend fun update(track: TrackEntity)
@@ -57,6 +63,9 @@ interface TrackDao {
 
     @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
+
+    @Query("SELECT lyrics FROM track WHERE mb_id=(:mbId)")
+    fun getLyricsFlowById(mbId: String): Flow<String?>
 
 
     @Query(

@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.annotation.concurrent.Immutable
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,7 @@ class MainActivityViewModel @Inject constructor(
 
 }
 
+@Immutable
 sealed class MainActivityUiState {
 
     object Loading: MainActivityUiState()

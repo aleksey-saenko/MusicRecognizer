@@ -13,7 +13,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
 class AuddJsonAdapter {
 
     @FromJson
@@ -44,11 +43,12 @@ class AuddJsonAdapter {
                         title = json.result.title,
                         album = json.result.album,
                         releaseDate = json.result.releaseDate?.toLocalDate(),
-                        lyrics = json.result.lyricsJson?.lyrics?.decodeHtml()?.trim(),
+                        lyrics = json.result.lyricsJson?.lyrics?.parseLyrics(),
                         links = TrackEntity.Links(
-                            artwork = json.result.deezerJson?.album?.coverBig?.let { url ->
+                            //FIXME: write complex logic for priority artwork parsing
+                            artwork = json.parseArtworkUrl()?.let { url ->
                                 validUrlOrNull(url)
-                            }, //FIXME write logic for priority artwork parsing
+                            },
                             spotify = json.result.spotify?.externalUrls?.spotify?.let { url ->
                                 validUrlOrNull(url)
                             },
@@ -98,9 +98,21 @@ class AuddJsonAdapter {
 
 }
 
-private fun String.decodeHtml(): String {
-    val preparedString = this.replace("\n", "<br>")
-    return Html.fromHtml(preparedString, Html.FROM_HTML_MODE_COMPACT).toString()
+private fun AuddResponseJson.Success.parseArtworkUrl(): String? {
+    return result?.deezerJson?.album?.run {
+        coverXl ?: coverBig ?: coverMedium ?: coverSmall
+    }
+}
+
+private fun String?.parseLyrics() = this?.run {
+    Html.fromHtml(
+        this.replace("\n", "<br>"),
+        Html.FROM_HTML_MODE_COMPACT
+    ).toString()
+        .trim()
+        .takeIf { str ->
+        str.length >= 20 || !str.contains("instrumental", true)
+    }
 }
 
 private fun String.toLocalDate() =
@@ -122,14 +134,20 @@ fun validUrlOrNull(potentialUrl: String) = if (isUrlValid(potentialUrl)) potenti
 
 /*
 https://docs.audd.io/#common-errors
-We have about 40 different error codes. The API returns the errors with an explanation of what happened. The common errors:
+We have about 40 different error codes. The common errors:
 
     #901 — No api_token passed, and the limit was reached (you need to obtain an api_token).
     #900 — Wrong API token (check the api_token parameter).
     #600 — Incorrect audio url.
-    #700 — You haven't sent a file for recognition (or we didn't receive it). If you use the POST HTTP method, check the Content-Type header: it should be multipart/form-data; also check the URL you're sending requests to: it should start with https:// (http:// requests get redirected and we don't receive any data from you when your code follows the redirect).
+    #700 — You haven't sent a file for recognition (or we didn't receive it).
+    If you use the POST HTTP method, check the Content-Type header: it should be multipart/form-data;
+    also check the URL you're sending requests to: it should start with https://
+    (http:// requests get redirected and we don't receive any data from you when your code follows the redirect).
     #500 — Incorrect audio file.
-    #400 — Too big audio file. 10M or 25 seconds is the maximum. We recommend recording no more than 20 seconds (usually, it takes less than one megabyte). If you need to recognize larger audio files, use the enterprise endpoint instead, it supports even days-long files.
-    #300 — Fingerprinting error: there was a problem with audio decoding or with the neural network. Possibly, the audio file is too small.
+    #400 — Too big audio file. 10M or 25 seconds is the maximum.
+    We recommend recording no more than 20 seconds (usually, it takes less than one megabyte).
+    #300 — Fingerprinting error: there was a problem with audio decoding or with the neural network.
+    Possibly, the audio file is too small.
     #100 — An unknown error. Contact us in this case.
+
  */

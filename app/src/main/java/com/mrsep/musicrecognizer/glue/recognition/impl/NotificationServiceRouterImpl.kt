@@ -7,7 +7,8 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceRouter
 import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen
-import com.mrsep.musicrecognizer.feature.track.presentation.TrackScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -18,6 +19,10 @@ class NotificationServiceRouterImpl @Inject constructor(
 
     override fun getDeepLinkIntentToTrack(mbId: String): Intent {
         return getDeepLinkIntent(TrackScreen.createDeepLink(mbId).toUri())
+    }
+
+    override fun getDeepLinkIntentToLyrics(mbId: String): Intent {
+        return getDeepLinkIntent(LyricsScreen.createDeepLink(mbId).toUri())
     }
 
     override fun getDeepLinkIntentToRecognitionQueue(): Intent {

@@ -200,7 +200,8 @@ internal fun LazyColumnEnqueuedItem(
                             Icons.Outlined.Edit,
                             contentDescription = null
                         )
-                    })
+                    }
+                )
                 DropdownMenuItem(
                     text = { Text(text = stringResource(StringsR.string.delete)) },
                     onClick = {
@@ -212,7 +213,8 @@ internal fun LazyColumnEnqueuedItem(
                             Icons.Outlined.Delete,
                             contentDescription = null
                         )
-                    })
+                    }
+                )
                 Divider()
                 when (enqueued.status) {
                     EnqueuedRecognitionStatus.Inactive -> {

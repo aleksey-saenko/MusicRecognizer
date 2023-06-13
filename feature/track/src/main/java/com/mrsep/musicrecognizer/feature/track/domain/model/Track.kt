@@ -35,13 +35,4 @@ data class Track(
         val isFavorite: Boolean
     )
 
-    fun getSharedBody(): String {
-        val albumAndYear = album?.let { alb ->
-            releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
-        }
-        return albumAndYear?.let { albAndYear ->
-            "$title / $artist / $albAndYear"
-        } ?: "$title / $artist"
-    }
-
 }

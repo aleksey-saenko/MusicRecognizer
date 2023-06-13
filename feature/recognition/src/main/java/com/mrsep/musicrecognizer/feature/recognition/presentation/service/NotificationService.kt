@@ -64,6 +64,7 @@ internal class NotificationService : Service() {
 
     private lateinit var isOffline: StateFlow<Boolean>
     private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
+
     // can be used to design background startup behaviour, not used now
     private var microphoneRestricted = true
 
@@ -228,7 +229,8 @@ internal class NotificationService : Service() {
                             .setContentText(status.result.track.artistWithAlbumFormatted())
                             .addBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
-                            .addShareButton(status.result.track)
+                            .addShowLyricsButton(status.result.track.mbId)
+                            .addShareButton(status.result.track.getSharedBody())
                     }
                 }
                 builder.addDismissIntent().buildAndNotifyAsResult()
@@ -419,8 +421,9 @@ internal class NotificationService : Service() {
         } ?: this
     }
 
-    private fun NotificationCompat.Builder.addTrackDeepLinkIntent(mbId: String): NotificationCompat.Builder {
-        Log.d("TA", "creating activity extra with mbId=$mbId")
+    private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
+        mbId: String
+    ): NotificationCompat.Builder {
         val mediateActivityIntent = Intent(
             this@NotificationService,
             NotificationServiceActivity::class.java
@@ -433,10 +436,31 @@ internal class NotificationService : Service() {
         return setContentIntent(pendingIntent)
     }
 
-    private fun NotificationCompat.Builder.addShareButton(track: Track): NotificationCompat.Builder {
+    private fun NotificationCompat.Builder.addShowLyricsButton(
+        mbId: String
+    ): NotificationCompat.Builder {
+        val mediateActivityIntent = Intent(
+            this@NotificationService,
+            NotificationServiceActivity::class.java
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            action = SHOW_LYRICS_ACTION
+            putExtra(MB_ID_EXTRA_KEY, mbId)
+        }
+        val pendingIntent = createPendingIntent(mediateActivityIntent)
+        return addAction(
+            android.R.drawable.ic_menu_more,
+            getString(StringsR.string.show_lyrics),
+            pendingIntent
+        )
+    }
+
+    private fun NotificationCompat.Builder.addShareButton(
+        sharedText: String
+    ): NotificationCompat.Builder {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, track.getSharedBody())
+            putExtra(Intent.EXTRA_TEXT, sharedText)
         }
         val wrappedIntent = Intent.createChooser(intent, null)
         return addAction(
@@ -524,6 +548,7 @@ internal class NotificationService : Service() {
         const val CANCEL_RECOGNITION_ACTION = "com.mrsep.musicrecognizer.action.cancel_recognition"
         const val DISMISS_STATUS_ACTION = "com.mrsep.musicrecognizer.action.dismiss_notification"
         const val SHOW_TRACK_ACTION = "com.mrsep.musicrecognizer.action.show_track"
+        const val SHOW_LYRICS_ACTION = "com.mrsep.musicrecognizer.action.show_lyrics"
 
         const val KEY_BACKGROUND_LAUNCH = "KEY_BACKGROUND_LAUNCH"
 

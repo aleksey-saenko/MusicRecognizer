@@ -40,7 +40,9 @@ internal fun PreferencesScreen(
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
-        is PreferencesUiState.Loading -> LoadingStub()
+        is PreferencesUiState.Loading -> LoadingStub(
+            modifier = Modifier.fillMaxSize()
+        )
         is PreferencesUiState.Success -> {
             Column {
                 PreferencesTopBar(topAppBarScrollBehavior = topBarBehaviour)
@@ -134,7 +136,7 @@ internal fun PreferencesScreen(
                             }
 
                             var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
-                            var permissionBlockedDialogVisible by rememberSaveable {
+                            var permissionBlockedDialogVisible by remember {
                                 mutableStateOf(
                                     false
                                 )

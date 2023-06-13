@@ -9,4 +9,4 @@ import androidx.navigation.NavBackStackEntry
  * This is used to de-duplicate navigation events.
  */
 val NavBackStackEntry.lifecycleIsResumed get() =
-    this.getLifecycle().currentState == Lifecycle.State.RESUMED
+    this.lifecycle.currentState == Lifecycle.State.RESUMED

@@ -1,5 +1,8 @@
 package com.mrsep.musicrecognizer.domain
 
+import javax.annotation.concurrent.Immutable
+
+@Immutable
 data class UserPreferences(
     val onboardingCompleted: Boolean,
     val apiToken: String,
@@ -9,6 +12,7 @@ data class UserPreferences(
     val developerModeEnabled: Boolean,
 ) {
 
+    @Immutable
     data class RequiredServices(
         val spotify: Boolean,
         val youtube: Boolean,

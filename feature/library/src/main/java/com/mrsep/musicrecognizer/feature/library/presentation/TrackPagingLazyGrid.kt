@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
-import com.mrsep.musicrecognizer.core.ui.components.VinylAnimated
+import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -79,7 +79,7 @@ internal fun TrackPagingLazyGrid(
 
 private fun LazyGridScope.loadingItem(modifier: Modifier = Modifier) {
     item(span = { GridItemSpan(this.maxLineSpan) }) {
-        VinylAnimated(
+        VinylRotating(
             color = MaterialTheme.colorScheme.primary,
             modifier = modifier.size(40.dp)
         )

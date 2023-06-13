@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.components.VinylAnimated
+import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +35,7 @@ internal fun AboutScreen(
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(PaddingValues(24.dp))
         )
-        VinylAnimated(
+        VinylRotating(
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(240.dp)

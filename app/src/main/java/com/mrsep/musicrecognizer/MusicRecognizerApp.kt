@@ -20,8 +20,7 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
-//            .allowHardware(false) // for experiments with palette
-            .crossfade(true)
+            .crossfade(false)
             .build()
     }
 

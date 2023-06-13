@@ -98,7 +98,9 @@ internal fun LibraryScreen(
                     ),
                 ) { state ->
                     when (state) {
-                        LibraryUiState.Loading -> LoadingStub()
+                        LibraryUiState.Loading -> LoadingStub(
+                            modifier = Modifier.fillMaxSize()
+                        )
                         LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
                             modifier = Modifier
                                 .fillMaxSize()

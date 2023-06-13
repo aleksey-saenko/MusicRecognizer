@@ -118,28 +118,28 @@ data class DeezerJson(
     @JsonClass(generateAdapter = true)
     data class Album(
         @Json(name = "id")
-        val id: Int,
+        val id: Int?,
         @Json(name = "title")
-        val title: String,
+        val title: String?,
         @Json(name = "link")
-        val link: String,
+        val link: String?,
         @Json(name = "cover")
-        val cover: String,
+        val cover: String?,
         @Json(name = "cover_small")
-        val coverSmall: String,
+        val coverSmall: String?,
         @Json(name = "cover_medium")
-        val coverMedium: String,
+        val coverMedium: String?,
         @Json(name = "cover_big")
-        val coverBig: String,
+        val coverBig: String?,
         @Json(name = "cover_xl")
-        val coverXl: String,
+        val coverXl: String?,
         @Json(name = "md5_image")
-        val md5Image: String,
+        val md5Image: String?,
         @Json(name = "release_date")
-        val releaseDate: String,
+        val releaseDate: String?,
         @Json(name = "tracklist")
-        val tracklist: String,
+        val tracklist: String?,
         @Json(name = "type")
-        val type: String
+        val type: String?
     )
 }

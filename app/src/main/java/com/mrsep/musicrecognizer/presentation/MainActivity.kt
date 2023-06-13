@@ -10,6 +10,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,21 +24,27 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
+import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-//    @Inject lateinit var databaseFiller: DatabaseFiller
-//    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+    @Inject
+    lateinit var databaseFiller: DatabaseFiller
+    @Inject @ApplicationScope
+    lateinit var appScope: CoroutineScope
 
     //    private val musicRecognizerApp get() = application as MusicRecognizerApp
     private val viewModel: MainActivityViewModel by viewModels()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -43,6 +54,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupApplicationWithPreferences()
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
             MusicRecognizerTheme(
                 dynamicColor = isDynamicColorsEnabled(uiState)
@@ -75,6 +87,7 @@ class MainActivity : ComponentActivity() {
                         exit = fadeOut(),
                     ) {
                         AppNavigation(
+                            isExpandedScreen = isExpandedScreen(windowSizeClass),
                             onboardingCompleted = isOnboardingCompleted(uiState),
                             onOnboardingClose = { this@MainActivity.finish() }
                         )
@@ -106,6 +119,7 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@Stable
 private fun isDynamicColorsEnabled(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
@@ -113,9 +127,23 @@ private fun isDynamicColorsEnabled(uiState: MainActivityUiState): Boolean {
     }
 }
 
+@Stable
 private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
         is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
     }
 }
+
+
+@Stable
+fun shouldShowBottomBar(windowSizeClass: WindowSizeClass) =
+    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+@Stable
+fun shouldShowNavRail(windowSizeClass: WindowSizeClass) = !shouldShowBottomBar(windowSizeClass)
+
+@Stable
+fun isExpandedScreen(windowSizeClass: WindowSizeClass) =
+    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
+    windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact

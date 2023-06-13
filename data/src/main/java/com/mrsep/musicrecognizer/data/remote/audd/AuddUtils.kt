@@ -6,7 +6,8 @@ internal fun UserPreferencesDo.RequiredServicesDo.toAuddReturnParameter(): Strin
     return "lyrics"
         .plusIf(this.spotify, "spotify")
         .plusIf(this.appleMusic, "apple_music")
-        .plusIf(this.deezer, "deezer")
+        //FIXME: should be fixed after implementation of a reliable solution to get artwork
+        .plusIf(true, "deezer")
         .plusIf(this.napster, "napster")
         .plusIf(this.musicbrainz, "musicbrainz")
 }

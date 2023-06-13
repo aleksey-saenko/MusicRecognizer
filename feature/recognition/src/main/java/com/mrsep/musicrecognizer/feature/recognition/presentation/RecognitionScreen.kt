@@ -53,7 +53,7 @@ internal fun RecognitionScreen(
         if (granted) viewModel.recognizeTap()
     }
     var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
-    var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
+    var permissionBlockedDialogVisible by remember { mutableStateOf(false) }
     val canShowPermissionRequest =
         recorderPermissionState.status.shouldShowRationale || isFirstTimeRequest
     val isPermissionBlocked =

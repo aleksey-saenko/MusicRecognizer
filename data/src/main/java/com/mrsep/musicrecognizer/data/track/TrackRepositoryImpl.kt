@@ -20,6 +20,7 @@ class TrackRepositoryImpl @Inject constructor(
     database: ApplicationDatabase
 ) : TrackRepositoryDo {
     private val trackDao = database.trackDao()
+    private val persistentCoroutineContext = appScope.coroutineContext + ioDispatcher
 
     override fun isEmptyFlow(): Flow<Boolean> {
         return trackDao.isEmptyFlow()
@@ -55,13 +56,13 @@ class TrackRepositoryImpl @Inject constructor(
 
 
     override suspend fun insertOrReplace(vararg track: TrackEntity) {
-        withContext(ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.insertOrReplace(*track)
         }
     }
 
     override suspend fun insertOrReplaceSaveMetadata(vararg track: TrackEntity): List<TrackEntity> {
-        return withContext(ioDispatcher) {
+        return withContext(persistentCoroutineContext) {
             val trackList = track.map { newTrack ->
                 getByMbId(newTrack.mbId)?.run {
                     newTrack.copy(
@@ -77,31 +78,43 @@ class TrackRepositoryImpl @Inject constructor(
     }
 
     override suspend fun update(track: TrackEntity) {
-        withContext(ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.update(track)
         }
     }
 
+    override suspend fun toggleFavoriteMark(mbId: String) {
+        withContext(persistentCoroutineContext) {
+            trackDao.toggleFavoriteMark(mbId)
+        }
+    }
+
     override suspend fun delete(vararg track: TrackEntity) {
-        withContext(appScope.coroutineContext + ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.delete(*track)
         }
     }
 
+    override suspend fun deleteByMbId(vararg mbId: String) {
+        withContext(persistentCoroutineContext) {
+            trackDao.deleteByMbId(*mbId)
+        }
+    }
+
     override suspend fun deleteAll() {
-        withContext(appScope.coroutineContext + ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.deleteAll()
         }
     }
 
     override suspend fun deleteAllExceptFavorites() {
-        withContext(appScope.coroutineContext + ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.deleteAllExceptFavorites()
         }
     }
 
     override suspend fun deleteAllFavorites() {
-        withContext(appScope.coroutineContext + ioDispatcher) {
+        withContext(persistentCoroutineContext) {
             trackDao.deleteAllFavorites()
         }
     }
@@ -125,7 +138,11 @@ class TrackRepositoryImpl @Inject constructor(
     override fun getByMbIdFlow(mbId: String): Flow<TrackEntity?> {
         return trackDao.getByMbIdFlow(mbId)
             .flowOn(ioDispatcher)
+    }
 
+    override fun getLyricsFlowById(mbId: String): Flow<String?> {
+        return trackDao.getLyricsFlowById(mbId)
+            .flowOn(ioDispatcher)
     }
 
     override fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>> {

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.MB_ID_EXTRA_KEY
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.RECOGNIZE_ACTION
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.SHOW_LYRICS_ACTION
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService.Companion.SHOW_TRACK_ACTION
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,6 +49,16 @@ class NotificationServiceActivity : ComponentActivity() {
                     startActivity(deepLinkIntent)
                 }
             }
+
+            SHOW_LYRICS_ACTION -> {
+                intent.getStringExtra(MB_ID_EXTRA_KEY)?.let { trackMbId ->
+                    recognitionInteractor.cancelAndResetStatus()
+                    val deepLinkIntent = serviceRouter.getDeepLinkIntentToLyrics(trackMbId)
+                    startActivity(deepLinkIntent)
+                }
+            }
+
+            else -> {}
 
         }
         finish()

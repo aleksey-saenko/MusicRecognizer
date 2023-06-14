@@ -25,7 +25,7 @@ interface MapperModule {
 
     @Binds
     fun bindRemoteTrackResultMapper(implementation: SearchResultMapper):
-            Mapper<SearchResultDo<Track>, SearchResult<Track>>
+            Mapper<SearchResultDo, SearchResult>
 
     @Binds
     fun bindTrackFilterMapper(implementation: TrackFilterMapper):

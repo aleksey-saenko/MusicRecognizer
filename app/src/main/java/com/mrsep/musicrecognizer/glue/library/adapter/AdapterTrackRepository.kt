@@ -18,7 +18,7 @@ import javax.inject.Inject
 class AdapterTrackRepository @Inject constructor(
     private val trackRepositoryDo: TrackRepositoryDo,
     private val trackMapper: Mapper<TrackEntity, Track>,
-    private val searchResultMapper: Mapper<SearchResultDo<Track>, SearchResult<Track>>,
+    private val searchResultMapper: Mapper<SearchResultDo, SearchResult>,
     private val trackFilterMapper: Mapper<TrackFilter, TrackFilterDo>
 ) : TrackRepository {
 
@@ -41,12 +41,8 @@ class AdapterTrackRepository @Inject constructor(
             .map { entity -> trackMapper.map(entity) }
     }
 
-    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult<Track>> {
-        return trackRepositoryDo.searchResultFlow(keyword, limit).map { searchResult ->
-            searchResultMapper.map(
-                searchResult.map { entity -> trackMapper.map(entity) }
-            )
-        }
+    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult> {
+        return trackRepositoryDo.searchResultFlow(keyword, limit).map(searchResultMapper::map)
     }
 
 }

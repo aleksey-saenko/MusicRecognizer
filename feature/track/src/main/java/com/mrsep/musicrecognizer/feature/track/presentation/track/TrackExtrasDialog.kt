@@ -13,7 +13,7 @@ internal fun TrackExtrasDialog(
     onDismissClick: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = {},
+        onDismissRequest = onDismissClick,
         confirmButton = {
             TextButton(onClick = onDismissClick) {
                 Text(text = stringResource(StringsR.string.close))

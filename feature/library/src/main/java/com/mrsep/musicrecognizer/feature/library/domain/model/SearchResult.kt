@@ -1,17 +1,15 @@
 package com.mrsep.musicrecognizer.feature.library.domain.model
 
-sealed class SearchResult<T> {
+sealed class SearchResult {
     abstract val keyword: String
 
-    data class Pending<T>(
+    data class Pending(
         override val keyword: String
-    ) : SearchResult<T>()
+    ) : SearchResult()
 
-    data class Success<T>(
+    data class Success(
         override val keyword: String,
-        val data: List<T>
-    ) : SearchResult<T>() {
-        val isEmpty get() = data.isEmpty()
-    }
+        val data: List<Track>
+    ) : SearchResult()
 
 }

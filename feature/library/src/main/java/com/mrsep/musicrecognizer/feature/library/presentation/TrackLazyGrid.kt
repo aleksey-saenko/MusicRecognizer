@@ -21,13 +21,13 @@ import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyGrid(
-    trackList: ImmutableList<Track>,
+    trackList: ImmutableList<TrackUi>,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -64,7 +64,7 @@ internal fun TrackLazyGrid(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyGridHorizontal(
-    trackList: ImmutableList<Track>,
+    trackList: ImmutableList<TrackUi>,
     restCount: Int,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
@@ -139,7 +139,7 @@ internal fun RestCountLabel(
 
 @Composable
 internal fun LazyGridTrackItem(
-    track: Track,
+    track: TrackUi,
     modifier: Modifier = Modifier,
     onTrackClick: (mbId: String) -> Unit
 ) {

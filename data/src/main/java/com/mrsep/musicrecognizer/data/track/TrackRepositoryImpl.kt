@@ -190,11 +190,10 @@ class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo<TrackEntity>> {
+    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo> {
         val searchKey = createSearchKeyForSQLite(keyword)
         return trackDao.searchFlow(searchKey, ESCAPE_SYMBOL, limit)
-            .map<List<TrackEntity>, SearchResultDo<TrackEntity>> { list ->
-//                delay(3000) //debug purpose
+            .map<List<TrackEntity>, SearchResultDo> { list ->
                 SearchResultDo.Success(
                     keyword = keyword,
                     data = list

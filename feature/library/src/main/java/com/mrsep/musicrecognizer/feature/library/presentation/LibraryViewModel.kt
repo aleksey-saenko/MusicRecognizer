@@ -7,8 +7,11 @@ import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
+import com.mrsep.musicrecognizer.feature.library.presentation.model.SearchResultUi
+import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +40,7 @@ internal class LibraryViewModel @Inject constructor(
         } else {
             trackRepository.getFilteredFlow(filter).map { trackList ->
                 LibraryUiState.Success(
-                    trackList = trackList.toImmutableList(),
+                    trackList = trackList.map { track -> track.toUi() }.toImmutableList(),
                     isFilterApplied = filter != TrackFilter.Empty
                 )
             }
@@ -52,23 +55,23 @@ internal class LibraryViewModel @Inject constructor(
     private val searchKeywordChannel = Channel<String>(Channel.CONFLATED)
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val trackSearchResultFlow: StateFlow<SearchResult<Track>> = searchKeywordChannel
+    val trackSearchResultFlow: StateFlow<SearchResultUi> = searchKeywordChannel
         .receiveAsFlow()
         .debounce(SEARCH_INPUT_DEBOUNCE_IN_MS)
         .distinctUntilChanged()
         .flatMapLatest { keyword ->
             if (keyword.isBlank()) {
-                flowOf(SearchResult.Success("", emptyList()))
+                flowOf(SearchResultUi.Success("", persistentListOf()))
             } else {
-                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
+                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT).map { it.toUi() }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SearchResult.Success(
+            initialValue = SearchResultUi.Success(
                 "",
-                emptyList()
+                persistentListOf()
             )
         )
 
@@ -93,17 +96,39 @@ internal sealed class LibraryUiState {
     object EmptyLibrary : LibraryUiState()
 
     data class Success(
-        val trackList: ImmutableList<Track>,
+        val trackList: ImmutableList<TrackUi>,
         val isFilterApplied: Boolean
     ) : LibraryUiState()
 
 }
 
-private fun Flow<SearchResult<Track>>.logDebugInfo(): Flow<SearchResult<Track>> {
+private fun Track.toUi(): TrackUi {
+    return TrackUi(
+        mbId = this.mbId,
+        title = this.title,
+        artist = this.artist,
+        albumAndYear = this.combineAlbumAndYear(),
+        artworkUrl = this.artworkUrl
+    )
+}
+
+private fun SearchResult.toUi(): SearchResultUi = when (this) {
+    is SearchResult.Pending -> SearchResultUi.Pending(this.keyword)
+    is SearchResult.Success -> SearchResultUi.Success(
+        keyword = this.keyword,
+        data = this.data.map { it.toUi() }.toImmutableList()
+    )
+}
+
+private fun Track.combineAlbumAndYear() = this.album?.let { alb ->
+    releaseDate?.year?.let { year -> "$alb - $year" } ?: album
+}
+
+private fun Flow<SearchResult>.logDebugInfo(): Flow<SearchResult> {
     return onEach { result ->
         val logMessage =
             "Search result type: ${result::class.simpleName} for keyword=${result.keyword}"
-        val addInfo = if (result is SearchResult.Success<Track>)
+        val addInfo = if (result is SearchResult.Success)
             "\n" + result.data.joinToString { "${it.title} - ${it.artist}" } else ""
         Log.d("TRACK SEARCH", logMessage + addInfo)
     }

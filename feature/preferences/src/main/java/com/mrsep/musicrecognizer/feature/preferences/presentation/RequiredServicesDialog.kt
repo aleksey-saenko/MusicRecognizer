@@ -147,6 +147,6 @@ internal fun RequiredServicesDialog(
                 }
             }
         },
-        onDismissRequest = { }
+        onDismissRequest = onDismissClick
     )
 }

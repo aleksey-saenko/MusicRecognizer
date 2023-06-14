@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,14 +26,14 @@ import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackPagingLazyGrid(
-    pagingTracks: LazyPagingItems<Track>,
+    pagingTracks: LazyPagingItems<TrackUi>,
     onTrackClick: (mbId: String) -> Unit,
     toggleTrackFavoriteStatus: (mbId: String) -> Unit,
     deleteTrack: (mbId: String) -> Unit,
@@ -114,7 +112,7 @@ private fun LazyGridScope.errorItem(
 
 @Composable
 private fun LazyGridTrackTestItem(
-    track: Track,
+    track: TrackUi,
     modifier: Modifier = Modifier,
     onTrackClick: (mbId: String) -> Unit,
     toggleTrackFavoriteStatus: (mbId: String) -> Unit,
@@ -136,14 +134,14 @@ private fun LazyGridTrackTestItem(
             alpha = 0.3f
         )
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Icon(
-                imageVector = if (track.metadata.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(onClick = { toggleTrackFavoriteStatus(track.mbId) })
-                    .padding(8.dp)
-            )
+//            Icon(
+//                imageVector = if (track.metadata.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .clickable(onClick = { toggleTrackFavoriteStatus(track.mbId) })
+//                    .padding(8.dp)
+//            )
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = null,

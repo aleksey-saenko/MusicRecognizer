@@ -171,6 +171,12 @@
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
     <string name="track_not_found">The track not found</string>
     <string name="loading">Loading</string>
+    <string name="ver">"ver. %s"</string>
+    <string name="music_recognizing_app">Music recognizing application</string>
+    <string name="powered_by_audd">Powered by AudD®</string>
+    <string name="github">Github</string>
+    <string name="github_repository">GitHub repository</string>
+    <string name="license_gnu_gplv3">License GNU GPLv3</string>
 
 
 </resources>

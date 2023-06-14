@@ -19,8 +19,7 @@ import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.presentation.model.SearchResultUi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -28,11 +27,11 @@ internal fun TrackSearchWindow(
     onSearch: (query: String) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClose: () -> Unit,
-    searchResult: SearchResult<Track>,
+    searchResult: SearchResultUi,
     onTrackClick: (mbId: String) -> Unit
 ) {
     var text by rememberSaveable {
-        mutableStateOf((searchResult as? SearchResult.Success)?.keyword ?: "")
+        mutableStateOf((searchResult as? SearchResultUi.Success)?.keyword ?: "")
     }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -100,10 +99,10 @@ internal fun TrackSearchWindow(
         ) {
             AnimatedContent(targetState = searchResult) { thisSearchResult ->
                 when (thisSearchResult) {
-                    is SearchResult.Pending -> LinearProgressIndicator(
+                    is SearchResultUi.Pending -> LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()
                     )
-                    is SearchResult.Success -> {
+                    is SearchResultUi.Success -> {
                         if (thisSearchResult.keyword == text) {
                             if (thisSearchResult.isEmpty && thisSearchResult.keyword.isNotBlank()) {
                                 Box(
@@ -140,7 +139,7 @@ internal fun TrackSearchWindow(
     }
     var focusRequested by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(focusRequested, searchResult) {
-        if ((searchResult as? SearchResult.Success)?.isEmpty == true && !focusRequested) {
+        if ((searchResult as? SearchResultUi.Success)?.isEmpty == true && !focusRequested) {
             focusRequester.requestFocus()
             focusRequested = true
         }

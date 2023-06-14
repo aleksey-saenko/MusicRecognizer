@@ -21,14 +21,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun TrackLazyRow(
-    trackList: ImmutableList<Track>,
+    trackList: ImmutableList<TrackUi>,
     restCount: Int,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
@@ -69,7 +68,7 @@ private fun LazyListScope.restCountLabel(
 
 @Composable
 internal fun LazyRowTrackItem(
-    track: Track,
+    track: TrackUi,
     modifier: Modifier = Modifier,
     onTrackClick: (mbId: String) -> Unit
 ) {
@@ -121,7 +120,7 @@ internal fun LazyRowTrackItem(
 
 @Composable
 internal fun LazyRowTrackItemHorizontal(
-    track: Track,
+    track: TrackUi,
     modifier: Modifier = Modifier,
     onTrackClick: (mbId: String) -> Unit
 ) {

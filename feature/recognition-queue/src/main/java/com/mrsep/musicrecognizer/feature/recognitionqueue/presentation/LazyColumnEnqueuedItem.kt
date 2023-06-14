@@ -311,7 +311,7 @@ internal fun LazyColumnEnqueuedItem(
             }
         }
         if (renameDialogVisible) {
-            val title = getTitle(enqueued) //FIXME too many recompositions
+            val title = getTitle(enqueued)
             var newName by rememberSaveable { mutableStateOf(title) }
             AlertDialog(
                 onDismissRequest = { renameDialogVisible = false },

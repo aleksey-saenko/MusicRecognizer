@@ -29,7 +29,7 @@ fun PermissionBlockedDialog(
             .show()
     } else {
         AlertDialog(
-            onDismissRequest = {},
+            onDismissRequest = onDismissClick,
             confirmButton = {
                 Button(onClick = {
                     onConfirmClick()

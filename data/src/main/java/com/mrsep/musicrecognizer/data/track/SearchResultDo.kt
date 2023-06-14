@@ -1,22 +1,15 @@
 package com.mrsep.musicrecognizer.data.track
 
-sealed class SearchResultDo<out T> {
+sealed class SearchResultDo {
     abstract val keyword: String
 
     data class Pending(
         override val keyword: String
-    ) : SearchResultDo<Nothing>()
+    ) : SearchResultDo()
 
-    data class Success<T>(
+    data class Success(
         override val keyword: String,
-        val data: List<T>
-    ) : SearchResultDo<T>()
-
-    inline fun <R> map(transform: (T) -> R): SearchResultDo<R> {
-        return when (this) {
-            is Pending -> this
-            is Success -> Success(keyword = this.keyword, data = this.data.map(transform))
-        }
-    }
+        val data: List<TrackEntity>
+    ) : SearchResultDo()
 
 }

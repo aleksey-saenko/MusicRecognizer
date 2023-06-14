@@ -35,7 +35,7 @@ interface TrackRepositoryDo {
 
     suspend fun search(keyword: String, limit: Int): List<TrackEntity>
     fun searchFlow(keyword: String, limit: Int): Flow<List<TrackEntity>>
-    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo<TrackEntity>>
+    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo>
     fun createSearchKeyForSQLite(word: String): String
 
 }

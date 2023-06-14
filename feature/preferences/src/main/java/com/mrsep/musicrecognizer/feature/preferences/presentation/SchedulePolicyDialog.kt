@@ -128,7 +128,7 @@ internal fun SchedulePolicyDialog(
                 )
             }
         },
-        onDismissRequest = { }
+        onDismissRequest = onDismissClick
     )
 }
 

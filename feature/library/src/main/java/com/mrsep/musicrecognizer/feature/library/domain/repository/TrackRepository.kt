@@ -16,6 +16,6 @@ interface TrackRepository {
 
     suspend fun search(keyword: String, limit: Int): List<Track>
 
-    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult<Track>>
+    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult>
 
 }

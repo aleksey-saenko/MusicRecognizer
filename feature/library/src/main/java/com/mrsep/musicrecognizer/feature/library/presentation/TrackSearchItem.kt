@@ -17,13 +17,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun TrackSearchItem(
-    track: Track,
+    track: TrackUi,
     modifier: Modifier = Modifier,
     onTrackClick: (mbId: String) -> Unit
 ) {
@@ -73,9 +72,9 @@ internal fun TrackSearchItem(
                     .alpha(0.85f)
                     .padding(top = 4.dp)
             )
-            track.album?.let { album ->
+            track.albumAndYear?.let { albumAndYear ->
                 Text(
-                    text = track.releaseDate?.year?.let { year -> "$album ($year)" } ?: album,
+                    text = albumAndYear,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,

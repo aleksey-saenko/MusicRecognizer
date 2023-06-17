@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class UserPreferencesDoMapper @Inject constructor(
     private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, SchedulePolicyDo>,
-    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>
+    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
+    private val lyricsFontStyleDoMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>
 ) : BidirectionalMapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun reverseMap(input: UserPreferencesDo): UserPreferencesProto {
@@ -21,6 +22,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setDynamicColorsEnabled(input.dynamicColorsEnabled)
             .setDeveloperModeEnabled(input.developerModeEnabled)
             .setSchedulePolicy(schedulePolicyMapper.reverseMap(input.schedulePolicy))
+            .setLyricsFontStyle(lyricsFontStyleDoMapper.reverseMap(input.lyricsFontStyle))
             .build()
     }
 
@@ -32,7 +34,8 @@ class UserPreferencesDoMapper @Inject constructor(
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
-            schedulePolicy = schedulePolicyMapper.map(input.schedulePolicy)
+            schedulePolicy = schedulePolicyMapper.map(input.schedulePolicy),
+            lyricsFontStyle = lyricsFontStyleDoMapper.map(input.lyricsFontStyle)
         )
     }
 

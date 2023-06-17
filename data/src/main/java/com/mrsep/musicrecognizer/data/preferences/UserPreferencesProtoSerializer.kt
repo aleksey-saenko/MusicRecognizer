@@ -11,10 +11,9 @@ import java.io.OutputStream
 object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
 
     override val defaultValue: UserPreferencesProto
-        get() = UserPreferencesProto.getDefaultInstance()
-            .toBuilder()
+        get() = UserPreferencesProto.newBuilder()
             .setRequiredServices(
-                UserPreferencesProto.RequiredServicesProto.getDefaultInstance().toBuilder()
+                UserPreferencesProto.RequiredServicesProto.newBuilder()
                     .setSpotify(true)
                     .setYoutube(true)
                     .setSoundcloud(true)
@@ -29,11 +28,17 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setNotificationServiceEnabled(false)
             .setDeveloperModeEnabled(true)
             .setSchedulePolicy(
-                UserPreferencesProto.SchedulePolicyProto.getDefaultInstance().toBuilder()
+                UserPreferencesProto.SchedulePolicyProto.newBuilder()
                     .setNoMatchesValue(UserPreferencesProto.ScheduleActionProto.IGNORE_VALUE)
                     .setBadConnectionValue(UserPreferencesProto.ScheduleActionProto.SAVE_AND_LAUNCH_VALUE)
                     .setAnotherFailureValue(UserPreferencesProto.ScheduleActionProto.SAVE_VALUE)
                     .build()
+            )
+            .setLyricsFontStyle(
+                UserPreferencesProto.LyricsFontStyleProto.newBuilder()
+                    .setFontSize(UserPreferencesProto.FontSizeProto.NORMAL)
+                    .setIsBold(false)
+                    .setIsHighContrast(false)
             )
             .build()
 

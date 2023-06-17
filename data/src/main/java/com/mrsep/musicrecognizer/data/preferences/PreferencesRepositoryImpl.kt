@@ -23,6 +23,7 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val preferencesMapper: BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, UserPreferencesDo.RequiredServicesDo>,
     private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, UserPreferencesDo.SchedulePolicyDo>,
+    private val lyricsFontStyleMapper: BidirectionalMapper<UserPreferencesProto.LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : PreferencesRepositoryDo {
 
@@ -61,6 +62,12 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun setSchedulePolicy(value: UserPreferencesDo.SchedulePolicyDo) {
         safeWriter {
             setSchedulePolicy(schedulePolicyMapper.reverseMap(value))
+        }
+    }
+
+    override suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo) {
+        safeWriter {
+            setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(value))
         }
     }
 

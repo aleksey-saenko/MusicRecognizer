@@ -177,6 +177,11 @@
     <string name="github">Github</string>
     <string name="github_repository">GitHub repository</string>
     <string name="license_gnu_gplv3">License GNU GPLv3</string>
+    <string name="lyrics_text_style">Lyrics text style</string>
+    <string name="font_size">Font size</string>
+    <string name="make_text_bigger_or_smaller">Make text bigger or smaller</string>
+    <string name="bold_text">Bold text</string>
+    <string name="high_contrast_text">High-contrast text</string>
 
 
 </resources>

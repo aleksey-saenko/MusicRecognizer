@@ -18,6 +18,7 @@ import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 @Composable
 internal fun LyricsScreenTopBar(
     onBackPressed: () -> Unit,
+    onChangeTextStyleClick: () -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -32,10 +33,10 @@ internal fun LyricsScreenTopBar(
             }
         },
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = onChangeTextStyleClick) {
                 Icon(
-                    painter = painterResource(id = UiR.drawable.baseline_text_fields_24),
-                    contentDescription = "Not implemented"
+                    painter = painterResource(UiR.drawable.baseline_text_fields_24),
+                    contentDescription = stringResource(StringsR.string.lyrics_text_style)
                 )
             }
         },

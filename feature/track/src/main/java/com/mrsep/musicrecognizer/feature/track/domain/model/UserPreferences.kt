@@ -1,12 +1,8 @@
 package com.mrsep.musicrecognizer.feature.track.domain.model
 
 data class UserPreferences(
-    val onboardingCompleted: Boolean,
-    val apiToken: String,
     val requiredServices: RequiredServices,
-    val notificationServiceEnabled: Boolean,
-    val dynamicColorsEnabled: Boolean,
-    val developerModeEnabled: Boolean,
+    val lyricsFontStyle: LyricsFontStyle
 ) {
 
     data class RequiredServices(
@@ -19,4 +15,14 @@ data class UserPreferences(
         val musicbrainz: Boolean
     )
 
+    data class LyricsFontStyle(
+        val fontSize: FontSize,
+        val isBold: Boolean,
+        val isHighContrast: Boolean
+    )
+
+}
+
+enum class FontSize {
+    Small, Normal, Large, Huge
 }

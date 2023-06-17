@@ -7,7 +7,8 @@ data class UserPreferencesDo(
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
-    val schedulePolicy: SchedulePolicyDo
+    val schedulePolicy: SchedulePolicyDo,
+    val lyricsFontStyle: LyricsFontStyleDo
 ) {
 
     data class RequiredServicesDo(
@@ -26,10 +27,20 @@ data class UserPreferencesDo(
         val anotherFailure: ScheduleActionDo
     )
 
+    data class LyricsFontStyleDo(
+        val fontSize: FontSizeDo,
+        val isBold: Boolean,
+        val isHighContrast: Boolean
+    )
+
 }
 
 enum class ScheduleActionDo {
     Ignore,
     Save,
     SaveAndLaunch
+}
+
+enum class FontSizeDo {
+    Small, Normal, Large, Huge
 }

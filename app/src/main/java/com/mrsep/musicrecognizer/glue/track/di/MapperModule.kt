@@ -22,6 +22,10 @@ interface MapperModule {
             Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
+    fun bindLyricsFontStyleMapper(implementation: LyricsFontStyleMapper):
+            BidirectionalMapper<UserPreferencesDo.LyricsFontStyleDo, UserPreferences.LyricsFontStyle>
+
+    @Binds
     fun bindTrackMapper(implementation: TrackMapper):
             BidirectionalMapper<TrackEntity, Track>
 

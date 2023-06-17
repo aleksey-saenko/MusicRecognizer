@@ -38,4 +38,19 @@ message UserPreferencesProto {
 
   SchedulePolicyProto schedule_policy = 17;
 
+  enum FontSizeProto {
+    SMALL = 0;
+    NORMAL = 1;
+    LARGE = 2;
+    HUGE = 3;
+  }
+
+  message LyricsFontStyleProto {
+    FontSizeProto font_size = 18;
+    bool is_bold = 19;
+    bool is_high_contrast = 20;
+  }
+
+  LyricsFontStyleProto lyrics_font_style = 21;
+
 }

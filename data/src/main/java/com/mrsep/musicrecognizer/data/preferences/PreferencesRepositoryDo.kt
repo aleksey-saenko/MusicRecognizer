@@ -20,4 +20,6 @@ interface PreferencesRepositoryDo {
 
     suspend fun setSchedulePolicy(value: UserPreferencesDo.SchedulePolicyDo)
 
+    suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)
+
 }

@@ -9,9 +9,12 @@ import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
+import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.RequiredServicesDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.ScheduleActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.SchedulePolicyDoMapper
@@ -72,5 +75,13 @@ interface PreferencesMappersModule {
     @Binds
     fun bindSchedulePolicyDoMapper(implementation: SchedulePolicyDoMapper):
             BidirectionalMapper<UserPreferencesProto.SchedulePolicyProto, UserPreferencesDo.SchedulePolicyDo>
+
+    @Binds
+    fun bindFontSizeDoMapper(implementation: FontSizeDoMapper):
+            BidirectionalMapper<UserPreferencesProto.FontSizeProto, FontSizeDo>
+
+    @Binds
+    fun bindLyricsFontStyleDoMapper(implementation: LyricsFontStyleDoMapper):
+            BidirectionalMapper<UserPreferencesProto.LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo>
 
 }

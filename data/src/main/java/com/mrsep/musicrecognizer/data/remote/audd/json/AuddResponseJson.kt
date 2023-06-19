@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.remote.audd.json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
 
-sealed class AuddResponseJson {
+internal sealed class AuddResponseJson {
 
     @JsonClass(generateAdapter = true)
     data class Success(
@@ -16,19 +16,13 @@ sealed class AuddResponseJson {
         @JsonClass(generateAdapter = true)
         data class Result(
             @Json(name = "artist")
-            val artist: String,
+            val artist: String?,
             @Json(name = "title")
-            val title: String,
+            val title: String?,
             @Json(name = "album")
             val album: String?,
             @Json(name = "release_date")
             val releaseDate: String?,
-            @Json(name = "label")
-            val label: String?,
-            @Json(name = "timecode")
-            val timecode: String?,
-            @Json(name = "song_link")
-            val songLink: String?,
             @Json(name = "deezer")
             val deezerJson: DeezerJson?,
             @Json(name = "lyrics")

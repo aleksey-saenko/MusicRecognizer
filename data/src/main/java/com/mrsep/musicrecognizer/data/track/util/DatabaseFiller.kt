@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.squareup.moshi.Moshi
@@ -19,6 +20,7 @@ private const val TAG = "DatabaseFiller"
 class DatabaseFiller @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
     private val trackRepository: TrackRepositoryDo,
     private val moshi: Moshi
 ) {
@@ -70,7 +72,7 @@ class DatabaseFiller @Inject constructor(
                 appContext.assets.list(assetsDirectory) ?: emptyArray()
             } catch (e: IOException) {
                 e.printStackTrace()
-                e.showNameInToast()
+                showNameInToast(e)
                 return@withContext emptyList()
             }
             fileNamesArray.mapNotNull { fileName ->
@@ -82,7 +84,7 @@ class DatabaseFiller @Inject constructor(
                     )
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    e.showNameInToast()
+                    showNameInToast(e)
                     null
                 }
             }
@@ -90,8 +92,10 @@ class DatabaseFiller @Inject constructor(
     }
 
 
-    private fun Exception.showNameInToast() {
-        Toast.makeText(appContext, this::class.simpleName, Toast.LENGTH_LONG).show()
+    private suspend fun showNameInToast(e: Exception) {
+        withContext(mainDispatcher) {
+            Toast.makeText(appContext, e::class.simpleName, Toast.LENGTH_LONG).show()
+        }
     }
 
 }

@@ -7,6 +7,8 @@ import android.net.Uri
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
+// FIXME: Youtube links are broken if youtube app is not installed
+// https://issuetracker.google.com/issues/243678703
 /** Validate URL before try to open  */
 fun Context.openUrlImplicitly(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

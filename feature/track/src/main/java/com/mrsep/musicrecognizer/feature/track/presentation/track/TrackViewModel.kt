@@ -33,17 +33,16 @@ internal class TrackViewModel @Inject constructor(
     private val _trackExistingState = MutableStateFlow(true)
     val trackExistingState = _trackExistingState.asStateFlow()
 
-    val uiStateStream = combineTransform(
+    val uiStateStream = combine(
         trackRepository.getByMbIdFlow(args.mbId),
         preferencesRepository.userPreferencesFlow
-    ) { optionalTrack, preferences ->
+    ) { track, preferences ->
+        track?.toUiState(preferences.requiredServices) ?: TrackUiState.TrackNotFound
+    }.transformWhile { uiState ->
         // do not update track state if track removal was requested
         // after track deletion and final animation, the screen should be destroyed
-        if (!trackRemovalRequested) {
-            val uiState = optionalTrack?.toUiState(preferences.requiredServices)
-                ?: TrackUiState.TrackNotFound
-            emit(uiState)
-        }
+        if (!trackRemovalRequested) emit(uiState)
+        !trackRemovalRequested
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),

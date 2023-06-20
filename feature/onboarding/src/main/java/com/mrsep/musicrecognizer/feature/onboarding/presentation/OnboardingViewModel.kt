@@ -1,9 +1,11 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.onboarding.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.feature.onboarding.domain.RecognitionService
+import com.mrsep.musicrecognizer.feature.onboarding.domain.model.TokenValidationStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -12,43 +14,56 @@ import javax.inject.Inject
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-//    private val recognitionService: RecognitionService,
+    private val recognitionService: RecognitionService,
 ) : ViewModel() {
 
-    private val _tokenState = MutableStateFlow<TokenState>(TokenState.Unchecked)
-    val tokenState = _tokenState.asStateFlow()
+    private val _uiState = MutableStateFlow<TokenPageUiState>(TokenPageUiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
-    val preferences = preferencesRepository.userPreferencesFlow
+    init {
+        viewModelScope.launch {
+            val initToken = preferencesRepository.userPreferencesFlow.first().apiToken
+            _uiState.update {
+                TokenPageUiState.Success(
+                    token = initToken,
+                    tokenValidationStatus = TokenValidationStatus.Unchecked
+                )
+            }
 
-    fun testToken(testToken: String) {
-        _tokenState.update { TokenState.Success }
-        return
-//        if (testToken.isBlank()) {
-//            _tokenState.update { MyTokenState.Wrong }
-//            return
-//        }
-//        _tokenState.update { MyTokenState.Success }
-//        return
+        }
+    }
 
-//        viewModelScope.launch {
-//            _tokenState.update { TokenState.Validating }
-//
-//            val newState = when (val remoteResult = recognitionService.validateToken(testToken)) {
-//                is RemoteRecognitionResult.Error.WrongToken -> TokenState.Wrong(
-//                    isLimitReached = remoteResult.isLimitReached
-//                )
-//                is RemoteRecognitionResult.Error -> TokenState.Error(remoteResult)
-//                else -> TokenState.Success
-//            }
-//            if (newState is TokenState.Success) {
-//                preferencesRepository.saveApiToken(testToken)
-//            }
-//            _tokenState.update { newState }
-//        }
+    fun testToken() {
+        val testToken = (_uiState.value as? TokenPageUiState.Success)?.token ?: return
+        viewModelScope.launch {
+            _uiState.update {
+                TokenPageUiState.Success(
+                    token = testToken,
+                    tokenValidationStatus = TokenValidationStatus.Validating
+                )
+            }
+            val remoteValidationStatus = recognitionService.validateToken(testToken)
+            if (remoteValidationStatus is TokenValidationStatus.Success) {
+                preferencesRepository.saveApiToken(testToken)
+            }
+            _uiState.update {
+                TokenPageUiState.Success(
+                    token = testToken,
+                    tokenValidationStatus = remoteValidationStatus
+                )
+            }
+        }
 
     }
 
-    fun resetTokenState() = _tokenState.update { TokenState.Unchecked }
+    fun setTokenField(value: String) {
+        _uiState.update {
+            TokenPageUiState.Success(
+                token = value,
+                tokenValidationStatus = TokenValidationStatus.Unchecked
+            )
+        }
+    }
 
     fun setOnboardingCompleted(value: Boolean) {
         viewModelScope.launch {
@@ -58,42 +73,14 @@ internal class OnboardingViewModel @Inject constructor(
 
 }
 
-internal sealed class TokenState {
-    abstract val isValidating: Boolean
-    abstract val isSuccessToken: Boolean
-    abstract val isBadToken: Boolean
-    abstract val isValidationAllowed: Boolean
+@Immutable
+internal sealed class TokenPageUiState {
 
-    object Unchecked : TokenState() {
-        override val isValidating = false
-        override val isSuccessToken = false
-        override val isBadToken = false
-        override val isValidationAllowed = true
-    }
-    object Validating : TokenState() {
-        override val isValidating = true
-        override val isSuccessToken = false
-        override val isBadToken = false
-        override val isValidationAllowed = false
-    }
-    object Success : TokenState() {
-        override val isValidating = false
-        override val isSuccessToken = true
-        override val isBadToken = false
-        override val isValidationAllowed = false
-    }
-    data class Wrong(val isLimitReached: Boolean) : TokenState() {
-        override val isValidating = false
-        override val isSuccessToken = false
-        override val isBadToken = true
-        override val isValidationAllowed = true
-    }
+    object Loading : TokenPageUiState()
 
-    data class Error(val rec: RemoteRecognitionResult.Error) : TokenState() {
-        override val isValidating = false
-        override val isSuccessToken = false
-        override val isBadToken = false
-        override val isValidationAllowed = true
-    }
+    data class Success(
+        val token: String,
+        val tokenValidationStatus: TokenValidationStatus
+    ) : TokenPageUiState()
 
 }

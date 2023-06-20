@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -50,7 +49,7 @@ internal fun OnboardingScreen(
         state = pagerState,
 //        modifier = Modifier.statusBarsPadding()
     ) { page ->
-        Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
+//        Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
         when (page) {
             OnboardingPage.WELCOME.index -> {
                 PageWithIndicator(

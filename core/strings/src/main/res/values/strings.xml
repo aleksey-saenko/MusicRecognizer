@@ -23,6 +23,7 @@
     <string name="apply_api_token">Apply API Token</string>
     <string name="audd_api_token">AudD API Token</string>
     <string name="api_token">API Token</string>
+    <string name="validating">Validating</string>
     <string name="welcome">Welcome</string>
     <string name="onboarding_welcome_message">TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
     <string name="onboarding_permission_message">The application requires permission to record audio in order to work properly. By enabling this permission, you agree that your recorded data will be used by remote servers for music recognition. The application does not use this data for any other purpose.</string>
@@ -182,6 +183,7 @@
     <string name="make_text_bigger_or_smaller">Make text bigger or smaller</string>
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
+
 
 
 </resources>

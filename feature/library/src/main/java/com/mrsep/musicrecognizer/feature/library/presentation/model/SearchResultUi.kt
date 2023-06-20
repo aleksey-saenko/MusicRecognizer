@@ -1,7 +1,9 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.model
 
+import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 
+@Immutable
 sealed class SearchResultUi {
     abstract val keyword: String
 

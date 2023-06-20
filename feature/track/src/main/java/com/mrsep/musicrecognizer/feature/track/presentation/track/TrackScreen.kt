@@ -37,7 +37,6 @@ internal fun TrackScreen(
     when (val uiState = screenUiState) {
 
         TrackUiState.Loading -> Column(
-            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.fillMaxSize()
         ) {
@@ -49,7 +48,6 @@ internal fun TrackScreen(
         }
 
         TrackUiState.TrackNotFound -> Column(
-            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.fillMaxSize()
         ) {
@@ -91,7 +89,6 @@ internal fun TrackScreen(
                 )
             ) {
                 Column(
-                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
                         .fillMaxSize()

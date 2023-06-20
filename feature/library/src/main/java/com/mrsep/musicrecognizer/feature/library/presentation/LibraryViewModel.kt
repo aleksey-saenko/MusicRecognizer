@@ -36,7 +36,7 @@ internal class LibraryViewModel @Inject constructor(
         flow2 = trackRepository.isEmptyFlow()
     ) { filter, isDatabaseEmpty ->
         if (isDatabaseEmpty) {
-            flow<LibraryUiState> { emit(LibraryUiState.EmptyLibrary) }
+            flowOf(LibraryUiState.EmptyLibrary)
         } else {
             trackRepository.getFilteredFlow(filter).map { trackList ->
                 LibraryUiState.Success(
@@ -85,8 +85,6 @@ internal class LibraryViewModel @Inject constructor(
 
     fun applyFilter(trackFilter: TrackFilter) = _appliedFilterFlow.update { trackFilter }
 
-    fun resetFilter() = applyFilter(TrackFilter.Empty)
-
 }
 
 internal sealed class LibraryUiState {
@@ -102,15 +100,13 @@ internal sealed class LibraryUiState {
 
 }
 
-private fun Track.toUi(): TrackUi {
-    return TrackUi(
-        mbId = this.mbId,
-        title = this.title,
-        artist = this.artist,
-        albumAndYear = this.combineAlbumAndYear(),
-        artworkUrl = this.artworkUrl
-    )
-}
+private fun Track.toUi() = TrackUi(
+    mbId = this.mbId,
+    title = this.title,
+    artist = this.artist,
+    albumAndYear = this.combineAlbumAndYear(),
+    artworkUrl = this.artworkUrl
+)
 
 private fun SearchResult.toUi(): SearchResultUi = when (this) {
     is SearchResult.Pending -> SearchResultUi.Pending(this.keyword)

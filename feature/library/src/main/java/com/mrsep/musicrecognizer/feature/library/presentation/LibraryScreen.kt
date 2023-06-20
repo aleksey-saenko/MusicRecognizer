@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,9 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +17,6 @@ import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-
 
 private const val animationDuration = 300
 
@@ -32,9 +27,8 @@ internal fun LibraryScreen(
     onTrackClick: (mbId: String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val uiStateTransition = updateTransition(uiState, label = "LibraryUiState")
-    val isLibraryEmpty = uiState !is LibraryUiState.Success
+    val screenUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLibraryEmpty = screenUiState !is LibraryUiState.Success
     var searchWindowActive by rememberSaveable { mutableStateOf(false) }
     var filterSheetActive by rememberSaveable { mutableStateOf(false) }
 
@@ -78,105 +72,66 @@ internal fun LibraryScreen(
                     onSearchIconClick = { searchWindowActive = true },
                     onFilterIconClick = { filterSheetActive = !filterSheetActive },
                     isLibraryEmpty = isLibraryEmpty,
-                    isFilterApplied = isFilterApplied(uiState),
+                    isFilterApplied = isFilterApplied(screenUiState),
                     topAppBarScrollBehavior = topBarBehaviour
                 )
-                uiStateTransition.AnimatedContent(
-                    contentKey = { stateObject -> stateObject::class.simpleName },
-                    transitionSpec = {
-                        fadeIn(tween(animationDuration)) with fadeOut(tween(animationDuration))
-                    },
-                    modifier = Modifier.animateEnterExit(
-                        enter = slideInVertically(
-                            animationSpec = tween(animationDuration),
-                            initialOffsetY = { it / 2 }
-                        ),
-                        exit = slideOutVertically(
-                            animationSpec = tween(animationDuration),
-                            targetOffsetY = { it / 2 }
-                        )
-                    ),
-                ) { state ->
-                    when (state) {
-                        LibraryUiState.Loading -> LoadingStub(
-                            modifier = Modifier.fillMaxSize()
-                        )
-                        LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
-                        )
-                        is LibraryUiState.Success -> {
+                when (val uiState = screenUiState) {
+                    LibraryUiState.Loading -> LoadingStub(
+                        modifier = Modifier.fillMaxSize()
+                    )
 
-                            val appliedFilter by viewModel.appliedFilterFlow.collectAsStateWithLifecycle()
-                            val filterSheetState = rememberModalBottomSheetState(
-                                skipPartiallyExpanded = true
-                            )
+                    LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+                    )
 
-                            fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
-                                scope.launch { filterSheetState.hide() }.invokeOnCompletion {
-                                    if (!filterSheetState.isVisible) filterSheetActive = false
-                                    newTrackFilter?.let(viewModel::applyFilter)
-                                }
+                    is LibraryUiState.Success -> {
+                        val appliedFilter by viewModel.appliedFilterFlow.collectAsStateWithLifecycle()
+                        val filterSheetState = rememberModalBottomSheetState(
+                            skipPartiallyExpanded = true
+                        )
+
+                        fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
+                            scope.launch { filterSheetState.hide() }.invokeOnCompletion {
+                                if (!filterSheetState.isVisible) filterSheetActive = false
+                                newTrackFilter?.let(viewModel::applyFilter)
                             }
-
-                            TrackLazyGrid(
-                                trackList = state.trackList,
-                                onTrackClick = onTrackClick,
-                                modifier = Modifier.nestedScroll(
-                                    topBarBehaviour.nestedScrollConnection
-                                )
-                            )
-                            if (filterSheetActive) {
-                                val filterState = rememberTrackFilterState(
-                                    initialTrackFilter = appliedFilter
-                                )
-                                TrackFilterBottomSheet(
-                                    sheetState = filterSheetState,
-                                    filterState = filterState,
-                                    onDismissRequest = { hideFilterSheet() },
-                                    onApplyClick = {
-                                        hideFilterSheet(filterState.makeFilter())
-                                    }
-                                )
-                            }
-
                         }
+
+                        TrackLazyGrid(
+                            trackList = uiState.trackList,
+                            onTrackClick = onTrackClick,
+                            modifier = Modifier.nestedScroll(
+                                topBarBehaviour.nestedScrollConnection
+                            )
+                        )
+                        if (filterSheetActive) {
+                            val filterState = rememberTrackFilterState(
+                                initialTrackFilter = appliedFilter
+                            )
+                            TrackFilterBottomSheet(
+                                sheetState = filterSheetState,
+                                filterState = filterState,
+                                onDismissRequest = { hideFilterSheet() },
+                                onApplyClick = {
+                                    hideFilterSheet(filterState.makeFilter())
+                                }
+                            )
+                        }
+
                     }
                 }
-            }
 
+            }
         }
     }
 }
 
+@Stable
 private fun isFilterApplied(state: LibraryUiState): Boolean {
     return when (state) {
         is LibraryUiState.Success -> state.isFilterApplied
         else -> false
     }
-}
-
-@Composable
-private fun EmptyLibraryMessage(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Icon(
-            painter = painterResource(UiR.drawable.baseline_list_24),
-            contentDescription = null,
-            modifier = Modifier.size(80.dp),
-        )
-        Text(
-            text = stringResource(StringsR.string.empty_library_message),
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-        )
-    }
-
 }

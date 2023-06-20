@@ -72,10 +72,6 @@ internal fun TrackFilterBottomSheet(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-//                    CompositionLocalProvider(
-//                        LocalMinimumInteractiveComponentEnforcement provides false
-//                    ) {
-//                    }
                 FilterChip(
                     selected = filterState.sortBy == SortBy.RecognitionDate,
                     onClick = { filterState.sortBy = SortBy.RecognitionDate },

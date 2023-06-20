@@ -136,6 +136,9 @@ class AuddRecognitionServicePure @Inject constructor(
     }
 
     override suspend fun validateToken(token: String): TokenValidationStatusDo {
+        if (token.isBlank()) return TokenValidationStatusDo.Error(
+            RemoteRecognitionResultDo.Error.WrongToken(false)
+        )
         val sampleUrlRecognitionResult = recognize(
             token = token,
             requiredServices = UserPreferencesDo.RequiredServicesDo(

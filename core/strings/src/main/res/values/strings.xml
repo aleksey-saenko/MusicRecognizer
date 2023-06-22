@@ -50,8 +50,10 @@
     <string name="ready">Ready</string>
     <string name="service_notification_main_channel_name">TuneSurfer main notification channel</string>
     <string name="service_notification_result_channel_name">TuneSurfer result notification channel</string>
+    <string name="service_notification_scheduled_result_channel_name">TuneSurfer scheduled result notification channel</string>
     <string name="service_notification_main_channel_desc">Allow to control recognition process from notifications</string>
     <string name="service_notification_result_channel_desc">Allow to receive recognition results from notifications</string>
+    <string name="service_notification_scheduled_result_channel_desc">Allow to receive scheduled recognition results from notifications</string>
     <string name="message_record_error">An error occurred while recording the audio</string>
     <string name="notification_message_recording_error">An error occurred while recording the audio, try again</string>
 
@@ -183,7 +185,7 @@
     <string name="make_text_bigger_or_smaller">Make text bigger or smaller</string>
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
-
+    <string name="title">Title</string>
 
 
 </resources>

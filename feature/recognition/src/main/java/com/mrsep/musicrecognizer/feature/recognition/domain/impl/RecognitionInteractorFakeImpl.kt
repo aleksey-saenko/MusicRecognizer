@@ -47,8 +47,8 @@ class RecognitionInteractorFakeImpl @Inject constructor(
             delay(1000)
             resultDelegator.notify(RecognitionStatus.Recognizing(true))
             delay(1000)
-//            notifySuccess()
-            notifyNoMatches(RecognitionTask.Created(123, false))
+            notifySuccess()
+//            notifyNoMatches(RecognitionTask.Created(123, false))
 //            testAllDoneStatuses()
 //            notifyUnhandledError(RecognitionTask.Created(123, false))
 //            notifyBadConnectionError(RecognitionTask.Created(123, false))
@@ -56,7 +56,15 @@ class RecognitionInteractorFakeImpl @Inject constructor(
     }
 
     override fun launchOfflineRecognition(scope: CoroutineScope) {
-        TODO("Not yet implemented")
+        if (recognitionJob?.isCompleted == false) return
+        recognitionJob = scope.launch {
+//            val userPreferences = preferencesRepository.userPreferencesFlow.first()
+            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            delay(1000)
+            resultDelegator.notify(RecognitionStatus.Recognizing(true))
+            delay(1000)
+            notifySuccess()
+        }.setCancellationHandler()
     }
 
     override fun cancelAndResetStatus() {

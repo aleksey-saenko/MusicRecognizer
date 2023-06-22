@@ -539,8 +539,8 @@ internal class NotificationService : Service() {
     }
 
     companion object {
-        private const val NOTIFICATION_STATUS_CHANNEL_ID = "music_recognizer_notification_ch_status"
-        private const val NOTIFICATION_RESULT_CHANNEL_ID = "music_recognizer_notification_ch_result"
+        private const val NOTIFICATION_STATUS_CHANNEL_ID = "com.mrsep.musicrecognizer.status"
+        private const val NOTIFICATION_RESULT_CHANNEL_ID = "com.mrsep.musicrecognizer.result"
         private const val STATUS_NOTIFICATION_ID = 1
         private const val RESULT_NOTIFICATION_ID = 2
 

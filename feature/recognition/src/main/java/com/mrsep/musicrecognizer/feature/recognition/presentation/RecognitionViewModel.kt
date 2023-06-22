@@ -7,8 +7,10 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionSta
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -32,13 +34,10 @@ internal class RecognitionViewModel @Inject constructor(
         initialValue = false
     )
 
-    val maxAmplitudeFlow = recognitionState.flatMapLatest { state ->
-        when (state) {
-            is RecognitionStatus.Done,
-            RecognitionStatus.Ready -> flowOf(0f)
-
-            is RecognitionStatus.Recognizing -> recorderController.maxAmplitudeFlow
-        }
+    val maxAmplitudeFlow = recognitionState.mapLatest { state ->
+        state is RecognitionStatus.Recognizing
+    }.distinctUntilChanged().flatMapLatest { isRecording ->
+        if (isRecording) recorderController.maxAmplitudeFlow else flowOf(0f)
     }
 
     fun recognizeTap() {

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackNotFoundMessage
@@ -40,6 +42,7 @@ internal fun LyricsScreen(
     modifier: Modifier = Modifier,
     viewModel: LyricsViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val uiStateInFlow by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
@@ -71,6 +74,12 @@ internal fun LyricsScreen(
                 var fontStyleDialogVisible by rememberSaveable { mutableStateOf(false) }
                 LyricsScreenTopBar(
                     onBackPressed = onBackPressed,
+                    onShareClick = {
+                        context.shareText(
+                            subject = "${uiState.title} - ${uiState.artist}",
+                            body = uiState.lyrics
+                        )
+                    },
                     onChangeTextStyleClick = { fontStyleDialogVisible = true },
                     topAppBarScrollBehavior = topBarBehaviour
                 )

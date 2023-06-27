@@ -64,10 +64,6 @@ interface TrackDao {
     @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
     fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
 
-    @Query("SELECT lyrics FROM track WHERE mb_id=(:mbId)")
-    fun getLyricsFlowById(mbId: String): Flow<String?>
-
-
     @Query(
         "SELECT * FROM track " +
                 "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
@@ -88,7 +84,7 @@ interface TrackDao {
 
 
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit) OFFSET (:offset)")
-    suspend fun getWihOffset(limit: Int, offset: Int): List<TrackEntity>
+    suspend fun getWithOffset(limit: Int, offset: Int): List<TrackEntity>
 
     @Query("SELECT * FROM track ORDER BY last_recognition_date DESC")
     fun pagingSource(): PagingSource<Int, TrackEntity>

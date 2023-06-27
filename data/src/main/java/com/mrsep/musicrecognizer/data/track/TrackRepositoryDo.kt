@@ -24,7 +24,6 @@ interface TrackRepositoryDo {
 
     suspend fun getByMbId(mbId: String): TrackEntity?
     fun getByMbIdFlow(mbId: String): Flow<TrackEntity?>
-    fun getLyricsFlowById(mbId: String): Flow<String?>
 
     fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>>
     suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity>

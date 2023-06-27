@@ -22,12 +22,9 @@ class AdapterTrackRepository @Inject constructor(
         trackRepositoryDo.deleteByMbId(mbId)
     }
 
-    override fun getLyricsFlowById(mbId: String): Flow<String?> {
-        return trackRepositoryDo.getLyricsFlowById(mbId)
-    }
-
     override fun getByMbIdFlow(mbId: String): Flow<Track?> {
         return trackRepositoryDo.getByMbIdFlow(mbId)
             .map { entity -> entity?.let { trackMapper.map(it) } }
     }
+
 }

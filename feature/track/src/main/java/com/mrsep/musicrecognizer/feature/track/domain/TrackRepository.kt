@@ -11,6 +11,4 @@ interface TrackRepository {
 
     fun getByMbIdFlow(mbId: String): Flow<Track?>
 
-    fun getLyricsFlowById(mbId: String): Flow<String?>
-
 }

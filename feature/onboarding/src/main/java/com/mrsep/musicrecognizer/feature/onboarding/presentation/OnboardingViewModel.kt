@@ -17,6 +17,8 @@ internal class OnboardingViewModel @Inject constructor(
     private val recognitionService: RecognitionService,
 ) : ViewModel() {
 
+    // FIXME: need to save user input between process recreation
+    // u can save token in rememberSaveable in Composable or in bundle savedInstantState
     private val _uiState = MutableStateFlow<TokenPageUiState>(TokenPageUiState.Loading)
     val uiState = _uiState.asStateFlow()
 

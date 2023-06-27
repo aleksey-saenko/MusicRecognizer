@@ -23,13 +23,17 @@ internal class LyricsViewModel @Inject constructor(
 
     private val args = LyricsScreen.Args(savedStateHandle)
 
-    val uiStateStream = trackRepository.getLyricsFlowById(args.mbId)
-        .combine(preferencesRepository.userPreferencesFlow) { lyrics, preferences ->
-            lyrics?.let {
-                LyricsUiState.Success(
-                    lyrics = lyrics,
-                    fontStyle = preferences.lyricsFontStyle
-                )
+    val uiStateStream = trackRepository.getByMbIdFlow(args.mbId)
+        .combine(preferencesRepository.userPreferencesFlow) { track, preferences ->
+            track?.let {
+                track.lyrics?.let { lyrics ->
+                    LyricsUiState.Success(
+                        title = track.title,
+                        artist = track.artist,
+                        lyrics = lyrics,
+                        fontStyle = preferences.lyricsFontStyle
+                    )
+                }
             } ?: LyricsUiState.LyricsNotFound
         }
         .stateIn(
@@ -54,6 +58,8 @@ internal sealed class LyricsUiState {
     object LyricsNotFound : LyricsUiState()
 
     data class Success(
+        val title: String,
+        val artist: String,
         val lyrics: String,
         val fontStyle: UserPreferences.LyricsFontStyle
     ) : LyricsUiState()

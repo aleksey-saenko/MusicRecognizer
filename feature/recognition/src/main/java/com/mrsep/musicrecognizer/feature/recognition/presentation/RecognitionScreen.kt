@@ -75,10 +75,7 @@ internal fun RecognitionScreen(
             exit = exitTransitionButton,
         ) {
             Column(
-                modifier = modifier
-                    .fillMaxSize()
-//                .verticalScroll(rememberScrollState())
-                ,
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -102,7 +99,7 @@ internal fun RecognitionScreen(
                         .padding(
                             horizontal = 24.dp,
                             vertical = 24.dp
-                        ) //.fillMaxSize().background(Color.Green)
+                        )
                 )
                 OfflineModePopup(
                     visible = isOffline,

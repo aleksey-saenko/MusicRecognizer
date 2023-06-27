@@ -1,7 +1,9 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +20,7 @@ import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 @Composable
 internal fun LyricsScreenTopBar(
     onBackPressed: () -> Unit,
+    onShareClick: () -> Unit,
     onChangeTextStyleClick: () -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
@@ -33,11 +36,19 @@ internal fun LyricsScreenTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onChangeTextStyleClick) {
-                Icon(
-                    painter = painterResource(UiR.drawable.baseline_text_fields_24),
-                    contentDescription = stringResource(StringsR.string.lyrics_text_style)
-                )
+            Row {
+                IconButton(onClick = onShareClick) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(StringsR.string.share)
+                    )
+                }
+                IconButton(onClick = onChangeTextStyleClick) {
+                    Icon(
+                        painter = painterResource(UiR.drawable.baseline_text_fields_24),
+                        contentDescription = stringResource(StringsR.string.lyrics_text_style)
+                    )
+                }
             }
         },
         topAppBarScrollBehavior = topAppBarScrollBehavior

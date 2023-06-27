@@ -49,7 +49,7 @@ class TrackRepositoryImpl @Inject constructor(
 
     override suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<TrackEntity>  {
         return withContext(ioDispatcher) {
-            trackDao.getWihOffset(limit = pageSize, offset = pageIndex * pageSize)
+            trackDao.getWithOffset(limit = pageSize, offset = pageIndex * pageSize)
 //                .map { trackToDomainMapper.map(it) }
         }
     }
@@ -137,11 +137,6 @@ class TrackRepositoryImpl @Inject constructor(
 
     override fun getByMbIdFlow(mbId: String): Flow<TrackEntity?> {
         return trackDao.getByMbIdFlow(mbId)
-            .flowOn(ioDispatcher)
-    }
-
-    override fun getLyricsFlowById(mbId: String): Flow<String?> {
-        return trackDao.getLyricsFlowById(mbId)
             .flowOn(ioDispatcher)
     }
 

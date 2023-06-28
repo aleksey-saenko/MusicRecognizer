@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.track
 
 import androidx.paging.PagingData
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import kotlinx.coroutines.flow.Flow
 
 interface TrackRepositoryDo {
@@ -25,7 +26,7 @@ interface TrackRepositoryDo {
     suspend fun getByMbId(mbId: String): TrackEntity?
     fun getByMbIdFlow(mbId: String): Flow<TrackEntity?>
 
-    fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>>
+    fun getFilteredFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>>
     suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity>
     suspend fun getLastRecognized(limit: Int): List<TrackEntity>
     fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>>

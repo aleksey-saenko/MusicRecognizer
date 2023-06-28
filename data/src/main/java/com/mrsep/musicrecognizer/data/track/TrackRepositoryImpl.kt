@@ -8,6 +8,10 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
+import com.mrsep.musicrecognizer.data.preferences.FavoritesModeDo
+import com.mrsep.musicrecognizer.data.preferences.OrderByDo
+import com.mrsep.musicrecognizer.data.preferences.SortByDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -140,7 +144,7 @@ class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getFilteredFlow(filter: TrackFilterDo): Flow<List<TrackEntity>> {
+    override fun getFilteredFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>> {
         return trackDao.getFlowByCustomQuery(filter.toSQLiteQuery())
             .flowOn(ioDispatcher)
     }
@@ -210,40 +214,40 @@ class TrackRepositoryImpl @Inject constructor(
 
 }
 
-private fun TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery {
+private fun UserPreferencesDo.TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery {
     val builder = StringBuilder("SELECT * FROM track")
     val params = mutableListOf<Any>()
     var whereUsed = false
     when (this.favoritesMode) {
-        DataFavoritesModeDo.All -> {}
-        DataFavoritesModeDo.OnlyFavorites -> {
+        FavoritesModeDo.All -> {}
+        FavoritesModeDo.OnlyFavorites -> {
             builder.append(" WHERE is_favorite")
             whereUsed = true
         }
-        DataFavoritesModeDo.ExcludeFavorites -> {
+        FavoritesModeDo.ExcludeFavorites -> {
             builder.append(" WHERE NOT(is_favorite)")
             whereUsed = true
         }
     }
-    when (val range = this.dateRange) {
-        DataRecognitionDateRangeDo.Empty -> {}
-        is DataRecognitionDateRangeDo.Selected -> {
-            builder.append(if (whereUsed) " AND" else " WHERE")
-            builder.append(" last_recognition_date BETWEEN ? and ?")
-            params.add(range.startDate)
-            params.add(range.endDate)
-        }
+    val hasUserDateLimits = this.dateRange.run {
+        first != Long.MIN_VALUE || last != Long.MAX_VALUE
+    }
+    if (hasUserDateLimits) {
+        builder.append(if (whereUsed) " AND" else " WHERE")
+        builder.append(" last_recognition_date BETWEEN ? and ?")
+        params.add(this.dateRange.first)
+        params.add(this.dateRange.last)
     }
     val sortByColumn = when (this.sortBy) {
-        DataSortByDo.RecognitionDate -> "last_recognition_date"
-        DataSortByDo.Title -> "title"
-        DataSortByDo.Artist -> "artist"
-        DataSortByDo.ReleaseDate -> "release_date"
+        SortByDo.RecognitionDate -> "last_recognition_date"
+        SortByDo.Title -> "title"
+        SortByDo.Artist -> "artist"
+        SortByDo.ReleaseDate -> "release_date"
     }
     builder.append(" ORDER BY $sortByColumn")
     val orderBy = when (this.orderBy) {
-        DataOrderByDo.Asc -> "ASC"
-        DataOrderByDo.Desc -> "DESC"
+        OrderByDo.Asc -> "ASC"
+        OrderByDo.Desc -> "DESC"
     }
     builder.append(" $orderBy")
     return SimpleSQLiteQuery(builder.toString(), params.toTypedArray())

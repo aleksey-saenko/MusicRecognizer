@@ -6,7 +6,7 @@ interface PreferencesRepositoryDo {
 
     val userPreferencesFlow: Flow<UserPreferencesDo>
 
-    suspend fun saveApiToken(value: String)
+    suspend fun setApiToken(value: String)
 
     suspend fun setOnboardingCompleted(value: Boolean)
 
@@ -21,5 +21,7 @@ interface PreferencesRepositoryDo {
     suspend fun setSchedulePolicy(value: UserPreferencesDo.SchedulePolicyDo)
 
     suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)
+
+    suspend fun setTrackFilter(value: UserPreferencesDo.TrackFilterDo)
 
 }

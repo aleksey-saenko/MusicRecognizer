@@ -15,30 +15,27 @@ internal class TrackFilterState(
     var favoritesMode by mutableStateOf(initialTrackFilter.favoritesMode)
     var sortBy by mutableStateOf(initialTrackFilter.sortBy)
     var orderBy by mutableStateOf(initialTrackFilter.orderBy)
-    var startDate: Long? by mutableStateOf(
-        (initialTrackFilter.dateRange as? RecognitionDateRange.Selected)?.startDate
+    var startDate: Long by mutableStateOf(
+        initialTrackFilter.dateRange.first
     )
-    var endDate: Long? by mutableStateOf(
-        (initialTrackFilter.dateRange as? RecognitionDateRange.Selected)?.endDate
+    var endDate: Long by mutableStateOf(
+        initialTrackFilter.dateRange.last
     )
 
     fun makeFilter() = TrackFilter(
         favoritesMode = favoritesMode,
-        dateRange = RecognitionDateRange.of(
-            startDate = startDate,
-            endDate = endDate
-        ),
+        dateRange = startDate..endDate,
         sortBy = sortBy,
         orderBy = orderBy
     )
 
     fun resetFilter() {
-        val emptyFilter = TrackFilter.Empty
+        val emptyFilter = TrackFilter.getEmpty()
         favoritesMode = emptyFilter.favoritesMode
         sortBy = emptyFilter.sortBy
         orderBy = emptyFilter.orderBy
-        startDate = null
-        endDate = null
+        startDate = Long.MIN_VALUE
+        endDate = Long.MAX_VALUE
     }
 
     companion object {
@@ -58,10 +55,7 @@ internal class TrackFilterState(
                         favoritesMode = it[0] as FavoritesMode,
                         sortBy = it[1] as SortBy,
                         orderBy = it[2] as OrderBy,
-                        dateRange = RecognitionDateRange.of(
-                            startDate = it[3] as Long?,
-                            endDate = it[4] as Long?
-                        )
+                        dateRange = it[3] as Long..it[4] as Long
                     )
                 )
             }

@@ -2,15 +2,19 @@ package com.mrsep.musicrecognizer.feature.library.domain.model
 
 data class TrackFilter(
     val favoritesMode: FavoritesMode,
-    val dateRange: RecognitionDateRange,
+    val dateRange: LongRange,
     val sortBy: SortBy,
     val orderBy: OrderBy
 ) {
+    val isEmpty = favoritesMode == FavoritesMode.All &&
+            dateRange.first == Long.MIN_VALUE && dateRange.last == Long.MAX_VALUE &&
+            sortBy == SortBy.RecognitionDate &&
+            orderBy == OrderBy.Desc
 
     companion object {
-        val Empty = TrackFilter(
+        fun getEmpty() = TrackFilter(
             favoritesMode = FavoritesMode.All,
-            dateRange = RecognitionDateRange.Empty,
+            dateRange = Long.MIN_VALUE..Long.MAX_VALUE,
             sortBy = SortBy.RecognitionDate,
             orderBy = OrderBy.Desc
         )
@@ -21,27 +25,3 @@ data class TrackFilter(
 enum class FavoritesMode { All, OnlyFavorites, ExcludeFavorites }
 enum class SortBy { RecognitionDate, Title, Artist, ReleaseDate }
 enum class OrderBy { Asc, Desc }
-
-sealed class RecognitionDateRange {
-
-    data class Selected(
-        val startDate: Long,
-        val endDate: Long
-    ) : RecognitionDateRange()
-
-    object Empty: RecognitionDateRange()
-
-    companion object {
-        fun of(startDate: Long?, endDate: Long?): RecognitionDateRange {
-            return if (startDate == null && endDate == null) {
-                Empty
-            } else {
-                Selected(
-                    startDate = startDate ?: Long.MIN_VALUE,
-                    endDate = endDate ?: Long.MAX_VALUE
-                )
-            }
-        }
-    }
-
-}

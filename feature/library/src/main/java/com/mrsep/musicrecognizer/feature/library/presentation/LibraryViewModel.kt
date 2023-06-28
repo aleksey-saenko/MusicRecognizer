@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
+import com.mrsep.musicrecognizer.feature.library.domain.repository.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
 import com.mrsep.musicrecognizer.feature.library.presentation.model.SearchResultUi
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
@@ -26,22 +27,20 @@ private const val SEARCH_QUERY_MIN_LENGTH = 2
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class LibraryViewModel @Inject constructor(
     private val trackRepository: TrackRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    private val _appliedFilterFlow = MutableStateFlow(TrackFilter.Empty)
-    val appliedFilterFlow = _appliedFilterFlow.asStateFlow()
-
     val uiState = combine(
-        flow = _appliedFilterFlow,
+        flow = preferencesRepository.userPreferencesFlow,
         flow2 = trackRepository.isEmptyFlow()
-    ) { filter, isDatabaseEmpty ->
+    ) { preferences, isDatabaseEmpty ->
         if (isDatabaseEmpty) {
             flowOf(LibraryUiState.EmptyLibrary)
         } else {
-            trackRepository.getFilteredFlow(filter).map { trackList ->
+            trackRepository.getFilteredFlow(preferences.trackFilter).map { trackList ->
                 LibraryUiState.Success(
                     trackList = trackList.map { track -> track.toUi() }.toImmutableList(),
-                    isFilterApplied = filter != TrackFilter.Empty
+                    trackFilter = preferences.trackFilter
                 )
             }
         }
@@ -83,7 +82,11 @@ internal class LibraryViewModel @Inject constructor(
 
     fun resetSearch() = searchKeywordChannel.trySend("")
 
-    fun applyFilter(trackFilter: TrackFilter) = _appliedFilterFlow.update { trackFilter }
+    fun applyFilter(trackFilter: TrackFilter) {
+        viewModelScope.launch {
+            preferencesRepository.setTrackFilter(trackFilter)
+        }
+    }
 
 }
 
@@ -95,7 +98,7 @@ internal sealed class LibraryUiState {
 
     data class Success(
         val trackList: ImmutableList<TrackUi>,
-        val isFilterApplied: Boolean
+        val trackFilter: TrackFilter
     ) : LibraryUiState()
 
 }

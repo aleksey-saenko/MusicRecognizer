@@ -24,6 +24,7 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, UserPreferencesDo.RequiredServicesDo>,
     private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, UserPreferencesDo.SchedulePolicyDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<UserPreferencesProto.LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo>,
+    private val trackFilterMapper: BidirectionalMapper<UserPreferencesProto.TrackFilterProto, UserPreferencesDo.TrackFilterDo>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : PreferencesRepositoryDo {
 
@@ -32,7 +33,7 @@ class PreferencesRepositoryImpl @Inject constructor(
         .map(preferencesMapper::map)
         .flowOn(ioDispatcher)
 
-    override suspend fun saveApiToken(value: String) {
+    override suspend fun setApiToken(value: String) {
         safeWriter { setApiToken(value) }
     }
 
@@ -68,6 +69,12 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo) {
         safeWriter {
             setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(value))
+        }
+    }
+
+    override suspend fun setTrackFilter(value: UserPreferencesDo.TrackFilterDo) {
+        safeWriter {
+            setTrackFilter(trackFilterMapper.reverseMap(value))
         }
     }
 

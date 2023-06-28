@@ -2,9 +2,10 @@ package com.mrsep.musicrecognizer.glue.library.adapter
 
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.track.SearchResultDo
-import com.mrsep.musicrecognizer.data.track.TrackFilterDo
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
@@ -19,7 +20,7 @@ class AdapterTrackRepository @Inject constructor(
     private val trackRepositoryDo: TrackRepositoryDo,
     private val trackMapper: Mapper<TrackEntity, Track>,
     private val searchResultMapper: Mapper<SearchResultDo, SearchResult>,
-    private val trackFilterMapper: Mapper<TrackFilter, TrackFilterDo>
+    private val trackFilterMapper: BidirectionalMapper<UserPreferencesDo.TrackFilterDo, TrackFilter>
 ) : TrackRepository {
 
     override fun isEmptyFlow(): Flow<Boolean> {
@@ -32,7 +33,7 @@ class AdapterTrackRepository @Inject constructor(
     }
 
     override fun getFilteredFlow(filter: TrackFilter): Flow<List<Track>> {
-        return trackRepositoryDo.getFilteredFlow(trackFilterMapper.map(filter))
+        return trackRepositoryDo.getFilteredFlow(trackFilterMapper.reverseMap(filter))
             .map { list -> list.map { entity -> trackMapper.map(entity) } }
     }
 

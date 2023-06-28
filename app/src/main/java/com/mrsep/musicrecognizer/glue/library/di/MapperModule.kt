@@ -1,15 +1,18 @@
 package com.mrsep.musicrecognizer.glue.library.di
 
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.track.SearchResultDo
-import com.mrsep.musicrecognizer.data.track.TrackFilterDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
+import com.mrsep.musicrecognizer.feature.library.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.library.mapper.SearchResultMapper
 import com.mrsep.musicrecognizer.glue.library.mapper.TrackFilterMapper
 import com.mrsep.musicrecognizer.glue.library.mapper.TrackMapper
+import com.mrsep.musicrecognizer.glue.library.mapper.UserPreferencesMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,6 +32,10 @@ interface MapperModule {
 
     @Binds
     fun bindTrackFilterMapper(implementation: TrackFilterMapper):
-            Mapper<TrackFilter, TrackFilterDo>
+            BidirectionalMapper<UserPreferencesDo.TrackFilterDo, TrackFilter>
+
+    @Binds
+    fun bindUserPreferencesMapper(implementation: UserPreferencesMapper):
+            Mapper<UserPreferencesDo, UserPreferences>
 
 }

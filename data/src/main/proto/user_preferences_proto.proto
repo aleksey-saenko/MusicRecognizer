@@ -53,4 +53,32 @@ message UserPreferencesProto {
 
   LyricsFontStyleProto lyrics_font_style = 21;
 
+  enum FavoritesModeProto {
+    ALL = 0;
+    ONLY_FAVORITES = 1;
+    EXCLUDE_FAVORITES = 2;
+  }
+
+  enum SortByProto {
+    RECOGNITION_DATE = 0;
+    TITLE = 1;
+    ARTIST = 2;
+    RELEASE_DATE = 3;
+  }
+
+  enum OrderByProto {
+    ASC = 0;
+    DESC = 1;
+  }
+
+  message TrackFilterProto {
+    FavoritesModeProto favorites_mode = 22;
+    SortByProto sort_by = 23;
+    OrderByProto order_by = 24;
+    int64 startDate = 25;
+    int64 endDate = 26;
+  }
+
+  TrackFilterProto track_filter = 27;
+
 }

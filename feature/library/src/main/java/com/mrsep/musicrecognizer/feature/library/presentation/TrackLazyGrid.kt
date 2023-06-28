@@ -28,9 +28,9 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
     onTrackClick: (mbId: String) -> Unit,
+    state: LazyGridState,
     modifier: Modifier = Modifier
 ) {
-    val state = rememberLazyGridState()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 104.dp),
         state = state,

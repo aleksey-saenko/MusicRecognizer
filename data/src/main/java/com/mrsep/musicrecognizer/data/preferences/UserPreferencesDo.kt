@@ -8,7 +8,8 @@ data class UserPreferencesDo(
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
     val schedulePolicy: SchedulePolicyDo,
-    val lyricsFontStyle: LyricsFontStyleDo
+    val lyricsFontStyle: LyricsFontStyleDo,
+    val trackFilter: TrackFilterDo
 ) {
 
     data class RequiredServicesDo(
@@ -33,14 +34,18 @@ data class UserPreferencesDo(
         val isHighContrast: Boolean
     )
 
+    data class TrackFilterDo(
+        val favoritesMode: FavoritesModeDo,
+        val sortBy: SortByDo,
+        val orderBy: OrderByDo,
+        val dateRange: LongRange,
+    )
+
 }
 
-enum class ScheduleActionDo {
-    Ignore,
-    Save,
-    SaveAndLaunch
-}
+enum class ScheduleActionDo { Ignore, Save, SaveAndLaunch }
+enum class FontSizeDo { Small, Normal, Large, Huge }
 
-enum class FontSizeDo {
-    Small, Normal, Large, Huge
-}
+enum class FavoritesModeDo { All, OnlyFavorites, ExcludeFavorites }
+enum class SortByDo { RecognitionDate, Title, Artist, ReleaseDate }
+enum class OrderByDo { Asc, Desc }

@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -72,7 +73,7 @@ internal fun LibraryScreen(
                     onSearchIconClick = { searchWindowActive = true },
                     onFilterIconClick = { filterSheetActive = !filterSheetActive },
                     isLibraryEmpty = isLibraryEmpty,
-                    isFilterApplied = isFilterApplied(screenUiState),
+                    isFilterApplied = screenUiState.isFilterApplied(),
                     topAppBarScrollBehavior = topBarBehaviour
                 )
                 when (val uiState = screenUiState) {
@@ -87,11 +88,9 @@ internal fun LibraryScreen(
                     )
 
                     is LibraryUiState.Success -> {
-                        val appliedFilter by viewModel.appliedFilterFlow.collectAsStateWithLifecycle()
                         val filterSheetState = rememberModalBottomSheetState(
                             skipPartiallyExpanded = true
                         )
-
                         fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
                             scope.launch { filterSheetState.hide() }.invokeOnCompletion {
                                 if (!filterSheetState.isVisible) filterSheetActive = false
@@ -99,16 +98,21 @@ internal fun LibraryScreen(
                             }
                         }
 
+                        val lazyGridState = rememberLazyGridState()
+                        LaunchedEffect(uiState.trackFilter) {
+                            lazyGridState.animateScrollToItem(0)
+                        }
                         TrackLazyGrid(
                             trackList = uiState.trackList,
                             onTrackClick = onTrackClick,
+                            state = lazyGridState,
                             modifier = Modifier.nestedScroll(
                                 topBarBehaviour.nestedScrollConnection
                             )
                         )
                         if (filterSheetActive) {
                             val filterState = rememberTrackFilterState(
-                                initialTrackFilter = appliedFilter
+                                initialTrackFilter = uiState.trackFilter
                             )
                             TrackFilterBottomSheet(
                                 sheetState = filterSheetState,
@@ -129,9 +133,9 @@ internal fun LibraryScreen(
 }
 
 @Stable
-private fun isFilterApplied(state: LibraryUiState): Boolean {
-    return when (state) {
-        is LibraryUiState.Success -> state.isFilterApplied
+private fun LibraryUiState.isFilterApplied(): Boolean {
+    return when (this) {
+        is LibraryUiState.Success -> !trackFilter.isEmpty
         else -> false
     }
 }

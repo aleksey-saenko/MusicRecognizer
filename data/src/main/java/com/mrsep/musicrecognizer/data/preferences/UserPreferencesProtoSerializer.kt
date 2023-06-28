@@ -29,9 +29,9 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setDeveloperModeEnabled(true)
             .setSchedulePolicy(
                 UserPreferencesProto.SchedulePolicyProto.newBuilder()
-                    .setNoMatchesValue(UserPreferencesProto.ScheduleActionProto.IGNORE_VALUE)
-                    .setBadConnectionValue(UserPreferencesProto.ScheduleActionProto.SAVE_AND_LAUNCH_VALUE)
-                    .setAnotherFailureValue(UserPreferencesProto.ScheduleActionProto.SAVE_VALUE)
+                    .setNoMatches(UserPreferencesProto.ScheduleActionProto.IGNORE)
+                    .setBadConnection(UserPreferencesProto.ScheduleActionProto.SAVE_AND_LAUNCH)
+                    .setAnotherFailure(UserPreferencesProto.ScheduleActionProto.SAVE)
                     .build()
             )
             .setLyricsFontStyle(
@@ -39,6 +39,15 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .setFontSize(UserPreferencesProto.FontSizeProto.NORMAL)
                     .setIsBold(false)
                     .setIsHighContrast(false)
+            )
+            .setTrackFilter(
+                UserPreferencesProto.TrackFilterProto.newBuilder()
+                    .setFavoritesMode(UserPreferencesProto.FavoritesModeProto.ALL)
+                    .setSortBy(UserPreferencesProto.SortByProto.RECOGNITION_DATE)
+                    .setOrderBy(UserPreferencesProto.OrderByProto.DESC)
+                    .setStartDate(Long.MIN_VALUE)
+                    .setEndDate(Long.MAX_VALUE)
+                    .build()
             )
             .build()
 

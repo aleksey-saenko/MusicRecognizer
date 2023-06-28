@@ -18,6 +18,7 @@ import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMappe
 import com.mrsep.musicrecognizer.data.preferences.mappers.RequiredServicesDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.ScheduleActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.SchedulePolicyDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.TrackFilterDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.UserPreferencesDoMapper
 import dagger.Binds
 import dagger.Module
@@ -83,5 +84,9 @@ interface PreferencesMappersModule {
     @Binds
     fun bindLyricsFontStyleDoMapper(implementation: LyricsFontStyleDoMapper):
             BidirectionalMapper<UserPreferencesProto.LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo>
+
+    @Binds
+    fun bindTrackFilterDoMapper(implementation: TrackFilterDoMapper):
+            BidirectionalMapper<UserPreferencesProto.TrackFilterProto, UserPreferencesDo.TrackFilterDo>
 
 }

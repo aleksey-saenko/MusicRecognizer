@@ -10,7 +10,8 @@ import javax.inject.Inject
 class UserPreferencesDoMapper @Inject constructor(
     private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, SchedulePolicyDo>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
-    private val lyricsFontStyleDoMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>
+    private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
+    private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>
 ) : BidirectionalMapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun reverseMap(input: UserPreferencesDo): UserPreferencesProto {
@@ -22,7 +23,8 @@ class UserPreferencesDoMapper @Inject constructor(
             .setDynamicColorsEnabled(input.dynamicColorsEnabled)
             .setDeveloperModeEnabled(input.developerModeEnabled)
             .setSchedulePolicy(schedulePolicyMapper.reverseMap(input.schedulePolicy))
-            .setLyricsFontStyle(lyricsFontStyleDoMapper.reverseMap(input.lyricsFontStyle))
+            .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
+            .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
             .build()
     }
 
@@ -35,7 +37,8 @@ class UserPreferencesDoMapper @Inject constructor(
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             schedulePolicy = schedulePolicyMapper.map(input.schedulePolicy),
-            lyricsFontStyle = lyricsFontStyleDoMapper.map(input.lyricsFontStyle)
+            lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
+            trackFilter = trackFilterMapper.map(input.trackFilter)
         )
     }
 

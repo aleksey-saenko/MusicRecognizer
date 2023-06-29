@@ -1,7 +1,12 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -101,9 +106,13 @@ internal fun SchedulePolicyDialog(
             }
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .width(IntrinsicSize.Min)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Text(
-                    text = stringResource(StringsR.string.schedule_policy_dialog_message)
+                    text = stringResource(StringsR.string.schedule_policy_dialog_message),
                 )
                 ScheduleActionsDropdownMenu(
                     options = allOptions,
@@ -148,7 +157,9 @@ private fun ScheduleActionsDropdownMenu(
         modifier = modifier
     ) {
         OutlinedTextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
             readOnly = true,
             value = selectedOption.getTitle(),
             onValueChange = {},

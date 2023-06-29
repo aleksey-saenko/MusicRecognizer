@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
     @Inject @ApplicationScope
     lateinit var appScope: CoroutineScope
 
-    //    private val musicRecognizerApp get() = application as MusicRecognizerApp
     private val viewModel: MainActivityViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -87,6 +86,7 @@ class MainActivity : ComponentActivity() {
                         exit = fadeOut(),
                     ) {
                         AppNavigation(
+                            shouldShowNavRail = shouldShowNavRail(windowSizeClass),
                             isExpandedScreen = isExpandedScreen(windowSizeClass),
                             onboardingCompleted = isOnboardingCompleted(uiState),
                             onOnboardingClose = { this@MainActivity.finish() }
@@ -98,12 +98,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+//    override fun onStart() {
+//        super.onStart()
 //        appScope.launch {
 //            databaseFiller.prepopulateFromAssets(force = false)
 //        }
-    }
+//    }
 
     private fun setupApplicationWithPreferences() {
         lifecycleScope.launch {

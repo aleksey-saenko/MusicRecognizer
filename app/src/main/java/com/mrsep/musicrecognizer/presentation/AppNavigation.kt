@@ -2,12 +2,14 @@ package com.mrsep.musicrecognizer.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,21 +33,22 @@ import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.tr
 
 @Composable
 internal fun AppNavigation(
+    shouldShowNavRail: Boolean,
     isExpandedScreen: Boolean,
     onboardingCompleted: Boolean,
     onOnboardingClose: () -> Unit
 ) {
     val topNavController = rememberNavController()
-//    printBackStack(topNavController, tag = "outer")
     NavHost(
         navController = topNavController,
-        startDestination = if (onboardingCompleted) BOTTOM_BAR_HOST_ROUTE else OnboardingScreen.ROUTE
+        startDestination = if (onboardingCompleted) BAR_HOST_ROUTE else OnboardingScreen.ROUTE
     ) {
         onboardingScreen(
             onOnboardingCompleted = { },
             onOnboardingClose = onOnboardingClose
         )
-        bottomBarNavHost(
+        barNavHost(
+            shouldShowNavRail = shouldShowNavRail,
             topNavController = topNavController
         )
         trackScreen(
@@ -68,56 +71,83 @@ internal fun AppNavigation(
     }
 }
 
-private const val BOTTOM_BAR_HOST_ROUTE = "bottom_bar_host"
+private const val BAR_HOST_ROUTE = "bar_host"
 
-private fun NavGraphBuilder.bottomBarNavHost(
+private fun NavGraphBuilder.barNavHost(
+    shouldShowNavRail: Boolean,
     topNavController: NavController
 ) {
-    composable(BOTTOM_BAR_HOST_ROUTE) {
+    composable(BAR_HOST_ROUTE) {
         val innerNavController = rememberNavController()
-//        printBackStack(innerNavController, tag = "inner")
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NavHost(
-                navController = innerNavController,
-                startDestination = RecognitionScreen.ROUTE,
-                modifier = Modifier.weight(1f, false)
+        if (shouldShowNavRail) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
             ) {
-                libraryScreen(onTrackClick = { mbId, from ->
-                    topNavController.navigateToTrackScreen(mbId = mbId, from = from)
-                })
-                recognitionScreen(
-                    onNavigateToTrackScreen = { mbId, from ->
-                        topNavController.navigateToTrackScreen(mbId = mbId, from = from)
-                    },
-                    //TODO: implement navigation with highlighting enqueuedId
-                    onNavigateToQueueScreen = { enqueuedId, from ->
-                        topNavController.navigateToQueueScreen(from = from)
-                    },
-                    onNavigateToPreferencesScreen = { from ->
-                        innerNavController.navigateToPreferencesScreen(from)
-                    }
-                )
-                preferencesScreen(
-                    onNavigateToAboutScreen = { from ->
-                        topNavController.navigateToAboutScreen(from)
-                    },
-                    onNavigateToQueueScreen = { from ->
-                        topNavController.navigateToQueueScreen(from)
-                    },
-                    onNavigateToDeveloperScreen = { from ->
-                        innerNavController.navigateToDeveloperScreen(from)
-                    }
-                )
-                developerScreen(
-                    onBackPressed = innerNavController::navigateUp
+                AppNavigationRail(navController = innerNavController)
+                BarNavHost(
+                    topNavController = topNavController,
+                    innerNavController = innerNavController,
+                    modifier = Modifier.weight(1f, false)
                 )
             }
-            NavigationBarCustom(navController = innerNavController)
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                BarNavHost(
+                    topNavController = topNavController,
+                    innerNavController = innerNavController,
+                    modifier = Modifier.weight(1f, false)
+                )
+                AppNavigationBar(navController = innerNavController)
+            }
         }
     }
+}
 
+@Composable
+private fun BarNavHost(
+    topNavController: NavController,
+    innerNavController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = innerNavController,
+        startDestination = RecognitionScreen.ROUTE,
+        modifier = modifier
+    ) {
+        libraryScreen(onTrackClick = { mbId, from ->
+            topNavController.navigateToTrackScreen(mbId = mbId, from = from)
+        })
+        recognitionScreen(
+            onNavigateToTrackScreen = { mbId, from ->
+                topNavController.navigateToTrackScreen(mbId = mbId, from = from)
+            },
+            //TODO: implement navigation with highlighting enqueuedId
+            onNavigateToQueueScreen = { enqueuedId, from ->
+                topNavController.navigateToQueueScreen(from = from)
+            },
+            onNavigateToPreferencesScreen = { from ->
+                innerNavController.navigateToPreferencesScreen(from)
+            }
+        )
+        preferencesScreen(
+            onNavigateToAboutScreen = { from ->
+                topNavController.navigateToAboutScreen(from)
+            },
+            onNavigateToQueueScreen = { from ->
+                topNavController.navigateToQueueScreen(from)
+            },
+            onNavigateToDeveloperScreen = { from ->
+                innerNavController.navigateToDeveloperScreen(from)
+            }
+        )
+        developerScreen(
+            onBackPressed = innerNavController::navigateUp
+        )
+    }
 }

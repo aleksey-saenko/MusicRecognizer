@@ -40,8 +40,15 @@
     <string name="none">None</string>
     <string name="permissions">Permissions</string>
     <string name="allow_access">Allow Access</string>
-    <string name="permission_multiple_denied_message">Previous requests for permission have been denied. You can change your decision in the application settings.\nWould you like to open settings?</string>
-    <string name="permission_denied">Permission denied</string>
+    <string name="ask_permission">Ask permission</string>
+    <string name="microphone_access">Microphone access</string>
+    <string name="microphone_permission_rationale_message">To perform music recognition, you need to grant access to the microphone.</string>
+    <string name="microphone_permission_denied_message">Previous requests for microphone access have been denied. Without this permission, the application can\'t perform music recognition. You can change your decision through the settings.</string>
+    <string name="notification_sending">Notification sending</string>
+    <string name="notification_permission_rationale_message">To enable the notification service, you need to allow the application to send notifications to you.</string>
+    <string name="notification_permission_denied_message">Previous requests to allow the app to send notifications have been denied. Without this permission, the notification service can\'t work properly. You can change your decision through the settings.</string>
+
+
     <string name="permissions_granted">Permissions Granted</string>
     <string name="back">Back</string>
     <string name="open_settings">Open settings</string>
@@ -186,6 +193,5 @@
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
     <string name="title">Title</string>
-
 
 </resources>

@@ -16,7 +16,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun EnhancedButton(
     activated: Boolean,
-    permissionBlocked: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -73,7 +72,6 @@ fun EnhancedButton(
 @Composable
 fun AnimatedEnhancedButton(
     activated: Boolean,
-    permissionBlocked: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -99,7 +97,6 @@ fun AnimatedEnhancedButton(
     EnhancedButton(
         modifier = modifier.scale(buttonSize.value),
         activated = activated,
-        permissionBlocked = permissionBlocked,
         onClick = onClick,
         onLongPress = onLongPress,
         content = content,

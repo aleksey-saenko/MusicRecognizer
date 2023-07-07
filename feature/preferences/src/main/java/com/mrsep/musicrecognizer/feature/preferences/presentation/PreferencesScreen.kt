@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,7 +21,10 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
-import com.mrsep.musicrecognizer.core.ui.components.PermissionBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.NotificationsPermissionBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.NotificationsPermissionRationaleDialog
+import com.mrsep.musicrecognizer.core.ui.findActivity
+import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
@@ -36,6 +40,7 @@ internal fun PreferencesScreen(
     onNavigateToQueueScreen: () -> Unit,
     onNavigateToDeveloperScreen: () -> Unit
 ) {
+    val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle(PreferencesUiState.Loading)
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -129,26 +134,30 @@ internal fun PreferencesScreen(
                     ) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             //region <permission handling block>
+                            var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
+                            var permissionRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
                             val notificationPermissionState = rememberPermissionState(
                                 Manifest.permission.POST_NOTIFICATIONS
                             ) { granted ->
-                                if (granted) viewModel.setNotificationServiceEnabled(true)
+                                if (granted) {
+                                    viewModel.setNotificationServiceEnabled(true)
+                                } else if (!context.findActivity().shouldShowRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                                    permissionBlockedDialogVisible = true
+                                }
                             }
-
-                            var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
-                            var permissionBlockedDialogVisible by remember {
-                                mutableStateOf(
-                                    false
-                                )
-                            }
-                            val canShowPermissionRequest =
-                                notificationPermissionState.status.shouldShowRationale || isFirstTimeRequest
-                            //endregion
-
-                            if (permissionBlockedDialogVisible) PermissionBlockedDialog(
+                            if (permissionBlockedDialogVisible) NotificationsPermissionBlockedDialog(
                                 onConfirmClick = { permissionBlockedDialogVisible = false },
                                 onDismissClick = { permissionBlockedDialogVisible = false }
                             )
+                            if (permissionRationaleDialogVisible) NotificationsPermissionRationaleDialog(
+                                onConfirmClick = {
+                                    permissionRationaleDialogVisible = false
+                                    notificationPermissionState.launchPermissionRequest()
+                                },
+                                onDismissClick = { permissionRationaleDialogVisible = false }
+                            )
+                            //endregion
+
                             PreferenceSwitchItem(
                                 title = stringResource(StringsR.string.notification_service),
                                 subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
@@ -156,11 +165,10 @@ internal fun PreferencesScreen(
                                     if (checked) {
                                         if (notificationPermissionState.status.isGranted) {
                                             viewModel.setNotificationServiceEnabled(true)
-                                        } else if (canShowPermissionRequest) {
-                                            notificationPermissionState.launchPermissionRequest()
-                                            isFirstTimeRequest = false
+                                        } else if (notificationPermissionState.status.shouldShowRationale) {
+                                            permissionRationaleDialogVisible = true
                                         } else {
-                                            permissionBlockedDialogVisible = true
+                                            notificationPermissionState.launchPermissionRequest()
                                         }
                                     } else {
                                         viewModel.setNotificationServiceEnabled(false)

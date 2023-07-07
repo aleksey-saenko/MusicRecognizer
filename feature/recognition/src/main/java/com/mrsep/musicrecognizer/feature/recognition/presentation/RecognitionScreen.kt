@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,7 +19,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.mrsep.musicrecognizer.core.ui.components.PermissionBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionRationaleDialog
+import com.mrsep.musicrecognizer.core.ui.findActivity
+import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
@@ -42,33 +46,40 @@ internal fun RecognitionScreen(
     onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
     onNavigateToPreferencesScreen: () -> Unit
 ) {
+    val context = LocalContext.current
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
     //region <permission handling block>
+    var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
+    var permissionRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
     val recorderPermissionState = rememberPermissionState(
         Manifest.permission.RECORD_AUDIO
     ) { granted ->
-        if (granted) viewModel.recognizeTap()
+        if (granted) {
+            viewModel.recognizeTap()
+        } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
+            permissionBlockedDialogVisible = true
+        }
     }
-    var isFirstTimeRequest by rememberSaveable { mutableStateOf(true) }
-    var permissionBlockedDialogVisible by remember { mutableStateOf(false) }
-    val canShowPermissionRequest =
-        recorderPermissionState.status.shouldShowRationale || isFirstTimeRequest
-    val isPermissionBlocked =
-        !(recorderPermissionState.status.isGranted || canShowPermissionRequest)
+    if (permissionBlockedDialogVisible) RecorderPermissionBlockedDialog(
+        onConfirmClick = { permissionBlockedDialogVisible = false },
+        onDismissClick = { permissionBlockedDialogVisible = false }
+    )
+    if (permissionRationaleDialogVisible) RecorderPermissionRationaleDialog(
+        onConfirmClick = {
+            permissionRationaleDialogVisible = false
+            recorderPermissionState.launchPermissionRequest()
+        },
+        onDismissClick = { permissionRationaleDialogVisible = false }
+    )
     //endregion
 
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (permissionBlockedDialogVisible) PermissionBlockedDialog(
-            onConfirmClick = { permissionBlockedDialogVisible = false },
-            onDismissClick = { permissionBlockedDialogVisible = false }
-        )
-
         AnimatedVisibility(
             visible = recognizeStatus.isNotDone(),
             enter = enterTransitionButton,
@@ -84,16 +95,14 @@ internal fun RecognitionScreen(
                     onButtonClick = {
                         if (recorderPermissionState.status.isGranted) {
                             viewModel.recognizeTap()
-                        } else if (canShowPermissionRequest) {
-                            recorderPermissionState.launchPermissionRequest()
-                            isFirstTimeRequest = false
+                        } else if (recorderPermissionState.status.shouldShowRationale) {
+                            permissionRationaleDialogVisible = true
                         } else {
-                            permissionBlockedDialogVisible = true
+                            recorderPermissionState.launchPermissionRequest()
                         }
                     },
                     activated = recognizeStatus is RecognitionStatus.Recognizing,
                     amplitudeFactor = ampFlow,
-                    permissionBlocked = isPermissionBlocked,
                     modifier = Modifier
                         .weight(1f)
                         .padding(

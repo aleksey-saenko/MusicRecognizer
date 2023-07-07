@@ -148,19 +148,6 @@ internal fun TokenPage(
                     }
                 }
 
-                Button(
-                    modifier = Modifier.widthIn(min = 240.dp),
-                    onClick = onTokenApplied,
-                    enabled = uiState.tokenValidationStatus.isValidationAllowed
-                ) {
-                    Text(
-                        text = when (uiState.tokenValidationStatus) {
-                            TokenValidationStatus.Success -> stringResource(StringsR.string.token_applied)
-                            TokenValidationStatus.Validating -> stringResource(StringsR.string.validating)
-                            else -> stringResource(StringsR.string.apply_api_token)
-                        }
-                    )
-                }
             }
         }
     }

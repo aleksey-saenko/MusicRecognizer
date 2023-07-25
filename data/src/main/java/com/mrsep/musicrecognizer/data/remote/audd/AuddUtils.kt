@@ -4,7 +4,7 @@ import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 
 
 internal const val auddReturnParameterFull =
-    "lyrics, spotify, apple_music, deezer, napster, musicbrainz"
+    "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
 
 //FIXME: consider removing building parameter (full json is more useful, and is not so heavy)
 internal fun UserPreferencesDo.RequiredServicesDo.toAuddReturnParameter(): String {

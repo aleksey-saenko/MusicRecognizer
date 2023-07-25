@@ -90,7 +90,7 @@ internal fun PermissionBlockedDialog(
         },
         dismissButton = {
             OutlinedButton(onClick = onDismissClick) {
-                Text(text = stringResource(StringsR.string.close))
+                Text(text = stringResource(StringsR.string.not_now))
             }
         },
         title = {
@@ -115,12 +115,12 @@ internal fun PermissionRationaleDialog(
             Button(onClick = {
                 onConfirmClick()
             }) {
-                Text(text = stringResource(StringsR.string.ask_permission))
+                Text(text = stringResource(StringsR.string.request_permission))
             }
         },
         dismissButton = {
             OutlinedButton(onClick = onDismissClick) {
-                Text(text = stringResource(StringsR.string.close))
+                Text(text = stringResource(StringsR.string.not_now))
             }
         },
         title = {

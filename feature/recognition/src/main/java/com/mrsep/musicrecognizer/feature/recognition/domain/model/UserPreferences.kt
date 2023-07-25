@@ -30,8 +30,12 @@ data class UserPreferences(
 
 
 enum class ScheduleAction(val save: Boolean, val launch: Boolean) {
-    Ignore(false, false), Save(true, false), SaveAndLaunch(true, true);
+
+    Ignore(false, false),
+    Save(true, false),
+    SaveAndLaunch(true, true);
 
     operator fun component1() = save
     operator fun component2() = launch
+
 }

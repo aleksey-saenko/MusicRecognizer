@@ -137,7 +137,11 @@ internal fun TokenPage(
                     )
                 }
 
-                Box(modifier = Modifier.padding(top = 24.dp).height(4.dp)) {
+                Box(
+                    modifier = Modifier
+                    .padding(top = 24.dp)
+                    .height(4.dp)
+                ) {
                     androidx.compose.animation.AnimatedVisibility(
                         visible = uiState.tokenValidationStatus is TokenValidationStatus.Validating
                     ) {
@@ -164,5 +168,6 @@ private fun TokenValidationStatus.errorMessageOrNull() = when (this) {
         stringResource(StringsR.string.token_limit_reached)
     else
         stringResource(StringsR.string.wrong_token)
+
     else -> null
 }

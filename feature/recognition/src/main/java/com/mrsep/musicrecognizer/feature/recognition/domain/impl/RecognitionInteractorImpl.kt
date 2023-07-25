@@ -69,21 +69,12 @@ class RecognitionInteractorImpl @Inject constructor(
 
     private var recognitionJob: Job? = null
 
-    private fun launchRecognitionIfPreviousCompleted(
-        scope: CoroutineScope,
-        block: suspend CoroutineScope.() -> Unit
-    ) {
-        if (recognitionJob == null || recognitionJob?.isCompleted == true) {
-            recognitionJob = scope.launch(block = block).setCancellationHandler()
-        }
-    }
-
     override fun launchRecognition(scope: CoroutineScope) {
         launchRecognitionIfPreviousCompleted(scope) {
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            val eachRecordingChannel = Channel<ByteArray>(onlineStrategy.steps.size)
+            val eachRecordingChannel = Channel<ByteArray>(onlineStrategy.stepsCount)
             val remoteResult = async {
                 recognitionService.recognize(
                     token = userPreferences.apiToken,
@@ -165,6 +156,42 @@ class RecognitionInteractorImpl @Inject constructor(
         }
     }
 
+    override fun launchOfflineRecognition(scope: CoroutineScope) {
+        launchRecognitionIfPreviousCompleted(scope) {
+            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            val fullRecording = recorderController.audioRecordingFlow(offlineStrategy).firstOrNull()
+                ?: Result.failure(IllegalStateException("Empty audio recording flow"))
+            fullRecording.onSuccess { recording ->
+                val task = enqueueRecognition(recording, true)
+                val result = RecognitionResult.ScheduledOffline(task)
+                resultDelegator.notify(RecognitionStatus.Done(result))
+            }.onFailure { cause ->
+                val error = RecognitionResult.Error(
+                    RemoteRecognitionResult.Error.BadRecording(cause),
+                    RecognitionTask.Ignored
+                )
+                resultDelegator.notify(RecognitionStatus.Done(error))
+            }
+        }
+    }
+
+    override fun cancelAndResetStatus() {
+        if (recognitionJob?.isCompleted == true) {
+            resultDelegator.notify(RecognitionStatus.Ready)
+        } else {
+            recognitionJob?.cancel()
+        }
+    }
+
+    private fun launchRecognitionIfPreviousCompleted(
+        scope: CoroutineScope,
+        block: suspend CoroutineScope.() -> Unit
+    ) {
+        if (recognitionJob == null || recognitionJob?.isCompleted == true) {
+            recognitionJob = scope.launch(block = block).setCancellationHandler()
+        }
+    }
+
     private suspend fun enqueueRecognition(
         audioRecord: ByteArray,
         launch: Boolean
@@ -194,33 +221,6 @@ class RecognitionInteractorImpl @Inject constructor(
         } else {
             fullRecordingAsync.cancelAndJoin()
             RecognitionTask.Ignored
-        }
-    }
-
-    override fun launchOfflineRecognition(scope: CoroutineScope) {
-        launchRecognitionIfPreviousCompleted(scope) {
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            val fullRecording = recorderController.audioRecordingFlow(offlineStrategy).firstOrNull()
-                ?: Result.failure(IllegalStateException("Empty audio recording flow"))
-            fullRecording.onSuccess { recording ->
-                val task = enqueueRecognition(recording, true)
-                val result = RecognitionResult.ScheduledOffline(task)
-                resultDelegator.notify(RecognitionStatus.Done(result))
-            }.onFailure { cause ->
-                val error = RecognitionResult.Error(
-                    RemoteRecognitionResult.Error.BadRecording(cause),
-                    RecognitionTask.Ignored
-                )
-                resultDelegator.notify(RecognitionStatus.Done(error))
-            }
-        }
-    }
-
-    override fun cancelAndResetStatus() {
-        if (recognitionJob?.isCompleted == true) {
-            resultDelegator.notify(RecognitionStatus.Ready)
-        } else {
-            recognitionJob?.cancel()
         }
     }
 

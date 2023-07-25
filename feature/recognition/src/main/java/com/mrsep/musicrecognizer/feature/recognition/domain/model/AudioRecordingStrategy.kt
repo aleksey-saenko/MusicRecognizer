@@ -29,6 +29,10 @@ class AudioRecordingStrategy(
     val extraTryIndex: Int
 ) {
 
+    val stepsCount get() = steps.size
+    val lastStepIndex get() = steps.lastIndex
+    val lastRecordingIndex get() = if (sendTotalAtEnd) lastStepIndex + 1 else lastStepIndex
+
     /**
      * Properties used to describe the audio recognition step during [AudioRecordingStrategy].
      *
@@ -37,9 +41,6 @@ class AudioRecordingStrategy(
      * @property splitter determines whether the given step is a record splitter.
      * If true, the start time of the next recording will be counted from this splitter.
      */
-
-    val lastStepIndex = steps.lastIndex
-    val lastRecordingIndex = if (sendTotalAtEnd) lastStepIndex + 1 else lastStepIndex
 
     class Step(
         val timestamp: Duration,

@@ -40,7 +40,7 @@
     <string name="none">None</string>
     <string name="permissions">Permissions</string>
     <string name="allow_access">Allow Access</string>
-    <string name="ask_permission">Ask permission</string>
+    <string name="request_permission">Request permission</string>
     <string name="microphone_access">Microphone access</string>
     <string name="microphone_permission_rationale_message">To perform music recognition, you need to grant access to the microphone.</string>
     <string name="microphone_permission_denied_message">Previous requests for microphone access have been denied. Without this permission, the application can\'t perform music recognition. You can change your decision through the settings.</string>
@@ -55,9 +55,9 @@
     <string name="token_applied">Token applied</string>
     <string name="invalid_token">Invalid token</string>
     <string name="ready">Ready</string>
-    <string name="service_notification_main_channel_name">TuneSurfer main notification channel</string>
-    <string name="service_notification_result_channel_name">TuneSurfer result notification channel</string>
-    <string name="service_notification_scheduled_result_channel_name">TuneSurfer scheduled result notification channel</string>
+    <string name="service_notification_main_channel_name">Control notification channel</string>
+    <string name="service_notification_result_channel_name">Result notification channel</string>
+    <string name="service_notification_scheduled_result_channel_name">Scheduled result notification channel</string>
     <string name="service_notification_main_channel_desc">Allow to control recognition process from notifications</string>
     <string name="service_notification_result_channel_desc">Allow to receive recognition results from notifications</string>
     <string name="service_notification_scheduled_result_channel_desc">Allow to receive scheduled recognition results from notifications</string>
@@ -139,6 +139,7 @@
     <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
     <string name="no_tracks_match_search">No tracks matching your search criteria</string>
     <string name="close">Close</string>
+    <string name="not_now">Not now</string>
     <string name="save_the_recording_and_launch_retry">Save the recording and launch retry</string>
     <string name="save_the_recording">Save the recording</string>
     <string name="ignore">Ignore</string>

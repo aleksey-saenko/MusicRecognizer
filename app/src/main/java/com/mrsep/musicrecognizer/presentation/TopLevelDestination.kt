@@ -6,7 +6,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen
-import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
 
 enum class TopLevelDestination(
     val route: String,

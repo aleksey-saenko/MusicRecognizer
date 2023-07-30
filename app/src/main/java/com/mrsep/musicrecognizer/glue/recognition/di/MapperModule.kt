@@ -3,11 +3,15 @@ package com.mrsep.musicrecognizer.glue.recognition.di
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingStrategyDo
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
+import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
@@ -44,5 +48,13 @@ interface MapperModule {
     @Binds
     fun bindScheduleActionMapper(implementation: ScheduleActionMapper):
             Mapper<ScheduleActionDo, ScheduleAction>
+
+    @Binds
+    fun bindPlayerStatusMapper(implementation: PlayerStatusMapper):
+            Mapper<PlayerStatusDo, PlayerStatus>
+
+    @Binds
+    fun bindEnqueuedRecognitionMapper(implementation: EnqueuedRecognitionMapper):
+    BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition>
 
 }

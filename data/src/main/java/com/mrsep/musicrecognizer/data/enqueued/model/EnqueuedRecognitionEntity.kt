@@ -1,12 +1,10 @@
 package com.mrsep.musicrecognizer.data.enqueued.model
 
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.io.File
 import java.time.Instant
@@ -32,7 +30,7 @@ data class EnqueuedRecognitionEntity(
     @ColumnInfo(name = "creation_date")
     val creationDate: Instant,
 
-    // result can't be embedded object because of indexing foreign key, see Index docs
+    // result can't be embedded object due to constraint of foreign key indexing, see Index docs
     @ColumnInfo(name = "result_type")
     val resultType: RemoteRecognitionResultType? = null,
     @ColumnInfo(name = "result_mb_id")
@@ -42,24 +40,3 @@ data class EnqueuedRecognitionEntity(
     @ColumnInfo(name = "result_date")
     val resultDate: Instant? = null
 )
-
-
-data class EnqueuedWithOptionalTrack(
-    @Embedded val enqueued: EnqueuedRecognitionEntity,
-    @Relation(
-         parentColumn = "result_mb_id",
-         entityColumn = "mb_id"
-    )
-    val track: TrackEntity?
-)
-
-enum class RemoteRecognitionResultType {
-    Success,
-    NoMatches,
-    BadConnection,
-    BadRecording,
-    WrongToken,
-    LimitedToken,
-    HttpError,
-    UnhandledError
-}

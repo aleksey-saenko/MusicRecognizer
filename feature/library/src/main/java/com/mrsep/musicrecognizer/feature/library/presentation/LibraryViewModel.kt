@@ -92,9 +92,9 @@ internal class LibraryViewModel @Inject constructor(
 
 internal sealed class LibraryUiState {
 
-    object Loading : LibraryUiState()
+    data object Loading : LibraryUiState()
 
-    object EmptyLibrary : LibraryUiState()
+    data object EmptyLibrary : LibraryUiState()
 
     data class Success(
         val trackList: ImmutableList<TrackUi>,

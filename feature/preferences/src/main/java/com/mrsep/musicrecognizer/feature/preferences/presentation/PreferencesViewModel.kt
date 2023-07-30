@@ -56,6 +56,6 @@ internal class PreferencesViewModel @Inject constructor(
 }
 
 internal sealed interface PreferencesUiState {
-    object Loading : PreferencesUiState
+    data object Loading : PreferencesUiState
     data class Success(val preferences: UserPreferences) : PreferencesUiState
 }

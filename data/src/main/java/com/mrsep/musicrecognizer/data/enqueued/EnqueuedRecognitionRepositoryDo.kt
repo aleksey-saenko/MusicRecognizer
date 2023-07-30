@@ -1,27 +1,24 @@
 package com.mrsep.musicrecognizer.data.enqueued
 
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionDo
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface EnqueuedRecognitionRepositoryDo {
 
-    suspend fun createEnqueuedRecognition(audioRecording: ByteArray, launch: Boolean): Int?
+    suspend fun create(audioRecording: ByteArray, title: String): Int?
 
     suspend fun update(enqueuedRecognition: EnqueuedRecognitionEntity)
 
     suspend fun updateTitle(enqueuedId: Int, newTitle: String)
 
+    suspend fun deleteById(vararg enqueuedId: Int)
+
+    suspend fun deleteAll()
+
+
     suspend fun getRecordingById(enqueuedId: Int): File?
-
-    suspend fun enqueueById(vararg enqueuedId: Int)
-
-    suspend fun cancelById(vararg enqueuedId: Int)
-
-    suspend fun cancelAndDeleteById(vararg enqueuedId: Int)
-
-    suspend fun cancelAndDeleteAll()
 
     suspend fun getById(id: Int): EnqueuedRecognitionEntity?
 
@@ -29,8 +26,13 @@ interface EnqueuedRecognitionRepositoryDo {
 
     fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
 
-    fun getFlowWithStatusById(id: Int): Flow<EnqueuedRecognitionDo?>
 
-    fun getFlowWithStatusAll(): Flow<List<EnqueuedRecognitionDo>>
+    suspend fun getByIdWithOptionalTrack(id: Int): EnqueuedRecognitionEntityWithTrack?
+
+    suspend fun getAllWithOptionalTrack(): List<EnqueuedRecognitionEntityWithTrack>
+
+    fun getFlowByIdWithOptionalTrack(id: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
+
+    fun getFlowAllWithOptionalTrack(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
 
 }

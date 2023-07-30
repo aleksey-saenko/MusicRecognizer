@@ -53,9 +53,9 @@ internal class LyricsViewModel @Inject constructor(
 @Immutable
 internal sealed class LyricsUiState {
 
-    object Loading : LyricsUiState()
+    data object Loading : LyricsUiState()
 
-    object LyricsNotFound : LyricsUiState()
+    data object LyricsNotFound : LyricsUiState()
 
     data class Success(
         val title: String,

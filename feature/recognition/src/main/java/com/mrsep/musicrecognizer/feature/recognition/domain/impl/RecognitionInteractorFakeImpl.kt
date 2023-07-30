@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionResultDelegator
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
@@ -26,7 +25,7 @@ import javax.inject.Singleton
 private const val TAG = "RecognitionInteractorFakeImpl"
 
 @Singleton
-class RecognitionInteractorFakeImpl @Inject constructor(
+internal class RecognitionInteractorFakeImpl @Inject constructor(
 //    private val recorderController: AudioRecorderController,
 //    private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
@@ -125,7 +124,7 @@ class RecognitionInteractorFakeImpl @Inject constructor(
     private fun notifyBadRecordingError() {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.BadRecording(RuntimeException("Error audio format")),
+                remoteError = RemoteRecognitionResult.Error.BadRecording("Error audio format"),
                 recognitionTask = RecognitionTask.Ignored
             )
         )
@@ -162,7 +161,7 @@ class RecognitionInteractorFakeImpl @Inject constructor(
     private fun notifyUnhandledError(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.UnhandledError(t = RuntimeException("Some UnhandledError"), message = "Some UnhandledError"),
+                remoteError = RemoteRecognitionResult.Error.UnhandledError(message = "Some UnhandledError", cause = RuntimeException("Some UnhandledError")),
                 recognitionTask = recognitionTask
             )
         )

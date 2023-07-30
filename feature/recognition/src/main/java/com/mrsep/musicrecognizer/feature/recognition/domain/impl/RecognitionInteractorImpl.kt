@@ -2,8 +2,8 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionResultDelegator
 import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
@@ -41,13 +41,14 @@ import kotlin.time.Duration.Companion.seconds
 private const val TAG = "RecognitionInteractorImpl"
 
 @Singleton
-class RecognitionInteractorImpl @Inject constructor(
+internal class RecognitionInteractorImpl @Inject constructor(
     private val recorderController: AudioRecorderController,
     private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
     private val resultDelegator: RecognitionResultDelegator,
-    private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository
+    private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
+    private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler
 ) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
 
     override val screenRecognitionStatus get() = resultDelegator.screenState
@@ -107,7 +108,7 @@ class RecognitionInteractorImpl @Inject constructor(
                 remoteResult.onAwait { remoteRecognitionResult -> remoteRecognitionResult }
                 recordingAsync.onAwait { recordingResult: Result<ByteArray> ->
                     recordingResult.exceptionOrNull()?.let { cause ->
-                        RemoteRecognitionResult.Error.BadRecording(cause)
+                        RemoteRecognitionResult.Error.BadRecording(cause = cause)
                     } ?: remoteResult.await()
                 }
             }
@@ -167,7 +168,7 @@ class RecognitionInteractorImpl @Inject constructor(
                 resultDelegator.notify(RecognitionStatus.Done(result))
             }.onFailure { cause ->
                 val error = RecognitionResult.Error(
-                    RemoteRecognitionResult.Error.BadRecording(cause),
+                    RemoteRecognitionResult.Error.BadRecording(cause = cause),
                     RecognitionTask.Ignored
                 )
                 resultDelegator.notify(RecognitionStatus.Done(error))
@@ -193,14 +194,15 @@ class RecognitionInteractorImpl @Inject constructor(
     }
 
     private suspend fun enqueueRecognition(
-        audioRecord: ByteArray,
-        launch: Boolean
+        audioRecording: ByteArray,
+        launched: Boolean
     ): RecognitionTask {
         return enqueuedRecognitionRepository.createEnqueuedRecognition(
-            audioRecord,
-            launch
+            audioRecording = audioRecording,
+            title = ""
         )?.let { enqueuedId ->
-            RecognitionTask.Created(enqueuedId, launch)
+            if (launched) enqueuedRecognitionScheduler.enqueueById(enqueuedId)
+            RecognitionTask.Created(enqueuedId, launched)
         } ?: RecognitionTask.Error()
     }
 

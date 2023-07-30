@@ -22,10 +22,10 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScr
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
-import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen
-import com.mrsep.musicrecognizer.feature.recognition.presentation.RecognitionScreen.recognitionScreen
-import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.navigateToQueueScreen
-import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen.queueScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen.recognitionScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.navigateToQueueScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.queueScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.lyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.navigateToLyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen

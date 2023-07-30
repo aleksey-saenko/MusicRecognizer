@@ -4,15 +4,15 @@ sealed class TokenValidationStatus {
 
     abstract val isValidationAllowed: Boolean
 
-    object Unchecked : TokenValidationStatus() {
+    data object Unchecked : TokenValidationStatus() {
         override val isValidationAllowed = true
     }
 
-    object Validating : TokenValidationStatus() {
+    data object Validating : TokenValidationStatus() {
         override val isValidationAllowed = false
     }
 
-    object Success : TokenValidationStatus() {
+    data object Success : TokenValidationStatus() {
         override val isValidationAllowed = false
     }
 
@@ -20,8 +20,8 @@ sealed class TokenValidationStatus {
         override val isValidationAllowed = true
 
         data class WrongToken(val isLimitReached: Boolean) : Error()
-        object BadConnection : Error()
-        object UnknownError : Error()
+        data object BadConnection : Error()
+        data object UnknownError : Error()
 
     }
 

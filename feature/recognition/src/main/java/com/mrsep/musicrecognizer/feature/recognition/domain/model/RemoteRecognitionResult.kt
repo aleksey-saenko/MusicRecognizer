@@ -4,22 +4,27 @@ sealed class RemoteRecognitionResult {
 
     data class Success(val track: Track) : RemoteRecognitionResult()
 
-    object NoMatches : RemoteRecognitionResult()
+    data object NoMatches : RemoteRecognitionResult()
 
     sealed class Error : RemoteRecognitionResult() {
 
-        object BadConnection : Error()
-        data class BadRecording(val cause: Throwable) : Error()
+        data object BadConnection : Error()
+
+        data class BadRecording(
+            val message: String = "",
+            val cause: Throwable? = null
+        ) : Error()
+
         data class WrongToken(val isLimitReached: Boolean) : Error()
 
         data class HttpError(
             val code: Int,
             val message: String
-        ): Error()
+        ) : Error()
 
         data class UnhandledError(
             val message: String = "",
-            val t: Throwable? = null
+            val cause: Throwable? = null
         ) : Error()
 
     }

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import androidx.core.net.toUri
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceRouter
-import com.mrsep.musicrecognizer.feature.recognitionqueue.presentation.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.presentation.MainActivity

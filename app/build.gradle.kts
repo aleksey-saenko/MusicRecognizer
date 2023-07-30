@@ -94,7 +94,6 @@ dependencies {
     implementation(project(":feature:library"))
     implementation(project(":feature:track"))
     implementation(project(":feature:recognition"))
-    implementation(project(":feature:recognition-queue"))
     implementation(project(":feature:preferences"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:developer-mode"))

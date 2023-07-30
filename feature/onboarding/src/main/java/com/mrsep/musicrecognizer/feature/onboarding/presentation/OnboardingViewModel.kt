@@ -78,7 +78,7 @@ internal class OnboardingViewModel @Inject constructor(
 @Immutable
 internal sealed class TokenPageUiState {
 
-    object Loading : TokenPageUiState()
+    data object Loading : TokenPageUiState()
 
     data class Success(
         val token: String,

@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.data.enqueued
 
 import androidx.room.*
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
-import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedWithOptionalTrack
+import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -44,10 +44,18 @@ interface EnqueuedRecognitionDao {
 
     @Transaction
     @Query("SELECT * FROM enqueued_recognition WHERE id in (:id)")
-    fun getEnqueuedWithOptionalTrackById(vararg id: Int): List<EnqueuedWithOptionalTrack>
+    fun getByIdWithOptionalTrack(vararg id: Int): List<EnqueuedRecognitionEntityWithTrack>
 
     @Transaction
     @Query("SELECT * FROM enqueued_recognition")
-    fun getEnqueuedWithOptionalTrackAll(): List<EnqueuedWithOptionalTrack>
+    fun getAllWithOptionalTrackAll(): List<EnqueuedRecognitionEntityWithTrack>
+
+    @Transaction
+    @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
+    fun getFlowByIdWithOptionalTrack(id: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
+
+    @Transaction
+    @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
+    fun getFlowAllWithOptionalTrack(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
 
 }

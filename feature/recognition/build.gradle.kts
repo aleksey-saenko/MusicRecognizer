@@ -85,6 +85,11 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    implementation(libs.androidx.workKtx)
+    implementation(libs.androidx.lifecycle.livedataKtx)
+    implementation(libs.hilt.ext.work)
+    kapt(libs.hilt.ext.compiler)
+
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutinesTest)
     androidTestImplementation(libs.androidx.test.ext.junit)

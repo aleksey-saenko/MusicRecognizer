@@ -68,8 +68,8 @@ internal class TrackViewModel @Inject constructor(
 
 @Immutable
 internal sealed interface TrackUiState {
-    object Loading : TrackUiState
-    object TrackNotFound : TrackUiState
+    data object Loading : TrackUiState
+    data object TrackNotFound : TrackUiState
     data class Success(
         val mbId: String,
         val title: String,

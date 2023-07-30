@@ -194,5 +194,6 @@
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
     <string name="title">Title</string>
+    <string name="format_created">Created: %s</string>
 
 </resources>

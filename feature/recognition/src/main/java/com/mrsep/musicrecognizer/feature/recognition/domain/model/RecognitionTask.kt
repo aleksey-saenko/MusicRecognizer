@@ -5,19 +5,11 @@ sealed class RecognitionTask {
     data class Created(
         val id: Int,
         val launched: Boolean
-    ): RecognitionTask() {
-        override fun getEnqueuedIdOrNull() = id
-    }
+    ): RecognitionTask()
 
-    // corresponds "do not schedule after bad recognition result"
-    object Ignored: RecognitionTask() {
-        override fun getEnqueuedIdOrNull() = null
-    }
+    // corresponds "do not create enqueued recognition after bad recognition result"
+    data object Ignored: RecognitionTask()
 
-    data class Error(val cause: Throwable? = null): RecognitionTask() {
-        override fun getEnqueuedIdOrNull() = null
-    }
-
-    abstract fun getEnqueuedIdOrNull(): Int?
+    data class Error(val cause: Throwable? = null): RecognitionTask()
 
 }

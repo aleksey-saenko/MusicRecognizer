@@ -9,18 +9,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import coil.imageLoader
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
@@ -28,14 +22,14 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionRes
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -53,16 +47,20 @@ private const val SERVICE_TAG = "NotificationService"
 @AndroidEntryPoint
 internal class NotificationService : Service() {
 
-    @Inject lateinit var recognitionInteractor: ServiceRecognitionInteractor
-    @Inject lateinit var serviceRouter: NotificationServiceRouter
-    @Inject lateinit var networkMonitor: NetworkMonitor
-    @Inject @IoDispatcher lateinit var ioDispatcher: CoroutineDispatcher
+    @Inject
+    lateinit var recognitionInteractor: ServiceRecognitionInteractor
+    @Inject
+    lateinit var serviceRouter: NotificationServiceRouter
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+    @Inject
+    @IoDispatcher
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     private val actionReceiver = ActionBroadcastReceiver()
     private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
     private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
 
-    private lateinit var isOffline: StateFlow<Boolean>
     private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
 
     // can be used to design background startup behaviour, not used now
@@ -99,18 +97,6 @@ internal class NotificationService : Service() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
 
-        isOffline = networkMonitor.isOffline.stateIn(
-            scope = serviceScope,
-            started = SharingStarted.Eagerly,
-            initialValue = false
-        )
-
-        isOffline.onEach { offline ->
-            if (recognitionState.value is RecognitionStatus.Ready) {
-                notifyReadyAsStatus(offline)
-            }
-        }.launchIn(serviceScope)
-
         recognitionState.onEach { status ->
             handleRecognitionStatus(status)
         }.launchIn(serviceScope)
@@ -133,10 +119,10 @@ internal class NotificationService : Service() {
     }
 
     private fun createStatusNotificationChannel() {
-        val name = getString(StringsR.string.service_notification_main_channel_name)
+        val name = getString(StringsR.string.notification_channel_name_control)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
-            description = getString(StringsR.string.service_notification_main_channel_desc)
+            description = getString(StringsR.string.notification_channel_desc_control)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             setShowBadge(false)
             enableLights(false)
@@ -147,10 +133,10 @@ internal class NotificationService : Service() {
     }
 
     private fun createResultNotificationChannel() {
-        val name = getString(StringsR.string.service_notification_result_channel_name)
+        val name = getString(StringsR.string.notification_channel_name_result)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
-            description = getString(StringsR.string.service_notification_result_channel_desc)
+            description = getString(StringsR.string.notification_channel_desc_result)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             setShowBadge(false)
             enableLights(true)
@@ -165,7 +151,7 @@ internal class NotificationService : Service() {
             RecognitionStatus.Ready -> {
                 // cancel last final result notification if it exists
                 notificationManager.cancel(RESULT_NOTIFICATION_ID)
-                notifyReadyAsStatus(isOffline.value)
+                notifyReadyAsStatus()
             }
 
             is RecognitionStatus.Recognizing -> {
@@ -227,44 +213,34 @@ internal class NotificationService : Service() {
                         resultNotificationBuilder()
                             .setContentTitle(status.result.track.title)
                             .setContentText(status.result.track.artistWithAlbumFormatted())
-                            .addBigPicture(status.result.track.links.artwork)
+                            .addOptionalBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
                             .addShowLyricsButton(status.result.track.mbId)
                             .addShareButton(status.result.track.getSharedBody())
                     }
                 }
                 builder.addDismissIntent().buildAndNotifyAsResult()
-                notifyReadyAsStatus(isOffline.value)
+                notifyReadyAsStatus()
                 // interactor still has final status, will be reset by notification dismiss
             }
         }
     }
 
     private fun getWrongTokenTitle(isLimitReached: Boolean): String {
-        return if (isLimitReached)
+        return if (isLimitReached) {
             getString(StringsR.string.token_limit_reached)
-        else
+        } else {
             getString(StringsR.string.wrong_token)
+        }
     }
 
     private fun getListeningMessage(extraTry: Boolean): String {
-        return if (extraTry)
+        return if (extraTry) {
             getString(StringsR.string.listening_with_last_try)
-        else
+        } else {
             getString(StringsR.string.listening_with_ellipsis)
-    }
-
-    private fun Track.artistWithAlbumFormatted(): String {
-        val albumAndYear = album?.let { alb ->
-            releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
         }
-        return albumAndYear?.let { albAndYear ->
-            "$artist / $albAndYear"
-        } ?: artist
     }
-
-    private fun Track.getSharedBody() = "$title / ${this.artistWithAlbumFormatted()}"
-
 
     private fun createPendingIntent(intent: Intent): PendingIntent {
         return TaskStackBuilder.create(this@NotificationService).run {
@@ -301,11 +277,8 @@ internal class NotificationService : Service() {
 //        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
     }
 
-    private fun notifyReadyAsStatus(isOffline: Boolean) {
-        val message = if (isOffline)
-            getString(StringsR.string.tap_to_schedule_song_recognition)
-        else
-            getString(StringsR.string.tap_to_recognize_the_song)
+    private fun notifyReadyAsStatus() {
+        val message = getString(StringsR.string.tap_to_recognize_the_song)
         statusNotificationBuilder()
             .setContentText(message)
             .addRecognizeButtonAndIntent()
@@ -401,19 +374,11 @@ internal class NotificationService : Service() {
         )
     }
 
-    private suspend fun getCoilBitmapOrNull(url: String): Bitmap? {
-        val context = this@NotificationService
-        val request = ImageRequest.Builder(context).data(url)
-            .allowHardware(false).build()
-        return when (val result = context.imageLoader.execute(request)) {
-            is SuccessResult -> (result.drawable as BitmapDrawable).bitmap
-            is ErrorResult -> null
-        }
-    }
-
-    private suspend fun NotificationCompat.Builder.addBigPicture(url: String?): NotificationCompat.Builder {
+    private suspend fun NotificationCompat.Builder.addOptionalBigPicture(
+        url: String?
+    ): NotificationCompat.Builder {
         return url?.let {
-            getCoilBitmapOrNull(url)?.let { bitmap ->
+            this@NotificationService.fetchBitmapOrNull(url)?.let { bitmap ->
                 setStyle(
                     NotificationCompat.BigPictureStyle().bigPicture(bitmap)
                 )
@@ -491,10 +456,12 @@ internal class NotificationService : Service() {
         if (recognitionState.value is RecognitionStatus.Recognizing) {
             recognitionInteractor.cancelAndResetStatus()
         } else {
-            if (isOffline.value) {
-                recognitionInteractor.launchOfflineRecognition(serviceScope)
-            } else {
-                recognitionInteractor.launchRecognition(serviceScope)
+            serviceScope.launch {
+                if (networkMonitor.isOffline.first()) {
+                    recognitionInteractor.launchOfflineRecognition(this)
+                } else {
+                    recognitionInteractor.launchRecognition(this)
+                }
             }
         }
     }

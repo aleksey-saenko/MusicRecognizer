@@ -55,12 +55,12 @@
     <string name="token_applied">Token applied</string>
     <string name="invalid_token">Invalid token</string>
     <string name="ready">Ready</string>
-    <string name="service_notification_main_channel_name">Control notification channel</string>
-    <string name="service_notification_result_channel_name">Result notification channel</string>
-    <string name="service_notification_scheduled_result_channel_name">Scheduled result notification channel</string>
-    <string name="service_notification_main_channel_desc">Allow to control recognition process from notifications</string>
-    <string name="service_notification_result_channel_desc">Allow to receive recognition results from notifications</string>
-    <string name="service_notification_scheduled_result_channel_desc">Allow to receive scheduled recognition results from notifications</string>
+    <string name="notification_channel_name_control">Control notification channel</string>
+    <string name="notification_channel_name_result">Result notification channel</string>
+    <string name="notification_channel_name_scheduled_result">Scheduled result notification channel</string>
+    <string name="notification_channel_desc_control">Allow to control recognition process from notifications</string>
+    <string name="notification_channel_desc_result">Allow to receive recognition results from notifications</string>
+    <string name="notification_channel_desc_scheduled_result">Allow to receive scheduled recognition results from notifications</string>
     <string name="message_record_error">An error occurred while recording the audio</string>
     <string name="notification_message_recording_error">An error occurred while recording the audio, try again</string>
 
@@ -195,5 +195,6 @@
     <string name="high_contrast_text">High-contrast text</string>
     <string name="title">Title</string>
     <string name="format_created">Created: %s</string>
+    <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
 
 </resources>

@@ -16,6 +16,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionSer
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ScheduledResultNotificationHelper
 import java.time.Instant
 
 @HiltWorker
@@ -26,6 +27,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val remoteRecognitionService: RemoteRecognitionService,
+    private val scheduledResultNotificationHelper: ScheduledResultNotificationHelper,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -41,9 +43,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 Log.w(TAG, message)
                 return@withContext Result.failure()
             }
-            if (enqueued.result != null) {
-                clearPreviousResult(enqueued)
-            }
+            clearPreviousResult(enqueued)
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
             val result = remoteRecognitionService.recognize(
@@ -55,18 +55,24 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 is RemoteRecognitionResult.Success -> {
                     val updatedTrack = trackRepository.insertOrReplaceSaveMetadata(result.track)[0]
                     val updatedResult = result.copy(track = updatedTrack)
-                    updateEnqueuedWithResult(enqueued, updatedResult)
+                    val updatedEnqueued = enqueued.copy(result = updatedResult, resultDate = Instant.now())
+                    enqueuedRecognitionRepository.update(updatedEnqueued)
+                    scheduledResultNotificationHelper.notify(updatedEnqueued)
                     Result.success()
                 }
 
                 is RemoteRecognitionResult.NoMatches -> {
-                    updateEnqueuedWithResult(enqueued, result)
+                    enqueuedRecognitionRepository.update(
+                        enqueued.copy(result = result, resultDate = Instant.now())
+                    )
                     Result.success()
                 }
 
                 is RemoteRecognitionResult.Error.WrongToken,
                 is RemoteRecognitionResult.Error.BadRecording -> {
-                    updateEnqueuedWithResult(enqueued, result)
+                    enqueuedRecognitionRepository.update(
+                        enqueued.copy(result = result, resultDate = Instant.now())
+                    )
                     Result.failure()
                 }
 
@@ -75,7 +81,9 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 is RemoteRecognitionResult.Error.UnhandledError -> {
                     if (runAttemptCount >= MAX_ATTEMPTS) {
                         Log.w(TAG, "$TAG canceled, runAttemptCount > max=$MAX_ATTEMPTS")
-                        updateEnqueuedWithResult(enqueued, result)
+                        enqueuedRecognitionRepository.update(
+                            enqueued.copy(result = result, resultDate = Instant.now())
+                        )
                         Result.failure()
                     } else {
                         Result.retry()
@@ -87,18 +95,11 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     }
 
     private suspend fun clearPreviousResult(enqueued: EnqueuedRecognition) {
-        enqueuedRecognitionRepository.update(
-            enqueued.copy(result = null, resultDate = null)
-        )
-    }
-
-    private suspend fun updateEnqueuedWithResult(
-        enqueued: EnqueuedRecognition,
-        remoteResult: RemoteRecognitionResult
-    ) {
-        enqueuedRecognitionRepository.update(
-            enqueued.copy(result = remoteResult, resultDate = Instant.now())
-        )
+        if (enqueued.result != null) {
+            enqueuedRecognitionRepository.update(
+                enqueued.copy(result = null, resultDate = null)
+            )
+        }
     }
 
 

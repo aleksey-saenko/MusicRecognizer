@@ -138,7 +138,7 @@ internal class NotificationService : Service() {
         val channel = NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
             description = getString(StringsR.string.notification_channel_desc_result)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            setShowBadge(false)
+            setShowBadge(true)
             enableLights(true)
             enableVibration(true)
             vibrationPattern = longArrayOf(100, 100, 100, 100)
@@ -268,6 +268,7 @@ internal class NotificationService : Service() {
     private fun resultNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_RESULT_CHANNEL_ID)
             .setSmallIcon(UiR.drawable.baseline_album_24)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
             // service should detect dismiss action and reset interactor status

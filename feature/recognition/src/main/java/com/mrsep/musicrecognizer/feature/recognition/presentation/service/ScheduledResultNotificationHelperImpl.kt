@@ -36,7 +36,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
         val channel = NotificationChannel(ENQUEUED_RESULT_CHANNEL_ID, name, importance).apply {
                 description = appContext.getString(StringsR.string.notification_channel_desc_scheduled_result)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                setShowBadge(false)
+                setShowBadge(true)
                 enableLights(true)
                 enableVibration(true)
                 vibrationPattern = longArrayOf(100, 100, 100, 100)
@@ -59,6 +59,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
 
         val notification = NotificationCompat.Builder(appContext, ENQUEUED_RESULT_CHANNEL_ID)
             .setSmallIcon(UiR.drawable.baseline_album_24)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
             .setAutoCancel(true)

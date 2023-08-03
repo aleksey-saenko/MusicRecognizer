@@ -17,7 +17,7 @@ At the same time, I try to make the application reliable for everyday use.
 ## Tech
 
 TuneSurfer is written in Kotlin and runs on Android 8.0 or higher.  
-The application is modularized with a feature-based approach. App architecture inspired by clean arch practices.  
+App architecture inspired by clean arch practices. The application is modularized with a feature-based approach (definitely overkill for such small app).  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
 The app uses the AudioRecord and MediaCodec API for audio recording and encoding, which allows to create recording strategies and audio processing of any complexity.  
 Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.  

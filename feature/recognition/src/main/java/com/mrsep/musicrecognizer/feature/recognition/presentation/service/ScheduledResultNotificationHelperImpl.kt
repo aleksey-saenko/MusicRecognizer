@@ -14,33 +14,33 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognit
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val serviceRouter: NotificationServiceRouter
-): ScheduledResultNotificationHelper {
+) : ScheduledResultNotificationHelper {
 
     private val notificationManager get() =
-        appContext.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
+            appContext.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
 
     private fun createEnqueuedResultNotificationChannel() {
         val name = appContext.getString(StringsR.string.notification_channel_name_scheduled_result)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(ENQUEUED_RESULT_CHANNEL_ID, name, importance).apply {
-                description = appContext.getString(StringsR.string.notification_channel_desc_scheduled_result)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                setShowBadge(true)
-                enableLights(true)
-                enableVibration(true)
-                vibrationPattern = longArrayOf(100, 100, 100, 100)
-            }
+            description = appContext.getString(StringsR.string.notification_channel_desc_scheduled_result)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            setShowBadge(true)
+            enableLights(true)
+            enableVibration(true)
+            vibrationPattern = longArrayOf(100, 100, 100, 100)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 

@@ -46,7 +46,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    private val resultDelegator: RecognitionResultDelegator,
+    private val resultDelegator: RecognitionStatusDelegator,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler
 ) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {

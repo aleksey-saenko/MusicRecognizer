@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
@@ -21,7 +22,6 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("unused")
 private const val TAG = "RecognitionInteractorFakeImpl"
 
 @Singleton
@@ -30,7 +30,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
 //    private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    private val resultDelegator: RecognitionResultDelegator
+    private val resultDelegator: RecognitionStatusDelegator
 ) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
 
     override val screenRecognitionStatus get() = resultDelegator.screenState
@@ -43,9 +43,9 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         recognitionJob = scope.launch {
 //            val userPreferences = preferencesRepository.userPreferencesFlow.first()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(1000)
+            delay(1_000)
             resultDelegator.notify(RecognitionStatus.Recognizing(true))
-            delay(1000)
+            delay(1_000)
             notifySuccess()
 //            notifyNoMatches(RecognitionTask.Created(123, false))
 //            testAllDoneStatuses()
@@ -59,9 +59,9 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         recognitionJob = scope.launch {
 //            val userPreferences = preferencesRepository.userPreferencesFlow.first()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(1000)
+            delay(1_000)
             resultDelegator.notify(RecognitionStatus.Recognizing(true))
-            delay(1000)
+            delay(1_000)
             notifySuccess()
         }.setCancellationHandler()
     }

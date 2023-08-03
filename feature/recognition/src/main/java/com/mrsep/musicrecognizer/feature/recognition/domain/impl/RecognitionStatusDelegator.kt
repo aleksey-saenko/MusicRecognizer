@@ -6,7 +6,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-internal class RecognitionResultDelegator @Inject constructor() {
+/** Provides recognition status to known subscribers: main screen and notification service.
+ *
+ * For intermediate statuses (not [RecognitionStatus.Done]):
+ * - Both the screen and service state are always updated,
+ *   regardless of whether it is observed or not.
+ *
+ * For final statuses ([RecognitionStatus.Done]):
+ * - The screen state is always updated, regardless of whether it is observed or not.
+ * - The service state receives the value of [RecognitionStatus.Done] only if the screen state
+ *   has no active subscribers; otherwise, it receives the Ready status.
+ * */
+internal class RecognitionStatusDelegator @Inject constructor() {
 
     private val _screenState = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
     private val _serviceState = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
@@ -34,7 +45,9 @@ internal class RecognitionResultDelegator @Inject constructor() {
 
     private fun MutableStateFlow<*>.isNotObserved() = subscriptionCount.value == 0
 
-    private fun MutableStateFlow<RecognitionStatus>.updateIfObserved(status: RecognitionStatus): Boolean {
+    private fun MutableStateFlow<RecognitionStatus>.updateIfObserved(
+        status: RecognitionStatus
+    ): Boolean {
         return if (isNotObserved()) {
             false
         } else {

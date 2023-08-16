@@ -14,10 +14,6 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override fun onCreate() {
-        super.onCreate()
-    }
-
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .crossfade(false)

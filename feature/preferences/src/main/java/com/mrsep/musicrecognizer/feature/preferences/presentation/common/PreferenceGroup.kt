@@ -23,7 +23,7 @@ internal fun PreferenceGroup(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        Column() {
+        Column {
             content()
         }
     }

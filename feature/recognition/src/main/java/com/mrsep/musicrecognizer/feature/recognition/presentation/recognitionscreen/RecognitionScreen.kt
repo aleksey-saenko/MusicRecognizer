@@ -4,8 +4,9 @@ import android.Manifest
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -37,10 +38,9 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal const val animationDurationButton = 600
 internal const val animationDurationShield = 220
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun RecognitionScreen(
-    modifier: Modifier = Modifier,
     viewModel: RecognitionViewModel = hiltViewModel(),
     onNavigateToTrackScreen: (mbId: String) -> Unit,
     onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
@@ -77,7 +77,9 @@ internal fun RecognitionScreen(
     //endregion
 
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         AnimatedVisibility(
@@ -271,14 +273,14 @@ private val exitTransitionButton = slideOutVertically(
     )
 )
 
-@OptIn(ExperimentalAnimationApi::class)
-private val transitionSpecShield: AnimatedContentScope<RecognitionStatus>.() -> ContentTransform = {
+private val transitionSpecShield:
+        AnimatedContentTransitionScope<RecognitionStatus>.() -> ContentTransform = {
     fadeIn(
         animationSpec = tween(
             durationMillis = animationDurationShield,
             delayMillis = animationDurationButton
         )
-    ).with(
+    ).togetherWith(
         fadeOut(
             animationSpec = tween(
                 durationMillis = animationDurationShield,

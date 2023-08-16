@@ -2,12 +2,11 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -26,7 +25,7 @@ import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun QueueScreenTopBar(
     modifier: Modifier = Modifier,
@@ -48,8 +47,9 @@ internal fun QueueScreenTopBar(
             AnimatedContent(
                 targetState = multiselectEnabled,
                 transitionSpec = {
-                    fadeIn() + scaleIn(initialScale = 0.8f) with
-                            fadeOut() + scaleOut(targetScale = 0.8f)
+                    (fadeIn() + scaleIn(initialScale = 0.8f)).togetherWith(
+                        fadeOut() + scaleOut(targetScale = 0.8f)
+                    )
                 },
                 contentAlignment = Alignment.CenterStart,
                 label = "multiselectTitleTransition"
@@ -75,8 +75,9 @@ internal fun QueueScreenTopBar(
             AnimatedContent(
                 targetState = multiselectEnabled,
                 transitionSpec = {
-                    fadeIn() + scaleIn(initialScale = 0.6f) with
-                            fadeOut() + scaleOut(targetScale = 0.6f)
+                    (fadeIn() + scaleIn(initialScale = 0.6f)).togetherWith(
+                        fadeOut() + scaleOut(targetScale = 0.6f)
+                    )
                 },
                 contentAlignment = Alignment.CenterStart,
                 label = "multiselectNavIconTransition"

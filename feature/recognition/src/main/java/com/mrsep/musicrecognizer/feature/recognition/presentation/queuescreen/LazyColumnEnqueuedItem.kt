@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -11,7 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -65,7 +64,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LazyColumnEnqueuedItem(
     enqueuedWithStatus: EnqueuedRecognitionWithStatus,
@@ -125,16 +124,17 @@ internal fun LazyColumnEnqueuedItem(
                 targetState = isPlaying,
                 contentAlignment = Alignment.Center,
                 transitionSpec = {
-                    fadeIn(animationSpec = tween(220)) +
+                    (fadeIn(animationSpec = tween(220)) +
                             scaleIn(
                                 initialScale = 0f,
                                 animationSpec = tween(220)
-                            ) with
-                            fadeOut(animationSpec = tween(220)) +
-                            scaleOut(
-                                targetScale = 0f,
-                                animationSpec = tween(220)
-                            )
+                            )).togetherWith(
+                        fadeOut(animationSpec = tween(220)) +
+                                scaleOut(
+                                    targetScale = 0f,
+                                    animationSpec = tween(220)
+                                )
+                    )
                 }, label = "PlayerIconTransition"
             ) {
                 if (it) {

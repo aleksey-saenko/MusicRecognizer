@@ -45,11 +45,13 @@ fun Modifier.rowFadingEdge(
 
         val startEdgeLengthAnim = animateFloatAsState(
             targetValue = if (isVisibleStartEdge) fadeStartEdgeLength else 0.1f,
-            animationSpec = tween()
+            animationSpec = tween(),
+            label = "startEdgeLengthAnim"
         )
         val endEdgeLengthAnim = animateFloatAsState(
             targetValue = if (isVisibleEndEdge) fadeEndEdgeLength else 0.1f,
-            animationSpec = tween()
+            animationSpec = tween(),
+            label = "endEdgeLengthAnim"
         )
 
         drawWithContent {

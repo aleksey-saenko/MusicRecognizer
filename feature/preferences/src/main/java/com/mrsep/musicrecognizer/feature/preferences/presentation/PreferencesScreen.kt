@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +35,6 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun PreferencesScreen(
-    modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel = hiltViewModel(),
     onNavigateToAboutScreen: () -> Unit,
     onNavigateToQueueScreen: () -> Unit,
@@ -46,13 +46,19 @@ internal fun PreferencesScreen(
 
     when (val uiState = uiStateInFlow) {
         is PreferencesUiState.Loading -> LoadingStub(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
         )
         is PreferencesUiState.Success -> {
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background)
+            ) {
                 PreferencesTopBar(topAppBarScrollBehavior = topBarBehaviour)
                 Column(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .nestedScroll(topBarBehaviour.nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
@@ -203,8 +209,6 @@ internal fun PreferencesScreen(
                     }
                 }
             }
-
-
         }
     }
 }

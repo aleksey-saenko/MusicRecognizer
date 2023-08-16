@@ -24,7 +24,7 @@ internal fun SuperButton(
             activated = activated,
 //            amplitudeFactor = amplitudeFactor,
             modifier = Modifier.size(256.dp),
-            startOffset = 0.5f, //should be a bit less then buttonSize/rippleSize
+            startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
             baseColor = MaterialTheme.colorScheme.primary,
             activatedColor = MaterialTheme.colorScheme.primary,
             circlesCount = 7,
@@ -35,7 +35,7 @@ internal fun SuperButton(
                 .size(176.dp)
 //                .drawBehindRippleAnimation(
 //                    activated = activated,
-//                    startOffset = 0.5f, //should be a bit less then buttonSize/rippleSize
+//                    startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
 //                    baseColor = MaterialTheme.colorScheme.primary,
 //                    activatedColor = MaterialTheme.colorScheme.primary,
 //                    circlesCount = 7,
@@ -61,7 +61,6 @@ internal fun SuperButton(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun SuperButtonSection(
     title: String,
@@ -79,16 +78,18 @@ internal fun SuperButtonSection(
             contentAlignment = Alignment.Center,
             targetState = title,
             transitionSpec = {
-                slideIntoContainer(
-                    towards = AnimatedContentScope.SlideDirection.Up,
+                (slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
                     animationSpec = tween(durationMillis = 350, delayMillis = 60)
                 ) + fadeIn(
                     animationSpec = tween(durationMillis = 200, delayMillis = 60)
-                ) with slideOutOfContainer(
-                    towards = AnimatedContentScope.SlideDirection.Up,
-                    animationSpec = tween(durationMillis = 350, delayMillis = 60)
-                ) + fadeOut(
-                    animationSpec = tween(durationMillis = 100, delayMillis = 60)
+                )).togetherWith(
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(durationMillis = 350, delayMillis = 60)
+                    ) + fadeOut(
+                        animationSpec = tween(durationMillis = 100, delayMillis = 60)
+                    )
                 )
             },
             label = "buttonTitleTransition"

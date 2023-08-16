@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
@@ -15,10 +16,10 @@ internal class TrackFilterState(
     var favoritesMode by mutableStateOf(initialTrackFilter.favoritesMode)
     var sortBy by mutableStateOf(initialTrackFilter.sortBy)
     var orderBy by mutableStateOf(initialTrackFilter.orderBy)
-    var startDate: Long by mutableStateOf(
+    var startDate: Long by mutableLongStateOf(
         initialTrackFilter.dateRange.first
     )
-    var endDate: Long by mutableStateOf(
+    var endDate: Long by mutableLongStateOf(
         initialTrackFilter.dateRange.last
     )
 

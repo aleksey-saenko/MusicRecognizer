@@ -29,11 +29,13 @@ fun AmplitudeVisualizerSmooth(
             in 0.6f..0.8f -> Color(0xFFFFA500)
             else -> Color.Red
         },
-        animationSpec = tween(easing = EaseInOutQuart, durationMillis = 500)
+        animationSpec = tween(easing = EaseInOutQuart, durationMillis = 500),
+        label = "IndicatorColor"
     )
     val smoothedValue by animateFloatAsState(
         targetValue = currentValue,
-        animationSpec = tween(easing = EaseInOutQuart, durationMillis = 150)
+        animationSpec = tween(easing = EaseInOutQuart, durationMillis = 150),
+        label = "SmoothedValue"
     )
     Box(
         modifier = modifier

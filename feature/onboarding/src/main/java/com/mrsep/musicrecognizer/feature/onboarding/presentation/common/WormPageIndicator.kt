@@ -43,7 +43,8 @@ internal fun WormPageIndicator(
 
             val height = indicatorSize
             val width: Dp by animateDpAsState(
-                if (selected) indicatorSize * selectedMultiplier else indicatorSize
+                targetValue = if (selected) indicatorSize * selectedMultiplier else indicatorSize,
+                label = "WidthSize"
             )
 
             Canvas(

@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,12 +20,11 @@ import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TrackScreen(
     isExpandedScreen: Boolean,
     onBackPressed: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: TrackViewModel = hiltViewModel(),
     onNavigateToLyricsScreen: (trackMbId: String) -> Unit
 ) {
@@ -38,7 +36,9 @@ internal fun TrackScreen(
 
         TrackUiState.Loading -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             LoadingStub(
@@ -49,7 +49,9 @@ internal fun TrackScreen(
 
         TrackUiState.TrackNotFound -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(
@@ -90,7 +92,7 @@ internal fun TrackScreen(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                 ) {

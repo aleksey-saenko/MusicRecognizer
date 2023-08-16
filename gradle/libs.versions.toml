@@ -1,23 +1,22 @@
 [versions]
-sdkCompile = "33"
+sdkCompile = "34"
 sdkMin = "26"
 sdkTarget = "33"
 
 accompanist = "0.30.1"
 androidGradlePlugin = "8.1.0"
 androidxActivity = "1.7.2"
-androidxComposeBom = "2023.06.01"
+androidxComposeBom = "2023.08.00"
 androidxComposeCompiler = "1.5.1"
-androidxComposeMaterial3 = "1.1.1"
 androidxCore = "1.10.1"
 androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.0.0"
 androidxEspresso = "3.5.1"
-androidxGlance = "1.0.0-rc01"
+#androidxGlance = "1.0.0-rc01"
 androidxHiltNavigationCompose = "1.0.0"
 androidxLifecycle = "2.6.1"
 androidxLifecycleViewmodelCompose = "2.6.1"
-androidxNavigation = "2.6.0"
+androidxNavigation = "2.7.0"
 androidxWindowManager = "1.1.0"
 androidxWork = "2.8.1" #2.8.1 2.9.0-alpha02
 coil = "2.4.0"
@@ -33,8 +32,8 @@ ksp = "1.9.0-1.0.12"
 moshi = "1.15.0"
 okhttpBom = "4.11.0"
 okhttpCoroutines = "1.0"
-paging3 = "3.1.1"
-paging3Compose = "1.0.0-alpha19"
+paging3 = "3.2.0"
+paging3Compose = "3.2.0"
 palette = "1.0.0"
 protobufJavalite = "3.23.4"
 protobufPlugin = "0.9.4"
@@ -47,8 +46,8 @@ accompanist-systemuicontroller = { group = "com.google.accompanist", name = "acc
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidxComposeMaterial3" }
-androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "androidxComposeMaterial3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-ui-testJunit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
@@ -58,9 +57,9 @@ androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-datastoreCore = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
-androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
-androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
-androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
+#androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
+#androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
+#androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 #FIXME: delete after updating workmanager to new version with kotlin flow
 #converts LiveData to Kotlin Flow (WorkManager WorkInfo)

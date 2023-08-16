@@ -16,7 +16,7 @@ import androidx.compose.ui.text.toUpperCase
 import com.mrsep.musicrecognizer.core.ui.R
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LibraryScreenTopBar(
     modifier: Modifier = Modifier,
@@ -72,7 +72,8 @@ internal fun LibraryScreenTopBar(
                                         if (isFilterApplied)
                                             MaterialTheme.colorScheme.tertiary
                                         else
-                                            MaterialTheme.colorScheme.onBackground
+                                            MaterialTheme.colorScheme.onBackground,
+                                        label = "FilterIconColor"
                                     ).value,
                                     contentDescription = stringResource(StringsR.string.filters)
                                 )

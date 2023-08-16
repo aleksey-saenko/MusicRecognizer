@@ -60,7 +60,7 @@ fun AppNavigationRail(
 
             val selected =
                 currentDestination?.hierarchy?.any { it.route == destination.route } == true
-            val iconSize by animateDpAsState(if (selected) 32.dp else 26.dp)
+            val iconSize by animateDpAsState(if (selected) 32.dp else 26.dp, label = "IconSize")
 
             val bounceHeightAnimatable = remember { Animatable(0f) }
 

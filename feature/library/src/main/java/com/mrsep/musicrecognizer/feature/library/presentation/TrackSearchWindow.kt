@@ -15,17 +15,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.isContainer
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.library.presentation.model.SearchResultUi
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TrackSearchWindow(
-    onSearch: (query: String) -> Unit,
     modifier: Modifier = Modifier,
+    onSearch: (query: String) -> Unit,
     onSearchClose: () -> Unit,
     searchResult: SearchResultUi,
     onTrackClick: (mbId: String) -> Unit
@@ -43,7 +43,7 @@ internal fun TrackSearchWindow(
 
     Box(
         modifier
-            .semantics { isContainer = true }
+            .semantics { isTraversalGroup = true }
             .zIndex(1f)
             .fillMaxWidth()) {
         SearchBar(
@@ -97,7 +97,10 @@ internal fun TrackSearchWindow(
             ),
             tonalElevation = 0.dp
         ) {
-            AnimatedContent(targetState = searchResult) { thisSearchResult ->
+            AnimatedContent(
+                targetState = searchResult,
+                label = "SearchResult"
+            ) { thisSearchResult ->
                 when (thisSearchResult) {
                     is SearchResultUi.Pending -> LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()

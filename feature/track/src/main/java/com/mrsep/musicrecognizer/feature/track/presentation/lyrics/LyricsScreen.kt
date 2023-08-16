@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,6 @@ import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackNotFoundM
 @Composable
 internal fun LyricsScreen(
     onBackPressed: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: LyricsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -49,8 +49,9 @@ internal fun LyricsScreen(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
             .nestedScroll(topBarBehaviour.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {

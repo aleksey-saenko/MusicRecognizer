@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.core.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -22,7 +21,6 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 private const val appearanceDelay = 1500
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LoadingStub(
     modifier: Modifier = Modifier,

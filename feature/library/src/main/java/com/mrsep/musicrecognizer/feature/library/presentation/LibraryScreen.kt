@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
@@ -37,8 +38,9 @@ internal fun LibraryScreen(
         targetState = searchWindowActive,
         contentAlignment = Alignment.Center,
         transitionSpec = {
-            fadeIn(tween(animationDuration)) with fadeOut(tween(animationDuration))
+            fadeIn(tween(animationDuration)) togetherWith fadeOut(tween(animationDuration))
         },
+        label = "searchWindow",
     ) { isSearchActive ->
         if (isSearchActive) {
             val searchResult by viewModel.trackSearchResultFlow.collectAsStateWithLifecycle()
@@ -57,7 +59,9 @@ internal fun LibraryScreen(
             Column(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background),
             ) {
                 LibraryScreenTopBar(
                     modifier = Modifier.animateEnterExit(

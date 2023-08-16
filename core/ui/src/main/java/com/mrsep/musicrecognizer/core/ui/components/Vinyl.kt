@@ -19,14 +19,14 @@ fun VinylRotating(
     modifier: Modifier = Modifier,
     color: Color
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "VinylAnimation")
     val degreesAnimated by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
             animation = tween(animationDuration, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
-        )
+        ), label = "VinylRotation"
 
     )
     VinylStatic(

@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -23,7 +24,6 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun QueueScreen(
-    modifier: Modifier = Modifier,
     viewModel: QueueScreenViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
     onNavigateToTrackScreen: (trackMbId: String) -> Unit
@@ -33,7 +33,9 @@ internal fun QueueScreen(
 
     when (val state = screenState) {
         QueueScreenUiState.Loading -> LoadingStub(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
         )
         is QueueScreenUiState.Success -> {
 
@@ -66,7 +68,9 @@ internal fun QueueScreen(
             BackHandler(enabled = multiselectEnabled) { disableMultiselect() }
 
             Column(
-                modifier = modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

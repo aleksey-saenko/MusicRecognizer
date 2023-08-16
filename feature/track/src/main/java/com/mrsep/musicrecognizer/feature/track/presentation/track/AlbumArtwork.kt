@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -63,7 +62,6 @@ internal fun AlbumArtwork(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun AlbumArtworkSubcompose(
     artworkUrl: String?,

@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation.about
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,13 +23,12 @@ import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-private const val github_repo_url = "https://github.com/aleksey-saenko/MusicRecognizer"
-private const val licence_url = "https://www.gnu.org/licenses/gpl-3.0.txt"
+private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer"
+private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutScreen(
-    modifier: Modifier = Modifier,
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -38,7 +38,9 @@ internal fun AboutScreen(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         AboutScreenTopBar(
             onBackPressed = onBackPressed,
@@ -73,7 +75,7 @@ internal fun AboutScreen(
                 modifier = Modifier.width(IntrinsicSize.Max)
             ) {
                 FilledTonalButton(
-                    onClick = { context.openUrlImplicitly(licence_url) },
+                    onClick = { context.openUrlImplicitly(LICENCE_URL) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
@@ -81,7 +83,7 @@ internal fun AboutScreen(
                     Text(text = stringResource(StringsR.string.license_gnu_gplv3))
                 }
                 FilledTonalButton(
-                    onClick = { context.openUrlImplicitly(github_repo_url) },
+                    onClick = { context.openUrlImplicitly(GITHUB_REPO_URL) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp)

@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -30,8 +31,13 @@ internal fun OnboardingScreen(
     onOnboardingClose: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    var availablePages by remember { mutableStateOf(2) }
-    val pagerState = rememberPagerState()
+    var availablePages by remember { mutableIntStateOf(2) }
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        availablePages
+    }
 
     BackHandler {
         scope.launch {
@@ -42,14 +48,10 @@ internal fun OnboardingScreen(
             }
         }
     }
-
     HorizontalPager(
-        pageCount = availablePages,
         beyondBoundsPageCount = 0,
-        state = pagerState,
-//        modifier = Modifier.statusBarsPadding()
+        state = pagerState
     ) { page ->
-//        Log.d("OnboardingScreen-Pager", "Page index: $page, AvailablePages=$availablePages")
         when (page) {
             OnboardingPage.WELCOME.index -> {
                 PageWithIndicator(
@@ -63,7 +65,9 @@ internal fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
@@ -90,7 +94,9 @@ internal fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
@@ -117,7 +123,9 @@ internal fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
@@ -136,7 +144,9 @@ internal fun OnboardingScreen(
                     },
                     totalPages = TOTAL_PAGES,
                     currentPage = page,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 

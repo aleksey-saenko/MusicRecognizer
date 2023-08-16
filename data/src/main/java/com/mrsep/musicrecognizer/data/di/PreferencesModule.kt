@@ -32,7 +32,6 @@ import javax.inject.Singleton
 
 private const val USER_PREFERENCES_STORE = "USER_PREFERENCES_STORE"
 
-@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
 class PreferencesModule {

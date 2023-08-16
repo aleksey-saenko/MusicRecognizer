@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -19,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun OfflineModePopup(
     modifier: Modifier = Modifier,

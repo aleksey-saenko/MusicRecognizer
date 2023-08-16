@@ -3,13 +3,13 @@ package com.mrsep.musicrecognizer.feature.developermode.presentation
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -32,6 +32,7 @@ internal fun DeveloperScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         AnimatedVisibility(isProcessing) {
             LinearProgressIndicator(
@@ -109,7 +110,7 @@ private fun ButtonGroup(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             FlowRow(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 content = content
             )

@@ -36,6 +36,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun PreferencesScreen(
     viewModel: PreferencesViewModel = hiltViewModel(),
+    showDeveloperOptions: Boolean,
     onNavigateToAboutScreen: () -> Unit,
     onNavigateToQueueScreen: () -> Unit,
     onNavigateToDeveloperScreen: () -> Unit
@@ -82,7 +83,6 @@ internal fun PreferencesScreen(
                             showPolicyDialog = true
                         }
                         if (showPolicyDialog) {
-
                             val dialogState = rememberSchedulePolicyDialogState(
                                 schedulePolicy = uiState.preferences.schedulePolicy
                             )
@@ -96,44 +96,26 @@ internal fun PreferencesScreen(
                             )
 
                         }
-                    }
 
-                    PreferenceGroup(
-                        title = stringResource(StringsR.string.appearance),
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
-                        var showServicesDialog by rememberSaveable { mutableStateOf(false) }
+                        var showTokenDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = "Show links to music services",
-                            subtitle = uiState.preferences.requiredServices.getNames()
+                            title = stringResource(StringsR.string.audd_api_token),
+                            modifier = Modifier.padding(top = 16.dp)
                         ) {
-                            showServicesDialog = true
+                            showTokenDialog = true
                         }
-                        if (showServicesDialog) {
-
-                            val dialogState = rememberRequiredServicesDialogState(
-                                requiredServices = uiState.preferences.requiredServices
-                            )
-                            RequiredServicesDialog(
-                                onConfirmClick = {
-                                    showServicesDialog = false
-                                    viewModel.setRequiredServices(dialogState.currentState)
+                        if (showTokenDialog) {
+                            ApiTokenDialog(
+                                onConfirmClick = { newToken ->
+                                    viewModel.setApiToken(newToken)
+                                    showTokenDialog = false
                                 },
-                                onDismissClick = { showServicesDialog = false },
-                                dialogState = dialogState
-                            )
-
-                        }
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            PreferenceSwitchItem(
-                                title = stringResource(StringsR.string.dynamic_colors_pref_title),
-                                onCheckedChange = { viewModel.setDynamicColorsEnabled(it) },
-                                checked = uiState.preferences.dynamicColorsEnabled,
-                                modifier = Modifier.padding(top = 16.dp)
+                                onDismissClick = { showTokenDialog = false },
+                                initialToken = uiState.preferences.apiToken
                             )
                         }
                     }
+
                     PreferenceGroup(
                         title = stringResource(StringsR.string.notifications),
                         modifier = Modifier.padding(top = 16.dp)
@@ -193,6 +175,43 @@ internal fun PreferencesScreen(
                             )
                         }
                     }
+
+                    PreferenceGroup(
+                        title = stringResource(StringsR.string.appearance),
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        var showServicesDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = "Show links to music services",
+                            subtitle = uiState.preferences.requiredServices.getNames()
+                        ) {
+                            showServicesDialog = true
+                        }
+                        if (showServicesDialog) {
+
+                            val dialogState = rememberRequiredServicesDialogState(
+                                requiredServices = uiState.preferences.requiredServices
+                            )
+                            RequiredServicesDialog(
+                                onConfirmClick = {
+                                    showServicesDialog = false
+                                    viewModel.setRequiredServices(dialogState.currentState)
+                                },
+                                onDismissClick = { showServicesDialog = false },
+                                dialogState = dialogState
+                            )
+
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            PreferenceSwitchItem(
+                                title = stringResource(StringsR.string.dynamic_colors_pref_title),
+                                onCheckedChange = { viewModel.setDynamicColorsEnabled(it) },
+                                checked = uiState.preferences.dynamicColorsEnabled,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+                        }
+                    }
                     PreferenceGroup(
                         title = stringResource(StringsR.string.misc),
                         modifier = Modifier.padding(top = 16.dp)
@@ -201,11 +220,13 @@ internal fun PreferencesScreen(
                             title = stringResource(StringsR.string.about),
                             onItemClick = onNavigateToAboutScreen
                         )
-                        PreferenceClickableItem(
-                            title = stringResource(StringsR.string.developer_options),
-                            onItemClick = onNavigateToDeveloperScreen,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
+                        if (showDeveloperOptions) {
+                            PreferenceClickableItem(
+                                title = stringResource(StringsR.string.developer_options),
+                                onItemClick = onNavigateToDeveloperScreen,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+                        }
                     }
                 }
             }

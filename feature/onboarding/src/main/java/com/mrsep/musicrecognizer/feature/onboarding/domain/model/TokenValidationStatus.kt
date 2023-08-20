@@ -20,6 +20,7 @@ sealed class TokenValidationStatus {
         override val isValidationAllowed = true
 
         data class WrongToken(val isLimitReached: Boolean) : Error()
+        data object EmptyToken : Error()
         data object BadConnection : Error()
         data object UnknownError : Error()
 

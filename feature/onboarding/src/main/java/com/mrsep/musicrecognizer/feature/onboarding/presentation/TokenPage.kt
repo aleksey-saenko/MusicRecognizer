@@ -2,46 +2,48 @@ package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.feature.onboarding.domain.model.TokenValidationStatus
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_ANNOTATION_TAG"
+private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_TAG"
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TokenPage(
     modifier: Modifier = Modifier,
-    viewModel: OnboardingViewModel = hiltViewModel(),
+    uiState: TokenPageUiState,
+    onTokenChanged: (String) -> Unit,
+    onTokenSkip: () -> Unit,
+    onTokenValidate: () -> Unit,
     onTokenApplied: () -> Unit
 ) {
     val context = LocalContext.current
-    val pageUiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    when (val uiState = pageUiState) {
+    when (uiState) {
         TokenPageUiState.Loading -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.fillMaxSize()
         ) {
-            LoadingStub(
-                modifier = Modifier.weight(weight = 1f)
-            )
+            LoadingStub(modifier = Modifier.weight(weight = 1f))
         }
 
         is TokenPageUiState.Success -> {
@@ -59,7 +61,7 @@ internal fun TokenPage(
                 Text(
                     text = stringResource(StringsR.string.api_token),
                     style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
+                    modifier = Modifier.padding(top = 24.dp)
                 )
 
                 val annotatedText = buildAnnotatedString {
@@ -96,62 +98,100 @@ internal fun TokenPage(
                     },
                     modifier = Modifier
                         .widthIn(max = 488.dp)
-                        .padding(bottom = 24.dp)
+                        .padding(top = 24.dp)
+                )
+                Text(
+                    text = stringResource(StringsR.string.token_skip_message),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .widthIn(max = 488.dp)
+                        .padding(top = 4.dp)
                 )
 
                 val errorMessage = uiState.tokenValidationStatus.errorMessageOrNull()
+                var passwordVisible by rememberSaveable { mutableStateOf(false) }
+                // FIXME: delete comment after rolling over Compose Foundation Version 1.6.0-alpha03
+                // keyboard showing after readonly changes fixed in alpha Version 1.6.0-alpha03
+                // https://android-review.googlesource.com/c/platform/frameworks/support/+/2669997
                 OutlinedTextField(
                     modifier = Modifier
                         .widthIn(min = 56.dp, max = 488.dp)
-                        .fillMaxWidth(0.9f)
-                        .padding(bottom = 24.dp),
+                        .fillMaxWidth(0.95f)
+                        .padding(top = 24.dp),
                     value = uiState.token,
+                    onValueChange = onTokenChanged,
                     readOnly = uiState.tokenValidationStatus is TokenValidationStatus.Validating,
-                    onValueChange = viewModel::setTokenField,
                     label = { Text(stringResource(StringsR.string.audd_api_token)) },
-                    singleLine = true,
-                    isError = errorMessage != null,
+                    trailingIcon = {
+                        val iconPainter = painterResource(
+                            if (passwordVisible) {
+                                UiR.drawable.baseline_visibility_off_24
+                            } else {
+                                UiR.drawable.baseline_visibility_24
+                            }
+                        )
+                        val iconDesc = stringResource(
+                            if (passwordVisible) {
+                                StringsR.string.hide_password
+                            } else {
+                                StringsR.string.show_password
+                            }
+                        )
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                painter = iconPainter,
+                                contentDescription = iconDesc
+                            )
+                        }
+                    },
                     supportingText = {
                         Text(errorMessage ?: "")
                     },
-                    trailingIcon = errorMessage?.let {
-                        {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(UiR.drawable.ic_error_filled_24),
-                                contentDescription = errorMessage
-                            )
-                        }
-                    }
-                )
-                Button(
-                    modifier = Modifier.widthIn(min = 240.dp),
-                    onClick = viewModel::testToken,
-                    enabled = uiState.tokenValidationStatus.isValidationAllowed
-                ) {
-                    Text(
-                        text = when (uiState.tokenValidationStatus) {
-                            TokenValidationStatus.Success -> stringResource(StringsR.string.token_applied)
-                            TokenValidationStatus.Validating -> stringResource(StringsR.string.validating)
-                            else -> stringResource(StringsR.string.apply_api_token)
-                        }
+                    visualTransformation = if (passwordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    isError = errorMessage != null,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
                     )
-                }
+                )
 
-                Box(
-                    modifier = Modifier
-                    .padding(top = 24.dp)
-                    .height(4.dp)
+                FlowRow(
+                    modifier = Modifier.padding(top = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    androidx.compose.animation.AnimatedVisibility(
-                        visible = uiState.tokenValidationStatus is TokenValidationStatus.Validating
+                    OutlinedButton(
+                        onClick = onTokenSkip,
+                        enabled = uiState.tokenValidationStatus.isValidationAllowed
                     ) {
-                        LinearProgressIndicator(
-                            modifier = Modifier.height(4.dp),
-                            strokeCap = StrokeCap.Round
+                        Text(
+                            text = stringResource(StringsR.string.skip)
                         )
                     }
-                }
+                    Button(
+                        onClick = onTokenValidate,
+                        enabled = uiState.tokenValidationStatus.isValidationAllowed
+                    ) {
+                        when (uiState.tokenValidationStatus) {
+                            TokenValidationStatus.Success -> Text(
+                                text = stringResource(StringsR.string.token_applied)
+                            )
 
+                            TokenValidationStatus.Validating -> Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(text = stringResource(StringsR.string.validating))
+                                VinylRotating(modifier = Modifier.size(24.dp))
+                            }
+
+                            else -> Text(text = stringResource(StringsR.string.apply_api_token))
+                        }
+                    }
+                }
             }
         }
     }
@@ -168,6 +208,8 @@ private fun TokenValidationStatus.errorMessageOrNull() = when (this) {
         stringResource(StringsR.string.token_limit_reached)
     else
         stringResource(StringsR.string.wrong_token)
-
-    else -> null
+    TokenValidationStatus.Error.EmptyToken -> stringResource(StringsR.string.must_not_be_empty)
+    TokenValidationStatus.Unchecked,
+    TokenValidationStatus.Validating,
+    TokenValidationStatus.Success -> null
 }

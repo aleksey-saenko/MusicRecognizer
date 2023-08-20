@@ -89,7 +89,6 @@ internal fun AlbumArtworkSubcompose(
                             scaleOut(tween(delayMillis = appearanceDelay)),
                 ) {
                     VinylRotating(
-                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .fillMaxSize(0.75f)
                             .alpha(0.3f)

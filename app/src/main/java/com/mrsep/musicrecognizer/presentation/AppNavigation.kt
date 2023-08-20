@@ -1,8 +1,5 @@
 package com.mrsep.musicrecognizer.presentation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.LibraryScreen.libraryScreen
@@ -47,8 +45,8 @@ internal fun AppNavigation(
     NavHost(
         navController = topNavController,
         startDestination = if (onboardingCompleted) BAR_HOST_ROUTE else OnboardingScreen.ROUTE,
-        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
-        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+//        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+//        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
         onboardingScreen(
             onOnboardingCompleted = { },
@@ -86,32 +84,24 @@ private fun NavGraphBuilder.barNavHost(
 ) {
     composable(BAR_HOST_ROUTE) {
         val innerNavController = rememberNavController()
-        if (shouldShowNavRail) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
-                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.weight(1f, false)
             ) {
-                AppNavigationRail(navController = innerNavController)
+                if (shouldShowNavRail) AppNavigationRail(navController = innerNavController)
                 BarNavHost(
                     topNavController = topNavController,
                     innerNavController = innerNavController,
                     modifier = Modifier.weight(1f, false)
                 )
             }
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                BarNavHost(
-                    topNavController = topNavController,
-                    innerNavController = innerNavController,
-                    modifier = Modifier.weight(1f, false)
-                )
-                AppNavigationBar(navController = innerNavController)
-            }
+            if (!shouldShowNavRail) AppNavigationBar(navController = innerNavController)
         }
     }
 }
@@ -126,8 +116,8 @@ private fun BarNavHost(
         navController = innerNavController,
         startDestination = RecognitionScreen.ROUTE,
         modifier = modifier,
-        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
-        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+//        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+//        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
         libraryScreen(onTrackClick = { mbId, from ->
             topNavController.navigateToTrackScreen(mbId = mbId, from = from)
@@ -145,6 +135,7 @@ private fun BarNavHost(
             }
         )
         preferencesScreen(
+            showDeveloperOptions = BuildConfig.DEBUG,
             onNavigateToAboutScreen = { from ->
                 topNavController.navigateToAboutScreen(from)
             },

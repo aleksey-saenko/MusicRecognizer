@@ -53,6 +53,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setApiToken(token: String) {
+        viewModelScope.launch {
+            preferencesRepository.setApiToken(token)
+        }
+    }
+
 }
 
 internal sealed interface PreferencesUiState {

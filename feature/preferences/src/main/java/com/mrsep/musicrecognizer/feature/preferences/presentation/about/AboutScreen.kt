@@ -54,7 +54,6 @@ internal fun AboutScreen(
                 .padding(16.dp)
         ) {
             VinylRotating(
-                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(160.dp)
             )
             Text(

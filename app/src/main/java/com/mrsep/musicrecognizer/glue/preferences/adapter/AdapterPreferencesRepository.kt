@@ -23,7 +23,7 @@ class AdapterPreferencesRepository @Inject constructor(
         get() = preferencesRepositoryDo.userPreferencesFlow
             .map { prefData -> preferencesMapper.map(prefData) }
 
-    override suspend fun saveApiToken(newToken: String) {
+    override suspend fun setApiToken(newToken: String) {
         preferencesRepositoryDo.setApiToken(newToken)
     }
 

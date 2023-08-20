@@ -16,17 +16,31 @@
     <string name="recently">Recently</string>
 
     <!--    Onboarding screen-->
-    <string name="onboarding_token_message_start">"This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don\'t have one, you can sign up for a free API token "</string>
-    <string name="onboarding_token_message_link">here</string>
-    <string name="onboarding_token_message_end">.</string>
-    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
-    <string name="apply_api_token">Apply API Token</string>
-    <string name="audd_api_token">AudD API Token</string>
-    <string name="api_token">API Token</string>
-    <string name="validating">Validating</string>
     <string name="welcome">Welcome</string>
     <string name="onboarding_welcome_message">TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
-    <string name="onboarding_permission_message">The application requires permission to record audio in order to work properly. By enabling this permission, you agree that your recorded data will be used by remote servers for music recognition. The application does not use this data for any other purpose.</string>
+
+    <string name="onboarding_permission_message_start">"The application requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by "</string>
+    <string name="onboarding_permission_message_link">remote service</string>
+    <string name="onboarding_permission_message_end">" for music recognition. The application does not use this data for any other purpose."</string>
+    <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
+
+    <string name="onboarding_token_message_start">"The app uses the AudD® service as a Music Recognition API, which requires a special API token. Sign up "</string>
+    <string name="onboarding_token_message_link">here</string>
+    <string name="onboarding_token_message_end">" to get your API token, if you don\'t have one yet."</string>
+    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
+    <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify a token later in preferences.</string>
+
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="apply_api_token">Apply API token</string>
+    <string name="skip">Skip</string>
+    <string name="audd_api_token">AudD API token</string>
+    <string name="api_token">API token</string>
+    <string name="validating">Validating</string>
+
+    <string name="final_onboarding_page_title">We are ready to go</string>
+    <string name="final_onboarding_page_message">Setup completed successfully</string>
+    <string name="get_started">Get started</string>
     <!--    Common-->
 
     <string name="spotify">Spotify</string>
@@ -107,6 +121,7 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="must_not_be_empty">Must not be empty</string>
     <string name="illegal_state">Illegal state</string>
     <string name="record_deletion_failed">Record file deletion failed</string>
     <string name="search_track">Search track</string>
@@ -149,7 +164,7 @@
     <string name="schedule_policy_pref_subtitle">Set schedule actions after unsuccessful recognitions</string>
     <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
     <string name="notification_service">Notification service</string>
-    <string name="notification_service_pref_subtitle">Allow to control recognition from notifications</string>
+    <string name="notification_service_pref_subtitle">Control recognition from notifications</string>
     <string name="notifications">Notifications</string>
     <string name="dynamic_colors_pref_title">Use dynamic colors</string>
     <string name="misc">Misc</string>
@@ -196,5 +211,5 @@
     <string name="title">Title</string>
     <string name="format_created">Created: %s</string>
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
-
+    <string name="token_preference_dialog_message">Enter a proper AudD API token (empty token will limit your daily recognitions):</string>
 </resources>

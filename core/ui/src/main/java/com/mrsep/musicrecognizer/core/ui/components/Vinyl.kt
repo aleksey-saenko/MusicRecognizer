@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.core.ui.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -17,7 +18,7 @@ private const val animationDuration = 1800
 @Composable
 fun VinylRotating(
     modifier: Modifier = Modifier,
-    color: Color
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "VinylAnimation")
     val degreesAnimated by infiniteTransition.animateFloat(

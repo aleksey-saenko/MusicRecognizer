@@ -11,32 +11,48 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.common.PageWithIndicator
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-private enum class OnboardingPage(val index: Int) {
-    WELCOME(0),
-    PERMISSIONS(1),
-    TOKEN(2),
-    FINAL(3)
+private enum class OnboardingPage {
+    WELCOME,
+    PERMISSIONS,
+    TOKEN,
+    FINAL
 }
 
-private val TOTAL_PAGES = OnboardingPage.values().size
+private val TOTAL_PAGES = OnboardingPage.entries.size
+private const val AVAILABLE_PAGES_ON_START = 2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun OnboardingScreen(
     onOnboardingCompleted: () -> Unit,
-    onOnboardingClose: () -> Unit
+    onOnboardingClose: () -> Unit,
+    viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
-    var availablePages by remember { mutableIntStateOf(2) }
+    var availablePages by remember { mutableIntStateOf(AVAILABLE_PAGES_ON_START) }
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     ) {
         availablePages
+    }
+
+    fun openNextPage(pageIndex: Int) {
+        val minAvailablePages = pageIndex + 1
+        if (availablePages < minAvailablePages) {
+            availablePages = minAvailablePages
+        }
+        snapshotFlow { pagerState.canScrollForward }
+            .filter { it }
+            .take(1)
+            .onEach { pagerState.animateScrollToPage(pageIndex) }
+            .launchIn(scope)
     }
 
     BackHandler {
@@ -51,9 +67,9 @@ internal fun OnboardingScreen(
     HorizontalPager(
         beyondBoundsPageCount = 0,
         state = pagerState
-    ) { page ->
-        when (page) {
-            OnboardingPage.WELCOME.index -> {
+    ) { pageIndex ->
+        when (pageIndex) {
+            OnboardingPage.WELCOME.ordinal -> {
                 PageWithIndicator(
                     PageContent = {
                         WelcomePage(
@@ -64,14 +80,14 @@ internal fun OnboardingScreen(
                         )
                     },
                     totalPages = TOTAL_PAGES,
-                    currentPage = page,
+                    currentPage = pageIndex,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
-            OnboardingPage.PERMISSIONS.index -> {
+            OnboardingPage.PERMISSIONS.ordinal -> {
                 PageWithIndicator(
                     PageContent = {
                         PermissionsPage(
@@ -80,27 +96,20 @@ internal fun OnboardingScreen(
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState()),
                             onPermissionsGranted = {
-                                val minimumRequiredPages = OnboardingPage.TOKEN.index + 1
-                                if (availablePages < minimumRequiredPages) {
-                                    availablePages = minimumRequiredPages
-                                }
-                                snapshotFlow { pagerState.canScrollForward }
-                                    .filter { it }
-                                    .take(1)
-                                    .onEach { pagerState.animateScrollToPage(OnboardingPage.TOKEN.index) }
-                                    .launchIn(scope)
+                                openNextPage(OnboardingPage.TOKEN.ordinal)
                             }
                         )
                     },
                     totalPages = TOTAL_PAGES,
-                    currentPage = page,
+                    currentPage = pageIndex,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
-            OnboardingPage.TOKEN.index -> {
+            OnboardingPage.TOKEN.ordinal -> {
+                val pageUiState by viewModel.uiState.collectAsStateWithLifecycle()
                 PageWithIndicator(
                     PageContent = {
                         TokenPage(
@@ -108,28 +117,24 @@ internal fun OnboardingScreen(
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState()),
+                            uiState = pageUiState,
+                            onTokenChanged = viewModel::setTokenField,
+                            onTokenSkip = viewModel::skipTokenApplying,
+                            onTokenValidate = viewModel::applyTokenIfValid,
                             onTokenApplied = {
-                                val minimumRequiredPages = OnboardingPage.FINAL.index + 1
-                                if (availablePages < minimumRequiredPages) {
-                                    availablePages = minimumRequiredPages
-                                }
-                                snapshotFlow { pagerState.canScrollForward }
-                                    .filter { it }
-                                    .take(1)
-                                    .onEach { pagerState.animateScrollToPage(OnboardingPage.FINAL.index) }
-                                    .launchIn(scope)
+                                openNextPage(OnboardingPage.FINAL.ordinal)
                             }
                         )
                     },
                     totalPages = TOTAL_PAGES,
-                    currentPage = page,
+                    currentPage = pageIndex,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
-            OnboardingPage.FINAL.index -> {
+            OnboardingPage.FINAL.ordinal -> {
                 PageWithIndicator(
                     PageContent = {
                         FinalPage(
@@ -137,13 +142,14 @@ internal fun OnboardingScreen(
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState()),
-                            onOnboardingCompletedClick = {
+                            onOnboardingCompleted = {
+                                viewModel.setOnboardingCompleted(true)
                                 onOnboardingCompleted()
                             }
                         )
                     },
                     totalPages = TOTAL_PAGES,
-                    currentPage = page,
+                    currentPage = pageIndex,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
@@ -154,7 +160,6 @@ internal fun OnboardingScreen(
                 throw IllegalStateException("OnboardingScreen: Unavailable page index")
             }
         }
-
     }
 }
 

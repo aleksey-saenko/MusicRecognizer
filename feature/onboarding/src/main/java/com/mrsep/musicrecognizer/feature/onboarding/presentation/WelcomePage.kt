@@ -27,11 +27,11 @@ internal fun WelcomePage(
             text = stringResource(StringsR.string.welcome),
             style = MaterialTheme.typography.headlineLarge
         )
-        Icon(
-            painter = painterResource(UiR.drawable.baseline_album_24),
-            contentDescription = null,
-            modifier = Modifier.padding(top = 24.dp).size(160.dp)
-        )
+//        Icon(
+//            painter = painterResource(UiR.drawable.baseline_album_24),
+//            contentDescription = null,
+//            modifier = Modifier.padding(top = 24.dp).size(160.dp)
+//        )
         Text(
             text = stringResource(StringsR.string.onboarding_welcome_message),
             style = MaterialTheme.typography.bodyLarge,

@@ -12,12 +12,14 @@ object PreferencesScreen {
     const val ROUTE = "preferences"
 
     fun NavGraphBuilder.preferencesScreen(
+        showDeveloperOptions: Boolean,
         onNavigateToAboutScreen: (from: NavBackStackEntry) -> Unit,
         onNavigateToQueueScreen: (from: NavBackStackEntry) -> Unit,
         onNavigateToDeveloperScreen: (from: NavBackStackEntry) -> Unit
     ) {
         composable(ROUTE) { backStackEntry ->
             PreferencesScreen(
+                showDeveloperOptions = showDeveloperOptions,
                 onNavigateToAboutScreen = { onNavigateToAboutScreen(backStackEntry) },
                 onNavigateToQueueScreen = { onNavigateToQueueScreen(backStackEntry) },
                 onNavigateToDeveloperScreen = { onNavigateToDeveloperScreen(backStackEntry) }

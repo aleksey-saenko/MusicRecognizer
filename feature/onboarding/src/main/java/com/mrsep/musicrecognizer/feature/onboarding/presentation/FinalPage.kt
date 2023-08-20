@@ -7,16 +7,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun FinalPage(
     modifier: Modifier = Modifier,
-    onOnboardingCompletedClick: () -> Unit,
-    viewModel: OnboardingViewModel = hiltViewModel()
+    onOnboardingCompleted: () -> Unit
 ) {
     Column(
         modifier = modifier.padding(PaddingValues(horizontal = 24.dp)),
@@ -24,12 +23,12 @@ internal fun FinalPage(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "We are ready to go",
+            text = stringResource(StringsR.string.final_onboarding_page_title),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
         )
         Text(
-            text = "Setup completed successfully",
+            text = stringResource(StringsR.string.final_onboarding_page_message),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -40,12 +39,9 @@ internal fun FinalPage(
             modifier = Modifier
                 .padding(bottom = 24.dp)
                 .widthIn(min = 240.dp),
-            onClick = {
-                viewModel.setOnboardingCompleted(true)
-                onOnboardingCompletedClick()
-            }
+            onClick = onOnboardingCompleted
         ) {
-            Text(text = "Get started")
+            Text(text = stringResource(StringsR.string.get_started))
         }
     }
 }

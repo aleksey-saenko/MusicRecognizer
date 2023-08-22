@@ -13,15 +13,15 @@ enum class TopLevelDestination(
     @StringRes val titleResId: Int,
     @DrawableRes val iconResId: Int
 ) {
-    Recently(
+    Library(
         route = LibraryScreen.ROUTE,
         titleResId = StringsR.string.library,
         iconResId = UiR.drawable.baseline_library_music_24
     ),
-    HOME(
+    Recognition(
         route = RecognitionScreen.ROUTE,
         titleResId = StringsR.string.recognition,
-        iconResId = UiR.drawable.baseline_home_24
+        iconResId = UiR.drawable.ic_lines_wave
     ),
     Preferences(
         route = PreferencesScreen.ROUTE,

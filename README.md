@@ -1,6 +1,6 @@
-# TuneSurfer
+# Audile
 
-TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.
+Audile is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.
 This application uses the AudD® service as a Music Recognition API.
 
 I'm developing this application as the project where I learn how to build complex applications using the best coding practices.
@@ -16,7 +16,7 @@ At the same time, I try to make the application reliable for everyday use.
 
 ## Tech
 
-TuneSurfer is written in Kotlin and runs on Android 8.0 or higher.  
+Audile is written in Kotlin and runs on Android 8.0 or higher.  
 App architecture inspired by clean arch practices. The application is modularized with a feature-based approach (definitely overkill for such small app).  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
 The app uses the AudioRecord and MediaCodec API for audio recording and encoding, which allows to create recording strategies and audio processing of any complexity.  

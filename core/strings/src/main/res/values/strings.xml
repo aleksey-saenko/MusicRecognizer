@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TuneSurfer</string>
+    <string name="app_name">Audile</string>
     <string name="tap_to_recognize">Tap to recognize</string>
     <string name="tap_to_recognize_the_song">Tap to recognize the song</string>
     <string name="tap_to_schedule_song_recognition">Tap to schedule a song recognition</string>
@@ -17,7 +17,7 @@
 
     <!--    Onboarding screen-->
     <string name="welcome">Welcome</string>
-    <string name="onboarding_welcome_message">TuneSurfer is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
+    <string name="onboarding_welcome_message">Audile is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
 
     <string name="onboarding_permission_message_start">"The application requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by "</string>
     <string name="onboarding_permission_message_link">remote service</string>

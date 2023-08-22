@@ -19,9 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
+import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer"
 private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
@@ -53,8 +54,9 @@ internal fun AboutScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            VinylRotating(
-                modifier = Modifier.size(160.dp)
+            AsyncImage(
+                model = UiR.mipmap.ic_launcher, contentDescription = null,
+                modifier = Modifier.size(120.dp)
             )
             Text(
                 text = stringResource(StringsR.string.app_name),

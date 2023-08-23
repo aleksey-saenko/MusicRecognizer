@@ -17,8 +17,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import kotlinx.coroutines.launch
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val animationDuration = 300
 
@@ -92,20 +90,29 @@ internal fun LibraryScreen(
                     )
 
                     is LibraryUiState.Success -> {
+                        val lazyGridState = rememberLazyGridState()
                         val filterSheetState = rememberModalBottomSheetState(
                             skipPartiallyExpanded = true
                         )
+                        var newFilterApplied by rememberSaveable { mutableStateOf(false) }
+
                         fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
                             scope.launch { filterSheetState.hide() }.invokeOnCompletion {
                                 if (!filterSheetState.isVisible) filterSheetActive = false
-                                newTrackFilter?.let(viewModel::applyFilter)
+                                newTrackFilter?.let {
+                                    newFilterApplied = true
+                                    viewModel.applyFilter(newTrackFilter)
+                                }
                             }
                         }
 
-                        val lazyGridState = rememberLazyGridState()
                         LaunchedEffect(uiState.trackFilter) {
-                            lazyGridState.animateScrollToItem(0)
+                            if (newFilterApplied) {
+                                lazyGridState.animateScrollToItem(0)
+                                newFilterApplied = false
+                            }
                         }
+
                         TrackLazyGrid(
                             trackList = uiState.trackList,
                             onTrackClick = onTrackClick,

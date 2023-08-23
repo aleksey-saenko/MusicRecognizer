@@ -3,8 +3,9 @@
 Audile is the music recognizing application, that can help you quickly and accurately recognize a music track playing nearby you.
 This application uses the AudD® service as a Music Recognition API.
 
-I'm developing this application as the project where I learn how to build complex applications using the best coding practices.
-At the same time, I try to make the application reliable for everyday use.
+I'm developing this application as a pet project where I can improve my coding skills. At the same time, I try to make the application reliable for everyday use.
+
+If you would like to contribute or translate, that is very much appreciated.
 
 ## Features
 
@@ -19,7 +20,7 @@ At the same time, I try to make the application reliable for everyday use.
 Audile is written in Kotlin and runs on Android 8.0 or higher.  
 App architecture inspired by clean arch practices. The application is modularized with a feature-based approach (definitely overkill for such small app).  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
-The app uses the AudioRecord and MediaCodec API for audio recording and encoding, which allows to create recording strategies and audio processing of any complexity.  
+The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
 Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.  
 
 ## Screenshots

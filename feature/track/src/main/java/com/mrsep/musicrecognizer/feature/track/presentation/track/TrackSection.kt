@@ -50,7 +50,7 @@ internal fun TrackSection(
                 )
                 ServicesChipsLazyRow(
                     links = links,
-                    contentPadding = PaddingValues(start = 16.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -79,7 +79,7 @@ internal fun TrackSection(
             )
             ServicesChipsLazyRow(
                 links = links,
-                contentPadding = PaddingValues(start = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)

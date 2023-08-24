@@ -9,5 +9,4 @@ sealed class RecognitionStatus {
 
     data class Done(val result: RecognitionResult) : RecognitionStatus()
 
-
 }

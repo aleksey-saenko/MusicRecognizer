@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -47,14 +44,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        val keepSplashScreen = mutableStateOf(true)
         splashScreen.setKeepOnScreenCondition {
-            viewModel.isLoadingState()
+            keepSplashScreen.value
         }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupApplicationWithPreferences()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
+
             MusicRecognizerTheme(
                 dynamicColor = isDynamicColorsEnabled(uiState)
             ) {
@@ -80,18 +79,13 @@ class MainActivity : ComponentActivity() {
                         .background(color = MaterialTheme.colorScheme.background)
                         .systemBarsPadding(),
                 ) {
-                    AnimatedVisibility(
-                        visible = uiState is MainActivityUiState.Success,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
                         AppNavigation(
                             shouldShowNavRail = shouldShowNavRail(windowSizeClass),
                             isExpandedScreen = isExpandedScreen(windowSizeClass),
                             onboardingCompleted = isOnboardingCompleted(uiState),
-                            onOnboardingClose = { this@MainActivity.finish() }
+                            onOnboardingClose = { this@MainActivity.finish() },
+                            hideSplashScreen = { keepSplashScreen.value = false }
                         )
-                    }
                 }
             }
 
@@ -128,9 +122,9 @@ private fun isDynamicColorsEnabled(uiState: MainActivityUiState): Boolean {
 }
 
 @Stable
-private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean {
+private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean? {
     return when (uiState) {
-        MainActivityUiState.Loading -> false
+        MainActivityUiState.Loading -> null
         is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
     }
 }

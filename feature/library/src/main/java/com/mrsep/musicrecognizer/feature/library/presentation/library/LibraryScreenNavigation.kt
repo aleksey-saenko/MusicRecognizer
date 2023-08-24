@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.library.presentation
+package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -12,11 +12,13 @@ object LibraryScreen {
     const val ROUTE = "library"
 
     fun NavGraphBuilder.libraryScreen(
-        onTrackClick: (mbId: String, from: NavBackStackEntry) -> Unit
+        onTrackClick: (mbId: String, from: NavBackStackEntry) -> Unit,
+        onTrackSearchClick: (from: NavBackStackEntry) -> Unit
     ) {
         composable(ROUTE) { backStackEntry ->
             LibraryScreen(
-                onTrackClick = { mbId -> onTrackClick(mbId, backStackEntry) }
+                onTrackClick = { mbId -> onTrackClick(mbId, backStackEntry) },
+                onTrackSearchClick = { onTrackSearchClick(backStackEntry) }
             )
         }
     }

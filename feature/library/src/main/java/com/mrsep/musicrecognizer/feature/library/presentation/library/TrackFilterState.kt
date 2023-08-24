@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.library.presentation
+package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

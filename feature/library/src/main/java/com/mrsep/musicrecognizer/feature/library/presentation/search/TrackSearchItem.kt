@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.library.presentation
+package com.mrsep.musicrecognizer.feature.library.presentation.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

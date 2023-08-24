@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.library.presentation
+package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi

@@ -44,19 +44,9 @@ class PreferencesMapper @Inject constructor() :
     override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
             onboardingCompleted = input.onboardingCompleted,
-            apiToken = input.apiToken,
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
-            developerModeEnabled = input.developerModeEnabled,
-            requiredServices = UserPreferences.RequiredServices(
-                spotify = input.requiredServices.spotify,
-                youtube = input.requiredServices.youtube,
-                soundCloud = input.requiredServices.soundCloud,
-                appleMusic = input.requiredServices.appleMusic,
-                deezer = input.requiredServices.deezer,
-                napster = input.requiredServices.napster,
-                musicbrainz = input.requiredServices.musicbrainz
-            )
+            developerModeEnabled = input.developerModeEnabled
         )
     }
 

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,6 +39,7 @@ internal fun QueueScreen(
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
         )
+
         is QueueScreenUiState.Success -> {
 
             val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -47,9 +50,16 @@ internal fun QueueScreen(
                 lifecycle.addObserver(observer)
                 onDispose { lifecycle.removeObserver(observer) }
             }
-
-            val selectedSet = remember(state.enqueuedList) { mutableStateMapOf<Int, Unit>() }
-            var multiselectEnabled by remember(state.enqueuedList) { mutableStateOf(false) }
+            val selectedSet = rememberSaveable(
+                state.enqueuedList,
+                saver = listSaver(
+                    save = { map -> map.keys.toList() },
+                    restore = { keys ->
+                        mutableStateMapOf<Int, Unit>().apply { putAll(keys.associateWith { Unit }) }
+                    }
+                )
+            ) { mutableStateMapOf<Int, Unit>() }
+            var multiselectEnabled by rememberSaveable(state.enqueuedList) { mutableStateOf(false) }
 
             fun disableMultiselect() {
                 selectedSet.clear()

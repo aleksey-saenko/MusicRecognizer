@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,12 @@ internal fun LibraryScreen(
     val screenUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLibraryEmpty = screenUiState !is LibraryUiState.Success
     var filterSheetActive by rememberSaveable { mutableStateOf(false) }
+    val trackSelectionState = rememberTracksSelectionState(screenUiState)
+
+    BackHandler(
+        enabled = trackSelectionState.multiselectEnabled,
+        onBack = trackSelectionState::deselectAll
+    )
 
     val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
@@ -38,10 +45,20 @@ internal fun LibraryScreen(
             .background(color = MaterialTheme.colorScheme.background),
     ) {
         LibraryScreenTopBar(
+            isLibraryEmpty = isLibraryEmpty,
+            isFilterApplied = (screenUiState as? LibraryUiState.Success)?.trackFilter?.isEmpty?.not() ?: false,
+            isMultiselectEnabled = trackSelectionState.multiselectEnabled,
+            selectedCount = trackSelectionState.selectedCount,
+            totalCount = (screenUiState as? LibraryUiState.Success)?.trackList?.size ?: 0,
             onSearchIconClick = onTrackSearchClick,
             onFilterIconClick = { filterSheetActive = !filterSheetActive },
-            isLibraryEmpty = isLibraryEmpty,
-            isFilterApplied = screenUiState.isFilterApplied(),
+            onDeleteIconClick = { viewModel.deleteByIds(trackSelectionState.getSelected()) },
+            onSelectAll = {
+                (screenUiState as? LibraryUiState.Success)?.trackList?.let { tracks ->
+                    trackSelectionState.select(tracks.map { it.mbId })
+                }
+            },
+            onDeselectAll = trackSelectionState::deselectAll,
             topAppBarScrollBehavior = topBarBehaviour
         )
         when (val uiState = screenUiState) {
@@ -82,7 +99,8 @@ internal fun LibraryScreen(
                 TrackLazyGrid(
                     trackList = uiState.trackList,
                     onTrackClick = onTrackClick,
-                    state = lazyGridState,
+                    lazyGridState = lazyGridState,
+                    selectionState = trackSelectionState,
                     modifier = Modifier.nestedScroll(
                         topBarBehaviour.nestedScrollConnection
                     )

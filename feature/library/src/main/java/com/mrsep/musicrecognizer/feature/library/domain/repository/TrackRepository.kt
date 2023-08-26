@@ -18,4 +18,6 @@ interface TrackRepository {
 
     fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult>
 
+    suspend fun deleteByMbId(vararg mbId: String)
+
 }

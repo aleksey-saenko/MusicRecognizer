@@ -1,8 +1,12 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
@@ -10,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -28,18 +33,28 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
     onTrackClick: (mbId: String) -> Unit,
-    state: LazyGridState,
+    lazyGridState: LazyGridState,
+    selectionState: TrackSelectionState,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 104.dp),
-        state = state,
+        state = lazyGridState,
         modifier = modifier
     ) {
         items(count = trackList.size, key = { trackList[it].mbId }) { index ->
             LazyGridTrackItem(
                 track = trackList[index],
-                onTrackClick = onTrackClick,
+                selected = selectionState.isTrackSelected(trackList[index].mbId),
+                multiselectEnabled = selectionState.multiselectEnabled,
+                onTrackClick = { trackMbId ->
+                    if (selectionState.multiselectEnabled) {
+                        selectionState.toggleSelection(trackMbId)
+                    } else {
+                        onTrackClick(trackMbId)
+                    }
+                },
+                onLongClick = selectionState::toggleSelection,
                 modifier = Modifier.animateItemPlacement(
                     tween(300)
                 )
@@ -60,17 +75,38 @@ internal fun TrackLazyGrid(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LazyGridTrackItem(
     track: TrackUi,
+    selected: Boolean,
+    multiselectEnabled: Boolean,
+    onTrackClick: (mbId: String) -> Unit,
+    onLongClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier,
-    onTrackClick: (mbId: String) -> Unit
 ) {
+    val containerColor by animateColorAsState(
+        targetValue = if (selected)
+            MaterialTheme.colorScheme.secondaryContainer
+        else
+            Color.Unspecified,
+        label = "containerColor"
+    )
     Column(
         modifier = modifier
+            .padding(2.dp)
+            .background(
+                color = containerColor,
+                shape = MaterialTheme.shapes.large
+            )
             .clip(MaterialTheme.shapes.large)
-            .clickable { onTrackClick(track.mbId) }
-            .padding(8.dp)
+            .combinedClickable(
+                onLongClick = { onLongClick(track.mbId) },
+                onClick = { onTrackClick(track.mbId) },
+                indication = if (multiselectEnabled) null else LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() }
+            )
+            .padding(6.dp)
             .width(104.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start

@@ -46,4 +46,8 @@ class AdapterTrackRepository @Inject constructor(
         return trackRepositoryDo.searchResultFlow(keyword, limit).map(searchResultMapper::map)
     }
 
+    override suspend fun deleteByMbId(vararg mbId: String) {
+        trackRepositoryDo.deleteByMbId(*mbId)
+    }
+
 }

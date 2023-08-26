@@ -48,6 +48,12 @@ internal class LibraryViewModel @Inject constructor(
         }
     }
 
+    fun deleteByIds(trackIds: List<String>) {
+        viewModelScope.launch {
+            trackRepository.deleteByMbId(*trackIds.toTypedArray())
+        }
+    }
+
 }
 
 internal sealed class LibraryUiState {

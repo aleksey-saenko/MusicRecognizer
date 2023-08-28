@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.core.ui.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,17 +14,32 @@ fun Context.openUrlImplicitly(url: String) {
     startActivityOrToast(intent, getString(StringsR.string.web_browser_not_found_toast))
 }
 
+fun Context.shareImageWithText(subject: String, body: String, imageUri: Uri) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/*"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+        putExtra(Intent.EXTRA_STREAM, imageUri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    startActivityOrToast(
+        Intent.createChooser(shareIntent, null),
+        getString(StringsR.string.cannot_share_toast)
+    )
+}
+
 fun Context.shareText(subject: String, body: String) {
-    val intent = Intent(Intent.ACTION_SEND).apply {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_SUBJECT, subject)
         putExtra(Intent.EXTRA_TEXT, body)
     }
-    val wrappedIntent = Intent.createChooser(intent, null)
-    startActivityOrToast(wrappedIntent, getString(StringsR.string.cannot_share_toast))
+    startActivityOrToast(
+        Intent.createChooser(shareIntent, null),
+        getString(StringsR.string.cannot_share_toast)
+    )
 }
 
-@SuppressLint("QueryPermissionsNeeded")
 private fun Context.startActivityOrToast(intent: Intent, message: String) {
     if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)

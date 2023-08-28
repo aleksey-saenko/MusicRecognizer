@@ -84,8 +84,8 @@ internal sealed interface TrackUiState {
 
         val sharedBody
             get() = albumAndYear?.let { albAndYear ->
-                "$title / $artist / $albAndYear"
-            } ?: "$title / $artist"
+                "$title\n$artist\n$albAndYear"
+            } ?: "$title\n$artist"
     }
 
 }

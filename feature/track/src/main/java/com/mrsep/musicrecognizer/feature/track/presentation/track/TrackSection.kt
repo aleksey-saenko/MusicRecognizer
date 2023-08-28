@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,7 @@ internal fun TrackSection(
     artworkUrl: String?,
     links: ImmutableList<ServiceLink>,
     isExpandedScreen: Boolean,
+    onArtworkCached: (Uri) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (isExpandedScreen) {
@@ -30,8 +32,8 @@ internal fun TrackSection(
             verticalAlignment = Alignment.Top
         ) {
             AlbumArtwork(
-                artworkUrl = artworkUrl,
-                contentDescription = null,
+                url = artworkUrl,
+                onArtworkCached = onArtworkCached,
                 modifier = Modifier
                     .padding(start = 16.dp, bottom = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
@@ -63,8 +65,8 @@ internal fun TrackSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AlbumArtwork(
-                artworkUrl = artworkUrl,
-                contentDescription = null,
+                url = artworkUrl,
+                onArtworkCached = onArtworkCached,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
@@ -84,7 +86,6 @@ internal fun TrackSection(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             )
-
         }
     }
 

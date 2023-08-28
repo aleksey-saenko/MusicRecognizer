@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.withResumed
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -16,7 +17,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen.libraryScreen
@@ -36,6 +36,8 @@ import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.navigateToLyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 
 //private const val SCREEN_TRANSITION_DURATION = 300
 
@@ -54,20 +56,24 @@ internal fun AppNavigation(
     val currentInnerEntry by innerNavController.currentBackStackEntryAsState()
     // Conditional navigation for onboarding screen
     LaunchedEffect(onboardingCompleted, currentOuterEntry, currentInnerEntry) {
-        val outerCurrentRoute = currentOuterEntry?.destination?.route ?: return@LaunchedEffect
+        val outerEntry = currentOuterEntry ?: return@LaunchedEffect
         onboardingCompleted ?: return@LaunchedEffect
-        val isOnOnboarding = (outerCurrentRoute == OnboardingScreen.ROUTE)
-        if ((onboardingCompleted && !isOnOnboarding) || (!onboardingCompleted && isOnOnboarding)) {
-            hideSplashScreen()
-        }
-        if (onboardingCompleted && isOnOnboarding) {
-            outerNavController.popBackStack()
-        }
-
-        if (!onboardingCompleted && !isOnOnboarding &&
-            currentInnerEntry?.destination?.route == RecognitionScreen.ROUTE
-        ) {
-            outerNavController.navigate(route = OnboardingScreen.ROUTE)
+        val onOnboarding = outerEntry.destination.route == OnboardingScreen.ROUTE
+        when {
+            !onboardingCompleted && !onOnboarding -> {
+                outerNavController.navigate(OnboardingScreen.ROUTE)
+            }
+            onboardingCompleted && onOnboarding -> {
+                outerNavController.popBackStack()
+            }
+            // hide splash screen if navigation is finished and result screen is resumed
+            else -> {
+                select<Unit> {
+                    listOfNotNull(currentOuterEntry, outerEntry).forEach { entry ->
+                        launch { entry.lifecycle.withResumed(hideSplashScreen) }.onJoin
+                    }
+                }
+            }
         }
     }
 
@@ -176,7 +182,7 @@ private fun BarNavHost(
             }
         )
         preferencesScreen(
-            showDeveloperOptions = BuildConfig.DEBUG,
+            showDeveloperOptions = true, //BuildConfig.DEBUG
             onNavigateToAboutScreen = { from ->
                 outerNavController.navigateToAboutScreen(from)
             },

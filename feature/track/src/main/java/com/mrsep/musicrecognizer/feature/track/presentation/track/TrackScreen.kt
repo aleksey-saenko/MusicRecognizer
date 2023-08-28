@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -18,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.util.shareImageWithText
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +83,7 @@ internal fun TrackScreen(
                 if (!trackExistenceTransitionState.currentState) currentOnBackPressed()
             }
 
+            var artworkUri by remember { mutableStateOf<Uri?>(null) }
             AnimatedVisibility(
                 visibleState = trackExistenceTransitionState,
                 enter = fadeIn() + scaleIn(
@@ -107,6 +110,18 @@ internal fun TrackScreen(
                                 subject = "",
                                 body = uiState.sharedBody
                             )
+//                            artworkUri?.let { uri ->
+//                                context.shareImageWithText(
+//                                    subject = "",
+//                                    body = uiState.sharedBody,
+//                                    imageUri = uri
+//                                )
+//                            } ?: let {
+//                                context.shareText(
+//                                    subject = "",
+//                                    body = uiState.sharedBody
+//                                )
+//                            }
                         },
                         onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
                         onShowDetailsClick = { extraDataDialogVisible = true },
@@ -119,6 +134,7 @@ internal fun TrackScreen(
                         artworkUrl = uiState.artworkUrl,
                         links = uiState.links,
                         isExpandedScreen = isExpandedScreen,
+                        onArtworkCached = { artworkUri = it },
                         modifier = Modifier.fillMaxSize()
                     )
                 }

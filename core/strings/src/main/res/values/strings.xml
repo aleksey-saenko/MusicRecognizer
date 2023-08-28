@@ -212,4 +212,5 @@
     <string name="format_created">Created: %s</string>
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
     <string name="token_preference_dialog_message">Enter a proper AudD API token (empty token will limit your daily recognitions):</string>
+    <string name="artwork">Artwork</string>
 </resources>

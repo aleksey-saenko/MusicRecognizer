@@ -1,40 +1,40 @@
 [versions]
 sdkCompile = "34"
 sdkMin = "26"
-sdkTarget = "33"
+sdkTarget = "34"
 
 accompanist = "0.32.0"
 androidGradlePlugin = "8.1.0"
 androidxActivity = "1.7.2"
-androidxComposeBom = "2023.08.00"
-androidxComposeCompiler = "1.5.2"
+androidxComposeBom = "2023.09.00"
+androidxComposeCompiler = "1.5.3"
 androidxCore = "1.10.1"
 androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.0.0"
 androidxEspresso = "3.5.1"
-#androidxGlance = "1.0.0-rc01"
+#androidxGlance = "1.0.0"
 androidxHiltNavigationCompose = "1.0.0"
-androidxLifecycle = "2.6.1"
-androidxLifecycleViewmodelCompose = "2.6.1"
-androidxNavigation = "2.6.0"
+androidxLifecycle = "2.6.2"
+androidxLifecycleViewmodelCompose = "2.6.2"
+androidxNavigation = "2.7.2"
 androidxWindowManager = "1.1.0"
-androidxWork = "2.8.1" #2.8.1 2.9.0-alpha02
+androidxWork = "2.8.1" # 2.9.0
 coil = "2.4.0"
-hilt = "2.47"
+hilt = "2.48"
 hiltExt = "1.0.0"
 junit4 = "4.13.2"
 junitExt = "1.1.5"
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
 kotlinxCollectionImmutable = "0.3.5"
-kotlinxDatetime = "0.4.0"
-ksp = "1.9.0-1.0.12"
+#kotlinxDatetime = "0.4.0"
+ksp = "1.9.10-1.0.13"
 moshi = "1.15.0"
 okhttpBom = "4.11.0"
 okhttpCoroutines = "1.0"
-paging3 = "3.2.0"
-paging3Compose = "3.2.0"
-palette = "1.0.0"
+paging3 = "3.2.1"
+paging3Compose = "3.2.1"
+#palette = "1.0.0"
 protobufJavalite = "3.23.4"
 protobufPlugin = "0.9.4"
 retrofit = "2.9.0"
@@ -61,7 +61,7 @@ androidx-datastoreCore = { group = "androidx.datastore", name = "datastore", ver
 #androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
 #androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
-#FIXME: delete after updating workmanager to new version with kotlin flow
+#FIXME: delete after updating workmanager to version 2.9.0
 #converts LiveData to Kotlin Flow (WorkManager WorkInfo)
 androidx-lifecycle-livedataKtx= { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
@@ -71,7 +71,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-paging3-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging3" }
 androidx-paging3-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging3" }
 androidx-paging3-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging3Compose" }
-androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette"  }
+#androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette"  }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
 androidx-windowManager = { group = "androidx.window", name = "window", version.ref = "androidxWindowManager" }
@@ -85,7 +85,7 @@ junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-collectionImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionImmutable" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
+#kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }

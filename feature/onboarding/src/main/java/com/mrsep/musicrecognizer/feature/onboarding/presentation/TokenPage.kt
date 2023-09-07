@@ -110,9 +110,6 @@ internal fun TokenPage(
 
                 val errorMessage = uiState.tokenValidationStatus.errorMessageOrNull()
                 var passwordVisible by rememberSaveable { mutableStateOf(false) }
-                // FIXME: delete comment after rolling over Compose Foundation Version 1.6.0-alpha03
-                // keyboard showing after readonly changes fixed in alpha Version 1.6.0-alpha03
-                // https://android-review.googlesource.com/c/platform/frameworks/support/+/2669997
                 OutlinedTextField(
                     modifier = Modifier
                         .widthIn(min = 56.dp, max = 488.dp)

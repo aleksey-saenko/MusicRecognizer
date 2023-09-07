@@ -141,9 +141,6 @@ internal fun SchedulePolicyDialog(
     )
 }
 
-// FIXME: delete comment after rolling over Compose Foundation Version 1.6.0-alpha03
-// readonly keyboard showing fixed in alpha Version 1.6.0-alpha03
-// https://android-review.googlesource.com/c/platform/frameworks/support/+/2669997
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScheduleActionsDropdownMenu(

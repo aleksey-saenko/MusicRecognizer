@@ -1,5 +1,8 @@
 package com.mrsep.musicrecognizer.presentation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +42,7 @@ import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.tr
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 
-//private const val SCREEN_TRANSITION_DURATION = 300
+private const val SCREEN_TRANSITION_DURATION = 300
 
 @Composable
 internal fun AppNavigation(
@@ -80,8 +83,8 @@ internal fun AppNavigation(
     NavHost(
         navController = outerNavController,
         startDestination = BAR_HOST_ROUTE,
-//        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
-//        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
         onboardingScreen(
             onOnboardingCompleted = { },
@@ -152,8 +155,8 @@ private fun BarNavHost(
         navController = innerNavController,
         startDestination = RecognitionScreen.ROUTE,
         modifier = modifier,
-//        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
-//        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+        enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
         libraryScreen(
             onTrackClick = { mbId, from ->

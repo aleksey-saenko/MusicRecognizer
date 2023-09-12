@@ -80,14 +80,6 @@ internal class QueueScreenViewModel @Inject constructor(
         }
     }
 
-    fun cancelAndDeleteRecognitionAll() {
-        appScope.launch(ioDispatcher) {
-            playerController.stop()
-            recognitionScheduler.cancelAll()
-            enqueuedRecognitionRepository.deleteAll()
-        }
-    }
-
     fun startAudioPlayer(enqueuedId: Int) {
         viewModelScope.launch {
             enqueuedRecognitionRepository.getRecordingById(enqueuedId)?.let { recordFile ->

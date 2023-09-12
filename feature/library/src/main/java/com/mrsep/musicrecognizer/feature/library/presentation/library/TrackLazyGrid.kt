@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.mrsep.musicrecognizer.core.ui.components.MultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -34,7 +35,7 @@ internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
     onTrackClick: (mbId: String) -> Unit,
     lazyGridState: LazyGridState,
-    selectionState: TrackSelectionState,
+    multiSelectionState: MultiSelectionState<String>,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -45,16 +46,16 @@ internal fun TrackLazyGrid(
         items(count = trackList.size, key = { trackList[it].mbId }) { index ->
             LazyGridTrackItem(
                 track = trackList[index],
-                selected = selectionState.isTrackSelected(trackList[index].mbId),
-                multiselectEnabled = selectionState.multiselectEnabled,
+                selected = multiSelectionState.isSelected(trackList[index].mbId),
+                multiselectEnabled = multiSelectionState.multiselectEnabled,
                 onTrackClick = { trackMbId ->
-                    if (selectionState.multiselectEnabled) {
-                        selectionState.toggleSelection(trackMbId)
+                    if (multiSelectionState.multiselectEnabled) {
+                        multiSelectionState.toggleSelection(trackMbId)
                     } else {
                         onTrackClick(trackMbId)
                     }
                 },
-                onLongClick = selectionState::toggleSelection,
+                onLongClick = multiSelectionState::toggleSelection,
                 modifier = Modifier.animateItemPlacement(
                     tween(300)
                 )

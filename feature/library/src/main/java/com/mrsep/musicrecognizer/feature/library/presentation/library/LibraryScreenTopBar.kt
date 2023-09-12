@@ -40,7 +40,7 @@ internal fun LibraryScreenTopBar(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
-    // since the toolbar has collapsing behavior, we have to hide the icons to avoid false positives
+    // since the toolbar has collapsing behavior, we have to disable the icons to avoid false positives
     val isExpanded by remember {
         derivedStateOf { topAppBarScrollBehavior.state.collapsedFraction < 0.6f }
     }
@@ -154,7 +154,7 @@ internal fun LibraryScreenTopBar(
             }
         },
         scrollBehavior = topAppBarScrollBehavior,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Unspecified,
             scrolledContainerColor = Color.Unspecified,
         )

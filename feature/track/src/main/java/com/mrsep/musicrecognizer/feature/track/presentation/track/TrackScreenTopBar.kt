@@ -124,6 +124,6 @@ internal fun TrackScreenTopBar(
 
             }
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior
     )
 }

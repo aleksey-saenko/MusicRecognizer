@@ -37,6 +37,6 @@ internal fun AboutScreenTopBar(
                 )
             }
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior
     )
 }

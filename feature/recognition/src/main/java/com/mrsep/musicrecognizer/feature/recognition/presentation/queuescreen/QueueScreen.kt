@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 
@@ -50,32 +50,31 @@ internal fun QueueScreen(
                 lifecycle.addObserver(observer)
                 onDispose { lifecycle.removeObserver(observer) }
             }
-            val selectedSet = rememberSaveable(
-                state.enqueuedList,
-                saver = listSaver(
-                    save = { map -> map.keys.toList() },
-                    restore = { keys ->
-                        mutableStateMapOf<Int, Unit>().apply { putAll(keys.associateWith { Unit }) }
-                    }
+
+            val multiSelectionState = rememberMultiSelectionState<Int>(state.enqueuedList)
+            BackHandler(
+                enabled = multiSelectionState.multiselectEnabled,
+                onBack = multiSelectionState::deselectAll
+            )
+
+            var deleteDialogVisible by rememberSaveable(state.enqueuedList) {
+                mutableStateOf(false)
+            }
+            var deletionInProgress by rememberSaveable(state.enqueuedList) {
+                mutableStateOf(false)
+            }
+            if (deleteDialogVisible) {
+                DeleteSelectedDialog(
+                    onDeleteClick = {
+                        deletionInProgress = true
+                        viewModel.cancelAndDeleteRecognition(
+                            *multiSelectionState.getSelected().toIntArray()
+                        )
+                    },
+                    onDismissClick = { deleteDialogVisible = false },
+                    inProgress = deletionInProgress
                 )
-            ) { mutableStateMapOf<Int, Unit>() }
-            var multiselectEnabled by rememberSaveable(state.enqueuedList) { mutableStateOf(false) }
-
-            fun disableMultiselect() {
-                selectedSet.clear()
-                multiselectEnabled = false
             }
-
-            fun toggleSelected(enqueuedId: Int) {
-                if (selectedSet.containsKey(enqueuedId)) {
-                    selectedSet.remove(enqueuedId)
-                } else {
-                    selectedSet[enqueuedId] = Unit
-                    multiselectEnabled = true
-                }
-            }
-
-            BackHandler(enabled = multiselectEnabled) { disableMultiselect() }
 
             Column(
                 modifier = Modifier
@@ -85,23 +84,20 @@ internal fun QueueScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 QueueScreenTopBar(
-                    topAppBarScrollBehavior = topBarBehaviour,
+                    scrollBehavior = topBarBehaviour,
                     onBackPressed = onBackPressed,
-                    multiselectEnabled = multiselectEnabled,
-                    selectedCount = selectedSet.size,
+                    multiselectEnabled = multiSelectionState.multiselectEnabled,
+                    selectedCount = multiSelectionState.selectedCount,
                     totalCount = state.enqueuedList.size,
                     onSelectAll = {
-                        selectedSet.putAll(state.enqueuedList.map { it.enqueued.id to Unit })
+                        multiSelectionState.select(state.enqueuedList.map { it.enqueued.id })
                     },
-                    onDeselectAll = selectedSet::clear,
+                    onDeselectAll = multiSelectionState::deselectAll,
                     onCancelSelected = {
-                        viewModel.cancelRecognition(*selectedSet.keys.toIntArray())
+                        viewModel.cancelRecognition(*multiSelectionState.getSelected().toIntArray())
                     },
-                    onDeleteSelected = {
-                        viewModel.cancelAndDeleteRecognition(*selectedSet.keys.toIntArray())
-                    },
-                    onDeleteAll = viewModel::cancelAndDeleteRecognitionAll,
-                    onDisableSelectionMode = ::disableMultiselect
+                    onDeleteSelected = { deleteDialogVisible = true },
+                    onDisableSelectionMode = multiSelectionState::deselectAll
                 )
                 if (state.enqueuedList.isEmpty()) {
                     EmptyQueueMessage(modifier = Modifier.fillMaxSize())
@@ -117,7 +113,9 @@ internal fun QueueScreen(
                         ) { index ->
                             LazyColumnEnqueuedItem(
                                 enqueuedWithStatus = state.enqueuedList[index],
-                                isPlaying = state.enqueuedList[index].enqueued.isPlaying(state.playerStatus),
+                                isPlaying = state.enqueuedList[index].enqueued.isPlaying(
+                                    state.playerStatus
+                                ),
                                 onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
                                 onRenameEnqueued = viewModel::renameRecognition,
                                 onStartPlayRecord = viewModel::startAudioPlayer,
@@ -125,12 +123,16 @@ internal fun QueueScreen(
                                 onEnqueueRecognition = viewModel::enqueueRecognition,
                                 onCancelRecognition = viewModel::cancelRecognition,
                                 onNavigateToTrackScreen = onNavigateToTrackScreen,
-                                menuEnabled = !multiselectEnabled,
-                                selected = selectedSet.containsKey(state.enqueuedList[index].enqueued.id),
+                                menuEnabled = !multiSelectionState.multiselectEnabled,
+                                selected = multiSelectionState.isSelected(
+                                    state.enqueuedList[index].enqueued.id
+                                ),
                                 onClick = { enqueuedId ->
-                                    if (multiselectEnabled) toggleSelected(enqueuedId)
+                                    if (multiSelectionState.multiselectEnabled) {
+                                        multiSelectionState.toggleSelection(enqueuedId)
+                                    }
                                 },
-                                onLongClick = ::toggleSelected,
+                                onLongClick = multiSelectionState::toggleSelection,
                                 modifier = Modifier.animateItemPlacement(
                                     tween(300)
                                 )

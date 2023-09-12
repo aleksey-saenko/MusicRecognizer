@@ -26,6 +26,6 @@ internal fun PreferencesTopBar(
                 style = MaterialTheme.typography.headlineSmall
             )
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior
     )
 }

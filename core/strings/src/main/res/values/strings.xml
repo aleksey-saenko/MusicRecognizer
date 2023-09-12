@@ -213,4 +213,8 @@
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
     <string name="token_preference_dialog_message">Enter a proper AudD API token (empty token will limit your daily recognitions):</string>
     <string name="artwork">Artwork</string>
+    <string name="delete_tracks">Delete tracks</string>
+    <string name="delete_selected_tracks_dialog">Are you sure you want to delete selected tracks? This process cannot be undone.</string>
+    <string name="delete_recognitions">Delete recognitions</string>
+    <string name="delete_selected_recognitions_dialog">Are you sure you want to cancel and delete selected scheduled recognitions? This process cannot be undone.</string>
 </resources>

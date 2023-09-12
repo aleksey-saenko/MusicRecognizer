@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import kotlinx.coroutines.launch
 
@@ -29,11 +30,17 @@ internal fun LibraryScreen(
     val screenUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLibraryEmpty = screenUiState !is LibraryUiState.Success
     var filterSheetActive by rememberSaveable { mutableStateOf(false) }
-    val trackSelectionState = rememberTracksSelectionState(screenUiState)
+    val multiSelectionState = rememberMultiSelectionState<String>(screenUiState)
+    var deleteDialogVisible by rememberSaveable(screenUiState) {
+        mutableStateOf(false)
+    }
+    var deletionInProgress by rememberSaveable(screenUiState) {
+        mutableStateOf(false)
+    }
 
     BackHandler(
-        enabled = trackSelectionState.multiselectEnabled,
-        onBack = trackSelectionState::deselectAll
+        enabled = multiSelectionState.multiselectEnabled,
+        onBack = multiSelectionState::deselectAll
     )
 
     val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -47,18 +54,18 @@ internal fun LibraryScreen(
         LibraryScreenTopBar(
             isLibraryEmpty = isLibraryEmpty,
             isFilterApplied = (screenUiState as? LibraryUiState.Success)?.trackFilter?.isEmpty?.not() ?: false,
-            isMultiselectEnabled = trackSelectionState.multiselectEnabled,
-            selectedCount = trackSelectionState.selectedCount,
+            isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+            selectedCount = multiSelectionState.selectedCount,
             totalCount = (screenUiState as? LibraryUiState.Success)?.trackList?.size ?: 0,
             onSearchIconClick = onTrackSearchClick,
             onFilterIconClick = { filterSheetActive = !filterSheetActive },
-            onDeleteIconClick = { viewModel.deleteByIds(trackSelectionState.getSelected()) },
+            onDeleteIconClick = { deleteDialogVisible = true },
             onSelectAll = {
                 (screenUiState as? LibraryUiState.Success)?.trackList?.let { tracks ->
-                    trackSelectionState.select(tracks.map { it.mbId })
+                    multiSelectionState.select(tracks.map { it.mbId })
                 }
             },
-            onDeselectAll = trackSelectionState::deselectAll,
+            onDeselectAll = multiSelectionState::deselectAll,
             topAppBarScrollBehavior = topBarBehaviour
         )
         when (val uiState = screenUiState) {
@@ -100,7 +107,7 @@ internal fun LibraryScreen(
                     trackList = uiState.trackList,
                     onTrackClick = onTrackClick,
                     lazyGridState = lazyGridState,
-                    selectionState = trackSelectionState,
+                    multiSelectionState = multiSelectionState,
                     modifier = Modifier.nestedScroll(
                         topBarBehaviour.nestedScrollConnection
                     )
@@ -118,7 +125,16 @@ internal fun LibraryScreen(
                         }
                     )
                 }
-
+                if (deleteDialogVisible) {
+                    DeleteSelectedDialog(
+                        onDeleteClick = {
+                            deletionInProgress = true
+                            viewModel.deleteByIds(multiSelectionState.getSelected())
+                        },
+                        onDismissClick = { deleteDialogVisible = false },
+                        inProgress = deletionInProgress
+                    )
+                }
             }
         }
     }

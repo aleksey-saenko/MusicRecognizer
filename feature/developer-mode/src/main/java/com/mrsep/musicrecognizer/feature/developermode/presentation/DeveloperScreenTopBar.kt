@@ -10,7 +10,6 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
 import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +36,6 @@ internal fun DeveloperScreenTopBar(
                 )
             }
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior
     )
 }

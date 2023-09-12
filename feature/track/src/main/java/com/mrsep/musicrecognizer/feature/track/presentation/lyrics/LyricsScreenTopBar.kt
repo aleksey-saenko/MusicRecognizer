@@ -51,6 +51,6 @@ internal fun LyricsScreenTopBar(
                 }
             }
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = topAppBarScrollBehavior
     )
 }

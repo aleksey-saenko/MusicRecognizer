@@ -1,12 +1,10 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,22 +12,26 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
-import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun QueueScreenTopBar(
     modifier: Modifier = Modifier,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior,
     onBackPressed: () -> Unit,
     multiselectEnabled: Boolean,
     selectedCount: Int,
@@ -38,59 +40,48 @@ internal fun QueueScreenTopBar(
     onDeselectAll: () -> Unit,
     onCancelSelected: () -> Unit,
     onDeleteSelected: () -> Unit,
-    onDeleteAll: () -> Unit,
     onDisableSelectionMode: () -> Unit
 ) {
-    ScreenScrollableTopBar(
-        modifier = modifier,
+    // since the toolbar has collapsing behavior, we have to disable the icons to avoid false positives
+    val isExpanded by remember {
+        derivedStateOf { scrollBehavior.state.collapsedFraction < 0.6f }
+    }
+    val topBarAlpha by animateFloatAsState(
+        targetValue = if (isExpanded) 1f else 0f,
+        label = ""
+    )
+    val transition = updateTransition(targetState = multiselectEnabled, label = "topBarMode")
+    TopAppBar(
         title = {
-            AnimatedContent(
-                targetState = multiselectEnabled,
-                transitionSpec = {
-                    (fadeIn() + scaleIn(initialScale = 0.8f)).togetherWith(
-                        fadeOut() + scaleOut(targetScale = 0.8f)
-                    )
-                },
-                contentAlignment = Alignment.CenterStart,
-                label = "multiselectTitleTransition"
-            ) { multiselectMode ->
+            transition.Crossfade { multiselectMode ->
                 if (multiselectMode) {
                     Text(
-                        text = "$selectedCount / $totalCount",
+                        text = if (selectedCount == 0) "" else "$selectedCount / $totalCount",
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.headlineSmall
+                        overflow = TextOverflow.Ellipsis
                     )
                 } else {
                     Text(
                         text = stringResource(StringsR.string.queue).toUpperCase(Locale.current),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.headlineSmall
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
         },
         navigationIcon = {
-            AnimatedContent(
-                targetState = multiselectEnabled,
-                transitionSpec = {
-                    (fadeIn() + scaleIn(initialScale = 0.6f)).togetherWith(
-                        fadeOut() + scaleOut(targetScale = 0.6f)
-                    )
-                },
-                contentAlignment = Alignment.CenterStart,
-                label = "multiselectNavIconTransition"
+            transition.AnimatedContent(
+                contentAlignment = Alignment.CenterStart
             ) { multiselectMode ->
                 if (multiselectMode) {
-                    IconButton(onClick = onDisableSelectionMode) {
+                    IconButton(onClick = onDisableSelectionMode, enabled = isExpanded) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = stringResource(StringsR.string.close_multi_selection_mode)
                         )
                     }
                 } else {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(onClick = onBackPressed, enabled = isExpanded) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(StringsR.string.back)
@@ -98,58 +89,48 @@ internal fun QueueScreenTopBar(
                     }
                 }
             }
-
         },
         actions = {
             val allSelected = (selectedCount == totalCount)
-            Row {
-                AnimatedVisibility(
-                    visible = multiselectEnabled,
-                    enter = fadeIn() + scaleIn(initialScale = 0.9f),
-                    exit = fadeOut() + scaleOut(targetScale = 0.9f),
-                ) {
+            transition.Crossfade { multiselectMode ->
+                if (multiselectMode) {
                     Row {
                         if (allSelected) {
-                            IconButton(onClick = onDeselectAll) {
+                            IconButton(onClick = onDeselectAll, enabled = isExpanded) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.baseline_deselect_24),
                                     contentDescription = stringResource(StringsR.string.deselect_all)
                                 )
                             }
                         } else {
-                            IconButton(onClick = onSelectAll) {
+                            IconButton(onClick = onSelectAll, enabled = isExpanded) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.baseline_select_all_24),
                                     contentDescription = stringResource(StringsR.string.select_all)
                                 )
                             }
                         }
-                        IconButton(onClick = onCancelSelected) {
+                        IconButton(onClick = onCancelSelected, enabled = isExpanded) {
                             Icon(
                                 painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
                                 contentDescription = stringResource(StringsR.string.cancel_selected)
                             )
                         }
-                    }
-                }
-                AnimatedVisibility(
-                    visible = totalCount > 0,
-                    enter = fadeIn() + scaleIn(initialScale = 0.9f),
-                    exit = fadeOut() + scaleOut(targetScale = 0.9f)
-                ) {
-                    IconButton(
-                        onClick = {
-                            if (allSelected || !multiselectEnabled) onDeleteAll() else onDeleteSelected()
+                        IconButton(onClick = onDeleteSelected, enabled = isExpanded) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = stringResource(StringsR.string.delete_selected)
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(StringsR.string.delete_selected)
-                        )
                     }
                 }
             }
         },
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Unspecified,
+            scrolledContainerColor = Color.Unspecified,
+        ),
+        modifier = modifier.alpha(topBarAlpha)
     )
 }

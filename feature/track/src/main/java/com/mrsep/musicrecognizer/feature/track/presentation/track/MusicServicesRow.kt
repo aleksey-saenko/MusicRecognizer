@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,23 +37,25 @@ internal fun ServicesChipsLazyRow(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberLazyListState()
-    LazyRow(
-        contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        state = scrollState,
-        modifier = modifier
-            .rowFadingEdge(
-                startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                isVisibleStartEdge = scrollState.canScrollBackward,
-                isVisibleEndEdge = scrollState.canScrollForward,
-            )
-    ) {
-        items(items = links) { link ->
-            MusicServiceChip(
-                titleRes = link.titleId(),
-                iconRes = link.iconId(),
-                link = link.url
-            )
+    Box(modifier = modifier) {
+        LazyRow(
+            contentPadding = contentPadding,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            state = scrollState,
+            modifier = Modifier
+                .rowFadingEdge(
+                    startEdgeInitialColor = MaterialTheme.colorScheme.background,
+                    isVisibleStartEdge = scrollState.canScrollBackward,
+                    isVisibleEndEdge = scrollState.canScrollForward,
+                )
+        ) {
+            items(items = links) { link ->
+                MusicServiceChip(
+                    titleRes = link.titleId(),
+                    iconRes = link.iconId(),
+                    link = link.url
+                )
+            }
         }
     }
 }

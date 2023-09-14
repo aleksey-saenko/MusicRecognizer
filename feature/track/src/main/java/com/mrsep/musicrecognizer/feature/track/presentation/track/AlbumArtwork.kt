@@ -11,7 +11,6 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
@@ -76,7 +75,6 @@ internal fun AlbumArtwork(
         contentDescription = stringResource(StringsR.string.artwork),
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .aspectRatio(1f)
             .shadow(
                 elevation = 1.dp,
                 shape = MaterialTheme.shapes.extraLarge

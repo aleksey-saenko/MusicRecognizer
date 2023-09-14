@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -37,6 +38,8 @@ internal fun TrackSection(
                 modifier = Modifier
                     .padding(start = 16.dp, bottom = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
+                    .fillMaxWidth(0.33f)
+                    .aspectRatio(1f)
             )
             Column(
                 modifier = Modifier.padding(bottom = 16.dp),
@@ -46,9 +49,9 @@ internal fun TrackSection(
                     title = title,
                     artist = artist,
                     albumYear = albumAndYear,
+                    isExpandedScreen = true,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp)
                 )
                 ServicesChipsLazyRow(
                     links = links,
@@ -70,21 +73,24 @@ internal fun TrackSection(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
+                    .weight(1f, false)
+                    .aspectRatio(1f, false)
             )
             TrackInfoColumn(
                 title = title,
                 artist = artist,
                 albumYear = albumAndYear,
+                isExpandedScreen = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 32.dp)
+                    .padding(top = 24.dp)
             )
             ServicesChipsLazyRow(
                 links = links,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(top = 24.dp, bottom = 16.dp)
             )
         }
     }

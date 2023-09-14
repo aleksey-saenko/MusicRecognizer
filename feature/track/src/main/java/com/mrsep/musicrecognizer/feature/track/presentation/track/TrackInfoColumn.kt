@@ -1,8 +1,11 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,62 +18,73 @@ internal fun TrackInfoColumn(
     title: String,
     artist: String,
     albumYear: String?,
+    isExpandedScreen: Boolean,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier) {
-        if (maxHeight <= 250.dp) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier
-            ) {
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Text(
-                    text = artist,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                albumYear?.let {
-                    Text(
-                        text = albumYear,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
+        val isCompact = if (isExpandedScreen) maxWidth < 500.dp else maxHeight < 500.dp
+        val spacerWidth = if (isCompact) 6.dp else 8.dp
+        val titleTextStyle = if (isCompact) {
+            MaterialTheme.typography.titleLarge
         } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+            MaterialTheme.typography.headlineMedium
+        }
+        val artistTextStyle = if (isCompact) {
+            MaterialTheme.typography.bodyLarge
+        } else {
+            MaterialTheme.typography.titleLarge
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(spacerWidth),
+            modifier = Modifier
+        ) {
+            val titleScrollState = rememberScrollState()
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = titleTextStyle,
                 modifier = Modifier
-            ) {
-                Text(
-                    text = title,
-                    maxLines = if (this@BoxWithConstraints.maxHeight < 300.dp) 1 else 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Text(
-                    text = artist,
-                    maxLines = if (this@BoxWithConstraints.maxHeight < 300.dp) 1 else 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                albumYear?.let {
-                    Text(
-                        text = albumYear,
-                        maxLines = if (this@BoxWithConstraints.maxHeight < 300.dp) 1 else 2,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleLarge
+                    .rowFadingEdge(
+                        startEdgeInitialColor = MaterialTheme.colorScheme.background,
+                        isVisibleStartEdge = titleScrollState.canScrollBackward,
+                        isVisibleEndEdge = titleScrollState.canScrollForward,
                     )
-                }
+                    .horizontalScroll(titleScrollState)
+                    .padding(horizontal = 16.dp)
+            )
+            val artistScrollState = rememberScrollState()
+            Text(
+                text = artist,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = artistTextStyle,
+                modifier = Modifier
+                    .rowFadingEdge(
+                        startEdgeInitialColor = MaterialTheme.colorScheme.background,
+                        isVisibleStartEdge = artistScrollState.canScrollBackward,
+                        isVisibleEndEdge = artistScrollState.canScrollForward,
+                    )
+                    .horizontalScroll(artistScrollState)
+                    .padding(horizontal = 16.dp)
+            )
+            val albumScrollState = rememberScrollState()
+            albumYear?.let {
+                Text(
+                    text = albumYear,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = artistTextStyle,
+                    modifier = Modifier
+                        .rowFadingEdge(
+                            startEdgeInitialColor = MaterialTheme.colorScheme.background,
+                            isVisibleStartEdge = albumScrollState.canScrollBackward,
+                            isVisibleEndEdge = albumScrollState.canScrollForward,
+                        )
+                        .horizontalScroll(albumScrollState)
+                        .padding(horizontal = 16.dp)
+                )
             }
         }
     }
-
 }

@@ -42,7 +42,7 @@ internal fun PreferencesScreen(
     onNavigateToDeveloperScreen: () -> Unit
 ) {
     val context = LocalContext.current
-    val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle(PreferencesUiState.Loading)
+    val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
@@ -182,13 +182,11 @@ internal fun PreferencesScreen(
                     ) {
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = "Show links to music services",
-                            subtitle = uiState.preferences.requiredServices.getNames()
-                        ) {
-                            showServicesDialog = true
-                        }
+                            title = stringResource(StringsR.string.show_links_to_music_services),
+                            subtitle = uiState.preferences.requiredServices.getNames(),
+                            onItemClick = { showServicesDialog = true }
+                        )
                         if (showServicesDialog) {
-
                             val dialogState = rememberRequiredServicesDialogState(
                                 requiredServices = uiState.preferences.requiredServices
                             )
@@ -200,7 +198,6 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showServicesDialog = false },
                                 dialogState = dialogState
                             )
-
                         }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

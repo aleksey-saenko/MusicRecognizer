@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,12 +18,11 @@ internal class PreferencesViewModel @Inject constructor(
 
     val uiFlow = preferencesRepository.userPreferencesFlow
         .map { preferences -> PreferencesUiState.Success(preferences) }
-
-    fun setOnboardingCompleted(value: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.setOnboardingCompleted(value)
-        }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = PreferencesUiState.Loading
+        )
 
     fun setNotificationServiceEnabled(value: Boolean) {
         viewModelScope.launch {
@@ -32,12 +33,6 @@ internal class PreferencesViewModel @Inject constructor(
     fun setDynamicColorsEnabled(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setDynamicColorsEnabled(value)
-        }
-    }
-
-    fun setDeveloperModeEnabled(value: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.setDeveloperModeEnabled(value)
         }
     }
 

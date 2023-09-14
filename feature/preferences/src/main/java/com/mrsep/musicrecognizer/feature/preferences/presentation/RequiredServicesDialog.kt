@@ -2,6 +2,8 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -12,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -85,7 +88,7 @@ internal fun RequiredServicesDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = "Select music services")
+            Text(text = stringResource(StringsR.string.music_services_links))
         },
         confirmButton = {
             Button(onClick = onConfirmClick) {
@@ -101,6 +104,10 @@ internal fun RequiredServicesDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
+                Text(
+                    text = stringResource(StringsR.string.required_services_dialog),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.spotifyCheckBox,

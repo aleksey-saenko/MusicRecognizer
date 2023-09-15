@@ -11,6 +11,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
@@ -69,7 +70,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
             .setContentText(contentText)
             .addOptionalBigPicture(track.links.artwork)
             .addTrackDeepLinkIntent(track.mbId)
-            .addShowLyricsButton(track.mbId)
+            .addShowLyricsButton(track)
             .addShareButton(track.getSharedBody())
             .build()
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
@@ -107,12 +108,13 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     }
 
     private fun NotificationCompat.Builder.addShowLyricsButton(
-        mbId: String
+        track: Track
     ): NotificationCompat.Builder {
+        if (track.lyrics == null) return this
         return addAction(
             android.R.drawable.ic_menu_more,
             appContext.getString(StringsR.string.show_lyrics),
-            createPendingIntent(serviceRouter.getDeepLinkIntentToLyrics(mbId))
+            createPendingIntent(serviceRouter.getDeepLinkIntentToLyrics(track.mbId))
         )
     }
 

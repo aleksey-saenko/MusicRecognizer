@@ -47,7 +47,6 @@ internal fun WaveAnimated(
 ) {
     BoxWithConstraints(
         modifier = modifier
-//            .border(width = 1.dp, color = Color.White.copy(alpha = 0.8f))
     ) {
         val minSizePx = constraints.maxWidth.coerceAtMost(constraints.maxHeight)
         val maxWidthPx = constraints.maxWidth

@@ -22,7 +22,6 @@ internal fun SuperButton(
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
         RippleAnimated(
             activated = activated,
-//            amplitudeFactor = amplitudeFactor,
             modifier = Modifier.size(256.dp),
             startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
             baseColor = MaterialTheme.colorScheme.primary,
@@ -32,16 +31,7 @@ internal fun SuperButton(
         )
         AnimatedEnhancedButton(
             modifier = Modifier
-                .size(176.dp)
-//                .drawBehindRippleAnimation(
-//                    activated = activated,
-//                    startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
-//                    baseColor = MaterialTheme.colorScheme.primary,
-//                    activatedColor = MaterialTheme.colorScheme.primary,
-//                    circlesCount = 7,
-//                    animationSpeed = 12_000
-//                )
-            ,
+                .size(176.dp),
             activated = activated,
             onClick = onClick,
             onLongPress = onLongPress

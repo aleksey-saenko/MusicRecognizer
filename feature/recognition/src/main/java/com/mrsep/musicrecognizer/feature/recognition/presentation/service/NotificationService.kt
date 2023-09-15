@@ -21,6 +21,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionRes
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
@@ -212,7 +213,7 @@ internal class NotificationService : Service() {
                             .setContentText(status.result.track.artistWithAlbumFormatted())
                             .addOptionalBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
-                            .addShowLyricsButton(status.result.track.mbId)
+                            .addShowLyricsButton(status.result.track)
                             .addShareButton(status.result.track.getSharedBody())
                     }
                 }
@@ -400,15 +401,16 @@ internal class NotificationService : Service() {
     }
 
     private fun NotificationCompat.Builder.addShowLyricsButton(
-        mbId: String
+        track: Track
     ): NotificationCompat.Builder {
+        if (track.lyrics == null) return this
         val mediateActivityIntent = Intent(
             this@NotificationService,
             NotificationServiceActivity::class.java
         ).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             action = SHOW_LYRICS_ACTION
-            putExtra(MB_ID_EXTRA_KEY, mbId)
+            putExtra(MB_ID_EXTRA_KEY, track.mbId)
         }
         val pendingIntent = createPendingIntent(mediateActivityIntent)
         return addAction(

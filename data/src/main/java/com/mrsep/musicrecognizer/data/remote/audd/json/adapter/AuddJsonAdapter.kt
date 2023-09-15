@@ -159,11 +159,7 @@ private fun AuddResponseJson.Success.Result.parseLyrics() = this.lyricsJson?.lyr
     Html.fromHtml(
         this.replace("\n", "<br>"),
         Html.FROM_HTML_MODE_COMPACT
-    ).toString()
-        .trim()
-        .takeIf { str ->
-            str.length >= 20 || !str.contains("instrumental", true)
-        }
+    ).toString().trim().takeIf { it.isNotBlank() }
 }
 
 /*

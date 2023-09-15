@@ -29,7 +29,6 @@ private const val TEST_SOCKET_OPENING_DELAY = 2300L
 
 // take into account this delay in test subject
 // while (wsService.queueSize() > 0) {
-//     Log.d(TAG, "queueSize > 0")
 //     delay(100)
 // }
 

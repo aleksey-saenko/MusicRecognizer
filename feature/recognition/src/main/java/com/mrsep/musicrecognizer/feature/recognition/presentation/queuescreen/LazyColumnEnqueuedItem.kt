@@ -136,17 +136,17 @@ internal fun LazyColumnEnqueuedItem(
                                 )
                     )
                 }, label = "PlayerIconTransition"
-            ) {
-                if (it) {
+            ) { playing ->
+                if (playing) {
                     Icon(
                         painter = painterResource(UiR.drawable.baseline_pause_24),
-                        contentDescription = null,
+                        contentDescription = stringResource(StringsR.string.stop_player),
                         modifier = Modifier.size(40.dp)
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = null,
+                        contentDescription = stringResource(StringsR.string.start_player),
                         modifier = Modifier.size(40.dp)
                     )
                 }
@@ -185,7 +185,7 @@ internal fun LazyColumnEnqueuedItem(
                 IconButton(onClick = { menuExpanded = !menuExpanded }, enabled = menuEnabled) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = null
+                        contentDescription = stringResource(StringsR.string.more)
                     )
                 }
             }
@@ -202,7 +202,7 @@ internal fun LazyColumnEnqueuedItem(
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.Edit,
-                            contentDescription = null
+                            contentDescription = stringResource(StringsR.string.edit)
                         )
                     }
                 )
@@ -215,7 +215,7 @@ internal fun LazyColumnEnqueuedItem(
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.Delete,
-                            contentDescription = null
+                            contentDescription = stringResource(StringsR.string.delete)
                         )
                     }
                 )
@@ -239,8 +239,8 @@ internal fun LazyColumnEnqueuedItem(
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            Icons.Default.Refresh,
-                                            contentDescription = null
+                                            imageVector = Icons.Default.Refresh,
+                                            contentDescription = stringResource(StringsR.string.enqueue_recognition)
                                         )
                                     }
                                 )
@@ -262,7 +262,7 @@ internal fun LazyColumnEnqueuedItem(
                                     leadingIcon = {
                                         Icon(
                                             painter = painterResource(UiR.drawable.baseline_audio_file_24),
-                                            contentDescription = null
+                                            contentDescription = stringResource(StringsR.string.show_track)
                                         )
                                     }
                                 )
@@ -286,7 +286,7 @@ internal fun LazyColumnEnqueuedItem(
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
-                                    contentDescription = null
+                                    contentDescription = stringResource(StringsR.string.cancel_recognition)
                                 )
                             }
                         )
@@ -307,14 +307,10 @@ internal fun LazyColumnEnqueuedItem(
                         Text(text = stringResource(StringsR.string.save))
                     }
                 },
-                modifier = Modifier,
                 dismissButton = {
                     TextButton(onClick = { renameDialogVisible = false }) {
                         Text(text = stringResource(StringsR.string.cancel))
                     }
-                },
-                icon = {
-
                 },
                 title = {
                     Text(
@@ -332,7 +328,6 @@ internal fun LazyColumnEnqueuedItem(
                 },
             )
         }
-
 
     }
 

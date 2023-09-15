@@ -56,7 +56,7 @@ internal fun DeveloperScreen(
                 title = "DATABASE",
                 content = {
                     Button(onClick = viewModel::clearDb) { Text(text = "Clear") }
-//                    Button(onClick = viewModel::prepopulateDbFakes) { Text(text = "Load fake") }
+                    Button(onClick = viewModel::prepopulateDbFakes) { Text(text = "Load fake") }
                     Button(onClick = viewModel::prepopulateDbAssets) { Text(text = "Load real") }
                 }
             )

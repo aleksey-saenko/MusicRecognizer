@@ -92,13 +92,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        appScope.launch {
-//            databaseFiller.prepopulateFromAssets(force = false)
-//        }
-//    }
-
     private fun setupApplicationWithPreferences() {
         lifecycleScope.launch {
             viewModel.uiStateStream.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)

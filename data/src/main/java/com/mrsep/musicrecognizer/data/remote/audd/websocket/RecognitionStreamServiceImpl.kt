@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.data.remote.audd.websocket
 
-import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
@@ -30,6 +28,7 @@ import okhttp3.WebSocket
 import okio.ByteString.Companion.toByteString
 import javax.inject.Inject
 
+@Suppress("unused")
 private const val TAG = "RemoteRecognitionStreamServiceImpl"
 
 private const val TIMEOUT_AFTER_RECORDING_FINISHED = 5_000L
@@ -46,22 +45,18 @@ class RecognitionStreamServiceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : RecognitionStreamServiceDo {
 
-
     override suspend fun recognize(
         token: String,
         requiredServices: UserPreferencesDo.RequiredServicesDo,
         audioRecordingFlow: Flow<ByteArray>
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
-
             val recordingChannel = Channel<ByteArray>(Channel.UNLIMITED)
 
             val recordWithTimeoutJob = launch {
                 audioRecordingFlow.collect { recordingChannel.send(it) }
                 recordingChannel.close()
-                Log.d(TAG, "Final timeout started")
                 delay(TIMEOUT_AFTER_RECORDING_FINISHED)
-                Log.d(TAG, "Final timeout finished")
             }
 
             val webSocketStateFlow = MutableStateFlow<WebSocket?>(null)
@@ -69,25 +64,17 @@ class RecognitionStreamServiceImpl @Inject constructor(
             var sentCounter = 0
             val sendingJob = async {
                 var recordingReceived = false
-
                 recordingChannel.receiveAsFlow().transform { recording ->
                     recordingReceived = true
-
                     try {
                         withTimeout(TIMEOUT_RECORDING_SENDING) {
                             webSocketStateFlow.filterNotNull()
                                 .transformLatest { wsService ->
                                     val isSent = wsService.send(recording.toByteString())
-                                    Log.d(
-                                        TAG,
-                                        "Recording #$sentCounter was added to sending queue=$isSent"
-                                    )
                                     if (!isSent) awaitCancellation()
                                     while (wsService.queueSize() > 0) {
-                                        Log.d(TAG, "queueSize > 0")
                                         delay(100)
                                     }
-                                    Log.d(TAG, "Recording #$sentCounter was sent")
                                     this.emit(Unit)
                                 }.first()
                             sentCounter++
@@ -95,14 +82,12 @@ class RecognitionStreamServiceImpl @Inject constructor(
                     } catch (e: TimeoutCancellationException) {
                         this.emit(SendingJobResult.SendingTimeoutExpired)
                     }
-
                 }.firstOrNull()
                     ?: if (recordingReceived) {
                         SendingJobResult.Success
                     } else {
                         SendingJobResult.BadRecording
                     }
-
             }
 
             // return only with bad result occurred during recording sending, else suspend
@@ -119,7 +104,6 @@ class RecognitionStreamServiceImpl @Inject constructor(
                 }
             }
 
-
             var retryCounter = 0
             var responseCounter = 0
             var lastResponse: RemoteRecognitionResultDo =
@@ -127,7 +111,6 @@ class RecognitionStreamServiceImpl @Inject constructor(
             // return only with final response, else continue handling sockets events
             val finalResponseAsync = async {
                 webSocketService.startSession(token, requiredServices)
-                    .onEach { Log.d(TAG, "Get socket event=${it::class.simpleName}") }
                     .transform { socketEvent ->
                         when (socketEvent) {
                             is SocketEvent.ConnectionClosing,
@@ -145,7 +128,6 @@ class RecognitionStreamServiceImpl @Inject constructor(
                             }
 
                             is SocketEvent.ResponseReceived -> {
-                                Log.d(TAG, "Response #$responseCounter received: ${socketEvent.response::class.simpleName}")
                                 responseCounter++
                                 when (socketEvent.response) {
                                     is RemoteRecognitionResultDo.Success,
@@ -155,7 +137,6 @@ class RecognitionStreamServiceImpl @Inject constructor(
                                     }
 
                                     else -> {
-                                        Log.d(TAG, "sendingJob.isCompleted=${sendingJob.isCompleted}, responseCounter=$responseCounter, sentCounter=$sentCounter")
                                         if (sendingJob.isCompleted && responseCounter == sentCounter) {
                                             emit(socketEvent.response)
                                         } else {
@@ -163,44 +144,32 @@ class RecognitionStreamServiceImpl @Inject constructor(
                                         }
                                     }
                                 }
-
                             }
-
                         }
                     }
                     .first()
             }
 
             select {
-
                 finalResponseAsync.onAwait { finalResult ->
-                    Log.d(TAG, "Selected clause: Final response")
                     sendingJob.cancelAndJoin()
                     badSendingResultAsync.cancelAndJoin()
                     recordWithTimeoutJob.cancelAndJoin()
                     finalResult
                 }
-
                 badSendingResultAsync.onAwait { finalResult ->
-                    Log.d(TAG, "Selected clause: Bad sending")
                     finalResponseAsync.cancelAndJoin()
                     sendingJob.cancelAndJoin()
                     recordWithTimeoutJob.cancelAndJoin()
                     finalResult
                 }
-
                 recordWithTimeoutJob.onJoin {
-                    Log.d(TAG, "Selected clause: Final timeout")
                     finalResponseAsync.cancelAndJoin()
                     sendingJob.cancelAndJoin()
                     badSendingResultAsync.cancelAndJoin()
                     lastResponse
                 }
-
             }
-
         }
     }
-
-
 }

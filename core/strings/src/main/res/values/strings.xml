@@ -220,5 +220,8 @@
     <string name="delete_selected_tracks_dialog">Are you sure you want to delete selected tracks? This process cannot be undone.</string>
     <string name="delete_recognitions">Delete recognitions</string>
     <string name="delete_selected_recognitions_dialog">Are you sure you want to cancel and delete selected scheduled recognitions? This process cannot be undone.</string>
+    <string name="stop_player">Stop player</string>
+    <string name="start_player">Start player</string>
+    <string name="edit">Edit</string>
 
 </resources>

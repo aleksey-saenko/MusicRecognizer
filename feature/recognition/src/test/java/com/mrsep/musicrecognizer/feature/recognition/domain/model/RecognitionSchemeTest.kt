@@ -1,17 +1,17 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.model
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.audioRecognitionStrategy
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.splitter
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.step
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.recognitionScheme
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.splitter
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.step
 import org.junit.Assert
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
 
-class AudioRecordingStrategyTest {
+class RecognitionSchemeTest {
 
     @Test(expected = IllegalStateException::class)
     fun `test builder with wrong step order`() {
-        audioRecognitionStrategy(true) {
+        recognitionScheme(true) {
             step(5.seconds)
             step(2.seconds)
         }
@@ -19,7 +19,7 @@ class AudioRecordingStrategyTest {
 
     @Test(expected = IllegalStateException::class)
     fun `test builder with duplicated step`() {
-        audioRecognitionStrategy(true) {
+        recognitionScheme(true) {
             step(5.seconds)
             step(5.seconds)
         }
@@ -27,12 +27,12 @@ class AudioRecordingStrategyTest {
 
     @Test(expected = IllegalStateException::class)
     fun `test builder without any step`() {
-        audioRecognitionStrategy(true) { }
+        recognitionScheme(true) { }
     }
 
     @Test
     fun `test normal builder`() {
-        audioRecognitionStrategy(true) {
+        recognitionScheme(true) {
             step(5.seconds)
             step(7.seconds)
             splitter(true)

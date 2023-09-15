@@ -14,14 +14,6 @@ internal data class LyricsJson(
 ) {
 
     @JsonClass(generateAdapter = true)
-    data class MediaSuper(
-        @Json(name = "list")
-        val provider: String?,
-        @Json(name = "url")
-        val url: String?
-    )
-
-    @JsonClass(generateAdapter = true)
      data class MediaItem(
         @Json(name = "provider")
         val provider: String?,

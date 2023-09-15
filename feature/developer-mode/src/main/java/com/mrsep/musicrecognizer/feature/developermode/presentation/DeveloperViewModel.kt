@@ -28,12 +28,9 @@ internal class DeveloperViewModel @Inject constructor(
     private val databaseFiller: DatabaseFiller,
     private val trackRepositoryDo: TrackRepositoryDo,
     private val recognitionServiceDo: RecognitionServiceDo,
-//    private val audioSource: SoundSource,
     private val amplitudeSource: SoundAmplitudeSourceDo,
     private val encoder: AacEncoder,
-//    private val aacEncoderController: AacEncoderController,
     private val playerController: MediaPlayerController,
-//    private val soundSourceImpl: SoundSourceImpl
 ) : ViewModel() {
 
     private var counter = MutableStateFlow(0)
@@ -54,7 +51,7 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun clearDb() = processSuspend { trackRepositoryDo.deleteAll() }
 
-    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 1000) }
+    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 10_000) }
 
     fun prepopulateDbAssets() = processSuspend { databaseFiller.prepopulateFromAssets() }
 

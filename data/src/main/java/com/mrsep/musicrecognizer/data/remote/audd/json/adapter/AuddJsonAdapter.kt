@@ -83,27 +83,27 @@ internal class AuddJsonAdapter {
 
 private fun AuddResponseJson.Success.Result.parseTrackTitle(): String? {
     return appleMusic?.name?.takeIf { it.isNotBlank() }
+        ?: deezerJson?.title?.takeIf { it.isNotBlank() }
         ?: title?.takeIf { it.isNotBlank() }
         ?: spotify?.name?.takeIf { it.isNotBlank() }
-        ?: deezerJson?.title?.takeIf { it.isNotBlank() }
         ?: napster?.name?.takeIf { it.isNotBlank() }
         ?: musicbrainz?.firstOrNull()?.title?.takeIf { it.isNotBlank() }
 }
 
 private fun AuddResponseJson.Success.Result.parseTrackArtist(): String? {
     return appleMusic?.artistName?.takeIf { it.isNotBlank() }
+        ?: deezerJson?.artist?.name?.takeIf { it.isNotBlank() }
         ?: artist?.takeIf { it.isNotBlank() }
         ?: spotify?.artists?.firstOrNull()?.name?.takeIf { it.isNotBlank() }
-        ?: deezerJson?.artist?.name?.takeIf { it.isNotBlank() }
         ?: napster?.artistName?.takeIf { it.isNotBlank() }
         ?: musicbrainz?.firstOrNull()?.artistCredit?.firstOrNull()?.name?.takeIf { it.isNotBlank() }
 }
 
 private fun AuddResponseJson.Success.Result.parseAlbum(): String? {
     return appleMusic?.albumName?.takeIf { it.isNotBlank() }
+        ?: deezerJson?.album?.title?.takeIf { it.isNotBlank() }
         ?: album?.takeIf { it.isNotBlank() }
         ?: spotify?.album?.name?.takeIf { it.isNotBlank() }
-        ?: deezerJson?.album?.title?.takeIf { it.isNotBlank() }
         ?: napster?.albumName?.takeIf { it.isNotBlank() }
 }
 
@@ -112,9 +112,9 @@ private fun String.toLocalDate() =
 
 private fun AuddResponseJson.Success.Result.parseReleaseDate(): LocalDate? {
     return appleMusic?.releaseDate?.toLocalDate()
+        ?: deezerJson?.releaseDate?.toLocalDate()
         ?: releaseDate?.toLocalDate()
         ?: spotify?.album?.releaseDate?.toLocalDate()
-        ?: deezerJson?.releaseDate?.toLocalDate()
 }
 
 private fun isUrlValid(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
@@ -166,7 +166,6 @@ private fun AuddResponseJson.Success.Result.parseLyrics() = this.lyricsJson?.lyr
         }
 }
 
-
 /*
 https://docs.audd.io/#common-errors
 We have about 40 different error codes. The common errors:
@@ -177,7 +176,7 @@ We have about 40 different error codes. The common errors:
     #700 — You haven't sent a file for recognition (or we didn't receive it).
     If you use the POST HTTP method, check the Content-Type header: it should be multipart/form-data;
     also check the URL you're sending requests to: it should start with https://
-    (http:// requests get redirected
+    (http:// requests get redirected,
     and we don't receive any data from you when your code follows the redirect).
     #500 — Incorrect audio file.
     #400 — Too big audio file. 10M or 25 seconds is the maximum.

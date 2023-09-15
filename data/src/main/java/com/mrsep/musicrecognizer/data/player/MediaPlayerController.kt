@@ -62,25 +62,3 @@ class MediaPlayerController @Inject constructor() : PlayerControllerDo {
     }
 
 }
-
-//data class PlayerPosition(
-//    val currentPositionMs: Int,
-//    val totalDurationMs: Int
-//)
-//
-//@OptIn(ExperimentalCoroutinesApi::class)
-//val positionFlow = _statusFlow.transformLatest { status ->
-//    when (status) {
-//        is PlayerStatus.Error ->
-//        PlayerStatus.Idle ->
-//        is PlayerStatus.Paused ->
-//        is PlayerStatus.Started -> {
-//            while (true) {
-//                player?.let { mp ->
-//                    emit(PlayerPosition(mp.currentPosition, mp.duration))
-//                }
-//                delay(500)
-//            }
-//        }
-//    }
-//}

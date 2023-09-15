@@ -8,9 +8,9 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionSer
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.audioRecognitionStrategy
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.splitter
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy.Companion.step
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.recognitionScheme
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.splitter
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.step
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
@@ -54,17 +54,14 @@ internal class RecognitionInteractorImpl @Inject constructor(
     override val screenRecognitionStatus get() = resultDelegator.screenState
     override val serviceRecognitionStatus get() = resultDelegator.serviceState
 
-    private val onlineStrategy = audioRecognitionStrategy(true) {
-        step(3_500.milliseconds)
-        step(6_000.milliseconds)
-        step(9_000.milliseconds)
+    private val onlineScheme = recognitionScheme(true) {
+        step(4_000.milliseconds)
+        step(8_000.milliseconds)
         splitter(true)
-        step(12_500.milliseconds)
         step(15_000.milliseconds)
-        step(18_000.milliseconds)
     }
 
-    private val offlineStrategy = audioRecognitionStrategy(false) {
+    private val offlineScheme = recognitionScheme(false) {
         step(10.seconds)
     }
 
@@ -75,7 +72,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            val eachRecordingChannel = Channel<ByteArray>(onlineStrategy.stepsCount)
+            val eachRecordingChannel = Channel<ByteArray>(onlineScheme.stepCount)
             val remoteResult = async {
                 recognitionService.recognize(
                     token = userPreferences.apiToken,
@@ -86,21 +83,21 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
             // send each recording step to eachRecordingChannel, return full (last) recording or failure
             val recordingAsync = async {
-                recorderController.audioRecordingFlow(onlineStrategy)
+                recorderController.audioRecordingFlow(onlineScheme)
                     .withIndex()
                     .transformWhile { (index, result) ->
                         result.onSuccess { recording ->
-                            val isExtraTry = (index >= onlineStrategy.extraTryIndex)
-                            if (index <= onlineStrategy.lastStepIndex) {
+                            val isExtraTry = (index >= onlineScheme.extraTryIndex)
+                            if (index <= onlineScheme.lastStepIndex) {
                                 eachRecordingChannel.send(recording)
                                 resultDelegator.notify(RecognitionStatus.Recognizing(isExtraTry))
                             }
                         }
-                        if (result.isFailure || index == onlineStrategy.lastStepIndex) {
+                        if (result.isFailure || index == onlineScheme.lastStepIndex) {
                             eachRecordingChannel.close()
                         }
                         emit(result)
-                        result.isSuccess && index <= onlineStrategy.lastRecordingIndex
+                        result.isSuccess && index <= onlineScheme.lastRecordingIndex
                     }.last()
             }
 
@@ -160,7 +157,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     override fun launchOfflineRecognition(scope: CoroutineScope) {
         launchRecognitionIfPreviousCompleted(scope) {
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            val fullRecording = recorderController.audioRecordingFlow(offlineStrategy).firstOrNull()
+            val fullRecording = recorderController.audioRecordingFlow(offlineScheme).firstOrNull()
                 ?: Result.failure(IllegalStateException("Empty audio recording flow"))
             fullRecording.onSuccess { recording ->
                 val task = enqueueRecognition(recording, true)

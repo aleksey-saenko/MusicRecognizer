@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.data.remote.audd.websocket
 
-import android.util.Log
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
@@ -20,6 +19,7 @@ import okhttp3.WebSocketListener
 import java.lang.Exception
 import javax.inject.Inject
 
+@Suppress("unused")
 private const val TAG = "AuddRecognitionWebSocketServiceImpl"
 
 private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
@@ -44,7 +44,6 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
         requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Flow<SocketEvent> = flow {
         while (true) {
-            Log.d(TAG, "Starting new single session")
             emitAll(startSingleSession(token, requiredServices))
         }
     }
@@ -53,47 +52,34 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
         token: String,
         requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Flow<SocketEvent> = callbackFlow {
-
         val eventsListener = object : WebSocketListener() {
-
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 trySendBlocking(SocketEvent.ConnectionClosed(ShutdownReason(code, reason)))
                 close()
             }
-
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
                 trySendBlocking(SocketEvent.ConnectionClosing(ShutdownReason(code, reason)))
             }
-
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 trySendBlocking(SocketEvent.ConnectionFailed(t))
                 close()
             }
-
             override fun onMessage(webSocket: WebSocket, text: String) {
                 trySendBlocking(SocketEvent.ResponseReceived(parseServerResponse(text)))
             }
-
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 trySendBlocking(SocketEvent.ConnectionOpened(webSocket))
             }
         }
-
-
         val request = buildRequest(token, requiredServices)
         val webSocket = okHttpClient.newWebSocket(
             request,
             eventsListener
         )
-        Log.d(TAG, "WebSocket=${webSocket} started")
-
         awaitClose {
             webSocket.cancel()
-            Log.d(TAG, "WebSocket=${webSocket} canceled")
         }
     }
-
-
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun parseServerResponse(json: String): RemoteRecognitionResultDo {
@@ -103,6 +89,5 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
             RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
-
 
 }

@@ -23,10 +23,9 @@ class AuddRestStreamServiceImpl @Inject constructor(
     ): RemoteRecognitionResultDo {
 
         // bad recording by default in case if audioRecordingFlow is empty
-        var lastResult: RemoteRecognitionResultDo =
-            RemoteRecognitionResultDo.Error.BadRecording(
-                "Recognition process failed due to empty audio recording stream"
-            )
+        var lastResult: RemoteRecognitionResultDo = RemoteRecognitionResultDo.Error.BadRecording(
+            "Recognition process failed due to empty audio recording stream"
+        )
         audioRecordingFlow.flatMapMerge { recording ->
             flow {
                 emit(

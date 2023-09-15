@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.model
 import kotlin.time.Duration
 
 /**
- * Down below the representation of strategy: 3, 6(S), 8, 12(S), 15, 30.
+ * Down below the representation of scheme: 3, 6(S), 8, 12(S), 15, 30.
  *
  *                                   S           S
  *                       |-----|-----|-----|-----|-----|-----|
@@ -14,7 +14,7 @@ import kotlin.time.Duration
  *  If splitter(S) is true, the next audio recordings will contain data
  *  from splitter start point (splitter -> next point).
  *
- *  val strategy: List<Step> = listOf(
+ *  val scheme: List<Step> = listOf(
  *  Step(timestamp = 3.seconds),
  *  Step(timestamp = 6.seconds, splitter = true),
  *  Step(timestamp = 8.seconds),
@@ -23,18 +23,18 @@ import kotlin.time.Duration
  *  Step(timestamp = 30.seconds))
  */
 
-class AudioRecordingStrategy(
+class RecognitionScheme(
     val steps: List<Step>,
     val sendTotalAtEnd: Boolean,
     val extraTryIndex: Int
 ) {
 
-    val stepsCount get() = steps.size
+    val stepCount get() = steps.size
     val lastStepIndex get() = steps.lastIndex
     val lastRecordingIndex get() = if (sendTotalAtEnd) lastStepIndex + 1 else lastStepIndex
 
     /**
-     * Properties used to describe the audio recognition step during [AudioRecordingStrategy].
+     * Properties used to describe the audio recognition step during [RecognitionScheme].
      *
      * @property timestamp specifies duration between the start of the recording and
      * the end of this step (time when the audio recording will be emitted).
@@ -56,7 +56,7 @@ class AudioRecordingStrategy(
         fun addStep(timestamp: Duration) = apply {
             steps.lastOrNull()?.timestamp?.let { lastTimestamp ->
                 check(lastTimestamp < timestamp) {
-                    "Each strategy step must have timestamp greater than the previous one"
+                    "Each scheme step must have timestamp greater than the previous one"
                 }
             }
             steps.add(Step(timestamp, false))
@@ -74,9 +74,9 @@ class AudioRecordingStrategy(
             sendTotalAtEnd = value
         }
 
-        fun build(): AudioRecordingStrategy {
-            check(steps.isNotEmpty()) { "AudioRecordingStrategy must have at least 1 step" }
-            return AudioRecordingStrategy(
+        fun build(): RecognitionScheme {
+            check(steps.isNotEmpty()) { "RecognitionScheme must have at least 1 step" }
+            return RecognitionScheme(
                 steps = steps,
                 sendTotalAtEnd= sendTotalAtEnd,
                 extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
@@ -87,10 +87,10 @@ class AudioRecordingStrategy(
 
     companion object {
 
-        inline fun audioRecognitionStrategy(
+        inline fun recognitionScheme(
             sendTotalAtEnd: Boolean,
             init: Builder.() -> Unit
-        ): AudioRecordingStrategy {
+        ): RecognitionScheme {
             return Builder()
                 .apply(init)
                 .sendTotalAtEnd(sendTotalAtEnd)

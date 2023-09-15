@@ -12,7 +12,6 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
@@ -34,6 +33,7 @@ import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
+@Suppress("unused")
 private const val SERVICE_TAG = "NotificationService"
 
 /**
@@ -69,7 +69,6 @@ internal class NotificationService : Service() {
     override fun onBind(intent: Intent?) = null
 
     override fun onCreate() {
-        Log.d(SERVICE_TAG, "onCreate")
         super.onCreate() // required by hilt injection
         createStatusNotificationChannel()
         createResultNotificationChannel()
@@ -104,7 +103,6 @@ internal class NotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.d(SERVICE_TAG, "onStartCommand: flags=$flags, startId=$startId")
         intent?.run {
             microphoneRestricted = getBooleanExtra(KEY_BACKGROUND_LAUNCH, true)
         }
@@ -112,7 +110,6 @@ internal class NotificationService : Service() {
     }
 
     override fun onDestroy() {
-        Log.d(SERVICE_TAG, "onDestroy")
         super.onDestroy()
         unregisterReceiver(actionReceiver)
         serviceScope.cancel()

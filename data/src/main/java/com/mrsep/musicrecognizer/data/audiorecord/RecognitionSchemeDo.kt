@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.data.audiorecord
 
 import kotlin.time.Duration
 
-class AudioRecordingStrategyDo(
+class RecognitionSchemeDo(
     val steps: List<Step>,
     val sendTotalAtEnd: Boolean
 ) {

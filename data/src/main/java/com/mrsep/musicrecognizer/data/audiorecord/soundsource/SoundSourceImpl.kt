@@ -26,7 +26,7 @@ import javax.inject.Inject
  * This doesn't depend on the set custom buffer size or anything else.
  * 2). If reading data from the buffer is slower than filling it up, the new recorded data is lost.
  * AudioRecord keeps recording, but audio frames which exceed the buffer-level are dropped.
- * The recording will be distorted and with a sense of acceleration (loss of intermediate frames).
+ * The recording will be distorted with a sense of acceleration (loss of intermediate frames).
  * 3). The first of the received samples will most likely be zero
  * due to hardware AGC (Automatic Gain Control).
  * 4). The first audio chunk arrives in the buffer with some delay (100ms in my tests).
@@ -61,22 +61,10 @@ class SoundSourceImpl @Inject constructor() : SoundSource {
         null
     }
 
-
-
-    override val pcmChunkFlow: SharedFlow<Result<ByteArray>> = flow<Result<ByteArray>> {
+    override val pcmChunkFlow: SharedFlow<Result<ByteArray>> = flow {
         val params = checkNotNull(params) { "No available params for AudioRecord" }
         val oneSecBuffer = params.audioFormat.sampleRate * params.bytesPerFrame
         val realBuffer = (params.minBufferSize * 10).coerceAtLeast(oneSecBuffer)
-        Log.d(
-            TAG, "Starting AudioRecord with params: " +
-                    "channels=${params.audioFormat.channelCount}, " +
-                    "sampleRate=${params.audioFormat.sampleRate}, " +
-                    "encoding=${params.audioFormat.encoding}, " +
-                    "chunkSize=${params.chunkSize}, " +
-                    "chunkSizeMS=${params.chunkSizeInSeconds}, " +
-                    "bufferSize=$realBuffer"
-        )
-
         var audioRecordRef: AudioRecord? = null
         try {
             @SuppressLint("MissingPermission")
@@ -117,27 +105,21 @@ class SoundSourceImpl @Inject constructor() : SoundSource {
             }
         } finally {
             audioRecordRef?.release()
-            Log.d(TAG, "AudioRecord released")
         }
     }
         .catch {cause ->
             Log.e(TAG, "An error occurred during audio recording", cause)
             emit(Result.failure(cause))
         }
-//        .retryWhen { cause, attempt ->
-//            Log.e(TAG, "An error occurred during audio recording", cause)
-//            emit(Result.failure(cause))
-//            delay(1000)
-//            Log.e(TAG, "Retry with attempt #$attempt")
-//            true
-//        }
         .shareIn(
             scope = CoroutineScope(AudioRecordDispatcher + SupervisorJob()),
             started = SharingStarted.WhileSubscribed(SHARING_TIMEOUT_MS),
             replay = 0
         )
 
-    private suspend inline fun FlowCollector<Result<ByteArray>>.loopEmitWithYield(nextPcmChunk: () -> ByteArray) {
+    private suspend inline fun FlowCollector<Result<ByteArray>>.loopEmitWithYield(
+        nextPcmChunk: () -> ByteArray
+    ) {
         while (true) {
             val pcmChunk = nextPcmChunk()
             emit(Result.success(pcmChunk))

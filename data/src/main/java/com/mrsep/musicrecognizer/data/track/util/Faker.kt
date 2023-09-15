@@ -9,14 +9,15 @@ import java.util.UUID
 internal fun getFakeTrackList(startIndex: Int, endIndex: Int, inclusive: Boolean, favorites: Boolean): List<TrackEntity> {
     return List(if (inclusive) endIndex - startIndex + 1 else endIndex - startIndex) { index ->
         TrackEntity(
-            mbId = "${index + startIndex}",
+            mbId = UUID.randomUUID().toString(),
             title = "Track #${index + startIndex}",
             artist = "Artist #${index + startIndex}",
             releaseDate = LocalDate.now(),
             album = "Album #${index + startIndex}",
             lyrics = "lyrics #${index + startIndex}",
             links = TrackEntity.Links(
-                artwork = "",
+//                artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
+                artwork = "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
                 spotify = "",
                 youtube = "",
                 soundCloud = "",

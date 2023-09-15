@@ -22,7 +22,7 @@ interface RecognitionModule {
 
     @Binds
     @Singleton
-//    fun bindRemoteRecognitionStreamService(implementation: AuddRestStreamServiceImpl): RecognitionStreamDataService
+//    fun bindRemoteRecognitionStreamService(implementation: AuddRestStreamServiceImpl): RecognitionStreamServiceDo
     fun bindRemoteRecognitionStreamService(implementation: RecognitionStreamServiceImpl): RecognitionStreamServiceDo
 
 }

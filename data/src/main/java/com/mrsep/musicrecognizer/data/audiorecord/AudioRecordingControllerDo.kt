@@ -4,6 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AudioRecordingControllerDo {
 
-    fun audioRecordingFlow(strategy: AudioRecordingStrategyDo): Flow<Result<ByteArray>>
+    fun audioRecordingFlow(scheme: RecognitionSchemeDo): Flow<Result<ByteArray>>
 
 }

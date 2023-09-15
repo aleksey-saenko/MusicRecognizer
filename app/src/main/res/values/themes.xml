@@ -2,7 +2,6 @@
 <resources>
 
     <style name="Theme.MusicRecognizer" parent="android:Theme.Material.Light.NoActionBar">
-<!--        <item name="android:statusBarColor" >@android:color/transparent</item>-->
         <item name="android:windowBackground">@color/compose_background_light</item>
     </style>
 

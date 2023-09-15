@@ -2,14 +2,14 @@ package com.mrsep.musicrecognizer.glue.recognition.di
 
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingStrategyDo
+import com.mrsep.musicrecognizer.data.audiorecord.RecognitionSchemeDo
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
 import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioRecordingStrategy
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
@@ -43,7 +43,7 @@ interface MapperModule {
 
     @Binds
     fun bindAudioRecordingMapper(implementation: AudioRecordingMapper):
-            Mapper<AudioRecordingStrategy, AudioRecordingStrategyDo>
+            Mapper<RecognitionScheme, RecognitionSchemeDo>
 
     @Binds
     fun bindScheduleActionMapper(implementation: ScheduleActionMapper):

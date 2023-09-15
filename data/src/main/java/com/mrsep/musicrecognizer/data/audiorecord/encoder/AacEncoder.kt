@@ -39,7 +39,6 @@ class AacEncoder @Inject constructor(
             coroutineContext.job.invokeOnCompletion {
                 codec.stop()
                 codec.release()
-                Log.d(TAG, "MediaCodec released")
             }
             val channels = audioSourceParams.audioFormat.channelCount
             val sampleRate = audioSourceParams.audioFormat.sampleRate
@@ -117,18 +116,16 @@ class AacEncoder @Inject constructor(
                 }
 
                 override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
-                    Log.d(callbackTag, "onError")
                     throw RuntimeException("Code:${e.errorCode}, message:${e.message}", e.cause)
                 }
 
                 override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
-                    Log.d(callbackTag, "onOutputFormatChanged")
+                    // NO-OP
                 }
             }
 
             codec.setCallback(callback, AudioEncoderHandler)
             codec.start()
-            Log.d(TAG, "MediaCodec started")
         } catch (e: Exception) {
             close(e)
         }
@@ -171,6 +168,5 @@ class AacEncoder @Inject constructor(
         this[5] = ((packetLen and 7 shl 5) + 0x1F).toByte()
         this[6] = 0xFC.toByte()
     }
-
 
 }

@@ -24,15 +24,14 @@ The app uses the AudioRecord/MediaCodec API for audio recording and encoding.
 Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.  
 
 ## Screenshots
-
-[<img src="./readme_img/0_recognition_screen.png" width=200>](./readme_img/0_recognition_screen.png)
-[<img src="./readme_img/1_track_screen.png" width=200>](./readme_img/1_track_screen.png)
-[<img src="./readme_img/2_library_screen.png" width=200>](./readme_img/2_library_screen.png)
-[<img src="./readme_img/3_library_filter.png" width=200>](./readme_img/3_library_filter.png)
-[<img src="./readme_img/4_library_search.png" width=200>](./readme_img/4_library_search.png)
-[<img src="./readme_img/5_notification_service.png" width=200>](./readme_img/5_notification_service.png)
-[<img src="./readme_img/6_queue_screen.png" width=200>](./readme_img/6_queue_screen.png)
-[<img src="./readme_img/7_preferences_screen.png" width=200>](./readme_img/7_preferences_screen.png)
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png "Recognition screen")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/01.png "Track screen")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/02.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/02.png "Library screen")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/03.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/03.png "Library filter")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/04.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/04.png "Library search")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/05.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/05.png "Notification service")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/06.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/06.png "Queue screen")
+[<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/07.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/07.png "Preferences screen")
 
 ## API Key
 

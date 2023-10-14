@@ -72,29 +72,29 @@ internal class RecognitionInteractorImpl @Inject constructor(
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            val eachRecordingChannel = Channel<ByteArray>(onlineScheme.stepCount)
+            val recordingChannel = Channel<ByteArray>(onlineScheme.stepCount)
             val remoteResult = async {
                 recognitionService.recognize(
                     token = userPreferences.apiToken,
                     requiredServices = userPreferences.requiredServices,
-                    audioRecordingFlow = eachRecordingChannel.receiveAsFlow()
+                    audioRecordingFlow = recordingChannel.receiveAsFlow()
                 )
             }
 
-            // send each recording step to eachRecordingChannel, return full (last) recording or failure
-            val recordingAsync = async {
+            // send each recording step to recordingChannel, return full (last) recording or failure
+            val recordProcess = async {
                 recorderController.audioRecordingFlow(onlineScheme)
                     .withIndex()
                     .transformWhile { (index, result) ->
                         result.onSuccess { recording ->
                             val isExtraTry = (index >= onlineScheme.extraTryIndex)
                             if (index <= onlineScheme.lastStepIndex) {
-                                eachRecordingChannel.send(recording)
+                                recordingChannel.send(recording)
                                 resultDelegator.notify(RecognitionStatus.Recognizing(isExtraTry))
                             }
                         }
                         if (result.isFailure || index == onlineScheme.lastStepIndex) {
-                            eachRecordingChannel.close()
+                            recordingChannel.close()
                         }
                         emit(result)
                         result.isSuccess && index <= onlineScheme.lastRecordingIndex
@@ -103,7 +103,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
             val result = select {
                 remoteResult.onAwait { remoteRecognitionResult -> remoteRecognitionResult }
-                recordingAsync.onAwait { recordingResult: Result<ByteArray> ->
+                recordProcess.onAwait { recordingResult: Result<ByteArray> ->
                     recordingResult.exceptionOrNull()?.let { cause ->
                         RemoteRecognitionResult.Error.BadRecording(cause = cause)
                     } ?: remoteResult.await()
@@ -115,14 +115,14 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     // bad recording result can be sent by server or by recording job,
                     // so we should stop both job manually
                     remoteResult.cancelAndJoin()
-                    recordingAsync.cancelAndJoin()
+                    recordProcess.cancelAndJoin()
                     RecognitionStatus.Done(RecognitionResult.Error(result, RecognitionTask.Ignored))
                 }
 
                 is RemoteRecognitionResult.Error.BadConnection -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.badConnection,
-                        recordingAsync
+                        recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
@@ -130,7 +130,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 is RemoteRecognitionResult.Error -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.anotherFailure,
-                        recordingAsync
+                        recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                 }
@@ -138,15 +138,14 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 RemoteRecognitionResult.NoMatches -> {
                     val recognitionTask = handleEnqueuedRecognition(
                         userPreferences.schedulePolicy.noMatches,
-                        recordingAsync
+                        recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
                 }
 
                 is RemoteRecognitionResult.Success -> {
-                    recordingAsync.cancelAndJoin()
-                    val newTrack =
-                        trackRepository.insertOrReplaceSaveMetadata(result.track).first()
+                    recordProcess.cancelAndJoin()
+                    val newTrack = trackRepository.insertOrReplaceSaveMetadata(result.track).first()
                     RecognitionStatus.Done(RecognitionResult.Success(newTrack))
                 }
             }
@@ -207,18 +206,18 @@ internal class RecognitionInteractorImpl @Inject constructor(
     // or cancels the recording job
     private suspend fun handleEnqueuedRecognition(
         scheduleAction: ScheduleAction,
-        fullRecordingAsync: Deferred<Result<ByteArray>>
+        recordProcess: Deferred<Result<ByteArray>>
     ): RecognitionTask {
         val (saveEnqueued, launchEnqueued) = scheduleAction
         return if (saveEnqueued) {
             runCatching {
-                val fullRecord = fullRecordingAsync.await().getOrThrow()
+                val fullRecord = recordProcess.await().getOrThrow()
                 enqueueRecognition(fullRecord, launchEnqueued)
             }.getOrElse { cause ->
                 RecognitionTask.Error(cause)
             }
         } else {
-            fullRecordingAsync.cancelAndJoin()
+            recordProcess.cancelAndJoin()
             RecognitionTask.Ignored
         }
     }

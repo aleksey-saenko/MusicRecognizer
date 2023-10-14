@@ -4,9 +4,9 @@ sdkMin = "26"
 sdkTarget = "34"
 
 accompanist = "0.32.0"
-androidGradlePlugin = "8.1.0"
-androidxActivity = "1.7.2"
-androidxComposeBom = "2023.09.00"
+androidGradlePlugin = "8.1.2"
+androidxActivity = "1.8.0"
+androidxComposeBom = "2023.10.00"
 androidxComposeCompiler = "1.5.3"
 androidxCore = "1.12.0"
 androidxCoreSplashscreen = "1.0.1"
@@ -16,7 +16,7 @@ androidxEspresso = "3.5.1"
 androidxHiltNavigationCompose = "1.0.0"
 androidxLifecycle = "2.6.2"
 androidxLifecycleViewmodelCompose = "2.6.2"
-androidxNavigation = "2.7.2"
+androidxNavigation = "2.7.4"
 androidxWindowManager = "1.1.0"
 androidxWork = "2.8.1" # 2.9.0
 coil = "2.4.0"
@@ -42,7 +42,6 @@ room = "2.5.2"
 turbine = "1.0.0"
 
 [libraries]
-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }

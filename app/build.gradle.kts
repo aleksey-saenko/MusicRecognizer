@@ -120,8 +120,6 @@ dependencies {
     implementation(libs.androidx.windowManager)
     implementation(libs.androidx.compose.material3.windowSizeClass)
 
-    implementation(libs.accompanist.systemuicontroller)
-
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.kotlinx.collectionImmutable)
 

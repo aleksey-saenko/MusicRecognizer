@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -15,12 +16,9 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
@@ -35,42 +33,29 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var databaseFiller: DatabaseFiller
-    @Inject @ApplicationScope
+
+    @Inject
+    @ApplicationScope
     lateinit var appScope: CoroutineScope
 
     private val viewModel: MainActivityViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         val keepSplashScreen = mutableStateOf(true)
         splashScreen.setKeepOnScreenCondition {
             keepSplashScreen.value
         }
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setupApplicationWithPreferences()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
-
             MusicRecognizerTheme(
                 dynamicColor = isDynamicColorsEnabled(uiState)
             ) {
-                val systemUiController = rememberSystemUiController()
-                val useDarkIcons = !isSystemInDarkTheme()
-                val statusBarColor = Color.Transparent
-                val navigationBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
-                SideEffect {
-                    systemUiController.setStatusBarColor(
-                        color = statusBarColor,
-                        darkIcons = useDarkIcons
-                    )
-                    systemUiController.setNavigationBarColor(
-                        color = navigationBarColor,
-                        darkIcons = useDarkIcons
-                    )
-                }
                 Surface(
                     color = Color.Unspecified,
                     contentColor = contentColorFor(MaterialTheme.colorScheme.background),
@@ -79,16 +64,15 @@ class MainActivity : ComponentActivity() {
                         .background(color = MaterialTheme.colorScheme.background)
                         .systemBarsPadding(),
                 ) {
-                        AppNavigation(
-                            shouldShowNavRail = shouldShowNavRail(windowSizeClass),
-                            isExpandedScreen = isExpandedScreen(windowSizeClass),
-                            onboardingCompleted = isOnboardingCompleted(uiState),
-                            onOnboardingClose = { this@MainActivity.finish() },
-                            hideSplashScreen = { keepSplashScreen.value = false }
-                        )
+                    AppNavigation(
+                        shouldShowNavRail = shouldShowNavRail(windowSizeClass),
+                        isExpandedScreen = isExpandedScreen(windowSizeClass),
+                        onboardingCompleted = isOnboardingCompleted(uiState),
+                        onOnboardingClose = { this@MainActivity.finish() },
+                        hideSplashScreen = { keepSplashScreen.value = false }
+                    )
                 }
             }
-
         }
     }
 
@@ -133,4 +117,4 @@ fun shouldShowNavRail(windowSizeClass: WindowSizeClass) = !shouldShowBottomBar(w
 @Stable
 fun isExpandedScreen(windowSizeClass: WindowSizeClass) =
     windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
-    windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
+            windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact

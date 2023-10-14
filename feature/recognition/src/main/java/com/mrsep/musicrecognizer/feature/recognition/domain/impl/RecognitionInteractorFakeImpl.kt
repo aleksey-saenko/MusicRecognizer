@@ -26,8 +26,6 @@ private const val TAG = "RecognitionInteractorFakeImpl"
 
 @Singleton
 internal class RecognitionInteractorFakeImpl @Inject constructor(
-//    private val recorderController: AudioRecorderController,
-//    private val recognitionService: RemoteRecognitionService,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
     private val resultDelegator: RecognitionStatusDelegator
@@ -41,7 +39,6 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     override fun launchRecognition(scope: CoroutineScope) {
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
-//            val userPreferences = preferencesRepository.userPreferencesFlow.first()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             delay(1_000)
             resultDelegator.notify(RecognitionStatus.Recognizing(true))
@@ -57,7 +54,6 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     override fun launchOfflineRecognition(scope: CoroutineScope) {
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
-//            val userPreferences = preferencesRepository.userPreferencesFlow.first()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             delay(1_000)
             resultDelegator.notify(RecognitionStatus.Recognizing(true))
@@ -124,7 +120,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private fun notifyBadRecordingError() {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.BadRecording("Error audio format"),
+                remoteError = RemoteRecognitionResult.Error.BadRecording("Err audio"),
                 recognitionTask = RecognitionTask.Ignored
             )
         )
@@ -151,7 +147,10 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private fun notifyHttpError(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.HttpError(code = 404, message = "Not Found"),
+                remoteError = RemoteRecognitionResult.Error.HttpError(
+                    code = 404,
+                    message = "Not Found"
+                ),
                 recognitionTask = recognitionTask
             )
         )
@@ -161,7 +160,10 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private fun notifyUnhandledError(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.UnhandledError(message = "Some UnhandledError", cause = RuntimeException("Some UnhandledError")),
+                remoteError = RemoteRecognitionResult.Error.UnhandledError(
+                    message = "Some UnhandledError",
+                    cause = RuntimeException("Some UnhandledError")
+                ),
                 recognitionTask = recognitionTask
             )
         )
@@ -218,14 +220,10 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         invokeOnCompletion { cause ->
             when (cause) {
                 is CancellationException -> {
-//                    recognitionJob = null
                     resultDelegator.notify(RecognitionStatus.Ready)
                 }
             }
         }
     }
 
-
-
 }
-

@@ -27,7 +27,7 @@ android {
         if (project.rootProject.file("local.properties").canRead()) {
             properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
         }
-        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token"))
+        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token", "\"\""))
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }
 
@@ -95,11 +95,6 @@ dependencies {
     implementation(libs.moshi.core)
     implementation(libs.moshi.adapters)
     ksp(libs.moshi.codegen)
-
-    implementation(libs.androidx.workKtx)
-    implementation(libs.androidx.lifecycle.livedataKtx)
-    implementation(libs.hilt.ext.work)
-    kapt(libs.hilt.ext.compiler)
 
     implementation(libs.androidx.paging3.runtimeKtx)
 

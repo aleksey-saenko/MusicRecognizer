@@ -1,8 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.scheduler
 
 import android.content.Context
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.map
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -11,6 +9,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobSt
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
@@ -47,13 +46,13 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
     }
 
     override fun getStatusFlowById(enqueuedId: Int): Flow<ScheduledJobStatus> {
-        return workManager.getWorkInfosForUniqueWorkLiveData(getUniqueWorkerName(enqueuedId))
+        return workManager.getWorkInfosForUniqueWorkFlow(getUniqueWorkerName(enqueuedId))
             .map { listWorkInfo -> listWorkInfo.lastOrNull().asScheduledJobStatus() }
-            .asFlow().conflate()
+            .conflate()
     }
 
     override fun getStatusFlowAll(): Flow<Map<Int, ScheduledJobStatus>> {
-        return workManager.getWorkInfosByTagLiveData(EnqueuedRecognitionWorker.TAG)
+        return workManager.getWorkInfosByTagFlow(EnqueuedRecognitionWorker.TAG)
             .map { listWorkInfo ->
                 listWorkInfo.mapNotNull { workInfo ->
                     val enqueuedId = workInfo.tags.find { tag -> tag.startsWith(UNIQUE_NAME_MASK) }
@@ -61,7 +60,7 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
                     enqueuedId?.let { enqueuedId to workInfo.asScheduledJobStatus() }
                 }.toMap()
             }
-            .asFlow().conflate()
+            .conflate()
     }
 
     private fun getUniqueWorkerName(enqueuedId: Int) = UNIQUE_NAME_MASK.plus(enqueuedId)

@@ -27,7 +27,7 @@ android {
         if (project.rootProject.file("local.properties").canRead()) {
             properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
         }
-        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token"))
+        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token", "\"\""))
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }
 

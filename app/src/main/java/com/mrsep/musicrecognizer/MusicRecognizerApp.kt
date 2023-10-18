@@ -20,10 +20,9 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
             .build()
     }
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-    }
 
 }

@@ -21,7 +21,7 @@ android {
         minSdk = libs.versions.sdkMin.get().toInt()
         targetSdk = libs.versions.sdkTarget.get().toInt()
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -29,7 +29,7 @@ android {
         if (project.rootProject.file("local.properties").canRead()) {
             properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
         }
-        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token"))
+        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token", "\"\""))
         buildConfigField("boolean", "DEV_OPTIONS", properties.getProperty("dev.options", "false"))
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }

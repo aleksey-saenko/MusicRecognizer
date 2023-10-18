@@ -18,7 +18,7 @@ androidxLifecycle = "2.6.2"
 androidxLifecycleViewmodelCompose = "2.6.2"
 androidxNavigation = "2.7.4"
 androidxWindowManager = "1.1.0"
-androidxWork = "2.8.1" # 2.9.0
+androidxWork = "2.9.0-rc01"
 coil = "2.4.0"
 hilt = "2.48"
 hiltExt = "1.0.0"
@@ -27,7 +27,6 @@ junitExt = "1.1.5"
 kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
 kotlinxCollectionImmutable = "0.3.5"
-#kotlinxDatetime = "0.4.0"
 ksp = "1.9.10-1.0.13"
 moshi = "1.15.0"
 okhttpBom = "4.11.0"
@@ -60,9 +59,6 @@ androidx-datastoreCore = { group = "androidx.datastore", name = "datastore", ver
 #androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
 #androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
-#FIXME: delete after updating workmanager to version 2.9.0
-#converts LiveData to Kotlin Flow (WorkManager WorkInfo)
-androidx-lifecycle-livedataKtx= { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycleViewmodelCompose" }
@@ -84,7 +80,6 @@ junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-collectionImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionImmutable" }
-#kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }

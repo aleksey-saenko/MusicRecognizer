@@ -41,20 +41,13 @@ class TrackRepositoryImpl @Inject constructor(
             ),
             pagingSourceFactory = {
                 trackDao.pagingSource()
-//                TrackPagingSource(
-//                    loadTracks = ::getWithOffset,
-//                    TRACK_PAGE_SIZE
-//                )
             }
-        ).flow
-//            .map { pagingData -> pagingData.map { entity -> trackToDomainMapper.map(entity) } }
-            .flowOn(ioDispatcher)
+        ).flow.flowOn(ioDispatcher)
     }
 
     override suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<TrackEntity>  {
         return withContext(ioDispatcher) {
             trackDao.getWithOffset(limit = pageSize, offset = pageIndex * pageSize)
-//                .map { trackToDomainMapper.map(it) }
         }
     }
 

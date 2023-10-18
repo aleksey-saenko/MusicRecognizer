@@ -86,7 +86,6 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.workKtx)
-    implementation(libs.androidx.lifecycle.livedataKtx)
     implementation(libs.hilt.ext.work)
     kapt(libs.hilt.ext.compiler)
 

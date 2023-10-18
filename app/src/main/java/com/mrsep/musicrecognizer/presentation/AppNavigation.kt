@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen.libraryScreen
@@ -185,7 +186,7 @@ private fun BarNavHost(
             }
         )
         preferencesScreen(
-            showDeveloperOptions = true, //BuildConfig.DEBUG
+            showDeveloperOptions = BuildConfig.DEV_OPTIONS,
             onNavigateToAboutScreen = { from ->
                 outerNavController.navigateToAboutScreen(from)
             },

@@ -30,6 +30,7 @@ android {
             properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
         }
         buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token"))
+        buildConfigField("boolean", "DEV_OPTIONS", properties.getProperty("dev.options", "false"))
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }
 

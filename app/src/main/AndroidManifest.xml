@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicRecognizer"
-        android:enableOnBackInvokedCallback="false"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
 
 <!--    Disabled due to microphone restriction of foreground service that was launched from background-->

@@ -1,15 +1,15 @@
 # Audile
 
-Audile is the music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
+Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
 This application uses the AudD® service as a Music Recognition API.
 
-I'm developing this application as a pet project where I can improve my coding skills. At the same time, I try to make the application reliable for everyday use.
+I'm developing this application as a pet project where I can improve my coding skills. At the same time, I try to make the app reliable for everyday use.
 
-If you would like to contribute or translate, that is very much appreciated.
+If you would like to contribute or translate, that is appreciated.
 
 ## Features
 
-* **Recognition** - The application allows you to perform song recognition in one click. The app will save the recording if there is no internet, and the recognition process will be executed when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
+* **Recognition** - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet, and the recognition process will be executed when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
 * **Notification service** - You can use the application from the notification drawer. Manage the recognition process and receive information about the track.
 * **About track** - In case of successful recognition, information about the track, such as the name, artist, album and year, artwork, links to this track on popular music services, lyrics is provided.
 * **Library** - All recognized tracks are stored in the application's library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.

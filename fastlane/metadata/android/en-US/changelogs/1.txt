@@ -1,1 +1,1 @@
-* Initial version with basic functionality
+* Initial version

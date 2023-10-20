@@ -7,7 +7,7 @@ data class UserPreferencesDo(
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
-    val schedulePolicy: SchedulePolicyDo,
+    val fallbackPolicy: FallbackPolicyDo,
     val lyricsFontStyle: LyricsFontStyleDo,
     val trackFilter: TrackFilterDo
 ) {
@@ -22,10 +22,10 @@ data class UserPreferencesDo(
         val musicbrainz: Boolean
     )
 
-    data class SchedulePolicyDo(
-        val noMatches: ScheduleActionDo,
-        val badConnection: ScheduleActionDo,
-        val anotherFailure: ScheduleActionDo
+    data class FallbackPolicyDo(
+        val noMatches: FallbackActionDo,
+        val badConnection: FallbackActionDo,
+        val anotherFailure: FallbackActionDo
     )
 
     data class LyricsFontStyleDo(
@@ -43,7 +43,7 @@ data class UserPreferencesDo(
 
 }
 
-enum class ScheduleActionDo { Ignore, Save, SaveAndLaunch }
+enum class FallbackActionDo { Ignore, Save, SaveAndLaunch }
 enum class FontSizeDo { Small, Normal, Large, Huge }
 
 enum class FavoritesModeDo { All, OnlyFavorites, ExcludeFavorites }

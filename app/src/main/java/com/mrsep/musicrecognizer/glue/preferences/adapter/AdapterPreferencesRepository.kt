@@ -16,7 +16,7 @@ class AdapterPreferencesRepository @Inject constructor(
     private val preferencesRepositoryDo: PreferencesRepositoryDo,
     private val preferencesMapper: Mapper<UserPreferencesDo, UserPreferences>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
-    private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyDo, SchedulePolicy>
+    private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>
 ) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
@@ -49,9 +49,9 @@ class AdapterPreferencesRepository @Inject constructor(
         )
     }
 
-    override suspend fun setSchedulePolicy(schedulePolicy: SchedulePolicy) {
-        preferencesRepositoryDo.setSchedulePolicy(
-            schedulePolicyMapper.reverseMap(schedulePolicy)
+    override suspend fun setFallbackPolicy(fallbackPolicy: FallbackPolicy) {
+        preferencesRepositoryDo.setFallbackPolicy(
+            fallbackPolicyMapper.reverseMap(fallbackPolicy)
         )
     }
 

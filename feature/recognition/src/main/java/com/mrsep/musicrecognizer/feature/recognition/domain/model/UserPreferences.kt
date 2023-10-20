@@ -7,7 +7,7 @@ data class UserPreferences(
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
-    val schedulePolicy: SchedulePolicy
+    val fallbackPolicy: FallbackPolicy
 ) {
 
     data class RequiredServices(
@@ -20,16 +20,16 @@ data class UserPreferences(
         val musicbrainz: Boolean
     )
 
-    data class SchedulePolicy(
-        val noMatches: ScheduleAction,
-        val badConnection: ScheduleAction,
-        val anotherFailure: ScheduleAction
+    data class FallbackPolicy(
+        val noMatches: FallbackAction,
+        val badConnection: FallbackAction,
+        val anotherFailure: FallbackAction
     )
 
 }
 
 
-enum class ScheduleAction(val save: Boolean, val launch: Boolean) {
+enum class FallbackAction(val save: Boolean, val launch: Boolean) {
 
     Ignore(false, false),
     Save(true, false),

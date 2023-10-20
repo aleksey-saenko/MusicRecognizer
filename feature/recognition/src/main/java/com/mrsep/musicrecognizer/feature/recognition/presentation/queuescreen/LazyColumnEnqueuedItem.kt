@@ -185,7 +185,7 @@ internal fun LazyColumnEnqueuedItem(
                 IconButton(onClick = { menuExpanded = !menuExpanded }, enabled = menuEnabled) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(StringsR.string.more)
+                        contentDescription = stringResource(StringsR.string.show_more)
                     )
                 }
             }

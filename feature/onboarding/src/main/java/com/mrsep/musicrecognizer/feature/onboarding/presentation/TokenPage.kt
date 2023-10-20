@@ -129,9 +129,9 @@ internal fun TokenPage(
                         )
                         val iconDesc = stringResource(
                             if (passwordVisible) {
-                                StringsR.string.hide_password
+                                StringsR.string.hide_token
                             } else {
-                                StringsR.string.show_password
+                                StringsR.string.show_token
                             }
                         )
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {

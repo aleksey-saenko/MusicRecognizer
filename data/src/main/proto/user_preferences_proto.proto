@@ -24,19 +24,19 @@ message UserPreferencesProto {
   bool dynamic_colors_enabled = 12;
   bool developer_mode_enabled = 13;
 
-  enum ScheduleActionProto {
+  enum FallbackActionProto {
     IGNORE = 0;
     SAVE = 1;
     SAVE_AND_LAUNCH = 2;
   }
 
-  message SchedulePolicyProto {
-    ScheduleActionProto no_matches = 14;
-    ScheduleActionProto bad_connection = 15;
-    ScheduleActionProto another_failure = 16;
+  message FallbackPolicyProto {
+    FallbackActionProto no_matches = 14;
+    FallbackActionProto bad_connection = 15;
+    FallbackActionProto another_failure = 16;
   }
 
-  SchedulePolicyProto schedule_policy = 17;
+  FallbackPolicyProto fallback_policy = 17;
 
   enum FontSizeProto {
     SMALL = 0;

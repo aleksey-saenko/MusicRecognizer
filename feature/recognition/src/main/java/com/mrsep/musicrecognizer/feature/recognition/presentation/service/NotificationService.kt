@@ -167,7 +167,7 @@ internal class NotificationService : Service() {
                     is RecognitionResult.Error -> when (status.result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> {
                             resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.no_internet_connection))
+                                .setContentTitle(getString(StringsR.string.bad_internet_connection))
                                 .setContentText(getString(StringsR.string.please_check_network_status))
                                 .addOptionalQueueButton(status.result.recognitionTask)
                         }
@@ -189,7 +189,7 @@ internal class NotificationService : Service() {
                         is RemoteRecognitionResult.Error.WrongToken -> {
                             resultNotificationBuilder()
                                 .setContentTitle(getWrongTokenTitle(status.result.remoteError.isLimitReached))
-                                .setContentText(getString(StringsR.string.notification_message_token_wrong_error))
+                                .setContentText(getString(StringsR.string.message_token_wrong_error))
                                 .addOptionalQueueButton(status.result.recognitionTask)
                         }
                     }
@@ -234,7 +234,7 @@ internal class NotificationService : Service() {
 
     private fun getListeningMessage(extraTry: Boolean): String {
         return if (extraTry) {
-            getString(StringsR.string.listening_with_last_try)
+            getString(StringsR.string.listening_last_attempt)
         } else {
             getString(StringsR.string.listening_with_ellipsis)
         }

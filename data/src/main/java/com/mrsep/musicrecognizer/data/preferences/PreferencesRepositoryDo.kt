@@ -18,7 +18,7 @@ interface PreferencesRepositoryDo {
 
     suspend fun setDeveloperModeEnabled(value: Boolean)
 
-    suspend fun setSchedulePolicy(value: UserPreferencesDo.SchedulePolicyDo)
+    suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo)
 
     suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)
 

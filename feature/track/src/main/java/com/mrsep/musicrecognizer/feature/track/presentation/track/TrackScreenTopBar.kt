@@ -107,7 +107,7 @@ internal fun TrackScreenTopBar(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(StringsR.string.show_metainfo)) },
+                            text = { Text(text = stringResource(StringsR.string.show_more_info)) },
                             onClick = {
                                 menuExpanded = false
                                 onShowDetailsClick()

@@ -42,9 +42,9 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setSchedulePolicy(schedulePolicy: UserPreferences.SchedulePolicy) {
+    fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy) {
         viewModelScope.launch {
-            preferencesRepository.setSchedulePolicy(schedulePolicy)
+            preferencesRepository.setFallbackPolicy(fallbackPolicy)
         }
     }
 

@@ -18,7 +18,7 @@ fun NotificationsPermissionRationaleDialog(
     onDismissClick: () -> Unit
 ) {
     PermissionRationaleDialog(
-        title = stringResource(StringsR.string.notification_sending),
+        title = stringResource(StringsR.string.sending_notifications),
         text = stringResource(StringsR.string.notification_permission_rationale_message),
         onConfirmClick = onConfirmClick,
         onDismissClick = onDismissClick
@@ -31,7 +31,7 @@ fun NotificationsPermissionBlockedDialog(
     onDismissClick: () -> Unit
 ) {
     PermissionBlockedDialog(
-        title = stringResource(StringsR.string.notification_sending),
+        title = stringResource(StringsR.string.sending_notifications),
         text = stringResource(StringsR.string.notification_permission_denied_message),
         onConfirmClick = onConfirmClick,
         onDismissClick = onDismissClick

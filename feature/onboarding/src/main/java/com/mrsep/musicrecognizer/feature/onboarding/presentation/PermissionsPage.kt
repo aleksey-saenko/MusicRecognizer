@@ -127,9 +127,9 @@ internal fun PermissionsPage(
             Text(
                 text = stringResource(
                     if (recorderPermissionState.status.isGranted) {
-                        StringsR.string.permissions_granted
+                        StringsR.string.permission_granted
                     } else {
-                        StringsR.string.allow_access
+                        StringsR.string.request_permission
                     }
                 )
             )

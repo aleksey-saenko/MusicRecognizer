@@ -76,20 +76,20 @@ internal fun PreferencesScreen(
 
                         var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.schedule_policy),
-                            subtitle = stringResource(StringsR.string.schedule_policy_pref_subtitle),
+                            title = stringResource(StringsR.string.fallback_policy),
+                            subtitle = stringResource(StringsR.string.fallback_policy_pref_subtitle),
                             modifier = Modifier.padding(top = 16.dp)
                         ) {
                             showPolicyDialog = true
                         }
                         if (showPolicyDialog) {
-                            val dialogState = rememberSchedulePolicyDialogState(
-                                schedulePolicy = uiState.preferences.schedulePolicy
+                            val dialogState = rememberFallbackPolicyDialogState(
+                                fallbackPolicy = uiState.preferences.fallbackPolicy
                             )
-                            SchedulePolicyDialog(
+                            FallbackPolicyDialog(
                                 onConfirmClick = {
                                     showPolicyDialog = false
-                                    viewModel.setSchedulePolicy(dialogState.currentState)
+                                    viewModel.setFallbackPolicy(dialogState.currentState)
                                 },
                                 onDismissClick = { showPolicyDialog = false },
                                 dialogState = dialogState

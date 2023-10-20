@@ -77,7 +77,7 @@ internal fun QueueScreenTopBar(
                     IconButton(onClick = onDisableSelectionMode, enabled = isExpanded) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(StringsR.string.close_multi_selection_mode)
+                            contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
                         )
                     }
                 } else {

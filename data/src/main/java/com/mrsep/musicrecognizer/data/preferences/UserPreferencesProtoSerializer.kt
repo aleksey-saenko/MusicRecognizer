@@ -28,11 +28,11 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setDynamicColorsEnabled(true)
             .setNotificationServiceEnabled(false)
             .setDeveloperModeEnabled(true)
-            .setSchedulePolicy(
-                UserPreferencesProto.SchedulePolicyProto.newBuilder()
-                    .setNoMatches(UserPreferencesProto.ScheduleActionProto.IGNORE)
-                    .setBadConnection(UserPreferencesProto.ScheduleActionProto.SAVE_AND_LAUNCH)
-                    .setAnotherFailure(UserPreferencesProto.ScheduleActionProto.SAVE)
+            .setFallbackPolicy(
+                UserPreferencesProto.FallbackPolicyProto.newBuilder()
+                    .setNoMatches(UserPreferencesProto.FallbackActionProto.IGNORE)
+                    .setBadConnection(UserPreferencesProto.FallbackActionProto.SAVE_AND_LAUNCH)
+                    .setAnotherFailure(UserPreferencesProto.FallbackActionProto.SAVE)
                     .build()
             )
             .setLyricsFontStyle(

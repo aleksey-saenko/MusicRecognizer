@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.audiorecord.RecognitionSchemeDo
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
 import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
-import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
@@ -13,7 +13,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionSch
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.recognition.mapper.*
@@ -46,8 +46,8 @@ interface MapperModule {
             Mapper<RecognitionScheme, RecognitionSchemeDo>
 
     @Binds
-    fun bindScheduleActionMapper(implementation: ScheduleActionMapper):
-            Mapper<ScheduleActionDo, ScheduleAction>
+    fun bindFallbackActionMapper(implementation: FallbackActionMapper):
+            Mapper<FallbackActionDo, FallbackAction>
 
     @Binds
     fun bindPlayerStatusMapper(implementation: PlayerStatusMapper):

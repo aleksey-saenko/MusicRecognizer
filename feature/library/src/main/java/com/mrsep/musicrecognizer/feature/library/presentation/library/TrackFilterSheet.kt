@@ -39,7 +39,7 @@ internal fun TrackFilterBottomSheet(
             )
             FilterGroup(
                 modifier = Modifier.padding(top = 16.dp),
-                title = stringResource(StringsR.string.favorite_status)
+                title = stringResource(StringsR.string.filter_favorite_status)
             ) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -55,18 +55,18 @@ internal fun TrackFilterBottomSheet(
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.OnlyFavorites,
                         onClick = { filterState.favoritesMode = FavoritesMode.OnlyFavorites },
-                        label = { Text(text = stringResource(StringsR.string.only_favorites)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_only_favorites)) }
                     )
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.ExcludeFavorites,
                         onClick = { filterState.favoritesMode = FavoritesMode.ExcludeFavorites },
-                        label = { Text(text = stringResource(StringsR.string.exclude_favorites)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_exclude_favorites)) }
                     )
                 }
             }
             FilterGroup(
                 modifier = Modifier.padding(top = 16.dp),
-                title = stringResource(StringsR.string.sort_by)
+                title = stringResource(StringsR.string.filter_sort_by)
             ) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -77,28 +77,28 @@ internal fun TrackFilterBottomSheet(
                     FilterChip(
                         selected = filterState.sortBy == SortBy.RecognitionDate,
                         onClick = { filterState.sortBy = SortBy.RecognitionDate },
-                        label = { Text(text = stringResource(StringsR.string.recognition_date)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_recognition_date)) }
                     )
                     FilterChip(
                         selected = filterState.sortBy == SortBy.Title,
                         onClick = { filterState.sortBy = SortBy.Title },
-                        label = { Text(text = stringResource(StringsR.string.title)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_title)) }
                     )
                     FilterChip(
                         selected = filterState.sortBy == SortBy.Artist,
                         onClick = { filterState.sortBy = SortBy.Artist },
-                        label = { Text(text = stringResource(StringsR.string.artist)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_artist)) }
                     )
                     FilterChip(
                         selected = filterState.sortBy == SortBy.ReleaseDate,
                         onClick = { filterState.sortBy = SortBy.ReleaseDate },
-                        label = { Text(text = stringResource(StringsR.string.release_date)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_release_date)) }
                     )
                 }
             }
             FilterGroup(
                 modifier = Modifier.padding(top = 16.dp),
-                title = stringResource(StringsR.string.order_By)
+                title = stringResource(StringsR.string.filter_order_By)
             ) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -109,12 +109,12 @@ internal fun TrackFilterBottomSheet(
                     FilterChip(
                         selected = filterState.orderBy == OrderBy.Desc,
                         onClick = { filterState.orderBy = OrderBy.Desc },
-                        label = { Text(text = stringResource(StringsR.string.descending)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_descending)) }
                     )
                     FilterChip(
                         selected = filterState.orderBy == OrderBy.Asc,
                         onClick = { filterState.orderBy = OrderBy.Asc },
-                        label = { Text(text = stringResource(StringsR.string.ascending)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_ascending)) }
                     )
                 }
             }

@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.preferences
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.mrsep.musicrecognizer.UserPreferencesProto
-import com.mrsep.musicrecognizer.UserPreferencesProto.SchedulePolicyProto
+import com.mrsep.musicrecognizer.UserPreferencesProto.FallbackPolicyProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.RequiredServicesProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
@@ -22,7 +22,7 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<UserPreferencesProto>,
     private val preferencesMapper: BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, UserPreferencesDo.RequiredServicesDo>,
-    private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, UserPreferencesDo.SchedulePolicyDo>,
+    private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, UserPreferencesDo.FallbackPolicyDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<UserPreferencesProto.LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<UserPreferencesProto.TrackFilterProto, UserPreferencesDo.TrackFilterDo>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -60,9 +60,9 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { setDeveloperModeEnabled(value) }
     }
 
-    override suspend fun setSchedulePolicy(value: UserPreferencesDo.SchedulePolicyDo) {
+    override suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo) {
         safeWriter {
-            setSchedulePolicy(schedulePolicyMapper.reverseMap(value))
+            setFallbackPolicy(fallbackPolicyMapper.reverseMap(value))
         }
     }
 

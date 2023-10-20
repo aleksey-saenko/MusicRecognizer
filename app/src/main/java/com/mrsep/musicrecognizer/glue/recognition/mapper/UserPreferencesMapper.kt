@@ -1,14 +1,14 @@
 package com.mrsep.musicrecognizer.glue.recognition.mapper
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import javax.inject.Inject
 
 class UserPreferencesMapper @Inject constructor(
-    private val scheduleActionMapper: Mapper<ScheduleActionDo, ScheduleAction>
+    private val fallbackActionMapper: Mapper<FallbackActionDo, FallbackAction>
 ) :
     Mapper<UserPreferencesDo, UserPreferences> {
 
@@ -28,10 +28,10 @@ class UserPreferencesMapper @Inject constructor(
                 napster = input.requiredServices.napster,
                 musicbrainz = input.requiredServices.musicbrainz
             ),
-            schedulePolicy = UserPreferences.SchedulePolicy(
-                noMatches = scheduleActionMapper.map(input.schedulePolicy.noMatches),
-                badConnection = scheduleActionMapper.map(input.schedulePolicy.badConnection),
-                anotherFailure = scheduleActionMapper.map(input.schedulePolicy.anotherFailure)
+            fallbackPolicy = UserPreferences.FallbackPolicy(
+                noMatches = fallbackActionMapper.map(input.fallbackPolicy.noMatches),
+                badConnection = fallbackActionMapper.map(input.fallbackPolicy.badConnection),
+                anotherFailure = fallbackActionMapper.map(input.fallbackPolicy.anotherFailure)
             )
         )
     }

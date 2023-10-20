@@ -8,7 +8,7 @@ import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import javax.inject.Inject
 
 class UserPreferencesDoMapper @Inject constructor(
-    private val schedulePolicyMapper: BidirectionalMapper<SchedulePolicyProto, SchedulePolicyDo>,
+    private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>
@@ -22,7 +22,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setNotificationServiceEnabled(input.notificationServiceEnabled)
             .setDynamicColorsEnabled(input.dynamicColorsEnabled)
             .setDeveloperModeEnabled(input.developerModeEnabled)
-            .setSchedulePolicy(schedulePolicyMapper.reverseMap(input.schedulePolicy))
+            .setFallbackPolicy(fallbackPolicyMapper.reverseMap(input.fallbackPolicy))
             .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
             .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
             .build()
@@ -36,7 +36,7 @@ class UserPreferencesDoMapper @Inject constructor(
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
-            schedulePolicy = schedulePolicyMapper.map(input.schedulePolicy),
+            fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter)
         )

@@ -41,7 +41,7 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.no_internet_connection),
+            text = stringResource(StringsR.string.bad_internet_connection),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)

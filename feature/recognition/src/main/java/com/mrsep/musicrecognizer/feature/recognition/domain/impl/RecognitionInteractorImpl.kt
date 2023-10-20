@@ -15,7 +15,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionRes
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduleAction
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -121,7 +121,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Error.BadConnection -> {
                     val recognitionTask = handleEnqueuedRecognition(
-                        userPreferences.schedulePolicy.badConnection,
+                        userPreferences.fallbackPolicy.badConnection,
                         recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
@@ -129,7 +129,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Error -> {
                     val recognitionTask = handleEnqueuedRecognition(
-                        userPreferences.schedulePolicy.anotherFailure,
+                        userPreferences.fallbackPolicy.anotherFailure,
                         recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
@@ -137,7 +137,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 RemoteRecognitionResult.NoMatches -> {
                     val recognitionTask = handleEnqueuedRecognition(
-                        userPreferences.schedulePolicy.noMatches,
+                        userPreferences.fallbackPolicy.noMatches,
                         recordProcess
                     )
                     RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
@@ -205,10 +205,10 @@ internal class RecognitionInteractorImpl @Inject constructor(
     // depending on the selected policy, waits for a full recording and creates a RecognitionTask
     // or cancels the recording job
     private suspend fun handleEnqueuedRecognition(
-        scheduleAction: ScheduleAction,
+        fallbackAction: FallbackAction,
         recordProcess: Deferred<Result<ByteArray>>
     ): RecognitionTask {
-        val (saveEnqueued, launchEnqueued) = scheduleAction
+        val (saveEnqueued, launchEnqueued) = fallbackAction
         return if (saveEnqueued) {
             runCatching {
                 val fullRecord = recordProcess.await().getOrThrow()

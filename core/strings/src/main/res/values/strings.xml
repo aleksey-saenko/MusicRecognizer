@@ -3,113 +3,83 @@
     <string name="app_name">Audile</string>
     <string name="tap_to_recognize">Tap to recognize</string>
     <string name="tap_to_recognize_the_song">Tap to recognize the song</string>
-    <string name="tap_to_schedule_song_recognition">Tap to schedule a song recognition</string>
     <string name="recognize">Recognize</string>
-    <string name="new_recognition">New recognition</string>
     <string name="listening">Listening</string>
     <string name="listening_with_ellipsis">Listening…</string>
     <string name="trying_one_more_time">Trying one more time</string>
-    <string name="listening_with_last_try">Listening… The last try…</string>
-    <string name="recognizing">Recognizing</string>
-    <string name="home">Home</string>
+    <string name="listening_last_attempt">Listening… The last attempt…</string>
     <string name="preferences">Preferences</string>
-    <string name="recently">Recently</string>
-
-    <!--    Onboarding screen-->
     <string name="welcome">Welcome</string>
     <string name="onboarding_welcome_message">Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
-
     <string name="onboarding_permission_message_start">"The app requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by "</string>
     <string name="onboarding_permission_message_link">remote service</string>
     <string name="onboarding_permission_message_end">" for music recognition. The app does not use this data for any other purpose."</string>
     <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
-
-    <string name="onboarding_token_message_start">"The app uses the AudD® service as a Music Recognition API, which requires a special API token. Sign up "</string>
+    <string name="onboarding_token_message_start">"The app uses the AudD® music recognition service, which requires a special API token. Sign up "</string>
     <string name="onboarding_token_message_link">here</string>
-    <string name="onboarding_token_message_end">" to get your API token, if you don\'t have one yet."</string>
+    <string name="onboarding_token_message_end">" to get your token, if you don\'t have one yet."</string>
     <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
     <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify a token later in preferences.</string>
-
-    <string name="hide_password">Hide password</string>
-    <string name="show_password">Show password</string>
+    <string name="hide_token">Hide token</string>
+    <string name="show_token">Show token</string>
     <string name="apply_api_token">Apply API token</string>
     <string name="skip">Skip</string>
     <string name="audd_api_token">AudD API token</string>
     <string name="api_token">API token</string>
     <string name="validating">Validating</string>
-
     <string name="final_onboarding_page_title">We are ready to go</string>
     <string name="final_onboarding_page_message">Setup completed successfully</string>
     <string name="get_started">Get started</string>
-    <!--    Common-->
-
-    <string name="spotify">Spotify</string>
-    <string name="apple_music">Apple Music</string>
-    <string name="deezer">Deezer</string>
-    <string name="napster">Napster</string>
-    <string name="musicbrainz">MusicBrainz</string>
-    <string name="youtube">Youtube</string>
+    <string name="spotify" translatable="false">Spotify</string>
+    <string name="apple_music" translatable="false">Apple Music</string>
+    <string name="deezer" translatable="false">Deezer</string>
+    <string name="napster" translatable="false">Napster</string>
+    <string name="musicbrainz" translatable="false">MusicBrainz</string>
+    <string name="youtube" translatable="false">Youtube</string>
+    <string name="soundcloud" translatable="false">SoundCloud</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="none">None</string>
     <string name="permissions">Permissions</string>
-    <string name="allow_access">Allow Access</string>
     <string name="request_permission">Request permission</string>
     <string name="microphone_access">Microphone access</string>
     <string name="microphone_permission_rationale_message">To perform music recognition, you need to grant access to the microphone.</string>
     <string name="microphone_permission_denied_message">Previous requests for microphone access have been denied. Without this permission, the application can\'t perform music recognition. You can change your decision through the settings.</string>
-    <string name="notification_sending">Notification sending</string>
+    <string name="sending_notifications">Sending notifications</string>
     <string name="notification_permission_rationale_message">To enable the notification service, you need to allow the application to send notifications to you.</string>
     <string name="notification_permission_denied_message">Previous requests to allow the app to send notifications have been denied. Without this permission, the notification service can\'t work properly. You can change your decision through the settings.</string>
-
-
-    <string name="permissions_granted">Permissions Granted</string>
+    <string name="permission_granted">Permission granted</string>
     <string name="back">Back</string>
     <string name="open_settings">Open settings</string>
     <string name="token_applied">Token applied</string>
-    <string name="invalid_token">Invalid token</string>
-    <string name="ready">Ready</string>
-    <string name="notification_channel_name_control">Control notification channel</string>
-    <string name="notification_channel_name_result">Result notification channel</string>
-    <string name="notification_channel_name_scheduled_result">Scheduled result notification channel</string>
-    <string name="notification_channel_desc_control">Allow to control recognition process from notifications</string>
-    <string name="notification_channel_desc_result">Allow to receive recognition results from notifications</string>
-    <string name="notification_channel_desc_scheduled_result">Allow to receive scheduled recognition results from notifications</string>
-    <string name="message_record_error">An error occurred while recording the audio</string>
-    <string name="notification_message_recording_error">An error occurred while recording the audio, try again</string>
-
-
+    <string name="notification_channel_name_control">Control notifications</string>
+    <string name="notification_channel_name_result">Recognition results</string>
+    <string name="notification_channel_name_scheduled_result">Scheduled recognition results</string>
+    <string name="notification_channel_desc_control">Allows to control recognition process via notifications</string>
+    <string name="notification_channel_desc_result">Allows to receive recognition results via notifications</string>
+    <string name="notification_channel_desc_scheduled_result">Allows to receive scheduled recognition results via notifications</string>
+    <string name="message_record_error">An error occurred during audio recording</string>
+    <string name="notification_message_recording_error">An error occurred during audio recording, try again</string>
     <string name="please_check_network_status">Please, check your network status</string>
     <string name="saved_recording_message">The audio sample was saved</string>
     <string name="manual_recognition_message">you can launch recognition whenever you want manually</string>
     <string name="auto_recognition_message_network">when you get back online, the app will try to identify this song</string>
-
     <string name="bad_network_response">Bad network response</string>
     <string name="message_http_error">An error occurred during internet request</string>
     <string name="message_unhandled_error">An internal error occurred</string>
-    <string name="please_try_again">Please, try again</string>
     <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
     <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
-    <string name="notification_message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
     <string name="not_implemented">Not implemented</string>
     <string name="no_matches_found">No matches found</string>
     <string name="library">Library</string>
-    <string name="dismiss">Dismiss</string>
     <string name="recognition_queue">Recognition queue</string>
-    <string name="open_queue">Open queue</string>
-    <string name="no_internet_connection">No internet connection</string>
     <string name="bad_internet_connection">Bad internet connection</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
-    <string name="save_record_message">You can save the record in recognition queue to retry later. The remote music library is always updating.</string>
     <string name="no_matches_message">Sorry, the app couldn\'t recognize this song</string>
-    <string name="surrounding_noise_message">Surrounding noise can interfere with song recognition</string>
-    <string name="notification_message_no_matches_found">The record was added in recognition queue to retry later</string>
     <string name="recording_error">Recording error</string>
-    <string name="check_permission">Check permission</string>
     <string name="token_limit_reached">API token limit reached</string>
     <string name="wrong_token">Wrong API token</string>
-    <string name="send_report">Send report</string>
     <string name="internal_error">Internal error</string>
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>
@@ -122,34 +92,26 @@
     <string name="delete">Delete</string>
     <string name="unknown_error">Unknown error</string>
     <string name="must_not_be_empty">Must not be empty</string>
-    <string name="illegal_state">Illegal state</string>
-    <string name="record_deletion_failed">Record file deletion failed</string>
     <string name="search_track">Search track</string>
     <string name="about">About</string>
-    <string name="unexpected_error">Unexpected error</string>
-    <string name="error_and_message">Error: %s</string>
-    <string name="soundcloud">SoundCloud</string>
     <string name="recognition">Recognition</string>
     <string name="share">Share</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
-    <string name="favorites">Favorites</string>
-    <string name="recents">Recents</string>
-    <string name="more">MORE</string>
     <string name="reset_all">Reset all</string>
     <string name="filters">Filters</string>
-    <string name="favorite_status">Favorite Status</string>
+    <string name="filter_favorite_status">Favorite Status</string>
     <string name="all">All</string>
-    <string name="only_favorites">Only favorites</string>
-    <string name="exclude_favorites">Exclude favorites</string>
-    <string name="sort_by">Sort By</string>
-    <string name="recognition_date">Recognition date</string>
-    <string name="track_title">Track title</string>
-    <string name="artist">Artist</string>
-    <string name="release_date">Release date</string>
-    <string name="order_By">Order By</string>
-    <string name="ascending">Ascending</string>
-    <string name="descending">Descending</string>
+    <string name="filter_only_favorites">Only favorites</string>
+    <string name="filter_exclude_favorites">Exclude favorites</string>
+    <string name="filter_sort_by">Sort By</string>
+    <string name="filter_recognition_date">Recognition date</string>
+    <string name="filter_title">Title</string>
+    <string name="filter_artist">Artist</string>
+    <string name="filter_release_date">Release date</string>
+    <string name="filter_order_By">Order By</string>
+    <string name="filter_ascending">Ascending</string>
+    <string name="filter_descending">Descending</string>
     <string name="search_track_hint">Search track…</string>
     <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
     <string name="no_tracks_match_search">No tracks matching your search criteria</string>
@@ -158,10 +120,11 @@
     <string name="save_the_recording_and_launch_retry">Save the recording and launch retry</string>
     <string name="save_the_recording">Save the recording</string>
     <string name="ignore">Ignore</string>
-    <string name="schedule_policy">Schedule policy</string>
-    <string name="schedule_policy_dialog_message">Set the default action to create a scheduled recognition for each type of unsuccessful result:</string>
+    <string name="fallback_policy">Recognition fallback policy</string>
+    <string name="fallback_policy_dialog_title">Fallback policy</string>
+    <string name="fallback_policy_dialog_message">Set the default fallback action for each type of unsuccessful result:</string>
     <string name="other_failures">Other failures</string>
-    <string name="schedule_policy_pref_subtitle">Set schedule actions after unsuccessful recognitions</string>
+    <string name="fallback_policy_pref_subtitle">Set fallback actions after unsuccessful recognitions</string>
     <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
     <string name="notification_service">Notification service</string>
     <string name="notification_service_pref_subtitle">Control recognition from notifications</string>
@@ -174,12 +137,12 @@
     <string name="developer_options">Developer options</string>
     <string name="appearance">Appearance</string>
     <string name="empty_recognition_queue_message">No queued recognitions</string>
-    <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen schedule policy</string>
+    <string name="empty_recognition_queue_sub_message">In case of unsuccessful recognition the app can enqueue a recognition according to chosen fallback policy</string>
     <string name="recognition_scheduled">Recognition scheduled</string>
     <string name="offline_mode">Offline mode</string>
     <string name="allow_the_app_to_access_the_microphone">Allow the app to access the microphone</string>
     <string name="notification_service_initializing">Notification service is initializing</string>
-    <string name="close_multi_selection_mode">Close multi selection mode</string>
+    <string name="disable_multi_selection_mode">Disable multi selection mode</string>
     <string name="deselect_all">Deselect all</string>
     <string name="select_all">Select all</string>
     <string name="cancel_selected">Cancel selected</string>
@@ -187,15 +150,14 @@
     <string name="queue">Queue</string>
     <string name="status_colon">Status: %s</string>
     <string name="enqueued">Enqueued</string>
-    <string name="failed">Failed</string>
     <string name="track_found">Track found</string>
     <string name="idle">Idle</string>
     <string name="running">Running</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Unmark as favorite</string>
     <string name="show_lyrics">Show lyrics</string>
-    <string name="show_metainfo">Show MetaInfo</string>
-    <string name="track_metainfo">Track MetaInfo</string>
+    <string name="show_more_info">Show more info</string>
+    <string name="track_info">Track info</string>
     <string name="date_of_last_recognition">Date of last recognition:%n%s</string>
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
     <string name="track_not_found">The track not found</string>
@@ -203,7 +165,6 @@
     <string name="ver">"ver. %s"</string>
     <string name="music_recognizing_app">Music recognition application</string>
     <string name="powered_by_audd">Powered by AudD®</string>
-    <string name="github">Github</string>
     <string name="github_repository">GitHub repository</string>
     <string name="license_gnu_gplv3">License GNU GPLv3</string>
     <string name="lyrics_text_style">Lyrics text style</string>
@@ -211,7 +172,6 @@
     <string name="make_text_bigger_or_smaller">Make text bigger or smaller</string>
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
-    <string name="title">Title</string>
     <string name="format_created">Created: %s</string>
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
     <string name="token_preference_dialog_message">Enter a proper AudD API token (empty token will limit your daily recognitions):</string>

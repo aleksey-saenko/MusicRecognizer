@@ -10,14 +10,14 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
-import com.mrsep.musicrecognizer.data.preferences.ScheduleActionDo
+import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
 import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.RequiredServicesDoMapper
-import com.mrsep.musicrecognizer.data.preferences.mappers.ScheduleActionDoMapper
-import com.mrsep.musicrecognizer.data.preferences.mappers.SchedulePolicyDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackActionDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackPolicyDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.TrackFilterDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.UserPreferencesDoMapper
 import dagger.Binds
@@ -69,12 +69,12 @@ interface PreferencesMappersModule {
             BidirectionalMapper<UserPreferencesProto.RequiredServicesProto, UserPreferencesDo.RequiredServicesDo>
 
     @Binds
-    fun bindScheduleActionDoMapper(implementation: ScheduleActionDoMapper):
-            BidirectionalMapper<UserPreferencesProto.ScheduleActionProto, ScheduleActionDo>
+    fun bindFallbackActionDoMapper(implementation: FallbackActionDoMapper):
+            BidirectionalMapper<UserPreferencesProto.FallbackActionProto, FallbackActionDo>
 
     @Binds
-    fun bindSchedulePolicyDoMapper(implementation: SchedulePolicyDoMapper):
-            BidirectionalMapper<UserPreferencesProto.SchedulePolicyProto, UserPreferencesDo.SchedulePolicyDo>
+    fun bindFallbackPolicyDoMapper(implementation: FallbackPolicyDoMapper):
+            BidirectionalMapper<UserPreferencesProto.FallbackPolicyProto, UserPreferencesDo.FallbackPolicyDo>
 
     @Binds
     fun bindFontSizeDoMapper(implementation: FontSizeDoMapper):

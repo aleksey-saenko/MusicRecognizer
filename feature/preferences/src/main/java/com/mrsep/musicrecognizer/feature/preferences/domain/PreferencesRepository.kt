@@ -12,6 +12,6 @@ interface PreferencesRepository {
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setDeveloperModeEnabled(value: Boolean)
     suspend fun setRequiredServices(requiredServices: UserPreferences.RequiredServices)
-    suspend fun setSchedulePolicy(schedulePolicy: UserPreferences.SchedulePolicy)
+    suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
 
 }

@@ -24,7 +24,7 @@ internal fun TrackExtrasDialog(
             }
         },
         title = {
-            Text(text = stringResource(StringsR.string.track_metainfo))
+            Text(text = stringResource(StringsR.string.track_info))
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {

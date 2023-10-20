@@ -28,27 +28,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.feature.preferences.domain.ScheduleAction
+import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
-internal class SchedulePolicyDialogState(
-    initialState: UserPreferences.SchedulePolicy,
+internal class FallbackPolicyDialogState(
+    initialState: UserPreferences.FallbackPolicy,
 ) {
     var noMatches by mutableStateOf(initialState.noMatches)
     var badConnection by mutableStateOf(initialState.badConnection)
     var anotherFailure by mutableStateOf(initialState.anotherFailure)
 
-    val currentState: UserPreferences.SchedulePolicy
-        get() = UserPreferences.SchedulePolicy(
+    val currentState: UserPreferences.FallbackPolicy
+        get() = UserPreferences.FallbackPolicy(
             noMatches = noMatches,
             badConnection = badConnection,
             anotherFailure = anotherFailure
         )
 
     companion object {
-        val Saver: Saver<SchedulePolicyDialogState, *> = listSaver(
+        val Saver: Saver<FallbackPolicyDialogState, *> = listSaver(
             save = {
                 listOf(
                     it.noMatches.ordinal,
@@ -57,11 +57,11 @@ internal class SchedulePolicyDialogState(
                 )
             },
             restore = {
-                SchedulePolicyDialogState(
-                    initialState = UserPreferences.SchedulePolicy(
-                        noMatches = ScheduleAction.values()[it[0]],
-                        badConnection = ScheduleAction.values()[it[1]],
-                        anotherFailure = ScheduleAction.values()[it[2]]
+                FallbackPolicyDialogState(
+                    initialState = UserPreferences.FallbackPolicy(
+                        noMatches = FallbackAction.values()[it[0]],
+                        badConnection = FallbackAction.values()[it[1]],
+                        anotherFailure = FallbackAction.values()[it[2]]
                     )
                 )
             }
@@ -71,29 +71,29 @@ internal class SchedulePolicyDialogState(
 }
 
 @Composable
-internal fun rememberSchedulePolicyDialogState(
-    schedulePolicy: UserPreferences.SchedulePolicy,
-): SchedulePolicyDialogState {
+internal fun rememberFallbackPolicyDialogState(
+    fallbackPolicy: UserPreferences.FallbackPolicy,
+): FallbackPolicyDialogState {
     return rememberSaveable(
-        inputs = arrayOf(schedulePolicy),
-        saver = SchedulePolicyDialogState.Saver
+        inputs = arrayOf(fallbackPolicy),
+        saver = FallbackPolicyDialogState.Saver
     ) {
-        SchedulePolicyDialogState(
-            initialState = schedulePolicy
+        FallbackPolicyDialogState(
+            initialState = fallbackPolicy
         )
     }
 }
 
 
 @Composable
-internal fun SchedulePolicyDialog(
+internal fun FallbackPolicyDialog(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
-    dialogState: SchedulePolicyDialogState,
+    dialogState: FallbackPolicyDialogState,
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.schedule_policy))
+            Text(text = stringResource(StringsR.string.fallback_policy_dialog_title))
         },
         confirmButton = {
             Button(onClick = onConfirmClick) {
@@ -112,23 +112,23 @@ internal fun SchedulePolicyDialog(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = stringResource(StringsR.string.schedule_policy_dialog_message),
+                    text = stringResource(StringsR.string.fallback_policy_dialog_message),
                 )
-                ScheduleActionsDropdownMenu(
+                FallbackActionsDropdownMenu(
                     options = allOptions,
                     label = stringResource(StringsR.string.bad_internet_connection),
                     selectedOption = dialogState.badConnection,
                     onSelectOption = { option -> dialogState.badConnection = option },
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                ScheduleActionsDropdownMenu(
+                FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
                     label = stringResource(StringsR.string.no_matches_found),
                     selectedOption = dialogState.noMatches,
                     onSelectOption = { option -> dialogState.noMatches = option },
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                ScheduleActionsDropdownMenu(
+                FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
                     label = stringResource(StringsR.string.other_failures),
                     selectedOption = dialogState.anotherFailure,
@@ -143,12 +143,12 @@ internal fun SchedulePolicyDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ScheduleActionsDropdownMenu(
+private fun FallbackActionsDropdownMenu(
     modifier: Modifier = Modifier,
     label: String,
-    options: ImmutableList<ScheduleAction>,
-    selectedOption: ScheduleAction,
-    onSelectOption: (ScheduleAction) -> Unit
+    options: ImmutableList<FallbackAction>,
+    selectedOption: FallbackAction,
+    onSelectOption: (FallbackAction) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
@@ -186,15 +186,15 @@ private fun ScheduleActionsDropdownMenu(
     }
 }
 
-private val allOptions = ScheduleAction.values().asList().toImmutableList()
+private val allOptions = FallbackAction.values().asList().toImmutableList()
 private val ignoreOrSaveOptions =
-    listOf(ScheduleAction.Ignore, ScheduleAction.Save).toImmutableList()
+    listOf(FallbackAction.Ignore, FallbackAction.Save).toImmutableList()
 
 @Composable
-private fun ScheduleAction.getTitle(): String {
+private fun FallbackAction.getTitle(): String {
     return when (this) {
-        ScheduleAction.Ignore -> stringResource(StringsR.string.ignore)
-        ScheduleAction.Save -> stringResource(StringsR.string.save_the_recording)
-        ScheduleAction.SaveAndLaunch -> stringResource(StringsR.string.save_the_recording_and_launch_retry)
+        FallbackAction.Ignore -> stringResource(StringsR.string.ignore)
+        FallbackAction.Save -> stringResource(StringsR.string.save_the_recording)
+        FallbackAction.SaveAndLaunch -> stringResource(StringsR.string.save_the_recording_and_launch_retry)
     }
 }

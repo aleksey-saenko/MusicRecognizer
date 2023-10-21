@@ -127,13 +127,14 @@ internal fun FontStyleDialog(
                     steps = 2
                 )
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = stringResource(StringsR.string.bold_text),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
                     )
                     Switch(
                         checked = fontStyleDialogState.isBold,
@@ -147,7 +148,8 @@ internal fun FontStyleDialog(
                 ) {
                     Text(
                         text = stringResource(StringsR.string.high_contrast_text),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
                     )
                     Switch(
                         checked = fontStyleDialogState.isHighContrast,

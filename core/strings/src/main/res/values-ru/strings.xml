@@ -51,7 +51,7 @@
     <string name="notification_channel_desc_scheduled_result">Позволяет получать результаты запланированных распознаваний из уведомлений</string>
     <string name="message_record_error">Произошла ошибка при записи аудио</string>
     <string name="notification_message_recording_error">Произошла ошибка при записи аудио, попробуйте еще раз</string>
-    <string name="please_check_network_status">Пожалуйста, проверьте ваше интернет соединение</string>
+    <string name="please_check_network_status">Пожалуйста, проверьте ваше подключение к интернету</string>
     <string name="saved_recording_message">Аудиозапись сохранена</string>
     <string name="manual_recognition_message">вы можете запустить распознавание вручную в любое время</string>
     <string name="auto_recognition_message_network">когда вы снова подключитесь к сети, приложение попытается распознать эту песню автоматически</string>
@@ -64,7 +64,7 @@
     <string name="no_matches_found">Совпадений не найдено</string>
     <string name="library">Библиотека</string>
     <string name="recognition_queue">Очередь распознавания</string>
-    <string name="bad_internet_connection">Плохое подключение к интернету</string>
+    <string name="bad_internet_connection">Плохое интернет соединение</string>
     <string name="retry">Повторить</string>
     <string name="save">Сохранить</string>
     <string name="no_matches_message">Извините, приложение не смогло распознать эту песню</string>
@@ -76,7 +76,7 @@
     <string name="show_less">Показать меньше</string>
     <string name="empty_library_message">Здесь будут отображаться недавно распознанные и избранные треки</string>
     <string name="untitled_recognition">Без названия</string>
-    <string name="enqueue_recognition">Добавить в очередь распознавания</string>
+    <string name="enqueue_recognition">Поставить в очередь</string>
     <string name="cancel_recognition">Отменить распознавание</string>
     <string name="show_track">Показать трек</string>
     <string name="rename">Переименовать</string>

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -70,6 +71,7 @@ internal fun TrackLazyGrid(
         ) {
             Text(
                 text = stringResource(StringsR.string.no_tracks_match_filter),
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(16.dp)
             )
         }

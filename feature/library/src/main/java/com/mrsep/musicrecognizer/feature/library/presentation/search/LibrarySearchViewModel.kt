@@ -57,12 +57,10 @@ internal class LibrarySearchViewModel @Inject constructor(
         )
 
     fun submitSearchKeyword(keyword: String) {
-        println("submitSearchKeyword=$keyword")
         savedStateHandle[KEY_QUERY] = keyword
     }
 
     fun resetSearch() {
-        println("resetSearch")
         savedStateHandle[KEY_QUERY] = ""
     }
 

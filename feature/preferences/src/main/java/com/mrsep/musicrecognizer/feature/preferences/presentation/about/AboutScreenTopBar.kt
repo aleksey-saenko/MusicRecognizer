@@ -33,7 +33,7 @@ internal fun AboutScreenTopBar(
             IconButton(onClick = onBackPressed) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null
+                    contentDescription = stringResource(StringsR.string.back)
                 )
             }
         },

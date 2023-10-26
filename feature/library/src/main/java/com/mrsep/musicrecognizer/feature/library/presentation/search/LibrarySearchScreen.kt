@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrsep.musicrecognizer.core.strings.R
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,12 +77,12 @@ internal fun LibrarySearchScreen(
             onSearch = viewModel::submitSearchKeyword,
             active = true,
             onActiveChange = { active -> if (!active) clearFocusAndCloseSearch() },
-            placeholder = { Text(stringResource(R.string.search_track_hint)) },
+            placeholder = { Text(stringResource(StringsR.string.search_track_hint)) },
             leadingIcon = {
                 IconButton(onClick = ::clearFocusAndCloseSearch) {
                     Icon(
                         Icons.Default.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(StringsR.string.back)
                     )
                 }
             },
@@ -126,7 +126,7 @@ internal fun LibrarySearchScreen(
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 Text(
-                                    text = stringResource(R.string.no_tracks_match_search),
+                                    text = stringResource(StringsR.string.no_tracks_match_search),
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
                                         .padding(24.dp)
@@ -142,6 +142,7 @@ internal fun LibrarySearchScreen(
                                 items(thisSearchResult.data.size) { index ->
                                     TrackSearchItem(
                                         track = thisSearchResult.data[index],
+                                        keyword = thisSearchResult.keyword,
                                         onTrackClick = onTrackClick
                                     )
                                 }

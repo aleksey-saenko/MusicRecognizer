@@ -123,7 +123,7 @@ internal fun LazyGridTrackItem(
             model = track.artworkUrl,
             placeholder = placeholder,
             error = placeholder,
-            contentDescription = null,
+            contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .clip(MaterialTheme.shapes.large)

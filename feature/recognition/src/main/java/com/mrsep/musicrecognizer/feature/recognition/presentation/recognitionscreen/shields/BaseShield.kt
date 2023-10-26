@@ -27,9 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.mrsep.musicrecognizer.core.strings.R
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationButton
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationShield
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -65,7 +65,7 @@ internal fun AnimatedVisibilityScope.BaseShield(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.close),
+                    contentDescription = stringResource(StringsR.string.close),
                     modifier = Modifier.size(24.dp)
                 )
             }

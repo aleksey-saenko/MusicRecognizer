@@ -97,7 +97,7 @@ internal fun LibrarySearchScreen(
                     ) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = null
+                            contentDescription = stringResource(StringsR.string.clear_search_query)
                         )
                     }
                 }

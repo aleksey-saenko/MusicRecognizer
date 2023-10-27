@@ -113,6 +113,7 @@
     <string name="filter_ascending">Ascending</string>
     <string name="filter_descending">Descending</string>
     <string name="search_track_hint">Search track…</string>
+    <string name="clear_search_query">Clear search query</string>
     <string name="no_tracks_match_filter">No tracks matching your selected filters</string>
     <string name="no_tracks_match_search">No tracks matching your search criteria</string>
     <string name="close">Close</string>
@@ -183,5 +184,6 @@
     <string name="stop_player">Stop player</string>
     <string name="start_player">Start player</string>
     <string name="edit">Edit</string>
+    <string name="format_navigate_to_screen">Navigate to %s screen</string>
 
 </resources>

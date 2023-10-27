@@ -153,7 +153,7 @@ private fun MusicServiceIcon(
     ) {
         Icon(
             painter = painterResource(iconRes),
-            contentDescription = null,
+            contentDescription = stringResource(titleRes),
             modifier = Modifier.size(20.dp)
         )
     }

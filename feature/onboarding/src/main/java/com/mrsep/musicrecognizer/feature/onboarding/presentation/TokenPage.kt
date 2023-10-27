@@ -158,11 +158,12 @@ internal fun TokenPage(
 
                 FlowRow(
                     modifier = Modifier.padding(top = 24.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     OutlinedButton(
                         onClick = onTokenSkip,
-                        enabled = uiState.tokenValidationStatus.isValidationAllowed
+                        enabled = uiState.tokenValidationStatus.isValidationAllowed,
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     ) {
                         Text(
                             text = stringResource(StringsR.string.skip)
@@ -170,7 +171,8 @@ internal fun TokenPage(
                     }
                     Button(
                         onClick = onTokenValidate,
-                        enabled = uiState.tokenValidationStatus.isValidationAllowed
+                        enabled = uiState.tokenValidationStatus.isValidationAllowed,
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     ) {
                         when (uiState.tokenValidationStatus) {
                             TokenValidationStatus.Success -> Text(

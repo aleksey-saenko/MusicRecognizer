@@ -55,7 +55,8 @@ internal fun AboutScreen(
                 .padding(16.dp)
         ) {
             AsyncImage(
-                model = UiR.mipmap.ic_launcher, contentDescription = null,
+                model = UiR.mipmap.ic_launcher,
+                contentDescription = null,
                 modifier = Modifier.size(120.dp)
             )
             Text(
@@ -70,6 +71,10 @@ internal fun AboutScreen(
             Text(
                 text = stringResource(StringsR.string.ver, version),
                 modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = stringResource(StringsR.string.powered_by_audd),
+                modifier = Modifier.padding(top = 16.dp)
             )
 
             Column(
@@ -92,12 +97,6 @@ internal fun AboutScreen(
                     Text(text = stringResource(StringsR.string.github_repository))
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(StringsR.string.powered_by_audd),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 16.dp)
-            )
         }
     }
 }

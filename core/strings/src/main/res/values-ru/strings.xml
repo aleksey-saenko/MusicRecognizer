@@ -104,6 +104,7 @@
     <string name="filter_ascending">Возрастанию</string>
     <string name="filter_descending">Убыванию</string>
     <string name="search_track_hint">Поиск трека…</string>
+    <string name="clear_search_query">Очистить поисковой запрос</string>
     <string name="no_tracks_match_filter">Нет треков, соответствующих выбранным фильтрам</string>
     <string name="no_tracks_match_search">Нет треков, соответствующих критериям поиска</string>
     <string name="close">Закрыть</string>
@@ -174,5 +175,6 @@
     <string name="stop_player">Остановить проигрыватель</string>
     <string name="start_player">Запустить проигрыватель</string>
     <string name="edit">Редактировать</string>
+    <string name="format_navigate_to_screen">Перейти на экран %s</string>
 
 </resources>

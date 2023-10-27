@@ -18,12 +18,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 fun AppNavigationBar(
@@ -74,7 +76,10 @@ fun AppNavigationBar(
                 icon = {
                     Icon(
                         painter = painterResource(destination.iconResId),
-                        contentDescription = null,
+                        contentDescription = stringResource(
+                            StringsR.string.format_navigate_to_screen,
+                            stringResource(destination.titleResId)
+                        ),
                         tint = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
                             alpha = 0.85f
                         ),
@@ -94,7 +99,9 @@ fun AppNavigationBar(
                         restoreState = true
                     }
                 },
-                modifier = Modifier.fillMaxHeight().weight(1f)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
             )
 
         }

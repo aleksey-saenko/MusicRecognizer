@@ -1,5 +1,11 @@
 # Audile
 
+<a href="https://f-droid.org/ru/packages/com.mrsep.musicrecognizer/">
+  <img alt="Get it on F-Droid"
+       height="80"
+       src="https://f-droid.org/badge/get-it-on.png" />
+</a>
+
 Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
 This application uses the AudD® service as a Music Recognition API.
 

@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -12,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,7 +43,13 @@ internal fun QueueScreen(
         )
 
         is QueueScreenUiState.Success -> {
-
+            val context = LocalContext.current
+            val playerStatus = state.playerStatus
+            LaunchedEffect(playerStatus) {
+                if (playerStatus is PlayerStatus.Error) {
+                    Toast.makeText(context, playerStatus.message, Toast.LENGTH_LONG).show()
+                }
+            }
             val lifecycle = LocalLifecycleOwner.current.lifecycle
             DisposableEffect(Unit) {
                 val observer = LifecycleEventObserver { _, event ->

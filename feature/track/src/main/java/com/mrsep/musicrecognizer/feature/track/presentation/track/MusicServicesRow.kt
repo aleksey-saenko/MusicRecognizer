@@ -5,8 +5,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,7 +17,6 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,6 +30,7 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun ServicesChipsLazyRow(
     links: ImmutableList<ServiceLink>,
+    showOnlyIcons: Boolean,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -50,58 +48,20 @@ internal fun ServicesChipsLazyRow(
                 )
         ) {
             items(items = links) { link ->
-                MusicServiceChip(
-                    titleRes = link.titleId(),
-                    iconRes = link.iconId(),
-                    link = link.url
-                )
+                if (showOnlyIcons) {
+                    MusicServiceIcon(
+                        titleRes = link.titleId(),
+                        iconRes = link.iconId(),
+                        link = link.url
+                    )
+                } else {
+                    MusicServiceChip(
+                        titleRes = link.titleId(),
+                        iconRes = link.iconId(),
+                        link = link.url
+                    )
+                }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-internal fun ServicesChipsFlowRow(
-    links: ImmutableList<ServiceLink>,
-    modifier: Modifier = Modifier
-) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
-            alignment = Alignment.Start
-        ),
-        modifier = modifier
-    ) {
-        links.forEach { link ->
-            MusicServiceChip(
-                titleRes = link.titleId(),
-                iconRes = link.iconId(),
-                link = link.url
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-internal fun ServicesIconsFlowRow(
-    links: ImmutableList<ServiceLink>,
-    modifier: Modifier = Modifier
-) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
-            alignment = Alignment.Start
-        ),
-        modifier = modifier
-    ) {
-        links.forEach { link ->
-            MusicServiceIcon(
-                titleRes = link.titleId(),
-                iconRes = link.iconId(),
-                link = link.url
-            )
         }
     }
 }

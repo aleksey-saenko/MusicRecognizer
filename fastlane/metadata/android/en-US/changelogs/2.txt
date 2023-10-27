@@ -1,0 +1,2 @@
+* Fixed a bug with audio recording on some devices that caused unsuccessful recognitions
+* Minor ui fixes

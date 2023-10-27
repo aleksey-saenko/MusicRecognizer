@@ -23,11 +23,8 @@ internal fun DeveloperScreen(
     onBackPressed: () -> Unit,
     viewModel: DeveloperViewModel = hiltViewModel()
 ) {
-//    val context = LocalContext.current
-//    val scope = rememberCoroutineScope()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
-//    val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
 
     Column(
         modifier = Modifier
@@ -55,35 +52,52 @@ internal fun DeveloperScreen(
             ButtonGroup(
                 title = "DATABASE",
                 content = {
-                    Button(onClick = viewModel::clearDb) { Text(text = "Clear") }
-                    Button(onClick = viewModel::prepopulateDbFakes) { Text(text = "Load fake") }
-                    Button(onClick = viewModel::prepopulateDbAssets) { Text(text = "Load real") }
+                    Button(onClick = viewModel::clearDb) {
+                        Text(text = "Clear")
+                    }
+                    Button(onClick = viewModel::prepopulateDbFakes) {
+                        Text(text = "Load fake")
+                    }
+                    Button(onClick = viewModel::prepopulateDbAssets) {
+                        Text(text = "Load real")
+                    }
                 }
             )
+            val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
+            val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
+            val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
             ButtonGroup(
-                title = "Audio Chain Test (with encoder)",
+                title = "AudioRecorder (with encoder)",
+                subtitle = "soundLevel = $amplitude",
                 content = {
-                    Button(onClick = viewModel::testAudioChain) { Text(text = "start chain") }
-                    Button(onClick = viewModel::stopTestAudioChain) { Text(text = "stop chain") }
-                    Button(onClick = viewModel::writeChainResult) { Text(text = "write result") }
-                    Button(onClick = viewModel::playChainResult) { Text(text = "play result") }
+                    Button(
+                        onClick = {
+                            if (isRecording) {
+                                viewModel.stopAudioRecord()
+                            } else {
+                                viewModel.startAudioRecord()
+                            }
+                        },
+                        enabled = !isPlaying
+                    ) {
+                        Text(text = if (isRecording) "Stop rec" else "Start rec")
+                    }
+                    Button(
+                        onClick = {
+                            if (isPlaying) {
+                                viewModel.stopPlayer()
+                            } else {
+                                viewModel.startPlayer()
+                            }
+                        },
+                        enabled = !isRecording
+                    ) {
+                        Text(text = if (isPlaying) "Stop player" else "Start player")
+                    }
                 }
             )
-//            Text(
-//                text = "AmplitudeVisualizerDirect",
-//                fontFamily = FontFamily.Monospace,
-//                fontWeight = FontWeight.Bold,
-//                fontSize = 12.sp,
-//                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
-//            )
-//            AmplitudeVisualizerDirect(
-//                modifier = Modifier.height(48.dp),
-//                currentValue = amplitude
-//            )
-
         }
     }
-
 
 }
 
@@ -92,6 +106,7 @@ internal fun DeveloperScreen(
 private fun ButtonGroup(
     modifier: Modifier = Modifier,
     title: String,
+    subtitle: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
@@ -109,6 +124,13 @@ private fun ButtonGroup(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
+            subtitle?.let {
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
             FlowRow(
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -119,6 +141,7 @@ private fun ButtonGroup(
 
 }
 
+@Suppress("unused")
 private fun showStubToast(context: Context) {
     Toast.makeText(context, context.getString(R.string.not_implemented), Toast.LENGTH_LONG).show()
 }

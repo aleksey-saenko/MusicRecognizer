@@ -59,7 +59,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
         val contentText = "${track.title} - ${track.artistWithAlbumFormatted()}"
 
         val notification = NotificationCompat.Builder(appContext, ENQUEUED_RESULT_CHANNEL_ID)
-            .setSmallIcon(UiR.drawable.baseline_album_24)
+            .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)

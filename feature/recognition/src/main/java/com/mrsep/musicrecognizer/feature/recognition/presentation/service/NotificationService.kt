@@ -254,7 +254,7 @@ internal class NotificationService : Service() {
     private fun statusNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_STATUS_CHANNEL_ID)
             .setContentTitle(getString(StringsR.string.app_name))
-            .setSmallIcon(UiR.drawable.baseline_album_24)
+            .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
             .setOngoing(true)
@@ -265,7 +265,7 @@ internal class NotificationService : Service() {
 
     private fun resultNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_RESULT_CHANNEL_ID)
-            .setSmallIcon(UiR.drawable.baseline_album_24)
+            .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)

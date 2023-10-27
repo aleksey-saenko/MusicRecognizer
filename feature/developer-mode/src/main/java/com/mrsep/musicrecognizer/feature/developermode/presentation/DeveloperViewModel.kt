@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
+import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
@@ -14,7 +15,9 @@ import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -75,11 +78,29 @@ internal class DeveloperViewModel @Inject constructor(
         }
     }
 
-    val amplitudeFlow get() = amplitudeSource.amplitudeFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val amplitudeFlow get() = isRecording.flatMapLatest { rec ->
+        if (rec) amplitudeSource.amplitudeFlow else flowOf(0f)
+    }
+
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording = _isRecording.asStateFlow()
+
+    val isPlaying = playerController.statusFlow
+        .map { it is PlayerStatusDo.Started }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            false
+        )
+
     private var _audioChainJob: Job? = null
     private val destination = ByteArrayOutputStream()
 
-    fun testAudioChain() {
+    fun startAudioRecord() {
+        _isRecording.update { true }
+        destination.reset()
+        playerController.stop()
         _audioChainJob = viewModelScope.launch(Dispatchers.IO) {
             encoder.aacPacketsFlow.takeWhile { it.isSuccess }.collect {
                 destination.write(it.getOrNull()!!.data)
@@ -87,19 +108,23 @@ internal class DeveloperViewModel @Inject constructor(
         }
     }
 
-    fun writeChainResult() {
+    fun stopAudioRecord() {
         viewModelScope.launch(Dispatchers.IO) {
-            appContext.writeToFile(destination.toByteArray(), "testAudioChain")
+            _audioChainJob?.cancelAndJoin()
+            appContext.writeToFile(destination.toByteArray(), "testAudio")
+            _isRecording.update { false }
         }
     }
 
-    fun playChainResult() {
-        playerController.start(File("${appContext.filesDir.absolutePath}/testAudioChain"))
+    fun startPlayer() {
+        if (_audioChainJob == null || _audioChainJob?.isCompleted == true) {
+            playerController.start(File("${appContext.filesDir.absolutePath}/testAudio"))
+        }
     }
 
-    fun stopTestAudioChain() = _audioChainJob?.cancel()
-
-
+    fun stopPlayer() {
+        playerController.stop()
+    }
 
 }
 

@@ -42,7 +42,7 @@ class SoundSourceImpl @Inject constructor() : SoundSource {
     private val audioSource = MediaRecorder.AudioSource.MIC
 
     override val params by lazy {
-        val encodings = listOf(AudioFormat.ENCODING_PCM_FLOAT, AudioFormat.ENCODING_PCM_16BIT)
+        val encodings = listOf(AudioFormat.ENCODING_PCM_16BIT, AudioFormat.ENCODING_PCM_FLOAT)
         val sampleRates = listOf(48_000, 44_100, 96_000)
         val ch = AudioFormat.CHANNEL_IN_MONO
         for (enc in encodings) {
@@ -133,6 +133,6 @@ private fun FloatArray.toByteArray(): ByteArray {
     val byteBuffer = ByteBuffer
         .allocate(this.size * Float.SIZE_BYTES)
         .order(ByteOrder.nativeOrder())
-    forEach { floatValue -> byteBuffer.putFloat(floatValue) }
+    byteBuffer.asFloatBuffer().put(this)
     return byteBuffer.array()
 }

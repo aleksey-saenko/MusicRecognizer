@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.player
 import android.media.MediaPlayer
 import kotlinx.coroutines.flow.*
 import java.io.File
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @Suppress("unused")
@@ -17,29 +18,48 @@ class MediaPlayerController @Inject constructor() : PlayerControllerDo {
     override val statusFlow = _statusFlow.asStateFlow()
 
     override fun start(file: File) {
-        stop()
-        player = MediaPlayer().apply {
-            isLooping = false
-            setDataSource(file.absolutePath)
-            setOnCompletionListener {
-                _statusFlow.update { PlayerStatusDo.Idle }
+        try {
+            stop()
+            player = MediaPlayer().apply {
+                isLooping = false
+                setDataSource(file.absolutePath)
+                setOnCompletionListener {
+                    _statusFlow.update { PlayerStatusDo.Idle }
+                }
+                setOnErrorListener { _, what, extra ->
+                    _statusFlow.update {
+                        PlayerStatusDo.Error(
+                            record = file,
+                            message = "what=$what, extra=$extra"
+                        )
+                    }
+                    true
+                }
+                setOnPreparedListener {
+                    player?.start()
+                    _statusFlow.update { PlayerStatusDo.Started(file) }
+                }
+                prepareAsync()
             }
-            setOnErrorListener { _, what, extra ->
-                _statusFlow.update { PlayerStatusDo.Error(file, "what=$what, extra=$extra") }
-                true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _statusFlow.update {
+                PlayerStatusDo.Error(
+                    record = file,
+                    message = e::class.java.simpleName
+                )
             }
-            setOnPreparedListener {
-                player?.start()
-                _statusFlow.update { PlayerStatusDo.Started(file) }
-            }
-            prepareAsync()
         }
     }
 
     override fun pause() {
         val currentStatus = _statusFlow.value
         if (currentStatus is PlayerStatusDo.Started) {
-            player?.pause()
+            try {
+                player?.pause()
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
             _statusFlow.update { PlayerStatusDo.Paused(currentStatus.record) }
         }
     }
@@ -47,14 +67,22 @@ class MediaPlayerController @Inject constructor() : PlayerControllerDo {
     override fun resume() {
         val currentStatus = _statusFlow.value
         if (currentStatus is PlayerStatusDo.Paused) {
-            player?.start()
+            try {
+                player?.start()
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
             _statusFlow.update { PlayerStatusDo.Started(currentStatus.record) }
         }
     }
 
     override fun stop() {
         player?.apply {
-            stop()
+            try {
+                stop()
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
             release()
         }
         player = null

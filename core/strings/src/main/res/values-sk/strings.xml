@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Audile</string>
     <string name="tap_to_recognize">Klepnutím rozpoznáte</string>
-    <string name="tap_to_recognize_the_song">Klepnutím rospoznáte skladbu</string>
+    <string name="tap_to_recognize_the_song">Klepnutím rozpoznáte skladbu</string>
     <string name="recognize">Rozpoznať</string>
     <string name="listening">Počúvam</string>
     <string name="listening_with_ellipsis">Počúvam...</string>

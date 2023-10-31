@@ -14,11 +14,9 @@
     <string name="onboarding_permission_message_start">"Aby aplikácia fungovala správne, vyžaduje povolenie na nahrávanie zvuku. Udelením tohto povolenia súhlasíte s tým, že vaše zaznamenané údaje budú použité spoločnosťou "</string>
     <string name="onboarding_permission_message_link">vzdialená služba</string>
     <string name="onboarding_permission_message_end">" na rozpoznávanie hudby. Aplikácia tieto údaje nepoužíva na žiadne iné účely."</string>
-    <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
     <string name="onboarding_token_message_start">"Aplikácia využíva službu rozpoznávania hudby AudD®, ktorá vyžaduje špeciálny token API. Prihláste sa "</string>
     <string name="onboarding_token_message_link">tu</string>
     <string name="onboarding_token_message_end">" získajte svoj token, ak ho ešte nemáte."</string>
-    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
     <string name="token_skip_message">Preskočenie tohto kroku obmedzí vaše denné rozpoznávanie, avšak token môžete kedykoľvek zadať neskôr v nastaveniach.</string>
     <string name="hide_token">Skryť token</string>
     <string name="show_token">Zobraziť token</string>
@@ -30,13 +28,6 @@
     <string name="final_onboarding_page_title">Všetko je pripravené</string>
     <string name="final_onboarding_page_message">Nastavenie bolo úspešne dokončené</string>
     <string name="get_started">Začať</string>
-    <string name="spotify" translatable="false">Spotify</string>
-    <string name="apple_music" translatable="false">Apple Music</string>
-    <string name="deezer" translatable="false">Deezer</string>
-    <string name="napster" translatable="false">Napster</string>
-    <string name="musicbrainz" translatable="false">MusicBrainz</string>
-    <string name="youtube" translatable="false">Youtube</string>
-    <string name="soundcloud" translatable="false">SoundCloud</string>
     <string name="apply">Použiť</string>
     <string name="cancel">Zrušiť</string>
     <string name="none">Žiadne</string>

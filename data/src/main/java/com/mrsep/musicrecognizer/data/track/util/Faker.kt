@@ -28,7 +28,8 @@ internal fun getFakeTrackList(startIndex: Int, endIndex: Int, inclusive: Boolean
             ),
             metadata = TrackEntity.Metadata(
                 lastRecognitionDate = Instant.ofEpochSecond(index.toLong()),
-                isFavorite = favorites
+                isFavorite = favorites,
+                themeSeedColor = null
             )
         )
     }
@@ -54,7 +55,8 @@ internal val fakeTrack by lazy {
         ),
         metadata = TrackEntity.Metadata(
             lastRecognitionDate = Instant.now(),
-            isFavorite = false
+            isFavorite = false,
+            themeSeedColor = null
         )
     )
 }

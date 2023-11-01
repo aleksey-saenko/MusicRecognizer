@@ -12,6 +12,7 @@ interface TrackRepositoryDo {
 
     suspend fun insertOrReplace(vararg track: TrackEntity)
     suspend fun insertOrReplaceSaveMetadata(vararg track: TrackEntity): List<TrackEntity>
+    suspend fun updateThemeSeedColor(mbId: String, color: Int?)
     suspend fun update(track: TrackEntity)
     suspend fun delete(vararg track: TrackEntity)
     suspend fun deleteByMbId(vararg mbId: String)

@@ -21,6 +21,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setRequiredServices(requiredServicesMapper.reverseMap(input.requiredServices))
             .setNotificationServiceEnabled(input.notificationServiceEnabled)
             .setDynamicColorsEnabled(input.dynamicColorsEnabled)
+            .setArtworkBasedThemeEnabled(input.artworkBasedThemeEnabled)
             .setDeveloperModeEnabled(input.developerModeEnabled)
             .setFallbackPolicy(fallbackPolicyMapper.reverseMap(input.fallbackPolicy))
             .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
@@ -34,6 +35,7 @@ class UserPreferencesDoMapper @Inject constructor(
             apiToken = input.apiToken,
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
+            artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),

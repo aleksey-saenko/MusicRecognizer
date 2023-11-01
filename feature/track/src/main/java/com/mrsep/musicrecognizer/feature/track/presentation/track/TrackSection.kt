@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 
@@ -24,6 +25,8 @@ internal fun TrackSection(
     links: ImmutableList<ServiceLink>,
     isExpandedScreen: Boolean,
     onArtworkCached: (Uri) -> Unit,
+    createSeedColor: Boolean,
+    onSeedColor: (Color) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (isExpandedScreen) {
@@ -35,6 +38,8 @@ internal fun TrackSection(
             AlbumArtwork(
                 url = artworkUrl,
                 onArtworkCached = onArtworkCached,
+                createSeedColor = createSeedColor,
+                onSeedColorCreated = onSeedColor,
                 modifier = Modifier
                     .padding(start = 16.dp, bottom = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
@@ -71,6 +76,8 @@ internal fun TrackSection(
             AlbumArtwork(
                 url = artworkUrl,
                 onArtworkCached = onArtworkCached,
+                createSeedColor = createSeedColor,
+                onSeedColorCreated = onSeedColor,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .sizeIn(maxWidth = 600.dp)

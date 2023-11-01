@@ -50,6 +50,10 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { setDynamicColorsEnabled(value) }
     }
 
+    override suspend fun setArtworkBasedThemeEnabled(value: Boolean) {
+        safeWriter { setArtworkBasedThemeEnabled(value) }
+    }
+
     override suspend fun setRequiredServices(value: UserPreferencesDo.RequiredServicesDo) {
         safeWriter {
             setRequiredServices(requiredServicesMapper.reverseMap(value))

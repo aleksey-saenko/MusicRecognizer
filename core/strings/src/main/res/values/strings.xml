@@ -134,6 +134,7 @@
     <string name="music_services_links">Music service links</string>
     <string name="required_services_dialog">Choose the music services for which you would like to see web links (if available):</string>
     <string name="dynamic_colors_pref_title">Use dynamic colors</string>
+    <string name="artwork_colors_pref_title">Adapt theme to artwork colors</string>
     <string name="misc">Misc</string>
     <string name="developer_options">Developer options</string>
     <string name="appearance">Appearance</string>

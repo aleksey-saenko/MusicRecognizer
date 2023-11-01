@@ -1,0 +1,214 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "a6eb5bad88ba773dea5efa2a5852b455",
+    "entities": [
+      {
+        "tableName": "track",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mb_id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `lyrics` TEXT, `link_artwork` TEXT, `link_spotify` TEXT, `link_youtube` TEXT, `link_soundcloud` TEXT, `link_apple_music` TEXT, `link_musicbrainz` TEXT, `link_deezer` TEXT, `link_napster` TEXT, `last_recognition_date` INTEGER NOT NULL, `is_favorite` INTEGER NOT NULL, `theme_seed_color` INTEGER, PRIMARY KEY(`mb_id`))",
+        "fields": [
+          {
+            "fieldPath": "mbId",
+            "columnName": "mb_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "artist",
+            "columnName": "artist",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "album",
+            "columnName": "album",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "releaseDate",
+            "columnName": "release_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lyrics",
+            "columnName": "lyrics",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.artwork",
+            "columnName": "link_artwork",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.spotify",
+            "columnName": "link_spotify",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.youtube",
+            "columnName": "link_youtube",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.soundCloud",
+            "columnName": "link_soundcloud",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.appleMusic",
+            "columnName": "link_apple_music",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.musicBrainz",
+            "columnName": "link_musicbrainz",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.deezer",
+            "columnName": "link_deezer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "links.napster",
+            "columnName": "link_napster",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "metadata.lastRecognitionDate",
+            "columnName": "last_recognition_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadata.isFavorite",
+            "columnName": "is_favorite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadata.themeSeedColor",
+            "columnName": "theme_seed_color",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "mb_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "enqueued_recognition",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `record_file` TEXT NOT NULL, `creation_date` INTEGER NOT NULL, `result_type` TEXT, `result_mb_id` TEXT, `result_message` TEXT, `result_date` INTEGER, FOREIGN KEY(`result_mb_id`) REFERENCES `track`(`mb_id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recordFile",
+            "columnName": "record_file",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creationDate",
+            "columnName": "creation_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resultType",
+            "columnName": "result_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultMbId",
+            "columnName": "result_mb_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultMessage",
+            "columnName": "result_message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resultDate",
+            "columnName": "result_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_enqueued_recognition_result_mb_id",
+            "unique": false,
+            "columnNames": [
+              "result_mb_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_enqueued_recognition_result_mb_id` ON `${TABLE_NAME}` (`result_mb_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "track",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "result_mb_id"
+            ],
+            "referencedColumns": [
+              "mb_id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a6eb5bad88ba773dea5efa2a5852b455')"
+    ]
+  }
+}

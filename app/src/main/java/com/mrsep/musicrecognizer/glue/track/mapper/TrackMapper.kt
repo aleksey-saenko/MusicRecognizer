@@ -27,7 +27,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             ),
             metadata = Track.Metadata(
                 lastRecognitionDate = input.metadata.lastRecognitionDate,
-                isFavorite = input.metadata.isFavorite
+                isFavorite = input.metadata.isFavorite,
+                themeSeedColor = input.metadata.themeSeedColor
             )
         )
     }
@@ -52,7 +53,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             ),
             metadata = TrackEntity.Metadata(
                 lastRecognitionDate = input.metadata.lastRecognitionDate,
-                isFavorite = input.metadata.isFavorite
+                isFavorite = input.metadata.isFavorite,
+                themeSeedColor = input.metadata.themeSeedColor
             )
         )
     }

@@ -208,6 +208,13 @@ internal fun PreferencesScreen(
                                 modifier = Modifier.padding(top = 16.dp)
                             )
                         }
+
+                        PreferenceSwitchItem(
+                            title = stringResource(StringsR.string.artwork_colors_pref_title),
+                            onCheckedChange = { viewModel.setArtworkBasedThemeEnabled(it) },
+                            checked = uiState.preferences.artworkBasedThemeEnabled,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
                     }
                     PreferenceGroup(
                         title = stringResource(StringsR.string.misc),

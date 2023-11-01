@@ -66,7 +66,11 @@ internal fun OnboardingScreen(
     }
     HorizontalPager(
         beyondBoundsPageCount = 0,
-        state = pagerState
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
     ) { pageIndex ->
         when (pageIndex) {
             OnboardingPage.WELCOME.ordinal -> {

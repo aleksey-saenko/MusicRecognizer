@@ -32,6 +32,9 @@ interface TrackDao {
     @Query("UPDATE track SET is_favorite = NOT is_favorite WHERE mb_id=(:mbId)")
     suspend fun toggleFavoriteMark(mbId: String)
 
+    @Query("UPDATE track SET theme_seed_color=(:color) WHERE mb_id=(:mbId)")
+    suspend fun updateThemeSeedColor(mbId: String, color: Int?)
+
     @Update
     suspend fun update(track: TrackEntity)
 

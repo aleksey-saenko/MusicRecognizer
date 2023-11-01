@@ -26,6 +26,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setApiToken(BuildConfig.AUDD_TOKEN)
             .setOnboardingCompleted(false)
             .setDynamicColorsEnabled(true)
+            .setArtworkBasedThemeEnabled(false)
             .setNotificationServiceEnabled(false)
             .setDeveloperModeEnabled(true)
             .setFallbackPolicy(

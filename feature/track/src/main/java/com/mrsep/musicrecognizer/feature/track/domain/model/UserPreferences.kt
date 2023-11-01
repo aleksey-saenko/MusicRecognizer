@@ -2,7 +2,8 @@ package com.mrsep.musicrecognizer.feature.track.domain.model
 
 data class UserPreferences(
     val requiredServices: RequiredServices,
-    val lyricsFontStyle: LyricsFontStyle
+    val lyricsFontStyle: LyricsFontStyle,
+    val artworkBasedThemeEnabled: Boolean
 ) {
 
     data class RequiredServices(

@@ -14,6 +14,8 @@ interface PreferencesRepositoryDo {
 
     suspend fun setDynamicColorsEnabled(value: Boolean)
 
+    suspend fun setArtworkBasedThemeEnabled(value: Boolean)
+
     suspend fun setRequiredServices(value: UserPreferencesDo.RequiredServicesDo)
 
     suspend fun setDeveloperModeEnabled(value: Boolean)

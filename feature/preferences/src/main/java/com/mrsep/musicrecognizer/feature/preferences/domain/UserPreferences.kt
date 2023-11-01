@@ -6,6 +6,7 @@ data class UserPreferences(
     val requiredServices: RequiredServices,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
+    val artworkBasedThemeEnabled: Boolean,
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy
 ) {

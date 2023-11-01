@@ -31,7 +31,9 @@ internal class LyricsViewModel @Inject constructor(
                         title = track.title,
                         artist = track.artist,
                         lyrics = lyrics,
-                        fontStyle = preferences.lyricsFontStyle
+                        fontStyle = preferences.lyricsFontStyle,
+                        themeSeedColor = track.metadata.themeSeedColor,
+                        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled
                     )
                 }
             } ?: LyricsUiState.LyricsNotFound
@@ -61,7 +63,9 @@ internal sealed class LyricsUiState {
         val title: String,
         val artist: String,
         val lyrics: String,
-        val fontStyle: UserPreferences.LyricsFontStyle
+        val fontStyle: UserPreferences.LyricsFontStyle,
+        val themeSeedColor: Int?,
+        val artworkBasedThemeEnabled: Boolean
     ) : LyricsUiState()
 
 }

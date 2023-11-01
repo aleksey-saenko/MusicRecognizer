@@ -22,6 +22,10 @@ class AdapterTrackRepository @Inject constructor(
         trackRepositoryDo.deleteByMbId(mbId)
     }
 
+    override suspend fun updateThemeSeedColor(mbId: String, color: Int?) {
+        trackRepositoryDo.updateThemeSeedColor(mbId, color)
+    }
+
     override fun getByMbIdFlow(mbId: String): Flow<Track?> {
         return trackRepositoryDo.getByMbIdFlow(mbId)
             .map { entity -> entity?.let { trackMapper.map(it) } }

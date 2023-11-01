@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -10,8 +11,11 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
 
 @Database(
     entities = [TrackEntity::class, EnqueuedRecognitionEntity::class],
-    version = 1,
-    exportSchema = true
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ]
 )
 @TypeConverters(
     value = [FileRoomConverter::class, InstantRoomConverter::class, LocalDateRoomConverter::class]

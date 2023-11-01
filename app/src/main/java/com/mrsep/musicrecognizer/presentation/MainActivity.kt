@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
-                        .systemBarsPadding(),
+                        .navigationBarsPadding(),
                 ) {
                     AppNavigation(
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),

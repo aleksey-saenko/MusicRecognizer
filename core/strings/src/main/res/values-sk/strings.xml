@@ -5,9 +5,9 @@
     <string name="tap_to_recognize_the_song">Klepnutím rozpoznáte skladbu</string>
     <string name="recognize">Rozpoznať</string>
     <string name="listening">Počúvam</string>
-    <string name="listening_with_ellipsis">Počúvam...</string>
+    <string name="listening_with_ellipsis">Počúvam…</string>
     <string name="trying_one_more_time">Pokúšam sa ešte raz</string>
-    <string name="listening_last_attempt">Počúvam... Posledný pokus...</string>
+    <string name="listening_last_attempt">Počúvam… Posledný pokus…</string>
     <string name="preferences">Predvoľby</string>
     <string name="welcome">Vitajte</string>
     <string name="onboarding_welcome_message">Audile je aplikácia na rozpoznávanie hudby, ktorá vám môže pomôcť rýchlo a presne rozpoznať hudobnú skladbu prehrávanú vo vašom okolí.</string>
@@ -125,6 +125,7 @@
     <string name="music_services_links">Odkazy na hudobné služby</string>
     <string name="required_services_dialog">Vyberte hudobné služby, pre ktoré chcete zobraziť webové odkazy (ak sú k dispozícii):</string>
     <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>
+    <string name="artwork_colors_pref_title">Prispôsobte tému farbám obrázku</string>
     <string name="misc">Rôzne</string>
     <string name="developer_options">Nastavenia pre vývojárov</string>
     <string name="appearance">Vzhľad</string>

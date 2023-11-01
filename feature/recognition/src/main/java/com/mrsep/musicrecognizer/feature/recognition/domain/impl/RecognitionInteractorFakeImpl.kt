@@ -91,7 +91,8 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
             ),
             metadata = Track.Metadata(
                 lastRecognitionDate = Instant.now(),
-                isFavorite = false
+                isFavorite = false,
+                themeSeedColor = null
             )
         )
         trackRepository.insertOrReplaceSaveMetadata(fakeTrack)

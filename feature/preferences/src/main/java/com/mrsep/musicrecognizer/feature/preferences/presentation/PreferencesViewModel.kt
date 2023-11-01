@@ -36,6 +36,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setArtworkBasedThemeEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setArtworkBasedThemeEnabled(value)
+        }
+    }
+
     fun setRequiredServices(requiredServices: UserPreferences.RequiredServices) {
         viewModelScope.launch {
             preferencesRepository.setRequiredServices(requiredServices)

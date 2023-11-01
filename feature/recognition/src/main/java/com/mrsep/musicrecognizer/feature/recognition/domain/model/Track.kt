@@ -32,7 +32,8 @@ data class Track(
 
     data class Metadata(
         val lastRecognitionDate: Instant,
-        val isFavorite: Boolean
+        val isFavorite: Boolean,
+        val themeSeedColor: Int?
     )
 
 }

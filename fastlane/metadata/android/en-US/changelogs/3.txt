@@ -1,0 +1,2 @@
+* Added Slovak translation (thanks to tomz00)
+* Added option to adapt track/lyrics screen to artwork colors (can be enabled via preferences)

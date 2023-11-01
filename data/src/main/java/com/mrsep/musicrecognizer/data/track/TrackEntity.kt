@@ -51,7 +51,9 @@ data class TrackEntity(
         @ColumnInfo(name = "last_recognition_date")
         val lastRecognitionDate: Instant,
         @ColumnInfo(name = "is_favorite")
-        val isFavorite: Boolean
+        val isFavorite: Boolean,
+        @ColumnInfo(name = "theme_seed_color")
+        val themeSeedColor: Int?,
     )
 
 }

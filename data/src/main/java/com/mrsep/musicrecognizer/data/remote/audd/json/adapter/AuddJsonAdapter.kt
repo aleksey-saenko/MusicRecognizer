@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.audd.json.adapter
 
+import android.graphics.Color
 import android.text.Html
 import android.util.Patterns
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
@@ -60,7 +61,9 @@ internal class AuddJsonAdapter {
                 ),
                 metadata = TrackEntity.Metadata(
                     lastRecognitionDate = Instant.now(),
-                    isFavorite = false
+                    isFavorite = false,
+                    //TODO: need to test matching the color by palette
+                    themeSeedColor = null //json.result.parseArtworkSeedColor()
                 )
             )
         )
@@ -161,6 +164,11 @@ private fun AuddResponseJson.Success.Result.parseLyrics() = this.lyricsJson?.lyr
         Html.FROM_HTML_MODE_COMPACT
     ).toString().trim().takeIf { it.isNotBlank() }
 }
+
+private fun AuddResponseJson.Success.Result.parseArtworkSeedColor() =
+    this.appleMusic?.artwork?.backgroundColor?.run {
+        runCatching { Color.parseColor("#$this") }.getOrNull()
+    }
 
 /*
 https://docs.audd.io/#common-errors

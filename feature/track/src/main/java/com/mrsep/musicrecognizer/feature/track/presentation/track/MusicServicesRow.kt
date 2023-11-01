@@ -88,7 +88,7 @@ private fun MusicServiceChip(
         },
         border = SuggestionChipDefaults.suggestionChipBorder(
             MaterialTheme.colorScheme.outline.copy(
-                0.5f
+                0.75f
             )
         ),
         modifier = modifier

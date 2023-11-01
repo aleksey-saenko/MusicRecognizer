@@ -22,7 +22,9 @@ internal data class AppleMusicJson(
     @JsonClass(generateAdapter = true)
     data class Artwork(
         @Json(name = "url")
-        val url: String?
+        val url: String?,
+        @Json(name = "bgColor")
+        val backgroundColor: String?
     )
 
 }

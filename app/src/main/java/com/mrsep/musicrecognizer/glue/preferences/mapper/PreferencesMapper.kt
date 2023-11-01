@@ -22,6 +22,7 @@ class PreferencesMapper @Inject constructor(
             apiToken = input.apiToken,
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
+            artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy)

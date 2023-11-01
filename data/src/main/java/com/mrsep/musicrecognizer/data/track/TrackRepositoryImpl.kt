@@ -74,6 +74,12 @@ class TrackRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateThemeSeedColor(mbId: String, color: Int?) {
+        withContext(persistentCoroutineContext) {
+            trackDao.updateThemeSeedColor(mbId, color)
+        }
+    }
+
     override suspend fun update(track: TrackEntity) {
         withContext(persistentCoroutineContext) {
             trackDao.update(track)

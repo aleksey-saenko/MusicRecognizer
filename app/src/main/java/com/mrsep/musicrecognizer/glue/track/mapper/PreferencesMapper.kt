@@ -22,7 +22,8 @@ class PreferencesMapper @Inject constructor(
                 napster = input.requiredServices.napster,
                 musicbrainz = input.requiredServices.musicbrainz
             ),
-            lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle)
+            lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
+            artworkBasedThemeEnabled = input.artworkBasedThemeEnabled
         )
     }
 

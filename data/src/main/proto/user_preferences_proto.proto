@@ -81,4 +81,6 @@ message UserPreferencesProto {
 
   TrackFilterProto track_filter = 27;
 
+  bool artwork_based_theme_enabled = 28;
+
 }

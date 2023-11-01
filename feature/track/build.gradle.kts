@@ -75,12 +75,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-//    implementation(libs.androidx.palette)
+    implementation(libs.androidx.palette)
 
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.kotlinx.collectionImmutable)
 
     implementation(libs.coil.compose)
+    implementation(libs.materialKolor)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

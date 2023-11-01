@@ -39,6 +39,10 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setDynamicColorsEnabled(value)
     }
 
+    override suspend fun setArtworkBasedThemeEnabled(value: Boolean) {
+        preferencesRepositoryDo.setArtworkBasedThemeEnabled(value)
+    }
+
     override suspend fun setDeveloperModeEnabled(value: Boolean) {
         preferencesRepositoryDo.setDeveloperModeEnabled(value)
     }

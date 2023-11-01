@@ -6,6 +6,7 @@ data class UserPreferencesDo(
     val requiredServices: RequiredServicesDo,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
+    val artworkBasedThemeEnabled: Boolean,
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicyDo,
     val lyricsFontStyle: LyricsFontStyleDo,

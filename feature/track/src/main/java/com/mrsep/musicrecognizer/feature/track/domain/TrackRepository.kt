@@ -9,6 +9,8 @@ interface TrackRepository {
 
     suspend fun deleteByMbId(mbId: String)
 
+    suspend fun updateThemeSeedColor(mbId: String, color: Int?)
+
     fun getByMbIdFlow(mbId: String): Flow<Track?>
 
 }

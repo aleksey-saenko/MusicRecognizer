@@ -37,7 +37,7 @@ internal class TrackViewModel @Inject constructor(
         trackRepository.getByMbIdFlow(args.mbId),
         preferencesRepository.userPreferencesFlow
     ) { track, preferences ->
-        track?.toUiState(preferences.requiredServices) ?: TrackUiState.TrackNotFound
+        track?.toUiState(preferences) ?: TrackUiState.TrackNotFound
     }.transformWhile { uiState ->
         // do not update track state if track removal was requested
         // after track deletion and final animation, the screen should be destroyed
@@ -64,6 +64,12 @@ internal class TrackViewModel @Inject constructor(
         }
     }
 
+    fun updateThemeSeedColor(mbId: String, color: Int?) {
+        viewModelScope.launch {
+            trackRepository.updateThemeSeedColor(mbId, color)
+        }
+    }
+
 }
 
 @Immutable
@@ -79,6 +85,8 @@ internal sealed interface TrackUiState {
         val isFavorite: Boolean,
         val isLyricsAvailable: Boolean,
         val lastRecognitionDate: String,
+        val themeSeedColor: Int?,
+        val artworkBasedThemeEnabled: Boolean,
         val links: ImmutableList<ServiceLink>
     ) : TrackUiState {
 
@@ -90,9 +98,7 @@ internal sealed interface TrackUiState {
 
 }
 
-private fun Track.toUiState(
-    requiredServices: UserPreferences.RequiredServices
-): TrackUiState.Success {
+private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success {
     return TrackUiState.Success(
         mbId = this.mbId,
         title = this.title,
@@ -102,7 +108,9 @@ private fun Track.toUiState(
         isFavorite = this.metadata.isFavorite,
         isLyricsAvailable = this.lyrics != null,
         lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
-        links = this.links.toUiList(requiredServices),
+        themeSeedColor = this.metadata.themeSeedColor,
+        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+        links = this.links.toUiList(preferences.requiredServices),
     )
 }
 

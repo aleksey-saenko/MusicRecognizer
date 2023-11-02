@@ -87,7 +87,8 @@ internal fun QueueScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.background),
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .systemBarsPadding(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

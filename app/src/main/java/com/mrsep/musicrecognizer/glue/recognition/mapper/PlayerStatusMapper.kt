@@ -10,8 +10,8 @@ class PlayerStatusMapper @Inject constructor() : Mapper<PlayerStatusDo, PlayerSt
     override fun map(input: PlayerStatusDo): PlayerStatus {
         return when (input) {
             PlayerStatusDo.Idle -> PlayerStatus.Idle
-            is PlayerStatusDo.Paused -> PlayerStatus.Paused(input.record)
-            is PlayerStatusDo.Started -> PlayerStatus.Started(input.record)
+            is PlayerStatusDo.Paused -> PlayerStatus.Paused(input.record, input.duration)
+            is PlayerStatusDo.Started -> PlayerStatus.Started(input.record, input.duration)
             is PlayerStatusDo.Error -> PlayerStatus.Error(input.record, input.message)
         }
     }

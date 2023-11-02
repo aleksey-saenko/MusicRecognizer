@@ -18,8 +18,19 @@ class AdapterPlayerController @Inject constructor(
         get() = playerControllerDo.statusFlow
             .map { status -> statusMapper.map(status) }
 
+    override val playbackPositionFlow: Flow<Int>
+        get() = playerControllerDo.playbackPositionFlow
+
     override fun start(file: File) {
         playerControllerDo.start(file)
+    }
+
+    override fun pause() {
+        playerControllerDo.pause()
+    }
+
+    override fun resume() {
+        playerControllerDo.resume()
     }
 
     override fun stop() {

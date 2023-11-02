@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -125,7 +127,7 @@ private fun NavGraphBuilder.barNavHost(
 ) {
     composable(BAR_HOST_ROUTE) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().navigationBarsPadding(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -134,14 +136,21 @@ private fun NavGraphBuilder.barNavHost(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.weight(1f, false)
             ) {
-                if (shouldShowNavRail) AppNavigationRail(navController = innerNavController)
+                if (shouldShowNavRail) {
+                    AppNavigationRail(
+                        navController = innerNavController,
+                        modifier = Modifier.statusBarsPadding()
+                    )
+                }
                 BarNavHost(
                     outerNavController = outerNavController,
                     innerNavController = innerNavController,
                     modifier = Modifier.weight(1f, false)
                 )
             }
-            if (!shouldShowNavRail) AppNavigationBar(navController = innerNavController)
+            if (!shouldShowNavRail) {
+                AppNavigationBar(navController = innerNavController)
+            }
         }
     }
 }

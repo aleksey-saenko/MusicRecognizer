@@ -13,20 +13,19 @@ androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.0.0"
 androidxEspresso = "3.5.1"
 #androidxGlance = "1.0.0"
-androidxHiltNavigationCompose = "1.0.0"
 androidxLifecycle = "2.6.2"
 androidxLifecycleViewmodelCompose = "2.6.2"
-androidxNavigation = "2.7.4"
+androidxNavigation = "2.7.5"
 androidxWindowManager = "1.1.0"
 androidxWork = "2.9.0-rc01"
 coil = "2.5.0"
-hilt = "2.48"
-hiltExt = "1.0.0"
+hilt = "2.48.1"
+hiltExt = "1.1.0"
 junit4 = "4.13.2"
 junitExt = "1.1.5"
 kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
-kotlinxCollectionImmutable = "0.3.5"
+kotlinxCollectionImmutable = "0.3.6"
 ksp = "1.9.10-1.0.13"
 materialKolor = "1.2.7"
 moshi = "1.15.0"
@@ -59,7 +58,7 @@ androidx-datastoreCore = { group = "androidx.datastore", name = "datastore", ver
 #androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
 #androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
 #androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
-androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltExt" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycleViewmodelCompose" }

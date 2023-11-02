@@ -70,7 +70,7 @@ internal fun OnboardingScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
+            .systemBarsPadding()
     ) { pageIndex ->
         when (pageIndex) {
             OnboardingPage.WELCOME.ordinal -> {

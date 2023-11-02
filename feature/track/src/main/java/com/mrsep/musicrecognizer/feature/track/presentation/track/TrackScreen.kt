@@ -104,7 +104,8 @@ internal fun TrackScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.systemBarsPadding()
                         ) {
                             TrackScreenTopBar(
                                 onBackPressed = onBackPressed,

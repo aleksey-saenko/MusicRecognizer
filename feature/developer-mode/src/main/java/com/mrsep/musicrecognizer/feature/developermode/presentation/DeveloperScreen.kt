@@ -31,16 +31,16 @@ internal fun DeveloperScreen(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
+        DeveloperScreenTopBar(
+            topAppBarScrollBehavior = topBarBehaviour,
+            onBackPressed = onBackPressed
+        )
         AnimatedVisibility(isProcessing) {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        DeveloperScreenTopBar(
-            topAppBarScrollBehavior = topBarBehaviour,
-            onBackPressed = onBackPressed
-        )
         Column(
             modifier = Modifier
                 .nestedScroll(topBarBehaviour.nestedScrollConnection)

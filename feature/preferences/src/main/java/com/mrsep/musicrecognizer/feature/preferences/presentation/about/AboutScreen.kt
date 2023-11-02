@@ -42,6 +42,7 @@ internal fun AboutScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
     ) {
         AboutScreenTopBar(
             onBackPressed = onBackPressed,

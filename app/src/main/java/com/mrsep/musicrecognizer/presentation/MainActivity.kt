@@ -15,28 +15,17 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var databaseFiller: DatabaseFiller
-
-    @Inject
-    @ApplicationScope
-    lateinit var appScope: CoroutineScope
 
     private val viewModel: MainActivityViewModel by viewModels()
 
@@ -53,17 +42,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
-            MusicRecognizerTheme(
-                dynamicColor = isDynamicColorsEnabled(uiState)
-            ) {
-                Surface(
-                    color = Color.Unspecified,
-                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .navigationBarsPadding(),
-                ) {
+            MusicRecognizerTheme(dynamicColor = isDynamicColorsEnabled(uiState)) {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),
                         isExpandedScreen = isExpandedScreen(windowSizeClass),

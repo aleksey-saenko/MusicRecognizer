@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.emitAll
@@ -43,8 +44,11 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
         token: String,
         requiredServices: UserPreferencesDo.RequiredServicesDo
     ): Flow<SocketEvent> = flow {
+        var reconnectionDelay = 1000L
         while (true) {
             emitAll(startSingleSession(token, requiredServices))
+            delay(reconnectionDelay)
+            if (reconnectionDelay < 4000L) reconnectionDelay *= 2
         }
     }
 

@@ -98,6 +98,12 @@ internal fun AppNavigation(
             outerNavController = outerNavController,
             innerNavController = innerNavController
         )
+        librarySearchScreen(
+            onBackPressed = outerNavController::navigateUp,
+            onTrackClick = { mbId, from ->
+                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+            }
+        )
         trackScreen(
             isExpandedScreen = isExpandedScreen,
             onBackPressed = outerNavController::navigateUp,
@@ -115,6 +121,9 @@ internal fun AppNavigation(
             }
         )
         aboutScreen(onBackPressed = outerNavController::navigateUp)
+        developerScreen(
+            onBackPressed = outerNavController::navigateUp
+        )
     }
 }
 
@@ -173,13 +182,7 @@ private fun BarNavHost(
                 outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
             },
             onTrackSearchClick = { from ->
-                innerNavController.navigateToLibrarySearchScreen(from = from)
-            }
-        )
-        librarySearchScreen(
-            onBackPressed = innerNavController::navigateUp,
-            onTrackClick = { mbId, from ->
-                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+                outerNavController.navigateToLibrarySearchScreen(from = from)
             }
         )
         recognitionScreen(
@@ -203,11 +206,8 @@ private fun BarNavHost(
                 outerNavController.navigateToQueueScreen(from)
             },
             onNavigateToDeveloperScreen = { from ->
-                innerNavController.navigateToDeveloperScreen(from)
+                outerNavController.navigateToDeveloperScreen(from)
             }
-        )
-        developerScreen(
-            onBackPressed = innerNavController::navigateUp
         )
     }
 }

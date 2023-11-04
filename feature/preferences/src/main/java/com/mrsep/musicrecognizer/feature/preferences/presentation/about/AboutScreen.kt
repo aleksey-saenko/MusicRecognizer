@@ -1,8 +1,5 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation.about
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.mrsep.musicrecognizer.core.common.util.getAppVersion
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -34,7 +32,7 @@ internal fun AboutScreen(
 ) {
     val context = LocalContext.current
     val topBarBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val version = rememberSaveable { context.getVersionName() }
+    val version = rememberSaveable { context.getAppVersion() }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -100,20 +98,4 @@ internal fun AboutScreen(
             }
         }
     }
-}
-
-private fun Context.getVersionName(): String = try {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        packageManager?.getPackageInfo(
-            packageName,
-            PackageManager.PackageInfoFlags.of(0)
-        )?.versionName
-    } else {
-        @Suppress("DEPRECATION") packageManager?.getPackageInfo(
-            packageName,
-            0
-        )?.versionName
-    } ?: ""
-} catch (e: PackageManager.NameNotFoundException) {
-    ""
 }

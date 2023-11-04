@@ -1,8 +1,10 @@
 package com.mrsep.musicrecognizer.data.di
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
+import com.mrsep.musicrecognizer.core.common.util.getAppVersion
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.data.ConnectivityManagerNetworkMonitor
 import com.mrsep.musicrecognizer.data.NetworkMonitorDo
@@ -56,6 +58,7 @@ object NetworkModule {
         @ApplicationScope appScope: CoroutineScope
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(UserAgentInterceptor(appContext))
             .run {
                 if ((BuildConfig.LOG_DEBUG_MODE)) {
                     val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
@@ -87,6 +90,20 @@ object NetworkModule {
 
 }
 
+private class UserAgentInterceptor(appContext: Context) : Interceptor {
+
+    private val userAgent = "Audile/${appContext.getAppVersion()} (Android ${Build.VERSION.RELEASE})"
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        return chain.proceed(
+            chain.request().newBuilder()
+                .header("User-Agent", userAgent)
+                .build()
+        )
+    }
+
+}
+
 
 @Suppress("unused")
 @Module
@@ -99,7 +116,7 @@ interface NetworkMonitorModule {
 }
 
 
-class HttpFileLoggingInterceptor(
+private class HttpFileLoggingInterceptor(
     private val appContext: Context,
     private val scope: CoroutineScope
 ) : Interceptor {

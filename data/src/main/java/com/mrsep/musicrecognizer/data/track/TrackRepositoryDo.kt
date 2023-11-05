@@ -1,14 +1,11 @@
 package com.mrsep.musicrecognizer.data.track
 
-import androidx.paging.PagingData
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import kotlinx.coroutines.flow.Flow
 
 interface TrackRepositoryDo {
 
     fun isEmptyFlow(): Flow<Boolean>
-    fun getPagedFlow(): Flow<PagingData<TrackEntity>>
-    suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<TrackEntity>
 
     suspend fun insertOrReplace(vararg track: TrackEntity)
     suspend fun insertOrReplaceSaveMetadata(vararg track: TrackEntity): List<TrackEntity>

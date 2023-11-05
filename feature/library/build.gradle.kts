@@ -79,10 +79,6 @@ dependencies {
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.kotlinx.collectionImmutable)
 
-    implementation(libs.androidx.paging3.runtimeKtx)
-    implementation(libs.androidx.paging3.compose)
-    implementation(libs.room.paging3)
-
     implementation(libs.accompanist.permissions)
 
     implementation(libs.coil.compose)

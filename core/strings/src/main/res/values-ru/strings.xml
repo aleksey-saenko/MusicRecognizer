@@ -155,7 +155,7 @@
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
     <string name="loading">Загрузка</string>
-    <string name="ver">вер. %s</string>
+    <string name="ver">верcия %s</string>
     <string name="music_recognizing_app">Приложение для распознавания музыки</string>
     <string name="powered_by_audd">Работает с помощью сервиса AudD®</string>
     <string name="github_repository">Репозиторий GitHub</string>

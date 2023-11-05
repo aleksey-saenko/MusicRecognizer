@@ -5,7 +5,7 @@ import kotlin.time.Duration
 
 sealed class PlayerStatus {
 
-        data object Idle : PlayerStatus()
+    data object Idle : PlayerStatus()
 
     data class Started(
         val record: File,

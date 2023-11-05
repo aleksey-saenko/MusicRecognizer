@@ -32,7 +32,7 @@ import javax.inject.Inject
 private const val TAG = "RemoteRecognitionStreamServiceImpl"
 
 private const val TIMEOUT_AFTER_RECORDING_FINISHED = 5_000L
-private const val TIMEOUT_RECORDING_SENDING = 5_000L
+private const val TIMEOUT_RECORDING_SENDING = 8_000L
 private const val WEB_SOCKET_RECONNECT_LIMIT = 1
 
 private enum class SendingJobResult {

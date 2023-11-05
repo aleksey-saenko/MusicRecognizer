@@ -1,0 +1,4 @@
+* Added User-Agent to prevent potential network request blocking by remote services
+* Fixed non-functioning buttons for the notification service on Android 14
+* Improved permission handling for the notification service on Android 14
+* Minor UI changes

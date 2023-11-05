@@ -31,8 +31,6 @@ materialKolor = "1.2.7"
 moshi = "1.15.0"
 okhttpBom = "4.12.0"
 okhttpCoroutines = "1.0"
-paging3 = "3.2.1"
-paging3Compose = "3.2.1"
 palette = "1.0.0"
 protobufJavalite = "3.24.3"
 protobufPlugin = "0.9.4"
@@ -63,9 +61,6 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycleViewmodelCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
-androidx-paging3-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging3" }
-androidx-paging3-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging3" }
-androidx-paging3-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging3Compose" }
 androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette"  }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
@@ -95,7 +90,6 @@ retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "convert
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-paging3 = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 [plugins]

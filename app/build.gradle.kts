@@ -20,8 +20,8 @@ android {
         applicationId = "com.mrsep.musicrecognizer"
         minSdk = libs.versions.sdkMin.get().toInt()
         targetSdk = libs.versions.sdkTarget.get().toInt()
-        versionCode = 3
-        versionName = "1.1.0"
+        versionCode = 4
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -128,7 +128,6 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     implementation(libs.coil.compose)
-    implementation(libs.androidx.paging3.common)
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)

@@ -1,8 +1,5 @@
 package com.mrsep.musicrecognizer.data.track
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
@@ -31,26 +28,6 @@ class TrackRepositoryImpl @Inject constructor(
             .distinctUntilChanged()
             .flowOn(ioDispatcher)
     }
-
-    override fun getPagedFlow(): Flow<PagingData<TrackEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = TRACK_PAGE_SIZE,
-                enablePlaceholders = false,
-//                maxSize = 100
-            ),
-            pagingSourceFactory = {
-                trackDao.pagingSource()
-            }
-        ).flow.flowOn(ioDispatcher)
-    }
-
-    override suspend fun getWithOffset(pageIndex: Int, pageSize: Int): List<TrackEntity>  {
-        return withContext(ioDispatcher) {
-            trackDao.getWithOffset(limit = pageSize, offset = pageIndex * pageSize)
-        }
-    }
-
 
     override suspend fun insertOrReplace(vararg track: TrackEntity) {
         withContext(persistentCoroutineContext) {
@@ -208,7 +185,6 @@ class TrackRepositoryImpl @Inject constructor(
 
     companion object {
         private const val ESCAPE_SYMBOL = "/"
-        private const val TRACK_PAGE_SIZE = 30
     }
 
 }

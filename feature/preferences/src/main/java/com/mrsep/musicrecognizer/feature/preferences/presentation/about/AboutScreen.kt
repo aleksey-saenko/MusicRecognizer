@@ -64,16 +64,16 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 24.dp)
             )
             Text(
-                text = stringResource(StringsR.string.music_recognizing_app),
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
                 text = stringResource(StringsR.string.ver, version),
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
+                text = stringResource(StringsR.string.music_recognizing_app),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
                 text = stringResource(StringsR.string.powered_by_audd),
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = 8.dp)
             )
 
             Column(

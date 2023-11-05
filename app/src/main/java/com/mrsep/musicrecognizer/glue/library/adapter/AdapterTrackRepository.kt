@@ -1,7 +1,5 @@
 package com.mrsep.musicrecognizer.glue.library.adapter
 
-import androidx.paging.PagingData
-import androidx.paging.map
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
@@ -25,11 +23,6 @@ class AdapterTrackRepository @Inject constructor(
 
     override fun isEmptyFlow(): Flow<Boolean> {
         return trackRepositoryDo.isEmptyFlow()
-    }
-
-    override fun getPagedFlow(): Flow<PagingData<Track>> {
-        return trackRepositoryDo.getPagedFlow()
-            .map { paging -> paging.map { entity -> trackMapper.map(entity) } }
     }
 
     override fun getFilteredFlow(filter: TrackFilter): Flow<List<Track>> {

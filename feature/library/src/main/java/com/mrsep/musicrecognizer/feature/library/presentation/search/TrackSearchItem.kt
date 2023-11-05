@@ -44,7 +44,7 @@ internal fun TrackSearchItem(
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.large
             )
     ) {
         val placeholder = forwardingPainter(
@@ -59,11 +59,11 @@ internal fun TrackSearchItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
+                .clip(MaterialTheme.shapes.large)
                 .aspectRatio(1f)
         )
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(12.dp)
         ) {
             Text(
                 text = highlightKeyword(track.title, keyword),

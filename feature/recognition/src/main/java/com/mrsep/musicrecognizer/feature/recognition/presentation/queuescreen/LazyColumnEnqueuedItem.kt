@@ -93,10 +93,10 @@ internal fun LazyColumnEnqueuedItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge)
+            .clip(MaterialTheme.shapes.large)
             .background(
                 color = containerColor,
-                shape = MaterialTheme.shapes.extraLarge
+                shape = MaterialTheme.shapes.large
             )
             .combinedClickable(
                 onLongClick = { onLongClick(enqueued.id) },

@@ -21,7 +21,7 @@ import org.junit.Test
 // test socket replacement
 
 private const val TIMEOUT_AFTER_RECORDING_FINISHED = 5_000L
-private const val TIMEOUT_RECORDING_SENDING = 5_000L
+private const val TIMEOUT_RECORDING_SENDING = 8_000L
 
 private const val TEST_QUEUE_DELAY = 450L
 private const val TEST_RESPONSE_DELAY = 600L
@@ -211,7 +211,7 @@ class RecognitionStreamServiceImplTest {
             override fun send(bytes: ByteString): Boolean {
                 queueSize += bytes.size.toLong()
                 launch {
-                    clearQueue(bytes, 6_000)
+                    clearQueue(bytes, TIMEOUT_RECORDING_SENDING + 500)
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(SocketEvent.ResponseReceived(
                         RemoteRecognitionResultDo.Error.WrongToken(true))

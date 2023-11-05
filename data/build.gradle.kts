@@ -82,7 +82,6 @@ dependencies {
 
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    implementation(libs.room.paging3)
     ksp(libs.room.compiler)
 
     implementation(platform(libs.okhttp.bom))
@@ -96,8 +95,6 @@ dependencies {
     implementation(libs.moshi.core)
     implementation(libs.moshi.adapters)
     ksp(libs.moshi.codegen)
-
-    implementation(libs.androidx.paging3.runtimeKtx)
 
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutinesTest)

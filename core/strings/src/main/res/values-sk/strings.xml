@@ -155,7 +155,7 @@
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>
     <string name="track_not_found">Skladba sa nenašla</string>
     <string name="loading">Načítavam</string>
-    <string name="ver">"ver. %s"</string>
+    <string name="ver">"version %s"</string>
     <string name="music_recognizing_app">Aplikácia na rozpoznávanie hudby</string>
     <string name="powered_by_audd">Poháňaný AudD®</string>
     <string name="github_repository">GitHub repozitár</string>

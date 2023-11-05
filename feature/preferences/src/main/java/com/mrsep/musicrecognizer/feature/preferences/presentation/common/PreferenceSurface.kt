@@ -17,7 +17,7 @@ internal fun PreferenceSurface(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 80.dp),
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = MaterialTheme.shapes.large,
         tonalElevation = 1.dp
     ) {
         content()

@@ -36,6 +36,11 @@ class AdapterPreferencesRepository @Inject constructor(
     override val userPreferencesFlow: Flow<UserPreferences>
         get() = preferencesRepositoryDo.userPreferencesFlow
             .map { preferencesMapper.map(it) }
+
+    override suspend fun setNotificationServiceEnabled(value: Boolean) {
+        preferencesRepositoryDo.setNotificationServiceEnabled(value)
+    }
+
 }
 
 class PreferencesMapper @Inject constructor() :

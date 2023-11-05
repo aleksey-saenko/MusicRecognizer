@@ -21,7 +21,7 @@ internal fun PreferenceClickableItem(
 ) {
     PreferenceSurface(
         modifier = modifier
-            .clip(MaterialTheme.shapes.extraLarge)
+            .clip(MaterialTheme.shapes.large)
             .clickable { onItemClick() }
     ) {
         Column(

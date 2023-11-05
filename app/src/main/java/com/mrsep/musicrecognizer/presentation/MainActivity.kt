@@ -62,7 +62,10 @@ class MainActivity : ComponentActivity() {
                 .filterIsInstance<MainActivityUiState.Success>()
                 .map { state -> state.userPreferences }
                 .onEach { userPreferences ->
-                    toggleNotificationService(userPreferences.notificationServiceEnabled)
+                    val serviceStartAllowed = toggleNotificationService(
+                        userPreferences.notificationServiceEnabled
+                    )
+                    if (!serviceStartAllowed) viewModel.setNotificationServiceEnabled(false)
                 }
                 .launchIn(this)
         }

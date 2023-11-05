@@ -12,6 +12,7 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
@@ -30,6 +31,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -59,8 +61,12 @@ internal class NotificationService : Service() {
     lateinit var ioDispatcher: CoroutineDispatcher
 
     private val actionReceiver = ActionBroadcastReceiver()
-    private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
-    private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
+    private val serviceScope by lazy {
+        CoroutineScope(ioDispatcher + SupervisorJob())
+    }
+    private val notificationManager by lazy {
+        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
 
@@ -76,30 +82,26 @@ internal class NotificationService : Service() {
         val initialNotification = statusNotificationBuilder()
             .setContentTitle(getString(StringsR.string.notification_service_initializing))
             .build()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            startForeground(
-                STATUS_NOTIFICATION_ID,
-                initialNotification,
-                FOREGROUND_SERVICE_TYPE_MICROPHONE
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Check again because user can restrict permissions when the app is in the background,
+            // which can lead to service restarting without required permissions
+            val startAllowed = checkServiceRequiredPermissions()
+            if (startAllowed) {
+                startForeground(
+                    STATUS_NOTIFICATION_ID,
+                    initialNotification,
+                    FOREGROUND_SERVICE_TYPE_MICROPHONE
+                )
+                registerActionReceiver()
+                registerRecognitionStateObserver()
+            } else {
+                stopSelf()
+            }
         } else {
             startForeground(STATUS_NOTIFICATION_ID, initialNotification)
+            registerActionReceiver()
+            registerRecognitionStateObserver()
         }
-
-        ContextCompat.registerReceiver(
-            this,
-            actionReceiver,
-            IntentFilter().apply {
-                addAction(RECOGNIZE_ACTION)
-                addAction(CANCEL_RECOGNITION_ACTION)
-                addAction(DISMISS_STATUS_ACTION)
-            },
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
-
-        recognitionState.onEach { status ->
-            handleRecognitionStatus(status)
-        }.launchIn(serviceScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -112,8 +114,31 @@ internal class NotificationService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(actionReceiver)
+        try {
+            unregisterReceiver(actionReceiver)
+        } catch (_: IllegalArgumentException) {
+            // receiver was not registered, no-op
+        }
         serviceScope.cancel()
+    }
+
+    private fun registerActionReceiver() {
+        ContextCompat.registerReceiver(
+            this,
+            actionReceiver,
+            IntentFilter().apply {
+                addAction(RECOGNIZE_ACTION)
+                addAction(CANCEL_RECOGNITION_ACTION)
+                addAction(DISMISS_STATUS_ACTION)
+            },
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    private fun registerRecognitionStateObserver() {
+        recognitionState.onEach { status ->
+            handleRecognitionStatus(status)
+        }.launchIn(serviceScope)
     }
 
     private fun createStatusNotificationChannel() {
@@ -257,7 +282,7 @@ internal class NotificationService : Service() {
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setOngoing(true)
+            .setOngoing(true) // behavior changes since API 34
             .setCategory(Notification.CATEGORY_STATUS)
 //        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
     }
@@ -316,11 +341,10 @@ internal class NotificationService : Service() {
 //            getString(StringsR.string.recognize),
 //            pendingIntent
 //        ).setContentIntent(pendingIntent)
-
         val pendingIntent = PendingIntent.getBroadcast(
             this@NotificationService,
             0,
-            Intent(RECOGNIZE_ACTION),
+            Intent(RECOGNIZE_ACTION).setPackage(packageName),
             PendingIntent.FLAG_IMMUTABLE
         )
         return addAction(
@@ -337,7 +361,7 @@ internal class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(CANCEL_RECOGNITION_ACTION),
+                Intent(CANCEL_RECOGNITION_ACTION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -367,7 +391,7 @@ internal class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(DISMISS_STATUS_ACTION),
+                Intent(DISMISS_STATUS_ACTION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -524,10 +548,34 @@ internal class NotificationService : Service() {
 
 }
 
-fun Context.toggleNotificationService(shouldStart: Boolean, backgroundLaunch: Boolean = false) {
+/** To turn on the service on API level above 33, it requires the following granted permissions:
+ * [Manifest.permission.RECORD_AUDIO], [Manifest.permission.POST_NOTIFICATIONS].
+ * @return true if the operation was successful, false otherwise (permissions is not granted)
+ * */
+fun Context.toggleNotificationService(
+    shouldStart: Boolean,
+    backgroundLaunch: Boolean = false
+): Boolean {
     val intent = Intent(this, NotificationService::class.java).apply {
         putExtra(NotificationService.KEY_BACKGROUND_LAUNCH, backgroundLaunch)
     }
-    if (shouldStart) startForegroundService(intent) else stopService(intent)
+    if (!shouldStart) {
+        stopService(intent)
+        return true
+    }
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        startForegroundService(intent)
+        true
+    } else {
+        val startAllowed = checkServiceRequiredPermissions()
+        if (startAllowed) startForegroundService(intent)
+        startAllowed
+    }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private fun Context.checkServiceRequiredPermissions() =
+    (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+    PackageManager.PERMISSION_GRANTED &&
+    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+    PackageManager.PERMISSION_GRANTED)

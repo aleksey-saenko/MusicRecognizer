@@ -27,7 +27,8 @@ internal val fakeTrack = TrackEntity(
     ),
     metadata = TrackEntity.Metadata(
         lastRecognitionDate = Instant.now(),
-        isFavorite = false
+        isFavorite = false,
+        themeSeedColor = null
     )
 )
 

@@ -8,12 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.annotation.concurrent.Immutable
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     val uiStateStream = preferencesRepository.userPreferencesFlow
@@ -25,6 +26,12 @@ class MainActivityViewModel @Inject constructor(
         )
 
     fun isLoadingState() = uiStateStream.value is MainActivityUiState.Loading
+
+    fun setNotificationServiceEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setNotificationServiceEnabled(value)
+        }
+    }
 
 }
 

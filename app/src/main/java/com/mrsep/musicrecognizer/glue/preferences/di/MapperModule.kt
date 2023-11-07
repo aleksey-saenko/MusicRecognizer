@@ -11,6 +11,7 @@ import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RequiredServicesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackPolicyMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.HapticFeedbackMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,5 +38,8 @@ interface MapperModule {
     fun bindFallbackPolicyMapper(implementation: FallbackPolicyMapper):
             BidirectionalMapper<FallbackPolicyDo, UserPreferences.FallbackPolicy>
 
+    @Binds
+    fun bindHapticFeedbackMapper(implementation: HapticFeedbackMapper):
+            BidirectionalMapper<HapticFeedbackDo, UserPreferences.HapticFeedback>
 
 }

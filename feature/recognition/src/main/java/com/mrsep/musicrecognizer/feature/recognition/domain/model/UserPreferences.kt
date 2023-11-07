@@ -7,7 +7,8 @@ data class UserPreferences(
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
-    val fallbackPolicy: FallbackPolicy
+    val fallbackPolicy: FallbackPolicy,
+    val hapticFeedback: HapticFeedback
 ) {
 
     data class RequiredServices(
@@ -24,6 +25,11 @@ data class UserPreferences(
         val noMatches: FallbackAction,
         val badConnection: FallbackAction,
         val anotherFailure: FallbackAction
+    )
+
+    data class HapticFeedback(
+        val vibrateOnTap: Boolean,
+        val vibrateOnResult: Boolean,
     )
 
 }

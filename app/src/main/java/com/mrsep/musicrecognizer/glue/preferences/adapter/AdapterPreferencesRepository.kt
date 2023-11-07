@@ -16,7 +16,8 @@ class AdapterPreferencesRepository @Inject constructor(
     private val preferencesRepositoryDo: PreferencesRepositoryDo,
     private val preferencesMapper: Mapper<UserPreferencesDo, UserPreferences>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
-    private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>
+    private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
+    private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>,
 ) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
@@ -56,6 +57,12 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setFallbackPolicy(fallbackPolicy: FallbackPolicy) {
         preferencesRepositoryDo.setFallbackPolicy(
             fallbackPolicyMapper.reverseMap(fallbackPolicy)
+        )
+    }
+
+    override suspend fun setHapticFeedback(hapticFeedback: HapticFeedback) {
+        preferencesRepositoryDo.setHapticFeedback(
+            hapticFeedbackMapper.reverseMap(hapticFeedback)
         )
     }
 

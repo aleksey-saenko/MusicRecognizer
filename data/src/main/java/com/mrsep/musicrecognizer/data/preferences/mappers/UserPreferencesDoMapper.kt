@@ -11,7 +11,8 @@ class UserPreferencesDoMapper @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
-    private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>
+    private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
+    private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
 ) : BidirectionalMapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun reverseMap(input: UserPreferencesDo): UserPreferencesProto {
@@ -26,6 +27,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setFallbackPolicy(fallbackPolicyMapper.reverseMap(input.fallbackPolicy))
             .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
             .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
+            .setHapticFeedback(hapticFeedbackMapper.reverseMap(input.hapticFeedback))
             .build()
     }
 
@@ -40,7 +42,8 @@ class UserPreferencesDoMapper @Inject constructor(
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
-            trackFilter = trackFilterMapper.map(input.trackFilter)
+            trackFilter = trackFilterMapper.map(input.trackFilter),
+            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback)
         )
     }
 

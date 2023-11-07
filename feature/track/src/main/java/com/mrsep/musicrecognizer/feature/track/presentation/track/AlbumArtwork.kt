@@ -72,7 +72,7 @@ internal fun AlbumArtwork(
                     imageLoader.diskCache?.openSnapshot(diskCacheKey)?.let { snapshot ->
                         val cacheUri = FileProvider.getUriForFile(
                             context,
-                            "com.mrsep.musicrecognizer.fileprovider",
+                            "${context.packageName}.fileprovider",
                             snapshot.data.toFile()
                         )
                         withContext(Dispatchers.Main) {

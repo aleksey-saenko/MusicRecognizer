@@ -135,6 +135,11 @@
     <string name="required_services_dialog">Choose the music services for which you would like to see web links (if available):</string>
     <string name="dynamic_colors_pref_title">Use dynamic colors</string>
     <string name="artwork_colors_pref_title">Adapt theme to artwork colors</string>
+    <string name="vibration_feedback">Vibration feedback</string>
+    <string name="vibration_feedback_dialog_title">Vibration feedback</string>
+    <string name="vibration_feedback_dialog_message">Customize vibration feedback for certain in-app actions:</string>
+    <string name="vibrate_on_tap">Vibrate on tap</string>
+    <string name="vibrate_on_result">Vibrate on result</string>
     <string name="misc">Misc</string>
     <string name="developer_options">Developer options</string>
     <string name="appearance">Appearance</string>

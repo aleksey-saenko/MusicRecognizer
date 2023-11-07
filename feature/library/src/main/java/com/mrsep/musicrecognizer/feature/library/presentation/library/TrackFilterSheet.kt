@@ -28,7 +28,6 @@ internal fun TrackFilterBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {

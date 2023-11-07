@@ -51,6 +51,12 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .setEndDate(Long.MAX_VALUE)
                     .build()
             )
+            .setHapticFeedback(
+                UserPreferencesProto.HapticFeedbackProto.newBuilder()
+                    .setVibrateOnTap(false)
+                    .setVibrateOnResult(false)
+                    .build()
+            )
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

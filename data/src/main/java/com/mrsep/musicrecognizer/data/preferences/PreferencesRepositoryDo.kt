@@ -26,4 +26,6 @@ interface PreferencesRepositoryDo {
 
     suspend fun setTrackFilter(value: UserPreferencesDo.TrackFilterDo)
 
+    suspend fun setHapticFeedback(value: UserPreferencesDo.HapticFeedbackDo)
+
 }

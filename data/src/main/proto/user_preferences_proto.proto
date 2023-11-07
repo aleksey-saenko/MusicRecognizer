@@ -83,4 +83,11 @@ message UserPreferencesProto {
 
   bool artwork_based_theme_enabled = 28;
 
+  message HapticFeedbackProto {
+    bool vibrate_on_tap = 29;
+    bool vibrate_on_result = 30;
+  }
+
+  HapticFeedbackProto haptic_feedback = 31;
+
 }

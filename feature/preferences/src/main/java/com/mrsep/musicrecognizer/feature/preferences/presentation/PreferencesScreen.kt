@@ -1,6 +1,9 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import android.content.Context
 import android.os.Build
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +35,7 @@ internal fun PreferencesScreen(
     onNavigateToQueueScreen: () -> Unit,
     onNavigateToDeveloperScreen: () -> Unit
 ) {
+    val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -78,8 +83,8 @@ internal fun PreferencesScreen(
                             )
                             FallbackPolicyDialog(
                                 onConfirmClick = {
-                                    showPolicyDialog = false
                                     viewModel.setFallbackPolicy(dialogState.currentState)
+                                    showPolicyDialog = false
                                 },
                                 onDismissClick = { showPolicyDialog = false },
                                 dialogState = dialogState
@@ -132,8 +137,8 @@ internal fun PreferencesScreen(
                             )
                             RequiredServicesDialog(
                                 onConfirmClick = {
-                                    showServicesDialog = false
                                     viewModel.setRequiredServices(dialogState.currentState)
+                                    showServicesDialog = false
                                 },
                                 onDismissClick = { showServicesDialog = false },
                                 dialogState = dialogState
@@ -160,9 +165,31 @@ internal fun PreferencesScreen(
                         title = stringResource(StringsR.string.misc),
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
+                        val vibratorAvailable = remember { context.hasVibratorHardware() }
+                        if (vibratorAvailable) {
+                            var showHapticDialog by rememberSaveable { mutableStateOf(false) }
+                            PreferenceClickableItem(
+                                title = stringResource(StringsR.string.vibration_feedback),
+                                onItemClick = { showHapticDialog = true }
+                            )
+                            if (showHapticDialog) {
+                                val dialogState = rememberHapticFeedbackDialogState(
+                                    hapticFeedback = uiState.preferences.hapticFeedback
+                                )
+                                HapticFeedbackDialog(
+                                    onConfirmClick = {
+                                        viewModel.setHapticFeedback(dialogState.currentState)
+                                        showHapticDialog = false
+                                    },
+                                    onDismissClick = { showHapticDialog = false },
+                                    dialogState = dialogState
+                                )
+                            }
+                        }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.about),
-                            onItemClick = onNavigateToAboutScreen
+                            onItemClick = onNavigateToAboutScreen,
+                            modifier = Modifier.padding(top = 12.dp)
                         )
                         if (showDeveloperOptions) {
                             PreferenceClickableItem(
@@ -191,3 +218,14 @@ private fun UserPreferences.RequiredServices.getNames() =
     ).filter { it.second }
         .joinToString(", ") { it.first }
         .ifEmpty { stringResource(StringsR.string.none) }
+
+
+private fun Context.hasVibratorHardware(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
+            .defaultVibrator.hasVibrator()
+    } else {
+        @Suppress("DEPRECATION")
+        (getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()
+    }
+}

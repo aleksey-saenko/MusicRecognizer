@@ -80,9 +80,11 @@ fun AppNavigationBar(
                             StringsR.string.format_navigate_to_screen,
                             stringResource(destination.titleResId)
                         ),
-                        tint = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.85f
-                        ),
+                        tint = if (selected) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                        },
                         modifier = Modifier
                             .size(iconSize)
                             .offset(y = (-8).dp * bounceHeightAnimatable.value)
@@ -99,9 +101,7 @@ fun AppNavigationBar(
                         restoreState = true
                     }
                 },
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
+                modifier = Modifier.fillMaxHeight().weight(1f)
             )
 
         }

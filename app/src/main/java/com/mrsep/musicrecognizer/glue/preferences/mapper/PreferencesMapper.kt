@@ -3,16 +3,15 @@ package com.mrsep.musicrecognizer.glue.preferences.mapper
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.FallbackPolicyDo
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.RequiredServicesDo
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.FallbackPolicy
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.RequiredServices
+import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.*
 import javax.inject.Inject
 
 class PreferencesMapper @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
-    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>
+    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
+    private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>
 ) :
     Mapper<UserPreferencesDo, UserPreferences> {
 
@@ -25,7 +24,8 @@ class PreferencesMapper @Inject constructor(
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
-            fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy)
+            fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
+            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback)
         )
     }
 

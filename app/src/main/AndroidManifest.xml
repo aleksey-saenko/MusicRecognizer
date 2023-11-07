@@ -67,12 +67,12 @@
         <!-- Disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.mrsep.musicrecognizer.androidx-startup"
+            android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mrsep.musicrecognizer.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

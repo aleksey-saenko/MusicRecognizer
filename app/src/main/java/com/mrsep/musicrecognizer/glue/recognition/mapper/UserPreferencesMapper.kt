@@ -32,6 +32,10 @@ class UserPreferencesMapper @Inject constructor(
                 noMatches = fallbackActionMapper.map(input.fallbackPolicy.noMatches),
                 badConnection = fallbackActionMapper.map(input.fallbackPolicy.badConnection),
                 anotherFailure = fallbackActionMapper.map(input.fallbackPolicy.anotherFailure)
+            ),
+            hapticFeedback = UserPreferences.HapticFeedback(
+                vibrateOnTap = input.hapticFeedback.vibrateOnTap,
+                vibrateOnResult = input.hapticFeedback.vibrateOnResult
             )
         )
     }

@@ -36,6 +36,9 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            resValue("string", "app_name", "Audile[Debug]")
             buildConfigField("boolean", "LOG_DEBUG_MODE", "true")
         }
         release {

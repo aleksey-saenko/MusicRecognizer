@@ -14,5 +14,6 @@ interface PreferencesRepository {
     suspend fun setDeveloperModeEnabled(value: Boolean)
     suspend fun setRequiredServices(requiredServices: UserPreferences.RequiredServices)
     suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
+    suspend fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback)
 
 }

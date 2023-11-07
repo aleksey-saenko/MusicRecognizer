@@ -10,7 +10,8 @@ data class UserPreferencesDo(
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicyDo,
     val lyricsFontStyle: LyricsFontStyleDo,
-    val trackFilter: TrackFilterDo
+    val trackFilter: TrackFilterDo,
+    val hapticFeedback: HapticFeedbackDo
 ) {
 
     data class RequiredServicesDo(
@@ -40,6 +41,11 @@ data class UserPreferencesDo(
         val sortBy: SortByDo,
         val orderBy: OrderByDo,
         val dateRange: LongRange,
+    )
+
+    data class HapticFeedbackDo(
+        val vibrateOnTap: Boolean,
+        val vibrateOnResult: Boolean,
     )
 
 }

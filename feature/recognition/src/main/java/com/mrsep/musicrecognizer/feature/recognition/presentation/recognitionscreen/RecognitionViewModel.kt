@@ -23,10 +23,17 @@ enum class SoundLevel {
 internal class RecognitionViewModel @Inject constructor(
     private val recognitionInteractor: ScreenRecognitionInteractor,
     private val recorderController: AudioRecorderController,
+    private val preferencesRepository: PreferencesRepository,
     networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     val recognitionState = recognitionInteractor.screenRecognitionStatus
+
+    val preferences = preferencesRepository.userPreferencesFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        null
+    )
 
     val isOffline = networkMonitor.isOffline.stateIn(
         scope = viewModelScope,

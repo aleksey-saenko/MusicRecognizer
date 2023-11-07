@@ -60,6 +60,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback) {
+        viewModelScope.launch {
+            preferencesRepository.setHapticFeedback(hapticFeedback)
+        }
+    }
+
 }
 
 internal sealed interface PreferencesUiState {

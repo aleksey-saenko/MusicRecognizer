@@ -18,6 +18,7 @@ import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMappe
 import com.mrsep.musicrecognizer.data.preferences.mappers.RequiredServicesDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackPolicyDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.HapticFeedbackDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.TrackFilterDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.UserPreferencesDoMapper
 import dagger.Binds
@@ -87,5 +88,9 @@ interface PreferencesMappersModule {
     @Binds
     fun bindTrackFilterDoMapper(implementation: TrackFilterDoMapper):
             BidirectionalMapper<UserPreferencesProto.TrackFilterProto, UserPreferencesDo.TrackFilterDo>
+
+    @Binds
+    fun bindHapticFeedbackDoMapper(implementation: HapticFeedbackDoMapper):
+            BidirectionalMapper<UserPreferencesProto.HapticFeedbackProto, UserPreferencesDo.HapticFeedbackDo>
 
 }

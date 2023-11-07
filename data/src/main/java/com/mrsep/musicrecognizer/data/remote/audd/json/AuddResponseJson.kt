@@ -23,6 +23,8 @@ internal sealed class AuddResponseJson {
             val album: String?,
             @Json(name = "release_date")
             val releaseDate: String?,
+            @Json(name = "song_link")
+            val auddSongLink: String?,
             @Json(name = "deezer")
             val deezerJson: DeezerJson?,
             @Json(name = "lyrics")

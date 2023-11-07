@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.Html
 import android.util.Patterns
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.audd.json.AppleMusicJson
 import com.mrsep.musicrecognizer.data.remote.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.data.remote.audd.json.LyricsJson
 import com.mrsep.musicrecognizer.data.track.TrackEntity
@@ -12,6 +13,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+
+// TODO: Implement a parser class that follows the specified priorities
 
 internal class AuddJsonAdapter {
 
@@ -50,7 +53,7 @@ internal class AuddJsonAdapter {
                 releaseDate = json.result.parseReleaseDate(),
                 lyrics = json.result.parseLyrics(),
                 links = TrackEntity.Links(
-                    artwork = json.result.parseArtworkLink(),
+                    artwork = json.result.toArtworkLink(),
                     spotify = json.result.parseSpotifyLink(),
                     appleMusic = json.result.parseAppleMusicLink(),
                     youtube = mediaItems?.parseYoutubeLink(),
@@ -123,37 +126,43 @@ private fun AuddResponseJson.Success.Result.parseReleaseDate(): LocalDate? {
 private fun isUrlValid(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
 private fun String.replaceHttpWithHttps() =
     replaceFirst("http://", "https://", true)
+private fun String.takeUrlIfValid() = replaceHttpWithHttps().takeIf { isUrlValid(it) }
 
-private fun AuddResponseJson.Success.Result.parseArtworkLink(): String? {
-    return appleMusic?.artwork?.url?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
-        ?: deezerJson?.album?.run { coverXl ?: coverBig }
-            ?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
-        ?: spotify?.album?.images?.firstOrNull()?.url
-            ?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
-        ?: deezerJson?.album?.run { coverMedium ?: coverSmall }
-            ?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+private fun AuddResponseJson.Success.Result.toArtworkLink(): String? {
+    return deezerJson?.album?.run { coverXl ?: coverBig }?.takeUrlIfValid()
+        ?: appleMusic?.artwork?.toArtworkLink(true)?.takeUrlIfValid()
+        ?: spotify?.album?.images?.firstOrNull()?.url?.takeUrlIfValid()
+        ?: appleMusic?.artwork?.toArtworkLink(false)?.takeUrlIfValid()
+        ?: deezerJson?.album?.run { coverMedium ?: coverSmall }?.takeUrlIfValid()
+}
+
+private fun AppleMusicJson.Artwork.toArtworkLink(requireHiRes: Boolean): String? {
+    if (width == null || height == null || url == null) return null
+    val isLowResArtwork = width < 700 || height < 700
+    if (requireHiRes && isLowResArtwork) return null
+    val isDefaultResAvailable = width >= 1000 && height >= 1000
+    val selectedRes = if (isDefaultResAvailable) "1000x1000" else "${width}x${height}"
+    return url.replaceFirst("{w}x{h}", selectedRes, true)
 }
 
 private fun AuddResponseJson.Success.Result.parseSpotifyLink() =
-    spotify?.externalUrls?.spotify?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+    spotify?.externalUrls?.spotify?.takeUrlIfValid()
 
 private fun AuddResponseJson.Success.Result.parseAppleMusicLink() =
-    appleMusic?.url?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+    appleMusic?.url?.takeUrlIfValid()
 
 private fun List<LyricsJson.MediaItem>.parseYoutubeLink() =
-    firstOrNull { item -> item.provider == "youtube" }?.url
-        ?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+    firstOrNull { item -> item.provider == "youtube" }?.url?.takeUrlIfValid()
 
 private fun List<LyricsJson.MediaItem>.parseSoundCloudLink() =
-    firstOrNull { item -> item.provider == "soundcloud" }?.url
-        ?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+    firstOrNull { item -> item.provider == "soundcloud" }?.url?.takeUrlIfValid()
 
 private fun AuddResponseJson.Success.Result.parseMusicBrainzLink() =
     musicbrainz?.firstOrNull()?.id?.run { "https://musicbrainz.org/recording/$this" }
         ?.takeIf { isUrlValid(it) }
 
 private fun AuddResponseJson.Success.Result.parseDeezerLink() =
-    deezerJson?.link?.replaceHttpWithHttps()?.takeIf { isUrlValid(it) }
+    deezerJson?.link?.takeUrlIfValid()
 
 private fun AuddResponseJson.Success.Result.parseNapsterLink() =
     napster?.id?.run { "https://web.napster.com/track/$this" }?.takeIf { isUrlValid(it) }

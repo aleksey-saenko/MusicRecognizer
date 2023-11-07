@@ -14,11 +14,9 @@
     <string name="onboarding_permission_message_start">"Tato aplikace pro správnou funkčnost vyžaduje oprávnění k nahrávání zvuku. Udělením tohoto oprávnění souhlasíte s použitím vašich nahraných dat "</string>
     <string name="onboarding_permission_message_link">vzdálenou službou</string>
     <string name="onboarding_permission_message_end">" pro účely rozpoznání hudby. Aplikace tato data nevyužívá k žádnému jinému účelu."</string>
-    <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
     <string name="onboarding_token_message_start">"Aplikace používá službu rozpoznávání hudby AudD®, která vyžaduje speciální token API. Pokud ještě token nemáte, zaregistrujte se "</string>
     <string name="onboarding_token_message_link">zde</string>
     <string name="onboarding_token_message_end">" pro jeho získání."</string>
-    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
     <string name="token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
     <string name="hide_token">Skrýt token</string>
     <string name="show_token">Zobrazit token</string>
@@ -30,13 +28,6 @@
     <string name="final_onboarding_page_title">Jdeme na to</string>
     <string name="final_onboarding_page_message">Prvotní nastavení úspěšně dokončeno</string>
     <string name="get_started">Začít</string>
-    <string name="spotify" translatable="false">Spotify</string>
-    <string name="apple_music" translatable="false">Apple Music</string>
-    <string name="deezer" translatable="false">Deezer</string>
-    <string name="napster" translatable="false">Napster</string>
-    <string name="musicbrainz" translatable="false">MusicBrainz</string>
-    <string name="youtube" translatable="false">YouTube</string>
-    <string name="soundcloud" translatable="false">SoundCloud</string>
     <string name="apply">Použít</string>
     <string name="cancel">Zrušit</string>
     <string name="none">Žádný</string>

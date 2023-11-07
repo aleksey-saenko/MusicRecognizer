@@ -1,0 +1,10 @@
+<b>Audile</b> je aplikace pro rozpoznávání hudby, která vám pomůže rychle a přesně rozpoznat hudební skladbu přehrávanou ve vašem okolí.
+Tato aplikace využívá službu AudD® jako rozhraní API pro rozpoznávání hudby.
+
+<b>Funkce:</b>
+
+<b>Rozpoznávání</b> - Audile umožňuje rozpoznávat skladby jedním klepnutím. Aplikace uloží nahrávku, pokud není k dispozici internet, a proces rozpoznávání se provede, jakmile se vrátíte online. Výchozí chování při neúspěšném rozpoznávání (bez internetu, bez shody, další neúspěch) můžete přizpůsobit prostřednictvím předvoleb.
+<b>Ovládání pomocí oznámení</b> - aplikaci můžete používat z nabídky oznámení. Spravujte proces rozpoznávání a podívejte se na informace o stopě.
+<b>Informace o skladbě</b> - v případě úspěšného rozpoznání se zobrazí informace o skladbě, například název, interpret, album a rok vydání, obal, odkazy na tuto skladbu v populárních hudebních službách a text skladby.
+<b>Knihovna</b> - všechny rozpoznané skladby jsou uloženy v knihovně aplikace. Seznam skladeb můžete filtrovat, vytvářet kolekci oblíbených skladeb, vyhledávat skladby nebo je odstraňovat.
+<b>Předvolby</b> - aplikace má řadu možností pro přizpůsobení svého chování a vzhledu, které najdete v nastavení.

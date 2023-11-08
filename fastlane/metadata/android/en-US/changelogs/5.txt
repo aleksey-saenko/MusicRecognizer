@@ -1,3 +1,4 @@
 * Added Czech translation (thanks to Fjuro)
 * Added optional in-app vibrations (can be enabled via preferences)
 * Fixed a bug with broken link to music service when the related app is installed
+* Minor UI fixes

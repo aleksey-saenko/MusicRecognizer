@@ -157,8 +157,9 @@ internal fun TokenPage(
                 )
 
                 FlowRow(
-                    modifier = Modifier.padding(top = 24.dp),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier.padding(top = 20.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedButton(
                         onClick = onTokenSkip,

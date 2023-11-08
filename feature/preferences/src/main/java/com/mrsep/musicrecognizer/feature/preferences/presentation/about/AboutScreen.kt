@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.common.util.getAppVersion
@@ -64,15 +65,18 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 24.dp)
             )
             Text(
-                text = stringResource(StringsR.string.ver, version),
+                text = stringResource(StringsR.string.format_version, version),
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
                 text = stringResource(StringsR.string.music_recognizing_app),
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
                 text = stringResource(StringsR.string.powered_by_audd),
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
 

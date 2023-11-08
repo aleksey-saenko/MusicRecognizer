@@ -141,7 +141,7 @@
     <string name="cancel_selected">Zrušiť označené</string>
     <string name="delete_selected">Zmazať označené</string>
     <string name="queue">Fronta</string>
-    <string name="status_colon">Stav: %s</string>
+    <string name="format_status">Stav: %s</string>
     <string name="enqueued">Zaradené do poradia</string>
     <string name="track_found">Stopa nájdená</string>
     <string name="idle">Nečinný</string>
@@ -151,11 +151,11 @@
     <string name="show_lyrics">Zobraziť text</string>
     <string name="show_more_info">Zobraziť viac informácií</string>
     <string name="track_info">Informácie o pesničke</string>
-    <string name="date_of_last_recognition">Dátum posledného rozpoznania:%n%s</string>
+    <string name="format_date_of_last_recognition">Dátum posledného rozpoznania:%n%s</string>
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>
     <string name="track_not_found">Skladba sa nenašla</string>
     <string name="loading">Načítavam</string>
-    <string name="ver">"version %s"</string>
+    <string name="format_version">Version %s</string>
     <string name="music_recognizing_app">Aplikácia na rozpoznávanie hudby</string>
     <string name="powered_by_audd">Poháňaný AudD®</string>
     <string name="github_repository">GitHub repozitár</string>

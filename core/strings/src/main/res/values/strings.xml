@@ -155,7 +155,7 @@
     <string name="cancel_selected">Cancel selected</string>
     <string name="delete_selected">Delete selected</string>
     <string name="queue">Queue</string>
-    <string name="status_colon">Status: %s</string>
+    <string name="format_status">Status: %s</string>
     <string name="enqueued">Enqueued</string>
     <string name="track_found">Track found</string>
     <string name="idle">Idle</string>
@@ -165,11 +165,11 @@
     <string name="show_lyrics">Show lyrics</string>
     <string name="show_more_info">Show more info</string>
     <string name="track_info">Track info</string>
-    <string name="date_of_last_recognition">Date of last recognition:%n%s</string>
+    <string name="format_date_of_last_recognition">Date of last recognition:%n%s</string>
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
     <string name="track_not_found">The track not found</string>
     <string name="loading">Loading</string>
-    <string name="ver">"version %s"</string>
+    <string name="format_version">Version %s</string>
     <string name="music_recognizing_app">Music recognition application</string>
     <string name="powered_by_audd">Powered by AudD® service</string>
     <string name="github_repository">GitHub repository</string>

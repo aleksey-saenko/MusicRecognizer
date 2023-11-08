@@ -29,7 +29,7 @@ internal fun TrackExtrasDialog(
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Text(
-                    text = stringResource(StringsR.string.date_of_last_recognition, lastRecognitionDate)
+                    text = stringResource(StringsR.string.format_date_of_last_recognition, lastRecognitionDate)
                 )
             }
         }

@@ -146,7 +146,7 @@
     <string name="cancel_selected">Отменить выбранные</string>
     <string name="delete_selected">Удалить выбранные</string>
     <string name="queue">Очередь</string>
-    <string name="status_colon">Статус: %s</string>
+    <string name="format_status">Статус: %s</string>
     <string name="enqueued">В очереди</string>
     <string name="track_found">Трек найден</string>
     <string name="idle">Простаивает</string>
@@ -156,11 +156,11 @@
     <string name="show_lyrics">Показать текст песни</string>
     <string name="show_more_info">Показать доп. инфо</string>
     <string name="track_info">Доп. инфо о треке</string>
-    <string name="date_of_last_recognition">Дата последнего распознавания:%n%s</string>
+    <string name="format_date_of_last_recognition">Дата последнего распознавания:%n%s</string>
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
     <string name="loading">Загрузка</string>
-    <string name="ver">верcия %s</string>
+    <string name="format_version">Верcия %s</string>
     <string name="music_recognizing_app">Приложение для распознавания музыки</string>
     <string name="powered_by_audd">Работает с помощью сервиса AudD®</string>
     <string name="github_repository">Репозиторий GitHub</string>

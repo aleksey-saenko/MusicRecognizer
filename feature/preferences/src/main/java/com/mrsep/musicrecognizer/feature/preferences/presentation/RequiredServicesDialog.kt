@@ -113,49 +113,70 @@ internal fun RequiredServicesDialog(
                         checked = dialogState.spotifyCheckBox,
                         onCheckedChange = { dialogState.spotifyCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.spotify))
+                    Text(
+                        text = stringResource(StringsR.string.spotify),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.youtubeCheckBox,
                         onCheckedChange = { dialogState.youtubeCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.youtube))
+                    Text(
+                        text = stringResource(StringsR.string.youtube),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.soundCloudCheckBox,
                         onCheckedChange = { dialogState.soundCloudCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.soundcloud))
+                    Text(
+                        text = stringResource(StringsR.string.soundcloud),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.appleMusicCheckBox,
                         onCheckedChange = { dialogState.appleMusicCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.apple_music))
+                    Text(
+                        text = stringResource(StringsR.string.apple_music),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.deezerCheckBox,
                         onCheckedChange = { dialogState.deezerCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.deezer))
+                    Text(
+                        text = stringResource(StringsR.string.deezer),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.napsterCheckBox,
                         onCheckedChange = { dialogState.napsterCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.napster))
+                    Text(
+                        text = stringResource(StringsR.string.napster),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = dialogState.musicBrainzCheckBox,
                         onCheckedChange = { dialogState.musicBrainzCheckBox = it }
                     )
-                    Text(text = stringResource(StringsR.string.musicbrainz))
+                    Text(
+                        text = stringResource(StringsR.string.musicbrainz),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
         },

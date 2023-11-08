@@ -358,5 +358,5 @@ private fun getStatusMessage(enqueuedWithStatus: EnqueuedRecognitionWithStatus):
         ScheduledJobStatus.ENQUEUED -> stringResource(StringsR.string.enqueued)
         ScheduledJobStatus.RUNNING -> stringResource(StringsR.string.running)
     }
-    return stringResource(StringsR.string.status_colon, statusDescription)
+    return stringResource(StringsR.string.format_status, statusDescription)
 }

@@ -146,7 +146,7 @@
     <string name="cancel_selected">Zrušit vybrané</string>
     <string name="delete_selected">Odstranit vybrané</string>
     <string name="queue">Fronta</string>
-    <string name="status_colon">Stav: %s</string>
+    <string name="format_status">Stav: %s</string>
     <string name="enqueued">Ve frontě</string>
     <string name="track_found">Skladba nalezena</string>
     <string name="idle">Nečinný</string>
@@ -156,11 +156,11 @@
     <string name="show_lyrics">Zobrazit texty</string>
     <string name="show_more_info">Zobrazit více informací</string>
     <string name="track_info">Informace o skladbě</string>
-    <string name="date_of_last_recognition">Datum posledního rozpoznávání: %n%s</string>
+    <string name="format_date_of_last_recognition">Datum posledního rozpoznávání: %n%s</string>
     <string name="track_not_found_message">Něco se pokazilo, skladba možná byla odebrána nebo nesprávně upravena</string>
     <string name="track_not_found">Skladba nebyla nalezena</string>
     <string name="loading">Načítání</string>
-    <string name="ver">"verze %s"</string>
+    <string name="format_version">Verze %s</string>
     <string name="music_recognizing_app">Aplikace pro rozpoznávání hudby</string>
     <string name="powered_by_audd">Poháněno službou AudD®</string>
     <string name="github_repository">Repozitář GitHub</string>

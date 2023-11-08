@@ -106,7 +106,7 @@ internal fun HapticFeedbackDialog(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
+                        .padding(top = 12.dp)
                 ) {
                     Text(
                         text = stringResource(StringsR.string.vibrate_on_tap),

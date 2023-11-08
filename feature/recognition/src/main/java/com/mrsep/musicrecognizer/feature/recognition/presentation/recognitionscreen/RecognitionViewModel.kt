@@ -24,6 +24,7 @@ internal class RecognitionViewModel @Inject constructor(
     private val recognitionInteractor: ScreenRecognitionInteractor,
     private val recorderController: AudioRecorderController,
     private val preferencesRepository: PreferencesRepository,
+    private val vibrationManager: VibrationManager,
     networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
@@ -60,5 +61,13 @@ internal class RecognitionViewModel @Inject constructor(
     }
 
     fun resetRecognitionResult() = recognitionInteractor.cancelAndResetStatus()
+
+    fun vibrateResult(isSuccess: Boolean) {
+        vibrationManager.vibrateResult(isSuccess)
+    }
+
+    fun vibrateOnTap() {
+        vibrationManager.vibrateOnTap()
+    }
 
 }

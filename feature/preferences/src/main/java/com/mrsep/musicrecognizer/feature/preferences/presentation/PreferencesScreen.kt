@@ -1,9 +1,6 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
-import android.content.Context
 import android.os.Build
-import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
@@ -165,7 +163,9 @@ internal fun PreferencesScreen(
                         title = stringResource(StringsR.string.misc),
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
-                        val vibratorAvailable = remember { context.hasVibratorHardware() }
+                        val vibratorAvailable = remember {
+                            context.getDefaultVibrator().hasVibrator()
+                        }
                         if (vibratorAvailable) {
                             var showHapticDialog by rememberSaveable { mutableStateOf(false) }
                             PreferenceClickableItem(
@@ -218,14 +218,3 @@ private fun UserPreferences.RequiredServices.getNames() =
     ).filter { it.second }
         .joinToString(", ") { it.first }
         .ifEmpty { stringResource(StringsR.string.none) }
-
-
-private fun Context.hasVibratorHardware(): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
-            .defaultVibrator.hasVibrator()
-    } else {
-        @Suppress("DEPRECATION")
-        (getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()
-    }
-}

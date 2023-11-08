@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen
 
 import android.Manifest
-import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -15,11 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.view.HapticFeedbackConstantsCompat
-import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -54,7 +50,6 @@ internal fun RecognitionScreen(
     onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
     onNavigateToPreferencesScreen: () -> Unit
 ) {
-    val view = LocalView.current
     val context = LocalContext.current
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
     val preferences by viewModel.preferences.collectAsStateWithLifecycle()
@@ -68,7 +63,7 @@ internal fun RecognitionScreen(
         Manifest.permission.RECORD_AUDIO
     ) { granted ->
         if (granted) {
-            if (preferences.vibrateOnTap()) view.vibrateOnTap()
+            if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
             viewModel.recognizeTap()
         } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
             permissionBlockedDialogVisible = true
@@ -116,7 +111,7 @@ internal fun RecognitionScreen(
                     title = getButtonTitle(recognizeStatus),
                     onButtonClick = {
                         if (recorderPermissionState.status.isGranted) {
-                            if (preferences.vibrateOnTap()) view.vibrateOnTap()
+                            if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
                             viewModel.recognizeTap()
                         } else if (recorderPermissionState.status.shouldShowRationale) {
                             permissionRationaleDialogVisible = true
@@ -262,10 +257,10 @@ internal fun RecognitionScreen(
                 if (status !is RecognitionStatus.Done) return@LaunchedEffect
                 when (status.result) {
                     is RecognitionResult.ScheduledOffline,
-                    is RecognitionResult.Success -> view.vibrateOnResult(true)
+                    is RecognitionResult.Success -> viewModel.vibrateResult(true)
 
                     is RecognitionResult.Error,
-                    is RecognitionResult.NoMatches -> view.vibrateOnResult(false)
+                    is RecognitionResult.NoMatches -> viewModel.vibrateResult(false)
                 }
             }
         }
@@ -351,24 +346,3 @@ private fun UserPreferences?.vibrateOnTap() = this?.hapticFeedback?.vibrateOnTap
 
 @Stable
 private fun UserPreferences?.vibrateOnResult() = this?.hapticFeedback?.vibrateOnResult == true
-
-private fun View.vibrateOnTap() {
-    ViewCompat.performHapticFeedback(
-        this,
-        HapticFeedbackConstantsCompat.KEYBOARD_TAP,
-        HapticFeedbackConstantsCompat.FLAG_IGNORE_VIEW_SETTING
-    )
-}
-
-private fun View.vibrateOnResult(isSuccess: Boolean) {
-    val feedbackConstant = if (isSuccess) {
-        HapticFeedbackConstantsCompat.CONFIRM
-    } else {
-        HapticFeedbackConstantsCompat.REJECT
-    }
-    ViewCompat.performHapticFeedback(
-        this,
-        feedbackConstant,
-        HapticFeedbackConstantsCompat.FLAG_IGNORE_VIEW_SETTING
-    )
-}

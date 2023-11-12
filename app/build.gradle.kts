@@ -80,6 +80,9 @@ android {
             resources.excludes += "DebugProbesKt.bin"
         }
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 kapt {

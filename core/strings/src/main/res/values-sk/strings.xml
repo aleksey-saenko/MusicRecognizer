@@ -109,8 +109,8 @@
     <string name="no_tracks_match_search">Vašim kritériám vyhľadávania nezodpovedajú žiadne skladby</string>
     <string name="close">Zatvoriť</string>
     <string name="not_now">Teraz nie</string>
-    <string name="save_the_recording_and_launch_retry">Save the recording and launch retry</string>
-    <string name="save_the_recording">Save the recording</string>
+    <string name="save_the_recording_and_launch_retry">Uložiť záznam a skúsiť znova</string>
+    <string name="save_the_recording">Uložiť záznam</string>
     <string name="ignore">Ignorovať</string>
     <string name="fallback_policy">Zástupná politika rozpoznávania</string>
     <string name="fallback_policy_dialog_title">Záložná politika</string>
@@ -125,7 +125,7 @@
     <string name="music_services_links">Odkazy na hudobné služby</string>
     <string name="required_services_dialog">Vyberte hudobné služby, pre ktoré chcete zobraziť webové odkazy (ak sú k dispozícii):</string>
     <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>
-    <string name="artwork_colors_pref_title">Prispôsobte tému farbám obrázku</string>
+    <string name="artwork_colors_pref_title">Prispôsobiť tému farbám obrázku</string>
     <string name="misc">Rôzne</string>
     <string name="developer_options">Nastavenia pre vývojárov</string>
     <string name="appearance">Vzhľad</string>
@@ -150,14 +150,14 @@
     <string name="unmark_as_favorite">Odznačiť ako obľúbené</string>
     <string name="show_lyrics">Zobraziť text</string>
     <string name="show_more_info">Zobraziť viac informácií</string>
-    <string name="track_info">Informácie o pesničke</string>
+    <string name="track_info">Informácie o skladbe</string>
     <string name="format_date_of_last_recognition">Dátum posledného rozpoznania:%n%s</string>
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>
     <string name="track_not_found">Skladba sa nenašla</string>
     <string name="loading">Načítavam</string>
     <string name="format_version">Version %s</string>
     <string name="music_recognizing_app">Aplikácia na rozpoznávanie hudby</string>
-    <string name="powered_by_audd">Poháňaný AudD®</string>
+    <string name="powered_by_audd">Poháňané službou AudD®</string>
     <string name="github_repository">GitHub repozitár</string>
     <string name="license_gnu_gplv3">Licencia GNU GPLv3</string>
     <string name="lyrics_text_style">Lyrics text style</string>

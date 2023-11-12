@@ -21,7 +21,7 @@ object LyricsScreen {
 
     data class Args(val mbId: String) {
         constructor(savedStateHandle: SavedStateHandle) : this(
-            mbId = checkNotNull(savedStateHandle["mbId"])
+            mbId = checkNotNull(savedStateHandle[ARG_MB_ID])
         )
     }
 

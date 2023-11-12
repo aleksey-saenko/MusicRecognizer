@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.withResumed
@@ -47,6 +51,11 @@ import kotlinx.coroutines.selects.select
 
 private const val SCREEN_TRANSITION_DURATION = 300
 
+@Stable
+internal class AppState(autostartRecognition: Boolean = false) {
+    var autostartRecognition by mutableStateOf(autostartRecognition)
+}
+
 @Composable
 internal fun AppNavigation(
     shouldShowNavRail: Boolean,
@@ -55,6 +64,9 @@ internal fun AppNavigation(
     onOnboardingClose: () -> Unit,
     hideSplashScreen: () -> Unit
 ) {
+    val appState = remember {
+        AppState(autostartRecognition = false)
+    }
     val outerNavController = rememberNavController()
     val innerNavController = rememberNavController()
 
@@ -94,6 +106,7 @@ internal fun AppNavigation(
             onOnboardingClose = onOnboardingClose
         )
         barNavHost(
+            appState = appState,
             shouldShowNavRail = shouldShowNavRail,
             outerNavController = outerNavController,
             innerNavController = innerNavController
@@ -109,6 +122,9 @@ internal fun AppNavigation(
             onBackPressed = outerNavController::navigateUp,
             onNavigateToLyricsScreen = { mbId, from ->
                 outerNavController.navigateToLyricsScreen(mbId = mbId, from = from)
+            },
+            onRetryRequested = {
+                appState.autostartRecognition = true
             }
         )
         lyricsScreen(
@@ -130,6 +146,7 @@ internal fun AppNavigation(
 private const val BAR_HOST_ROUTE = "bar_host"
 
 private fun NavGraphBuilder.barNavHost(
+    appState: AppState,
     shouldShowNavRail: Boolean,
     outerNavController: NavController,
     innerNavController: NavHostController
@@ -152,6 +169,7 @@ private fun NavGraphBuilder.barNavHost(
                     )
                 }
                 BarNavHost(
+                    appState = appState,
                     outerNavController = outerNavController,
                     innerNavController = innerNavController,
                     modifier = Modifier.weight(1f, false)
@@ -166,6 +184,7 @@ private fun NavGraphBuilder.barNavHost(
 
 @Composable
 private fun BarNavHost(
+    appState: AppState,
     outerNavController: NavController,
     innerNavController: NavHostController,
     modifier: Modifier = Modifier
@@ -186,8 +205,12 @@ private fun BarNavHost(
             }
         )
         recognitionScreen(
+            autostart = appState.autostartRecognition,
+            onResetAutostart = { appState.autostartRecognition = false },
             onNavigateToTrackScreen = { mbId, from ->
-                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+                outerNavController.navigateToTrackScreen(
+                    mbId = mbId, isRetryAvailable = true, from = from
+                )
             },
             //TODO: implement navigation with highlighting enqueuedId
             onNavigateToQueueScreen = { enqueuedId, from ->

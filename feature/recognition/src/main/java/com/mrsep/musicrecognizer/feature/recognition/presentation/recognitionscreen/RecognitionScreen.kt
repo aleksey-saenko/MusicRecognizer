@@ -46,6 +46,8 @@ internal const val animationDurationShield = 220
 @Composable
 internal fun RecognitionScreen(
     viewModel: RecognitionViewModel = hiltViewModel(),
+    autostart: Boolean,
+    onResetAutostart: () -> Unit,
     onNavigateToTrackScreen: (mbId: String) -> Unit,
     onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
     onNavigateToPreferencesScreen: () -> Unit
@@ -55,6 +57,11 @@ internal fun RecognitionScreen(
     val preferences by viewModel.preferences.collectAsStateWithLifecycle()
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
+
+    LaunchedEffect(autostart) {
+        if (autostart) viewModel.recognizeTap()
+        onResetAutostart()
+    }
 
     //region <permission handling block>
     var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
@@ -108,7 +115,7 @@ internal fun RecognitionScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 SuperButtonSection(
-                    title = getButtonTitle(recognizeStatus),
+                    title = getButtonTitle(recognizeStatus, autostart),
                     onButtonClick = {
                         if (recorderPermissionState.status.isGranted) {
                             if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
@@ -327,16 +334,20 @@ private fun RecognitionStatus.isDone() = this is RecognitionStatus.Done
 private fun RecognitionStatus.isNotDone() = !isDone()
 
 @Composable
-private fun getButtonTitle(recognitionStatus: RecognitionStatus): String {
+private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Boolean): String {
     return when (recognitionStatus) {
-        RecognitionStatus.Ready -> stringResource(StringsR.string.tap_to_recognize)
+        RecognitionStatus.Ready -> if (skipReady) {
+            " "
+        } else {
+            stringResource(StringsR.string.tap_to_recognize)
+        }
         is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTry) {
             stringResource(StringsR.string.trying_one_more_time)
         } else {
             stringResource(StringsR.string.listening)
         }
 
-        is RecognitionStatus.Done -> ""
+        is RecognitionStatus.Done -> " "
 
     }
 }

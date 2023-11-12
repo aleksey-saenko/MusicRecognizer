@@ -21,7 +21,7 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
     // Use uniqueWorkName as an extra tag to associate workInfo with enqueuedId
     // in the getStatusFlowAll method.
     // WorkInfo only contains the worker UUID (which cannot be converted in both directions) and tags.
-    override fun enqueueById(vararg enqueuedId: Int) {
+    override fun enqueueById(vararg enqueuedId: Int, forceLaunch: Boolean) {
         enqueuedId.forEach { id ->
             val uniqueWorkName = getUniqueWorkerName(id)
             workManager.enqueueUniqueWork(
@@ -29,7 +29,8 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
                 ExistingWorkPolicy.REPLACE,
                 EnqueuedRecognitionWorker.getOneTimeWorkRequest(
                     enqueuedId = id,
-                    identifyTag = uniqueWorkName
+                    identifyTag = uniqueWorkName,
+                    forceLaunch = forceLaunch
                 )
             )
         }

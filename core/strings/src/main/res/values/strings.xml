@@ -86,6 +86,7 @@
     <string name="empty_library_message">Your recently recognized and favorite songs will be shown here</string>
     <string name="untitled_recognition">Untitled recognition</string>
     <string name="enqueue_recognition">Enqueue recognition</string>
+    <string name="force_recognition_launch">Force launch</string>
     <string name="cancel_recognition">Cancel recognition</string>
     <string name="show_track">Show track</string>
     <string name="rename">Rename</string>

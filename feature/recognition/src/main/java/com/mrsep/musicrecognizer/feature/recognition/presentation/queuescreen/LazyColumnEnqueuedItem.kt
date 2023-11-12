@@ -3,8 +3,6 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -27,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.AlertDialog
@@ -74,7 +71,7 @@ internal fun LazyColumnEnqueuedItem(
     onRenameEnqueued: (enqueuedId: Int, name: String) -> Unit,
     onStartPlayRecord: (enqueuedId: Int) -> Unit,
     onStopPlayRecord: () -> Unit,
-    onEnqueueRecognition: (enqueuedId: Int) -> Unit,
+    onEnqueueRecognition: (enqueuedId: Int, forceLaunch: Boolean) -> Unit,
     onCancelRecognition: (enqueuedId: Int) -> Unit,
     onNavigateToTrackScreen: (trackMbId: String) -> Unit,
     menuEnabled: Boolean,
@@ -179,8 +176,8 @@ internal fun LazyColumnEnqueuedItem(
         Box(contentAlignment = Alignment.Center) {
             this@Row.AnimatedVisibility(
                 visible = menuEnabled,
-                enter = fadeIn(spring(stiffness = Spring.StiffnessMedium)),
-                exit = fadeOut(spring(stiffness = Spring.StiffnessMedium))
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
                 IconButton(onClick = { menuExpanded = !menuExpanded }, enabled = menuEnabled) {
                     Icon(
@@ -196,8 +193,8 @@ internal fun LazyColumnEnqueuedItem(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(StringsR.string.rename)) },
                     onClick = {
-                        renameDialogVisible = true
                         menuExpanded = false
+                        renameDialogVisible = true
                     },
                     leadingIcon = {
                         Icon(
@@ -209,8 +206,8 @@ internal fun LazyColumnEnqueuedItem(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(StringsR.string.delete)) },
                     onClick = {
-                        onDeleteEnqueued(enqueued.id)
                         menuExpanded = false
+                        onDeleteEnqueued(enqueued.id)
                     },
                     leadingIcon = {
                         Icon(
@@ -234,13 +231,31 @@ internal fun LazyColumnEnqueuedItem(
                                         )
                                     },
                                     onClick = {
-                                        onEnqueueRecognition(enqueued.id)
                                         menuExpanded = false
+                                        onEnqueueRecognition(enqueued.id, false)
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Default.Refresh,
-                                            contentDescription = stringResource(StringsR.string.enqueue_recognition)
+                                            painter = painterResource(UiR.drawable.baseline_schedule_send_24),
+                                            contentDescription = stringResource(StringsR.string.enqueue_recognition),
+                                        )
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(StringsR.string.force_recognition_launch),
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    },
+                                    onClick = {
+                                        menuExpanded = false
+                                        onEnqueueRecognition(enqueued.id, true)
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(UiR.drawable.baseline_send_24),
+                                            contentDescription = stringResource(StringsR.string.force_recognition_launch),
                                         )
                                     }
                                 )
@@ -254,10 +269,10 @@ internal fun LazyColumnEnqueuedItem(
                                         )
                                     },
                                     onClick = {
+                                        menuExpanded = false
                                         onNavigateToTrackScreen(
                                             enqueued.result.track.mbId
                                         )
-                                        menuExpanded = false
                                     },
                                     leadingIcon = {
                                         Icon(
@@ -280,8 +295,8 @@ internal fun LazyColumnEnqueuedItem(
                                 )
                             },
                             onClick = {
-                                onCancelRecognition(enqueued.id)
                                 menuExpanded = false
+                                onCancelRecognition(enqueued.id)
                             },
                             leadingIcon = {
                                 Icon(

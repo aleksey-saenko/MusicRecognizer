@@ -197,7 +197,9 @@ internal class RecognitionInteractorImpl @Inject constructor(
             audioRecording = audioRecording,
             title = ""
         )?.let { enqueuedId ->
-            if (launched) enqueuedRecognitionScheduler.enqueueById(enqueuedId)
+            if (launched) {
+                enqueuedRecognitionScheduler.enqueueById(enqueuedId, forceLaunch = false)
+            }
             RecognitionTask.Created(enqueuedId, launched)
         } ?: RecognitionTask.Error()
     }

@@ -33,6 +33,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
+        val forceLaunch = inputData.getBoolean(INPUT_KEY_FORCE_LAUNCH, true)
         val enqueuedRecognitionId = inputData.getInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, -1)
         check(enqueuedRecognitionId != -1) { "$TAG require enqueued recognition id as parameter" }
 
@@ -79,8 +80,12 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 RemoteRecognitionResult.Error.BadConnection,
                 is RemoteRecognitionResult.Error.HttpError,
                 is RemoteRecognitionResult.Error.UnhandledError -> {
-                    if (runAttemptCount >= MAX_ATTEMPTS) {
-                        Log.w(TAG, "$TAG canceled, runAttemptCount > max=$MAX_ATTEMPTS")
+                    if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
+                        Log.w(TAG, "$TAG canceled, " +
+                                "forceLaunch=$forceLaunch," +
+                                " runAttemptCount=$runAttemptCount," +
+                                " maxAttempts=$MAX_ATTEMPTS"
+                        )
                         enqueuedRecognitionRepository.update(
                             enqueued.copy(result = result, resultDate = Instant.now())
                         )
@@ -107,15 +112,25 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         const val TAG = "EnqueuedRecognitionWorker"
         private const val MAX_ATTEMPTS = 3
         private const val INPUT_KEY_ENQUEUED_RECOGNITION_ID = "ENQUEUED_RECOGNITION_ID"
+        private const val INPUT_KEY_FORCE_LAUNCH = "FORCE_LAUNCH"
 
-        fun getOneTimeWorkRequest(enqueuedId: Int, identifyTag: String): OneTimeWorkRequest {
+        fun getOneTimeWorkRequest(
+            enqueuedId: Int,
+            identifyTag: String,
+            forceLaunch: Boolean
+        ): OneTimeWorkRequest {
             val data = Data.Builder()
                 .putInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, enqueuedId)
+                .putBoolean(INPUT_KEY_FORCE_LAUNCH, forceLaunch)
                 .build()
-            val constraints = Constraints.Builder()
-                .setRequiresBatteryNotLow(true)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
+            val constraints = if (forceLaunch) {
+                Constraints.NONE
+            } else {
+                Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            }
             return OneTimeWorkRequestBuilder<EnqueuedRecognitionWorker>()
                 .addTag(TAG)
                 .addTag(identifyTag)

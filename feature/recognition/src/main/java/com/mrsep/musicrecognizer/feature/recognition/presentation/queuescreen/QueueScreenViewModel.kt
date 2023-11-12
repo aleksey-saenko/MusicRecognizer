@@ -60,9 +60,9 @@ internal class QueueScreenViewModel @Inject constructor(
         }
     }
 
-    fun enqueueRecognition(vararg enqueuedId: Int) {
+    fun enqueueRecognition(enqueuedId: Int, forceLaunch: Boolean) {
         appScope.launch(ioDispatcher) {
-            recognitionScheduler.enqueueById(*enqueuedId)
+            recognitionScheduler.enqueueById(enqueuedId, forceLaunch = forceLaunch)
         }
     }
 

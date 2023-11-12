@@ -77,6 +77,7 @@
     <string name="empty_library_message">Здесь будут отображаться недавно распознанные и избранные треки</string>
     <string name="untitled_recognition">Без названия</string>
     <string name="enqueue_recognition">Поставить в очередь</string>
+    <string name="force_recognition_launch">Принудительный старт</string>
     <string name="cancel_recognition">Отменить распознавание</string>
     <string name="show_track">Показать трек</string>
     <string name="rename">Переименовать</string>

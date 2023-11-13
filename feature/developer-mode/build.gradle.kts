@@ -21,7 +21,6 @@ android {
     defaultConfig {
         minSdk = libs.versions.sdkMin.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
 
         val properties = Properties()
         if (project.rootProject.file("local.properties").canRead()) {

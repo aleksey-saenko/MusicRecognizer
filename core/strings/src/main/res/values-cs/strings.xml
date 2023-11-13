@@ -156,7 +156,7 @@
     <string name="show_lyrics">Zobrazit texty</string>
     <string name="show_more_info">Zobrazit více informací</string>
     <string name="track_info">Informace o skladbě</string>
-    <string name="format_date_of_last_recognition">Datum posledního rozpoznávání: %n%s</string>
+    <string name="format_date_of_last_recognition">Datum posledního rozpoznávání:\n%s</string>
     <string name="track_not_found_message">Něco se pokazilo, skladba možná byla odebrána nebo nesprávně upravena</string>
     <string name="track_not_found">Skladba nebyla nalezena</string>
     <string name="loading">Načítání</string>

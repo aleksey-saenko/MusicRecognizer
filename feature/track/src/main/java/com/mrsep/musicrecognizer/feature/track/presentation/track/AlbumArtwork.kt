@@ -67,7 +67,7 @@ internal fun AlbumArtwork(
                     }
                 }
             }
-            scope.launch(Dispatchers.Default) {
+            scope.launch(Dispatchers.IO) {
                 state.result.diskCacheKey?.let { diskCacheKey ->
                     imageLoader.diskCache?.openSnapshot(diskCacheKey)?.let { snapshot ->
                         val cacheUri = FileProvider.getUriForFile(
@@ -75,6 +75,7 @@ internal fun AlbumArtwork(
                             "${context.packageName}.fileprovider",
                             snapshot.data.toFile()
                         )
+                        snapshot.close()
                         withContext(Dispatchers.Main) {
                             onArtworkCached(cacheUri)
                         }

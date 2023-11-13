@@ -157,7 +157,7 @@
     <string name="show_lyrics">Показать текст песни</string>
     <string name="show_more_info">Показать доп. инфо</string>
     <string name="track_info">Доп. инфо о треке</string>
-    <string name="format_date_of_last_recognition">Дата последнего распознавания:%n%s</string>
+    <string name="format_date_of_last_recognition">Дата последнего распознавания:\n%s</string>
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
     <string name="loading">Загрузка</string>

@@ -1,0 +1,3 @@
+* Added swipe-to-retry function on track screen after recognition (dismiss track and retry)
+* Added force launch for saved recognitions (ignores network constraints and energy-saving mode)
+* Updated Slovak translation

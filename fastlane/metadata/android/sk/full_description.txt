@@ -5,6 +5,6 @@ Táto aplikácia používa službu AudD® ako API na rozpoznávanie hudby.
 
 <b>Rozpoznávanie</b> - Audile umožňuje rozpoznávať skladby jedným kliknutím. Ak nie je k dispozícii internet, aplikácia uloží záznam a proces rozpoznávania sa vykoná, keď budete späť online. Predvolené správanie pre neúspešné rozpoznanie (žiadny internet, žiadne zhody, ďalšie zlyhanie) si môžete prispôsobiť v nastaveniach aplikácie.
 <b>Notifikačná služba</b> - Aplikáciu môžete použiť v lište upozornení. Spravujte proces rozpoznávania a získajte informácie o skladbe.
-<b>About track</b> - V prípade úspešného rozpoznania sú poskytnuté informácie o skladbe, ako je názov, interpret, album a rok, artwork, text a odkazy na skladbu na populárnych hudobných službách.
-<b>Library</b> - Všetky rozpoznané skladby sú uložené v knižnici aplikácie. Môžete filtrovať zoznam skladieb, vytvárať zbierku obľúbených, vyhľadávať, alebo vymazávať skladby.
-<b>Preferences</b> - Aplikácia má množstvo možností na prispôsobenie svojho správania a vzhľadu, ktoré nájdete v nastaveniach aplikácie.
+<b>O skladbe</b> - V prípade úspešného rozpoznania sú poskytnuté informácie o skladbe, ako je názov, interpret, album a rok, artwork, text a odkazy na skladbu na populárnych hudobných službách.
+<b>Knižnica</b> - Všetky rozpoznané skladby sú uložené v knižnici aplikácie. Môžete filtrovať zoznam skladieb, vytvárať zbierku obľúbených, vyhľadávať, alebo vymazávať skladby.
+<b>Nastavenia</b> - Aplikácia má množstvo možností na prispôsobenie svojho správania a vzhľadu, ktoré nájdete v nastaveniach aplikácie.

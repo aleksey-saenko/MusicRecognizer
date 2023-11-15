@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 
@@ -112,10 +113,9 @@ internal fun TrackScreen(
 //                                    )
 //                                }
                             },
-                            onDeleteClick = {
-                                viewModel.deleteTrack(uiState.mbId)
-                            },
+                            onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
+                            onOpenOdesliClick = { context.openUrlImplicitly(uiState.odesliLink) },
                             topAppBarScrollBehavior = topBarBehaviour
                         )
                         TrackSection(

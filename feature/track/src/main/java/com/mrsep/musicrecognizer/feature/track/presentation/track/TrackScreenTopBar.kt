@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +41,7 @@ internal fun TrackScreenTopBar(
     onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onShowDetailsClick: () -> Unit,
+    onOpenOdesliClick: () -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -94,6 +96,33 @@ internal fun TrackScreenTopBar(
                         onDismissRequest = { menuExpanded = false }
                     ) {
                         DropdownMenuItem(
+                            text = { Text(text = stringResource(StringsR.string.open_odesli)) },
+                            onClick = {
+                                menuExpanded = false
+                                onOpenOdesliClick()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.baseline_travel_explore_24),
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(StringsR.string.show_more)) },
+                            onClick = {
+                                menuExpanded = false
+                                onShowDetailsClick()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                        Divider()
+                        DropdownMenuItem(
                             text = { Text(text = stringResource(StringsR.string.delete)) },
                             onClick = {
                                 menuExpanded = false
@@ -101,20 +130,7 @@ internal fun TrackScreenTopBar(
                             },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.Delete,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(StringsR.string.show_more_info)) },
-                            onClick = {
-                                menuExpanded = false
-                                onShowDetailsClick()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Info,
+                                    imageVector = Icons.Default.Delete,
                                     contentDescription = null
                                 )
                             }

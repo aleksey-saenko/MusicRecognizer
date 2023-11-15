@@ -12,6 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -87,6 +88,7 @@ internal sealed interface TrackUiState {
         val lastRecognitionDate: String,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
+        val odesliLink: String,
         val links: ImmutableList<ServiceLink>
     ) : TrackUiState {
 
@@ -110,6 +112,7 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
         lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
         themeSeedColor = this.metadata.themeSeedColor,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+        odesliLink = this.createOdesliLink(),
         links = this.links.toUiList(preferences.requiredServices),
     )
 }
@@ -157,4 +160,10 @@ private fun Track.Links.toUiList(required: UserPreferences.RequiredServices): Im
     if (required.deezer) deezer?.let { url -> list.add(ServiceLink.Deezer(url)) }
     if (required.napster) napster?.let { url -> list.add(ServiceLink.Napster(url)) }
     return list.toImmutableList()
+}
+
+private fun Track.createOdesliLink(): String {
+    val serviceLink = with(links) { spotify ?: appleMusic ?: deezer ?: napster }
+    val query = "?q=${URLEncoder.encode("$artist $title", "UTF-8")}"
+    return "https://odesli.co/${serviceLink ?: query}"
 }

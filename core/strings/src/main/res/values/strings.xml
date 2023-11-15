@@ -164,7 +164,7 @@
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Unmark as favorite</string>
     <string name="show_lyrics">Show lyrics</string>
-    <string name="show_more_info">Show more info</string>
+    <string name="open_odesli">Open Odesli</string>
     <string name="track_info">Track info</string>
     <string name="format_date_of_last_recognition">Date of last recognition:\n%s</string>
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>

@@ -155,7 +155,6 @@
     <string name="mark_as_favorite">Označiť ako obľúbené</string>
     <string name="unmark_as_favorite">Odznačiť ako obľúbené</string>
     <string name="show_lyrics">Zobraziť text</string>
-    <string name="show_more_info">Zobraziť viac informácií</string>
     <string name="track_info">Informácie o skladbe</string>
     <string name="format_date_of_last_recognition">Dátum posledného rozpoznania:\n%s</string>
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>

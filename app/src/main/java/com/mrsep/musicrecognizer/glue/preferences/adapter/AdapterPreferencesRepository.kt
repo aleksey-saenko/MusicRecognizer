@@ -66,4 +66,8 @@ class AdapterPreferencesRepository @Inject constructor(
         )
     }
 
+    override suspend fun setUseGridForLibrary(value: Boolean) {
+        preferencesRepositoryDo.setUseGridForLibrary(value)
+    }
+
 }

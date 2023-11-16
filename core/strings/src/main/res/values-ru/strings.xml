@@ -127,6 +127,7 @@
     <string name="required_services_dialog">Выберите музыкальные сервисы, для которых вы хотите видеть веб-ссылки (если доступны):</string>
     <string name="dynamic_colors_pref_title">Динамические цвета</string>
     <string name="artwork_colors_pref_title">Адаптировать тему к обложке</string>
+    <string name="use_grid_for_library">Использовать сетку для библиотеки</string>
     <string name="vibration_feedback">Вибрация</string>
     <string name="vibration_feedback_dialog_title">Вибрация</string>
     <string name="vibration_feedback_dialog_message">Настройте вибрацию для конкретных действий в приложении:</string>
@@ -155,7 +156,7 @@
     <string name="mark_as_favorite">Отметить как избранное</string>
     <string name="unmark_as_favorite">Снять отметку избранного</string>
     <string name="show_lyrics">Показать текст песни</string>
-    <string name="open_odesli">Открыть Odesli</string>
+    <string name="format_open_website_or_app">Открыть %s</string>
     <string name="track_info">Доп. инфо о треке</string>
     <string name="format_date_of_last_recognition">Дата последнего распознавания:\n%s</string>
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>

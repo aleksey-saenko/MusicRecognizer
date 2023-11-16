@@ -10,6 +10,7 @@ data class UserPreferences(
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
+    val useGridForLibrary: Boolean,
 ) {
 
     data class RequiredServices(

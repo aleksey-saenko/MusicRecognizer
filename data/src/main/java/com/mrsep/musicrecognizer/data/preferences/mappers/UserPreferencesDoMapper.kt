@@ -28,6 +28,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
             .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
             .setHapticFeedback(hapticFeedbackMapper.reverseMap(input.hapticFeedback))
+            .setUseGridForLibrary(input.useGridForLibrary)
             .build()
     }
 
@@ -43,7 +44,8 @@ class UserPreferencesDoMapper @Inject constructor(
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),
-            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback)
+            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
+            useGridForLibrary = input.useGridForLibrary
         )
     }
 

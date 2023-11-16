@@ -66,6 +66,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setUseGridForLibrary(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUseGridForLibrary(value)
+        }
+    }
+
 }
 
 internal sealed interface PreferencesUiState {

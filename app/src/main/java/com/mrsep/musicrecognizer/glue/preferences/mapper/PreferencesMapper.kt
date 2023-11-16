@@ -25,7 +25,8 @@ class PreferencesMapper @Inject constructor(
             developerModeEnabled = input.developerModeEnabled,
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
-            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback)
+            hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
+            useGridForLibrary = input.useGridForLibrary
         )
     }
 

@@ -89,6 +89,10 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun setUseGridForLibrary(value: Boolean) {
+        safeWriter { setUseGridForLibrary(value) }
+    }
+
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {
         return this.catch { e ->
             Log.e(TAG, "Failed to read user preferences", e)

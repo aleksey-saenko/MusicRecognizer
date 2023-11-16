@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,25 +33,25 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun TrackSearchItem(
     track: TrackUi,
     keyword: String,
+    shape: Shape,
     onTrackClick: (mbId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start,
         modifier = modifier
-            .clip(MaterialTheme.shapes.large)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                shape = shape
+            )
+            .clip(shape)
             .clickable { onTrackClick(track.mbId) }
             .height(120.dp)
             .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                shape = MaterialTheme.shapes.large
-            )
     ) {
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.baseline_album_24),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-            alpha = 0.3f
+            alpha = 0.2f
         )
         AsyncImage(
             model = track.artworkUrl,
@@ -59,27 +60,31 @@ internal fun TrackSearchItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.large)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                    shape = shape
+                )
+                .clip(shape)
                 .aspectRatio(1f)
         )
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = highlightKeyword(track.title, keyword),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
             )
             Text(
                 text = highlightKeyword(track.artist, keyword),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .alpha(0.9f)
-                    .padding(top = 4.dp)
+                modifier = Modifier.alpha(0.95f)
             )
             track.albumAndYear?.let { albumAndYear ->
                 Text(
@@ -87,9 +92,7 @@ internal fun TrackSearchItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .alpha(0.9f)
-                        .padding(top = 4.dp)
+                    modifier = Modifier.alpha(0.95f)
                 )
             }
         }

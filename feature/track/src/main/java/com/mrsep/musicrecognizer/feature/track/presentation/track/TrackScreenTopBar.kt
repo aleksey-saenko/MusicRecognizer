@@ -96,7 +96,14 @@ internal fun TrackScreenTopBar(
                         onDismissRequest = { menuExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(StringsR.string.open_odesli)) },
+                            text = {
+                                Text(
+                                    text = stringResource(
+                                        StringsR.string.format_open_website_or_app,
+                                        stringResource(StringsR.string.odesli)
+                                    )
+                                )
+                            },
                             onClick = {
                                 menuExpanded = false
                                 onOpenOdesliClick()

@@ -27,6 +27,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             .setOnboardingCompleted(false)
             .setDynamicColorsEnabled(true)
             .setArtworkBasedThemeEnabled(false)
+            .setUseGridForLibrary(true)
             .setNotificationServiceEnabled(false)
             .setDeveloperModeEnabled(true)
             .setFallbackPolicy(

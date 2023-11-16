@@ -142,7 +142,6 @@ internal fun PreferencesScreen(
                                 dialogState = dialogState
                             )
                         }
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             PreferenceSwitchItem(
                                 title = stringResource(StringsR.string.dynamic_colors_pref_title),
@@ -151,11 +150,16 @@ internal fun PreferencesScreen(
                                 modifier = Modifier.padding(top = 12.dp)
                             )
                         }
-
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.artwork_colors_pref_title),
                             onCheckedChange = { viewModel.setArtworkBasedThemeEnabled(it) },
                             checked = uiState.preferences.artworkBasedThemeEnabled,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                        PreferenceSwitchItem(
+                            title = stringResource(StringsR.string.use_grid_for_library),
+                            onCheckedChange = { viewModel.setUseGridForLibrary(it) },
+                            checked = uiState.preferences.useGridForLibrary,
                             modifier = Modifier.padding(top = 12.dp)
                         )
                     }

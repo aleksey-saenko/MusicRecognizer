@@ -15,5 +15,6 @@ interface PreferencesRepository {
     suspend fun setRequiredServices(requiredServices: UserPreferences.RequiredServices)
     suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
     suspend fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback)
+    suspend fun setUseGridForLibrary(value: Boolean)
 
 }

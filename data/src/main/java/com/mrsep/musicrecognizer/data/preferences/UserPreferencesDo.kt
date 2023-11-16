@@ -11,7 +11,8 @@ data class UserPreferencesDo(
     val fallbackPolicy: FallbackPolicyDo,
     val lyricsFontStyle: LyricsFontStyleDo,
     val trackFilter: TrackFilterDo,
-    val hapticFeedback: HapticFeedbackDo
+    val hapticFeedback: HapticFeedbackDo,
+    val useGridForLibrary: Boolean,
 ) {
 
     data class RequiredServicesDo(

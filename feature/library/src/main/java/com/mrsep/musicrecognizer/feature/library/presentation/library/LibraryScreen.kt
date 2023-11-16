@@ -5,6 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -80,11 +81,46 @@ internal fun LibraryScreen(
             )
 
             is LibraryUiState.Success -> {
-                val lazyGridState = rememberLazyGridState()
                 val filterSheetState = rememberModalBottomSheetState(
                     skipPartiallyExpanded = true
                 )
                 var newFilterApplied by rememberSaveable { mutableStateOf(false) }
+
+                if (uiState.useGridLayout) {
+                    val lazyGridState = rememberLazyGridState()
+                    TrackLazyGrid(
+                        trackList = uiState.trackList,
+                        onTrackClick = onTrackClick,
+                        lazyGridState = lazyGridState,
+                        multiSelectionState = multiSelectionState,
+                        modifier = Modifier.nestedScroll(
+                            topBarBehaviour.nestedScrollConnection
+                        )
+                    )
+                    LaunchedEffect(uiState.trackFilter) {
+                        if (newFilterApplied) {
+                            lazyGridState.animateScrollToItem(0)
+                            newFilterApplied = false
+                        }
+                    }
+                } else {
+                    val lazyListState = rememberLazyListState()
+                    TrackLazyColumn(
+                        trackList = uiState.trackList,
+                        onTrackClick = onTrackClick,
+                        lazyListState = lazyListState,
+                        multiSelectionState = multiSelectionState,
+                        modifier = Modifier.nestedScroll(
+                            topBarBehaviour.nestedScrollConnection
+                        )
+                    )
+                    LaunchedEffect(uiState.trackFilter) {
+                        if (newFilterApplied) {
+                            lazyListState.animateScrollToItem(0)
+                            newFilterApplied = false
+                        }
+                    }
+                }
 
                 fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
                     scope.launch { filterSheetState.hide() }.invokeOnCompletion {
@@ -96,22 +132,6 @@ internal fun LibraryScreen(
                     }
                 }
 
-                LaunchedEffect(uiState.trackFilter) {
-                    if (newFilterApplied) {
-                        lazyGridState.animateScrollToItem(0)
-                        newFilterApplied = false
-                    }
-                }
-
-                TrackLazyGrid(
-                    trackList = uiState.trackList,
-                    onTrackClick = onTrackClick,
-                    lazyGridState = lazyGridState,
-                    multiSelectionState = multiSelectionState,
-                    modifier = Modifier.nestedScroll(
-                        topBarBehaviour.nestedScrollConnection
-                    )
-                )
                 if (filterSheetActive) {
                     val filterState = rememberTrackFilterState(
                         initialTrackFilter = uiState.trackFilter

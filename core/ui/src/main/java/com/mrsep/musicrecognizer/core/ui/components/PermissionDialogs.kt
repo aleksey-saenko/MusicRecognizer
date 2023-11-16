@@ -4,9 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -80,7 +79,7 @@ internal fun PermissionBlockedDialog(
         onDismissRequest = onDismissClick,
         confirmButton = {
             if (appSettingsIntent.resolveActivity(context.packageManager) != null) {
-                Button(onClick = {
+                TextButton(onClick = {
                     onConfirmClick()
                     context.startActivity(appSettingsIntent)
                 }) {
@@ -89,7 +88,7 @@ internal fun PermissionBlockedDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismissClick) {
+            TextButton(onClick = onDismissClick) {
                 Text(text = stringResource(StringsR.string.not_now))
             }
         },
@@ -112,14 +111,14 @@ internal fun PermissionRationaleDialog(
     AlertDialog(
         onDismissRequest = onDismissClick,
         confirmButton = {
-            Button(onClick = {
+            TextButton(onClick = {
                 onConfirmClick()
             }) {
                 Text(text = stringResource(StringsR.string.request_permission))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismissClick) {
+            TextButton(onClick = onDismissClick) {
                 Text(text = stringResource(StringsR.string.not_now))
             }
         },

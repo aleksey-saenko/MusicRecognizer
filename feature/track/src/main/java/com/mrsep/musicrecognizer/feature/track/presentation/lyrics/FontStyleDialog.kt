@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,12 +90,12 @@ internal fun FontStyleDialog(
     AlertDialog(
         onDismissRequest = onDismissClick,
         confirmButton = {
-            Button(onClick = onConfirmClick) {
-                Text(text = stringResource(StringsR.string.save))
+            TextButton(onClick = onConfirmClick) {
+                Text(text = stringResource(StringsR.string.apply))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismissClick) {
+            TextButton(onClick = onDismissClick) {
                 Text(text = stringResource(StringsR.string.close))
             }
         },

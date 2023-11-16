@@ -91,12 +91,12 @@ internal fun RequiredServicesDialog(
             Text(text = stringResource(StringsR.string.music_services_links))
         },
         confirmButton = {
-            Button(onClick = onConfirmClick) {
+            TextButton(onClick = onConfirmClick) {
                 Text(text = stringResource(StringsR.string.apply))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismissClick) {
+            TextButton(onClick = onDismissClick) {
                 Text(text = stringResource(StringsR.string.cancel))
             }
         },

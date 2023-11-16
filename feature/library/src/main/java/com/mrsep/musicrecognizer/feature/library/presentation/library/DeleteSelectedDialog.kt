@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -29,7 +28,7 @@ internal fun DeleteSelectedDialog(
             Text(text = stringResource(StringsR.string.delete_tracks))
         },
         confirmButton = {
-            Button(onClick = onDeleteClick, enabled = !inProgress) {
+            TextButton(onClick = onDeleteClick, enabled = !inProgress) {
                 Text(text = stringResource(StringsR.string.delete))
                 Crossfade(targetState = inProgress, label = "inProgress") { progress ->
                     if (progress) {
@@ -42,7 +41,7 @@ internal fun DeleteSelectedDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismissClick, enabled = !inProgress) {
+            TextButton(onClick = onDismissClick, enabled = !inProgress) {
                 Text(text = stringResource(StringsR.string.cancel))
             }
         },

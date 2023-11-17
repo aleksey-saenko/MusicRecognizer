@@ -16,13 +16,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,76 +29,19 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
-@Stable
-internal class FallbackPolicyDialogState(
-    initialState: UserPreferences.FallbackPolicy,
-) {
-    var noMatches by mutableStateOf(initialState.noMatches)
-    var badConnection by mutableStateOf(initialState.badConnection)
-    var anotherFailure by mutableStateOf(initialState.anotherFailure)
-
-    val currentState: UserPreferences.FallbackPolicy
-        get() = UserPreferences.FallbackPolicy(
-            noMatches = noMatches,
-            badConnection = badConnection,
-            anotherFailure = anotherFailure
-        )
-
-    companion object {
-        val Saver: Saver<FallbackPolicyDialogState, *> = listSaver(
-            save = {
-                listOf(
-                    it.noMatches.ordinal,
-                    it.badConnection.ordinal,
-                    it.anotherFailure.ordinal
-                )
-            },
-            restore = {
-                FallbackPolicyDialogState(
-                    initialState = UserPreferences.FallbackPolicy(
-                        noMatches = FallbackAction.values()[it[0]],
-                        badConnection = FallbackAction.values()[it[1]],
-                        anotherFailure = FallbackAction.values()[it[2]]
-                    )
-                )
-            }
-        )
-    }
-
-}
-
-@Composable
-internal fun rememberFallbackPolicyDialogState(
-    fallbackPolicy: UserPreferences.FallbackPolicy,
-): FallbackPolicyDialogState {
-    return rememberSaveable(
-        inputs = arrayOf(fallbackPolicy),
-        saver = FallbackPolicyDialogState.Saver
-    ) {
-        FallbackPolicyDialogState(
-            initialState = fallbackPolicy
-        )
-    }
-}
-
 @Composable
 internal fun FallbackPolicyDialog(
-    onConfirmClick: () -> Unit,
+    fallbackPolicy: UserPreferences.FallbackPolicy,
+    onFallbackPolicyChanged: (UserPreferences.FallbackPolicy) -> Unit,
     onDismissClick: () -> Unit,
-    dialogState: FallbackPolicyDialogState,
 ) {
     AlertDialog(
         title = {
             Text(text = stringResource(StringsR.string.fallback_policy_dialog_title))
         },
         confirmButton = {
-            TextButton(onClick = onConfirmClick) {
-                Text(text = stringResource(StringsR.string.apply))
-            }
-        },
-        dismissButton = {
             TextButton(onClick = onDismissClick) {
-                Text(text = stringResource(StringsR.string.cancel))
+                Text(text = stringResource(StringsR.string.close))
             }
         },
         text = {
@@ -117,22 +56,28 @@ internal fun FallbackPolicyDialog(
                 FallbackActionsDropdownMenu(
                     options = allOptions,
                     label = stringResource(StringsR.string.bad_internet_connection),
-                    selectedOption = dialogState.badConnection,
-                    onSelectOption = { option -> dialogState.badConnection = option },
+                    selectedOption = fallbackPolicy.badConnection,
+                    onSelectOption = { option ->
+                        onFallbackPolicyChanged(fallbackPolicy.copy(badConnection = option))
+                    },
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
                     label = stringResource(StringsR.string.no_matches_found),
-                    selectedOption = dialogState.noMatches,
-                    onSelectOption = { option -> dialogState.noMatches = option },
+                    selectedOption = fallbackPolicy.noMatches,
+                    onSelectOption = { option ->
+                        onFallbackPolicyChanged(fallbackPolicy.copy(noMatches = option))
+                    },
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
                     label = stringResource(StringsR.string.other_failures),
-                    selectedOption = dialogState.anotherFailure,
-                    onSelectOption = { option -> dialogState.anotherFailure = option },
+                    selectedOption = fallbackPolicy.anotherFailure,
+                    onSelectOption = { option ->
+                        onFallbackPolicyChanged(fallbackPolicy.copy(anotherFailure = option))
+                    },
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }

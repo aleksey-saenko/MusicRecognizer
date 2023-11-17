@@ -107,13 +107,9 @@ internal fun LyricsScreen(
                             topAppBarScrollBehavior = topBarBehaviour
                         )
                         if (fontStyleDialogVisible) {
-                            val dialogState = rememberFontStyleDialogState(uiState.fontStyle)
                             FontStyleDialog(
-                                fontStyleDialogState = dialogState,
-                                onConfirmClick = {
-                                    viewModel.setLyricsFontStyle(dialogState.currentState)
-                                    fontStyleDialogVisible = false
-                                },
+                                fontStyle = uiState.fontStyle,
+                                onFontStyleChanged = viewModel::setLyricsFontStyle,
                                 onDismissClick = { fontStyleDialogVisible = false }
                             )
                         }

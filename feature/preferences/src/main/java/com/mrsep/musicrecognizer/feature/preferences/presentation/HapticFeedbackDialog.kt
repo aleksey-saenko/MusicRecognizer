@@ -13,13 +13,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,72 +20,19 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 
-@Stable
-internal class HapticFeedbackDialogState(
-    initialState: UserPreferences.HapticFeedback,
-) {
-    var vibrateOnTap by mutableStateOf(initialState.vibrateOnTap)
-    var vibrateOnResult by mutableStateOf(initialState.vibrateOnResult)
-
-    val currentState: UserPreferences.HapticFeedback
-        get() = UserPreferences.HapticFeedback(
-            vibrateOnTap = vibrateOnTap,
-            vibrateOnResult = vibrateOnResult
-        )
-
-    companion object {
-        val Saver: Saver<HapticFeedbackDialogState, *> = listSaver(
-            save = {
-                listOf(
-                    it.vibrateOnTap,
-                    it.vibrateOnResult
-                )
-            },
-            restore = {
-                HapticFeedbackDialogState(
-                    initialState = UserPreferences.HapticFeedback(
-                        vibrateOnTap = it[0],
-                        vibrateOnResult = it[1]
-                    )
-                )
-            }
-        )
-    }
-
-}
-
-@Composable
-internal fun rememberHapticFeedbackDialogState(
-    hapticFeedback: UserPreferences.HapticFeedback,
-): HapticFeedbackDialogState {
-    return rememberSaveable(
-        inputs = arrayOf(hapticFeedback),
-        saver = HapticFeedbackDialogState.Saver
-    ) {
-        HapticFeedbackDialogState(
-            initialState = hapticFeedback
-        )
-    }
-}
-
 @Composable
 internal fun HapticFeedbackDialog(
-    onConfirmClick: () -> Unit,
+    hapticFeedback: UserPreferences.HapticFeedback,
+    onHapticFeedbackChanged: (UserPreferences.HapticFeedback) -> Unit,
     onDismissClick: () -> Unit,
-    dialogState: HapticFeedbackDialogState,
 ) {
     AlertDialog(
         title = {
             Text(text = stringResource(StringsR.string.vibration_feedback_dialog_title))
         },
         confirmButton = {
-            TextButton(onClick = onConfirmClick) {
-                Text(text = stringResource(StringsR.string.apply))
-            }
-        },
-        dismissButton = {
             TextButton(onClick = onDismissClick) {
-                Text(text = stringResource(StringsR.string.cancel))
+                Text(text = stringResource(StringsR.string.close))
             }
         },
         text = {
@@ -115,8 +55,10 @@ internal fun HapticFeedbackDialog(
                         modifier = Modifier.weight(1f)
                     )
                     Switch(
-                        checked = dialogState.vibrateOnTap,
-                        onCheckedChange = { dialogState.vibrateOnTap = it }
+                        checked = hapticFeedback.vibrateOnTap,
+                        onCheckedChange = { checked ->
+                            onHapticFeedbackChanged(hapticFeedback.copy(vibrateOnTap = checked))
+                        }
                     )
                 }
                 Row(
@@ -130,8 +72,10 @@ internal fun HapticFeedbackDialog(
                         modifier = Modifier.weight(1f)
                     )
                     Switch(
-                        checked = dialogState.vibrateOnResult,
-                        onCheckedChange = { dialogState.vibrateOnResult = it }
+                        checked = hapticFeedback.vibrateOnResult,
+                        onCheckedChange = { checked ->
+                            onHapticFeedbackChanged(hapticFeedback.copy(vibrateOnResult = checked))
+                        }
                     )
                 }
             }

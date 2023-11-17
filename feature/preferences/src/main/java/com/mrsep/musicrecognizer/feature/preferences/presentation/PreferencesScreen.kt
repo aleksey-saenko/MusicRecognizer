@@ -75,18 +75,11 @@ internal fun PreferencesScreen(
                             showPolicyDialog = true
                         }
                         if (showPolicyDialog) {
-                            val dialogState = rememberFallbackPolicyDialogState(
-                                fallbackPolicy = uiState.preferences.fallbackPolicy
-                            )
                             FallbackPolicyDialog(
-                                onConfirmClick = {
-                                    viewModel.setFallbackPolicy(dialogState.currentState)
-                                    showPolicyDialog = false
-                                },
-                                onDismissClick = { showPolicyDialog = false },
-                                dialogState = dialogState
+                                fallbackPolicy = uiState.preferences.fallbackPolicy,
+                                onFallbackPolicyChanged = viewModel::setFallbackPolicy,
+                                onDismissClick = { showPolicyDialog = false }
                             )
-
                         }
 
                         var showTokenDialog by rememberSaveable { mutableStateOf(false) }
@@ -148,16 +141,10 @@ internal fun PreferencesScreen(
                             modifier = Modifier.padding(top = 12.dp)
                         )
                         if (showServicesDialog) {
-                            val dialogState = rememberRequiredServicesDialogState(
-                                requiredServices = uiState.preferences.requiredServices
-                            )
                             RequiredServicesDialog(
-                                onConfirmClick = {
-                                    viewModel.setRequiredServices(dialogState.currentState)
-                                    showServicesDialog = false
-                                },
-                                onDismissClick = { showServicesDialog = false },
-                                dialogState = dialogState
+                                requiredServices = uiState.preferences.requiredServices,
+                                onRequiredServicesChanged = viewModel::setRequiredServices,
+                                onDismissClick = { showServicesDialog = false }
                             )
                         }
                         PreferenceSwitchItem(
@@ -181,16 +168,10 @@ internal fun PreferencesScreen(
                                 onItemClick = { showHapticDialog = true }
                             )
                             if (showHapticDialog) {
-                                val dialogState = rememberHapticFeedbackDialogState(
-                                    hapticFeedback = uiState.preferences.hapticFeedback
-                                )
                                 HapticFeedbackDialog(
-                                    onConfirmClick = {
-                                        viewModel.setHapticFeedback(dialogState.currentState)
-                                        showHapticDialog = false
-                                    },
+                                    hapticFeedback = uiState.preferences.hapticFeedback,
+                                    onHapticFeedbackChanged = viewModel::setHapticFeedback,
                                     onDismissClick = { showHapticDialog = false },
-                                    dialogState = dialogState
                                 )
                             }
                         }

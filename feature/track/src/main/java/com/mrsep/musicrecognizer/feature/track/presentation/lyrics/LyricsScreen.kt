@@ -75,13 +75,19 @@ internal fun LyricsScreen(
         }
 
         is LyricsUiState.Success -> {
+            val useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
-                useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
+                useDarkTheme = useDarkTheme
             ) {
+                val backgroundColor = if (uiState.fontStyle.isHighContrast) {
+                    if (useDarkTheme) Color.Black else Color.White
+                } else {
+                    MaterialTheme.colorScheme.background
+                }
                 Surface(
-                    color = MaterialTheme.colorScheme.background,
+                    color = backgroundColor,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Column(

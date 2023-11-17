@@ -14,6 +14,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
@@ -29,6 +30,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 
+@Stable
 internal class FontStyleDialogState(
     initialState: UserPreferences.LyricsFontStyle,
 ) {

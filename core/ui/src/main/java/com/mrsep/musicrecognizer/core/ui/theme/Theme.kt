@@ -2,15 +2,18 @@ package com.mrsep.musicrecognizer.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val LightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -42,7 +45,7 @@ private val LightColorScheme = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-private val DarkColorScheme = darkColorScheme(
+private val darkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -78,20 +81,33 @@ private val DarkColorScheme = darkColorScheme(
 fun MusicRecognizerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    pureBlack: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val context = LocalContext.current
+    val colorScheme = remember(darkTheme, dynamicColor, pureBlack) {
+        when {
+            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                when {
+                    darkTheme && pureBlack -> dynamicDarkColorScheme(context).pureBlack()
+                    darkTheme -> dynamicDarkColorScheme(context)
+                    else -> dynamicLightColorScheme(context)
+                }
+            }
 
+            darkTheme && pureBlack -> darkColorScheme.pureBlack()
+            darkTheme -> darkColorScheme
+            else -> lightColorScheme
+        }
+    }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
 }
+
+private fun ColorScheme.pureBlack() = copy(
+    surface = Color.Black,
+    background = Color.Black
+)

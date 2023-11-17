@@ -32,8 +32,10 @@ import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
+import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackNotFoundMessage
+import com.mrsep.musicrecognizer.feature.track.presentation.track.shouldUseDarkTheme
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +77,8 @@ internal fun LyricsScreen(
         is LyricsUiState.Success -> {
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
-                artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled
+                artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
+                useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             ) {
                 Surface(
                     color = MaterialTheme.colorScheme.background,
@@ -88,9 +91,10 @@ internal fun LyricsScreen(
                         LyricsScreenTopBar(
                             onBackPressed = onBackPressed,
                             onShareClick = {
+                                val trackInfo = "${uiState.title} - ${uiState.artist}"
                                 context.shareText(
-                                    subject = "${uiState.title} - ${uiState.artist}",
-                                    body = uiState.lyrics
+                                    subject = trackInfo,
+                                    body = "$trackInfo\n\n${uiState.lyrics}"
                                 )
                             },
                             onChangeTextStyleClick = { fontStyleDialogVisible = true },
@@ -110,7 +114,7 @@ internal fun LyricsScreen(
                         Text(
                             text = uiState.lyrics,
                             textAlign = TextAlign.Center,
-                            style = uiState.fontStyle.toTextStyle(),
+                            style = uiState.fontStyle.toTextStyle(uiState.themeMode),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -123,8 +127,8 @@ internal fun LyricsScreen(
 }
 
 @Composable
-private fun UserPreferences.LyricsFontStyle.toTextStyle(): TextStyle {
-    return when (this.fontSize) {
+private fun UserPreferences.LyricsFontStyle.toTextStyle(themeMode: ThemeMode): TextStyle {
+    return when (fontSize) {
         FontSize.Small -> MaterialTheme.typography.bodyMedium
         FontSize.Normal -> MaterialTheme.typography.bodyLarge
         FontSize.Large -> MaterialTheme.typography.titleLarge
@@ -132,7 +136,11 @@ private fun UserPreferences.LyricsFontStyle.toTextStyle(): TextStyle {
     }.copy(
         fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
         color = if (isHighContrast) {
-            if (isSystemInDarkTheme()) Color.White else Color.Black
+            when (themeMode) {
+                ThemeMode.FollowSystem -> if (isSystemInDarkTheme()) Color.White else Color.Black
+                ThemeMode.AlwaysLight -> Color.Black
+                ThemeMode.AlwaysDark -> Color.White
+            }
         } else {
             Color.Unspecified
         }

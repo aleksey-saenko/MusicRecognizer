@@ -3,7 +3,8 @@ package com.mrsep.musicrecognizer.feature.track.domain.model
 data class UserPreferences(
     val requiredServices: RequiredServices,
     val lyricsFontStyle: LyricsFontStyle,
-    val artworkBasedThemeEnabled: Boolean
+    val artworkBasedThemeEnabled: Boolean,
+    val themeMode: ThemeMode,
 ) {
 
     data class RequiredServices(
@@ -27,3 +28,5 @@ data class UserPreferences(
 enum class FontSize {
     Small, Normal, Large, Huge
 }
+
+enum class ThemeMode { FollowSystem, AlwaysLight, AlwaysDark }

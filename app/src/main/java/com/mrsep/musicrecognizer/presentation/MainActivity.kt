@@ -1,7 +1,9 @@
 package com.mrsep.musicrecognizer.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,6 +21,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
+import com.mrsep.musicrecognizer.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -42,7 +45,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
-            MusicRecognizerTheme(dynamicColor = isDynamicColorsEnabled(uiState)) {
+            val darkTheme = shouldUseDarkTheme(uiState)
+            MusicRecognizerTheme(
+                darkTheme = darkTheme,
+                dynamicColor = shouldUseDynamicColors(uiState),
+                pureBlack = shouldUsePureBlack(uiState)
+            ) {
+                // Update enableEdgeToEdge to match user theme mode
+                DisposableEffect(darkTheme) {
+                    enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.auto(
+                            Color.TRANSPARENT,
+                            Color.TRANSPARENT,
+                        ) { darkTheme },
+                        navigationBarStyle = SystemBarStyle.auto(
+                            lightScrim,
+                            darkScrim,
+                        ) { darkTheme },
+                    )
+                    onDispose {}
+                }
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),
@@ -74,7 +96,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Stable
-private fun isDynamicColorsEnabled(uiState: MainActivityUiState): Boolean {
+private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
         is MainActivityUiState.Success -> uiState.userPreferences.dynamicColorsEnabled
@@ -101,3 +123,26 @@ fun shouldShowNavRail(windowSizeClass: WindowSizeClass) = !shouldShowBottomBar(w
 fun isExpandedScreen(windowSizeClass: WindowSizeClass) =
     windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
             windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
+
+@Composable
+private fun shouldUseDarkTheme(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> isSystemInDarkTheme()
+    is MainActivityUiState.Success -> when (uiState.userPreferences.themeMode) {
+        ThemeMode.FollowSystem -> isSystemInDarkTheme()
+        ThemeMode.AlwaysLight -> false
+        ThemeMode.AlwaysDark -> true
+    }
+}
+
+@Stable
+private fun shouldUsePureBlack(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> false
+    is MainActivityUiState.Success -> uiState.userPreferences.usePureBlackForDarkTheme
+}
+
+private val lightScrim = Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
+private val darkScrim = Color.argb(0x80, 0x1b, 0x1b, 0x1b)

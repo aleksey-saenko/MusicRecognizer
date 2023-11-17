@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.mrsep.musicrecognizer.feature.library.domain.model.*
 
+@Stable
 internal class TrackFilterState(
     initialTrackFilter: TrackFilter
 ) {

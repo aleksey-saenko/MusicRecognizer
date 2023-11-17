@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.preferences.mappers
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import javax.inject.Inject
@@ -13,6 +14,7 @@ class UserPreferencesDoMapper @Inject constructor(
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
+    private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
 ) : BidirectionalMapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun reverseMap(input: UserPreferencesDo): UserPreferencesProto {
@@ -29,6 +31,8 @@ class UserPreferencesDoMapper @Inject constructor(
             .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
             .setHapticFeedback(hapticFeedbackMapper.reverseMap(input.hapticFeedback))
             .setUseGridForLibrary(input.useGridForLibrary)
+            .setThemeMode(themeModeMapper.reverseMap(input.themeMode))
+            .setUsePureBlackForDarkTheme(input.usePureBlackForDarkTheme)
             .build()
     }
 
@@ -45,7 +49,9 @@ class UserPreferencesDoMapper @Inject constructor(
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
-            useGridForLibrary = input.useGridForLibrary
+            useGridForLibrary = input.useGridForLibrary,
+            themeMode = themeModeMapper.map(input.themeMode),
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
         )
     }
 

@@ -13,6 +13,8 @@ data class UserPreferencesDo(
     val trackFilter: TrackFilterDo,
     val hapticFeedback: HapticFeedbackDo,
     val useGridForLibrary: Boolean,
+    val themeMode: ThemeModeDo,
+    val usePureBlackForDarkTheme: Boolean,
 ) {
 
     data class RequiredServicesDo(
@@ -57,3 +59,5 @@ enum class FontSizeDo { Small, Normal, Large, Huge }
 enum class FavoritesModeDo { All, OnlyFavorites, ExcludeFavorites }
 enum class SortByDo { RecognitionDate, Title, Artist, ReleaseDate }
 enum class OrderByDo { Asc, Desc }
+
+enum class ThemeModeDo { FollowSystem, AlwaysLight, AlwaysDark }

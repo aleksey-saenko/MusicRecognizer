@@ -26,6 +26,7 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
+    private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : PreferencesRepositoryDo {
 
@@ -91,6 +92,14 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUseGridForLibrary(value: Boolean) {
         safeWriter { setUseGridForLibrary(value) }
+    }
+
+    override suspend fun setThemeMode(value: ThemeModeDo) {
+        safeWriter { setThemeMode(themeModeMapper.reverseMap(value)) }
+    }
+
+    override suspend fun setUsePureBlackForDarkTheme(value: Boolean) {
+        safeWriter { setUsePureBlackForDarkTheme(value) }
     }
 
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {

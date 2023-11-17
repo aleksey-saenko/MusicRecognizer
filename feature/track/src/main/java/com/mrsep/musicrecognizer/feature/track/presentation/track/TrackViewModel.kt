@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -88,6 +89,7 @@ internal sealed interface TrackUiState {
         val lastRecognitionDate: String,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
+        val themeMode: ThemeMode,
         val odesliLink: String,
         val links: ImmutableList<ServiceLink>
     ) : TrackUiState {
@@ -111,6 +113,7 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
         isLyricsAvailable = this.lyrics != null,
         lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
         themeSeedColor = this.metadata.themeSeedColor,
+        themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         odesliLink = this.createOdesliLink(),
         links = this.links.toUiList(preferences.requiredServices),

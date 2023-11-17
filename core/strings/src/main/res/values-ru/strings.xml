@@ -125,8 +125,6 @@
     <string name="show_links_to_music_services">Ссылки на музыкальные сервисы</string>
     <string name="music_services_links">Ссылки на музыкальные сервисы</string>
     <string name="required_services_dialog">Выберите музыкальные сервисы, для которых вы хотите видеть веб-ссылки (если доступны):</string>
-    <string name="dynamic_colors_pref_title">Динамические цвета</string>
-    <string name="artwork_colors_pref_title">Адаптировать тему к обложке</string>
     <string name="use_grid_for_library">Использовать сетку для библиотеки</string>
     <string name="vibration_feedback">Вибрация</string>
     <string name="vibration_feedback_dialog_title">Вибрация</string>

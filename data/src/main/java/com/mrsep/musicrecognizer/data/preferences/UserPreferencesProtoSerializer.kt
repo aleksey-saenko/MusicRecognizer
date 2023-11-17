@@ -58,6 +58,8 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                     .setVibrateOnResult(false)
                     .build()
             )
+            .setThemeMode(UserPreferencesProto.ThemeModeProto.FOLLOW_SYSTEM)
+            .setUsePureBlackForDarkTheme(false)
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

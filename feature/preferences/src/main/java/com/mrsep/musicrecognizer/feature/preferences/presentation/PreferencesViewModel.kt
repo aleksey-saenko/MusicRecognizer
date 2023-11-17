@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -69,6 +70,18 @@ internal class PreferencesViewModel @Inject constructor(
     fun setUseGridForLibrary(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setUseGridForLibrary(value)
+        }
+    }
+
+    fun setThemeMode(value: ThemeMode) {
+        viewModelScope.launch {
+            preferencesRepository.setThemeMode(value)
+        }
+    }
+
+    fun setUsePureBlackForDarkTheme(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUsePureBlackForDarkTheme(value)
         }
     }
 

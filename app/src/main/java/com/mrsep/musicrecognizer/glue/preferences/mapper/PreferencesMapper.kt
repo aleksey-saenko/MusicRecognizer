@@ -2,8 +2,10 @@ package com.mrsep.musicrecognizer.glue.preferences.mapper
 
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.*
 import javax.inject.Inject
@@ -11,7 +13,8 @@ import javax.inject.Inject
 class PreferencesMapper @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
-    private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>
+    private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>,
+    private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
 ) :
     Mapper<UserPreferencesDo, UserPreferences> {
 
@@ -26,7 +29,9 @@ class PreferencesMapper @Inject constructor(
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
-            useGridForLibrary = input.useGridForLibrary
+            useGridForLibrary = input.useGridForLibrary,
+            themeMode = themeModeMapper.map(input.themeMode),
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
         )
     }
 

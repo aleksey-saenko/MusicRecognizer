@@ -124,8 +124,8 @@
     <string name="show_links_to_music_services">Zobrazit odkazy na hudební služby</string>
     <string name="music_services_links">Odkazy na hudební služby</string>
     <string name="required_services_dialog">Vyberte hudební služby, pro které chcete zobrazit webové odkazy (pokud jsou k dispozici):</string>
-    <string name="dynamic_colors_pref_title">Použít dynamické barvy</string>
-    <string name="artwork_colors_pref_title">Přizpůsobit téma barvám obalu alba</string>
+<!--    <string name="dynamic_colors_pref_title">Použít dynamické barvy</string>-->
+<!--    <string name="artwork_colors_pref_title">Přizpůsobit téma barvám obalu alba</string>-->
     <string name="vibration_feedback">Vibrační odezva</string>
     <string name="vibration_feedback_dialog_title">Vibrační odezva</string>
     <string name="vibration_feedback_dialog_message">Přizpůsobení vibrační odezvy pro určité akce v aplikaci:</string>

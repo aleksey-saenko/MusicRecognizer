@@ -125,8 +125,8 @@
     <string name="show_links_to_music_services">Zobraziť odkazy na hudobné služby</string>
     <string name="music_services_links">Odkazy na hudobné služby</string>
     <string name="required_services_dialog">Vyberte hudobné služby, pre ktoré chcete zobraziť webové odkazy (ak sú k dispozícii):</string>
-    <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>
-    <string name="artwork_colors_pref_title">Prispôsobiť tému farbám obrázku</string>
+<!--    <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>-->
+<!--    <string name="artwork_colors_pref_title">Prispôsobiť tému farbám obrázku</string>-->
     <string name="vibration_feedback">Vibrovanie</string>
     <string name="vibration_feedback_dialog_title">Vibrovanie</string>
     <string name="vibration_feedback_dialog_message">Prispôsobiť odozvu vibrácií pre určité akcie v aplikácii:</string>

@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,6 +19,7 @@ import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
+import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +68,8 @@ internal fun TrackScreen(
         is TrackUiState.Success -> {
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run(::Color),
-                artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled
+                artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
+                useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             ) {
                 var extraDataDialogVisible by remember { mutableStateOf(false) }
                 if (extraDataDialogVisible) {
@@ -146,4 +149,13 @@ internal fun TrackScreen(
             }
         }
     }
+}
+
+@Composable
+internal fun shouldUseDarkTheme(
+    themeMode: ThemeMode,
+): Boolean = when (themeMode) {
+    ThemeMode.FollowSystem -> isSystemInDarkTheme()
+    ThemeMode.AlwaysLight -> false
+    ThemeMode.AlwaysDark -> true
 }

@@ -11,6 +11,8 @@ data class UserPreferences(
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
     val useGridForLibrary: Boolean,
+    val themeMode: ThemeMode,
+    val usePureBlackForDarkTheme: Boolean,
 ) {
 
     data class RequiredServices(
@@ -42,3 +44,5 @@ enum class FallbackAction(val save: Boolean, val launch: Boolean) {
     operator fun component1() = save
     operator fun component2() = launch
 }
+
+enum class ThemeMode { FollowSystem, AlwaysLight, AlwaysDark }

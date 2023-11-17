@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
+@Stable
 internal class RequiredServicesDialogState(
     initialState: UserPreferences.RequiredServices,
 ) {

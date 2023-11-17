@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,7 +24,7 @@ internal fun Bitmap.getDominantColor(): Color? {
 internal fun SwitchingMusicRecognizerTheme(
     seedColor: Color?,
     artworkBasedThemeEnabled: Boolean,
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    useDarkTheme: Boolean,
     style: PaletteStyle = PaletteStyle.Vibrant,
     contrastLevel: Double = 0.0,
     animationSpec: AnimationSpec<Color> = tween(durationMillis = 800),

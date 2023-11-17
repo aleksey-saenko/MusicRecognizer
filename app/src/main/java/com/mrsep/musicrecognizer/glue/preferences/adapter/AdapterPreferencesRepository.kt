@@ -3,9 +3,11 @@ package com.mrsep.musicrecognizer.glue.preferences.adapter
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
+import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.*
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +20,7 @@ class AdapterPreferencesRepository @Inject constructor(
     private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>,
+    private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
 ) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
@@ -68,6 +71,14 @@ class AdapterPreferencesRepository @Inject constructor(
 
     override suspend fun setUseGridForLibrary(value: Boolean) {
         preferencesRepositoryDo.setUseGridForLibrary(value)
+    }
+
+    override suspend fun setThemeMode(value: ThemeMode) {
+        preferencesRepositoryDo.setThemeMode(themeModeMapper.reverseMap(value))
+    }
+
+    override suspend fun setUsePureBlackForDarkTheme(value: Boolean) {
+        preferencesRepositoryDo.setUsePureBlackForDarkTheme(value)
     }
 
 }

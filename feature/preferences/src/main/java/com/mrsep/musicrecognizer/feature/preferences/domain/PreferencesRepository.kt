@@ -16,5 +16,7 @@ interface PreferencesRepository {
     suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
     suspend fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback)
     suspend fun setUseGridForLibrary(value: Boolean)
+    suspend fun setThemeMode(value: ThemeMode)
+    suspend fun setUsePureBlackForDarkTheme(value: Boolean)
 
 }

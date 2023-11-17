@@ -2,8 +2,10 @@ package com.mrsep.musicrecognizer.di
 
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
+import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.domain.ThemeMode
 import com.mrsep.musicrecognizer.domain.UserPreferences
 import dagger.Binds
 import dagger.Module
@@ -50,8 +52,14 @@ class PreferencesMapper @Inject constructor() :
         return UserPreferences(
             onboardingCompleted = input.onboardingCompleted,
             notificationServiceEnabled = input.notificationServiceEnabled,
+            themeMode = when (input.themeMode) {
+                ThemeModeDo.FollowSystem -> ThemeMode.FollowSystem
+                ThemeModeDo.AlwaysLight -> ThemeMode.AlwaysLight
+                ThemeModeDo.AlwaysDark -> ThemeMode.AlwaysDark
+            },
             dynamicColorsEnabled = input.dynamicColorsEnabled,
-            developerModeEnabled = input.developerModeEnabled
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
+            developerModeEnabled = input.developerModeEnabled,
         )
     }
 

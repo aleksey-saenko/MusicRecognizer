@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +34,8 @@ internal class LyricsViewModel @Inject constructor(
                         lyrics = lyrics,
                         fontStyle = preferences.lyricsFontStyle,
                         themeSeedColor = track.metadata.themeSeedColor,
-                        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled
+                        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+                        themeMode = preferences.themeMode
                     )
                 }
             } ?: LyricsUiState.LyricsNotFound
@@ -65,7 +67,8 @@ internal sealed class LyricsUiState {
         val lyrics: String,
         val fontStyle: UserPreferences.LyricsFontStyle,
         val themeSeedColor: Int?,
-        val artworkBasedThemeEnabled: Boolean
+        val artworkBasedThemeEnabled: Boolean,
+        val themeMode: ThemeMode
     ) : LyricsUiState()
 
 }

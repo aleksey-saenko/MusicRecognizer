@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -123,11 +122,30 @@ internal fun PreferencesScreen(
                         title = stringResource(StringsR.string.appearance),
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
+                        var showThemeDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.theme_preference_title),
+                            onItemClick = { showThemeDialog = true }
+                        )
+                        if (showThemeDialog) {
+                            ThemeDialog(
+                                onDismissClick = { showThemeDialog = false },
+                                themeMode = uiState.preferences.themeMode,
+                                useDynamicColors = uiState.preferences.dynamicColorsEnabled,
+                                useArtworkBasedTheme = uiState.preferences.artworkBasedThemeEnabled,
+                                usePureBlackForDarkTheme = uiState.preferences.usePureBlackForDarkTheme,
+                                onThemeModeSelected = viewModel::setThemeMode,
+                                onDynamicColorsEnabled = viewModel::setDynamicColorsEnabled,
+                                onPureBlackEnabled = viewModel::setUsePureBlackForDarkTheme,
+                                onArtworkBasedThemeEnabled = viewModel::setArtworkBasedThemeEnabled
+                            )
+                        }
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.show_links_to_music_services),
                             subtitle = uiState.preferences.requiredServices.getNames(),
-                            onItemClick = { showServicesDialog = true }
+                            onItemClick = { showServicesDialog = true },
+                            modifier = Modifier.padding(top = 12.dp)
                         )
                         if (showServicesDialog) {
                             val dialogState = rememberRequiredServicesDialogState(
@@ -142,20 +160,6 @@ internal fun PreferencesScreen(
                                 dialogState = dialogState
                             )
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            PreferenceSwitchItem(
-                                title = stringResource(StringsR.string.dynamic_colors_pref_title),
-                                onCheckedChange = { viewModel.setDynamicColorsEnabled(it) },
-                                checked = uiState.preferences.dynamicColorsEnabled,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
-                        }
-                        PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.artwork_colors_pref_title),
-                            onCheckedChange = { viewModel.setArtworkBasedThemeEnabled(it) },
-                            checked = uiState.preferences.artworkBasedThemeEnabled,
-                            modifier = Modifier.padding(top = 12.dp)
-                        )
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.use_grid_for_library),
                             onCheckedChange = { viewModel.setUseGridForLibrary(it) },

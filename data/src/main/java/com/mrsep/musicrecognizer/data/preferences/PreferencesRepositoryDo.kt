@@ -18,5 +18,7 @@ interface PreferencesRepositoryDo {
     suspend fun setTrackFilter(value: UserPreferencesDo.TrackFilterDo)
     suspend fun setHapticFeedback(value: UserPreferencesDo.HapticFeedbackDo)
     suspend fun setUseGridForLibrary(value: Boolean)
+    suspend fun setThemeMode(value: ThemeModeDo)
+    suspend fun setUsePureBlackForDarkTheme(value: Boolean)
 
 }

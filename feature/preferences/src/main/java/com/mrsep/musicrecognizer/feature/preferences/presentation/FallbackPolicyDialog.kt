@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
+@Stable
 internal class FallbackPolicyDialogState(
     initialState: UserPreferences.FallbackPolicy,
 ) {
@@ -82,7 +84,6 @@ internal fun rememberFallbackPolicyDialogState(
         )
     }
 }
-
 
 @Composable
 internal fun FallbackPolicyDialog(

@@ -122,7 +122,6 @@
     <string name="notification_service">Notifikačná služba</string>
     <string name="notification_service_pref_subtitle">Ovládajte rozpoznávanie z upozornení</string>
     <string name="notifications">Upozornenia</string>
-    <string name="show_links_to_music_services">Zobraziť odkazy na hudobné služby</string>
     <string name="music_services_links">Odkazy na hudobné služby</string>
     <string name="required_services_dialog">Vyberte hudobné služby, pre ktoré chcete zobraziť webové odkazy (ak sú k dispozícii):</string>
 <!--    <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>-->

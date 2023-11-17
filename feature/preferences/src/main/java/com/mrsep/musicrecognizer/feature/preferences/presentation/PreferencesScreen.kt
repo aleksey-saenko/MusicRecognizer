@@ -117,7 +117,7 @@ internal fun PreferencesScreen(
                     ) {
                         var showThemeDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.theme_preference_title),
+                            title = stringResource(StringsR.string.theme),
                             onItemClick = { showThemeDialog = true }
                         )
                         if (showThemeDialog) {
@@ -135,7 +135,7 @@ internal fun PreferencesScreen(
                         }
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.show_links_to_music_services),
+                            title = stringResource(StringsR.string.music_services_links),
                             subtitle = uiState.preferences.requiredServices.getNames(),
                             onItemClick = { showServicesDialog = true },
                             modifier = Modifier.padding(top = 12.dp)

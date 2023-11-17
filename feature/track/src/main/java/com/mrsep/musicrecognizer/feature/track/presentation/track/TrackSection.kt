@@ -152,7 +152,7 @@ internal fun TrackSection(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp, bottom = 32.dp)
+                        .padding(top = 24.dp, bottom = 24.dp)
                 )
             }
         }

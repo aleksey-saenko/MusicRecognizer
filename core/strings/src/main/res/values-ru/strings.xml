@@ -122,7 +122,14 @@
     <string name="notification_service">Сервис уведомлений</string>
     <string name="notification_service_pref_subtitle">Управляйте распознаванием из уведомлений</string>
     <string name="notifications">Уведомления</string>
-    <string name="show_links_to_music_services">Ссылки на музыкальные сервисы</string>
+    <string name="theme">Тема</string>
+    <string name="theme_dialog_message">Выберите цветовую схему:</string>
+    <string name="theme_follow_system">Следовать системе</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
+    <string name="theme_use_dynamic_colors">Динамические цвета</string>
+    <string name="theme_use_artwork_colors">Исп. цвета обложки</string>
+    <string name="theme_use_pure_black">Исп. черный фон</string>
     <string name="music_services_links">Ссылки на музыкальные сервисы</string>
     <string name="required_services_dialog">Выберите музыкальные сервисы, для которых вы хотите видеть веб-ссылки (если доступны):</string>
     <string name="use_grid_for_library">Использовать сетку для библиотеки</string>

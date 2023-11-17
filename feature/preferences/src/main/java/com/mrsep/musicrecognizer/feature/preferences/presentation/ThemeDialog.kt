@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -43,7 +42,7 @@ internal fun ThemeDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.theme_dialog_title))
+            Text(text = stringResource(StringsR.string.theme))
         },
         confirmButton = {
             TextButton(onClick = onDismissClick) {
@@ -57,19 +56,19 @@ internal fun ThemeDialog(
                 Text(
                     text = stringResource(StringsR.string.theme_dialog_message)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 ChooserRow(
                     text = stringResource(StringsR.string.theme_follow_system),
                     selected = themeMode == ThemeMode.FollowSystem,
                     onClick = { onThemeModeSelected(ThemeMode.FollowSystem) }
                 )
                 ChooserRow(
-                    text = stringResource(StringsR.string.theme_always_light),
+                    text = stringResource(StringsR.string.theme_light),
                     selected = themeMode == ThemeMode.AlwaysLight,
                     onClick = { onThemeModeSelected(ThemeMode.AlwaysLight) }
                 )
                 ChooserRow(
-                    text = stringResource(StringsR.string.theme_always_dark),
+                    text = stringResource(StringsR.string.theme_dark),
                     selected = themeMode == ThemeMode.AlwaysDark,
                     onClick = { onThemeModeSelected(ThemeMode.AlwaysDark) }
                 )
@@ -151,7 +150,7 @@ private fun ChooserRow(
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp)
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }

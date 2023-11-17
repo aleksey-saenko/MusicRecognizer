@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -55,7 +56,7 @@ internal fun TrackLazyColumn(
         modifier = modifier,
         state = lazyListState,
         contentPadding = PaddingValues(top = 6.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(count = trackList.size, key = { trackList[it].mbId }) { index ->
@@ -126,7 +127,8 @@ internal fun LazyListTrackItem(
             contentDescription = stringResource(com.mrsep.musicrecognizer.core.strings.R.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-//                .shadow(elevation = 1.dp, shape = shape)
+                .padding(4.dp)
+                .shadow(elevation = 1.dp, shape = shape)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                     shape = shape

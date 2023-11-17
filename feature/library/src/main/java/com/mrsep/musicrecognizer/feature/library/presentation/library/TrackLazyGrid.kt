@@ -42,7 +42,7 @@ internal fun TrackLazyGrid(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 112.dp),
+        columns = GridCells.Adaptive(minSize = 108.dp),
         state = lazyGridState,
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),

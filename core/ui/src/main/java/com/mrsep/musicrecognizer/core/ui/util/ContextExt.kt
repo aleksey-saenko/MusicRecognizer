@@ -1,9 +1,12 @@
 package com.mrsep.musicrecognizer.core.ui.util
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -38,6 +41,18 @@ fun Context.shareText(subject: String, body: String) {
         Intent.createChooser(shareIntent, null),
         getString(StringsR.string.cannot_share_toast)
     )
+}
+
+fun Context.copyTextToClipboard(text: String) {
+    val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        Toast.makeText(
+            this,
+            getString(StringsR.string.copied),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 }
 
 private fun Context.startActivityOrToast(intent: Intent, message: String) {

@@ -1,8 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import android.net.Uri
-import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -13,20 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
+import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 import kotlinx.coroutines.launch
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,7 +74,6 @@ internal fun TrackScreen(
             ) {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
-                val clipboardManager = LocalClipboardManager.current
                 var artworkUri by remember { mutableStateOf<Uri?>(null) }
                 var shareSheetActive by rememberSaveable { mutableStateOf(false) }
                 val shareSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -101,14 +96,7 @@ internal fun TrackScreen(
                         onDismissRequest = { hideShareSheet() },
                         onCopyClick = { textToCopy ->
                             hideShareSheet()
-                            clipboardManager.setText(AnnotatedString(textToCopy))
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(StringsR.string.copied),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            context.copyTextToClipboard(textToCopy)
                         },
                         onShareClick = { textToShare ->
                             hideShareSheet()
@@ -174,6 +162,7 @@ internal fun TrackScreen(
                                 viewModel.deleteTrack(uiState.mbId)
                                 onRetryRequested()
                             },
+                            onCopyToClipboard = { context.copyTextToClipboard(it) },
                             modifier = Modifier.fillMaxSize()
                         )
                     }

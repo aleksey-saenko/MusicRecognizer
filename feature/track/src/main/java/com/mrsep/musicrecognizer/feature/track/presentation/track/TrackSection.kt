@@ -45,6 +45,7 @@ internal fun TrackSection(
     onSeedColor: (Color) -> Unit,
     isRetryAvailable: Boolean,
     onRetryRequested: () -> Unit,
+    onCopyToClipboard: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
@@ -106,6 +107,7 @@ internal fun TrackSection(
                         artist = artist,
                         albumYear = albumAndYear,
                         isExpandedScreen = true,
+                        onCopyToClipboard = onCopyToClipboard,
                         modifier = Modifier
                             .fillMaxWidth()
                     )
@@ -142,6 +144,7 @@ internal fun TrackSection(
                     artist = artist,
                     albumYear = albumAndYear,
                     isExpandedScreen = false,
+                    onCopyToClipboard = onCopyToClipboard,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)

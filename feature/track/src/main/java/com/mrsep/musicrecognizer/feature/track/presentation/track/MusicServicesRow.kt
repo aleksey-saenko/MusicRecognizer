@@ -50,14 +50,14 @@ internal fun ServicesChipsLazyRow(
             items(items = links) { link ->
                 if (showOnlyIcons) {
                     MusicServiceIcon(
-                        titleRes = link.titleId(),
-                        iconRes = link.iconId(),
+                        titleRes = link.type.titleId(),
+                        iconRes = link.type.iconId(),
                         link = link.url
                     )
                 } else {
                     MusicServiceChip(
-                        titleRes = link.titleId(),
-                        iconRes = link.iconId(),
+                        titleRes = link.type.titleId(),
+                        iconRes = link.type.iconId(),
                         link = link.url
                     )
                 }
@@ -119,22 +119,22 @@ private fun MusicServiceIcon(
     }
 }
 
-internal fun ServiceLink.titleId() = when (this) {
-    is ServiceLink.Spotify -> StringsR.string.spotify
-    is ServiceLink.Youtube -> StringsR.string.youtube
-    is ServiceLink.SoundCloud -> StringsR.string.soundcloud
-    is ServiceLink.AppleMusic -> StringsR.string.apple_music
-    is ServiceLink.Deezer -> StringsR.string.deezer
-    is ServiceLink.MusicBrainz -> StringsR.string.musicbrainz
-    is ServiceLink.Napster -> StringsR.string.napster
+internal fun MusicService.titleId() = when (this) {
+    MusicService.Spotify -> StringsR.string.spotify
+    MusicService.Youtube -> StringsR.string.youtube
+    MusicService.SoundCloud -> StringsR.string.soundcloud
+    MusicService.AppleMusic -> StringsR.string.apple_music
+    MusicService.Deezer -> StringsR.string.deezer
+    MusicService.MusicBrainz -> StringsR.string.musicbrainz
+    MusicService.Napster -> StringsR.string.napster
 }
 
-internal fun ServiceLink.iconId() = when (this) {
-    is ServiceLink.Spotify -> UiR.drawable.ic_spotify
-    is ServiceLink.Youtube -> UiR.drawable.ic_youtube
-    is ServiceLink.SoundCloud -> UiR.drawable.ic_soundcloud
-    is ServiceLink.AppleMusic -> UiR.drawable.ic_apple
-    is ServiceLink.Deezer -> UiR.drawable.ic_deezer
-    is ServiceLink.MusicBrainz -> UiR.drawable.ic_musicbrainz
-    is ServiceLink.Napster -> UiR.drawable.ic_napster
+internal fun MusicService.iconId() = when (this) {
+    MusicService.Spotify -> UiR.drawable.ic_spotify
+    MusicService.Youtube -> UiR.drawable.ic_youtube
+    MusicService.SoundCloud -> UiR.drawable.ic_soundcloud
+    MusicService.AppleMusic -> UiR.drawable.ic_apple
+    MusicService.Deezer -> UiR.drawable.ic_deezer
+    MusicService.MusicBrainz -> UiR.drawable.ic_musicbrainz
+    MusicService.Napster -> UiR.drawable.ic_napster
 }

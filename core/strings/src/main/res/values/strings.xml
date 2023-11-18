@@ -199,5 +199,14 @@
     <string name="start_player">Start player</string>
     <string name="edit">Edit</string>
     <string name="format_navigate_to_screen">Navigate to %s screen</string>
+    <string name="share_options">Share options</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
+    <string name="metadata">Metadata</string>
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="year">Year</string>
+    <string name="lyrics">Lyrics</string>
 
 </resources>

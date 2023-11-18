@@ -189,5 +189,14 @@
     <string name="start_player">Запустить проигрыватель</string>
     <string name="edit">Редактировать</string>
     <string name="format_navigate_to_screen">Перейти на экран %s</string>
+    <string name="share_options">Параметры обмена</string>
+    <string name="copy">Копировать</string>
+    <string name="copied">Скопировано</string>
+    <string name="metadata">Метаданные</string>
+    <string name="title">Заголовок</string>
+    <string name="artist">Исполнитель</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="lyrics">Текст песни</string>
 
 </resources>

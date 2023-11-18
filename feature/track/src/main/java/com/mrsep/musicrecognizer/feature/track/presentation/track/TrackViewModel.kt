@@ -75,30 +75,28 @@ internal class TrackViewModel @Inject constructor(
 }
 
 @Immutable
-internal sealed interface TrackUiState {
-    data object Loading : TrackUiState
-    data object TrackNotFound : TrackUiState
+internal sealed class TrackUiState {
+
+    data object Loading : TrackUiState()
+
+    data object TrackNotFound : TrackUiState()
+
     data class Success(
         val mbId: String,
         val title: String,
         val artist: String,
-        val albumAndYear: String?,
+        val album: String?,
+        val year: String?,
+        val lyrics: String?,
         val artworkUrl: String?,
         val isFavorite: Boolean,
-        val isLyricsAvailable: Boolean,
         val lastRecognitionDate: String,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
         val odesliLink: String,
         val links: ImmutableList<ServiceLink>
-    ) : TrackUiState {
-
-        val sharedBody
-            get() = albumAndYear?.let { albAndYear ->
-                "$title\n$artist\n$albAndYear"
-            } ?: "$title\n$artist"
-    }
+    ) : TrackUiState()
 
 }
 
@@ -107,10 +105,11 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
         mbId = this.mbId,
         title = this.title,
         artist = this.artist,
-        albumAndYear = this.combineAlbumAndYear(),
+        album = this.album,
+        year = this.releaseDate?.year?.toString(),
+        lyrics = this.lyrics,
         artworkUrl = this.links.artwork,
         isFavorite = this.metadata.isFavorite,
-        isLyricsAvailable = this.lyrics != null,
         lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
         themeSeedColor = this.metadata.themeSeedColor,
         themeMode = preferences.themeMode,
@@ -123,45 +122,31 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
 private fun Instant.format(style: FormatStyle) = this.atZone(ZoneId.systemDefault())
     .format(DateTimeFormatter.ofLocalizedDateTime(style))
 
-private fun Track.combineAlbumAndYear() = this.album?.let { alb ->
-    releaseDate?.year?.let { year -> "$alb - $year" } ?: album
+internal enum class MusicService {
+    Spotify,
+    Youtube,
+    SoundCloud,
+    AppleMusic,
+    MusicBrainz,
+    Deezer,
+    Napster
 }
 
 @Immutable
-internal sealed interface ServiceLink {
+internal data class ServiceLink(
+    val type: MusicService,
     val url: String
-
-    @JvmInline
-    value class Spotify(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class Youtube(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class SoundCloud(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class AppleMusic(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class MusicBrainz(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class Deezer(override val url: String) : ServiceLink
-
-    @JvmInline
-    value class Napster(override val url: String) : ServiceLink
-}
+)
 
 private fun Track.Links.toUiList(required: UserPreferences.RequiredServices): ImmutableList<ServiceLink> {
     val list = mutableListOf<ServiceLink>()
-    if (required.spotify) spotify?.let { url -> list.add(ServiceLink.Spotify(url)) }
-    if (required.youtube) youtube?.let { url -> list.add(ServiceLink.Youtube(url)) }
-    if (required.soundCloud) soundCloud?.let { url -> list.add(ServiceLink.SoundCloud(url)) }
-    if (required.appleMusic) appleMusic?.let { url -> list.add(ServiceLink.AppleMusic(url)) }
-    if (required.musicbrainz) musicBrainz?.let { url -> list.add(ServiceLink.MusicBrainz(url)) }
-    if (required.deezer) deezer?.let { url -> list.add(ServiceLink.Deezer(url)) }
-    if (required.napster) napster?.let { url -> list.add(ServiceLink.Napster(url)) }
+    if (required.spotify) spotify?.let { url -> list.add(ServiceLink(MusicService.Spotify, url)) }
+    if (required.youtube) youtube?.let { url -> list.add(ServiceLink(MusicService.Youtube, url)) }
+    if (required.soundCloud) soundCloud?.let { url -> list.add(ServiceLink(MusicService.SoundCloud, url)) }
+    if (required.appleMusic) appleMusic?.let { url -> list.add(ServiceLink(MusicService.AppleMusic, url)) }
+    if (required.musicbrainz) musicBrainz?.let { url -> list.add(ServiceLink(MusicService.MusicBrainz, url)) }
+    if (required.deezer) deezer?.let { url -> list.add(ServiceLink(MusicService.Deezer, url)) }
+    if (required.napster) napster?.let { url -> list.add(ServiceLink(MusicService.Napster, url)) }
     return list.toImmutableList()
 }
 

@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import android.net.Uri
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -11,7 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,6 +25,8 @@ import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
+import kotlinx.coroutines.launch
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +39,6 @@ internal fun TrackScreen(
     onRetryRequested: () -> Unit,
     onTrackDeleted: () -> Unit
 ) {
-    val context = LocalContext.current
     val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val screenUiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
@@ -71,6 +76,50 @@ internal fun TrackScreen(
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
                 useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             ) {
+                val context = LocalContext.current
+                val scope = rememberCoroutineScope()
+                val clipboardManager = LocalClipboardManager.current
+                var artworkUri by remember { mutableStateOf<Uri?>(null) }
+                var shareSheetActive by rememberSaveable { mutableStateOf(false) }
+                val shareSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+                fun hideShareSheet() {
+                    scope.launch { shareSheetState.hide() }.invokeOnCompletion {
+                        if (!shareSheetState.isVisible) shareSheetActive = false
+                    }
+                }
+
+                if (shareSheetActive) {
+                    ShareBottomSheet(
+                        title = uiState.title,
+                        artist = uiState.artist,
+                        album = uiState.album,
+                        year = uiState.year,
+                        lyrics = uiState.lyrics,
+                        serviceLinks = uiState.links,
+                        sheetState = shareSheetState,
+                        onDismissRequest = { hideShareSheet() },
+                        onCopyClick = { textToCopy ->
+                            hideShareSheet()
+                            clipboardManager.setText(AnnotatedString(textToCopy))
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(StringsR.string.copied),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        onShareClick = { textToShare ->
+                            hideShareSheet()
+                            context.shareText(
+                                subject = "",
+                                body = textToShare
+                            )
+                        }
+                    )
+                }
+
                 var extraDataDialogVisible by remember { mutableStateOf(false) }
                 if (extraDataDialogVisible) {
                     TrackExtrasDialog(
@@ -83,7 +132,7 @@ internal fun TrackScreen(
                 LaunchedEffect(trackExistenceState) {
                     if (!trackExistenceState && !trackDismissed) onTrackDeleted()
                 }
-                var artworkUri by remember { mutableStateOf<Uri?>(null) }
+
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier.fillMaxSize()
@@ -96,26 +145,9 @@ internal fun TrackScreen(
                             onBackPressed = onBackPressed,
                             isFavorite = uiState.isFavorite,
                             onFavoriteClick = { viewModel.toggleFavoriteMark(uiState.mbId) },
-                            isLyricsAvailable = uiState.isLyricsAvailable,
+                            isLyricsAvailable = uiState.lyrics != null,
                             onLyricsClick = { onNavigateToLyricsScreen(uiState.mbId) },
-                            onShareClick = {
-                                context.shareText(
-                                    subject = "",
-                                    body = uiState.sharedBody
-                                )
-//                                artworkUri?.let { uri ->
-//                                    context.shareImageWithText(
-//                                        subject = "",
-//                                        body = uiState.sharedBody,
-//                                        imageUri = uri
-//                                    )
-//                                } ?: let {
-//                                    context.shareText(
-//                                        subject = "",
-//                                        body = uiState.sharedBody
-//                                    )
-//                                }
-                            },
+                            onShareClick = { shareSheetActive = !shareSheetActive },
                             onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
                             onOpenOdesliClick = { context.openUrlImplicitly(uiState.odesliLink) },
@@ -124,7 +156,7 @@ internal fun TrackScreen(
                         TrackSection(
                             title = uiState.title,
                             artist = uiState.artist,
-                            albumAndYear = uiState.albumAndYear,
+                            albumAndYear = uiState.run { year?.let { "$album - $year" } ?: album },
                             artworkUrl = uiState.artworkUrl,
                             links = uiState.links,
                             isExpandedScreen = isExpandedScreen,

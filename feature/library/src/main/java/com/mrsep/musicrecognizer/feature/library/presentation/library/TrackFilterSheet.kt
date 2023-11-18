@@ -37,11 +37,11 @@ internal fun TrackFilterBottomSheet(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             FilterGroup(
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 24.dp),
                 title = stringResource(StringsR.string.filter_favorite_status)
             ) {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -68,7 +68,7 @@ internal fun TrackFilterBottomSheet(
                 title = stringResource(StringsR.string.filter_sort_by)
             ) {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -100,7 +100,7 @@ internal fun TrackFilterBottomSheet(
                 title = stringResource(StringsR.string.filter_order_By)
             ) {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)

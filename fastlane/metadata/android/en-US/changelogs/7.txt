@@ -1,0 +1,4 @@
+* Added share options sheet for track screen
+* Added column layout for library screen
+* Added pure black theme for OLED displays
+* Minor UI changes

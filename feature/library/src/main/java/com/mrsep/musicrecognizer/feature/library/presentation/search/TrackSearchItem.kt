@@ -11,7 +11,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -61,8 +60,6 @@ internal fun TrackSearchItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(4.dp)
-                .shadow(elevation = 1.dp, shape = shape)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                     shape = shape

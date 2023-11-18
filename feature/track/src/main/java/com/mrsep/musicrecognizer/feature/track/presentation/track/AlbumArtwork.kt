@@ -90,7 +90,7 @@ internal fun AlbumArtwork(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .shadow(
-                elevation = 2.dp,
+                elevation = 1.dp,
                 shape = MaterialTheme.shapes.extraLarge
             )
             .background(

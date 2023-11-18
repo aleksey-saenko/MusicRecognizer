@@ -137,7 +137,7 @@ internal fun LibrarySearchScreen(
                             LazyColumn(
                                 modifier = Modifier.fillMaxWidth(),
                                 contentPadding = PaddingValues(10.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 items(thisSearchResult.data.size) { index ->
                                     TrackSearchItem(

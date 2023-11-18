@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -129,7 +128,7 @@ internal fun LazyGridTrackItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .shadow(elevation = 1.dp, shape = shape)
+//                .shadow(elevation = 1.dp, shape = shape)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     shape = shape

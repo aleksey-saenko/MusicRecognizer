@@ -45,7 +45,7 @@ internal fun TrackSearchItem(
             )
             .clip(shape)
             .clickable { onTrackClick(track.mbId) }
-            .height(120.dp)
+            .height(112.dp)
             .fillMaxWidth()
     ) {
         val placeholder = forwardingPainter(

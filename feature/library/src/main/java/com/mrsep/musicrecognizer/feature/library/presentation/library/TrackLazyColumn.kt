@@ -54,8 +54,8 @@ internal fun TrackLazyColumn(
     LazyColumn(
         modifier = modifier,
         state = lazyListState,
-        contentPadding = PaddingValues(top = 6.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(top = 6.dp, start = 12.dp, end = 12.dp, bottom = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(count = trackList.size, key = { trackList[it].mbId }) { index ->
@@ -111,7 +111,7 @@ internal fun LazyListTrackItem(
                 indication = if (multiselectEnabled) null else LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
-            .height(120.dp)
+            .height(112.dp)
             .fillMaxWidth()
     ) {
         val placeholder = forwardingPainter(

@@ -132,7 +132,7 @@ internal fun ShareBottomSheet(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Divider(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
                 verticalAlignment = Alignment.CenterVertically,

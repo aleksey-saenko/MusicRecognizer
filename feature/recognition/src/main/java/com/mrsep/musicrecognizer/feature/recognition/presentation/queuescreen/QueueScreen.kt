@@ -112,8 +112,10 @@ internal fun QueueScreen(
                     EmptyQueueMessage(modifier = Modifier.fillMaxSize())
                 } else {
                     LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(
+                            start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.nestedScroll(topBarBehaviour.nestedScrollConnection)
                     ) {
                         items(

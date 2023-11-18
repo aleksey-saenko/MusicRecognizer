@@ -132,7 +132,8 @@
     <string name="theme_use_pure_black">Исп. черный фон</string>
     <string name="music_services_links">Ссылки на музыкальные сервисы</string>
     <string name="required_services_dialog">Выберите музыкальные сервисы, для которых вы хотите видеть веб-ссылки (если доступны):</string>
-    <string name="use_grid_for_library">Использовать сетку для библиотеки</string>
+    <string name="use_grid_for_library">Библиотека в виде сетки</string>
+    <string name="use_list_for_library">Библиотека в виде списка</string>
     <string name="vibration_feedback">Вибрация</string>
     <string name="vibration_feedback_dialog_title">Вибрация</string>
     <string name="vibration_feedback_dialog_message">Настройте вибрацию для конкретных действий в приложении:</string>

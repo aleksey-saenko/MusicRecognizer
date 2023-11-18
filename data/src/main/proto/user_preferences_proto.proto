@@ -89,7 +89,7 @@ message UserPreferencesProto {
   }
 
   HapticFeedbackProto haptic_feedback = 31;
-  bool use_grid_for_library = 32;
+  bool use_column_for_library = 32;
 
   enum ThemeModeProto {
     FOLLOW_SYSTEM = 0;

@@ -12,7 +12,7 @@ data class UserPreferencesDo(
     val lyricsFontStyle: LyricsFontStyleDo,
     val trackFilter: TrackFilterDo,
     val hapticFeedback: HapticFeedbackDo,
-    val useGridForLibrary: Boolean,
+    val useColumnForLibrary: Boolean,
     val themeMode: ThemeModeDo,
     val usePureBlackForDarkTheme: Boolean,
 ) {

@@ -10,7 +10,7 @@ data class UserPreferences(
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
-    val useGridForLibrary: Boolean,
+    val useColumnForLibrary: Boolean,
     val themeMode: ThemeMode,
     val usePureBlackForDarkTheme: Boolean,
 ) {

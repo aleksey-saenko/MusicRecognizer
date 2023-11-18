@@ -90,8 +90,8 @@ class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setUseGridForLibrary(value: Boolean) {
-        safeWriter { setUseGridForLibrary(value) }
+    override suspend fun setUseColumnForLibrary(value: Boolean) {
+        safeWriter { setUseColumnForLibrary(value) }
     }
 
     override suspend fun setThemeMode(value: ThemeModeDo) {

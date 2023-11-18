@@ -32,7 +32,7 @@ internal class LibraryViewModel @Inject constructor(
                 LibraryUiState.Success(
                     trackList = trackList.map { track -> track.toUi() }.toImmutableList(),
                     trackFilter = preferences.trackFilter,
-                    useGridLayout = preferences.useGridForLibrary
+                    useColumnLayout = preferences.useColumnForLibrary
                 )
             }
         }
@@ -66,7 +66,7 @@ internal sealed class LibraryUiState {
     data class Success(
         val trackList: ImmutableList<TrackUi>,
         val trackFilter: TrackFilter,
-        val useGridLayout: Boolean
+        val useColumnLayout: Boolean
     ) : LibraryUiState()
 
 }

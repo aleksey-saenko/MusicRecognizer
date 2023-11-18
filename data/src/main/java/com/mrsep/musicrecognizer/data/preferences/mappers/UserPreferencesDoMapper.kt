@@ -30,7 +30,7 @@ class UserPreferencesDoMapper @Inject constructor(
             .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
             .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
             .setHapticFeedback(hapticFeedbackMapper.reverseMap(input.hapticFeedback))
-            .setUseGridForLibrary(input.useGridForLibrary)
+            .setUseColumnForLibrary(input.useColumnForLibrary)
             .setThemeMode(themeModeMapper.reverseMap(input.themeMode))
             .setUsePureBlackForDarkTheme(input.usePureBlackForDarkTheme)
             .build()
@@ -49,7 +49,7 @@ class UserPreferencesDoMapper @Inject constructor(
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
-            useGridForLibrary = input.useGridForLibrary,
+            useColumnForLibrary = input.useColumnForLibrary,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
         )

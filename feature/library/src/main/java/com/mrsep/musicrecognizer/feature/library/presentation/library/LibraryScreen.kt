@@ -86,24 +86,7 @@ internal fun LibraryScreen(
                 )
                 var newFilterApplied by rememberSaveable { mutableStateOf(false) }
 
-                if (uiState.useGridLayout) {
-                    val lazyGridState = rememberLazyGridState()
-                    TrackLazyGrid(
-                        trackList = uiState.trackList,
-                        onTrackClick = onTrackClick,
-                        lazyGridState = lazyGridState,
-                        multiSelectionState = multiSelectionState,
-                        modifier = Modifier.nestedScroll(
-                            topBarBehaviour.nestedScrollConnection
-                        )
-                    )
-                    LaunchedEffect(uiState.trackFilter) {
-                        if (newFilterApplied) {
-                            lazyGridState.animateScrollToItem(0)
-                            newFilterApplied = false
-                        }
-                    }
-                } else {
+                if (uiState.useColumnLayout) {
                     val lazyListState = rememberLazyListState()
                     TrackLazyColumn(
                         trackList = uiState.trackList,
@@ -117,6 +100,23 @@ internal fun LibraryScreen(
                     LaunchedEffect(uiState.trackFilter) {
                         if (newFilterApplied) {
                             lazyListState.animateScrollToItem(0)
+                            newFilterApplied = false
+                        }
+                    }
+                } else {
+                    val lazyGridState = rememberLazyGridState()
+                    TrackLazyGrid(
+                        trackList = uiState.trackList,
+                        onTrackClick = onTrackClick,
+                        lazyGridState = lazyGridState,
+                        multiSelectionState = multiSelectionState,
+                        modifier = Modifier.nestedScroll(
+                            topBarBehaviour.nestedScrollConnection
+                        )
+                    )
+                    LaunchedEffect(uiState.trackFilter) {
+                        if (newFilterApplied) {
+                            lazyGridState.animateScrollToItem(0)
                             newFilterApplied = false
                         }
                     }

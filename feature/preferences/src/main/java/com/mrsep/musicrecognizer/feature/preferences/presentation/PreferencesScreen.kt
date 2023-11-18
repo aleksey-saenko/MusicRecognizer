@@ -148,9 +148,9 @@ internal fun PreferencesScreen(
                             )
                         }
                         PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.use_grid_for_library),
-                            onCheckedChange = { viewModel.setUseGridForLibrary(it) },
-                            checked = uiState.preferences.useGridForLibrary,
+                            title = stringResource(StringsR.string.use_list_for_library),
+                            onCheckedChange = { viewModel.setUseColumnForLibrary(it) },
+                            checked = uiState.preferences.useColumnForLibrary,
                             modifier = Modifier.padding(top = 12.dp)
                         )
                     }

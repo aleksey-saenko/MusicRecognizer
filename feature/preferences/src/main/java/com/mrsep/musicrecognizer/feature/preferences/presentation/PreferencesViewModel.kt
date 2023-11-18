@@ -67,9 +67,9 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setUseGridForLibrary(value: Boolean) {
+    fun setUseColumnForLibrary(value: Boolean) {
         viewModelScope.launch {
-            preferencesRepository.setUseGridForLibrary(value)
+            preferencesRepository.setUseColumnForLibrary(value)
         }
     }
 

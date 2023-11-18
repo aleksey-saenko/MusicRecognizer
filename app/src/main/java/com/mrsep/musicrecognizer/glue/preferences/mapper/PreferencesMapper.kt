@@ -29,7 +29,7 @@ class PreferencesMapper @Inject constructor(
             requiredServices = requiredServicesMapper.map(input.requiredServices),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
-            useGridForLibrary = input.useGridForLibrary,
+            useColumnForLibrary = input.useColumnForLibrary,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
         )

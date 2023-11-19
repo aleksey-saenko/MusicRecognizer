@@ -5,38 +5,20 @@ import androidx.compose.animation.core.tween
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
-//val topBottomFade = Brush.verticalGradient(
-//    0f to Color.Transparent,
-//    0.3f to Color.Red,
-//    0.7f to Color.Red,
-//    1f to Color.Transparent
-//)
-
-fun Modifier.fadingEdge(brush: Brush) = this
-    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-    .drawWithContent {
-        drawContent()
-        drawRect(brush = brush, blendMode = BlendMode.DstIn)
-    }
-
-fun Modifier.rowFadingEdge(
-    isVisibleStartEdge: Boolean = true,
-    isVisibleEndEdge: Boolean = true,
-    startEdgeInitialColor: Color = Color.White,
+internal fun Modifier.rowFadingEdge(
+    isVisibleStartEdge: Boolean,
+    isVisibleEndEdge: Boolean,
+    startEdgeInitialColor: Color,
     startEdgeTargetColor: Color = Color.Transparent,
     endEdgeInitialColor: Color = startEdgeTargetColor,
     endEdgeTargetColor: Color = startEdgeInitialColor,
-    fadeStartEdgeLengthDp: Dp = 16.dp,
-    fadeEndEdgeLengthDp: Dp = 16.dp,
+    fadeStartEdgeLengthDp: Dp,
+    fadeEndEdgeLengthDp: Dp
 ) = this.then(
     composed {
         val density = LocalDensity.current
@@ -75,6 +57,41 @@ fun Modifier.rowFadingEdge(
                     )
                 )
             }
+        }
+
+    }
+)
+
+internal fun Modifier.rowFadingEdge(
+    startEdgeInitialColor: Color,
+    startEdgeTargetColor: Color = Color.Transparent,
+    endEdgeInitialColor: Color = startEdgeTargetColor,
+    endEdgeTargetColor: Color = startEdgeInitialColor,
+    fadeStartEdgeLengthDp: Dp,
+    fadeEndEdgeLengthDp: Dp
+) = this.then(
+    composed {
+        val density = LocalDensity.current
+        val fadeStartEdgeLength = with(density) { fadeStartEdgeLengthDp.toPx() }
+        val fadeEndEdgeLength = with(density) { fadeEndEdgeLengthDp.toPx() }
+
+        drawWithContent {
+            val startEdgeColors = listOf(startEdgeInitialColor, startEdgeTargetColor)
+            val endEdgeColors = listOf(endEdgeInitialColor, endEdgeTargetColor)
+            drawContent()
+            drawRect(
+                brush = Brush.horizontalGradient(
+                    startEdgeColors,
+                    endX = fadeStartEdgeLength
+                )
+            )
+            drawRect(
+                brush = Brush.horizontalGradient(
+                    endEdgeColors,
+                    startX = size.width - fadeEndEdgeLength,
+                    endX = size.width
+                )
+            )
         }
 
     }

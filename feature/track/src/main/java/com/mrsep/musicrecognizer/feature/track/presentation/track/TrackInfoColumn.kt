@@ -60,8 +60,8 @@ internal fun TrackInfoColumn(
                     )
                     .rowFadingEdge(
                         startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                        isVisibleStartEdge = titleScrollState.canScrollBackward,
-                        isVisibleEndEdge = titleScrollState.canScrollForward,
+                        fadeStartEdgeLengthDp = 16.dp,
+                        fadeEndEdgeLengthDp = 16.dp
                     )
                     .horizontalScroll(titleScrollState)
                     .padding(horizontal = 16.dp)
@@ -81,8 +81,8 @@ internal fun TrackInfoColumn(
                     )
                     .rowFadingEdge(
                         startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                        isVisibleStartEdge = artistScrollState.canScrollBackward,
-                        isVisibleEndEdge = artistScrollState.canScrollForward,
+                        fadeStartEdgeLengthDp = 16.dp,
+                        fadeEndEdgeLengthDp = 16.dp
                     )
                     .horizontalScroll(artistScrollState)
                     .padding(horizontal = 16.dp)
@@ -103,8 +103,8 @@ internal fun TrackInfoColumn(
                         )
                         .rowFadingEdge(
                             startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                            isVisibleStartEdge = albumScrollState.canScrollBackward,
-                            isVisibleEndEdge = albumScrollState.canScrollForward,
+                            fadeStartEdgeLengthDp = 16.dp,
+                            fadeEndEdgeLengthDp = 16.dp
                         )
                         .horizontalScroll(albumScrollState)
                         .padding(horizontal = 16.dp)

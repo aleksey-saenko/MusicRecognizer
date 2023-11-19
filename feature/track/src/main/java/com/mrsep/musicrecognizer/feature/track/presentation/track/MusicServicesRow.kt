@@ -6,6 +6,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,17 +37,17 @@ internal fun ServicesChipsLazyRow(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberLazyListState()
+    val layoutDirection = LocalLayoutDirection.current
     Box(modifier = modifier) {
         LazyRow(
             contentPadding = contentPadding,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            state = scrollState,
+            state = rememberLazyListState(),
             modifier = Modifier
                 .rowFadingEdge(
                     startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                    isVisibleStartEdge = scrollState.canScrollBackward,
-                    isVisibleEndEdge = scrollState.canScrollForward,
+                    fadeStartEdgeLengthDp = contentPadding.calculateStartPadding(layoutDirection),
+                    fadeEndEdgeLengthDp = contentPadding.calculateEndPadding(layoutDirection)
                 )
         ) {
             items(items = links) { link ->

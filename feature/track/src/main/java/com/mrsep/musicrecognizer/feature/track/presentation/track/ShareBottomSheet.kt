@@ -49,15 +49,19 @@ internal fun ShareBottomSheet(
 
         fun buildStringToShare() = buildString {
             if (titleSelected) append(title)
-            if (artistSelected) append(" - $artist")
-            if (albumSelected) append(" - $album")
-            if (yearSelected) append(" ($year)")
-            if (lyricsSelected) append("\n\n$lyrics")
-            val serviceUrls = serviceLinks
-                    .filter { selectedMusicServices.contains(it.type) }
-                    .joinToString("\n") { it.url }
-            if (serviceUrls.isNotBlank()) append("\n\n$serviceUrls")
+            if (artistSelected) if (isNotBlank()) append(" - $artist") else append(artist)
+            if (albumSelected) if (isNotBlank()) append(" - $album") else append(album)
+            if (yearSelected) if (isNotBlank()) append(" ($year)") else append(year)
+            if (lyricsSelected) if (isNotEmpty()) append("\n\n$lyrics") else append(lyrics)
+            serviceLinks
+                .filter { selectedMusicServices.contains(it.type) }
+                .joinToString("\n") { it.url }
+                .takeIf { serviceUrls -> serviceUrls.isNotBlank() }?.let { serviceUrls ->
+                    if (isNotEmpty()) append("\n\n$serviceUrls") else append(serviceUrls)
+                }
         }
+        val shareAllowed = titleSelected || artistSelected || albumSelected ||
+                yearSelected || selectedMusicServices.isNotEmpty() || lyricsSelected
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Text(
@@ -142,7 +146,8 @@ internal fun ShareBottomSheet(
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 TextButton(
-                    onClick = { onCopyClick(buildStringToShare()) }
+                    onClick = { onCopyClick(buildStringToShare()) },
+                    enabled = shareAllowed
                 ) {
                     Text(
                         text = stringResource(StringsR.string.copy),
@@ -150,7 +155,8 @@ internal fun ShareBottomSheet(
                     )
                 }
                 TextButton(
-                    onClick = { onShareClick(buildStringToShare()) }
+                    onClick = { onShareClick(buildStringToShare()) },
+                    enabled = shareAllowed
                 ) {
                     Text(
                         text = stringResource(StringsR.string.share),

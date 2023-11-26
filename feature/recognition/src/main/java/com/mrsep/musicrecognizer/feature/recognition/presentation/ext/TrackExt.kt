@@ -7,8 +7,8 @@ fun Track.artistWithAlbumFormatted(): String {
         releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
     }
     return albumAndYear?.let { albAndYear ->
-        "$artist / $albAndYear"
+        "$artist - $albAndYear"
     } ?: artist
 }
 
-fun Track.getSharedBody() = "$title / ${this.artistWithAlbumFormatted()}"
+fun Track.getSharedBody() = "$title - ${this.artistWithAlbumFormatted()}"

@@ -90,7 +90,7 @@ internal fun WaveAnimated(
                 label = "line#${index}Length"
             )
         }
-        val gaussianFactors = generateGaussianList(linesCount)
+        val gaussianFactors = remember(linesCount) { generateGaussianList(linesCount) }
 
         val startXOffset = lineWidthPx / 2 +
                 (maxWidthPx - linesCount * lineWidthPx - spaceCount * spaceWidthPx) / 2

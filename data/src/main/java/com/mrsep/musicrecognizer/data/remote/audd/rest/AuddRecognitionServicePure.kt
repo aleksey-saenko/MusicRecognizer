@@ -119,7 +119,12 @@ class AuddRecognitionServicePure @Inject constructor(
         return try {
             val response = okHttpClient.newCall(request).await()
             if (response.isSuccessful) {
-                moshiAdapter.fromJson(response.body!!.source())!!
+                try {
+                    moshiAdapter.fromJson(response.body!!.source())!!
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
+                }
             } else {
                 RemoteRecognitionResultDo.Error.HttpError(
                     code = response.code,

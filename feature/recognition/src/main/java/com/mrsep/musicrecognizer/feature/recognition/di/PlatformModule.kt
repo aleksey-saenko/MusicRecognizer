@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.VibrationManager
+import com.mrsep.musicrecognizer.feature.recognition.domain.WidgetNotifier
+import com.mrsep.musicrecognizer.feature.recognition.domain.WidgetNotifierImpl
 import com.mrsep.musicrecognizer.feature.recognition.platform.VibrationManagerImpl
 import dagger.Binds
 import dagger.Module
@@ -16,5 +18,9 @@ internal interface PlatformModule {
     @Binds
     @Singleton
     fun bindVibrationManager(implementation: VibrationManagerImpl): VibrationManager
+
+    @Binds
+    @Singleton
+    fun bindWidgetNotifier(implementation: WidgetNotifierImpl): WidgetNotifier
 
 }

@@ -12,11 +12,11 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
+import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
@@ -28,16 +28,12 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitma
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-
-@Suppress("unused")
-private const val SERVICE_TAG = "NotificationService"
 
 /**
  * When designing behavior, consider these restrictions:
@@ -48,8 +44,10 @@ private const val SERVICE_TAG = "NotificationService"
  */
 
 @AndroidEntryPoint
-internal class NotificationService : Service() {
+class NotificationService : Service() {
 
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
     @Inject
     lateinit var recognitionInteractor: ServiceRecognitionInteractor
     @Inject
@@ -60,16 +58,19 @@ internal class NotificationService : Service() {
     @IoDispatcher
     lateinit var ioDispatcher: CoroutineDispatcher
 
+    private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
+
     private val actionReceiver = ActionBroadcastReceiver()
-    private val serviceScope by lazy {
-        CoroutineScope(ioDispatcher + SupervisorJob())
-    }
-    private val notificationManager by lazy {
-        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    }
+
+    private val notificationManager by lazy { getNotificationManager() }
 
     private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
+    private val isReadyToRecognize get() = recognitionState.value is RecognitionStatus.Ready
 
+    private var notificationSendingJob: Job? = null
+
+    private var oneTimeMode = true
+    private var oneTimeRecognitionLaunched = false
     // can be used to design background startup behaviour, not used now
     private var microphoneRestricted = true
 
@@ -77,15 +78,13 @@ internal class NotificationService : Service() {
 
     override fun onCreate() {
         super.onCreate() // required by hilt injection
-        createStatusNotificationChannel()
-        createResultNotificationChannel()
         val initialNotification = statusNotificationBuilder()
-            .setContentTitle(getString(StringsR.string.notification_service_initializing))
+            .setContentText(getString(StringsR.string.notification_service_initializing))
             .build()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Check again because user can restrict permissions when the app is in the background,
             // which can lead to service restarting without required permissions
-            val startAllowed = checkServiceRequiredPermissions()
+            val startAllowed = checkNotificationServicePermissions()
             if (startAllowed) {
                 startForeground(
                     STATUS_NOTIFICATION_ID,
@@ -93,23 +92,39 @@ internal class NotificationService : Service() {
                     FOREGROUND_SERVICE_TYPE_MICROPHONE
                 )
                 registerActionReceiver()
-                registerRecognitionStateObserver()
             } else {
-                stopSelf()
+                serviceScope.launch {
+                    preferencesRepository.setNotificationServiceEnabled(false)
+                    stopSelf()
+                }
             }
         } else {
             startForeground(STATUS_NOTIFICATION_ID, initialNotification)
             registerActionReceiver()
-            registerRecognitionStateObserver()
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        var oneTimeRequested = false
         intent?.run {
             microphoneRestricted = getBooleanExtra(KEY_BACKGROUND_LAUNCH, true)
+            oneTimeRequested = getBooleanExtra(KEY_ONE_TIME_RECOGNITION, false)
         }
-        return START_STICKY
+
+        if (oneTimeRequested) {
+            if (isReadyToRecognize) {
+                notificationSendingJob ?: registerRecognitionStateObserver()
+                launchRecognition()
+            } else {
+                cancelAndResetStatus()
+            }
+        } else {
+            notificationSendingJob ?: registerRecognitionStateObserver()
+            oneTimeMode = false
+        }
+
+        return if (oneTimeMode) START_NOT_STICKY else START_STICKY
     }
 
     override fun onDestroy() {
@@ -136,51 +151,30 @@ internal class NotificationService : Service() {
     }
 
     private fun registerRecognitionStateObserver() {
-        recognitionState.onEach { status ->
-            handleRecognitionStatus(status)
-        }.launchIn(serviceScope)
-    }
-
-    private fun createStatusNotificationChannel() {
-        val name = getString(StringsR.string.notification_channel_name_control)
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
-            description = getString(StringsR.string.notification_channel_desc_control)
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            setShowBadge(false)
-            enableLights(false)
-            enableVibration(false)
-            vibrationPattern = longArrayOf(100, 100, 100, 100)
+        notificationSendingJob = serviceScope.launch {
+            recognitionState.collectLatest(::handleRecognitionStatus)
         }
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun createResultNotificationChannel() {
-        val name = getString(StringsR.string.notification_channel_name_result)
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        val channel = NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
-            description = getString(StringsR.string.notification_channel_desc_result)
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            setShowBadge(true)
-            enableLights(true)
-            enableVibration(true)
-            vibrationPattern = longArrayOf(100, 100, 100, 100)
-        }
-        notificationManager.createNotificationChannel(channel)
     }
 
     private suspend fun handleRecognitionStatus(status: RecognitionStatus) {
         when (status) {
             RecognitionStatus.Ready -> {
-                // cancel last final result notification if it exists
-                notificationManager.cancel(RESULT_NOTIFICATION_ID)
-                notifyReadyAsStatus()
+                if (oneTimeMode) {
+                    if (oneTimeRecognitionLaunched) stopSelf()
+                } else {
+                    statusNotificationBuilder()
+                        .setContentText(getString(StringsR.string.tap_to_recognize_the_song))
+                        .addRecognizeButtonAndIntent()
+                        .buildAndNotifyAsStatus()
+                }
             }
 
             is RecognitionStatus.Recognizing -> {
-                // cancel notification about microphone permission if it exists
+                oneTimeRecognitionLaunched = true
+                // cancel last result notification if it exists
+                // cancel microphone permission notification if it exists
+                // TODO: consider to create a channel for warnings
                 notificationManager.cancel(RESULT_NOTIFICATION_ID)
-
                 statusNotificationBuilder()
                     .setContentText(getListeningMessage(status.extraTry))
                     .addCancelButton()
@@ -188,7 +182,7 @@ internal class NotificationService : Service() {
             }
 
             is RecognitionStatus.Done -> {
-                val builder = when (status.result) {
+                val resultBuilder = when (status.result) {
                     is RecognitionResult.Error -> when (status.result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> {
                             resultNotificationBuilder()
@@ -238,13 +232,12 @@ internal class NotificationService : Service() {
                             .setContentText(status.result.track.artistWithAlbumFormatted())
                             .addOptionalBigPicture(status.result.track.links.artwork)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
-                            .addShowLyricsButton(status.result.track)
+                            .addOptionalShowLyricsButton(status.result.track)
                             .addShareButton(status.result.track.getSharedBody())
                     }
                 }
-                builder.addDismissIntent().buildAndNotifyAsResult()
-                notifyReadyAsStatus()
-                // interactor still has final status, will be reset by notification dismiss
+                resultBuilder.buildAndNotifyAsResult()
+                cancelAndResetStatus()
             }
         }
     }
@@ -278,13 +271,13 @@ internal class NotificationService : Service() {
 
     private fun statusNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_STATUS_CHANNEL_ID)
-            .setContentTitle(getString(StringsR.string.app_name))
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setOngoing(true) // behavior changes since API 34
+            .setOngoing(true) // can be dismissed since API 34
             .setCategory(Notification.CATEGORY_STATUS)
-//        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setSilent(true) // to avoid alert sound in recording
+            .addDismissIntent()
     }
 
 
@@ -294,19 +287,9 @@ internal class NotificationService : Service() {
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
-            // service should detect dismiss action and reset interactor status
-            .setAutoCancel(false)
             .setOngoing(false)
+            .setAutoCancel(true)
             .setCategory(Notification.CATEGORY_MESSAGE)
-//        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
-    }
-
-    private fun notifyReadyAsStatus() {
-        val message = getString(StringsR.string.tap_to_recognize_the_song)
-        statusNotificationBuilder()
-            .setContentText(message)
-            .addRecognizeButtonAndIntent()
-            .buildAndNotifyAsStatus()
     }
 
     @SuppressLint("LaunchActivityFromNotification")
@@ -412,31 +395,17 @@ internal class NotificationService : Service() {
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
         mbId: String
     ): NotificationCompat.Builder {
-        val mediateActivityIntent = Intent(
-            this@NotificationService,
-            NotificationServiceActivity::class.java
-        ).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            action = SHOW_TRACK_ACTION
-            putExtra(MB_ID_EXTRA_KEY, mbId)
-        }
-        val pendingIntent = createPendingIntent(mediateActivityIntent)
+        val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(mbId)
+        val pendingIntent = createPendingIntent(deepLinkIntent)
         return setContentIntent(pendingIntent)
     }
 
-    private fun NotificationCompat.Builder.addShowLyricsButton(
+    private fun NotificationCompat.Builder.addOptionalShowLyricsButton(
         track: Track
     ): NotificationCompat.Builder {
         if (track.lyrics == null) return this
-        val mediateActivityIntent = Intent(
-            this@NotificationService,
-            NotificationServiceActivity::class.java
-        ).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            action = SHOW_LYRICS_ACTION
-            putExtra(MB_ID_EXTRA_KEY, track.mbId)
-        }
-        val pendingIntent = createPendingIntent(mediateActivityIntent)
+        val deepLinkIntent = serviceRouter.getDeepLinkIntentToLyrics(track.mbId)
+        val pendingIntent = createPendingIntent(deepLinkIntent)
         return addAction(
             android.R.drawable.ic_menu_more,
             getString(StringsR.string.show_lyrics),
@@ -472,21 +441,23 @@ internal class NotificationService : Service() {
         notificationManager.notify(RESULT_NOTIFICATION_ID, this.build())
     }
 
-    private fun cancelAndResetStatus() {
-        recognitionInteractor.cancelAndResetStatus()
+    private fun launchRecognition() {
+        serviceScope.launch {
+            if (networkMonitor.isOffline.first()) {
+                recognitionInteractor.launchOfflineRecognition(this)
+            } else {
+                recognitionInteractor.launchRecognition(this)
+            }
+        }
     }
 
-    private fun launchRecognizeOrCancel() {
-        if (recognitionState.value is RecognitionStatus.Recognizing) {
+    private fun cancelAndResetStatus() {
+        if (oneTimeMode) {
+            notificationSendingJob?.cancel()
             recognitionInteractor.cancelAndResetStatus()
+            stopSelf()
         } else {
-            serviceScope.launch {
-                if (networkMonitor.isOffline.first()) {
-                    recognitionInteractor.launchOfflineRecognition(this)
-                } else {
-                    recognitionInteractor.launchRecognition(this)
-                }
-            }
+            recognitionInteractor.cancelAndResetStatus()
         }
     }
 
@@ -499,7 +470,11 @@ internal class NotificationService : Service() {
                         Manifest.permission.RECORD_AUDIO
                     )
                     if (permissionGranted == PackageManager.PERMISSION_GRANTED) {
-                        launchRecognizeOrCancel()
+                        if (isReadyToRecognize) {
+                            launchRecognition()
+                        } else {
+                            cancelAndResetStatus()
+                        }
                     } else {
                         serviceScope.launch {
                             // wait for the end of notification drawer closing animation
@@ -508,7 +483,7 @@ internal class NotificationService : Service() {
                                 resources.getInteger(android.R.integer.config_longAnimTime)
                             delay(drawerAnimationDuration.toLong())
                             resultNotificationBuilder()
-                                .setContentTitle(context.getString(StringsR.string.app_name))
+                                .setContentTitle(context.getString(StringsR.string.permissions))
                                 .setContentText(getString(StringsR.string.allow_the_app_to_access_the_microphone))
                                 .setAutoCancel(true)
                                 .addAppPreferencesButtonAndIntent()
@@ -522,7 +497,10 @@ internal class NotificationService : Service() {
                 }
 
                 DISMISS_STATUS_ACTION -> {
-                    cancelAndResetStatus()
+                    serviceScope.launch {
+                        preferencesRepository.setNotificationServiceEnabled(false)
+                        stopSelf()
+                    }
                 }
 
             }
@@ -542,40 +520,67 @@ internal class NotificationService : Service() {
         const val SHOW_LYRICS_ACTION = "com.mrsep.musicrecognizer.action.show_lyrics"
 
         const val KEY_BACKGROUND_LAUNCH = "KEY_BACKGROUND_LAUNCH"
+        const val KEY_ONE_TIME_RECOGNITION = "KEY_ONE_TIME_RECOGNITION"
 
         const val MB_ID_EXTRA_KEY = "KEY_MB_ID"
+
+
+        fun createStatusNotificationChannel(context: Context) {
+            val name = context.getString(StringsR.string.notification_channel_name_control)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
+                description = context.getString(StringsR.string.notification_channel_desc_control)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                setShowBadge(false)
+                enableLights(false)
+                enableVibration(false)
+            }
+            context.getNotificationManager().createNotificationChannel(channel)
+        }
+
+        fun createResultNotificationChannel(context: Context) {
+            val name = context.getString(StringsR.string.notification_channel_name_result)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
+                description = context.getString(StringsR.string.notification_channel_desc_result)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                setShowBadge(true)
+                enableLights(true)
+                enableVibration(true)
+                vibrationPattern = longArrayOf(100, 100, 100, 100)
+            }
+            context.getNotificationManager().createNotificationChannel(channel)
+        }
     }
 
 }
 
-/** To turn on the service on API level above 33, it requires the following granted permissions:
- * [Manifest.permission.RECORD_AUDIO], [Manifest.permission.POST_NOTIFICATIONS].
- * @return true if the operation was successful, false otherwise (permissions is not granted)
- * */
-fun Context.toggleNotificationService(
-    shouldStart: Boolean,
-    backgroundLaunch: Boolean = false
-): Boolean {
+fun Context.startNotificationService(
+    backgroundLaunch: Boolean = false,
+    oneTimeRecognition: Boolean = false
+) {
     val intent = Intent(this, NotificationService::class.java).apply {
         putExtra(NotificationService.KEY_BACKGROUND_LAUNCH, backgroundLaunch)
+        putExtra(NotificationService.KEY_ONE_TIME_RECOGNITION, oneTimeRecognition)
     }
-    if (!shouldStart) {
-        stopService(intent)
-        return true
-    }
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-        startForegroundService(intent)
-        true
-    } else {
-        val startAllowed = checkServiceRequiredPermissions()
-        if (startAllowed) startForegroundService(intent)
-        startAllowed
-    }
+    startForegroundService(intent)
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private fun Context.checkServiceRequiredPermissions() =
-    (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-    PackageManager.PERMISSION_GRANTED &&
-    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-    PackageManager.PERMISSION_GRANTED)
+fun Context.stopNotificationService() {
+    stopService(Intent(this, NotificationService::class.java))
+}
+
+private fun Context.getNotificationManager() =
+    getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
+
+private fun Context.checkNotificationServicePermissions(): Boolean {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+                PackageManager.PERMISSION_GRANTED)
+    } else {
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+                PackageManager.PERMISSION_GRANTED &&
+        ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED)
+    }
+}

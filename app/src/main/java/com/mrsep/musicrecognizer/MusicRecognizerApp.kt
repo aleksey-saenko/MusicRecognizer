@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -13,6 +14,12 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    override fun onCreate() {
+        super.onCreate()
+        NotificationService.createStatusNotificationChannel(this)
+        NotificationService.createResultNotificationChannel(this)
+    }
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)

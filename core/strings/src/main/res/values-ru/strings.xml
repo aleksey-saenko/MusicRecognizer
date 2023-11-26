@@ -146,7 +146,7 @@
     <string name="empty_recognition_queue_sub_message">В случае неуспешного распознавания приложение может добавить распознавание в очередь в соответствии с настройками</string>
     <string name="recognition_scheduled">Распознавание запланировано</string>
     <string name="offline_mode">Офлайн-режим</string>
-    <string name="allow_the_app_to_access_the_microphone">Разрешить приложению доступ к микрофону</string>
+    <string name="allow_the_app_to_access_the_microphone">Разрешите приложению доступ к микрофону</string>
     <string name="notification_service_initializing">Сервис уведомлений инициализируется</string>
     <string name="disable_multi_selection_mode">Отключить режим множественного выбора</string>
     <string name="deselect_all">Снять выделение со всех</string>
@@ -199,5 +199,9 @@
     <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="lyrics">Текст песни</string>
+    <string name="quick_tile_permissions_blocked_api33">Для распознования в фоне Audile требуются разрешения на доступ к микрофону и отправке уведомлений. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте эти разрешения.</string>
+    <string name="quick_tile_permissions_blocked">Для распознования в фоне Audile требуется разрешение на доступ к микрофону. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте это разрешение.</string>
+    <string name="quick_tile_recognize">Распознать песню</string>
+    <string name="quick_tile_cancel_recognition">Отменить распознование</string>
 
 </resources>

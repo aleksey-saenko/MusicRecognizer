@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.startNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -35,15 +35,12 @@ class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             appScope.launch {
-                context.toggleNotificationService(
-                    shouldStart = shouldStartService(),
-                    backgroundLaunch = true
-                )
+                val userPreferences = preferencesRepository.userPreferencesFlow.first()
+                if (userPreferences.notificationServiceEnabled) {
+                    context.startNotificationService(backgroundLaunch = true)
+                }
             }
         }
     }
-
-    private suspend fun shouldStartService() =
-        preferencesRepository.userPreferencesFlow.first().notificationServiceEnabled
 
 }

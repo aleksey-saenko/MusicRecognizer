@@ -18,4 +18,8 @@ class AdapterPreferencesRepository @Inject constructor(
         get() = preferencesRepositoryDo.userPreferencesFlow
             .map { prefData -> userPreferencesMapper.map(prefData) }
 
+    override suspend fun setNotificationServiceEnabled(value: Boolean) {
+        preferencesRepositoryDo.setNotificationServiceEnabled(value)
+    }
+
 }

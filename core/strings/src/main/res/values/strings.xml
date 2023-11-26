@@ -209,5 +209,9 @@
     <string name="album">Album</string>
     <string name="year">Year</string>
     <string name="lyrics">Lyrics</string>
+    <string name="quick_tile_permissions_blocked_api33">To perform background recognition, Audile requires access to the microphone and the ability to send notifications. Please open App info in Settings, and grant these permissions.</string>
+    <string name="quick_tile_permissions_blocked">To perform background recognition, Audile requires access to the microphone. Please open App info in Settings, and grant this permission.</string>
+    <string name="quick_tile_recognize">Recognize song</string>
+    <string name="quick_tile_cancel_recognition">Cancel recognition</string>
 
 </resources>

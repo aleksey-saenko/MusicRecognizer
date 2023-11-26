@@ -22,7 +22,8 @@ import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.toggleNotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.startNotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.stopNotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -84,10 +85,10 @@ class MainActivity : ComponentActivity() {
                 .filterIsInstance<MainActivityUiState.Success>()
                 .map { state -> state.userPreferences }
                 .onEach { userPreferences ->
-                    val serviceStartAllowed = toggleNotificationService(
-                        userPreferences.notificationServiceEnabled
-                    )
-                    if (!serviceStartAllowed) viewModel.setNotificationServiceEnabled(false)
+                    when (userPreferences.notificationServiceEnabled) {
+                        true -> startNotificationService()
+                        false -> stopNotificationService()
+                    }
                 }
                 .launchIn(this)
         }

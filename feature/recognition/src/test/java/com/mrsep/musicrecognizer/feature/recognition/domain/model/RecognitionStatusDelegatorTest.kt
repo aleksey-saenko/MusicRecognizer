@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.model
 
 import app.cash.turbine.test
+import com.mrsep.musicrecognizer.feature.recognition.domain.WidgetNotifier
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusDelegator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -19,9 +20,12 @@ class RecognitionStatusDelegatorTest {
         RecognitionResult.ScheduledOffline(RecognitionTask.Ignored)
     )
 
-    @Test()
+    @Test
     fun `screen and service observers are active`() = runTest {
-        val delegator = RecognitionStatusDelegator()
+        val widgetNotifier = object : WidgetNotifier {
+            override fun requestUpdate() {}
+        }
+        val delegator = RecognitionStatusDelegator(widgetNotifier)
         launch {
             delegator.screenState.test {
                 assertEquals(readyStatus, awaitItem()) //initial status for delegator
@@ -51,9 +55,12 @@ class RecognitionStatusDelegatorTest {
         advanceUntilIdle()
     }
 
-    @Test()
+    @Test
     fun `only service observer are active`() = runTest {
-        val delegator = RecognitionStatusDelegator()
+        val widgetNotifier = object : WidgetNotifier {
+            override fun requestUpdate() {}
+        }
+        val delegator = RecognitionStatusDelegator(widgetNotifier)
         launch {
             delegator.serviceState.test {
                 assertEquals(readyStatus, awaitItem()) //initial status for delegator

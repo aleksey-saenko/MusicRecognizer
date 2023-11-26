@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
+import com.mrsep.musicrecognizer.feature.recognition.domain.WidgetNotifier
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +18,9 @@ import javax.inject.Inject
  * - The service state receives the value of [RecognitionStatus.Done] only if the screen state
  *   has no active subscribers; otherwise, it receives the Ready status.
  * */
-internal class RecognitionStatusDelegator @Inject constructor() {
+internal class RecognitionStatusDelegator @Inject constructor(
+    private val widgetNotifier: WidgetNotifier
+) {
 
     private val _screenState = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
     private val _serviceState = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
@@ -41,6 +44,7 @@ internal class RecognitionStatusDelegator @Inject constructor() {
                 }
             }
         }
+        widgetNotifier.requestUpdate()
     }
 
     private fun MutableStateFlow<*>.isNotObserved() = subscriptionCount.value == 0

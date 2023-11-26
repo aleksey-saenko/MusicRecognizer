@@ -1,0 +1,3 @@
+* Added quick settings tile to perform one time background recognition
+* Fixed track info sharing format issues
+* Minor UI fixes

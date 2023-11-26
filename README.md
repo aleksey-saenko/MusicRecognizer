@@ -9,8 +9,6 @@
 Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
 This application uses the AudD® service as a Music Recognition API.
 
-I'm developing this application as a pet project where I can improve my coding skills. At the same time, I try to make the app reliable for everyday use.
-
 If you would like to contribute or translate, that is appreciated.
 
 ## Features
@@ -41,10 +39,8 @@ Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Mos
 
 ## API Key
 
-This application uses the AudD® service as a Music Recognition API. You need a special API token provided by AudD® to use the application. If you don't have one, you can sign up for a free API token.
-You can add the key on the onboarding or preferences screen, or just set it in `local.properties`.
-
-There is also the option to use the app without a token, but please note that this will restrict the number of daily recognitions that can be performed.
+This application uses the AudD® service as a Music Recognition API. Please note that the AudD® service is not free, and you will need a special API token provided by the service to use this application. If you don't have an API token, you can sign up for a trial one.
+There is also the option to use the app without a token, but please note that this will significantly restrict the number of daily recognitions that can be performed. Please keep in mind that this behavior is not guaranteed by the service and can be restricted at any time.
 
 ## License
 

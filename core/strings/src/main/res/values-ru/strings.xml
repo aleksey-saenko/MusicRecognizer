@@ -14,10 +14,10 @@
     <string name="onboarding_permission_message_start">"Приложению требуется разрешение на запись аудио для правильной работы. Предоставляя это разрешение, вы соглашаетесь на использование записанных данных "</string>
     <string name="onboarding_permission_message_link">удаленным сервисом</string>
     <string name="onboarding_permission_message_end">" для распознавания музыки. Приложение не использует эти данные для других целей."</string>
-    <string name="onboarding_token_message_start">"Приложение использует сервис для распознавания музыки AudD®, который требует специального API-токена. Зарегистрируйтесь "</string>
+    <string name="onboarding_token_message_start">"Приложение использует для распознавания платный сервис AudD®, для использования которого, требуется специальный API-токен. Зарегистрируйтесь "</string>
     <string name="onboarding_token_message_link">здесь</string>
-    <string name="onboarding_token_message_end">" , чтобы получить токен, если у вас его еще нет."</string>
-    <string name="token_skip_message">Пропуск этого шага ограничит допустимый лимит ежедневных распознаваний, но вы всегда сможете указать токен в настройках позже.</string>
+    <string name="onboarding_token_message_end">", чтобы получить пробный токен, если у вас его еще нет."</string>
+    <string name="token_skip_message">Пропуск этого шага ограничит допустимый лимит ежедневных распознаваний, но вы всегда сможете указать личный токен в настройках позже.</string>
     <string name="hide_token">Скрыть токен</string>
     <string name="show_token">Показать токен</string>
     <string name="apply_api_token">Применить API-токен</string>
@@ -45,7 +45,7 @@
     <string name="token_applied">Токен применен</string>
     <string name="notification_channel_name_control">Управляющие уведомления</string>
     <string name="notification_channel_name_result">Результаты распознаваний</string>
-    <string name="notification_channel_name_scheduled_result">Результы запланированных распознований</string>
+    <string name="notification_channel_name_scheduled_result">Результы запланированных распознаваний</string>
     <string name="notification_channel_desc_control">Позволяет управлять процессом распознавания из уведомлений</string>
     <string name="notification_channel_desc_result">Позволяет получать результаты распознаваний из уведомлений</string>
     <string name="notification_channel_desc_scheduled_result">Позволяет получать результаты запланированных распознаваний из уведомлений</string>
@@ -199,9 +199,9 @@
     <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="lyrics">Текст песни</string>
-    <string name="quick_tile_permissions_blocked_api33">Для распознования в фоне Audile требуются разрешения на доступ к микрофону и отправке уведомлений. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте эти разрешения.</string>
-    <string name="quick_tile_permissions_blocked">Для распознования в фоне Audile требуется разрешение на доступ к микрофону. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте это разрешение.</string>
+    <string name="quick_tile_permissions_blocked_api33">Для распознавания в фоне Audile требуются разрешения на доступ к микрофону и отправке уведомлений. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте эти разрешения.</string>
+    <string name="quick_tile_permissions_blocked">Для распознавания в фоне Audile требуется разрешение на доступ к микрофону. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте это разрешение.</string>
     <string name="quick_tile_recognize">Распознать песню</string>
-    <string name="quick_tile_cancel_recognition">Отменить распознование</string>
+    <string name="quick_tile_cancel_recognition">Отменить распознавание</string>
 
 </resources>

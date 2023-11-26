@@ -15,11 +15,11 @@
     <string name="onboarding_permission_message_link">remote service</string>
     <string name="onboarding_permission_message_end">" for music recognition. The app does not use this data for any other purpose."</string>
     <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
-    <string name="onboarding_token_message_start">"The app uses the AudD® music recognition service, which requires a special API token. Sign up "</string>
+    <string name="onboarding_token_message_start">"The app uses the AudD® music recognition service, which is not free and requires a special API token. Sign up "</string>
     <string name="onboarding_token_message_link">here</string>
-    <string name="onboarding_token_message_end">" to get your token, if you don\'t have one yet."</string>
+    <string name="onboarding_token_message_end">" to get your trial token, if you don\'t have one yet."</string>
     <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
-    <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify a token later in preferences.</string>
+    <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify your personal token later in preferences.</string>
     <string name="hide_token">Hide token</string>
     <string name="show_token">Show token</string>
     <string name="apply_api_token">Apply API token</string>

@@ -3,15 +3,24 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
@@ -19,12 +28,19 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
@@ -52,13 +68,13 @@ internal fun ServicesChipsLazyRow(
         ) {
             items(items = links) { link ->
                 if (showOnlyIcons) {
-                    MusicServiceIcon(
+                    MusicServiceIconCopy(
                         titleRes = link.type.titleId(),
                         iconRes = link.type.iconId(),
                         link = link.url
                     )
                 } else {
-                    MusicServiceChip(
+                    MusicServiceChipCopy(
                         titleRes = link.type.titleId(),
                         iconRes = link.type.iconId(),
                         link = link.url
@@ -69,8 +85,87 @@ internal fun ServicesChipsLazyRow(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MusicServiceChip(
+private fun MusicServiceChipCopy(
+    @StringRes titleRes: Int,
+    @DrawableRes iconRes: Int,
+    link: String,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .sizeIn(minHeight = 32.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(0.75f),
+                shape = MaterialTheme.shapes.small
+            )
+            .clip(MaterialTheme.shapes.small)
+            .combinedClickable(
+                onLongClick = { context.copyTextToClipboard(link) },
+                onClick = { context.openUrlImplicitly(link) },
+                indication = LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() }
+            )
+            .semantics { role = Role.Button }
+            .padding(horizontal = 8.dp)
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = stringResource(titleRes),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MusicServiceIconCopy(
+    @StringRes titleRes: Int,
+    @DrawableRes iconRes: Int,
+    link: String,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(40.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(0.75f),
+                shape = CircleShape
+            )
+            .clip(CircleShape)
+            .combinedClickable(
+                onLongClick = { context.copyTextToClipboard(link) },
+                onClick = { context.openUrlImplicitly(link) },
+                indication = LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() }
+            )
+            .semantics { role = Role.Button }
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = stringResource(titleRes),
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
+private fun MusicServiceChipDefault(
     @StringRes titleRes: Int,
     @DrawableRes iconRes: Int,
     link: String,
@@ -99,8 +194,8 @@ private fun MusicServiceChip(
 }
 
 @Composable
-private fun MusicServiceIcon(
-    @StringRes titleRes: Int, // add popup on long press
+private fun MusicServiceIconDefault(
+    @StringRes titleRes: Int,
     @DrawableRes iconRes: Int,
     link: String,
     modifier: Modifier = Modifier
@@ -110,7 +205,7 @@ private fun MusicServiceIcon(
         onClick = { context.openUrlImplicitly(link) },
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.75f)
         ),
         modifier = modifier
     ) {

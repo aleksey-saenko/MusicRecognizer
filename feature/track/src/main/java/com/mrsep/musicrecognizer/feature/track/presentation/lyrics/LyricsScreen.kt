@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +47,7 @@ internal fun LyricsScreen(
     viewModel: LyricsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val uiStateInFlow by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
     when (val uiState = uiStateInFlow) {
@@ -55,6 +57,7 @@ internal fun LyricsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             LoadingStub(
@@ -67,6 +70,7 @@ internal fun LyricsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(
@@ -76,6 +80,7 @@ internal fun LyricsScreen(
 
         is LyricsUiState.Success -> {
             val useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
+            var fontStyleDialogVisible by rememberSaveable { mutableStateOf(false) }
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
@@ -91,9 +96,8 @@ internal fun LyricsScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
+                        modifier = Modifier.systemBarsPadding()
                     ) {
-                        var fontStyleDialogVisible by rememberSaveable { mutableStateOf(false) }
                         LyricsScreenTopBar(
                             onBackPressed = onBackPressed,
                             onShareClick = {
@@ -106,22 +110,24 @@ internal fun LyricsScreen(
                             onChangeTextStyleClick = { fontStyleDialogVisible = true },
                             topAppBarScrollBehavior = topBarBehaviour
                         )
-                        if (fontStyleDialogVisible) {
-                            FontStyleDialog(
-                                fontStyle = uiState.fontStyle,
-                                onFontStyleChanged = viewModel::setLyricsFontStyle,
-                                onDismissClick = { fontStyleDialogVisible = false }
-                            )
-                        }
                         Text(
                             text = uiState.lyrics,
                             textAlign = TextAlign.Center,
                             style = uiState.fontStyle.toTextStyle(uiState.themeMode),
                             modifier = Modifier
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .verticalScroll(rememberScrollState())
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         )
                     }
+                }
+                if (fontStyleDialogVisible) {
+                    FontStyleDialog(
+                        fontStyle = uiState.fontStyle,
+                        onFontStyleChanged = viewModel::setLyricsFontStyle,
+                        onDismissClick = { fontStyleDialogVisible = false }
+                    )
                 }
             }
         }

@@ -40,6 +40,7 @@ internal fun QueueScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         )
 
         is QueueScreenUiState.Success -> {

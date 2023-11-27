@@ -45,6 +45,7 @@ internal fun TrackScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             LoadingStub(
@@ -58,6 +59,7 @@ internal fun TrackScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(

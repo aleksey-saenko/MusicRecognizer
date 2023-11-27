@@ -41,6 +41,7 @@ internal fun PreferencesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         )
 
         is PreferencesUiState.Success -> {

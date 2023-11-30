@@ -1,6 +1,6 @@
 # Audile
 
-<a href="https://f-droid.org/ru/packages/com.mrsep.musicrecognizer/">
+<a href="https://f-droid.org/en/packages/com.mrsep.musicrecognizer/">
   <img alt="Get it on F-Droid"
        height="80"
        src="https://f-droid.org/badge/get-it-on.png" />

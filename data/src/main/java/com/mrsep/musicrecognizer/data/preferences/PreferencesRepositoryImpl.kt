@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
+import com.mrsep.musicrecognizer.UserPreferencesProtoKt
+import com.mrsep.musicrecognizer.copy
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
@@ -38,94 +40,85 @@ class PreferencesRepositoryImpl @Inject constructor(
         .flowOn(ioDispatcher)
 
     override suspend fun setApiToken(value: String) {
-        safeWriter { setApiToken(value) }
+        safeWriter { apiToken = value }
     }
 
     override suspend fun setOnboardingCompleted(value: Boolean) {
-        safeWriter { setOnboardingCompleted(value) }
+        safeWriter { onboardingCompleted = value }
     }
 
     override suspend fun setNotificationServiceEnabled(value: Boolean) {
-        safeWriter { setNotificationServiceEnabled(value) }
+        safeWriter { notificationServiceEnabled = value }
     }
 
-
     override suspend fun setDynamicColorsEnabled(value: Boolean) {
-        safeWriter { setDynamicColorsEnabled(value) }
+        safeWriter { dynamicColorsEnabled = value }
     }
 
     override suspend fun setArtworkBasedThemeEnabled(value: Boolean) {
-        safeWriter { setArtworkBasedThemeEnabled(value) }
+        safeWriter { artworkBasedThemeEnabled = value }
     }
 
-    override suspend fun setRequiredMusicServices(value: Set<MusicServiceDo>) {
+    override suspend fun setRequiredMusicServices(services: Set<MusicServiceDo>) {
         safeWriter {
-            clearRequiredMusicServices()
-            addAllRequiredMusicServices(
-                value.map { serviceDo -> musicServiceMapper.reverseMap(serviceDo) }
+            requiredMusicServices.clear()
+            requiredMusicServices.addAll(
+                services.mapNotNull { serviceDo -> musicServiceMapper.reverseMap(serviceDo) }
             )
         }
     }
 
     override suspend fun setDeveloperModeEnabled(value: Boolean) {
-        safeWriter { setDeveloperModeEnabled(value) }
+        safeWriter { developerModeEnabled = value }
     }
 
     override suspend fun setFallbackPolicy(value: FallbackPolicyDo) {
-        safeWriter {
-            setFallbackPolicy(fallbackPolicyMapper.reverseMap(value))
-        }
+        safeWriter { fallbackPolicy = fallbackPolicyMapper.reverseMap(value) }
     }
 
     override suspend fun setLyricsFontStyle(value: LyricsFontStyleDo) {
-        safeWriter {
-            setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(value))
-        }
+        safeWriter { lyricsFontStyle = lyricsFontStyleMapper.reverseMap(value) }
     }
 
     override suspend fun setTrackFilter(value: TrackFilterDo) {
-        safeWriter {
-            setTrackFilter(trackFilterMapper.reverseMap(value))
-        }
+        safeWriter { trackFilter = trackFilterMapper.reverseMap(value) }
     }
 
     override suspend fun setHapticFeedback(value: HapticFeedbackDo) {
-        safeWriter {
-            setHapticFeedback(hapticFeedbackMapper.reverseMap(value))
-        }
+        safeWriter { hapticFeedback = hapticFeedbackMapper.reverseMap(value) }
     }
 
     override suspend fun setUseColumnForLibrary(value: Boolean) {
-        safeWriter { setUseColumnForLibrary(value) }
+        safeWriter { useColumnForLibrary = value }
     }
 
     override suspend fun setThemeMode(value: ThemeModeDo) {
-        safeWriter { setThemeMode(themeModeMapper.reverseMap(value)) }
+        safeWriter { themeMode = themeModeMapper.reverseMap(value) }
     }
 
     override suspend fun setUsePureBlackForDarkTheme(value: Boolean) {
-        safeWriter { setUsePureBlackForDarkTheme(value) }
+        safeWriter { usePureBlackForDarkTheme = value }
     }
 
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {
         return this.catch { e ->
             Log.e(TAG, "Failed to read user preferences", e)
             when (e) {
-                is IOException -> emit(UserPreferencesProto.getDefaultInstance())
+                is IOException -> emit(getDefaultInstance())
                 else -> throw e
             }
         }
     }
 
     private suspend inline fun safeWriter(
-        crossinline action: UserPreferencesProto.Builder.() -> UserPreferencesProto.Builder
+        crossinline action: UserPreferencesProtoKt.Dsl.() -> Unit
     ) {
         withContext(ioDispatcher) {
             try {
                 dataStore.updateData { currentPreferences ->
-                    currentPreferences.toBuilder()
-                        .action()
-                        .build()
+                    currentPreferences.copy {
+                        action()
+                    }
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Failed to update user preferences", e)

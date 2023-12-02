@@ -21,7 +21,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun RequiredServicesDialog(
     modifier: Modifier = Modifier,
     requiredServices: ImmutableSet<MusicService>,
-    onRequiredServicesChanged: (ImmutableSet<MusicService>) -> Unit,
+    onRequiredServicesChanged: (Set<MusicService>) -> Unit,
     onDismissClick: () -> Unit
 ) {
     AlertDialog(
@@ -51,7 +51,7 @@ internal fun RequiredServicesDialog(
                             checked = requiredServices.contains(service),
                             onCheckedChange = { checked ->
                                 onRequiredServicesChanged(
-                                    requiredServices.apply {
+                                    requiredServices.run {
                                         if (checked) plus(service) else minus(service)
                                     }
                                 )

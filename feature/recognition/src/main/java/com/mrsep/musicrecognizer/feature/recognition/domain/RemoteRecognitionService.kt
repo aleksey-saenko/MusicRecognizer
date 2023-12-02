@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 

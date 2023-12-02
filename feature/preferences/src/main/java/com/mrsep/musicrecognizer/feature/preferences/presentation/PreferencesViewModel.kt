@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
@@ -43,9 +44,9 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setRequiredServices(requiredServices: UserPreferences.RequiredServices) {
+    fun setRequiredMusicServices(services: Set<MusicService>) {
         viewModelScope.launch {
-            preferencesRepository.setRequiredServices(requiredServices)
+            preferencesRepository.setRequiredMusicServices(services)
         }
     }
 

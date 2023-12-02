@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audile</string>
     <string name="tap_to_recognize">Klepnutím rozpoznáte</string>
     <string name="tap_to_recognize_the_song">Klepnutím rozpoznáte skladbu</string>
     <string name="recognize">Rozpoznať</string>
@@ -124,8 +123,6 @@
     <string name="notifications">Upozornenia</string>
     <string name="music_services_links">Odkazy na hudobné služby</string>
     <string name="required_services_dialog">Vyberte hudobné služby, pre ktoré chcete zobraziť webové odkazy (ak sú k dispozícii):</string>
-<!--    <string name="dynamic_colors_pref_title">Použiť dynamické farby</string>-->
-<!--    <string name="artwork_colors_pref_title">Prispôsobiť tému farbám obrázku</string>-->
     <string name="vibration_feedback">Vibrovanie</string>
     <string name="vibration_feedback_dialog_title">Vibrovanie</string>
     <string name="vibration_feedback_dialog_message">Prispôsobiť odozvu vibrácií pre určité akcie v aplikácii:</string>

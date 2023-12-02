@@ -12,7 +12,7 @@ interface PreferencesRepository {
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setArtworkBasedThemeEnabled(value: Boolean)
     suspend fun setDeveloperModeEnabled(value: Boolean)
-    suspend fun setRequiredServices(requiredServices: UserPreferences.RequiredServices)
+    suspend fun setRequiredMusicServices(services: Set<MusicService>)
     suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
     suspend fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback)
     suspend fun setUseColumnForLibrary(value: Boolean)

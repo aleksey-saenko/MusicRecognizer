@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audile</string>
+    <string name="app_name" translatable="false">Audile</string>
     <string name="tap_to_recognize">Tap to recognize</string>
     <string name="tap_to_recognize_the_song">Tap to recognize the song</string>
     <string name="recognize">Recognize</string>
@@ -30,14 +30,26 @@
     <string name="final_onboarding_page_title">We are ready to go</string>
     <string name="final_onboarding_page_message">Setup completed successfully</string>
     <string name="get_started">Get started</string>
+
     <string name="odesli" translatable="false">Odesli</string>
-    <string name="spotify" translatable="false">Spotify</string>
+    <string name="amazon_music" translatable="false">Amazon Music</string>
+    <string name="anghami" translatable="false">Anghami</string>
     <string name="apple_music" translatable="false">Apple Music</string>
+    <string name="audiomack" translatable="false">Audiomack</string>
+    <string name="audius" translatable="false">Audius</string>
+    <string name="boomplay" translatable="false">Boomplay</string>
     <string name="deezer" translatable="false">Deezer</string>
-    <string name="napster" translatable="false">Napster</string>
     <string name="musicbrainz" translatable="false">MusicBrainz</string>
-    <string name="youtube" translatable="false">Youtube</string>
+    <string name="napster" translatable="false">Napster</string>
+    <string name="pandora" translatable="false">Pandora</string>
     <string name="soundcloud" translatable="false">SoundCloud</string>
+    <string name="spotify" translatable="false">Spotify</string>
+    <string name="tidal" translatable="false">Tidal</string>
+    <string name="yandex_music" translatable="false">Yandex Music</string>
+    <string name="youtube" translatable="false">YouTube</string>
+    <string name="youtubeMusic" translatable="false">YouTube Music</string>
+
+    <string name="format_more_services">", and %d more"</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="none">None</string>

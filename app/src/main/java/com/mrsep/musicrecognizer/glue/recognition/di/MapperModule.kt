@@ -8,12 +8,14 @@ import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.recognition.mapper.*
@@ -38,8 +40,8 @@ interface MapperModule {
             Mapper<RemoteRecognitionResultDo, RemoteRecognitionResult>
 
     @Binds
-    fun bindRequiredServicesMapper(implementation: RequiredServicesMapper):
-            BidirectionalMapper<UserPreferencesDo.RequiredServicesDo, UserPreferences.RequiredServices>
+    fun bindMusicServiceMapper(implementation: MusicServiceMapper):
+            Mapper<MusicServiceDo, MusicService>
 
     @Binds
     fun bindAudioRecordingMapper(implementation: AudioRecordingMapper):
@@ -55,6 +57,6 @@ interface MapperModule {
 
     @Binds
     fun bindEnqueuedRecognitionMapper(implementation: EnqueuedRecognitionMapper):
-    BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition>
+            BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition>
 
 }

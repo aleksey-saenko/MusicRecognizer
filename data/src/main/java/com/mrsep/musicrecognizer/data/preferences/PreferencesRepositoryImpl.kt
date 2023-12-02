@@ -2,11 +2,13 @@ package com.mrsep.musicrecognizer.data.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +23,7 @@ private const val TAG = "PreferencesRepositoryImpl"
 class PreferencesRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<UserPreferencesProto>,
     private val preferencesMapper: BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>,
-    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
+    private val musicServiceMapper: BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>,
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
@@ -56,9 +58,12 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { setArtworkBasedThemeEnabled(value) }
     }
 
-    override suspend fun setRequiredServices(value: RequiredServicesDo) {
+    override suspend fun setRequiredMusicServices(value: Set<MusicServiceDo>) {
         safeWriter {
-            setRequiredServices(requiredServicesMapper.reverseMap(value))
+            clearRequiredMusicServices()
+            addAllRequiredMusicServices(
+                value.map { serviceDo -> musicServiceMapper.reverseMap(serviceDo) }
+            )
         }
     }
 

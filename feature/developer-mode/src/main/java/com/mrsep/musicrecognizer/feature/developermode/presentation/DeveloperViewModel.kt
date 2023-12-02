@@ -8,7 +8,6 @@ import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.player.MediaPlayerController
 import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
@@ -34,6 +33,8 @@ internal class DeveloperViewModel @Inject constructor(
     private val amplitudeSource: SoundAmplitudeSourceDo,
     private val encoder: AacEncoder,
     private val playerController: MediaPlayerController,
+//    private val trackLinkFetcher: TrackLinksFetcherImpl,
+//    private val trackLinkFetcherPure: TrackLinksFetcherPureImpl,
 ) : ViewModel() {
 
     private var counter = MutableStateFlow(0)
@@ -63,15 +64,6 @@ internal class DeveloperViewModel @Inject constructor(
         viewModelScope.launch {
             val result = recognitionServiceDo.recognize(
                 token = "",
-                requiredServices = UserPreferencesDo.RequiredServicesDo(
-                    spotify = true,
-                    youtube = false,
-                    soundCloud = false,
-                    appleMusic = false,
-                    deezer = false,
-                    napster = false,
-                    musicbrainz = false
-                ),
                 file = File("${appContext.filesDir.absolutePath}/testAudioChain")
             )
             println(result)
@@ -125,6 +117,33 @@ internal class DeveloperViewModel @Inject constructor(
     fun stopPlayer() {
         playerController.stop()
     }
+
+//    // **************************
+//
+//    val trackLinksResult = MutableStateFlow<String?>(null)
+//
+//    fun fetchTrackLinks(queryUrl: String) {
+//        viewModelScope.launch {
+//            trackLinksResult.update { "busy" }
+//            trackLinksResult.update {
+//                val response = trackLinkFetcher.fetchByUrl(queryUrl, "")
+//                response.toString()
+//            }
+//        }
+//    }
+//
+//    //spotify%3Atrack%3A0Jcij1eWd5bDMU5iPbxe2i
+//    fun fetchTrackLinksPure(queryUrl: String) {
+//        viewModelScope.launch {
+//            trackLinksResult.update { "busy" }
+//            trackLinksResult.update {
+//                val response = trackLinkFetcherPure.fetchByUrl(queryUrl, "")
+//                response.toString()
+//            }
+//        }
+//    }
+//
+//    fun resetFetchResult() = trackLinksResult.update { null }
 
 }
 

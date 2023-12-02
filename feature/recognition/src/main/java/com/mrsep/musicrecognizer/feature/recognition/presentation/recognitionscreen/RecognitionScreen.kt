@@ -22,11 +22,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.mrsep.musicrecognizer.core.ui.BuildConfig
 import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionBlockedDialog
 import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
+import com.mrsep.musicrecognizer.feature.recognition.BuildConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult

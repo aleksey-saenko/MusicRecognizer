@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -25,7 +27,7 @@ internal fun ShareBottomSheet(
     album: String?,
     year: String?,
     lyrics: String?,
-    serviceLinks: ImmutableList<ServiceLink>,
+    trackLinks: ImmutableList<TrackLink>,
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     onShareClick: (String) -> Unit,
@@ -42,8 +44,8 @@ internal fun ShareBottomSheet(
         var artistSelected by rememberSaveable(artist) { mutableStateOf(true) }
         var albumSelected by rememberSaveable(album) { mutableStateOf(false) }
         var yearSelected by rememberSaveable(year) { mutableStateOf(false) }
-        var selectedMusicServices by rememberSaveable(serviceLinks) {
-            mutableStateOf(listOf<MusicService>())
+        var selectedMusicServices by rememberSaveable(trackLinks) {
+            mutableStateOf(setOf<MusicService>())
         }
         var lyricsSelected by rememberSaveable(year) { mutableStateOf(false) }
 
@@ -53,8 +55,8 @@ internal fun ShareBottomSheet(
             if (albumSelected) if (isNotBlank()) append(" - $album") else append(album)
             if (yearSelected) if (isNotBlank()) append(" ($year)") else append(year)
             if (lyricsSelected) if (isNotEmpty()) append("\n\n$lyrics") else append(lyrics)
-            serviceLinks
-                .filter { selectedMusicServices.contains(it.type) }
+            trackLinks
+                .filter { selectedMusicServices.contains(it.service) }
                 .joinToString("\n") { it.url }
                 .takeIf { serviceUrls -> serviceUrls.isNotBlank() }?.let { serviceUrls ->
                     if (isNotEmpty()) append("\n\n$serviceUrls") else append(serviceUrls)
@@ -118,7 +120,7 @@ internal fun ShareBottomSheet(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    serviceLinks.forEach { (serviceType, _) ->
+                    trackLinks.forEach { (_, serviceType) ->
                         val selected = selectedMusicServices.contains(serviceType)
                         FilterChip(
                             selected = selected,

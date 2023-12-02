@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
 
 private enum class DismissState { NoAction, Dismissed }
@@ -38,7 +39,7 @@ internal fun TrackSection(
     artist: String,
     albumAndYear: String?,
     artworkUrl: String?,
-    links: ImmutableList<ServiceLink>,
+    trackLinks: ImmutableList<TrackLink>,
     isExpandedScreen: Boolean,
     onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
@@ -112,7 +113,7 @@ internal fun TrackSection(
                             .fillMaxWidth()
                     )
                     ServicesChipsLazyRow(
-                        links = links,
+                        trackLinks = trackLinks,
                         showOnlyIcons = false,
                         contentPadding = PaddingValues(horizontal = 16.dp),
                         modifier = Modifier
@@ -150,7 +151,7 @@ internal fun TrackSection(
                         .padding(top = 24.dp)
                 )
                 ServicesChipsLazyRow(
-                    links = links,
+                    trackLinks = trackLinks,
                     showOnlyIcons = false,
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier

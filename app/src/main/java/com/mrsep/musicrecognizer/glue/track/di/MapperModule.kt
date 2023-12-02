@@ -4,7 +4,9 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
@@ -22,6 +24,10 @@ interface MapperModule {
     @Binds
     fun bindPreferencesMapper(implementation: PreferencesMapper):
             Mapper<UserPreferencesDo, UserPreferences>
+
+    @Binds
+    fun bindMusicServiceMapper(implementation: MusicServiceMapper):
+            Mapper<MusicServiceDo, MusicService>
 
     @Binds
     fun bindLyricsFontStyleMapper(implementation: LyricsFontStyleMapper):

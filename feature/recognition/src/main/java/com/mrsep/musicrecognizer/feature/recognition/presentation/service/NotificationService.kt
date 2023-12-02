@@ -230,7 +230,7 @@ class NotificationService : Service() {
                         resultNotificationBuilder()
                             .setContentTitle(status.result.track.title)
                             .setContentText(status.result.track.artistWithAlbumFormatted())
-                            .addOptionalBigPicture(status.result.track.links.artwork)
+                            .addOptionalBigPicture(status.result.track.artworkUrl)
                             .addTrackDeepLinkIntent(status.result.track.mbId)
                             .addOptionalShowLyricsButton(status.result.track)
                             .addShareButton(status.result.track.getSharedBody())

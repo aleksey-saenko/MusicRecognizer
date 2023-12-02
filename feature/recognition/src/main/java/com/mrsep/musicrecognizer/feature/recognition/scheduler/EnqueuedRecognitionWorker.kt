@@ -49,7 +49,6 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
 
             val result = remoteRecognitionService.recognize(
                 token = userPreferences.apiToken,
-                requiredServices = userPreferences.requiredServices,
                 file = enqueued.recordFile
             )
             when (result) {

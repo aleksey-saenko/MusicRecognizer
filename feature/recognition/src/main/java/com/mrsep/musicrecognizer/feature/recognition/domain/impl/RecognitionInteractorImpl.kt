@@ -76,7 +76,6 @@ internal class RecognitionInteractorImpl @Inject constructor(
             val remoteResult = async {
                 recognitionService.recognize(
                     token = userPreferences.apiToken,
-                    requiredServices = userPreferences.requiredServices,
                     audioRecordingFlow = recordingChannel.receiveAsFlow()
                 )
             }

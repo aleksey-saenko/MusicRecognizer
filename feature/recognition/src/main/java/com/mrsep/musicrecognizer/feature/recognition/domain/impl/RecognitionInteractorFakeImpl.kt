@@ -5,11 +5,13 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepositor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.TrackLink
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -40,11 +42,8 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(1_000)
-            resultDelegator.notify(RecognitionStatus.Recognizing(true))
-            delay(1_000)
+            delay(4000)
             notifySuccess()
-//            notifyNoMatches(RecognitionTask.Created(123, false))
 //            testAllDoneStatuses()
 //            notifyUnhandledError(RecognitionTask.Created(123, false))
 //            notifyBadConnectionError(RecognitionTask.Created(123, false))
@@ -52,14 +51,15 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     }
 
     override fun launchOfflineRecognition(scope: CoroutineScope) {
-        if (recognitionJob?.isCompleted == false) return
-        recognitionJob = scope.launch {
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(1_000)
-            resultDelegator.notify(RecognitionStatus.Recognizing(true))
-            delay(1_000)
-            notifySuccess()
-        }.setCancellationHandler()
+        launchRecognition(scope)
+//        if (recognitionJob?.isCompleted == false) return
+//        recognitionJob = scope.launch {
+//            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+//            delay(1_000)
+//            resultDelegator.notify(RecognitionStatus.Recognizing(true))
+//            delay(1_000)
+//            notifySuccess()
+//        }.setCancellationHandler()
     }
 
     override fun cancelAndResetStatus() {
@@ -74,21 +74,13 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private suspend fun notifySuccess() {
         val fakeTrack = Track(
             mbId = UUID.randomUUID().toString(),
-            title = "Echoes",
+            title = "Echoes", //#${kotlin.random.Random.nextInt()}
             artist = "Pink Floyd",
             album = "Meddle",
             releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
             lyrics = "lyrics stub",
-            links = Track.Links(
-                artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-                spotify = null,
-                youtube = null,
-                soundCloud = null,
-                appleMusic = null,
-                musicBrainz = null,
-                deezer = null,
-                napster = null
-            ),
+            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
+            trackLinks = MusicService.entries.map { service -> TrackLink("", service) },
             metadata = Track.Metadata(
                 lastRecognitionDate = Instant.now(),
                 isFavorite = false,

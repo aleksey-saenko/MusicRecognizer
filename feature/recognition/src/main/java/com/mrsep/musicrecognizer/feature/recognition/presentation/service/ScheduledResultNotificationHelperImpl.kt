@@ -68,7 +68,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
             .setCategory(Notification.CATEGORY_MESSAGE)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
-            .addOptionalBigPicture(track.links.artwork)
+            .addOptionalBigPicture(track.artworkUrl)
             .addTrackDeepLinkIntent(track.mbId)
             .addShowLyricsButton(track)
             .addShareButton(track.getSharedBody())

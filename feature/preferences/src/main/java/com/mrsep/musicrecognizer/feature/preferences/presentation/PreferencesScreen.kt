@@ -17,10 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableSet
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,16 +137,19 @@ internal fun PreferencesScreen(
                             )
                         }
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
+                        val requiredMusicServices = uiState.preferences.requiredMusicServices
+                            .toImmutableSet()
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.music_services_links),
-                            subtitle = uiState.preferences.requiredServices.getNames(),
+                            subtitle = requiredMusicServices.getEnumerationForSubtitle(limit = 3),
                             onItemClick = { showServicesDialog = true },
                             modifier = Modifier.padding(top = 12.dp)
                         )
                         if (showServicesDialog) {
                             RequiredServicesDialog(
-                                requiredServices = uiState.preferences.requiredServices,
-                                onRequiredServicesChanged = viewModel::setRequiredServices,
+                                modifier = Modifier.fillMaxHeight(0.8f),
+                                requiredServices = requiredMusicServices,
+                                onRequiredServicesChanged = viewModel::setRequiredMusicServices,
                                 onDismissClick = { showServicesDialog = false }
                             )
                         }
@@ -195,16 +200,11 @@ internal fun PreferencesScreen(
     }
 }
 
+@Stable
 @Composable
-private fun UserPreferences.RequiredServices.getNames() =
-    listOf(
-        stringResource(StringsR.string.spotify) to spotify,
-        stringResource(StringsR.string.youtube) to youtube,
-        stringResource(StringsR.string.soundcloud) to soundCloud,
-        stringResource(StringsR.string.apple_music) to appleMusic,
-        stringResource(StringsR.string.deezer) to deezer,
-        stringResource(StringsR.string.napster) to napster,
-        stringResource(StringsR.string.musicbrainz) to musicbrainz
-    ).filter { it.second }
-        .joinToString(", ") { it.first }
-        .ifEmpty { stringResource(StringsR.string.none) }
+private fun ImmutableSet<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
+    0 -> stringResource(StringsR.string.none)
+    in 1..limit -> map { service -> service.getTitle() }.joinToString(", ")
+    else -> take(3).map { service -> service.getTitle() }.joinToString(", ")
+        .plus(stringResource(StringsR.string.format_more_services, size - limit))
+}

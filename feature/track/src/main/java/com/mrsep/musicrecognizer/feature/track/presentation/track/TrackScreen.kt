@@ -18,7 +18,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
-import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
@@ -93,7 +92,7 @@ internal fun TrackScreen(
                         album = uiState.album,
                         year = uiState.year,
                         lyrics = uiState.lyrics,
-                        serviceLinks = uiState.links,
+                        trackLinks = uiState.requiredLinks,
                         sheetState = shareSheetState,
                         onDismissRequest = { hideShareSheet() },
                         onCopyClick = { textToCopy ->
@@ -140,7 +139,6 @@ internal fun TrackScreen(
                             onShareClick = { shareSheetActive = !shareSheetActive },
                             onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
-                            onOpenOdesliClick = { context.openUrlImplicitly(uiState.odesliLink) },
                             topAppBarScrollBehavior = topBarBehaviour
                         )
                         TrackSection(
@@ -148,7 +146,7 @@ internal fun TrackScreen(
                             artist = uiState.artist,
                             albumAndYear = uiState.run { year?.let { "$album - $year" } ?: album },
                             artworkUrl = uiState.artworkUrl,
-                            links = uiState.links,
+                            trackLinks = uiState.requiredLinks,
                             isExpandedScreen = isExpandedScreen,
                             onArtworkCached = { artworkUri = it },
                             createSeedColor = uiState.artworkBasedThemeEnabled,

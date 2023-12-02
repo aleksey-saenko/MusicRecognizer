@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.preferences
 
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import kotlinx.coroutines.flow.Flow
 
 interface PreferencesRepositoryDo {
@@ -11,7 +12,7 @@ interface PreferencesRepositoryDo {
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setArtworkBasedThemeEnabled(value: Boolean)
-    suspend fun setRequiredServices(value: UserPreferencesDo.RequiredServicesDo)
+    suspend fun setRequiredMusicServices(value: Set<MusicServiceDo>)
     suspend fun setDeveloperModeEnabled(value: Boolean)
     suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo)
     suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)

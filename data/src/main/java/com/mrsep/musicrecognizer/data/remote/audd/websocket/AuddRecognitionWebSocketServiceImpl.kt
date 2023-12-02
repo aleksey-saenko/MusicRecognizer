@@ -1,8 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.audd.websocket
 
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
-import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import kotlinx.coroutines.channels.awaitClose
@@ -24,38 +22,29 @@ import javax.inject.Inject
 private const val TAG = "AuddRecognitionWebSocketServiceImpl"
 
 private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
+private const val AUDD_RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
 
 class AuddRecognitionWebSocketServiceImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val moshi: Moshi
 ) : AuddRecognitionWebSocketService {
 
-    private fun buildRequest(
-        token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo
-    ): Request {
-        val returnParam = requiredServices.toAuddReturnParameter()
+    private fun buildRequest(token: String): Request {
         return Request.Builder()
-            .url(AUDD_WEB_SOCKET_URL.format(returnParam, token))
+            .url(AUDD_WEB_SOCKET_URL.format(AUDD_RETURN_PARAM, token))
             .build()
     }
 
-    override suspend fun startSession(
-        token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo
-    ): Flow<SocketEvent> = flow {
+    override suspend fun startSession(token: String): Flow<SocketEvent> = flow {
         var reconnectionDelay = 1000L
         while (true) {
-            emitAll(startSingleSession(token, requiredServices))
+            emitAll(startSingleSession(token))
             delay(reconnectionDelay)
             if (reconnectionDelay < 4000L) reconnectionDelay *= 2
         }
     }
 
-    private suspend fun startSingleSession(
-        token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo
-    ): Flow<SocketEvent> = callbackFlow {
+    private suspend fun startSingleSession(token: String): Flow<SocketEvent> = callbackFlow {
         val eventsListener = object : WebSocketListener() {
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 trySendBlocking(SocketEvent.ConnectionClosed(ShutdownReason(code, reason)))
@@ -75,7 +64,7 @@ class AuddRecognitionWebSocketServiceImpl @Inject constructor(
                 trySendBlocking(SocketEvent.ConnectionOpened(webSocket))
             }
         }
-        val request = buildRequest(token, requiredServices)
+        val request = buildRequest(token)
         val webSocket = okHttpClient.newWebSocket(
             request,
             eventsListener

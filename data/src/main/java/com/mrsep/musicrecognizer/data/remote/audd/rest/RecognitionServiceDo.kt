@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.data.remote.audd.rest
 
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.TokenValidationStatusDo
 import java.io.File
@@ -10,19 +9,16 @@ interface RecognitionServiceDo {
 
     suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         file: File
     ): RemoteRecognitionResultDo
 
     suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         byteArray: ByteArray
     ): RemoteRecognitionResultDo
 
     suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         url: URL
     ): RemoteRecognitionResultDo
 

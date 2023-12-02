@@ -9,13 +9,11 @@ interface RemoteRecognitionService {
 
     suspend fun recognize(
         token: String,
-        requiredServices: UserPreferences.RequiredServices,
         audioRecordingFlow: Flow<ByteArray>
     ): RemoteRecognitionResult
 
     suspend fun recognize(
         token: String,
-        requiredServices: UserPreferences.RequiredServices,
         file: File
     ): RemoteRecognitionResult
 

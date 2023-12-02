@@ -6,14 +6,16 @@ import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
+import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
-import com.mrsep.musicrecognizer.glue.preferences.mapper.RequiredServicesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackPolicyMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.HapticFeedbackMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.MusicServiceMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.ThemeModeMapper
 import dagger.Binds
 import dagger.Module
@@ -30,8 +32,8 @@ interface MapperModule {
             Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
-    fun bindRequiredServicesMapper(implementation: RequiredServicesMapper):
-            BidirectionalMapper<RequiredServicesDo, UserPreferences.RequiredServices>
+    fun bindMusicServiceMapper(implementation: MusicServiceMapper):
+            BidirectionalMapper<MusicServiceDo, MusicService>
 
     @Binds
     fun bindFallbackActionMapper(implementation: FallbackActionMapper):

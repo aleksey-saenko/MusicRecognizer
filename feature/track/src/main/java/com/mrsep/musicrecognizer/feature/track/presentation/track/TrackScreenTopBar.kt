@@ -41,7 +41,6 @@ internal fun TrackScreenTopBar(
     onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onShowDetailsClick: () -> Unit,
-    onOpenOdesliClick: () -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -95,26 +94,6 @@ internal fun TrackScreenTopBar(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false }
                     ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(
-                                        StringsR.string.format_open_website_or_app,
-                                        stringResource(StringsR.string.odesli)
-                                    )
-                                )
-                            },
-                            onClick = {
-                                menuExpanded = false
-                                onOpenOdesliClick()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_travel_explore_24),
-                                    contentDescription = null
-                                )
-                            }
-                        )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(StringsR.string.show_more)) },
                             onClick = {

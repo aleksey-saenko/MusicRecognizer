@@ -5,24 +5,27 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
+import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
+import com.mrsep.musicrecognizer.data.preferences.RequiredMusicServicesMigration
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
 import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMapper
-import com.mrsep.musicrecognizer.data.preferences.mappers.RequiredServicesDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackPolicyDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.HapticFeedbackDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.MusicServiceDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.ThemeModeDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.TrackFilterDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.UserPreferencesDoMapper
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -51,6 +54,9 @@ class PreferencesModule {
             corruptionHandler = ReplaceFileCorruptionHandler(
                 produceNewData = { UserPreferencesProto.getDefaultInstance() }
             ),
+            migrations = listOf(
+                RequiredMusicServicesMigration,
+            ),
             scope = CoroutineScope(appScope.coroutineContext + ioDispatcher),
             produceFile = { appContext.dataStoreFile(USER_PREFERENCES_STORE) }
         )
@@ -68,8 +74,8 @@ interface PreferencesMappersModule {
             BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>
 
     @Binds
-    fun bindRequiredServicesDoMapper(implementation: RequiredServicesDoMapper):
-            BidirectionalMapper<UserPreferencesProto.RequiredServicesProto, UserPreferencesDo.RequiredServicesDo>
+    fun bindMusicServiceDoMapper(implementation: MusicServiceDoMapper):
+            BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>
 
     @Binds
     fun bindFallbackActionDoMapper(implementation: FallbackActionDoMapper):

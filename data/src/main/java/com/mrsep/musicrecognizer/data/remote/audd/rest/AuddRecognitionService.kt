@@ -1,10 +1,8 @@
 package com.mrsep.musicrecognizer.data.remote.audd.rest
 
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.TokenValidationStatusDo
-import com.mrsep.musicrecognizer.data.remote.audd.toAuddReturnParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -22,6 +20,8 @@ import javax.inject.Inject
 private const val mediaTypeString = "audio/mpeg; charset=utf-8"
 private const val AUDIO_SAMPLE_URL = "https://audd.tech/example.mp3"
 
+private const val AUDD_RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
+
 class AuddRecognitionService @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     retrofit: Retrofit,
@@ -30,13 +30,11 @@ class AuddRecognitionService @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         file: File
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
-            baseCallFunction(
+            baseCall(
                 token = token,
-                requiredServices = requiredServices,
                 dataBodyPart = { addFileAsMultipartBody(file) }
             )
         }
@@ -44,13 +42,11 @@ class AuddRecognitionService @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         byteArray: ByteArray
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
-            baseCallFunction(
+            baseCall(
                 token = token,
-                requiredServices = requiredServices,
                 dataBodyPart = { addByteArrayAsMultipartBody(byteArray) }
             )
         }
@@ -58,13 +54,11 @@ class AuddRecognitionService @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         url: URL
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
-            baseCallFunction(
+            baseCall(
                 token = token,
-                requiredServices = requiredServices,
                 dataBodyPart = { addUrlAsMultipartBody(url) }
             )
         }
@@ -94,14 +88,14 @@ class AuddRecognitionService @Inject constructor(
         )
     }
 
-    private suspend fun baseCallFunction(
+    private suspend fun baseCall(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
+        returnParam: String = AUDD_RETURN_PARAM,
         dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
     ): RemoteRecognitionResultDo {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("api_token", token)
-            .addFormDataPart("return", requiredServices.toAuddReturnParameter())
+            .addFormDataPart("return", returnParam)
             .dataBodyPart()
             .build()
         return try {
@@ -122,19 +116,13 @@ class AuddRecognitionService @Inject constructor(
         if (token.isBlank()) return TokenValidationStatusDo.Error(
             RemoteRecognitionResultDo.Error.WrongToken(false)
         )
-        val sampleUrlRecognitionResult = recognize(
-            token = token,
-            requiredServices = UserPreferencesDo.RequiredServicesDo(
-                spotify = true,
-                youtube = false,
-                soundCloud = false,
-                appleMusic = false,
-                deezer = false,
-                napster = false,
-                musicbrainz = false
-            ),
-            url = URL(AUDIO_SAMPLE_URL)
-        )
+        val sampleUrlRecognitionResult = withContext(ioDispatcher) {
+            baseCall(
+                token = token,
+                returnParam = "",
+                dataBodyPart = { addUrlAsMultipartBody(URL(AUDIO_SAMPLE_URL)) }
+            )
+        }
         return when (sampleUrlRecognitionResult) {
             is RemoteRecognitionResultDo.Error ->
                 TokenValidationStatusDo.Error(sampleUrlRecognitionResult)

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "music_service_proto.proto";
+
 option java_package = "com.mrsep.musicrecognizer";
 option java_multiple_files = true;
 
@@ -8,7 +10,7 @@ message UserPreferencesProto {
   bool onboarding_completed = 1;
   string api_token = 2;
 
-  message RequiredServicesProto {
+  message DeprecatedRequiredServicesProto {
     bool spotify = 3;
     bool youtube = 4;
     bool soundcloud = 5;
@@ -18,7 +20,7 @@ message UserPreferencesProto {
     bool musicbrainz = 9;
   }
 
-  RequiredServicesProto required_services = 10;
+  DeprecatedRequiredServicesProto deprecated_required_services = 10;
 
   bool notification_service_enabled = 11;
   bool dynamic_colors_enabled = 12;
@@ -100,6 +102,9 @@ message UserPreferencesProto {
   ThemeModeProto theme_mode = 33;
   bool use_pure_black_for_dark_theme = 34;
 
-  // NEXT AVAILABLE ID: 35
+  repeated MusicServiceProto required_music_services = 35;
+  bool has_done_required_music_services_migration = 36;
+
+  // NEXT AVAILABLE ID: 37
 
 }

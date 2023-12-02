@@ -1,16 +1,18 @@
 package com.mrsep.musicrecognizer.data.preferences.mappers
 
+import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import javax.inject.Inject
 
 class UserPreferencesDoMapper @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
-    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesProto, RequiredServicesDo>,
+    private val musicServiceMapper: BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
@@ -21,7 +23,9 @@ class UserPreferencesDoMapper @Inject constructor(
         return newBuilder()
             .setOnboardingCompleted(input.onboardingCompleted)
             .setApiToken(input.apiToken)
-            .setRequiredServices(requiredServicesMapper.reverseMap(input.requiredServices))
+            .addAllRequiredMusicServices(
+                input.requiredMusicServices.map(musicServiceMapper::reverseMap)
+            )
             .setNotificationServiceEnabled(input.notificationServiceEnabled)
             .setDynamicColorsEnabled(input.dynamicColorsEnabled)
             .setArtworkBasedThemeEnabled(input.artworkBasedThemeEnabled)
@@ -44,14 +48,16 @@ class UserPreferencesDoMapper @Inject constructor(
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             developerModeEnabled = input.developerModeEnabled,
-            requiredServices = requiredServicesMapper.map(input.requiredServices),
+            requiredMusicServices = input.requiredMusicServicesList
+                .mapNotNull { serviceProto -> musicServiceMapper.map(serviceProto) }
+                .toSet(),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
             useColumnForLibrary = input.useColumnForLibrary,
             themeMode = themeModeMapper.map(input.themeMode),
-            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
         )
     }
 

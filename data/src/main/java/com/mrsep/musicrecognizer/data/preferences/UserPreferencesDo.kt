@@ -1,9 +1,11 @@
 package com.mrsep.musicrecognizer.data.preferences
 
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
+
 data class UserPreferencesDo(
     val onboardingCompleted: Boolean,
     val apiToken: String,
-    val requiredServices: RequiredServicesDo,
+    val requiredMusicServices: Set<MusicServiceDo>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,
@@ -16,16 +18,6 @@ data class UserPreferencesDo(
     val themeMode: ThemeModeDo,
     val usePureBlackForDarkTheme: Boolean,
 ) {
-
-    data class RequiredServicesDo(
-        val spotify: Boolean,
-        val youtube: Boolean,
-        val soundCloud: Boolean,
-        val appleMusic: Boolean,
-        val deezer: Boolean,
-        val napster: Boolean,
-        val musicbrainz: Boolean
-    )
 
     data class FallbackPolicyDo(
         val noMatches: FallbackActionDo,

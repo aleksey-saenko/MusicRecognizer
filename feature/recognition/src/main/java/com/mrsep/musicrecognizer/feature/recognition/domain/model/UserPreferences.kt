@@ -3,23 +3,13 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.model
 data class UserPreferences(
     val onboardingCompleted: Boolean,
     val apiToken: String,
-    val requiredServices: RequiredServices,
+    val requiredMusicServices: Set<MusicService>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback
 ) {
-
-    data class RequiredServices(
-        val spotify: Boolean,
-        val youtube: Boolean,
-        val soundCloud: Boolean,
-        val appleMusic: Boolean,
-        val deezer: Boolean,
-        val napster: Boolean,
-        val musicbrainz: Boolean
-    )
 
     data class FallbackPolicy(
         val noMatches: FallbackAction,

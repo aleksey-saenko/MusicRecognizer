@@ -5,27 +5,24 @@ import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
+import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences.*
 import javax.inject.Inject
 
 class PreferencesMapper @Inject constructor(
+    private val musicServiceMapper: Mapper<MusicServiceDo, MusicService>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleDo, LyricsFontStyle>,
     private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
 ) : Mapper<UserPreferencesDo, UserPreferences> {
 
     override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
-            requiredServices = RequiredServices(
-                spotify = input.requiredServices.spotify,
-                youtube = input.requiredServices.youtube,
-                soundCloud = input.requiredServices.soundCloud,
-                appleMusic = input.requiredServices.appleMusic,
-                deezer = input.requiredServices.deezer,
-                napster = input.requiredServices.napster,
-                musicbrainz = input.requiredServices.musicbrainz
-            ),
+            requiredMusicServices = input.requiredMusicServices
+                .map(musicServiceMapper::map)
+                .toSet(),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             themeMode = themeModeMapper.map(input.themeMode)

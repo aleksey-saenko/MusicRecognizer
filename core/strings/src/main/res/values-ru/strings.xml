@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audile</string>
     <string name="tap_to_recognize">Нажмите, чтобы распознать</string>
     <string name="tap_to_recognize_the_song">Нажмите, чтобы распознать песню</string>
     <string name="recognize">Распознать</string>
@@ -28,6 +27,7 @@
     <string name="final_onboarding_page_title">Все готово!</string>
     <string name="final_onboarding_page_message">Настройка успешно завершена</string>
     <string name="get_started">Начать</string>
+    <string name="format_more_services">" и ещё %d"</string>
     <string name="apply">Применить</string>
     <string name="cancel">Отмена</string>
     <string name="none">Ни один</string>

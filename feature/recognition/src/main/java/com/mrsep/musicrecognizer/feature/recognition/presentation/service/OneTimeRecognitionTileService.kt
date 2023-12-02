@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.service
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
@@ -43,6 +44,7 @@ internal class OneTimeRecognitionTileService : TileService() {
     }
 
 
+    @SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         super.onClick()
         if (areRequiredPermissionsGranted()) {

@@ -6,6 +6,8 @@ import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.track.MusicServiceDo
+import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class AdapterPreferencesRepository @Inject constructor(
     private val preferencesRepositoryDo: PreferencesRepositoryDo,
     private val preferencesMapper: Mapper<UserPreferencesDo, UserPreferences>,
-    private val requiredServicesMapper: BidirectionalMapper<RequiredServicesDo, RequiredServices>,
+    private val musicServiceMapper: BidirectionalMapper<MusicServiceDo, MusicService>,
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>,
     private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
@@ -51,9 +53,9 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setDeveloperModeEnabled(value)
     }
 
-    override suspend fun setRequiredServices(requiredServices: RequiredServices) {
-        preferencesRepositoryDo.setRequiredServices(
-            requiredServicesMapper.reverseMap(requiredServices)
+    override suspend fun setRequiredMusicServices(services: Set<MusicService>) {
+        preferencesRepositoryDo.setRequiredMusicServices(
+            services.map(musicServiceMapper::reverseMap).toSet()
         )
     }
 

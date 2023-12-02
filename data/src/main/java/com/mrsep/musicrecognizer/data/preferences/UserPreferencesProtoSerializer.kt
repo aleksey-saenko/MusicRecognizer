@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.preferences
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
+import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.data.BuildConfig
 import java.io.InputStream
@@ -12,19 +13,20 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
 
     override val defaultValue: UserPreferencesProto
         get() = UserPreferencesProto.newBuilder()
-            .setRequiredServices(
-                UserPreferencesProto.RequiredServicesProto.newBuilder()
-                    .setSpotify(true)
-                    .setYoutube(true)
-                    .setSoundcloud(true)
-                    .setAppleMusic(true)
-                    .setDeezer(true)
-                    .setMusicbrainz(true)
-                    .setNapster(true)
-                    .build()
-            )
-            .setApiToken(BuildConfig.AUDD_TOKEN)
             .setOnboardingCompleted(false)
+            .setApiToken(BuildConfig.AUDD_TOKEN)
+            .addAllRequiredMusicServices(
+                // add default audd services
+                listOf(
+                    MusicServiceProto.Spotify,
+                    MusicServiceProto.Youtube,
+                    MusicServiceProto.Soundcloud,
+                    MusicServiceProto.AppleMusic,
+                    MusicServiceProto.Deezer,
+                    MusicServiceProto.MusicBrainz,
+                    MusicServiceProto.Napster,
+                )
+            )
             .setDynamicColorsEnabled(true)
             .setArtworkBasedThemeEnabled(false)
             .setUseColumnForLibrary(false)
@@ -60,6 +62,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             )
             .setThemeMode(UserPreferencesProto.ThemeModeProto.FOLLOW_SYSTEM)
             .setUsePureBlackForDarkTheme(false)
+            .setHasDoneRequiredMusicServicesMigration(true)
             .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
@@ -13,7 +14,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -89,13 +89,12 @@ internal sealed class TrackUiState {
         val year: String?,
         val lyrics: String?,
         val artworkUrl: String?,
+        val requiredLinks: ImmutableList<TrackLink>,
         val isFavorite: Boolean,
         val lastRecognitionDate: String,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
-        val odesliLink: String,
-        val links: ImmutableList<ServiceLink>
     ) : TrackUiState()
 
 }
@@ -108,50 +107,17 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
         album = this.album,
         year = this.releaseDate?.year?.toString(),
         lyrics = this.lyrics,
-        artworkUrl = this.links.artwork,
+        artworkUrl = this.artworkUrl,
         isFavorite = this.metadata.isFavorite,
         lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
         themeSeedColor = this.metadata.themeSeedColor,
         themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-        odesliLink = this.createOdesliLink(),
-        links = this.links.toUiList(preferences.requiredServices),
+        requiredLinks = this.trackLinks
+            .filter { trackLink -> preferences.requiredMusicServices.contains(trackLink.service) }
+            .toImmutableList(),
     )
 }
 
 private fun Instant.format(style: FormatStyle) = this.atZone(ZoneId.systemDefault())
     .format(DateTimeFormatter.ofLocalizedDateTime(style))
-
-internal enum class MusicService {
-    Spotify,
-    Youtube,
-    SoundCloud,
-    AppleMusic,
-    MusicBrainz,
-    Deezer,
-    Napster
-}
-
-@Immutable
-internal data class ServiceLink(
-    val type: MusicService,
-    val url: String
-)
-
-private fun Track.Links.toUiList(required: UserPreferences.RequiredServices): ImmutableList<ServiceLink> {
-    val list = mutableListOf<ServiceLink>()
-    if (required.spotify) spotify?.let { url -> list.add(ServiceLink(MusicService.Spotify, url)) }
-    if (required.youtube) youtube?.let { url -> list.add(ServiceLink(MusicService.Youtube, url)) }
-    if (required.soundCloud) soundCloud?.let { url -> list.add(ServiceLink(MusicService.SoundCloud, url)) }
-    if (required.appleMusic) appleMusic?.let { url -> list.add(ServiceLink(MusicService.AppleMusic, url)) }
-    if (required.musicbrainz) musicBrainz?.let { url -> list.add(ServiceLink(MusicService.MusicBrainz, url)) }
-    if (required.deezer) deezer?.let { url -> list.add(ServiceLink(MusicService.Deezer, url)) }
-    if (required.napster) napster?.let { url -> list.add(ServiceLink(MusicService.Napster, url)) }
-    return list.toImmutableList()
-}
-
-private fun Track.createOdesliLink(): String {
-    val serviceLink = with(links) { spotify ?: appleMusic ?: deezer ?: napster }
-    val query = "?q=${URLEncoder.encode("$artist $title", "UTF-8")}"
-    return "https://odesli.co/${serviceLink ?: query}"
-}

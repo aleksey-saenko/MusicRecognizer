@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "com.mrsep.musicrecognizer";
+option java_multiple_files = true;
+
+enum MusicServiceProto {
+    AmazonMusic = 0;
+    Anghami = 1;
+    AppleMusic = 2;
+    Audiomack = 3;
+    Audius = 4;
+    Boomplay = 5;
+    Deezer = 6;
+    MusicBrainz = 7;
+    Napster = 8;
+    Pandora = 9;
+    Soundcloud = 10;
+    Spotify = 11;
+    Tidal = 12;
+    YandexMusic = 13;
+    Youtube = 14;
+    YoutubeMusic = 15;
+}

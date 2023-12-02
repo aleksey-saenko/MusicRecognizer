@@ -23,17 +23,6 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
 
-<!--    Disabled due to microphone restriction of foreground service that was launched from background-->
-        <receiver
-            android:name=".BootCompletedReceiver"
-            android:enabled="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
@@ -59,6 +48,17 @@
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.NoDisplay" />
 
+        <!--    Disabled due to microphone restriction of foreground service that was launched from background-->
+        <receiver
+            android:name=".BootCompletedReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".feature.recognition.presentation.service.NotificationService"
             android:enabled="true"
@@ -67,6 +67,7 @@
 
         <service
             android:name=".feature.recognition.presentation.service.OneTimeRecognitionTileService"
+            android:enabled="true"
             android:exported="true"
             android:icon="@drawable/ic_retro_microphone"
             android:label="@string/quick_tile_recognize"

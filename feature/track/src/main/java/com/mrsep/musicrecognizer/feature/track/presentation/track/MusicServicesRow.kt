@@ -28,6 +28,7 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,11 +45,13 @@ import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
+import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun ServicesChipsLazyRow(
-    links: ImmutableList<ServiceLink>,
+    trackLinks: ImmutableList<TrackLink>,
     showOnlyIcons: Boolean,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -66,17 +69,17 @@ internal fun ServicesChipsLazyRow(
                     fadeEndEdgeLengthDp = contentPadding.calculateEndPadding(layoutDirection)
                 )
         ) {
-            items(items = links) { link ->
+            items(items = trackLinks) { link ->
                 if (showOnlyIcons) {
                     MusicServiceIconCopy(
-                        titleRes = link.type.titleId(),
-                        iconRes = link.type.iconId(),
+                        titleRes = link.service.titleId(),
+                        iconRes = link.service.iconId(),
                         link = link.url
                     )
                 } else {
                     MusicServiceChipCopy(
-                        titleRes = link.type.titleId(),
-                        iconRes = link.type.iconId(),
+                        titleRes = link.service.titleId(),
+                        iconRes = link.service.iconId(),
                         link = link.url
                     )
                 }
@@ -217,22 +220,42 @@ private fun MusicServiceIconDefault(
     }
 }
 
+@Stable
 internal fun MusicService.titleId() = when (this) {
-    MusicService.Spotify -> StringsR.string.spotify
-    MusicService.Youtube -> StringsR.string.youtube
-    MusicService.SoundCloud -> StringsR.string.soundcloud
+    MusicService.AmazonMusic -> StringsR.string.amazon_music
+    MusicService.Anghami -> StringsR.string.anghami
     MusicService.AppleMusic -> StringsR.string.apple_music
+    MusicService.Audiomack -> StringsR.string.audiomack
+    MusicService.Audius -> StringsR.string.audius
+    MusicService.Boomplay -> StringsR.string.boomplay
     MusicService.Deezer -> StringsR.string.deezer
     MusicService.MusicBrainz -> StringsR.string.musicbrainz
     MusicService.Napster -> StringsR.string.napster
+    MusicService.Pandora -> StringsR.string.pandora
+    MusicService.Soundcloud -> StringsR.string.soundcloud
+    MusicService.Spotify -> StringsR.string.spotify
+    MusicService.Tidal -> StringsR.string.tidal
+    MusicService.YandexMusic -> StringsR.string.yandex_music
+    MusicService.Youtube -> StringsR.string.youtube
+    MusicService.YoutubeMusic -> StringsR.string.youtubeMusic
 }
 
+@Stable
 internal fun MusicService.iconId() = when (this) {
-    MusicService.Spotify -> UiR.drawable.ic_spotify
-    MusicService.Youtube -> UiR.drawable.ic_youtube
-    MusicService.SoundCloud -> UiR.drawable.ic_soundcloud
+    MusicService.AmazonMusic -> UiR.drawable.ic_amazon
+    MusicService.Anghami -> UiR.drawable.ic_anghami
     MusicService.AppleMusic -> UiR.drawable.ic_apple
+    MusicService.Audiomack -> UiR.drawable.ic_audiomack
+    MusicService.Audius -> UiR.drawable.ic_audius
+    MusicService.Boomplay -> UiR.drawable.ic_boomplay
     MusicService.Deezer -> UiR.drawable.ic_deezer
     MusicService.MusicBrainz -> UiR.drawable.ic_musicbrainz
     MusicService.Napster -> UiR.drawable.ic_napster
+    MusicService.Pandora -> UiR.drawable.ic_pandora
+    MusicService.Soundcloud -> UiR.drawable.ic_soundcloud
+    MusicService.Spotify -> UiR.drawable.ic_spotify
+    MusicService.Tidal -> UiR.drawable.ic_tidal
+    MusicService.YandexMusic -> UiR.drawable.ic_yandex_music
+    MusicService.Youtube -> UiR.drawable.ic_youtube
+    MusicService.YoutubeMusic -> UiR.drawable.ic_youtube_music
 }

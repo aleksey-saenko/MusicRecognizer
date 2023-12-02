@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.audd.websocket
 
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,7 +46,6 @@ class RecognitionStreamServiceImpl @Inject constructor(
 
     override suspend fun recognize(
         token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo,
         audioRecordingFlow: Flow<ByteArray>
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
@@ -110,7 +108,7 @@ class RecognitionStreamServiceImpl @Inject constructor(
                 RemoteRecognitionResultDo.Error.BadConnection
             // return only with final response, else continue handling sockets events
             val finalResponseAsync = async {
-                webSocketService.startSession(token, requiredServices)
+                webSocketService.startSession(token)
                     .transform { socketEvent ->
                         when (socketEvent) {
                             is SocketEvent.ConnectionClosing,

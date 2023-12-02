@@ -4,7 +4,7 @@ sdkMin = "26"
 sdkTarget = "34"
 
 accompanist = "0.32.0"
-androidGradlePlugin = "8.1.4"
+androidGradlePlugin = "8.2.0"
 androidxActivity = "1.8.1"
 androidxComposeBom = "2023.10.01"
 androidxComposeCompiler = "1.5.5"
@@ -32,7 +32,7 @@ moshi = "1.15.0"
 okhttpBom = "4.12.0"
 okhttpCoroutines = "1.0"
 palette = "1.0.0"
-protobufJavalite = "3.25.1"
+protobuf = "3.25.1"
 protobufPlugin = "0.9.4"
 retrofit = "2.9.0"
 room = "2.6.1"
@@ -84,7 +84,7 @@ okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref 
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 okhttp-coroutines = { group = "ru.gildor.coroutines", name = "kotlin-coroutines-okhttp", version.ref = "okhttpCoroutines" }
-protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufJavalite" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }

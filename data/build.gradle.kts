@@ -1,9 +1,6 @@
-@file:Suppress(names = ["UnstableApiUsage", "SpellCheckingInspection"])
-
 import java.util.Properties
 import java.io.FileInputStream
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -61,6 +58,9 @@ android {
             resources.excludes += "DebugProbesKt.bin"
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 kapt {
@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.kotlinx.collectionImmutable)
 
     implementation(libs.androidx.datastoreCore)
-    implementation(libs.protobuf.javalite)
+    implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -105,12 +105,15 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobufJavalite.get()}"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     generateProtoTasks {
         all().forEach { task ->
             task.builtins {
                 register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
                     option("lite")
                 }
             }

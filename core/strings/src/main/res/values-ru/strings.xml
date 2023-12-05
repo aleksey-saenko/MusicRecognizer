@@ -81,6 +81,7 @@
     <string name="cancel_recognition">Отменить распознавание</string>
     <string name="show_track">Показать трек</string>
     <string name="rename">Переименовать</string>
+    <string name="clear">Очистить</string>
     <string name="delete">Удалить</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="must_not_be_empty">Не должно быть пустым</string>

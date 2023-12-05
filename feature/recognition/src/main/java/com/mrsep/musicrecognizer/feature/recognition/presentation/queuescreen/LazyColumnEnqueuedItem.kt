@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Delete
@@ -50,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
@@ -155,7 +158,9 @@ internal fun LazyColumnEnqueuedItem(
                 .weight(1f)
         ) {
             Text(
-                text = getTitle(enqueued)
+                text = getTitle(enqueued),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = getStatusMessage(enqueuedWithStatus),
@@ -260,6 +265,7 @@ internal fun LazyColumnEnqueuedItem(
                                     }
                                 )
                             }
+
                             is RemoteRecognitionResult.Success -> {
                                 DropdownMenuItem(
                                     text = {
@@ -311,41 +317,79 @@ internal fun LazyColumnEnqueuedItem(
         }
         if (renameDialogVisible) {
             val title = getTitle(enqueued)
-            var newName by rememberSaveable { mutableStateOf(title) }
-            AlertDialog(
-                onDismissRequest = { renameDialogVisible = false },
-                confirmButton = {
-                    TextButton(onClick = {
-                        onRenameEnqueued(enqueued.id, newName)
-                        renameDialogVisible = false
-                    }) {
-                        Text(text = stringResource(StringsR.string.save))
-                    }
+            RenameDialog(
+                initialName = title,
+                onConfirmClick = { newName ->
+                    onRenameEnqueued(enqueued.id, newName)
+                    renameDialogVisible = false
                 },
-                dismissButton = {
-                    TextButton(onClick = { renameDialogVisible = false }) {
-                        Text(text = stringResource(StringsR.string.cancel))
-                    }
-                },
-                title = {
-                    Text(
-                        text = stringResource(StringsR.string.rename),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    )
-                },
-                text = {
-                    OutlinedTextField(
-                        value = newName,
-                        onValueChange = { newName = it }
-                    )
-                },
+                onDismissClick = {
+                    renameDialogVisible = false
+                }
             )
         }
-
     }
 
+}
+
+@Composable
+private fun RenameDialog(
+    initialName: String,
+    modifier: Modifier = Modifier,
+    onConfirmClick: (String) -> Unit,
+    onDismissClick: () -> Unit
+) {
+    var newName by rememberSaveable { mutableStateOf(initialName) }
+    AlertDialog(
+        modifier = modifier,
+        onDismissRequest = onDismissClick,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmClick(newName)
+                },
+                enabled = newName.isNotBlank()
+            ) {
+                Text(text = stringResource(StringsR.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissClick) {
+                Text(text = stringResource(StringsR.string.cancel))
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(StringsR.string.rename),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+        },
+        text = {
+            OutlinedTextField(
+                value = newName,
+                onValueChange = { newName = it },
+                trailingIcon = {
+                    Crossfade(
+                        targetState = newName.isNotEmpty(),
+                        label = ""
+                    ) { visible ->
+                        if (visible) {
+                            IconButton(onClick = { newName = "" }) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = stringResource(StringsR.string.clear)
+                                )
+                            }
+                        }
+                    }
+                },
+                singleLine = true,
+                shape = MaterialTheme.shapes.small
+            )
+        },
+    )
 }
 
 @Composable
@@ -356,7 +400,7 @@ private fun getTitle(enqueued: EnqueuedRecognition) =
 private fun getStatusMessage(enqueuedWithStatus: EnqueuedRecognitionWithStatus): String {
     val statusDescription = when (enqueuedWithStatus.status) {
         ScheduledJobStatus.INACTIVE -> {
-             when (enqueuedWithStatus.enqueued.result) {
+            when (enqueuedWithStatus.enqueued.result) {
                 RemoteRecognitionResult.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
                 is RemoteRecognitionResult.Error.BadRecording -> stringResource(StringsR.string.recording_error)
                 is RemoteRecognitionResult.Error.HttpError -> stringResource(StringsR.string.bad_network_response)
@@ -365,11 +409,13 @@ private fun getStatusMessage(enqueuedWithStatus: EnqueuedRecognitionWithStatus):
                     stringResource(StringsR.string.token_limit_reached)
                 else
                     stringResource(StringsR.string.wrong_token)
+
                 RemoteRecognitionResult.NoMatches -> stringResource(StringsR.string.no_matches_found)
                 is RemoteRecognitionResult.Success -> stringResource(StringsR.string.track_found)
                 null -> stringResource(StringsR.string.idle)
             }
         }
+
         ScheduledJobStatus.ENQUEUED -> stringResource(StringsR.string.enqueued)
         ScheduledJobStatus.RUNNING -> stringResource(StringsR.string.running)
     }

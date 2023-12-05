@@ -57,7 +57,7 @@ internal fun FontStyleDialog(
                 Slider(
                     value = fontStyle.fontSize.ordinal.toFloat(),
                     onValueChange = { sliderValue ->
-                        val fontSize = FontSize.values()[sliderValue.toInt()]
+                        val fontSize = FontSize.entries[sliderValue.toInt()]
                         onFontStyleChanged(fontStyle.copy(fontSize = fontSize))
                     },
                     valueRange = 0f..3f,

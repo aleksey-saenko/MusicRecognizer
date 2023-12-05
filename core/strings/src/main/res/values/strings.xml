@@ -103,6 +103,7 @@
     <string name="cancel_recognition">Cancel recognition</string>
     <string name="show_track">Show track</string>
     <string name="rename">Rename</string>
+    <string name="clear">Clear</string>
     <string name="delete">Delete</string>
     <string name="unknown_error">Unknown error</string>
     <string name="must_not_be_empty">Must not be empty</string>

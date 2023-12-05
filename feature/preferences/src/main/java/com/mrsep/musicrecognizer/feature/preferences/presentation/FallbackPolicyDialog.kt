@@ -12,6 +12,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -111,7 +112,8 @@ private fun FallbackActionsDropdownMenu(
             label = { Text(text = label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-            singleLine = true
+            singleLine = true,
+            shape = MaterialTheme.shapes.small
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -131,7 +133,7 @@ private fun FallbackActionsDropdownMenu(
     }
 }
 
-private val allOptions = FallbackAction.values().asList().toImmutableList()
+private val allOptions = FallbackAction.entries.toImmutableList()
 private val ignoreOrSaveOptions =
     listOf(FallbackAction.Ignore, FallbackAction.Save).toImmutableList()
 

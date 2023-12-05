@@ -58,7 +58,7 @@ fun AppNavigationRail(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        navBarDestList.forEach { destination ->
+        TopLevelDestination.entries.forEach { destination ->
 
             val selected =
                 currentDestination?.hierarchy?.any { it.route == destination.route } == true

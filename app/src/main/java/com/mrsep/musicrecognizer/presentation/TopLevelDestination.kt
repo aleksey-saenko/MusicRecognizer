@@ -29,5 +29,3 @@ enum class TopLevelDestination(
         iconResId = UiR.drawable.baseline_preferences_24
     )
 }
-
-val navBarDestList = TopLevelDestination.values().asList()

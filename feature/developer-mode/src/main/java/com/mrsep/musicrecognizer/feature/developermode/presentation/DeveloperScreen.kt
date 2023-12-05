@@ -97,29 +97,6 @@ internal fun DeveloperScreen(
                     }
                 }
             )
-//            val clipboardManager = LocalClipboardManager.current
-//            var bufferText by remember { mutableStateOf("") }
-//            LaunchedEffect(Unit) {
-//                bufferText = clipboardManager.getText().toString()
-//            }
-//
-//            val trackLinksResult by viewModel.trackLinksResult.collectAsStateWithLifecycle()
-//            ButtonGroup(
-//                title = "TRACK LINKS FETCHER",
-//                content = {
-//                    Button(onClick = { viewModel.fetchTrackLinks(bufferText) } ) {
-//                        Text(text = "Fetch")
-//                    }
-//                    Button(onClick = { viewModel.fetchTrackLinksPure(bufferText) } ) {
-//                        Text(text = "FetchPure")
-//                    }
-//                    Button(onClick = viewModel::resetFetchResult) {
-//                        Text(text = "Reset result")
-//                    }
-//                }
-//            )
-//            Text(text = "Query URL:\n\n$bufferText")
-//            Text(text = "Fetch result:\n\n$trackLinksResult")
         }
     }
 

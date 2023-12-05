@@ -33,8 +33,6 @@ internal class DeveloperViewModel @Inject constructor(
     private val amplitudeSource: SoundAmplitudeSourceDo,
     private val encoder: AacEncoder,
     private val playerController: MediaPlayerController,
-//    private val trackLinkFetcher: TrackLinksFetcherImpl,
-//    private val trackLinkFetcherPure: TrackLinksFetcherPureImpl,
 ) : ViewModel() {
 
     private var counter = MutableStateFlow(0)
@@ -117,33 +115,6 @@ internal class DeveloperViewModel @Inject constructor(
     fun stopPlayer() {
         playerController.stop()
     }
-
-//    // **************************
-//
-//    val trackLinksResult = MutableStateFlow<String?>(null)
-//
-//    fun fetchTrackLinks(queryUrl: String) {
-//        viewModelScope.launch {
-//            trackLinksResult.update { "busy" }
-//            trackLinksResult.update {
-//                val response = trackLinkFetcher.fetchByUrl(queryUrl, "")
-//                response.toString()
-//            }
-//        }
-//    }
-//
-//    //spotify%3Atrack%3A0Jcij1eWd5bDMU5iPbxe2i
-//    fun fetchTrackLinksPure(queryUrl: String) {
-//        viewModelScope.launch {
-//            trackLinksResult.update { "busy" }
-//            trackLinksResult.update {
-//                val response = trackLinkFetcherPure.fetchByUrl(queryUrl, "")
-//                response.toString()
-//            }
-//        }
-//    }
-//
-//    fun resetFetchResult() = trackLinksResult.update { null }
 
 }
 

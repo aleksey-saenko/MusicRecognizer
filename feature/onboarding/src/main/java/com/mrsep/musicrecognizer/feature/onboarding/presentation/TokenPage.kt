@@ -153,7 +153,8 @@ internal fun TokenPage(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password
-                    )
+                    ),
+                    shape = MaterialTheme.shapes.small
                 )
 
                 FlowRow(

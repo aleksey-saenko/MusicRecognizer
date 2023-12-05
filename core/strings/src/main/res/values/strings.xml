@@ -113,6 +113,7 @@
     <string name="share">Share</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
+    <string name="reset">Reset</string>
     <string name="reset_all">Reset all</string>
     <string name="filters">Filters</string>
     <string name="filter_favorite_status">Favorite Status</string>

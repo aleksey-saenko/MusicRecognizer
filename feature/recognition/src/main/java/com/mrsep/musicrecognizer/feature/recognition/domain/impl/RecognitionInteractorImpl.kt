@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
@@ -48,7 +49,8 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val trackRepository: TrackRepository,
     private val resultDelegator: RecognitionStatusDelegator,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
-    private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler
+    private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler,
+    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
 ) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
 
     override val screenRecognitionStatus get() = resultDelegator.screenState
@@ -145,6 +147,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 is RemoteRecognitionResult.Success -> {
                     recordProcess.cancelAndJoin()
                     val newTrack = trackRepository.insertOrReplaceSaveMetadata(result.track).first()
+                    trackMetadataEnhancerScheduler.enqueue(newTrack.mbId)
                     RecognitionStatus.Done(RecognitionResult.Success(newTrack))
                 }
             }

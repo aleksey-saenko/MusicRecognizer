@@ -20,13 +20,22 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             artworkUrl = input.links.artwork,
             trackLinks = with(input.links) {
                 listOfNotNull(
-                    spotify?.run { TrackLink(this, MusicService.Spotify) },
-                    youtube?.run { TrackLink(this, MusicService.Youtube) },
-                    soundCloud?.run { TrackLink(this, MusicService.Soundcloud) },
+                    amazonMusic?.run { TrackLink(this, MusicService.AmazonMusic) },
+                    anghami?.run { TrackLink(this, MusicService.Anghami) },
                     appleMusic?.run { TrackLink(this, MusicService.AppleMusic) },
-                    musicBrainz?.run { TrackLink(this, MusicService.MusicBrainz) },
+                    audiomack?.run { TrackLink(this, MusicService.Audiomack) },
+                    audius?.run { TrackLink(this, MusicService.Audius) },
+                    boomplay?.run { TrackLink(this, MusicService.Boomplay) },
                     deezer?.run { TrackLink(this, MusicService.Deezer) },
+                    musicBrainz?.run { TrackLink(this, MusicService.MusicBrainz) },
                     napster?.run { TrackLink(this, MusicService.Napster) },
+                    pandora?.run { TrackLink(this, MusicService.Pandora) },
+                    soundCloud?.run { TrackLink(this, MusicService.Soundcloud) },
+                    spotify?.run { TrackLink(this, MusicService.Spotify) },
+                    tidal?.run { TrackLink(this, MusicService.Tidal) },
+                    yandexMusic?.run { TrackLink(this, MusicService.YandexMusic) },
+                    youtube?.run { TrackLink(this, MusicService.Youtube) },
+                    youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
             metadata = Track.Metadata(
@@ -49,13 +58,22 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                 val linkMap = input.trackLinks.associate { link -> link.service to link.url }
                 TrackEntity.Links(
                     artwork = input.artworkUrl,
-                    spotify = linkMap[MusicService.Spotify],
-                    youtube = linkMap[MusicService.Youtube],
-                    soundCloud = linkMap[MusicService.Soundcloud],
+                    amazonMusic = linkMap[MusicService.AmazonMusic],
+                    anghami = linkMap[MusicService.Anghami],
                     appleMusic = linkMap[MusicService.AppleMusic],
-                    musicBrainz = linkMap[MusicService.MusicBrainz],
+                    audiomack = linkMap[MusicService.Audiomack],
+                    audius = linkMap[MusicService.Audius],
+                    boomplay = linkMap[MusicService.Boomplay],
                     deezer = linkMap[MusicService.Deezer],
-                    napster = linkMap[MusicService.Napster]
+                    musicBrainz = linkMap[MusicService.MusicBrainz],
+                    napster = linkMap[MusicService.Napster],
+                    pandora = linkMap[MusicService.Pandora],
+                    soundCloud = linkMap[MusicService.Soundcloud],
+                    spotify = linkMap[MusicService.Spotify],
+                    tidal = linkMap[MusicService.Tidal],
+                    yandexMusic = linkMap[MusicService.YandexMusic],
+                    youtube = linkMap[MusicService.Youtube],
+                    youtubeMusic = linkMap[MusicService.YoutubeMusic],
                 )
             },
             metadata = TrackEntity.Metadata(

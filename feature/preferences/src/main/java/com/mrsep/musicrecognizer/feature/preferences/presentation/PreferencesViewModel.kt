@@ -44,7 +44,7 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setRequiredMusicServices(services: Set<MusicService>) {
+    fun setRequiredMusicServices(services: List<MusicService>) {
         viewModelScope.launch {
             preferencesRepository.setRequiredMusicServices(services)
         }

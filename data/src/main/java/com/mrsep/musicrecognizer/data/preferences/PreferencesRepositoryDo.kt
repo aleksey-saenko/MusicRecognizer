@@ -12,7 +12,7 @@ interface PreferencesRepositoryDo {
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setArtworkBasedThemeEnabled(value: Boolean)
-    suspend fun setRequiredMusicServices(services: Set<MusicServiceDo>)
+    suspend fun setRequiredMusicServices(services: List<MusicServiceDo>)
     suspend fun setDeveloperModeEnabled(value: Boolean)
     suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo)
     suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)

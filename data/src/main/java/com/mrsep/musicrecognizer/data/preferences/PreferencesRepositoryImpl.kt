@@ -59,7 +59,10 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { artworkBasedThemeEnabled = value }
     }
 
-    override suspend fun setRequiredMusicServices(services: Set<MusicServiceDo>) {
+    override suspend fun setRequiredMusicServices(services: List<MusicServiceDo>) {
+        check(services.toSet().size == services.size) {
+            "RequiredMusicServices must contain only unique values"
+        }
         safeWriter {
             requiredMusicServices.clear()
             requiredMusicServices.addAll(

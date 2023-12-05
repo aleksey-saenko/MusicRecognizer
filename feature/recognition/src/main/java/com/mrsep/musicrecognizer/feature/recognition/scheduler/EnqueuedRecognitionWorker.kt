@@ -9,8 +9,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import java.util.concurrent.TimeUnit
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
@@ -28,6 +28,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val remoteRecognitionService: RemoteRecognitionService,
     private val scheduledResultNotificationHelper: ScheduledResultNotificationHelper,
+    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -35,7 +36,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
         val forceLaunch = inputData.getBoolean(INPUT_KEY_FORCE_LAUNCH, true)
         val enqueuedRecognitionId = inputData.getInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, -1)
-        check(enqueuedRecognitionId != -1) { "$TAG require enqueued recognition id as parameter" }
+        check(enqueuedRecognitionId != -1) { "$TAG requires enqueued recognition id as parameter" }
 
         return withContext(ioDispatcher) {
             val enqueued = enqueuedRecognitionRepository.getById(enqueuedRecognitionId) ?: run {
@@ -57,6 +58,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                     val updatedResult = result.copy(track = updatedTrack)
                     val updatedEnqueued = enqueued.copy(result = updatedResult, resultDate = Instant.now())
                     enqueuedRecognitionRepository.update(updatedEnqueued)
+                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.mbId)
                     scheduledResultNotificationHelper.notify(updatedEnqueued)
                     Result.success()
                 }
@@ -80,11 +82,9 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 is RemoteRecognitionResult.Error.HttpError,
                 is RemoteRecognitionResult.Error.UnhandledError -> {
                     if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
-                        Log.w(TAG, "$TAG canceled, " +
-                                "forceLaunch=$forceLaunch," +
-                                " runAttemptCount=$runAttemptCount," +
-                                " maxAttempts=$MAX_ATTEMPTS"
-                        )
+                        val log = "$TAG canceled, forceLaunch=$forceLaunch, " +
+                                "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
+                        Log.w(TAG, log)
                         enqueuedRecognitionRepository.update(
                             enqueued.copy(result = result, resultDate = Instant.now())
                         )
@@ -135,11 +135,6 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 .addTag(identifyTag)
                 .setConstraints(constraints)
                 .setInputData(data)
-                .setBackoffCriteria(
-                    BackoffPolicy.EXPONENTIAL,
-                    WorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-                    TimeUnit.MILLISECONDS
-                )
                 .build()
         }
 

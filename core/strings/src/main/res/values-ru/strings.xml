@@ -91,6 +91,7 @@
     <string name="share">Поделиться</string>
     <string name="web_browser_not_found_toast">Веб-браузер не найден</string>
     <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
+    <string name="reset">Сбросить</string>
     <string name="reset_all">Сбросить все</string>
     <string name="filters">Фильтры</string>
     <string name="filter_favorite_status">Статус избранного</string>

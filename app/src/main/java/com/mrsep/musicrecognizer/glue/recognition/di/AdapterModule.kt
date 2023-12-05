@@ -33,4 +33,7 @@ interface AdapterModule {
     @Binds
     fun bindNetworkMonitor(implementation: AdapterNetworkMonitor): NetworkMonitor
 
+    @Binds
+    fun bindTrackMetadataEnhancer(implementation: AdapterTrackMetadataEnhancer): TrackMetadataEnhancer
+
 }

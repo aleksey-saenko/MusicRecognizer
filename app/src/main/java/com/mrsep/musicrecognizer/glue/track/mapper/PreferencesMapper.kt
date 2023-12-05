@@ -21,8 +21,7 @@ class PreferencesMapper @Inject constructor(
     override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
             requiredMusicServices = input.requiredMusicServices
-                .map(musicServiceMapper::map)
-                .toSet(),
+                .map(musicServiceMapper::map),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             themeMode = themeModeMapper.map(input.themeMode)

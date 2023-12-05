@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 data class UserPreferencesDo(
     val onboardingCompleted: Boolean,
     val apiToken: String,
-    val requiredMusicServices: Set<MusicServiceDo>,
+    val requiredMusicServices: List<MusicServiceDo>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,

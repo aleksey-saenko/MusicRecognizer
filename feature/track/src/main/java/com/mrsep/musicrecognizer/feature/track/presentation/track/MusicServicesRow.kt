@@ -2,9 +2,12 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +43,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -49,39 +52,64 @@ import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ServicesChipsLazyRow(
+    isLoading: Boolean,
     trackLinks: ImmutableList<TrackLink>,
     showOnlyIcons: Boolean,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val layoutDirection = LocalLayoutDirection.current
-    Box(modifier = modifier) {
-        LazyRow(
-            contentPadding = contentPadding,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            state = rememberLazyListState(),
-            modifier = Modifier
-                .rowFadingEdge(
-                    startEdgeInitialColor = MaterialTheme.colorScheme.background,
-                    fadeStartEdgeLengthDp = contentPadding.calculateStartPadding(layoutDirection),
-                    fadeEndEdgeLengthDp = contentPadding.calculateEndPadding(layoutDirection)
-                )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.animateContentSize()
+    ) {
+        AnimatedVisibility(
+            visible = isLoading,
+            label = "isLoading"
         ) {
-            items(items = trackLinks) { link ->
-                if (showOnlyIcons) {
-                    MusicServiceIconCopy(
-                        titleRes = link.service.titleId(),
-                        iconRes = link.service.iconId(),
-                        link = link.url
+            VinylRotating(
+                modifier = Modifier
+                    .padding(start = contentPadding.calculateStartPadding(layoutDirection))
+                    .size(20.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        AnimatedVisibility(
+            visible = trackLinks.isNotEmpty(),
+            label = "ShouldShowLinks"
+        ) {
+            LazyRow(
+                contentPadding = contentPadding,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .rowFadingEdge(
+                        startEdgeInitialColor = MaterialTheme.colorScheme.background,
+                        fadeStartEdgeLengthDp = contentPadding.calculateStartPadding(
+                            layoutDirection
+                        ),
+                        fadeEndEdgeLengthDp = contentPadding.calculateEndPadding(layoutDirection)
                     )
-                } else {
-                    MusicServiceChipCopy(
-                        titleRes = link.service.titleId(),
-                        iconRes = link.service.iconId(),
-                        link = link.url
-                    )
+            ) {
+                items(items = trackLinks) { link ->
+                    if (showOnlyIcons) {
+                        MusicServiceIconCopy(
+                            titleRes = link.service.titleId(),
+                            iconRes = link.service.iconId(),
+                            link = link.url,
+                            modifier = Modifier.animateItemPlacement()
+                        )
+                    } else {
+                        MusicServiceChipCopy(
+                            titleRes = link.service.titleId(),
+                            iconRes = link.service.iconId(),
+                            link = link.url,
+                            modifier = Modifier.animateItemPlacement()
+                        )
+                    }
                 }
             }
         }
@@ -102,6 +130,10 @@ private fun MusicServiceChipCopy(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .sizeIn(minHeight = 32.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.small
+            )
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline.copy(0.75f),
@@ -145,6 +177,10 @@ private fun MusicServiceIconCopy(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .size(40.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = CircleShape
+            )
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline.copy(0.75f),

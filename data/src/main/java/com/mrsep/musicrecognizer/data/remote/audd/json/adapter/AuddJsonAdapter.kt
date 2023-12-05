@@ -54,13 +54,22 @@ internal class AuddJsonAdapter {
                 lyrics = json.result.parseLyrics(),
                 links = TrackEntity.Links(
                     artwork = json.result.toArtworkLink(),
-                    spotify = json.result.parseSpotifyLink(),
+                    amazonMusic = null,
+                    anghami = null,
                     appleMusic = json.result.parseAppleMusicLink(),
-                    youtube = mediaItems?.parseYoutubeLink(),
-                    soundCloud = mediaItems?.parseSoundCloudLink(),
-                    musicBrainz = json.result.parseMusicBrainzLink(),
+                    audiomack = null,
+                    audius = null,
+                    boomplay = null,
                     deezer = json.result.parseDeezerLink(),
-                    napster = json.result.parseNapsterLink()
+                    musicBrainz = json.result.parseMusicBrainzLink(),
+                    napster = json.result.parseNapsterLink(),
+                    pandora = null,
+                    soundCloud = mediaItems?.parseSoundCloudLink(),
+                    spotify = json.result.parseSpotifyLink(),
+                    tidal = null,
+                    yandexMusic = null,
+                    youtube = mediaItems?.parseYoutubeLink(),
+                    youtubeMusic = null
                 ),
                 metadata = TrackEntity.Metadata(
                     lastRecognitionDate = Instant.now(),

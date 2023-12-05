@@ -10,6 +10,7 @@ import com.mrsep.musicrecognizer.data.ConnectivityManagerNetworkMonitor
 import com.mrsep.musicrecognizer.data.NetworkMonitorDo
 import com.mrsep.musicrecognizer.data.remote.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.data.remote.audd.json.adapter.AuddJsonAdapter
+import com.mrsep.musicrecognizer.data.remote.enhancer.odesli.OdesliJsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Binds
@@ -30,7 +31,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Singleton
 
-
 private const val AUDD_REST_BASE_URL = "https://api.audd.io/"
 //private const val AUDD_WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
 
@@ -48,6 +48,7 @@ object NetworkModule {
                     .withSubtype(AuddResponseJson.Error::class.java, "error")
             )
             .add(AuddJsonAdapter())
+            .add(OdesliJsonAdapter())
             .build()
     }
 

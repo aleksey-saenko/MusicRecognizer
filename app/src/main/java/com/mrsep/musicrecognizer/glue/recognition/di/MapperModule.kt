@@ -8,6 +8,7 @@ import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.enhancer.RemoteMetadataEnhancingResultDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
@@ -16,6 +17,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteMetadataEnhancingResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.recognition.mapper.*
@@ -36,7 +38,7 @@ interface MapperModule {
     fun bindTrackMapper(implementation: TrackMapper): BidirectionalMapper<TrackEntity, Track>
 
     @Binds
-    fun bindRemoteResultMapper(implementation: RemoteResultMapper):
+    fun bindRemoteRecognitionResultMapper(implementation: RemoteRecognitionResultMapper):
             Mapper<RemoteRecognitionResultDo, RemoteRecognitionResult>
 
     @Binds
@@ -58,5 +60,9 @@ interface MapperModule {
     @Binds
     fun bindEnqueuedRecognitionMapper(implementation: EnqueuedRecognitionMapper):
             BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition>
+
+    @Binds
+    fun bindRemoteEnhancingResultMapper(implementation: RemoteEnhancingResultMapper):
+            Mapper<RemoteMetadataEnhancingResultDo, RemoteMetadataEnhancingResult>
 
 }

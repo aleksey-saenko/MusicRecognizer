@@ -49,8 +49,7 @@ class UserPreferencesDoMapper @Inject constructor(
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredMusicServices = input.requiredMusicServicesList
-                .mapNotNull { serviceProto -> musicServiceMapper.map(serviceProto) }
-                .toSet(),
+                .mapNotNull { serviceProto -> musicServiceMapper.map(serviceProto) },
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),

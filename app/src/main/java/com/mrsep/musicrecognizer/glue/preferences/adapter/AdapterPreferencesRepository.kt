@@ -53,9 +53,9 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setDeveloperModeEnabled(value)
     }
 
-    override suspend fun setRequiredMusicServices(services: Set<MusicService>) {
+    override suspend fun setRequiredMusicServices(services: List<MusicService>) {
         preferencesRepositoryDo.setRequiredMusicServices(
-            services.map(musicServiceMapper::reverseMap).toSet()
+            services.map(musicServiceMapper::reverseMap)
         )
     }
 

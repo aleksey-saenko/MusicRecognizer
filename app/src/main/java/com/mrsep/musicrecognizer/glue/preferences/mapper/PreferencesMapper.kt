@@ -10,6 +10,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.*
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 class PreferencesMapper @Inject constructor(
@@ -29,7 +30,7 @@ class PreferencesMapper @Inject constructor(
             developerModeEnabled = input.developerModeEnabled,
             requiredMusicServices = input.requiredMusicServices
                 .map(musicServiceMapper::map)
-                .toSet(),
+                .toImmutableList(),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
             useColumnForLibrary = input.useColumnForLibrary,

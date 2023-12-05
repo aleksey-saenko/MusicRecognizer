@@ -1,9 +1,11 @@
 package com.mrsep.musicrecognizer.feature.preferences.domain
 
+import kotlinx.collections.immutable.ImmutableList
+
 data class UserPreferences(
     val onboardingCompleted: Boolean,
     val apiToken: String,
-    val requiredMusicServices: Set<MusicService>,
+    val requiredMusicServices: ImmutableList<MusicService>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,

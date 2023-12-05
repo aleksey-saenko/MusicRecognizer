@@ -3,8 +3,10 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.feature.track.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
+import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
@@ -26,6 +28,7 @@ internal class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val trackRepository: TrackRepository,
     preferencesRepository: PreferencesRepository,
+    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler
 ) : ViewModel() {
 
     private val args = TrackScreen.Args(savedStateHandle)
@@ -37,9 +40,10 @@ internal class TrackViewModel @Inject constructor(
 
     val uiStateStream = combine(
         trackRepository.getByMbIdFlow(args.mbId),
-        preferencesRepository.userPreferencesFlow
-    ) { track, preferences ->
-        track?.toUiState(preferences) ?: TrackUiState.TrackNotFound
+        preferencesRepository.userPreferencesFlow,
+        trackMetadataEnhancerScheduler.isRunning(args.mbId)
+    ) { track, preferences, isMetaEnhancerRunning ->
+        track?.toUiState(preferences, isMetaEnhancerRunning) ?: TrackUiState.TrackNotFound
     }.transformWhile { uiState ->
         // do not update track state if track removal was requested
         // after track deletion and final animation, the screen should be destroyed
@@ -55,6 +59,7 @@ internal class TrackViewModel @Inject constructor(
     fun deleteTrack(mbId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
+            trackMetadataEnhancerScheduler.cancel(mbId)
             trackRepository.deleteByMbId(mbId)
             _trackExistingState.update { false }
         }
@@ -90,6 +95,7 @@ internal sealed class TrackUiState {
         val lyrics: String?,
         val artworkUrl: String?,
         val requiredLinks: ImmutableList<TrackLink>,
+        val isLoadingLinks: Boolean,
         val isFavorite: Boolean,
         val lastRecognitionDate: String,
         val themeSeedColor: Int?,
@@ -99,7 +105,14 @@ internal sealed class TrackUiState {
 
 }
 
-private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success {
+private fun Track.toUiState(
+    preferences: UserPreferences,
+    isMetadataEnhancerRunning: Boolean
+): TrackUiState.Success {
+    val linkMap = trackLinks.associate { link -> link.service to link.url }
+    val requiredLinks = preferences.requiredMusicServices
+        .mapNotNull { service -> linkMap[service]?.let { url -> TrackLink(url, service) } }
+        .toImmutableList()
     return TrackUiState.Success(
         mbId = this.mbId,
         title = this.title,
@@ -113,10 +126,15 @@ private fun Track.toUiState(preferences: UserPreferences): TrackUiState.Success 
         themeSeedColor = this.metadata.themeSeedColor,
         themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-        requiredLinks = this.trackLinks
-            .filter { trackLink -> preferences.requiredMusicServices.contains(trackLink.service) }
-            .toImmutableList(),
+        requiredLinks = requiredLinks,
+        isLoadingLinks = isMetadataEnhancerRunning &&
+                requiredLinks.hasMissingLink(preferences.requiredMusicServices)
     )
+}
+
+private fun List<TrackLink>.hasMissingLink(requiredServices: List<MusicService>): Boolean {
+    val availableServicesSet = map { link -> link.service }.toSet()
+    return requiredServices.any { service -> !availableServicesSet.contains(service) }
 }
 
 private fun Instant.format(style: FormatStyle) = this.atZone(ZoneId.systemDefault())

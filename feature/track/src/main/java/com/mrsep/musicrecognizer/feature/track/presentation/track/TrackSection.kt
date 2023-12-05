@@ -39,6 +39,7 @@ internal fun TrackSection(
     artist: String,
     albumAndYear: String?,
     artworkUrl: String?,
+    isLoadingLinks: Boolean,
     trackLinks: ImmutableList<TrackLink>,
     isExpandedScreen: Boolean,
     onArtworkCached: (Uri) -> Unit,
@@ -113,6 +114,7 @@ internal fun TrackSection(
                             .fillMaxWidth()
                     )
                     ServicesChipsLazyRow(
+                        isLoading = isLoadingLinks,
                         trackLinks = trackLinks,
                         showOnlyIcons = false,
                         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -151,6 +153,7 @@ internal fun TrackSection(
                         .padding(top = 24.dp)
                 )
                 ServicesChipsLazyRow(
+                    isLoading = isLoadingLinks,
                     trackLinks = trackLinks,
                     showOnlyIcons = false,
                     contentPadding = PaddingValues(horizontal = 16.dp),

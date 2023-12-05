@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.model
 data class UserPreferences(
     val onboardingCompleted: Boolean,
     val apiToken: String,
-    val requiredMusicServices: Set<MusicService>,
+    val requiredMusicServices: List<MusicService>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val developerModeEnabled: Boolean,

@@ -23,8 +23,7 @@ class UserPreferencesMapper @Inject constructor(
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             developerModeEnabled = input.developerModeEnabled,
             requiredMusicServices = input.requiredMusicServices
-                .map(musicServiceMapper::map)
-                .toSet(),
+                .map(musicServiceMapper::map),
             fallbackPolicy = UserPreferences.FallbackPolicy(
                 noMatches = fallbackActionMapper.map(input.fallbackPolicy.noMatches),
                 badConnection = fallbackActionMapper.map(input.fallbackPolicy.badConnection),

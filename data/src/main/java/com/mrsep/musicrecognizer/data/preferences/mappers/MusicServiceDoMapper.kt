@@ -48,7 +48,7 @@ class MusicServiceDoMapper @Inject constructor() :
             MusicServiceDo.Tidal -> MusicServiceProto.Tidal
             MusicServiceDo.YandexMusic -> MusicServiceProto.YandexMusic
             MusicServiceDo.Youtube -> MusicServiceProto.Youtube
-            MusicServiceDo.YoutubeMusic -> MusicServiceProto.YandexMusic
+            MusicServiceDo.YoutubeMusic -> MusicServiceProto.YoutubeMusic
             null -> null
         }
     }

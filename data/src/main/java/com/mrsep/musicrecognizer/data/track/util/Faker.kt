@@ -6,7 +6,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-internal fun getFakeTrackList(startIndex: Int, endIndex: Int, inclusive: Boolean, favorites: Boolean): List<TrackEntity> {
+internal fun getFakeTrackList(
+    startIndex: Int,
+    endIndex: Int,
+    inclusive: Boolean,
+    favorites: Boolean
+): List<TrackEntity> {
     return List(if (inclusive) endIndex - startIndex + 1 else endIndex - startIndex) { index ->
         TrackEntity(
             mbId = UUID.randomUUID().toString(),
@@ -18,13 +23,22 @@ internal fun getFakeTrackList(startIndex: Int, endIndex: Int, inclusive: Boolean
             links = TrackEntity.Links(
 //                artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
                 artwork = "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
-                spotify = "",
-                youtube = "",
-                soundCloud = "",
+                amazonMusic = "",
+                anghami = "",
                 appleMusic = "",
-                musicBrainz = "",
+                audiomack = "",
+                audius = "",
+                boomplay = "",
                 deezer = "",
+                musicBrainz = "",
                 napster = "",
+                pandora = "",
+                soundCloud = "",
+                spotify = "",
+                tidal = "",
+                yandexMusic = "",
+                youtube = "",
+                youtubeMusic = "",
             ),
             metadata = TrackEntity.Metadata(
                 lastRecognitionDate = Instant.ofEpochSecond(index.toLong()),
@@ -45,13 +59,22 @@ internal val fakeTrack by lazy {
         lyrics = "lyrics stub",
         links = TrackEntity.Links(
             artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-            spotify = null,
-            youtube = null,
-            soundCloud = null,
-            appleMusic = null,
-            musicBrainz = null,
-            deezer = null,
-            napster = null
+            amazonMusic = "",
+            anghami = "",
+            appleMusic = "",
+            audiomack = "",
+            audius = "",
+            boomplay = "",
+            deezer = "",
+            musicBrainz = "",
+            napster = "",
+            pandora = "",
+            soundCloud = "",
+            spotify = "",
+            tidal = "",
+            yandexMusic = "",
+            youtube = "",
+            youtubeMusic = "",
         ),
         metadata = TrackEntity.Metadata(
             lastRecognitionDate = Instant.now(),

@@ -21,8 +21,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,7 +137,6 @@ internal fun PreferencesScreen(
                         }
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         val requiredMusicServices = uiState.preferences.requiredMusicServices
-                            .toImmutableSet()
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.music_services_links),
                             subtitle = requiredMusicServices.getEnumerationForSubtitle(limit = 3),
@@ -147,7 +145,7 @@ internal fun PreferencesScreen(
                         )
                         if (showServicesDialog) {
                             RequiredServicesDialog(
-                                modifier = Modifier.fillMaxHeight(0.8f),
+                                modifier = Modifier.fillMaxHeight(0.9f),
                                 requiredServices = requiredMusicServices,
                                 onRequiredServicesChanged = viewModel::setRequiredMusicServices,
                                 onDismissClick = { showServicesDialog = false }
@@ -202,9 +200,13 @@ internal fun PreferencesScreen(
 
 @Stable
 @Composable
-private fun ImmutableSet<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
+private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
     0 -> stringResource(StringsR.string.none)
-    in 1..limit -> map { service -> service.getTitle() }.joinToString(", ")
-    else -> take(3).map { service -> service.getTitle() }.joinToString(", ")
-        .plus(stringResource(StringsR.string.format_more_services, size - limit))
+    in 1..limit -> {
+        map { service -> stringResource(service.titleId()) }.joinToString(", ")
+    }
+    else -> {
+        take(3).map { service -> stringResource(service.titleId()) }.joinToString(", ")
+            .plus(stringResource(StringsR.string.format_more_services, size - limit))
+    }
 }

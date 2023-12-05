@@ -147,6 +147,7 @@ internal fun TrackScreen(
                             albumAndYear = uiState.run { year?.let { "$album - $year" } ?: album },
                             artworkUrl = uiState.artworkUrl,
                             trackLinks = uiState.requiredLinks,
+                            isLoadingLinks = uiState.isLoadingLinks,
                             isExpandedScreen = isExpandedScreen,
                             onArtworkCached = { artworkUri = it },
                             createSeedColor = uiState.artworkBasedThemeEnabled,

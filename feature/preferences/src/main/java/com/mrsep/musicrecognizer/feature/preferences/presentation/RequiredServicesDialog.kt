@@ -1,12 +1,13 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,16 +15,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.ImmutableList
+import kotlin.random.Random
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun RequiredServicesDialog(
     modifier: Modifier = Modifier,
-    requiredServices: ImmutableSet<MusicService>,
-    onRequiredServicesChanged: (Set<MusicService>) -> Unit,
+    requiredServices: ImmutableList<MusicService>,
+    onRequiredServicesChanged: (List<MusicService>) -> Unit,
     onDismissClick: () -> Unit
 ) {
+    val fullList by remember(requiredServices) {
+        derivedStateOf {
+            val requiredServicesSet = requiredServices.toSet()
+            val unselectedServices = MusicService.entries
+                .filter { service -> !requiredServicesSet.contains(service) }
+                .map { service -> MusicServiceUiState(service, false) }
+            val selectedServices = requiredServices
+                .map { service -> MusicServiceUiState(service, true) }
+            selectedServices + unselectedServices
+        }
+    }
     AlertDialog(
         modifier = modifier,
         title = {
@@ -34,28 +48,34 @@ internal fun RequiredServicesDialog(
                 Text(text = stringResource(StringsR.string.close))
             }
         },
+        dismissButton = {
+            TextButton(onClick = { onRequiredServicesChanged(emptyList()) }) {
+                Text(text = stringResource(StringsR.string.reset))
+            }
+        },
         text = {
             Column {
                 Text(
                     text = stringResource(StringsR.string.required_services_dialog),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .fillMaxWidth()
-                ) {
-                    MusicService.entries.forEach { service ->
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    //workaround for first element https://issuetracker.google.com/issues/209652366
+                    itemsIndexed(
+                        items = fullList,
+                        key = { index, (service, _) -> if (index == 0) Random.nextInt() else service }
+                    ) { _, (service, selected) ->
                         MusicServiceCheckbox(
                             service = service,
-                            checked = requiredServices.contains(service),
-                            onCheckedChange = { checked ->
+                            checked = selected,
+                            onCheckedChange = {
                                 onRequiredServicesChanged(
                                     requiredServices.run {
-                                        if (checked) plus(service) else minus(service)
+                                        if (selected) minus(service) else plus(service)
                                     }
                                 )
-                            }
+                            },
+                            modifier = Modifier.animateItemPlacement()
                         )
                     }
                 }
@@ -65,6 +85,12 @@ internal fun RequiredServicesDialog(
     )
 }
 
+@Immutable
+private data class MusicServiceUiState(
+    val service: MusicService,
+    val selected: Boolean
+)
+
 @Composable
 private fun MusicServiceCheckbox(
     service: MusicService,
@@ -72,38 +98,44 @@ private fun MusicServiceCheckbox(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        onClick = { onCheckedChange(!checked) },
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-        Text(
-            text = service.getTitle(),
-            style = MaterialTheme.typography.titleMedium
-        )
+        Row(
+            modifier = Modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = checked,
+                onCheckedChange = onCheckedChange
+            )
+            Text(
+                text = stringResource(service.titleId()),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Stable
-@Composable
-internal fun MusicService.getTitle() = when (this) {
-    MusicService.AmazonMusic -> stringResource(StringsR.string.amazon_music)
-    MusicService.Anghami -> stringResource(StringsR.string.anghami)
-    MusicService.AppleMusic -> stringResource(StringsR.string.apple_music)
-    MusicService.Audiomack -> stringResource(StringsR.string.audiomack)
-    MusicService.Audius -> stringResource(StringsR.string.audius)
-    MusicService.Boomplay -> stringResource(StringsR.string.boomplay)
-    MusicService.Deezer -> stringResource(StringsR.string.deezer)
-    MusicService.MusicBrainz -> stringResource(StringsR.string.musicbrainz)
-    MusicService.Napster -> stringResource(StringsR.string.napster)
-    MusicService.Pandora -> stringResource(StringsR.string.pandora)
-    MusicService.Soundcloud -> stringResource(StringsR.string.soundcloud)
-    MusicService.Spotify -> stringResource(StringsR.string.spotify)
-    MusicService.Tidal -> stringResource(StringsR.string.tidal)
-    MusicService.YandexMusic -> stringResource(StringsR.string.yandex_music)
-    MusicService.Youtube -> stringResource(StringsR.string.youtube)
-    MusicService.YoutubeMusic -> stringResource(StringsR.string.youtubeMusic)
+internal fun MusicService.titleId() = when (this) {
+    MusicService.AmazonMusic -> StringsR.string.amazon_music
+    MusicService.Anghami -> StringsR.string.anghami
+    MusicService.AppleMusic -> StringsR.string.apple_music
+    MusicService.Audiomack -> StringsR.string.audiomack
+    MusicService.Audius -> StringsR.string.audius
+    MusicService.Boomplay -> StringsR.string.boomplay
+    MusicService.Deezer -> StringsR.string.deezer
+    MusicService.MusicBrainz -> StringsR.string.musicbrainz
+    MusicService.Napster -> StringsR.string.napster
+    MusicService.Pandora -> StringsR.string.pandora
+    MusicService.Soundcloud -> StringsR.string.soundcloud
+    MusicService.Spotify -> StringsR.string.spotify
+    MusicService.Tidal -> StringsR.string.tidal
+    MusicService.YandexMusic -> StringsR.string.yandex_music
+    MusicService.Youtube -> StringsR.string.youtube
+    MusicService.YoutubeMusic -> StringsR.string.youtubeMusic
 }

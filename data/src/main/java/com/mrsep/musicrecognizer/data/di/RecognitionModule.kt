@@ -4,6 +4,8 @@ import com.mrsep.musicrecognizer.data.remote.audd.rest.AuddRecognitionServicePur
 import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
 import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceDo
 import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceImpl
+import com.mrsep.musicrecognizer.data.remote.enhancer.TrackMetadataEnhancerDo
+import com.mrsep.musicrecognizer.data.remote.enhancer.odesli.OdesliMetadataEnhancer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -24,5 +26,9 @@ interface RecognitionModule {
     @Singleton
 //    fun bindRemoteRecognitionStreamService(implementation: AuddRestStreamServiceImpl): RecognitionStreamServiceDo
     fun bindRemoteRecognitionStreamService(implementation: RecognitionStreamServiceImpl): RecognitionStreamServiceDo
+
+    @Binds
+    @Singleton
+    fun bindTrackMetadataEnhancer(implementation: OdesliMetadataEnhancer): TrackMetadataEnhancerDo
 
 }

@@ -1,0 +1,4 @@
+* Added track link finder for music services: AmazonMusic, Anghami, Audiomack, Audius, Boomplay, Pandora, Tidal, YandexMusic, YoutubeMusic
+* Added possibility to display track links in custom order
+* Added copy-on-hold functionality for track link buttons
+* Minor UI fixes

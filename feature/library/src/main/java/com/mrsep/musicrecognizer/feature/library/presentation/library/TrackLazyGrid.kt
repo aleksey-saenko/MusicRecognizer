@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -20,7 +18,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -48,10 +45,10 @@ internal fun TrackLazyGrid(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
-        items(count = trackList.size, key = { trackList[it].mbId }) { index ->
+        items(items = trackList, key = { track -> track.mbId }) { track ->
             LazyGridTrackItem(
-                track = trackList[index],
-                selected = multiSelectionState.isSelected(trackList[index].mbId),
+                track = track,
+                selected = multiSelectionState.isSelected(track.mbId),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
                 shape = MaterialTheme.shapes.large,
                 onTrackClick = { trackMbId ->
@@ -62,22 +59,7 @@ internal fun TrackLazyGrid(
                     }
                 },
                 onLongClick = multiSelectionState::toggleSelection,
-                modifier = Modifier.animateItemPlacement(
-                    tween(300)
-                )
-
-            )
-        }
-    }
-    if (trackList.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(StringsR.string.no_tracks_match_filter),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.animateItemPlacement()
             )
         }
     }
@@ -99,7 +81,6 @@ internal fun LazyGridTrackItem(
             MaterialTheme.colorScheme.secondaryContainer
         } else {
             MaterialTheme.colorScheme.background
-//            MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
         },
         label = "containerColor"
     )
@@ -128,7 +109,6 @@ internal fun LazyGridTrackItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-//                .shadow(elevation = 1.dp, shape = shape)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     shape = shape

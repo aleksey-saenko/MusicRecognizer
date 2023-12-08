@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +17,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as Strings
 
 @Composable
-internal fun EmptyLibraryMessage(
+internal fun NoFilteredTracksMessage(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -32,10 +31,9 @@ internal fun EmptyLibraryMessage(
             modifier = Modifier.size(80.dp),
         )
         Text(
-            text = stringResource(Strings.string.empty_library_message),
-            style = MaterialTheme.typography.bodyLarge,
+            text = stringResource(Strings.string.no_tracks_match_filter),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
+            modifier = Modifier.padding(16.dp)
         )
     }
 }

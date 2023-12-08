@@ -36,7 +36,7 @@ Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Mos
 
 ## API Key
 
-This application uses the AudD® service as a Music Recognition API. Please note that the AudD® service is not free, and you will need a special API token provided by the service to use this application. If you don't have an API token, you can sign up for a trial one.
+This application uses AudD service as a Music Recognition API. Please note that AudD service is not free, and you will need a special API token provided by the service to use this application. If you don't have an API token, you can sign up for a trial one.
 
 There is also the option to use the app without a token, but please note that this will significantly restrict the number of daily recognitions that can be performed. Please keep in mind that this behavior is not guaranteed by the service and can be restricted at any time.
 

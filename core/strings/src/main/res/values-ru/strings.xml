@@ -13,7 +13,7 @@
     <string name="onboarding_permission_message_start">"Приложению требуется разрешение на запись аудио для правильной работы. Предоставляя это разрешение, вы соглашаетесь на использование записанных данных "</string>
     <string name="onboarding_permission_message_link">удаленным сервисом</string>
     <string name="onboarding_permission_message_end">" для распознавания музыки. Приложение не использует эти данные для других целей."</string>
-    <string name="onboarding_token_message_start">"Приложение использует для распознавания платный сервис AudD®, для использования которого, требуется специальный API-токен. Зарегистрируйтесь "</string>
+    <string name="onboarding_token_message_start">"Приложение использует для распознавания платный сервис AudD, для использования которого, требуется специальный API-токен. Зарегистрируйтесь "</string>
     <string name="onboarding_token_message_link">здесь</string>
     <string name="onboarding_token_message_end">", чтобы получить пробный токен, если у вас его еще нет."</string>
     <string name="token_skip_message">Пропуск этого шага ограничит допустимый лимит ежедневных распознаваний, но вы всегда сможете указать личный токен в настройках позже.</string>
@@ -92,7 +92,6 @@
     <string name="web_browser_not_found_toast">Веб-браузер не найден</string>
     <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
     <string name="reset">Сбросить</string>
-    <string name="reset_all">Сбросить все</string>
     <string name="filters">Фильтры</string>
     <string name="filter_favorite_status">Статус избранного</string>
     <string name="all">Все</string>
@@ -172,8 +171,11 @@
     <string name="loading">Загрузка</string>
     <string name="format_version">Верcия %s</string>
     <string name="music_recognizing_app">Приложение для распознавания музыки</string>
-    <string name="powered_by_audd">Работает с помощью сервиса AudD®</string>
-    <string name="github_repository">Репозиторий GitHub</string>
+    <string name="powered_by">Работает с помощью</string>
+    <string name="format_service">Сервис %s</string>
+    <string name="purpose_recognition_service">Выполняет распознавание и предоставляет основную информацию о треке</string>
+    <string name="purpose_track_links_service">Предоставляет ссылки на трек для дополнительных музыкальных сервисов</string>
+    <string name="github_repository">GitHub репозиторий</string>
     <string name="license_gnu_gplv3">Лицензия GNU GPLv3</string>
     <string name="lyrics_text_style">Стиль текста песни</string>
     <string name="font_size">Размер шрифта</string>

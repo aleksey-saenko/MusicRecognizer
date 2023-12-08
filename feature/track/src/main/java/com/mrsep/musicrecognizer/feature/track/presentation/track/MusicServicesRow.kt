@@ -94,7 +94,7 @@ internal fun ServicesChipsLazyRow(
                         fadeEndEdgeLengthDp = contentPadding.calculateEndPadding(layoutDirection)
                     )
             ) {
-                items(items = trackLinks) { link ->
+                items(items = trackLinks, key = { link -> link.service }) { link ->
                     if (showOnlyIcons) {
                         MusicServiceIconCopy(
                             titleRes = link.service.titleId(),

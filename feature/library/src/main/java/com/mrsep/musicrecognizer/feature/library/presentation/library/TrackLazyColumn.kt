@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -58,10 +58,10 @@ internal fun TrackLazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(count = trackList.size, key = { trackList[it].mbId }) { index ->
+        items(items = trackList, key = { track -> track.mbId }) { track ->
             LazyListTrackItem(
-                track = trackList[index],
-                selected = multiSelectionState.isSelected(trackList[index].mbId),
+                track = track,
+                selected = multiSelectionState.isSelected(track.mbId),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
                 shape = MaterialTheme.shapes.large,
                 onTrackClick = { trackMbId ->
@@ -72,10 +72,7 @@ internal fun TrackLazyColumn(
                     }
                 },
                 onLongClick = multiSelectionState::toggleSelection,
-                modifier = Modifier.animateItemPlacement(
-                    tween(300)
-                )
-
+                modifier = Modifier.animateItemPlacement()
             )
         }
     }
@@ -96,7 +93,6 @@ internal fun LazyListTrackItem(
         targetValue = if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
         } else {
-//            MaterialTheme.colorScheme.background
             MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
         },
         label = "containerColor"

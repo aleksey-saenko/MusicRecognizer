@@ -6,13 +6,13 @@ data class TrackFilter(
     val sortBy: SortBy,
     val orderBy: OrderBy
 ) {
-    val isEmpty = favoritesMode == FavoritesMode.All &&
+    val isDefault = favoritesMode == FavoritesMode.All &&
             dateRange.first == Long.MIN_VALUE && dateRange.last == Long.MAX_VALUE &&
             sortBy == SortBy.RecognitionDate &&
             orderBy == OrderBy.Desc
 
     companion object {
-        fun getEmpty() = TrackFilter(
+        fun getDefault() = TrackFilter(
             favoritesMode = FavoritesMode.All,
             dateRange = Long.MIN_VALUE..Long.MAX_VALUE,
             sortBy = SortBy.RecognitionDate,

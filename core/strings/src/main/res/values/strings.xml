@@ -15,7 +15,7 @@
     <string name="onboarding_permission_message_link">remote service</string>
     <string name="onboarding_permission_message_end">" for music recognition. The app does not use this data for any other purpose."</string>
     <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
-    <string name="onboarding_token_message_start">"The app uses the AudD® music recognition service, which is not free and requires a special API token. Sign up "</string>
+    <string name="onboarding_token_message_start">"The app uses AudD music recognition service, which is not free and requires a special API token. Sign up "</string>
     <string name="onboarding_token_message_link">here</string>
     <string name="onboarding_token_message_end">" to get your trial token, if you don\'t have one yet."</string>
     <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
@@ -31,6 +31,7 @@
     <string name="final_onboarding_page_message">Setup completed successfully</string>
     <string name="get_started">Get started</string>
 
+    <string name="audd" translatable="false">AudD</string>
     <string name="odesli" translatable="false">Odesli</string>
     <string name="amazon_music" translatable="false">Amazon Music</string>
     <string name="anghami" translatable="false">Anghami</string>
@@ -114,7 +115,6 @@
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
     <string name="reset">Reset</string>
-    <string name="reset_all">Reset all</string>
     <string name="filters">Filters</string>
     <string name="filter_favorite_status">Favorite Status</string>
     <string name="all">All</string>
@@ -194,7 +194,10 @@
     <string name="loading">Loading</string>
     <string name="format_version">Version %s</string>
     <string name="music_recognizing_app">Music recognition application</string>
-    <string name="powered_by_audd">Powered by AudD® service</string>
+    <string name="powered_by">Powered by</string>
+    <string name="format_service">%s service</string>
+    <string name="purpose_recognition_service">Provides song identification and primary metadata</string>
+    <string name="purpose_track_links_service">Provides additional platform-specific track links</string>
     <string name="github_repository">GitHub repository</string>
     <string name="license_gnu_gplv3">License GNU GPLv3</string>
     <string name="lyrics_text_style">Lyrics text style</string>

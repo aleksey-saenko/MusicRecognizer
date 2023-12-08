@@ -71,8 +71,7 @@ internal fun PreferencesScreen(
                         var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.fallback_policy),
-                            subtitle = stringResource(StringsR.string.fallback_policy_pref_subtitle),
-                            modifier = Modifier.padding(top = 12.dp)
+                            subtitle = stringResource(StringsR.string.fallback_policy_pref_subtitle)
                         ) {
                             showPolicyDialog = true
                         }
@@ -85,10 +84,7 @@ internal fun PreferencesScreen(
                         }
 
                         var showTokenDialog by rememberSaveable { mutableStateOf(false) }
-                        PreferenceClickableItem(
-                            title = stringResource(StringsR.string.audd_api_token),
-                            modifier = Modifier.padding(top = 12.dp)
-                        ) {
+                        PreferenceClickableItem(title = stringResource(StringsR.string.audd_api_token)) {
                             showTokenDialog = true
                         }
                         if (showTokenDialog) {
@@ -140,8 +136,7 @@ internal fun PreferencesScreen(
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.music_services_links),
                             subtitle = requiredMusicServices.getEnumerationForSubtitle(limit = 3),
-                            onItemClick = { showServicesDialog = true },
-                            modifier = Modifier.padding(top = 12.dp)
+                            onItemClick = { showServicesDialog = true }
                         )
                         if (showServicesDialog) {
                             RequiredServicesDialog(
@@ -154,8 +149,7 @@ internal fun PreferencesScreen(
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.use_list_for_library),
                             onCheckedChange = { viewModel.setUseColumnForLibrary(it) },
-                            checked = uiState.preferences.useColumnForLibrary,
-                            modifier = Modifier.padding(top = 12.dp)
+                            checked = uiState.preferences.useColumnForLibrary
                         )
                     }
                     PreferenceGroup(
@@ -181,14 +175,12 @@ internal fun PreferencesScreen(
                         }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.about),
-                            onItemClick = onNavigateToAboutScreen,
-                            modifier = Modifier.padding(top = 12.dp)
+                            onItemClick = onNavigateToAboutScreen
                         )
                         if (showDeveloperOptions) {
                             PreferenceClickableItem(
                                 title = stringResource(StringsR.string.developer_options),
-                                onItemClick = onNavigateToDeveloperScreen,
-                                modifier = Modifier.padding(top = 12.dp)
+                                onItemClick = onNavigateToDeveloperScreen
                             )
                         }
                     }

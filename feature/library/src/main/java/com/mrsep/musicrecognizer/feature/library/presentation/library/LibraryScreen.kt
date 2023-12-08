@@ -54,18 +54,14 @@ internal fun LibraryScreen(
     ) {
         LibraryScreenTopBar(
             isLibraryEmpty = isLibraryEmpty,
-            isFilterApplied = (screenUiState as? LibraryUiState.Success)?.trackFilter?.isEmpty?.not() ?: false,
+            isFilterApplied = screenUiState.isFilterApplied(),
             isMultiselectEnabled = multiSelectionState.multiselectEnabled,
             selectedCount = multiSelectionState.selectedCount,
-            totalCount = (screenUiState as? LibraryUiState.Success)?.trackList?.size ?: 0,
+            totalCount = screenUiState.getTrackCount(),
             onSearchIconClick = onTrackSearchClick,
             onFilterIconClick = { filterSheetActive = !filterSheetActive },
             onDeleteIconClick = { deleteDialogVisible = true },
-            onSelectAll = {
-                (screenUiState as? LibraryUiState.Success)?.trackList?.let { tracks ->
-                    multiSelectionState.select(tracks.map { it.mbId })
-                }
-            },
+            onSelectAll = { multiSelectionState.select(screenUiState.getTrackIdList()) },
             onDeselectAll = multiSelectionState::deselectAll,
             topAppBarScrollBehavior = topBarBehaviour
         )
@@ -80,10 +76,10 @@ internal fun LibraryScreen(
                     .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
             )
 
-            is LibraryUiState.Success -> {
-                val filterSheetState = rememberModalBottomSheetState(
-                    skipPartiallyExpanded = true
-                )
+            is LibraryUiState.Success -> Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
                 var newFilterApplied by rememberSaveable { mutableStateOf(false) }
 
                 if (uiState.useColumnLayout) {
@@ -93,9 +89,9 @@ internal fun LibraryScreen(
                         onTrackClick = onTrackClick,
                         lazyListState = lazyListState,
                         multiSelectionState = multiSelectionState,
-                        modifier = Modifier.nestedScroll(
-                            topBarBehaviour.nestedScrollConnection
-                        )
+                        modifier = Modifier
+                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                            .fillMaxSize()
                     )
                     LaunchedEffect(uiState.trackFilter) {
                         if (newFilterApplied) {
@@ -110,9 +106,9 @@ internal fun LibraryScreen(
                         onTrackClick = onTrackClick,
                         lazyGridState = lazyGridState,
                         multiSelectionState = multiSelectionState,
-                        modifier = Modifier.nestedScroll(
-                            topBarBehaviour.nestedScrollConnection
-                        )
+                        modifier = Modifier
+                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                            .fillMaxSize()
                     )
                     LaunchedEffect(uiState.trackFilter) {
                         if (newFilterApplied) {
@@ -121,7 +117,21 @@ internal fun LibraryScreen(
                         }
                     }
                 }
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = uiState.trackList.isEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    NoFilteredTracksMessage(
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .fillMaxSize()
+                    )
+                }
 
+                val filterSheetState = rememberModalBottomSheetState(
+                    skipPartiallyExpanded = true
+                )
                 fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
                     scope.launch { filterSheetState.hide() }.invokeOnCompletion {
                         if (!filterSheetState.isVisible) filterSheetActive = false
@@ -131,7 +141,6 @@ internal fun LibraryScreen(
                         }
                     }
                 }
-
                 if (filterSheetActive) {
                     val filterState = rememberTrackFilterState(
                         initialTrackFilter = uiState.trackFilter
@@ -139,12 +148,13 @@ internal fun LibraryScreen(
                     TrackFilterBottomSheet(
                         sheetState = filterSheetState,
                         filterState = filterState,
-                        onDismissRequest = { hideFilterSheet() },
+                        onDismissRequest = ::hideFilterSheet,
                         onApplyClick = {
                             hideFilterSheet(filterState.makeFilter())
                         }
                     )
                 }
+
                 if (deleteDialogVisible) {
                     DeleteSelectedDialog(
                         onDeleteClick = {
@@ -163,7 +173,23 @@ internal fun LibraryScreen(
 @Stable
 private fun LibraryUiState.isFilterApplied(): Boolean {
     return when (this) {
-        is LibraryUiState.Success -> !trackFilter.isEmpty
+        is LibraryUiState.Success -> !trackFilter.isDefault
         else -> false
+    }
+}
+
+@Stable
+private fun LibraryUiState.getTrackCount(): Int {
+    return when (this) {
+        is LibraryUiState.Success -> trackList.size
+        else -> 0
+    }
+}
+
+@Stable
+private fun LibraryUiState.getTrackIdList(): List<String> {
+    return when (this) {
+        is LibraryUiState.Success -> trackList.map { it.mbId }
+        else -> emptyList()
     }
 }

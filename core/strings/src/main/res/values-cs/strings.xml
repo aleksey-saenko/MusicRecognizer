@@ -13,7 +13,7 @@
     <string name="onboarding_permission_message_start">"Tato aplikace pro správnou funkčnost vyžaduje oprávnění k nahrávání zvuku. Udělením tohoto oprávnění souhlasíte s použitím vašich nahraných dat "</string>
     <string name="onboarding_permission_message_link">vzdálenou službou</string>
     <string name="onboarding_permission_message_end">" pro účely rozpoznání hudby. Aplikace tato data nevyužívá k žádnému jinému účelu."</string>
-    <string name="onboarding_token_message_start">"Aplikace používá službu rozpoznávání hudby AudD®, která vyžaduje speciální token API. Pokud ještě token nemáte, zaregistrujte se "</string>
+    <string name="onboarding_token_message_start">"Aplikace používá službu rozpoznávání hudby AudD, která vyžaduje speciální token API. Pokud ještě token nemáte, zaregistrujte se "</string>
     <string name="onboarding_token_message_link">zde</string>
     <string name="onboarding_token_message_end">" pro jeho získání."</string>
     <string name="token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
@@ -88,7 +88,7 @@
     <string name="share">Sdílet</string>
     <string name="web_browser_not_found_toast">Webový prohlížeč nenalezen</string>
     <string name="cannot_share_toast">Nepodařilo se najít žádnou aplikaci ke sdílení</string>
-    <string name="reset_all">Resetovat vše</string>
+    <string name="reset">Resetovat</string>
     <string name="filters">Filtry</string>
     <string name="filter_favorite_status">Oblíbené</string>
     <string name="all">Vše</string>
@@ -157,7 +157,7 @@
     <string name="loading">Načítání</string>
     <string name="format_version">Verze %s</string>
     <string name="music_recognizing_app">Aplikace pro rozpoznávání hudby</string>
-    <string name="powered_by_audd">Poháněno službou AudD®</string>
+    <string name="powered_by">Poháněno</string>
     <string name="github_repository">Repozitář GitHub</string>
     <string name="license_gnu_gplv3">Licence GNU GPLv3</string>
     <string name="lyrics_text_style">Styl textů</string>

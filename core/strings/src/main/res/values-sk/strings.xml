@@ -13,7 +13,7 @@
     <string name="onboarding_permission_message_start">"Aby aplikácia fungovala správne, vyžaduje povolenie na nahrávanie zvuku. Udelením tohto povolenia súhlasíte s tým, že vaše zaznamenané údaje budú použité spoločnosťou "</string>
     <string name="onboarding_permission_message_link">vzdialená služba</string>
     <string name="onboarding_permission_message_end">" na rozpoznávanie hudby. Aplikácia tieto údaje nepoužíva na žiadne iné účely."</string>
-    <string name="onboarding_token_message_start">"Aplikácia využíva službu rozpoznávania hudby AudD®, ktorá vyžaduje špeciálny token API. Prihláste sa "</string>
+    <string name="onboarding_token_message_start">"Aplikácia využíva službu rozpoznávania hudby AudD, ktorá vyžaduje špeciálny token API. Prihláste sa "</string>
     <string name="onboarding_token_message_link">tu</string>
     <string name="onboarding_token_message_end">" získajte svoj token, ak ho ešte nemáte."</string>
     <string name="token_skip_message">Preskočenie tohto kroku obmedzí vaše denné rozpoznávanie, avšak token môžete kedykoľvek zadať neskôr v nastaveniach.</string>
@@ -89,7 +89,7 @@
     <string name="share">Zdieľať</string>
     <string name="web_browser_not_found_toast">Webový prehliadač sa nenašiel</string>
     <string name="cannot_share_toast">Nebola nájdená žiadna aplikácia na zdieľanie</string>
-    <string name="reset_all">Obnoviť všetko</string>
+    <string name="reset">Obnoviť</string>
     <string name="filters">Filtre</string>
     <string name="filter_favorite_status">Obľúbený stav</string>
     <string name="all">Všetko</string>
@@ -158,7 +158,7 @@
     <string name="loading">Načítavam</string>
     <string name="format_version">Verzia %s</string>
     <string name="music_recognizing_app">Aplikácia na rozpoznávanie hudby</string>
-    <string name="powered_by_audd">Poháňané službou AudD®</string>
+    <string name="powered_by">Poháňané</string>
     <string name="github_repository">GitHub repozitár</string>
     <string name="license_gnu_gplv3">Licencia GNU GPLv3</string>
     <string name="lyrics_text_style">Štýl lyrics textu</string>

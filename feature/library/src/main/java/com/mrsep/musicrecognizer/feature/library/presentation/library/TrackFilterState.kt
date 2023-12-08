@@ -33,7 +33,7 @@ internal class TrackFilterState(
     )
 
     fun resetFilter() {
-        val emptyFilter = TrackFilter.getEmpty()
+        val emptyFilter = TrackFilter.getDefault()
         favoritesMode = emptyFilter.favoritesMode
         sortBy = emptyFilter.sortBy
         orderBy = emptyFilter.orderBy

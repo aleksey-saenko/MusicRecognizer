@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,10 +27,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.common.util.getAppVersion
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
+import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
+import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer"
+private const val AUDD_URL = "https://audd.io/"
+private const val ODESLI_URL = "https://odesli.co/"
+private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
 private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,52 +62,54 @@ internal fun AboutScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .nestedScroll(topBarBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp)
         ) {
             AppLogo(
                 modifier = Modifier.size(120.dp)
             )
             Text(
                 text = stringResource(StringsR.string.app_name),
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(top = 24.dp)
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(top = 12.dp)
             )
             Text(
-                text = stringResource(StringsR.string.format_version, version),
+                text = version,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 4.dp)
             )
-            Text(
-                text = stringResource(StringsR.string.music_recognizing_app),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = stringResource(StringsR.string.powered_by_audd),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Column(
-                modifier = Modifier.width(IntrinsicSize.Max)
+            PreferenceGroup(
+                title = stringResource(StringsR.string.powered_by),
+                modifier = Modifier.padding(top = 20.dp)
             ) {
-                FilledTonalButton(
-                    onClick = { context.openUrlImplicitly(LICENCE_URL) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp)
-                ) {
-                    Text(text = stringResource(StringsR.string.license_gnu_gplv3))
-                }
-                FilledTonalButton(
-                    onClick = { context.openUrlImplicitly(GITHUB_REPO_URL) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp)
-                ) {
-                    Text(text = stringResource(StringsR.string.github_repository))
-                }
+                PreferenceClickableItem(
+                    title = stringResource(
+                        StringsR.string.format_service, stringResource(StringsR.string.audd)
+                    ),
+                    subtitle = stringResource(StringsR.string.purpose_recognition_service),
+                    onItemClick = { context.openUrlImplicitly(AUDD_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(
+                        StringsR.string.format_service, stringResource(StringsR.string.odesli)
+                    ),
+                    subtitle = stringResource(StringsR.string.purpose_track_links_service),
+                    onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
+                )
+            }
+            PreferenceGroup(
+                title = stringResource(StringsR.string.misc),
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.github_repository),
+                    onItemClick = { context.openUrlImplicitly(GITHUB_REPO_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.license_gnu_gplv3),
+                    onItemClick = { context.openUrlImplicitly(LICENCE_URL) }
+                )
             }
         }
     }

@@ -131,7 +131,7 @@ internal fun TrackFilterBottomSheet(
             ) {
                 TextButton(onClick = filterState::resetFilter) {
                     Text(
-                        text = stringResource(StringsR.string.reset_all),
+                        text = stringResource(StringsR.string.reset),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

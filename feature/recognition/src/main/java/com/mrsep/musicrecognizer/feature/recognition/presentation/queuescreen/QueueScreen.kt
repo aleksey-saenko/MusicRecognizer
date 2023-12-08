@@ -2,11 +2,11 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -120,12 +120,12 @@ internal fun QueueScreen(
                         modifier = Modifier.nestedScroll(topBarBehaviour.nestedScrollConnection)
                     ) {
                         items(
-                            count = state.enqueuedList.size,
-                            key = { index -> state.enqueuedList[index].enqueued.id }
-                        ) { index ->
+                            items = state.enqueuedList,
+                            key = { enqueuedWithStatus -> enqueuedWithStatus.enqueued.id }
+                        ) { enqueuedWithStatus ->
                             LazyColumnEnqueuedItem(
-                                enqueuedWithStatus = state.enqueuedList[index],
-                                isPlaying = state.enqueuedList[index].enqueued.isPlaying(
+                                enqueuedWithStatus = enqueuedWithStatus,
+                                isPlaying = enqueuedWithStatus.enqueued.isPlaying(
                                     state.playerStatus
                                 ),
                                 onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
@@ -137,7 +137,7 @@ internal fun QueueScreen(
                                 onNavigateToTrackScreen = onNavigateToTrackScreen,
                                 menuEnabled = !multiSelectionState.multiselectEnabled,
                                 selected = multiSelectionState.isSelected(
-                                    state.enqueuedList[index].enqueued.id
+                                    enqueuedWithStatus.enqueued.id
                                 ),
                                 onClick = { enqueuedId ->
                                     if (multiSelectionState.multiselectEnabled) {
@@ -145,9 +145,7 @@ internal fun QueueScreen(
                                     }
                                 },
                                 onLongClick = multiSelectionState::toggleSelection,
-                                modifier = Modifier.animateItemPlacement(
-                                    tween(300)
-                                )
+                                modifier = Modifier.animateItemPlacement()
                             )
                         }
                     }

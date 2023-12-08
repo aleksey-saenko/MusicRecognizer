@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -27,19 +28,23 @@ internal fun PreferenceClickableItem(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,
-            modifier = Modifier.padding(16.dp).run {
-                if (enabled) this else alpha(0.8f)
-            }
+            modifier = Modifier
+                .padding(16.dp)
+                .alpha(if (enabled) 1f else 0.8f)
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 20.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             if (!subtitle.isNullOrBlank()) {
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

@@ -53,7 +53,7 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun clearDb() = processSuspend { trackRepositoryDo.deleteAll() }
 
-    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 10_000) }
+    fun prepopulateDbFakes() = processSuspend { databaseFiller.prepopulateByFaker(count = 1_000) }
 
     fun prepopulateDbAssets() = processSuspend { databaseFiller.prepopulateFromAssets() }
 

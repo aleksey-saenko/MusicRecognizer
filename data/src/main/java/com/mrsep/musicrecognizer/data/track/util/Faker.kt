@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.track.util
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.time.Instant
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 internal fun getFakeTrackList(
@@ -17,12 +17,12 @@ internal fun getFakeTrackList(
             mbId = UUID.randomUUID().toString(),
             title = "Track #${index + startIndex}",
             artist = "Artist #${index + startIndex}",
-            releaseDate = LocalDate.now(),
+            releaseDate = LocalDate.now()
+                .minus(index * 10L, ChronoUnit.DAYS),
             album = "Album #${index + startIndex}",
             lyrics = "lyrics #${index + startIndex}",
             links = TrackEntity.Links(
-//                artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-                artwork = "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+                artwork = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
                 amazonMusic = "",
                 anghami = "",
                 appleMusic = "",
@@ -41,45 +41,11 @@ internal fun getFakeTrackList(
                 youtubeMusic = "",
             ),
             metadata = TrackEntity.Metadata(
-                lastRecognitionDate = Instant.ofEpochSecond(index.toLong()),
+                lastRecognitionDate = Instant.now()
+                    .minus(index * index * 10L, ChronoUnit.HOURS),
                 isFavorite = favorites,
                 themeSeedColor = null
             )
         )
     }
-}
-
-internal val fakeTrack by lazy {
-    TrackEntity(
-        mbId = UUID.randomUUID().toString(),
-        title = "Echoes",
-        artist = "Pink Floyd",
-        album = "Meddle",
-        releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
-        lyrics = "lyrics stub",
-        links = TrackEntity.Links(
-            artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-            amazonMusic = "",
-            anghami = "",
-            appleMusic = "",
-            audiomack = "",
-            audius = "",
-            boomplay = "",
-            deezer = "",
-            musicBrainz = "",
-            napster = "",
-            pandora = "",
-            soundCloud = "",
-            spotify = "",
-            tidal = "",
-            yandexMusic = "",
-            youtube = "",
-            youtubeMusic = "",
-        ),
-        metadata = TrackEntity.Metadata(
-            lastRecognitionDate = Instant.now(),
-            isFavorite = false,
-            themeSeedColor = null
-        )
-    )
 }

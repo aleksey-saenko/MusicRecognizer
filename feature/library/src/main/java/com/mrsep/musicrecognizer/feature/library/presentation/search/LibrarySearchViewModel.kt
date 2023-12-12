@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,8 @@ private const val KEY_QUERY = "KEY_QUERY"
 @HiltViewModel
 internal class LibrarySearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val trackRepository: TrackRepository
+    private val trackRepository: TrackRepository,
+    private val dateTimeFormatter: AppDateTimeFormatter
 ) : ViewModel() {
 
     val query = savedStateHandle.getStateFlow(KEY_QUERY, "")
@@ -44,7 +46,8 @@ internal class LibrarySearchViewModel @Inject constructor(
             if (keyword.isBlank()) {
                 flowOf(SearchResultUi.Success("", persistentListOf()))
             } else {
-                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT).map { it.toUi() }
+                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
+                    .map { result -> result.toUi(dateTimeFormatter) }
             }
         }
         .stateIn(

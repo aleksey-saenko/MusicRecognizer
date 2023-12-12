@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import com.mrsep.musicrecognizer.feature.library.domain.repository.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class LibraryViewModel @Inject constructor(
     private val trackRepository: TrackRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val dateTimeFormatter: AppDateTimeFormatter
 ) : ViewModel() {
 
     val uiState = combine(
@@ -30,7 +32,9 @@ internal class LibraryViewModel @Inject constructor(
         } else {
             trackRepository.getFilteredFlow(preferences.trackFilter).map { trackList ->
                 LibraryUiState.Success(
-                    trackList = trackList.map { track -> track.toUi() }.toImmutableList(),
+                    trackList = trackList
+                        .map { track -> track.toUi(dateTimeFormatter) }
+                        .toImmutableList(),
                     trackFilter = preferences.trackFilter,
                     useColumnLayout = preferences.useColumnForLibrary
                 )

@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -63,15 +63,14 @@ internal fun TrackLazyColumn(
                 track = track,
                 selected = multiSelectionState.isSelected(track.mbId),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
-                shape = MaterialTheme.shapes.large,
-                onTrackClick = { trackMbId ->
+                onClick = {
                     if (multiSelectionState.multiselectEnabled) {
-                        multiSelectionState.toggleSelection(trackMbId)
+                        multiSelectionState.toggleSelection(track.mbId)
                     } else {
-                        onTrackClick(trackMbId)
+                        onTrackClick(track.mbId)
                     }
                 },
-                onLongClick = multiSelectionState::toggleSelection,
+                onLongClick = { multiSelectionState.toggleSelection(track.mbId) },
                 modifier = Modifier.animateItemPlacement()
             )
         }
@@ -84,10 +83,10 @@ internal fun LazyListTrackItem(
     track: TrackUi,
     selected: Boolean,
     multiselectEnabled: Boolean,
-    shape: Shape,
-    onTrackClick: (mbId: String) -> Unit,
-    onLongClick: (mbId: String) -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.large
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (selected) {
@@ -98,16 +97,16 @@ internal fun LazyListTrackItem(
         label = "containerColor"
     )
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(color = containerColor, shape = shape)
             .clip(shape)
             .combinedClickable(
-                onLongClick = { onLongClick(track.mbId) },
-                onClick = { onTrackClick(track.mbId) },
+                onLongClick = onLongClick,
+                onClick = onClick,
                 indication = if (multiselectEnabled) null else LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
-            .height(112.dp)
             .fillMaxWidth()
     ) {
         val placeholder = forwardingPainter(
@@ -127,13 +126,14 @@ internal fun LazyListTrackItem(
                     shape = shape
                 )
                 .clip(shape)
-                .aspectRatio(1f)
-
+                .heightIn(max = 112.dp)
+                .aspectRatio(1f, true)
         )
         Column(
             modifier = Modifier
-                .padding(10.dp)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .heightIn(min = 112.dp)
+                .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
@@ -147,17 +147,25 @@ internal fun LazyListTrackItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.alpha(0.95f)
+                modifier = Modifier.alpha(0.9f)
             )
-            track.albumAndYear?.let { albumAndYear ->
-                Text(
-                    text = albumAndYear,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.alpha(0.95f)
-                )
-            }
+            Text(
+                text = track.albumAndYear ?: "",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.alpha(0.9f)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = track.recognitionDate,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .alpha(0.72f)
+                    .align(Alignment.End)
+            )
         }
     }
 }

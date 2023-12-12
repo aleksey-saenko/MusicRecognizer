@@ -184,8 +184,7 @@ private fun SearchResultLazyColumn(
                             TrackSearchItem(
                                 track = track,
                                 keyword = result.keyword,
-                                shape = MaterialTheme.shapes.large,
-                                onTrackClick = onTrackClick,
+                                onClick = { onTrackClick(track.mbId) },
                                 modifier = Modifier.animateItemPlacement()
                             )
                         }

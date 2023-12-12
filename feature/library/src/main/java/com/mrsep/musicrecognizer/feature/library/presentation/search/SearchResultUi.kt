@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.search
 
 import androidx.compose.runtime.Immutable
+import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.feature.library.presentation.model.toUi
@@ -24,10 +25,14 @@ internal sealed class SearchResultUi {
 
 }
 
-internal fun SearchResult.toUi(): SearchResultUi = when (this) {
+internal fun SearchResult.toUi(
+    dateTimeFormatter: AppDateTimeFormatter
+): SearchResultUi = when (this) {
     is SearchResult.Pending -> SearchResultUi.Pending(this.keyword)
     is SearchResult.Success -> SearchResultUi.Success(
         keyword = this.keyword,
-        data = this.data.map { it.toUi() }.toImmutableList()
+        data = this.data
+            .map { track -> track.toUi(dateTimeFormatter) }
+            .toImmutableList()
     )
 }

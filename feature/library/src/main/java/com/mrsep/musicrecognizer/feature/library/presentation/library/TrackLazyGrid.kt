@@ -50,15 +50,14 @@ internal fun TrackLazyGrid(
                 track = track,
                 selected = multiSelectionState.isSelected(track.mbId),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
-                shape = MaterialTheme.shapes.large,
-                onTrackClick = { trackMbId ->
+                onClick = {
                     if (multiSelectionState.multiselectEnabled) {
-                        multiSelectionState.toggleSelection(trackMbId)
+                        multiSelectionState.toggleSelection(track.mbId)
                     } else {
-                        onTrackClick(trackMbId)
+                        onTrackClick(track.mbId)
                     }
                 },
-                onLongClick = multiSelectionState::toggleSelection,
+                onLongClick = { multiSelectionState.toggleSelection(track.mbId) },
                 modifier = Modifier.animateItemPlacement()
             )
         }
@@ -71,10 +70,10 @@ internal fun LazyGridTrackItem(
     track: TrackUi,
     selected: Boolean,
     multiselectEnabled: Boolean,
-    shape: Shape,
-    onTrackClick: (mbId: String) -> Unit,
-    onLongClick: (mbId: String) -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.large
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (selected) {
@@ -89,8 +88,8 @@ internal fun LazyGridTrackItem(
             .background(color = containerColor, shape = shape)
             .clip(shape)
             .combinedClickable(
-                onLongClick = { onLongClick(track.mbId) },
-                onClick = { onTrackClick(track.mbId) },
+                onLongClick = onLongClick,
+                onClick = onClick,
                 indication = if (multiselectEnabled) null else LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
@@ -118,7 +117,9 @@ internal fun LazyGridTrackItem(
 
         )
         Column(
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(

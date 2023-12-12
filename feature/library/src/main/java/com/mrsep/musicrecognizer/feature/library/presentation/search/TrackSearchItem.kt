@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -33,19 +34,19 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun TrackSearchItem(
     track: TrackUi,
     keyword: String,
-    shape: Shape,
-    onTrackClick: (mbId: String) -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.large
 ) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                 shape = shape
             )
             .clip(shape)
-            .clickable { onTrackClick(track.mbId) }
-            .height(112.dp)
+            .clickable(onClick = onClick)
             .fillMaxWidth()
     ) {
         val placeholder = forwardingPainter(
@@ -65,36 +66,47 @@ internal fun TrackSearchItem(
                     shape = shape
                 )
                 .clip(shape)
-                .aspectRatio(1f)
+                .heightIn(max = 112.dp)
+                .aspectRatio(1f, true)
         )
         Column(
             modifier = Modifier
-                .padding(10.dp)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .heightIn(min = 112.dp)
+                .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = highlightKeyword(track.title, keyword),
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
                 text = highlightKeyword(track.artist, keyword),
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.alpha(0.95f)
+                modifier = Modifier.alpha(0.9f)
             )
-            track.albumAndYear?.let { albumAndYear ->
-                Text(
-                    text = highlightKeyword(albumAndYear, keyword),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.alpha(0.95f)
-                )
-            }
+            Text(
+                text = track.albumAndYear?.run { highlightKeyword(this, keyword) }
+                    ?: AnnotatedString(""),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.alpha(0.9f)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = track.recognitionDate,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .alpha(0.72f)
+                    .align(Alignment.End)
+            )
         }
     }
 }

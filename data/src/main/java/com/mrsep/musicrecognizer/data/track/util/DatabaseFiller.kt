@@ -13,6 +13,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import java.io.IOException
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 private const val TAG = "DatabaseFiller"
@@ -49,13 +51,19 @@ class DatabaseFiller @Inject constructor(
                 val trackList = parseJsonFilesFromAssets(assetsDirectory)
                     .filterIsInstance<RemoteRecognitionResultDo.Success>()
                     .mapIndexed { index, result ->
-                        result.data.run {
+                        val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
                                 copy(metadata = result.data.metadata.copy(isFavorite = true))
                             } else {
                                 this
                             }
                         }
+                        entity.copy(
+                            metadata = entity.metadata.copy(
+                                lastRecognitionDate = Instant.now()
+                                    .minus(index * 500L, ChronoUnit.HOURS)
+                            )
+                        )
                     }.toTypedArray()
                 trackRepository.insertOrReplace(*trackList)
                 Log.d(TAG, "Database filling completed")
@@ -76,7 +84,6 @@ class DatabaseFiller @Inject constructor(
                 return@withContext emptyList()
             }
             fileNamesArray.mapNotNull { fileName ->
-                delay(1) //for individual timestamps
                 try {
                     jsonAdapter.fromJson(
                         appContext.assets.open("${assetsDirectory}/${fileName}")

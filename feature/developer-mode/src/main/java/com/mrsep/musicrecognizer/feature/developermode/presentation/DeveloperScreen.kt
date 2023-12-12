@@ -1,7 +1,5 @@
 package com.mrsep.musicrecognizer.feature.developermode.presentation
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +13,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrsep.musicrecognizer.core.strings.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,9 +137,4 @@ private fun ButtonGroup(
         }
     }
 
-}
-
-@Suppress("unused")
-private fun showStubToast(context: Context) {
-    Toast.makeText(context, context.getString(R.string.not_implemented), Toast.LENGTH_LONG).show()
 }

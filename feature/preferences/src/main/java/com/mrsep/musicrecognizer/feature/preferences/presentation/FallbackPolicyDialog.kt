@@ -51,9 +51,7 @@ internal fun FallbackPolicyDialog(
                     .width(IntrinsicSize.Min)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = stringResource(StringsR.string.fallback_policy_dialog_message),
-                )
+                Text(text = stringResource(StringsR.string.fallback_policy_dialog_message))
                 FallbackActionsDropdownMenu(
                     options = allOptions,
                     label = stringResource(StringsR.string.bad_internet_connection),

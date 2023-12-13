@@ -146,10 +146,11 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showServicesDialog = false }
                             )
                         }
+                        val useColumnForLibrary = uiState.preferences.useColumnForLibrary
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.use_list_for_library),
-                            onCheckedChange = { viewModel.setUseColumnForLibrary(it) },
-                            checked = uiState.preferences.useColumnForLibrary
+                            onClick = { viewModel.setUseColumnForLibrary(!useColumnForLibrary) },
+                            checked = useColumnForLibrary
                         )
                     }
                     PreferenceGroup(

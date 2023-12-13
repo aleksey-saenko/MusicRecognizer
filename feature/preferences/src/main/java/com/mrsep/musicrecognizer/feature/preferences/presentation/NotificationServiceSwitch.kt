@@ -90,8 +90,10 @@ internal fun NotificationServiceSwitch(
         PreferenceSwitchItem(
             title = stringResource(StringsR.string.notification_service),
             subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
-            onCheckedChange = { checked ->
-                if (checked) {
+            onClick = {
+                if (serviceEnabled) {
+                    toggleServiceState(false)
+                } else {
                     if (recordPermissionState.status.isGranted &&
                         notificationsPermissionState.status.isGranted
                     ) {
@@ -107,8 +109,6 @@ internal fun NotificationServiceSwitch(
                     } else {
                         recordPermissionState.launchPermissionRequest()
                     }
-                } else {
-                    toggleServiceState(false)
                 }
             },
             checked = serviceEnabled
@@ -118,9 +118,7 @@ internal fun NotificationServiceSwitch(
             modifier = modifier,
             title = stringResource(StringsR.string.notification_service),
             subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
-            onCheckedChange = { checked ->
-                toggleServiceState(checked)
-            },
+            onClick = { toggleServiceState(!serviceEnabled) },
             checked = serviceEnabled
         )
     }

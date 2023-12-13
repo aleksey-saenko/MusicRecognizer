@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,8 +17,8 @@ internal fun PreferenceSwitchItem(
     title: String,
     subtitle: String? = null,
     enabled: Boolean = true,
-    onCheckedChange: (Boolean) -> Unit,
-    checked: Boolean
+    checked: Boolean,
+    onClick: () -> Unit
 ) {
     PreferenceSurface(
         modifier = modifier
@@ -25,12 +26,17 @@ internal fun PreferenceSwitchItem(
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .clickable(
+                    onClick = onClick,
+                    enabled = enabled
+                )
+                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .alpha(if (enabled) 1f else 0.8f)
+                    .alpha(if (enabled) 1f else 0.7f)
             ) {
                 Text(
                     text = title,
@@ -51,7 +57,7 @@ internal fun PreferenceSwitchItem(
             Switch(
                 checked = checked,
                 enabled = enabled,
-                onCheckedChange = { onCheckedChange(it) }
+                onCheckedChange = null
             )
         }
     }

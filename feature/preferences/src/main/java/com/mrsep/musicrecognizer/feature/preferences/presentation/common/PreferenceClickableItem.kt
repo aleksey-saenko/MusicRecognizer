@@ -30,7 +30,7 @@ internal fun PreferenceClickableItem(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .padding(16.dp)
-                .alpha(if (enabled) 1f else 0.8f)
+                .alpha(if (enabled) 1f else 0.7f)
         ) {
             Text(
                 text = title,

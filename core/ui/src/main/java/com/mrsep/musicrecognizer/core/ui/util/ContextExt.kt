@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.core.ui.util
 
+import android.app.SearchManager
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -13,6 +14,13 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 fun Context.openUrlImplicitly(url: String) {
     startActivityOrToast(
         Intent(Intent.ACTION_VIEW, Uri.parse(url)),
+        getString(StringsR.string.web_browser_not_found_toast)
+    )
+}
+
+fun Context.openWebSearchImplicitly(query: String) {
+    startActivityOrToast(
+        Intent(Intent.ACTION_WEB_SEARCH).apply { putExtra(SearchManager.QUERY, query) },
         getString(StringsR.string.web_browser_not_found_toast)
     )
 }

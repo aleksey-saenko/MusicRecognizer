@@ -60,7 +60,6 @@
     <string name="message_unhandled_error">Произошла внутренняя ошибка</string>
     <string name="notification_message_unhandled_error">Произошла внутренняя ошибка, попробуйте еще раз</string>
     <string name="message_token_wrong_error">Пожалуйста, добавьте правильный токен в настройках приложения и повторите попытку</string>
-    <string name="not_implemented">Не реализовано</string>
     <string name="no_matches_found">Совпадений не найдено</string>
     <string name="library">Библиотека</string>
     <string name="recognition_queue">Очередь распознавания</string>
@@ -72,8 +71,8 @@
     <string name="token_limit_reached">Достигнут лимит использования API-токена</string>
     <string name="wrong_token">Неправильный API-токен</string>
     <string name="internal_error">Внутренняя ошибка</string>
-    <string name="show_more">Показать больше</string>
-    <string name="show_less">Показать меньше</string>
+    <string name="show_more">Подробнее</string>
+    <string name="show_less">Скрыть</string>
     <string name="empty_library_message">Здесь будут отображаться недавно распознанные и избранные треки</string>
     <string name="untitled_recognition">Без названия</string>
     <string name="enqueue_recognition">Поставить в очередь</string>
@@ -163,8 +162,10 @@
     <string name="mark_as_favorite">Отметить как избранное</string>
     <string name="unmark_as_favorite">Снять отметку избранного</string>
     <string name="show_lyrics">Показать текст песни</string>
+    <string name="web_search">Веб-поиск</string>
+    <string name="search_for">Найти</string>
     <string name="format_open_website_or_app">Открыть %s</string>
-    <string name="track_info">Доп. инфо о треке</string>
+    <string name="track_info">О треке</string>
     <string name="format_date_of_last_recognition">Дата последнего распознавания:\n%s</string>
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
@@ -198,6 +199,7 @@
     <string name="copy">Копировать</string>
     <string name="copied">Скопировано</string>
     <string name="metadata">Метаданные</string>
+    <string name="track">Трек</string>
     <string name="title">Заголовок</string>
     <string name="artist">Исполнитель</string>
     <string name="album">Альбом</string>

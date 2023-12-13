@@ -59,7 +59,6 @@
     <string name="message_unhandled_error">Vyskytla sa interná chyba</string>
     <string name="notification_message_unhandled_error">Vyskytla sa interná chyba, skúste to znova</string>
     <string name="message_token_wrong_error">Nastavte správny token v nastaveniach a skúste to znova</string>
-    <string name="not_implemented">Neimplementované</string>
     <string name="no_matches_found">Nenájdené žiadne zhody</string>
     <string name="library">Knižnica</string>
     <string name="recognition_queue">Rozpoznávací rad</string>

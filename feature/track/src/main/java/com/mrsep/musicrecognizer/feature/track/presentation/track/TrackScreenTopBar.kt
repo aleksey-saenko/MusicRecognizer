@@ -16,6 +16,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -30,6 +32,14 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 
+internal enum class SearchProvider { WebDefault, Wikipedia }
+internal enum class SearchTarget { Track, Artist, Album }
+
+internal data class SearchParams(
+    val provider: SearchProvider,
+    val target: SearchTarget
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TrackScreenTopBar(
@@ -41,6 +51,7 @@ internal fun TrackScreenTopBar(
     onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onShowDetailsClick: () -> Unit,
+    onPerformWebSearchClick: (SearchParams) -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -83,8 +94,10 @@ internal fun TrackScreenTopBar(
                     )
                 }
                 var menuExpanded by remember { mutableStateOf(false) }
+                var menuSearchMode by remember { mutableStateOf(false) }
+                var searchProvider = remember { SearchProvider.WebDefault }
                 Box {
-                    IconButton(onClick = { menuExpanded = !menuExpanded }) {
+                    IconButton(onClick = { menuSearchMode = false; menuExpanded = !menuExpanded }) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = stringResource(StringsR.string.show_more)
@@ -94,33 +107,104 @@ internal fun TrackScreenTopBar(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false }
                     ) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(StringsR.string.show_more)) },
-                            onClick = {
-                                menuExpanded = false
-                                onShowDetailsClick()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Info,
-                                    contentDescription = null
+                        if (!menuSearchMode) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = stringResource(StringsR.string.web_search))
+                                },
+                                onClick = {
+                                    searchProvider = SearchProvider.WebDefault
+                                    menuSearchMode = true
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(UiR.drawable.baseline_travel_explore_24),
+                                        contentDescription = null
+                                    )
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = stringResource(StringsR.string.wikipedia))
+                                },
+                                onClick = {
+                                    searchProvider = SearchProvider.Wikipedia
+                                    menuSearchMode = true
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(UiR.drawable.ic_wikipedia),
+                                        contentDescription = null
+                                    )
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.show_more)) },
+                                onClick = {
+                                    menuExpanded = false
+                                    onShowDetailsClick()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Info,
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                            Divider()
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.delete)) },
+                                onClick = {
+                                    menuExpanded = false
+                                    onDeleteClick()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        } else {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.search_for)) },
+                                onClick = {},
+                                enabled = false,
+                                colors = MenuDefaults.itemColors(
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = 0.75f)
                                 )
-                            }
-                        )
-                        Divider()
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(StringsR.string.delete)) },
-                            onClick = {
-                                menuExpanded = false
-                                onDeleteClick()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = null
-                                )
-                            }
-                        )
+                            )
+                            Divider()
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.track)) },
+                                onClick = {
+                                    menuExpanded = false
+                                    onPerformWebSearchClick(
+                                        SearchParams(searchProvider, SearchTarget.Track)
+                                    )
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.artist)) },
+                                onClick = {
+                                    menuExpanded = false
+                                    onPerformWebSearchClick(
+                                        SearchParams(searchProvider, SearchTarget.Artist)
+                                    )
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(StringsR.string.album)) },
+                                onClick = {
+                                    menuExpanded = false
+                                    onPerformWebSearchClick(
+                                        SearchParams(searchProvider, SearchTarget.Album)
+                                    )
+                                },
+                            )
+                        }
+
                     }
                 }
 

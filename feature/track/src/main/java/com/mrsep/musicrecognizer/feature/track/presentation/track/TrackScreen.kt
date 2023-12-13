@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -18,10 +19,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
+import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
+import com.mrsep.musicrecognizer.core.ui.util.openWebSearchImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 import kotlinx.coroutines.launch
+import java.util.Locale
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -139,6 +144,9 @@ internal fun TrackScreen(
                             onShareClick = { shareSheetActive = !shareSheetActive },
                             onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
+                            onPerformWebSearchClick = { searchParams ->
+                                performWebSearch(context, searchParams, uiState)
+                            },
                             topAppBarScrollBehavior = topBarBehaviour
                         )
                         TrackSection(
@@ -180,4 +188,33 @@ internal fun shouldUseDarkTheme(
     ThemeMode.FollowSystem -> isSystemInDarkTheme()
     ThemeMode.AlwaysLight -> false
     ThemeMode.AlwaysDark -> true
+}
+
+private fun performWebSearch(
+    context: Context,
+    searchParams: SearchParams,
+    uiState: TrackUiState.Success
+) {
+    val query = uiState.getWebSearchQuery(searchParams.target, context)
+    when (searchParams.provider) {
+        SearchProvider.WebDefault -> {
+            context.openWebSearchImplicitly(query)
+        }
+
+        SearchProvider.Wikipedia -> {
+            val lang = Locale.getDefault().language
+            val encodedQuery = Uri.encode(query)
+            val url = "https://$lang.wikipedia.org/wiki/Special:Search?search=$encodedQuery"
+            context.openUrlImplicitly(url)
+        }
+    }
+}
+
+private fun TrackUiState.Success.getWebSearchQuery(
+    target: SearchTarget, context: Context
+) = when (target) {
+    SearchTarget.Track -> "$title $artist"
+    SearchTarget.Artist -> artist
+    SearchTarget.Album -> album?.run { "$this $artist" }
+        ?: "$title $artist ${context.getString(StringsR.string.album)}"
 }

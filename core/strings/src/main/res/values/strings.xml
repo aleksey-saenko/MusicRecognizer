@@ -33,6 +33,8 @@
 
     <string name="audd" translatable="false">AudD</string>
     <string name="odesli" translatable="false">Odesli</string>
+    <string name="wikipedia" translatable="false">Wikipedia</string>
+
     <string name="amazon_music" translatable="false">Amazon Music</string>
     <string name="anghami" translatable="false">Anghami</string>
     <string name="apple_music" translatable="false">Apple Music</string>
@@ -83,7 +85,6 @@
     <string name="message_unhandled_error">An internal error occurred</string>
     <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
     <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
-    <string name="not_implemented">Not implemented</string>
     <string name="no_matches_found">No matches found</string>
     <string name="library">Library</string>
     <string name="recognition_queue">Recognition queue</string>
@@ -186,6 +187,8 @@
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Unmark as favorite</string>
     <string name="show_lyrics">Show lyrics</string>
+    <string name="web_search">Web search</string>
+    <string name="search_for">Search for</string>
     <string name="format_open_website_or_app">Open %s</string>
     <string name="track_info">Track info</string>
     <string name="format_date_of_last_recognition">Date of last recognition:\n%s</string>
@@ -221,6 +224,7 @@
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
     <string name="metadata">Metadata</string>
+    <string name="track">Track</string>
     <string name="title">Title</string>
     <string name="artist">Artist</string>
     <string name="album">Album</string>

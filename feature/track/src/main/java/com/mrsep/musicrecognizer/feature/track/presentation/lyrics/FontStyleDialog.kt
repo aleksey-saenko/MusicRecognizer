@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
@@ -46,10 +45,7 @@ internal fun FontStyleDialog(
                 )
                 Text(
                     text = stringResource(StringsR.string.make_text_bigger_or_smaller),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .alpha(0.9f)
-                        .padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp)
                 )
                 Slider(
                     value = fontStyle.fontSize.ordinal.toFloat(),
@@ -58,7 +54,8 @@ internal fun FontStyleDialog(
                         onFontStyleChanged(fontStyle.copy(fontSize = fontSize))
                     },
                     valueRange = 0f..3f,
-                    steps = 2
+                    steps = 2,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp),

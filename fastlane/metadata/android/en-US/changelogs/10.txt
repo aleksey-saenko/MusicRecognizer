@@ -1,0 +1,2 @@
+* Added buttons for Web and Wikipedia search
+* Minor UI changes

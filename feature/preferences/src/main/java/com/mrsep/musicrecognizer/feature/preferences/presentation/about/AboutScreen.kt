@@ -23,6 +23,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.common.util.getAppVersion
@@ -77,7 +78,8 @@ internal fun AboutScreen(
             Text(
                 text = version,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(top = 2.dp)
             )
             PreferenceGroup(
                 title = stringResource(StringsR.string.powered_by),

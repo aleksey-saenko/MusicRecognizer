@@ -53,6 +53,7 @@ internal fun AlbumArtwork(
             .data(url)
             .size(Size.ORIGINAL)
             .allowHardware(!createSeedColor)
+            .crossfade(50)
             .build(),
         error = placeholder,
         fallback = placeholder,

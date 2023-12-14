@@ -7,10 +7,14 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
 import dagger.hilt.android.HiltAndroidApp
+import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 @HiltAndroidApp
 class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Provider {
+
+    @Inject
+    lateinit var okHttpClient: OkHttpClient
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -23,7 +27,9 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
-            .crossfade(false)
+            .okHttpClient { okHttpClient }
+            .crossfade(true)
+            .respectCacheHeaders(false)
             .build()
     }
 

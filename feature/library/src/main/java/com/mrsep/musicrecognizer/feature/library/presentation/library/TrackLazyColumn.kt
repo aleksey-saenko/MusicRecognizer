@@ -116,7 +116,7 @@ internal fun LazyListTrackItem(
         )
         AsyncImage(
             model = track.artworkUrl,
-            placeholder = placeholder,
+            fallback = placeholder,
             error = placeholder,
             contentDescription = stringResource(com.mrsep.musicrecognizer.core.strings.R.string.artwork),
             contentScale = ContentScale.Crop,

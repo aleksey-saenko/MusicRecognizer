@@ -103,7 +103,7 @@ internal fun LazyGridTrackItem(
         )
         AsyncImage(
             model = track.artworkUrl,
-            placeholder = placeholder,
+            fallback = placeholder,
             error = placeholder,
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,

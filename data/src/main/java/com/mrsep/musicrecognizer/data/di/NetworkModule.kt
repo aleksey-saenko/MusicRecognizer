@@ -21,6 +21,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
@@ -93,7 +94,8 @@ object NetworkModule {
 
 private class UserAgentInterceptor(appContext: Context) : Interceptor {
 
-    private val userAgent = "Audile/${appContext.getAppVersion()} (Android ${Build.VERSION.RELEASE})"
+    private val userAgent =
+        "Audile/${appContext.getAppVersion()} (Android ${Build.VERSION.RELEASE})"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(
@@ -128,7 +130,7 @@ private class HttpFileLoggingInterceptor(
 
     init {
         try {
-            File("${appContext.filesDir.absolutePath}/http_logger/").run { if (!exists()) mkdir() }
+            File(rootDir).run { if (!exists()) mkdir() }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -137,18 +139,22 @@ private class HttpFileLoggingInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
-
-        val responseTime = sdf.format(Date(System.currentTimeMillis()))
-        val responseFile = File("$rootDir/${responseTime}_response.txt")
-
         val body = response.body!!
-        val json = body.string()
-        if (json.isNotBlank()) {
-            writeLogFile(responseFile, JSONObject(json).toString(4))
+
+        val newBody = if (body.contentType() == "application/json".toMediaType()) {
+            val json = body.string()
+            if (json.isNotBlank()) {
+                val responseTime = sdf.format(Date(System.currentTimeMillis()))
+                val responseFile = File("$rootDir/${responseTime}_response.txt")
+                writeLogFile(responseFile, JSONObject(json).toString(4))
+            }
+            json.toResponseBody(body.contentType())
+        } else {
+            body
         }
 
         return response.newBuilder()
-            .body(json.toResponseBody(body.contentType()))
+            .body(newBody)
             .build()
     }
 

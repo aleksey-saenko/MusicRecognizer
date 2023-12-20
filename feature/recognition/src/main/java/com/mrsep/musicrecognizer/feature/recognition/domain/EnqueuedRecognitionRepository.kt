@@ -6,19 +6,19 @@ import java.io.File
 
 interface EnqueuedRecognitionRepository {
 
-    suspend fun createEnqueuedRecognition(audioRecording: ByteArray, title: String): Int?
+    suspend fun createRecognition(audioRecording: ByteArray, title: String): Int?
 
-    suspend fun getRecordingById(enqueuedId: Int): File?
+    suspend fun getRecordingForRecognition(recognitionId: Int): File?
 
-    suspend fun getById(id: Int): EnqueuedRecognition?
+    suspend fun getRecognition(recognitionId: Int): EnqueuedRecognition?
 
-    fun getFlowAll(): Flow<List<EnqueuedRecognition>>
+    fun getAllRecognitionsFlow(): Flow<List<EnqueuedRecognition>>
 
-    suspend fun update(enqueuedRecognition: EnqueuedRecognition)
+    suspend fun update(recognition: EnqueuedRecognition)
 
-    suspend fun updateTitle(enqueuedId: Int, newTitle: String)
+    suspend fun updateTitle(recognitionId: Int, newTitle: String)
 
-    suspend fun deleteById(vararg enqueuedId: Int)
+    suspend fun delete(vararg recognitionIds: Int)
 
     suspend fun deleteAll()
 

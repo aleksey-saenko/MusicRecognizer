@@ -28,7 +28,7 @@ internal fun AnimatedVisibilityScope.NoMatchesShield(
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
     onRetryClick: () -> Unit,
-    onNavigateToQueue: (enqueuedId: Int?) -> Unit
+    onNavigateToQueue: (recognitionId: Int?) -> Unit
 ) {
     BaseShield(
         modifier = modifier,

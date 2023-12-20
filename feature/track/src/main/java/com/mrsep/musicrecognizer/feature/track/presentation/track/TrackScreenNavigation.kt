@@ -19,36 +19,36 @@ object TrackScreen {
 
     private const val ROOT_ROUTE = "track"
     private const val ROOT_DEEP_LINK = "app://mrsep.musicrecognizer.com"
-    private const val ARG_MB_ID = "mbId"
+    private const val ARG_TRACK_ID = "trackId"
     private const val ARG_RETRY = "retry"
 
     private const val KEY_LAST_ACTION = "KEY_LAST_ACTION"
 
-    const val ROUTE = "$ROOT_ROUTE/{$ARG_MB_ID}/{$ARG_RETRY}"
+    const val ROUTE = "$ROOT_ROUTE/{$ARG_TRACK_ID}/{$ARG_RETRY}"
 
-    data class Args(val mbId: String) {
+    data class Args(val trackId: String) {
         constructor(savedStateHandle: SavedStateHandle) : this(
-            mbId = checkNotNull(savedStateHandle[ARG_MB_ID])
+            trackId = checkNotNull(savedStateHandle[ARG_TRACK_ID])
         )
     }
 
     private fun routeWithArgs(
-        mbId: String,
+        trackId: String,
         isRetryAvailable: Boolean
     ): String {
-        return "$ROOT_ROUTE/$mbId/$isRetryAvailable"
+        return "$ROOT_ROUTE/$trackId/$isRetryAvailable"
     }
 
     fun NavGraphBuilder.trackScreen(
         isExpandedScreen: Boolean,
         onBackPressed: () -> Unit,
-        onNavigateToLyricsScreen: (trackMbId: String, from: NavBackStackEntry) -> Unit,
+        onNavigateToLyricsScreen: (trackId: String, from: NavBackStackEntry) -> Unit,
         onRetryRequested: () -> Unit
     ) {
         composable(
             route = ROUTE,
             arguments = listOf(
-                navArgument(ARG_MB_ID) { type = NavType.StringType },
+                navArgument(ARG_TRACK_ID) { type = NavType.StringType },
                 navArgument(ARG_RETRY) { type = NavType.BoolType },
             ),
             deepLinks = listOf(navDeepLink {
@@ -80,8 +80,8 @@ object TrackScreen {
                 isExpandedScreen = isExpandedScreen,
                 isRetryAvailable = backStackEntry.arguments?.getBoolean(ARG_RETRY) ?: false,
                 onBackPressed = onBackPressed,
-                onNavigateToLyricsScreen = { trackMbId ->
-                    onNavigateToLyricsScreen(trackMbId, backStackEntry)
+                onNavigateToLyricsScreen = { trackId ->
+                    onNavigateToLyricsScreen(trackId, backStackEntry)
                 },
                 onRetryRequested = {
                     backStackEntry.savedStateHandle[KEY_LAST_ACTION] = TrackAction.Dismissed
@@ -98,19 +98,19 @@ object TrackScreen {
     }
 
     fun NavController.navigateToTrackScreen(
-        mbId: String,
+        trackId: String,
         isRetryAvailable: Boolean = false,
         from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {
         if (from.lifecycleIsResumed) {
-            this.navigate(route = routeWithArgs(mbId, isRetryAvailable), navOptions = navOptions)
+            this.navigate(route = routeWithArgs(trackId, isRetryAvailable), navOptions = navOptions)
         }
 
     }
 
-    fun createDeepLink(mbId: String, isRetryAvailable: Boolean = false): String {
-        return "$ROOT_DEEP_LINK/${routeWithArgs(mbId, isRetryAvailable)}"
+    fun createDeepLink(trackId: String, isRetryAvailable: Boolean = false): String {
+        return "$ROOT_DEEP_LINK/${routeWithArgs(trackId, isRetryAvailable)}"
     }
 
 }

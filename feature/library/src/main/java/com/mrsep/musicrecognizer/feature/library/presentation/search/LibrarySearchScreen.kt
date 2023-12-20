@@ -55,7 +55,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun LibrarySearchScreen(
     onBackPressed: () -> Unit,
-    onTrackClick: (mbId: String) -> Unit,
+    onTrackClick: (trackId: String) -> Unit,
     viewModel: LibrarySearchViewModel = hiltViewModel()
 ) {
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -141,7 +141,7 @@ internal fun LibrarySearchScreen(
 private fun SearchResultLazyColumn(
     query: String,
     searchResult: SearchResultUi,
-    onTrackClick: (mbId: String) -> Unit,
+    onTrackClick: (trackId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedContent(
@@ -179,12 +179,12 @@ private fun SearchResultLazyColumn(
                     ) {
                         items(
                             items = result.data,
-                            key = { track -> track.mbId }
+                            key = { track -> track.id }
                         ) { track ->
                             TrackSearchItem(
                                 track = track,
                                 keyword = result.keyword,
-                                onClick = { onTrackClick(track.mbId) },
+                                onClick = { onTrackClick(track.id) },
                                 modifier = Modifier.animateItemPlacement()
                             )
                         }

@@ -17,12 +17,12 @@ class NotificationServiceRouterImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
 ) : NotificationServiceRouter {
 
-    override fun getDeepLinkIntentToTrack(mbId: String): Intent {
-        return getDeepLinkIntent(TrackScreen.createDeepLink(mbId).toUri())
+    override fun getDeepLinkIntentToTrack(trackId: String): Intent {
+        return getDeepLinkIntent(TrackScreen.createDeepLink(trackId).toUri())
     }
 
-    override fun getDeepLinkIntentToLyrics(mbId: String): Intent {
-        return getDeepLinkIntent(LyricsScreen.createDeepLink(mbId).toUri())
+    override fun getDeepLinkIntentToLyrics(trackId: String): Intent {
+        return getDeepLinkIntent(LyricsScreen.createDeepLink(trackId).toUri())
     }
 
     override fun getDeepLinkIntentToRecognitionQueue(): Intent {

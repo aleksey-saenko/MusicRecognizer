@@ -11,7 +11,7 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
 
     override fun map(input: TrackEntity): Track {
         return Track(
-            mbId = input.mbId,
+            id = input.id,
             title = input.title,
             artist = input.artist,
             album = input.album,
@@ -38,17 +38,17 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                     youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
-            metadata = Track.Metadata(
-                lastRecognitionDate = input.metadata.lastRecognitionDate,
-                isFavorite = input.metadata.isFavorite,
-                themeSeedColor = input.metadata.themeSeedColor
+            properties = Track.Properties(
+                lastRecognitionDate = input.properties.lastRecognitionDate,
+                isFavorite = input.properties.isFavorite,
+                themeSeedColor = input.properties.themeSeedColor
             )
         )
     }
 
     override fun reverseMap(input: Track): TrackEntity {
         return TrackEntity(
-            mbId = input.mbId,
+            id = input.id,
             title = input.title,
             artist = input.artist,
             album = input.album,
@@ -76,10 +76,10 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                     youtubeMusic = linkMap[MusicService.YoutubeMusic],
                 )
             },
-            metadata = TrackEntity.Metadata(
-                lastRecognitionDate = input.metadata.lastRecognitionDate,
-                isFavorite = input.metadata.isFavorite,
-                themeSeedColor = input.metadata.themeSeedColor
+            properties = TrackEntity.Properties(
+                lastRecognitionDate = input.properties.lastRecognitionDate,
+                isFavorite = input.properties.isFavorite,
+                themeSeedColor = input.properties.themeSeedColor
             )
         )
     }

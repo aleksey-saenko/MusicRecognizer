@@ -10,10 +10,6 @@ interface SoundSource {
      */
     val params: SoundSourceConfig?
 
-    /**
-     * All consumers should handle collected empty bytearray as error occurred
-     * during audio recording.
-     */
     val pcmChunkFlow: SharedFlow<Result<ByteArray>>
 
 }

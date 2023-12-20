@@ -105,7 +105,7 @@ internal fun PreferencesScreen(
                     ) {
                         NotificationServiceSwitch(
                             serviceEnabled = uiState.preferences.notificationServiceEnabled,
-                            toggleServiceState = viewModel::setNotificationServiceEnabled
+                            setServiceEnabled = viewModel::setNotificationServiceEnabled
                         )
                     }
 

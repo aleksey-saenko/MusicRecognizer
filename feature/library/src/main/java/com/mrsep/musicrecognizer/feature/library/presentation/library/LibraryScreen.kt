@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LibraryScreen(
-    onTrackClick: (mbId: String) -> Unit,
+    onTrackClick: (trackId: String) -> Unit,
     onTrackSearchClick: () -> Unit,
     viewModel: LibraryViewModel = hiltViewModel()
 ) {
@@ -32,12 +32,8 @@ internal fun LibraryScreen(
     val isLibraryEmpty = screenUiState !is LibraryUiState.Success
     var filterSheetActive by rememberSaveable { mutableStateOf(false) }
     val multiSelectionState = rememberMultiSelectionState<String>(screenUiState)
-    var deleteDialogVisible by rememberSaveable(screenUiState) {
-        mutableStateOf(false)
-    }
-    var deletionInProgress by rememberSaveable(screenUiState) {
-        mutableStateOf(false)
-    }
+    var deleteDialogVisible by rememberSaveable(screenUiState) { mutableStateOf(false) }
+    var deletionInProgress by rememberSaveable(screenUiState) { mutableStateOf(false) }
 
     BackHandler(
         enabled = multiSelectionState.multiselectEnabled,
@@ -150,7 +146,8 @@ internal fun LibraryScreen(
                         filterState = filterState,
                         onDismissRequest = ::hideFilterSheet,
                         onApplyClick = {
-                            hideFilterSheet(filterState.makeFilter())
+                            val newFilter = filterState.makeFilter()
+                            hideFilterSheet(newFilter)
                         }
                     )
                 }
@@ -159,7 +156,8 @@ internal fun LibraryScreen(
                     DeleteSelectedDialog(
                         onDeleteClick = {
                             deletionInProgress = true
-                            viewModel.deleteByIds(multiSelectionState.getSelected())
+                            val selectedIds = multiSelectionState.getSelected()
+                            viewModel.deleteTracks(selectedIds)
                         },
                         onDismissClick = { deleteDialogVisible = false },
                         inProgress = deletionInProgress
@@ -189,7 +187,7 @@ private fun LibraryUiState.getTrackCount(): Int {
 @Stable
 private fun LibraryUiState.getTrackIdList(): List<String> {
     return when (this) {
-        is LibraryUiState.Success -> trackList.map { it.mbId }
+        is LibraryUiState.Success -> trackList.map { it.id }
         else -> emptyList()
     }
 }

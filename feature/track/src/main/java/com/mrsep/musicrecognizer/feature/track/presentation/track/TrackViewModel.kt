@@ -39,9 +39,9 @@ internal class TrackViewModel @Inject constructor(
     val trackExistingState = _trackExistingState.asStateFlow()
 
     val uiStateStream = combine(
-        trackRepository.getByMbIdFlow(args.mbId),
+        trackRepository.getTrackFlow(args.trackId),
         preferencesRepository.userPreferencesFlow,
-        trackMetadataEnhancerScheduler.isRunning(args.mbId)
+        trackMetadataEnhancerScheduler.isRunning(args.trackId)
     ) { track, preferences, isMetaEnhancerRunning ->
         track?.toUiState(preferences, isMetaEnhancerRunning) ?: TrackUiState.TrackNotFound
     }.transformWhile { uiState ->
@@ -56,24 +56,24 @@ internal class TrackViewModel @Inject constructor(
     )
 
 
-    fun deleteTrack(mbId: String) {
+    fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
-            trackMetadataEnhancerScheduler.cancel(mbId)
-            trackRepository.deleteByMbId(mbId)
+            trackMetadataEnhancerScheduler.cancel(trackId)
+            trackRepository.delete(trackId)
             _trackExistingState.update { false }
         }
     }
 
-    fun toggleFavoriteMark(mbId: String) {
+    fun setFavorite(trackId: String, isFavorite: Boolean) {
         viewModelScope.launch {
-            trackRepository.toggleFavoriteMark(mbId)
+            trackRepository.setFavorite(trackId, isFavorite)
         }
     }
 
-    fun updateThemeSeedColor(mbId: String, color: Int?) {
+    fun setThemeSeedColor(trackId: String, color: Int?) {
         viewModelScope.launch {
-            trackRepository.updateThemeSeedColor(mbId, color)
+            trackRepository.setThemeSeedColor(trackId, color)
         }
     }
 
@@ -87,7 +87,7 @@ internal sealed class TrackUiState {
     data object TrackNotFound : TrackUiState()
 
     data class Success(
-        val mbId: String,
+        val trackId: String,
         val title: String,
         val artist: String,
         val album: String?,
@@ -114,16 +114,16 @@ private fun Track.toUiState(
         .mapNotNull { service -> linkMap[service]?.let { url -> TrackLink(url, service) } }
         .toImmutableList()
     return TrackUiState.Success(
-        mbId = this.mbId,
+        trackId = this.id,
         title = this.title,
         artist = this.artist,
         album = this.album,
         year = this.releaseDate?.year?.toString(),
         lyrics = this.lyrics,
         artworkUrl = this.artworkUrl,
-        isFavorite = this.metadata.isFavorite,
-        lastRecognitionDate = this.metadata.lastRecognitionDate.format(FormatStyle.MEDIUM),
-        themeSeedColor = this.metadata.themeSeedColor,
+        isFavorite = this.properties.isFavorite,
+        lastRecognitionDate = this.properties.lastRecognitionDate.format(FormatStyle.MEDIUM),
+        themeSeedColor = this.properties.themeSeedColor,
         themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         requiredLinks = requiredLinks,

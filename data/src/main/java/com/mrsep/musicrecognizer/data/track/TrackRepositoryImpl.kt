@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
+import java.time.Instant
 import javax.inject.Inject
 
 class TrackRepositoryImpl @Inject constructor(
@@ -20,64 +21,55 @@ class TrackRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
 ) : TrackRepositoryDo {
+
     private val trackDao = database.trackDao()
     private val persistentCoroutineContext = appScope.coroutineContext + ioDispatcher
 
-    override fun isEmptyFlow(): Flow<Boolean> {
-        return trackDao.isEmptyFlow()
-            .distinctUntilChanged()
-            .flowOn(ioDispatcher)
-    }
-
-    override suspend fun insertOrReplace(vararg track: TrackEntity) {
+    override suspend fun upsert(vararg tracks: TrackEntity) {
         withContext(persistentCoroutineContext) {
-            trackDao.insertOrReplace(*track)
+            trackDao.upsert(*tracks)
         }
     }
 
-    override suspend fun insertOrReplaceSaveMetadata(vararg track: TrackEntity): List<TrackEntity> {
+    override suspend fun update(vararg tracks: TrackEntity) {
+        withContext(persistentCoroutineContext) {
+            trackDao.update(*tracks)
+        }
+    }
+
+    override suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return withContext(persistentCoroutineContext) {
-            val trackList = track.map { newTrack ->
-                getByMbId(newTrack.mbId)?.run {
-                    newTrack.copy(
-                        metadata = newTrack.metadata.copy(
-                            isFavorite = this.metadata.isFavorite
-                        )
-                    )
-                } ?: newTrack
-            }
-            trackDao.insertOrReplace(*trackList.toTypedArray())
-            trackList
+            trackDao.upsertKeepProperties(*tracks)
         }
     }
 
-    override suspend fun updateThemeSeedColor(mbId: String, color: Int?) {
-        withContext(persistentCoroutineContext) {
-            trackDao.updateThemeSeedColor(mbId, color)
+    override suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
+        return withContext(persistentCoroutineContext) {
+            trackDao.updateKeepProperties(*tracks)
         }
     }
 
-    override suspend fun update(track: TrackEntity) {
+    override suspend fun setFavorite(trackId: String, isFavorite: Boolean) {
         withContext(persistentCoroutineContext) {
-            trackDao.update(track)
+            trackDao.setFavorite(trackId, isFavorite)
         }
     }
 
-    override suspend fun toggleFavoriteMark(mbId: String) {
+    override suspend fun setThemeSeedColor(trackId: String, color: Int?) {
         withContext(persistentCoroutineContext) {
-            trackDao.toggleFavoriteMark(mbId)
+            trackDao.setThemeSeedColor(trackId, color)
         }
     }
 
-    override suspend fun delete(vararg track: TrackEntity) {
+    override suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant) {
         withContext(persistentCoroutineContext) {
-            trackDao.delete(*track)
+            trackDao.setRecognitionDate(trackId, recognitionDate)
         }
     }
 
-    override suspend fun deleteByMbId(vararg mbId: String) {
+    override suspend fun delete(vararg trackIds: String) {
         withContext(persistentCoroutineContext) {
-            trackDao.deleteByMbId(*mbId)
+            trackDao.delete(*trackIds)
         }
     }
 
@@ -87,87 +79,33 @@ class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAllExceptFavorites() {
-        withContext(persistentCoroutineContext) {
-            trackDao.deleteAllExceptFavorites()
-        }
-    }
-
-    override suspend fun deleteAllFavorites() {
-        withContext(persistentCoroutineContext) {
-            trackDao.deleteAllFavorites()
-        }
-    }
-
-    override fun countAllFlow(): Flow<Int> {
-        return trackDao.countAllFlow()
+    override fun isEmptyFlow(): Flow<Boolean> {
+        return trackDao.isEmptyDatabaseFlow()
+            .distinctUntilChanged()
             .flowOn(ioDispatcher)
     }
 
-    override fun countFavoritesFlow(): Flow<Int> {
-        return trackDao.countFavoritesFlow()
-            .flowOn(ioDispatcher)
-    }
-
-    override suspend fun getByMbId(mbId: String): TrackEntity? {
+    override suspend fun getTrack(trackId: String): TrackEntity? {
         return withContext(ioDispatcher) {
-            trackDao.getByMbId(mbId)
+            trackDao.getTrack(trackId)
         }
     }
 
-    override fun getByMbIdFlow(mbId: String): Flow<TrackEntity?> {
-        return trackDao.getByMbIdFlow(mbId)
+    override fun getTrackFlow(trackId: String): Flow<TrackEntity?> {
+        return trackDao.getTrackFlow(trackId)
             .flowOn(ioDispatcher)
     }
 
-    override fun getFilteredFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>> {
-        return trackDao.getFlowByCustomQuery(filter.toSQLiteQuery())
+    override fun getTracksByFilterFlow(
+        filter: UserPreferencesDo.TrackFilterDo
+    ): Flow<List<TrackEntity>> {
+        return trackDao.getTracksFlowByQuery(filter.toSQLiteQuery())
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity> {
-        return withContext(ioDispatcher) {
-            trackDao.getAfterDate(date, limit)
-        }
-    }
-
-    override suspend fun getLastRecognized(limit: Int): List<TrackEntity> {
-        return withContext(ioDispatcher) {
-            trackDao.getLastRecognized(limit)
-        }
-    }
-
-    override fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>> {
-        return trackDao.getLastRecognizedFlow(limit)
-            .flowOn(ioDispatcher)
-    }
-
-    override fun getNotFavoriteRecentsFlow(limit: Int): Flow<List<TrackEntity>> {
-        return trackDao.getNotFavoriteRecentsFlow(limit)
-            .flowOn(ioDispatcher)
-    }
-
-    override fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>> {
-        return trackDao.getFavoritesFlow(limit)
-            .flowOn(ioDispatcher)
-    }
-
-    override suspend fun search(keyword: String, limit: Int): List<TrackEntity> {
-        return withContext(ioDispatcher) {
-            val searchKey = createSearchKeyForSQLite(keyword)
-            trackDao.search(searchKey, ESCAPE_SYMBOL, limit)
-        }
-    }
-
-    override fun searchFlow(keyword: String, limit: Int): Flow<List<TrackEntity>> {
+    override fun getSearchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo> {
         val searchKey = createSearchKeyForSQLite(keyword)
-        return trackDao.searchFlow(searchKey, ESCAPE_SYMBOL, limit)
-            .flowOn(ioDispatcher)
-    }
-
-    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo> {
-        val searchKey = createSearchKeyForSQLite(keyword)
-        return trackDao.searchFlow(searchKey, ESCAPE_SYMBOL, limit)
+        return trackDao.getTracksFlowByKeyword(searchKey, ESCAPE_SYMBOL, limit)
             .map<List<TrackEntity>, SearchResultDo> { list ->
                 SearchResultDo.Success(
                     keyword = keyword,
@@ -178,7 +116,7 @@ class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun createSearchKeyForSQLite(word: String): String {
+    private fun createSearchKeyForSQLite(word: String): String {
         return "%" + word.replace("%", "${ESCAPE_SYMBOL}%")
             .replace("_", "${ESCAPE_SYMBOL}_") + "%"
     }

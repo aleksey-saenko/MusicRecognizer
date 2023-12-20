@@ -13,12 +13,12 @@ import java.time.Instant
     tableName = "enqueued_recognition",
     foreignKeys = [ForeignKey(
         entity = TrackEntity::class,
-        parentColumns = arrayOf("mb_id"),
-        childColumns = arrayOf("result_mb_id"),
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("result_track_id"),
         onDelete = ForeignKey.SET_NULL,
         onUpdate = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["result_mb_id"])]
+    indices = [Index(value = ["result_track_id"])]
 )
 data class EnqueuedRecognitionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id")
@@ -33,8 +33,8 @@ data class EnqueuedRecognitionEntity(
     // result can't be embedded object due to constraint of foreign key indexing, see Index docs
     @ColumnInfo(name = "result_type")
     val resultType: RemoteRecognitionResultType? = null,
-    @ColumnInfo(name = "result_mb_id")
-    val resultMbId: String? = null,
+    @ColumnInfo(name = "result_track_id")
+    val resultTrackId: String? = null,
     @ColumnInfo(name = "result_message")
     val resultMessage: String? = null,
     @ColumnInfo(name = "result_date")

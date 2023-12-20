@@ -14,21 +14,21 @@ class AdapterTrackRepository @Inject constructor(
     private val trackMapper: BidirectionalMapper<TrackEntity, Track>
 ) : TrackRepository {
 
-    override suspend fun toggleFavoriteMark(mbId: String) {
-        trackRepositoryDo.toggleFavoriteMark(mbId)
+    override fun getTrackFlow(trackId: String): Flow<Track?> {
+        return trackRepositoryDo.getTrackFlow(trackId)
+            .map { entity -> entity?.run(trackMapper::map) }
     }
 
-    override suspend fun deleteByMbId(mbId: String) {
-        trackRepositoryDo.deleteByMbId(mbId)
+    override suspend fun setFavorite(trackId: String, isFavorite: Boolean) {
+        trackRepositoryDo.setFavorite(trackId, isFavorite)
     }
 
-    override suspend fun updateThemeSeedColor(mbId: String, color: Int?) {
-        trackRepositoryDo.updateThemeSeedColor(mbId, color)
+    override suspend fun delete(trackId: String) {
+        trackRepositoryDo.delete(trackId)
     }
 
-    override fun getByMbIdFlow(mbId: String): Flow<Track?> {
-        return trackRepositoryDo.getByMbIdFlow(mbId)
-            .map { entity -> entity?.let { trackMapper.map(it) } }
+    override suspend fun setThemeSeedColor(trackId: String, color: Int?) {
+        trackRepositoryDo.setThemeSeedColor(trackId, color)
     }
 
 }

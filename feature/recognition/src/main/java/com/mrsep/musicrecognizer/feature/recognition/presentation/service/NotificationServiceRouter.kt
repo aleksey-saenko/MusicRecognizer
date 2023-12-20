@@ -4,9 +4,9 @@ import android.content.Intent
 
 interface NotificationServiceRouter {
 
-    fun getDeepLinkIntentToTrack(mbId: String): Intent
+    fun getDeepLinkIntentToTrack(trackId: String): Intent
 
-    fun getDeepLinkIntentToLyrics(mbId: String): Intent
+    fun getDeepLinkIntentToLyrics(trackId: String): Intent
 
     fun getDeepLinkIntentToRecognitionQueue(): Intent
 

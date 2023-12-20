@@ -30,7 +30,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 internal fun QueueScreen(
     viewModel: QueueScreenViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
-    onNavigateToTrackScreen: (trackMbId: String) -> Unit
+    onNavigateToTrackScreen: (trackId: String) -> Unit
 ) {
     val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val screenState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
@@ -139,9 +139,9 @@ internal fun QueueScreen(
                                 selected = multiSelectionState.isSelected(
                                     enqueuedWithStatus.enqueued.id
                                 ),
-                                onClick = { enqueuedId ->
+                                onClick = { recognitionId ->
                                     if (multiSelectionState.multiselectEnabled) {
-                                        multiSelectionState.toggleSelection(enqueuedId)
+                                        multiSelectionState.toggleSelection(recognitionId)
                                     }
                                 },
                                 onLongClick = multiSelectionState::toggleSelection,

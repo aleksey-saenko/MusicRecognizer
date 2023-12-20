@@ -9,53 +9,37 @@ import java.io.File
 @Dao
 interface EnqueuedRecognitionDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplace(enqueued: EnqueuedRecognitionEntity): Long
+    @Insert
+    suspend fun insert(recognition: EnqueuedRecognitionEntity): Long
 
     @Update
-    suspend fun update(vararg enqueued: EnqueuedRecognitionEntity)
+    suspend fun update(vararg recognitions: EnqueuedRecognitionEntity)
 
-    @Query("UPDATE enqueued_recognition SET title=(:newTitle) WHERE id=(:id)")
-    suspend fun updateTitle(id: Int, newTitle: String)
+    @Query("UPDATE enqueued_recognition SET title=(:newTitle) WHERE id=(:recognitionId)")
+    suspend fun updateTitle(recognitionId: Int, newTitle: String)
 
-    @Query("SELECT record_file FROM enqueued_recognition WHERE id=(:id)")
-    suspend fun getRecordingFile(id: Int): File?
+    @Query("SELECT record_file FROM enqueued_recognition WHERE id=(:recognitionId)")
+    suspend fun getRecordingFile(recognitionId: Int): File?
 
-    @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:id)")
-    suspend fun getRecordingFiles(vararg id: Int): List<File>
+    @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:recognitionIds)")
+    suspend fun getRecordingFiles(vararg recognitionIds: Int): List<File>
 
-    @Query("DELETE FROM enqueued_recognition WHERE id in (:id)")
-    suspend fun deleteById(vararg id: Int)
+    @Query("DELETE FROM enqueued_recognition WHERE id in (:recognitionIds)")
+    suspend fun delete(vararg recognitionIds: Int)
 
     @Query("DELETE FROM enqueued_recognition")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM enqueued_recognition WHERE id=(:id)")
-    suspend fun getById(id: Int): EnqueuedRecognitionEntity?
-
-    @Query("SELECT * FROM enqueued_recognition WHERE id in (:id)")
-    suspend fun getByIds(vararg id: Int): List<EnqueuedRecognitionEntity>
-
-    @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
-    fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?>
-
-    @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
-    fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
+    @Transaction
+    @Query("SELECT * FROM enqueued_recognition WHERE id in (:recognitionIds)")
+    fun getRecognitionWithTrack(vararg recognitionIds: Int): List<EnqueuedRecognitionEntityWithTrack>
 
     @Transaction
-    @Query("SELECT * FROM enqueued_recognition WHERE id in (:id)")
-    fun getByIdWithOptionalTrack(vararg id: Int): List<EnqueuedRecognitionEntityWithTrack>
-
-    @Transaction
-    @Query("SELECT * FROM enqueued_recognition")
-    fun getAllWithOptionalTrackAll(): List<EnqueuedRecognitionEntityWithTrack>
-
-    @Transaction
-    @Query("SELECT * FROM enqueued_recognition WHERE id=(:id) LIMIT 1")
-    fun getFlowByIdWithOptionalTrack(id: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
+    @Query("SELECT * FROM enqueued_recognition WHERE id=(:recognitionId) LIMIT 1")
+    fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
 
     @Transaction
     @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
-    fun getFlowAllWithOptionalTrack(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
+    fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
 
 }

@@ -9,15 +9,15 @@ class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
 
     override fun map(input: TrackEntity): Track {
         return Track(
-            mbId = input.mbId,
+            id = input.id,
             title = input.title,
             artist = input.artist,
             album = input.album,
             releaseDate = input.releaseDate,
             artworkUrl = input.links.artwork,
-            metadata = Track.Metadata(
-                lastRecognitionDate = input.metadata.lastRecognitionDate,
-                isFavorite = input.metadata.isFavorite
+            properties = Track.Properties(
+                lastRecognitionDate = input.properties.lastRecognitionDate,
+                isFavorite = input.properties.isFavorite
             )
         )
     }

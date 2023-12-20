@@ -35,37 +35,46 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
         val forceLaunch = inputData.getBoolean(INPUT_KEY_FORCE_LAUNCH, true)
-        val enqueuedRecognitionId = inputData.getInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, -1)
-        check(enqueuedRecognitionId != -1) { "$TAG requires enqueued recognition id as parameter" }
+        val recognitionId = inputData.getInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, -1)
+        check(recognitionId != -1) { "$TAG requires enqueued recognition id as parameter" }
 
         return withContext(ioDispatcher) {
-            val enqueued = enqueuedRecognitionRepository.getById(enqueuedRecognitionId) ?: run {
+            val enqueuedRecognition = enqueuedRecognitionRepository.getRecognition(recognitionId)
+            if (enqueuedRecognition == null) {
                 val message = "$TAG finished with fatal error, " +
                         "enqueuedRecognition with id=$id was not found"
                 Log.w(TAG, message)
                 return@withContext Result.failure()
             }
-            clearPreviousResult(enqueued)
+            clearPreviousResult(enqueuedRecognition)
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
             val result = remoteRecognitionService.recognize(
                 token = userPreferences.apiToken,
-                file = enqueued.recordFile
+                file = enqueuedRecognition.recordFile
             )
             when (result) {
                 is RemoteRecognitionResult.Success -> {
-                    val updatedTrack = trackRepository.insertOrReplaceSaveMetadata(result.track)[0]
+                    val nowDate = Instant.now()
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    trackRepository.setRecognitionDate(trackWithStoredProps.id, nowDate)
+                    val updatedTrack = trackWithStoredProps.copy(
+                        properties = trackWithStoredProps.properties.copy(
+                            lastRecognitionDate = nowDate
+                        )
+                    )
                     val updatedResult = result.copy(track = updatedTrack)
-                    val updatedEnqueued = enqueued.copy(result = updatedResult, resultDate = Instant.now())
+                    val updatedEnqueued =
+                        enqueuedRecognition.copy(result = updatedResult, resultDate = Instant.now())
                     enqueuedRecognitionRepository.update(updatedEnqueued)
-                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.mbId)
+                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
                     scheduledResultNotificationHelper.notify(updatedEnqueued)
                     Result.success()
                 }
 
                 is RemoteRecognitionResult.NoMatches -> {
                     enqueuedRecognitionRepository.update(
-                        enqueued.copy(result = result, resultDate = Instant.now())
+                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
                     )
                     Result.success()
                 }
@@ -73,7 +82,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 is RemoteRecognitionResult.Error.WrongToken,
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     enqueuedRecognitionRepository.update(
-                        enqueued.copy(result = result, resultDate = Instant.now())
+                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
                     )
                     Result.failure()
                 }
@@ -86,7 +95,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                                 "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
                         Log.w(TAG, log)
                         enqueuedRecognitionRepository.update(
-                            enqueued.copy(result = result, resultDate = Instant.now())
+                            enqueuedRecognition.copy(result = result, resultDate = Instant.now())
                         )
                         Result.failure()
                     } else {
@@ -114,12 +123,12 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         private const val INPUT_KEY_FORCE_LAUNCH = "FORCE_LAUNCH"
 
         fun getOneTimeWorkRequest(
-            enqueuedId: Int,
+            recognitionId: Int,
             identifyTag: String,
             forceLaunch: Boolean
         ): OneTimeWorkRequest {
             val data = Data.Builder()
-                .putInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, enqueuedId)
+                .putInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, recognitionId)
                 .putBoolean(INPUT_KEY_FORCE_LAUNCH, forceLaunch)
                 .build()
             val constraints = if (forceLaunch) {

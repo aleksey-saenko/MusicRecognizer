@@ -29,7 +29,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun NotificationServiceSwitch(
     modifier: Modifier = Modifier,
     serviceEnabled: Boolean,
-    toggleServiceState: (Boolean) -> Unit
+    setServiceEnabled: (Boolean) -> Unit
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         //region <permission handling block>
@@ -43,7 +43,7 @@ internal fun NotificationServiceSwitch(
             Manifest.permission.POST_NOTIFICATIONS
         ) { granted ->
             if (granted) {
-                toggleServiceState(true)
+                setServiceEnabled(true)
             } else if (context.isPermissionBlocked(Manifest.permission.POST_NOTIFICATIONS)) {
                 notificationBlockedDialogVisible = true
             }
@@ -92,12 +92,12 @@ internal fun NotificationServiceSwitch(
             subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
             onClick = {
                 if (serviceEnabled) {
-                    toggleServiceState(false)
+                    setServiceEnabled(false)
                 } else {
                     if (recordPermissionState.status.isGranted &&
                         notificationsPermissionState.status.isGranted
                     ) {
-                        toggleServiceState(true)
+                        setServiceEnabled(true)
                     } else if (!recordPermissionState.status.isGranted &&
                         recordPermissionState.status.shouldShowRationale
                     ) {
@@ -118,7 +118,7 @@ internal fun NotificationServiceSwitch(
             modifier = modifier,
             title = stringResource(StringsR.string.notification_service),
             subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
-            onClick = { toggleServiceState(!serviceEnabled) },
+            onClick = { setServiceEnabled(!serviceEnabled) },
             checked = serviceEnabled
         )
     }

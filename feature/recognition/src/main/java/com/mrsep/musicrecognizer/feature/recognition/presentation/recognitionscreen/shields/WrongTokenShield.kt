@@ -29,7 +29,7 @@ internal fun AnimatedVisibilityScope.WrongTokenShield(
     isLimitReached: Boolean,
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
-    onNavigateToQueue: (enqueuedId: Int?) -> Unit,
+    onNavigateToQueue: (recognitionId: Int?) -> Unit,
     onNavigateToPreferences: () -> Unit
 ) {
     BaseShield(

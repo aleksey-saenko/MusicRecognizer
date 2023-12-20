@@ -18,8 +18,8 @@ class MultiSelectionState<T>(selectedIds: List<T>) {
 
     val multiselectEnabled get () = selectedIds.isNotEmpty()
 
-    fun select(trackMbIds: List<T>) {
-        selectedIds.putAll(trackMbIds.associateWith { Unit })
+    fun select(ids: List<T>) {
+        selectedIds.putAll(ids.associateWith { Unit })
     }
 
     fun toggleSelection(itemId: T) {

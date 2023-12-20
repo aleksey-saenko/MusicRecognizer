@@ -1,4 +1,5 @@
 @file:Suppress("unused")
+
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
@@ -43,13 +44,23 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     override fun launchRecognition(scope: CoroutineScope) {
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
+//            debugRecognitionScreen()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             delay(2000)
-            notifySuccessAndLaunchEnhancer()
+            notifySuccess(launchEnhancer = true)
 //            testAllDoneStatuses()
 //            notifyUnhandledError(RecognitionTask.Created(123, false))
 //            notifyBadConnectionError(RecognitionTask.Created(123, false))
         }.setCancellationHandler()
+    }
+
+    private suspend fun debugRecognitionScreen() {
+        while (true) {
+            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            delay(2000)
+            resultDelegator.notify(RecognitionStatus.Ready)
+            delay(2000)
+        }
     }
 
     override fun launchOfflineRecognition(scope: CoroutineScope) {
@@ -73,54 +84,50 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     }
 
 
-    private suspend fun notifySuccess() {
+    private suspend fun notifySuccess(launchEnhancer: Boolean) {
         val fakeTrack = Track(
-            mbId = UUID.randomUUID().toString(),
+            id = persistentUUID,
+//            id = UUID.randomUUID().toString(),
             title = "Echoes", //#${kotlin.random.Random.nextInt()}
             artist = "Pink Floyd",
             album = "Meddle",
             releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
             lyrics = "lyrics stub",
-            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-            trackLinks = MusicService.entries.map { service -> TrackLink("", service) },
-            metadata = Track.Metadata(
-                lastRecognitionDate = Instant.now(),
-                isFavorite = false,
-                themeSeedColor = null
-            )
-        )
-        trackRepository.insertOrReplaceSaveMetadata(fakeTrack)
-        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(fakeTrack))
-        resultDelegator.notify(fakeResult)
-    }
-
-    private suspend fun notifySuccessAndLaunchEnhancer() {
-        val fakeTrack = Track(
-            mbId = UUID.randomUUID().toString(),
-            title = "Echoes", //#${kotlin.random.Random.nextInt()}
-            artist = "Pink Floyd",
-            album = "Meddle",
-            releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
-            lyrics = "lyrics stub",
-            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
+            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
+//            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
             trackLinks = listOf(
-                TrackLink("https://music.apple.com/us/album/copycat/1440898929?i=1440899117", MusicService.AppleMusic),
-                TrackLink("https://open.spotify.com/track/5w7wuzMzsDer96KqxafeRK", MusicService.Spotify),
+                TrackLink(
+                    "https://music.apple.com/us/album/copycat/1440898929?i=1440899117",
+                    MusicService.AppleMusic
+                ),
+                TrackLink(
+                    "https://open.spotify.com/track/5w7wuzMzsDer96KqxafeRK",
+                    MusicService.Spotify
+                ),
                 TrackLink("", MusicService.Soundcloud),
                 TrackLink("", MusicService.Youtube),
                 TrackLink("", MusicService.Deezer),
                 TrackLink("", MusicService.Napster),
                 TrackLink("", MusicService.MusicBrainz),
             ),
-            metadata = Track.Metadata(
+            properties = Track.Properties(
                 lastRecognitionDate = Instant.now(),
                 isFavorite = false,
                 themeSeedColor = null
             )
         )
-        trackRepository.insertOrReplaceSaveMetadata(fakeTrack)
-        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(fakeTrack))
-        enhancerScheduler.enqueue(fakeTrack.mbId)
+        val nowDate = Instant.now()
+        val trackWithStoredProps = trackRepository.upsertKeepProperties(fakeTrack)[0]
+        trackRepository.setRecognitionDate(trackWithStoredProps.id, nowDate)
+        val updatedTrack = trackWithStoredProps.copy(
+            properties = trackWithStoredProps.properties.copy(
+                lastRecognitionDate = nowDate
+            )
+        )
+        if (launchEnhancer) {
+            enhancerScheduler.enqueue(updatedTrack.id)
+        }
+        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
         resultDelegator.notify(fakeResult)
     }
 
@@ -129,7 +136,6 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         resultDelegator.notify(RecognitionStatus.Ready)
         delay(2000)
     }
-
 
 
     private fun notifyBadConnectionError(recognitionTask: RecognitionTask) {
@@ -238,7 +244,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         notifyUnhandledError(taskIgnored)
         resetToReadyWithDelay()
 
-        notifySuccess()
+        notifySuccess(launchEnhancer = false)
     }
 
     private fun Job.setCancellationHandler() = apply {
@@ -248,6 +254,12 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                     resultDelegator.notify(RecognitionStatus.Ready)
                 }
             }
+        }
+    }
+
+    companion object {
+        private val persistentUUID by lazy {
+            UUID.randomUUID().toString()
         }
     }
 

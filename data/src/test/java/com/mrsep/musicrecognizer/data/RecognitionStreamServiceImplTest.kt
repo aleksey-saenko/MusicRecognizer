@@ -37,15 +37,6 @@ class RecognitionStreamServiceImplTest {
 
     private val scope = TestScope()
     private val testDispatcher = StandardTestDispatcher(scope.testScheduler)
-    private val requiredServicesStub = UserPreferencesDo.RequiredServicesDo(
-        spotify = true,
-        youtube = false,
-        soundCloud = false,
-        appleMusic = false,
-        deezer = false,
-        napster = false,
-        musicbrainz = false
-    )
 
     @Test
     fun `intermediate results only = return last`() = scope.runTest {
@@ -74,7 +65,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         val expectedTime = normalAudioFlowDuration + TEST_QUEUE_DELAY + TEST_RESPONSE_DELAY
@@ -103,7 +93,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_QUEUE_DELAY + TEST_RESPONSE_DELAY
@@ -133,7 +122,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         val expected = RemoteRecognitionResultDo.Error.WrongToken(true)
@@ -164,7 +152,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         val expectedTime = normalAudioFlowDuration + TIMEOUT_AFTER_RECORDING_FINISHED
@@ -198,7 +185,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         Assert.assertTrue(result is RemoteRecognitionResultDo.Error.BadConnection)
@@ -227,7 +213,6 @@ class RecognitionStreamServiceImplTest {
         )
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = normalAudioRecordingFlow
         )
         val expectedTime = TIMEOUT_RECORDING_SENDING
@@ -260,7 +245,6 @@ class RecognitionStreamServiceImplTest {
         val delayBeforeFlowClose = 5500L
         val result = service.recognize(
             token = "",
-            requiredServices = requiredServicesStub,
             audioRecordingFlow = emptyAudioRecordingFlow(delayBeforeFlowClose)
         )
         Assert.assertTrue(result is RemoteRecognitionResultDo.Error.BadRecording)
@@ -273,10 +257,7 @@ class RecognitionStreamServiceImplTest {
 // must provide websocket events while collected (reconnect on close by manual simulate)
 private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : AuddRecognitionWebSocketService {
 
-    override suspend fun startSession(
-        token: String,
-        requiredServices: UserPreferencesDo.RequiredServicesDo
-    ): Flow<SocketEvent> = flow {
+    override suspend fun startSession(token: String): Flow<SocketEvent> = flow {
         emitAll(webSocket.outputChannel)
     }
 

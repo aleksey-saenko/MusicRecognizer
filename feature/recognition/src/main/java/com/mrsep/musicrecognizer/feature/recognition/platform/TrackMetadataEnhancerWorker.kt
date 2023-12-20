@@ -32,15 +32,15 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
-        val trackMbId = inputData.getString(INPUT_KEY_TRACK_ID)
-        checkNotNull(trackMbId) { "$TAG requires track ID as parameter" }
+        val trackId = inputData.getString(INPUT_KEY_TRACK_ID)
+        checkNotNull(trackId) { "$TAG requires track ID as parameter" }
 
         return withContext(ioDispatcher) {
-            val oldTrack = trackRepository.getByMbId(trackMbId)
+            val oldTrack = trackRepository.getTrack(trackId)
                 ?: return@withContext Result.failure()
             when (val enhancingResult = trackMetadataEnhancer.enhance(oldTrack)) {
                 is RemoteMetadataEnhancingResult.Success -> {
-                    trackRepository.update(enhancingResult.track)
+                    trackRepository.updateKeepProperties(enhancingResult.track)
                     Result.success()
                 }
 

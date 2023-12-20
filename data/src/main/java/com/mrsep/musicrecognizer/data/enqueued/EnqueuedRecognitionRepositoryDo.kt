@@ -11,28 +11,19 @@ interface EnqueuedRecognitionRepositoryDo {
 
     suspend fun update(enqueuedRecognition: EnqueuedRecognitionEntity)
 
-    suspend fun updateTitle(enqueuedId: Int, newTitle: String)
+    suspend fun updateTitle(recognitionId: Int, newTitle: String)
 
-    suspend fun deleteById(vararg enqueuedId: Int)
+    suspend fun delete(vararg recognitionIds: Int)
 
     suspend fun deleteAll()
 
+    suspend fun getRecordingForRecognition(recognitionId: Int): File?
 
-    suspend fun getRecordingById(enqueuedId: Int): File?
-
-    suspend fun getById(id: Int): EnqueuedRecognitionEntity?
-
-    fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?>
-
-    fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>>
+    suspend fun getRecognitionWithTrack(recognitionId: Int): EnqueuedRecognitionEntityWithTrack?
 
 
-    suspend fun getByIdWithOptionalTrack(id: Int): EnqueuedRecognitionEntityWithTrack?
+    fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
 
-    suspend fun getAllWithOptionalTrack(): List<EnqueuedRecognitionEntityWithTrack>
-
-    fun getFlowByIdWithOptionalTrack(id: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
-
-    fun getFlowAllWithOptionalTrack(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
+    fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
 
 }

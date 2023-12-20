@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface EnqueuedRecognitionScheduler {
 
-    fun enqueueById(vararg enqueuedId: Int, forceLaunch: Boolean)
+    fun enqueue(vararg recognitionIds: Int, forceLaunch: Boolean)
 
-    fun cancelById(vararg enqueuedId: Int)
+    fun cancel(vararg recognitionIds: Int)
 
     fun cancelAll()
 
-    fun getStatusFlowById(enqueuedId: Int): Flow<ScheduledJobStatus>
+    fun getJobStatusFlow(recognitionId: Int): Flow<ScheduledJobStatus>
 
-    fun getStatusFlowAll(): Flow<Map<Int, ScheduledJobStatus>>
+    fun getJobStatusForAllFlow(): Flow<Map<Int, ScheduledJobStatus>>
 
 }

@@ -7,8 +7,8 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
 data class EnqueuedRecognitionEntityWithTrack(
     @Embedded val enqueued: EnqueuedRecognitionEntity,
     @Relation(
-        parentColumn = "result_mb_id",
-        entityColumn = "mb_id"
+        parentColumn = "result_track_id",
+        entityColumn = "id"
     )
     val track: TrackEntity?
 )

@@ -7,7 +7,7 @@ import javax.annotation.concurrent.Immutable
 
 @Immutable
 internal data class TrackUi(
-    val mbId: String,
+    val id: String,
     val title: String,
     val artist: String,
     val albumAndYear: String?,
@@ -16,13 +16,13 @@ internal data class TrackUi(
 )
 
 internal fun Track.toUi(dateTimeFormatter: AppDateTimeFormatter) = TrackUi(
-    mbId = this.mbId,
+    id = this.id,
     title = this.title,
     artist = this.artist,
     albumAndYear = this.combineAlbumAndYear(),
     artworkUrl = this.artworkUrl,
     recognitionDate = dateTimeFormatter.formatRelativeToToday(
-        this.metadata.lastRecognitionDate.atZone(ZoneId.systemDefault())
+        this.properties.lastRecognitionDate.atZone(ZoneId.systemDefault())
     )
 )
 

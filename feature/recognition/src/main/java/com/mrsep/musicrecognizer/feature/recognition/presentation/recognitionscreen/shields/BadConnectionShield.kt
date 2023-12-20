@@ -29,7 +29,7 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
     onRetryClick: () -> Unit,
-    onNavigateToQueue: (enqueuedId: Int?) -> Unit
+    onNavigateToQueue: (recognitionId: Int?) -> Unit
 ) {
     BaseShield(
         modifier = modifier,

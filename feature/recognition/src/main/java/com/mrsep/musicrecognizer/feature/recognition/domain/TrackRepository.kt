@@ -1,14 +1,16 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
+import java.time.Instant
 
 interface TrackRepository {
 
-    suspend fun insertOrReplace(vararg track: Track)
-    suspend fun insertOrReplaceSaveMetadata(vararg track: Track): List<Track>
+    suspend fun upsertKeepProperties(vararg tracks: Track): List<Track>
 
-    suspend fun getByMbId(mbId: String): Track?
-    suspend fun update(track: Track)
+    suspend fun updateKeepProperties(vararg tracks: Track)
 
+    suspend fun getTrack(trackId: String): Track?
+
+    suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant)
 
 }

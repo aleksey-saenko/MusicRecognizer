@@ -4,20 +4,20 @@ import java.time.Instant
 import java.time.LocalDate
 
 /*
- * MusicBrainz Recording Identifier (mbId) uses as id (primary) or random UUID (secondary)
+ * MusicBrainz Recording Identifier uses as id (primary) or random UUID (secondary)
  * https://musicbrainz.org/doc/MusicBrainz_Identifier
  */
 data class Track(
-    val mbId: String,
+    val id: String,
     val title: String,
     val artist: String,
     val album: String?,
     val releaseDate: LocalDate?,
     val artworkUrl: String?,
-    val metadata: Metadata
+    val properties: Properties
 ) {
 
-    data class Metadata(
+    data class Properties(
         val lastRecognitionDate: Instant,
         val isFavorite: Boolean
     )

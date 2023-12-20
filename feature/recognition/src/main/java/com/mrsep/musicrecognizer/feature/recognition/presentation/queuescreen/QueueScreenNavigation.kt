@@ -15,7 +15,7 @@ object RecognitionQueueScreen {
 
     fun NavGraphBuilder.queueScreen(
         onBackPressed: () -> Unit,
-        onNavigateToTrackScreen: (trackMbId: String, from: NavBackStackEntry) -> Unit
+        onNavigateToTrackScreen: (trackId: String, from: NavBackStackEntry) -> Unit
     ) {
         composable(
             route = ROUTE,
@@ -25,11 +25,8 @@ object RecognitionQueueScreen {
         ) { backStackEntry ->
             QueueScreen(
                 onBackPressed = onBackPressed,
-                onNavigateToTrackScreen = { trackMbId ->
-                    onNavigateToTrackScreen(
-                        trackMbId,
-                        backStackEntry
-                    )
+                onNavigateToTrackScreen = { trackId ->
+                    onNavigateToTrackScreen(trackId, backStackEntry)
                 }
             )
         }

@@ -48,8 +48,8 @@ internal fun RecognitionScreen(
     viewModel: RecognitionViewModel = hiltViewModel(),
     autostart: Boolean,
     onResetAutostart: () -> Unit,
-    onNavigateToTrackScreen: (mbId: String) -> Unit,
-    onNavigateToQueueScreen: (enqueuedId: Int?) -> Unit,
+    onNavigateToTrackScreen: (trackId: String) -> Unit,
+    onNavigateToQueueScreen: (recognitionId: Int?) -> Unit,
     onNavigateToPreferencesScreen: () -> Unit
 ) {
     val context = LocalContext.current
@@ -159,9 +159,9 @@ internal fun RecognitionScreen(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = viewModel::recognizeTap,
-                            onNavigateToQueue = { enqueuedId ->
+                            onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
-                                onNavigateToQueueScreen(enqueuedId)
+                                onNavigateToQueueScreen(recognitionId)
                             }
                         )
 
@@ -172,9 +172,9 @@ internal fun RecognitionScreen(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = viewModel::recognizeTap,
-                            onNavigateToQueue = { enqueuedId ->
+                            onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
-                                onNavigateToQueueScreen(enqueuedId)
+                                onNavigateToQueueScreen(recognitionId)
                             }
                         )
 
@@ -186,9 +186,9 @@ internal fun RecognitionScreen(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = viewModel::recognizeTap,
-                            onNavigateToQueue = { enqueuedId ->
+                            onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
-                                onNavigateToQueueScreen(enqueuedId)
+                                onNavigateToQueueScreen(recognitionId)
                             }
                         )
 
@@ -200,9 +200,9 @@ internal fun RecognitionScreen(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = viewModel::recognizeTap,
-                            onNavigateToQueue = { enqueuedId ->
+                            onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
-                                onNavigateToQueueScreen(enqueuedId)
+                                onNavigateToQueueScreen(recognitionId)
                             }
                         )
 
@@ -210,9 +210,9 @@ internal fun RecognitionScreen(
                             isLimitReached = thisStatus.result.remoteError.isLimitReached,
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onNavigateToQueue = { enqueuedId ->
+                            onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
-                                onNavigateToQueueScreen(enqueuedId)
+                                onNavigateToQueueScreen(recognitionId)
                             },
                             onNavigateToPreferences = {
                                 viewModel.resetRecognitionResult()
@@ -224,9 +224,9 @@ internal fun RecognitionScreen(
                     is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
                         recognitionTask = thisStatus.result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
-                        onNavigateToQueue = { enqueuedId ->
+                        onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
+                            onNavigateToQueueScreen(recognitionId)
                         }
                     )
 
@@ -234,16 +234,16 @@ internal fun RecognitionScreen(
                         recognitionTask = thisStatus.result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
                         onRetryClick = viewModel::recognizeTap,
-                        onNavigateToQueue = { enqueuedId ->
+                        onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
-                            onNavigateToQueueScreen(enqueuedId)
+                            onNavigateToQueueScreen(recognitionId)
                         }
                     )
 
                     is RecognitionResult.Success -> {
                         LaunchedEffect(thisStatus.result) {
                             delay(animationDurationButton.toLong())
-                            onNavigateToTrackScreen(thisStatus.result.track.mbId)
+                            onNavigateToTrackScreen(thisStatus.result.track.id)
                         }
                         DisposableEffect(thisStatus.result) {
                             onDispose(viewModel::resetRecognitionResult)

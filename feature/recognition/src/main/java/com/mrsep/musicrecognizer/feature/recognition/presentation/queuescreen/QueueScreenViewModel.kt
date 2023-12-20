@@ -32,8 +32,8 @@ internal class QueueScreenViewModel @Inject constructor(
 
     val screenUiStateFlow = combine(
         flow = combine(
-            enqueuedRecognitionRepository.getFlowAll(),
-            recognitionScheduler.getStatusFlowAll()
+            enqueuedRecognitionRepository.getAllRecognitionsFlow(),
+            recognitionScheduler.getJobStatusForAllFlow()
         ) { enqueuedList, statusMap ->
             enqueuedList.map { enqueued ->
                 EnqueuedRecognitionWithStatus(
@@ -54,36 +54,36 @@ internal class QueueScreenViewModel @Inject constructor(
         initialValue = QueueScreenUiState.Loading
     )
 
-    fun renameRecognition(enqueuedId: Int, newTitle: String) {
+    fun renameRecognition(recognitionId: Int, newTitle: String) {
         appScope.launch(ioDispatcher) {
-            enqueuedRecognitionRepository.updateTitle(enqueuedId, newTitle)
+            enqueuedRecognitionRepository.updateTitle(recognitionId, newTitle)
         }
     }
 
-    fun enqueueRecognition(enqueuedId: Int, forceLaunch: Boolean) {
+    fun enqueueRecognition(recognitionId: Int, forceLaunch: Boolean) {
         appScope.launch(ioDispatcher) {
-            recognitionScheduler.enqueueById(enqueuedId, forceLaunch = forceLaunch)
+            recognitionScheduler.enqueue(recognitionId, forceLaunch = forceLaunch)
         }
     }
 
-    fun cancelRecognition(vararg enqueuedId: Int) {
+    fun cancelRecognition(vararg recognitionIds: Int) {
         appScope.launch(ioDispatcher) {
-            recognitionScheduler.cancelById(*enqueuedId)
+            recognitionScheduler.cancel(*recognitionIds)
         }
     }
 
-    fun cancelAndDeleteRecognition(vararg enqueuedId: Int) {
+    fun cancelAndDeleteRecognition(vararg recognitionIds: Int) {
         appScope.launch(ioDispatcher) {
             playerController.stop()
-            recognitionScheduler.cancelById(*enqueuedId)
-            enqueuedRecognitionRepository.deleteById(*enqueuedId)
+            recognitionScheduler.cancel(*recognitionIds)
+            enqueuedRecognitionRepository.delete(*recognitionIds)
         }
     }
 
-    fun startAudioPlayer(enqueuedId: Int) {
+    fun startAudioPlayer(recognitionId: Int) {
         viewModelScope.launch {
-            enqueuedRecognitionRepository.getRecordingById(enqueuedId)?.let { recordFile ->
-                playerController.start(recordFile)
+            enqueuedRecognitionRepository.getRecordingForRecognition(recognitionId)?.let { recording ->
+                playerController.start(recording)
             }
         }
     }

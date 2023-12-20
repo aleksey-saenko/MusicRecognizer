@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
 
-    suspend fun toggleFavoriteMark(mbId: String)
+    fun getTrackFlow(trackId: String): Flow<Track?>
 
-    suspend fun deleteByMbId(mbId: String)
+    suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
-    suspend fun updateThemeSeedColor(mbId: String, color: Int?)
+    suspend fun delete(trackId: String)
 
-    fun getByMbIdFlow(mbId: String): Flow<Track?>
+    suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
 }

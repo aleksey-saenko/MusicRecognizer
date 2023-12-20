@@ -24,22 +24,24 @@ internal class LyricsViewModel @Inject constructor(
 
     private val args = LyricsScreen.Args(savedStateHandle)
 
-    val uiStateStream = trackRepository.getByMbIdFlow(args.mbId)
-        .combine(preferencesRepository.userPreferencesFlow) { track, preferences ->
-            track?.let {
-                track.lyrics?.let { lyrics ->
-                    LyricsUiState.Success(
-                        title = track.title,
-                        artist = track.artist,
-                        lyrics = lyrics,
-                        fontStyle = preferences.lyricsFontStyle,
-                        themeSeedColor = track.metadata.themeSeedColor,
-                        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-                        themeMode = preferences.themeMode
-                    )
-                }
-            } ?: LyricsUiState.LyricsNotFound
-        }
+    val uiStateStream = combine(
+        flow = trackRepository.getTrackFlow(args.trackId),
+        flow2 = preferencesRepository.userPreferencesFlow
+    ) { track, preferences ->
+        track?.let {
+            track.lyrics?.let { lyrics ->
+                LyricsUiState.Success(
+                    title = track.title,
+                    artist = track.artist,
+                    lyrics = lyrics,
+                    fontStyle = preferences.lyricsFontStyle,
+                    themeSeedColor = track.properties.themeSeedColor,
+                    artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+                    themeMode = preferences.themeMode
+                )
+            }
+        } ?: LyricsUiState.LyricsNotFound
+    }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),

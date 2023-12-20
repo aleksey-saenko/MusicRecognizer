@@ -13,12 +13,12 @@ object LibrarySearchScreen {
 
     fun NavGraphBuilder.librarySearchScreen(
         onBackPressed: () -> Unit,
-        onTrackClick: (mbId: String, from: NavBackStackEntry) -> Unit
+        onTrackClick: (trackId: String, from: NavBackStackEntry) -> Unit
     ) {
         composable(ROUTE) { backStackEntry ->
             LibrarySearchScreen(
                 onBackPressed = onBackPressed,
-                onTrackClick = { mbId -> onTrackClick(mbId, backStackEntry) }
+                onTrackClick = { trackId -> onTrackClick(trackId, backStackEntry) }
             )
         }
     }

@@ -32,7 +32,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
-    onTrackClick: (mbId: String) -> Unit,
+    onTrackClick: (trackId: String) -> Unit,
     lazyGridState: LazyGridState,
     multiSelectionState: MultiSelectionState<String>,
     modifier: Modifier = Modifier
@@ -45,19 +45,19 @@ internal fun TrackLazyGrid(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
-        items(items = trackList, key = { track -> track.mbId }) { track ->
+        items(items = trackList, key = { track -> track.id }) { track ->
             LazyGridTrackItem(
                 track = track,
-                selected = multiSelectionState.isSelected(track.mbId),
+                selected = multiSelectionState.isSelected(track.id),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
                 onClick = {
                     if (multiSelectionState.multiselectEnabled) {
-                        multiSelectionState.toggleSelection(track.mbId)
+                        multiSelectionState.toggleSelection(track.id)
                     } else {
-                        onTrackClick(track.mbId)
+                        onTrackClick(track.id)
                     }
                 },
-                onLongClick = { multiSelectionState.toggleSelection(track.mbId) },
+                onLongClick = { multiSelectionState.toggleSelection(track.id) },
                 modifier = Modifier.animateItemPlacement()
             )
         }

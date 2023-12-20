@@ -4,14 +4,10 @@ import androidx.room.*
 import java.time.Instant
 import java.time.LocalDate
 
-/*
- * MusicBrainz Recording Identifier uses as id (mbId)
- * https://musicbrainz.org/doc/MusicBrainz_Identifier
- */
 @Entity(tableName = "track")
 data class TrackEntity(
-    @PrimaryKey @ColumnInfo(name = "mb_id")
-    val mbId: String,
+    @PrimaryKey @ColumnInfo(name = "id")
+    val id: String,
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "artist")
@@ -25,7 +21,7 @@ data class TrackEntity(
     @Embedded(prefix = "link_")
     val links: Links,
     @Embedded
-    val metadata: Metadata
+    val properties: Properties
 ) {
 
     data class Links(
@@ -65,7 +61,7 @@ data class TrackEntity(
         val youtubeMusic: String?,
     )
 
-    data class Metadata(
+    data class Properties(
         @ColumnInfo(name = "last_recognition_date")
         val lastRecognitionDate: Instant,
         @ColumnInfo(name = "is_favorite")

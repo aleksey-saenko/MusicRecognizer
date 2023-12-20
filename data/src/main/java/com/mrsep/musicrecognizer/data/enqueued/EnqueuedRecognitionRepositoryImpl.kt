@@ -32,7 +32,7 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
                     recordFile = recordingFile,
                     creationDate = Instant.now()
                 )
-                dao.insertOrReplace(enqueued).toInt()
+                dao.insert(enqueued).toInt()
             }
         }
     }
@@ -43,36 +43,22 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateTitle(enqueuedId: Int, newTitle: String) {
+    override suspend fun updateTitle(recognitionId: Int, newTitle: String) {
         withContext(persistentCoroutineContext) {
-            dao.updateTitle(enqueuedId, newTitle)
+            dao.updateTitle(recognitionId, newTitle)
         }
     }
 
-    override suspend fun getRecordingById(enqueuedId: Int): File? {
+    override suspend fun getRecordingForRecognition(recognitionId: Int): File? {
         return withContext(ioDispatcher) {
-            dao.getRecordingFile(enqueuedId)
+            dao.getRecordingFile(recognitionId)
         }
     }
 
-    override suspend fun getById(id: Int): EnqueuedRecognitionEntity? {
-        return withContext(ioDispatcher) {
-            dao.getById(id)
-        }
-    }
-
-    override fun getFlowById(id: Int): Flow<EnqueuedRecognitionEntity?> {
-        return dao.getFlowById(id).flowOn(ioDispatcher)
-    }
-
-    override fun getFlowAll(): Flow<List<EnqueuedRecognitionEntity>> {
-        return dao.getFlowAll().flowOn(ioDispatcher)
-    }
-
-    override suspend fun deleteById(vararg enqueuedId: Int) {
+    override suspend fun delete(vararg recognitionIds: Int) {
         withContext(persistentCoroutineContext) {
-            val files = dao.getRecordingFiles(*enqueuedId)
-            dao.deleteById(*enqueuedId)
+            val files = dao.getRecordingFiles(*recognitionIds)
+            dao.delete(*recognitionIds)
             files.forEach { file -> recordingFileDataSource.delete(file) }
         }
     }
@@ -84,25 +70,18 @@ class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-
-    override suspend fun getByIdWithOptionalTrack(id: Int): EnqueuedRecognitionEntityWithTrack? {
+    override suspend fun getRecognitionWithTrack(recognitionId: Int): EnqueuedRecognitionEntityWithTrack? {
         return withContext(ioDispatcher) {
-            dao.getByIdWithOptionalTrack(id).firstOrNull()
+            dao.getRecognitionWithTrack(recognitionId).firstOrNull()
         }
     }
 
-    override suspend fun getAllWithOptionalTrack(): List<EnqueuedRecognitionEntityWithTrack> {
-        return withContext(ioDispatcher) {
-            dao.getAllWithOptionalTrackAll()
-        }
+    override fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?> {
+        return dao.getRecognitionWithTrackFlow(recognitionId).flowOn(ioDispatcher)
     }
 
-    override fun getFlowByIdWithOptionalTrack(id: Int): Flow<EnqueuedRecognitionEntityWithTrack?> {
-        return dao.getFlowByIdWithOptionalTrack(id).flowOn(ioDispatcher)
-    }
-
-    override fun getFlowAllWithOptionalTrack(): Flow<List<EnqueuedRecognitionEntityWithTrack>> {
-        return dao.getFlowAllWithOptionalTrack().flowOn(ioDispatcher)
+    override fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>> {
+        return dao.getAllRecognitionsWithTrackFlow().flowOn(ioDispatcher)
     }
 
 }

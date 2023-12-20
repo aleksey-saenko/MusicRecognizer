@@ -15,24 +15,24 @@ object LyricsScreen {
 
     private const val ROOT_ROUTE = "lyrics"
     private const val ROOT_DEEP_LINK = "app://mrsep.musicrecognizer.com"
-    private const val ARG_MB_ID = "mbId"
+    private const val ARG_TRACK_ID = "trackId"
 
-    const val ROUTE = "$ROOT_ROUTE/{$ARG_MB_ID}"
+    const val ROUTE = "$ROOT_ROUTE/{$ARG_TRACK_ID}"
 
-    data class Args(val mbId: String) {
+    data class Args(val trackId: String) {
         constructor(savedStateHandle: SavedStateHandle) : this(
-            mbId = checkNotNull(savedStateHandle[ARG_MB_ID])
+            trackId = checkNotNull(savedStateHandle[ARG_TRACK_ID])
         )
     }
 
-    private fun routeWithArgs(mbId: String) = "$ROOT_ROUTE/$mbId"
+    private fun routeWithArgs(trackId: String) = "$ROOT_ROUTE/$trackId"
 
     fun NavGraphBuilder.lyricsScreen(
         onBackPressed: () -> Unit
     ) {
         composable(
             route = ROUTE,
-            arguments = listOf(navArgument(ARG_MB_ID) { type = NavType.StringType }),
+            arguments = listOf(navArgument(ARG_TRACK_ID) { type = NavType.StringType }),
             deepLinks = listOf(navDeepLink {
                 uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
             })
@@ -45,18 +45,18 @@ object LyricsScreen {
     }
 
     fun NavController.navigateToLyricsScreen(
-        mbId: String,
+        trackId: String,
         from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {
         if (from.lifecycleIsResumed) {
-            this.navigate(route = routeWithArgs(mbId), navOptions = navOptions)
+            this.navigate(route = routeWithArgs(trackId), navOptions = navOptions)
         }
 
     }
 
-    fun createDeepLink(mbId: String): String {
-        return "$ROOT_DEEP_LINK/${routeWithArgs(mbId)}"
+    fun createDeepLink(trackId: String): String {
+        return "$ROOT_DEEP_LINK/${routeWithArgs(trackId)}"
     }
 
 }

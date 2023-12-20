@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 internal val fakeTrack = TrackEntity(
-    mbId = UUID.randomUUID().toString(),
+    id = UUID.randomUUID().toString(),
     title = "Echoes",
     artist = "Pink Floyd",
     album = "Meddle",
@@ -17,15 +17,24 @@ internal val fakeTrack = TrackEntity(
     lyrics = "lyrics stub",
     links = TrackEntity.Links(
         artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
-        spotify = null,
-        youtube = null,
-        soundCloud = null,
+        amazonMusic = null,
+        anghami = null,
         appleMusic = null,
-        musicBrainz = null,
+        audiomack = null,
+        audius = null,
+        boomplay = null,
         deezer = null,
-        napster = null
+        musicBrainz = null,
+        napster = null,
+        pandora = null,
+        soundCloud = null,
+        spotify = null,
+        tidal = null,
+        yandexMusic = null,
+        youtube = null,
+        youtubeMusic = null
     ),
-    metadata = TrackEntity.Metadata(
+    properties = TrackEntity.Properties(
         lastRecognitionDate = Instant.now(),
         isFavorite = false,
         themeSeedColor = null
@@ -36,12 +45,12 @@ internal fun emptyAudioRecordingFlow(delayBeforeClose: Long) = flow<ByteArray> {
     delay(delayBeforeClose)
 }
 
-internal val normalAudioFlowDuration = 5000L
-internal val normalAudioDelay1 = 0L
-internal val normalAudioDelay2 = 1000L
-internal val normalAudioDelay3 = 1500L
-internal val normalAudioDelay4 = 1000L
-internal val normalAudioDelay5 = 1500L
+internal const val normalAudioFlowDuration = 5000L
+internal const val normalAudioDelay1 = 0L
+internal const val normalAudioDelay2 = 1000L
+internal const val normalAudioDelay3 = 1500L
+internal const val normalAudioDelay4 = 1000L
+internal const val normalAudioDelay5 = 1500L
 internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay1)
     emit(ByteArray(100 * 1024))

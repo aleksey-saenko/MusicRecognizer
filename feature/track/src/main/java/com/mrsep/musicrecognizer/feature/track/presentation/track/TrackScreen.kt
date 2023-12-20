@@ -35,7 +35,7 @@ internal fun TrackScreen(
     isExpandedScreen: Boolean,
     isRetryAvailable: Boolean,
     onBackPressed: () -> Unit,
-    onNavigateToLyricsScreen: (trackMbId: String) -> Unit,
+    onNavigateToLyricsScreen: (trackId: String) -> Unit,
     onRetryRequested: () -> Unit,
     onTrackDeleted: () -> Unit
 ) {
@@ -138,11 +138,13 @@ internal fun TrackScreen(
                         TrackScreenTopBar(
                             onBackPressed = onBackPressed,
                             isFavorite = uiState.isFavorite,
-                            onFavoriteClick = { viewModel.toggleFavoriteMark(uiState.mbId) },
+                            onFavoriteClick = {
+                                viewModel.setFavorite(uiState.trackId, !uiState.isFavorite)
+                            },
                             isLyricsAvailable = uiState.lyrics != null,
-                            onLyricsClick = { onNavigateToLyricsScreen(uiState.mbId) },
+                            onLyricsClick = { onNavigateToLyricsScreen(uiState.trackId) },
                             onShareClick = { shareSheetActive = !shareSheetActive },
-                            onDeleteClick = { viewModel.deleteTrack(uiState.mbId) },
+                            onDeleteClick = { viewModel.deleteTrack(uiState.trackId) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
                             onPerformWebSearchClick = { searchParams ->
                                 performWebSearch(context, searchParams, uiState)
@@ -160,15 +162,15 @@ internal fun TrackScreen(
                             onArtworkCached = { artworkUri = it },
                             createSeedColor = uiState.artworkBasedThemeEnabled,
                             onSeedColor = { seedColor ->
-                                viewModel.updateThemeSeedColor(
-                                    uiState.mbId,
+                                viewModel.setThemeSeedColor(
+                                    uiState.trackId,
                                     seedColor.toArgb()
                                 )
                             },
                             isRetryAvailable = isRetryAvailable,
                             onRetryRequested = {
                                 trackDismissed = true
-                                viewModel.deleteTrack(uiState.mbId)
+                                viewModel.deleteTrack(uiState.trackId)
                                 onRetryRequested()
                             },
                             onCopyToClipboard = { context.copyTextToClipboard(it) },

@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
+import java.time.Instant
 import javax.inject.Inject
 
 class AdapterTrackRepository @Inject constructor(
@@ -12,22 +13,24 @@ class AdapterTrackRepository @Inject constructor(
     private val trackMapper: BidirectionalMapper<TrackEntity, Track>
 ) : TrackRepository {
 
-    override suspend fun insertOrReplace(vararg track: Track) {
-        trackRepositoryDo.insertOrReplace(*track.map { trackMapper.reverseMap(it) }.toTypedArray())
+    override suspend fun upsertKeepProperties(vararg tracks: Track): List<Track> {
+        return trackRepositoryDo.upsertKeepProperties(
+            *tracks.map(trackMapper::reverseMap).toTypedArray()
+        ).map(trackMapper::map)
     }
 
-    override suspend fun insertOrReplaceSaveMetadata(vararg track: Track): List<Track> {
-        return trackRepositoryDo.insertOrReplaceSaveMetadata(
-            *track.map { trackMapper.reverseMap(it) }.toTypedArray()
-        ).map { entity -> trackMapper.map(entity) }
+    override suspend fun updateKeepProperties(vararg tracks: Track) {
+        trackRepositoryDo.updateKeepProperties(
+            *tracks.map(trackMapper::reverseMap).toTypedArray()
+        )
     }
 
-    override suspend fun getByMbId(mbId: String): Track? {
-        return trackRepositoryDo.getByMbId(mbId)?.let { entity -> trackMapper.map(entity) }
+    override suspend fun getTrack(trackId: String): Track? {
+        return trackRepositoryDo.getTrack(trackId)?.run(trackMapper::map)
     }
 
-    override suspend fun update(track: Track) {
-        trackRepositoryDo.update(trackMapper.reverseMap(track))
+    override suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant) {
+        trackRepositoryDo.setRecognitionDate(trackId, recognitionDate)
     }
 
 }

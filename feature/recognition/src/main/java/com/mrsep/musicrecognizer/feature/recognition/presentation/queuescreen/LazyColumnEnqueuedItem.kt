@@ -70,17 +70,17 @@ internal fun LazyColumnEnqueuedItem(
     enqueuedWithStatus: EnqueuedRecognitionWithStatus,
     isPlaying: Boolean,
     modifier: Modifier = Modifier,
-    onDeleteEnqueued: (enqueuedId: Int) -> Unit,
-    onRenameEnqueued: (enqueuedId: Int, name: String) -> Unit,
-    onStartPlayRecord: (enqueuedId: Int) -> Unit,
+    onDeleteEnqueued: (recognitionId: Int) -> Unit,
+    onRenameEnqueued: (recognitionId: Int, name: String) -> Unit,
+    onStartPlayRecord: (recognitionId: Int) -> Unit,
     onStopPlayRecord: () -> Unit,
-    onEnqueueRecognition: (enqueuedId: Int, forceLaunch: Boolean) -> Unit,
-    onCancelRecognition: (enqueuedId: Int) -> Unit,
-    onNavigateToTrackScreen: (trackMbId: String) -> Unit,
+    onEnqueueRecognition: (recognitionId: Int, forceLaunch: Boolean) -> Unit,
+    onCancelRecognition: (recognitionId: Int) -> Unit,
+    onNavigateToTrackScreen: (trackId: String) -> Unit,
     menuEnabled: Boolean,
     selected: Boolean,
-    onClick: (enqueuedId: Int) -> Unit,
-    onLongClick: (enqueuedId: Int) -> Unit
+    onClick: (recognitionId: Int) -> Unit,
+    onLongClick: (recognitionId: Int) -> Unit
 ) {
     val enqueued = enqueuedWithStatus.enqueued
     val containerColor by animateColorAsState(
@@ -276,9 +276,7 @@ internal fun LazyColumnEnqueuedItem(
                                     },
                                     onClick = {
                                         menuExpanded = false
-                                        onNavigateToTrackScreen(
-                                            enqueued.result.track.mbId
-                                        )
+                                        onNavigateToTrackScreen(enqueued.result.track.id)
                                     },
                                     leadingIcon = {
                                         Icon(

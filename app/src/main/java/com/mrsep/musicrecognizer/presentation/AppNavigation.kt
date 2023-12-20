@@ -113,15 +113,15 @@ internal fun AppNavigation(
         )
         librarySearchScreen(
             onBackPressed = outerNavController::navigateUp,
-            onTrackClick = { mbId, from ->
-                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+            onTrackClick = { trackId, from ->
+                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
             }
         )
         trackScreen(
             isExpandedScreen = isExpandedScreen,
             onBackPressed = outerNavController::navigateUp,
-            onNavigateToLyricsScreen = { mbId, from ->
-                outerNavController.navigateToLyricsScreen(mbId = mbId, from = from)
+            onNavigateToLyricsScreen = { trackId, from ->
+                outerNavController.navigateToLyricsScreen(trackId = trackId, from = from)
             },
             onRetryRequested = {
                 appState.autostartRecognition = true
@@ -132,8 +132,8 @@ internal fun AppNavigation(
         )
         queueScreen(
             onBackPressed = outerNavController::navigateUp,
-            onNavigateToTrackScreen = { mbId, from ->
-                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+            onNavigateToTrackScreen = { trackId, from ->
+                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
             }
         )
         aboutScreen(onBackPressed = outerNavController::navigateUp)
@@ -197,8 +197,8 @@ private fun BarNavHost(
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
         libraryScreen(
-            onTrackClick = { mbId, from ->
-                outerNavController.navigateToTrackScreen(mbId = mbId, from = from)
+            onTrackClick = { trackId, from ->
+                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
             },
             onTrackSearchClick = { from ->
                 outerNavController.navigateToLibrarySearchScreen(from = from)
@@ -207,13 +207,12 @@ private fun BarNavHost(
         recognitionScreen(
             autostart = appState.autostartRecognition,
             onResetAutostart = { appState.autostartRecognition = false },
-            onNavigateToTrackScreen = { mbId, from ->
+            onNavigateToTrackScreen = { trackId, from ->
                 outerNavController.navigateToTrackScreen(
-                    mbId = mbId, isRetryAvailable = true, from = from
+                    trackId = trackId, isRetryAvailable = true, from = from
                 )
             },
-            //TODO: implement navigation with highlighting enqueuedId
-            onNavigateToQueueScreen = { enqueuedId, from ->
+            onNavigateToQueueScreen = { _, from ->
                 outerNavController.navigateToQueueScreen(from = from)
             },
             onNavigateToPreferencesScreen = { from ->

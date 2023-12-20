@@ -69,7 +69,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .addOptionalBigPicture(track.artworkUrl)
-            .addTrackDeepLinkIntent(track.mbId)
+            .addTrackDeepLinkIntent(track.id)
             .addShowLyricsButton(track)
             .addShareButton(track.getSharedBody())
             .build()
@@ -91,7 +91,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     private fun createPendingIntent(intent: Intent): PendingIntent {
         return TaskStackBuilder.create(appContext).run {
             addNextIntentWithParentStack(intent)
-            // FLAG_UPDATE_CURRENT to update track mbId key on each result
+            // FLAG_UPDATE_CURRENT to update trackId key on each result
             getPendingIntent(
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -100,10 +100,10 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
-        mbId: String
+        trackId: String
     ): NotificationCompat.Builder {
         return setContentIntent(
-            createPendingIntent(serviceRouter.getDeepLinkIntentToTrack(mbId))
+            createPendingIntent(serviceRouter.getDeepLinkIntentToTrack(trackId))
         )
     }
 
@@ -114,7 +114,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
         return addAction(
             android.R.drawable.ic_menu_more,
             appContext.getString(StringsR.string.show_lyrics),
-            createPendingIntent(serviceRouter.getDeepLinkIntentToLyrics(track.mbId))
+            createPendingIntent(serviceRouter.getDeepLinkIntentToLyrics(track.id))
         )
     }
 

@@ -30,7 +30,7 @@ internal class LibraryViewModel @Inject constructor(
         if (isDatabaseEmpty) {
             flowOf(LibraryUiState.EmptyLibrary)
         } else {
-            trackRepository.getFilteredFlow(preferences.trackFilter).map { trackList ->
+            trackRepository.getTracksByFilterFlow(preferences.trackFilter).map { trackList ->
                 LibraryUiState.Success(
                     trackList = trackList
                         .map { track -> track.toUi(dateTimeFormatter) }
@@ -53,9 +53,9 @@ internal class LibraryViewModel @Inject constructor(
         }
     }
 
-    fun deleteByIds(trackIds: List<String>) {
+    fun deleteTracks(trackIds: List<String>) {
         viewModelScope.launch {
-            trackRepository.deleteByMbId(*trackIds.toTypedArray())
+            trackRepository.delete(*trackIds.toTypedArray())
         }
     }
 

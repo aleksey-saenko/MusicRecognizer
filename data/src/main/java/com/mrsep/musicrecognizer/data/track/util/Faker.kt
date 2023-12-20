@@ -14,7 +14,7 @@ internal fun getFakeTrackList(
 ): List<TrackEntity> {
     return List(if (inclusive) endIndex - startIndex + 1 else endIndex - startIndex) { index ->
         TrackEntity(
-            mbId = UUID.randomUUID().toString(),
+            id = UUID.randomUUID().toString(),
             title = "Track #${index + startIndex}",
             artist = "Artist #${index + startIndex}",
             releaseDate = LocalDate.now()
@@ -40,7 +40,7 @@ internal fun getFakeTrackList(
                 youtube = "",
                 youtubeMusic = "",
             ),
-            metadata = TrackEntity.Metadata(
+            properties = TrackEntity.Properties(
                 lastRecognitionDate = Instant.now()
                     .minus(index * index * 10L, ChronoUnit.HOURS),
                 isFavorite = favorites,

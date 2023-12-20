@@ -15,38 +15,39 @@ class AdapterEnqueuedRepository @Inject constructor(
     private val enqueuedMapper: BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition>
 ) : EnqueuedRecognitionRepository {
 
-    override suspend fun createEnqueuedRecognition(audioRecording: ByteArray, title: String): Int? {
+    override suspend fun createRecognition(audioRecording: ByteArray, title: String): Int? {
         return enqueuedRecognitionRepositoryDo.create(audioRecording, title)
     }
 
-    override suspend fun getById(id: Int): EnqueuedRecognition? {
-        return enqueuedRecognitionRepositoryDo.getByIdWithOptionalTrack(id)?.run(enqueuedMapper::map)
+    override suspend fun getRecognition(recognitionId: Int): EnqueuedRecognition? {
+        return enqueuedRecognitionRepositoryDo.getRecognitionWithTrack(recognitionId)
+            ?.run(enqueuedMapper::map)
     }
 
-    override suspend fun getRecordingById(enqueuedId: Int): File? {
-        return enqueuedRecognitionRepositoryDo.getRecordingById(enqueuedId)
+    override suspend fun getRecordingForRecognition(recognitionId: Int): File? {
+        return enqueuedRecognitionRepositoryDo.getRecordingForRecognition(recognitionId)
     }
 
-    override fun getFlowAll(): Flow<List<EnqueuedRecognition>> {
-        return enqueuedRecognitionRepositoryDo.getFlowAllWithOptionalTrack()
+    override fun getAllRecognitionsFlow(): Flow<List<EnqueuedRecognition>> {
+        return enqueuedRecognitionRepositoryDo.getAllRecognitionsWithTrackFlow()
             .map { enqueuedList -> enqueuedList.map(enqueuedMapper::map) }
     }
 
-    override suspend fun updateTitle(enqueuedId: Int, newTitle: String) {
-        enqueuedRecognitionRepositoryDo.updateTitle(enqueuedId, newTitle)
+    override suspend fun updateTitle(recognitionId: Int, newTitle: String) {
+        enqueuedRecognitionRepositoryDo.updateTitle(recognitionId, newTitle)
     }
 
-    override suspend fun deleteById(vararg enqueuedId: Int) {
-        enqueuedRecognitionRepositoryDo.deleteById(*enqueuedId)
+    override suspend fun delete(vararg recognitionIds: Int) {
+        enqueuedRecognitionRepositoryDo.delete(*recognitionIds)
     }
 
     override suspend fun deleteAll() {
         enqueuedRecognitionRepositoryDo.deleteAll()
     }
 
-    override suspend fun update(enqueuedRecognition: EnqueuedRecognition) {
+    override suspend fun update(recognition: EnqueuedRecognition) {
         enqueuedRecognitionRepositoryDo.update(
-            enqueuedMapper.reverseMap(enqueuedRecognition).enqueued
+            enqueuedMapper.reverseMap(recognition).enqueued
         )
     }
 

@@ -27,7 +27,7 @@ internal fun AnimatedVisibilityScope.ScheduledOfflineShield(
     modifier: Modifier = Modifier,
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
-    onNavigateToQueue: (enqueuedId: Int?) -> Unit
+    onNavigateToQueue: (recognitionId: Int?) -> Unit
 ) {
     BaseShield(
         modifier = modifier,

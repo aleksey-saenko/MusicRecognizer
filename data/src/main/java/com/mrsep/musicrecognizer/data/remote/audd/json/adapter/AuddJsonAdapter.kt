@@ -42,11 +42,11 @@ internal class AuddJsonAdapter {
             return RemoteRecognitionResultDo.NoMatches
         }
         val mediaItems = json.result.lyricsJson?.parseMediaItems()
-        val mbId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString()
+        val trackId = json.result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString()
 
         return RemoteRecognitionResultDo.Success(
             data = TrackEntity(
-                mbId = mbId,
+                id = trackId,
                 title = trackTitle,
                 artist = trackArtist,
                 album = json.result.parseAlbum(),
@@ -71,7 +71,7 @@ internal class AuddJsonAdapter {
                     youtube = mediaItems?.parseYoutubeLink(),
                     youtubeMusic = null
                 ),
-                metadata = TrackEntity.Metadata(
+                properties = TrackEntity.Properties(
                     lastRecognitionDate = Instant.now(),
                     isFavorite = false,
                     //TODO: need to test matching the color by palette

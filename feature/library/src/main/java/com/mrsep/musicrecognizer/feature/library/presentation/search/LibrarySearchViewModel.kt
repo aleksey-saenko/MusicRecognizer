@@ -46,7 +46,7 @@ internal class LibrarySearchViewModel @Inject constructor(
             if (keyword.isBlank()) {
                 flowOf(SearchResultUi.Success("", persistentListOf()))
             } else {
-                trackRepository.searchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
+                trackRepository.getSearchResultFlow(keyword, SEARCH_ITEMS_LIMIT)
                     .map { result -> result.toUi(dateTimeFormatter) }
             }
         }

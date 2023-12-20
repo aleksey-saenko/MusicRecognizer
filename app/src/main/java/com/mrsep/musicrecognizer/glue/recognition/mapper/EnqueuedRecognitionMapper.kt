@@ -15,48 +15,46 @@ class EnqueuedRecognitionMapper @Inject constructor(
 ) : BidirectionalMapper<EnqueuedRecognitionEntityWithTrack, EnqueuedRecognition> {
 
     override fun map(input: EnqueuedRecognitionEntityWithTrack): EnqueuedRecognition {
+        val result = when (input.enqueued.resultType) {
+            RemoteRecognitionResultType.Success ->
+                input.track?.run(trackMapper::map)?.run(RemoteRecognitionResult::Success)
+            RemoteRecognitionResultType.NoMatches -> RemoteRecognitionResult.NoMatches
+            RemoteRecognitionResultType.BadConnection -> RemoteRecognitionResult.Error.BadConnection
+            RemoteRecognitionResultType.BadRecording ->
+                RemoteRecognitionResult.Error.BadRecording(
+                    message = input.enqueued.resultMessage ?: ""
+                )
+
+            RemoteRecognitionResultType.WrongToken ->
+                RemoteRecognitionResult.Error.WrongToken(false)
+
+            RemoteRecognitionResultType.LimitedToken ->
+                RemoteRecognitionResult.Error.WrongToken(true)
+
+            RemoteRecognitionResultType.HttpError -> {
+                val combMessage = input.enqueued.resultMessage ?: ""
+                val code = combMessage.substringBefore(
+                    ":", "-1"
+                ).toIntOrNull() ?: -1
+                val message = combMessage.substringAfter(
+                    ":", "Unexpected error"
+                )
+                RemoteRecognitionResult.Error.HttpError(code, message)
+            }
+
+            RemoteRecognitionResultType.UnhandledError ->
+                RemoteRecognitionResult.Error.UnhandledError(
+                    message = input.enqueued.resultMessage ?: ""
+                )
+
+            null -> null
+        }
         return EnqueuedRecognition(
             id = input.enqueued.id,
             title = input.enqueued.title,
             recordFile = input.enqueued.recordFile,
             creationDate = input.enqueued.creationDate,
-            result = input.track?.let { trackEntity ->
-                RemoteRecognitionResult.Success(trackMapper.map(trackEntity))
-            } ?: run {
-                when (input.enqueued.resultType) {
-                    RemoteRecognitionResultType.Success -> null
-                    RemoteRecognitionResultType.NoMatches -> RemoteRecognitionResult.NoMatches
-                    RemoteRecognitionResultType.BadConnection -> RemoteRecognitionResult.Error.BadConnection
-                    RemoteRecognitionResultType.BadRecording ->
-                        RemoteRecognitionResult.Error.BadRecording(
-                            message = input.enqueued.resultMessage ?: ""
-                        )
-
-                    RemoteRecognitionResultType.WrongToken ->
-                        RemoteRecognitionResult.Error.WrongToken(false)
-
-                    RemoteRecognitionResultType.LimitedToken ->
-                        RemoteRecognitionResult.Error.WrongToken(true)
-
-                    RemoteRecognitionResultType.HttpError -> {
-                        val combMessage = input.enqueued.resultMessage ?: ""
-                        val code = combMessage.substringBefore(
-                            ":", "-1"
-                        ).toIntOrNull() ?: -1
-                        val message = combMessage.substringAfter(
-                            ":", "Unexpected error"
-                        )
-                        RemoteRecognitionResult.Error.HttpError(code, message)
-                    }
-
-                    RemoteRecognitionResultType.UnhandledError ->
-                        RemoteRecognitionResult.Error.UnhandledError(
-                            message = input.enqueued.resultMessage ?: ""
-                        )
-
-                    null -> null
-                }
-            },
+            result = result,
             resultDate = input.enqueued.resultDate
         )
     }
@@ -64,7 +62,8 @@ class EnqueuedRecognitionMapper @Inject constructor(
     override fun reverseMap(input: EnqueuedRecognition): EnqueuedRecognitionEntityWithTrack {
         var resultType: RemoteRecognitionResultType? = null
         var resultMessage: String? = null
-        var trackMbId: String? = null
+        var trackId: String? = null
+        var optionalTrack: TrackEntity? = null
         when (val result = input.result) {
             RemoteRecognitionResult.Error.BadConnection -> {
                 resultType = RemoteRecognitionResultType.BadConnection
@@ -93,13 +92,11 @@ class EnqueuedRecognitionMapper @Inject constructor(
             }
             is RemoteRecognitionResult.Success -> {
                 resultType = RemoteRecognitionResultType.Success
-                trackMbId = result.track.mbId
+                trackId = result.track.id
+                optionalTrack = result.track.run(trackMapper::reverseMap)
             }
             null -> { /* NO-OP */ }
         }
-        val optionalTrack = (input.result as? RemoteRecognitionResult.Success)?.track?.run(
-            trackMapper::reverseMap
-        )
         return EnqueuedRecognitionEntityWithTrack(
             enqueued = EnqueuedRecognitionEntity(
                 id = input.id,
@@ -107,7 +104,7 @@ class EnqueuedRecognitionMapper @Inject constructor(
                 recordFile = input.recordFile,
                 creationDate = input.creationDate,
                 resultType = resultType,
-                resultMbId = trackMbId,
+                resultTrackId = trackId,
                 resultMessage = resultMessage,
                 resultDate = input.resultDate
             ),

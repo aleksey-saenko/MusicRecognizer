@@ -31,12 +31,13 @@ class DatabaseFiller @Inject constructor(
     suspend fun prepopulateByFaker(force: Boolean = true, count: Int) {
         withContext(ioDispatcher) {
             if (force || trackRepository.isEmptyFlow().first()) {
-                getFakeTrackList(
+                val trackList = getFakeTrackList(
                     startIndex = 0,
                     endIndex = count,
                     inclusive = false,
                     favorites = false
-                ).toTypedArray().run { trackRepository.insertOrReplace(*this) }
+                )
+                trackRepository.upsert(*trackList.toTypedArray())
                 Log.d(TAG, "Database filling completed")
             }
         }
@@ -53,19 +54,19 @@ class DatabaseFiller @Inject constructor(
                     .mapIndexed { index, result ->
                         val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
-                                copy(metadata = result.data.metadata.copy(isFavorite = true))
+                                copy(properties = result.data.properties.copy(isFavorite = true))
                             } else {
                                 this
                             }
                         }
                         entity.copy(
-                            metadata = entity.metadata.copy(
+                            properties = entity.properties.copy(
                                 lastRecognitionDate = Instant.now()
                                     .minus(index * 500L, ChronoUnit.HOURS)
                             )
                         )
                     }.toTypedArray()
-                trackRepository.insertOrReplace(*trackList)
+                trackRepository.upsert(*trackList)
                 Log.d(TAG, "Database filling completed")
             }
         }

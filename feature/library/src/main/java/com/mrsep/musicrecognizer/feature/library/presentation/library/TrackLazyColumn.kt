@@ -46,7 +46,7 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun TrackLazyColumn(
     trackList: ImmutableList<TrackUi>,
-    onTrackClick: (mbId: String) -> Unit,
+    onTrackClick: (trackId: String) -> Unit,
     lazyListState: LazyListState,
     multiSelectionState: MultiSelectionState<String>,
     modifier: Modifier = Modifier
@@ -58,19 +58,19 @@ internal fun TrackLazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(items = trackList, key = { track -> track.mbId }) { track ->
+        items(items = trackList, key = { track -> track.id }) { track ->
             LazyListTrackItem(
                 track = track,
-                selected = multiSelectionState.isSelected(track.mbId),
+                selected = multiSelectionState.isSelected(track.id),
                 multiselectEnabled = multiSelectionState.multiselectEnabled,
                 onClick = {
                     if (multiSelectionState.multiselectEnabled) {
-                        multiSelectionState.toggleSelection(track.mbId)
+                        multiSelectionState.toggleSelection(track.id)
                     } else {
-                        onTrackClick(track.mbId)
+                        onTrackClick(track.id)
                     }
                 },
-                onLongClick = { multiSelectionState.toggleSelection(track.mbId) },
+                onLongClick = { multiSelectionState.toggleSelection(track.id) },
                 modifier = Modifier.animateItemPlacement()
             )
         }

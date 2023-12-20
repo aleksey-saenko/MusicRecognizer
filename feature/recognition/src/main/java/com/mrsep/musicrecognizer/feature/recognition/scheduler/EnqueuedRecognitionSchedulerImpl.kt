@@ -18,17 +18,17 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
 
     private val workManager get() = WorkManager.getInstance(appContext)
 
-    // Use uniqueWorkName as an extra tag to associate workInfo with enqueuedId
+    // Use uniqueWorkName as an extra tag to associate workInfo with recognitionId
     // in the getStatusFlowAll method.
     // WorkInfo only contains the worker UUID (which cannot be converted in both directions) and tags.
-    override fun enqueueById(vararg enqueuedId: Int, forceLaunch: Boolean) {
-        enqueuedId.forEach { id ->
+    override fun enqueue(vararg recognitionIds: Int, forceLaunch: Boolean) {
+        recognitionIds.forEach { id ->
             val uniqueWorkName = getUniqueWorkerName(id)
             workManager.enqueueUniqueWork(
                 uniqueWorkName,
                 ExistingWorkPolicy.REPLACE,
                 EnqueuedRecognitionWorker.getOneTimeWorkRequest(
-                    enqueuedId = id,
+                    recognitionId = id,
                     identifyTag = uniqueWorkName,
                     forceLaunch = forceLaunch
                 )
@@ -36,8 +36,8 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
         }
     }
 
-    override fun cancelById(vararg enqueuedId: Int) {
-        enqueuedId.forEach { id ->
+    override fun cancel(vararg recognitionIds: Int) {
+        recognitionIds.forEach { id ->
             workManager.cancelUniqueWork(getUniqueWorkerName(id))
         }
     }
@@ -46,25 +46,25 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
         workManager.cancelAllWorkByTag(EnqueuedRecognitionWorker.TAG)
     }
 
-    override fun getStatusFlowById(enqueuedId: Int): Flow<ScheduledJobStatus> {
-        return workManager.getWorkInfosForUniqueWorkFlow(getUniqueWorkerName(enqueuedId))
+    override fun getJobStatusFlow(recognitionId: Int): Flow<ScheduledJobStatus> {
+        return workManager.getWorkInfosForUniqueWorkFlow(getUniqueWorkerName(recognitionId))
             .map { listWorkInfo -> listWorkInfo.lastOrNull().asScheduledJobStatus() }
             .conflate()
     }
 
-    override fun getStatusFlowAll(): Flow<Map<Int, ScheduledJobStatus>> {
+    override fun getJobStatusForAllFlow(): Flow<Map<Int, ScheduledJobStatus>> {
         return workManager.getWorkInfosByTagFlow(EnqueuedRecognitionWorker.TAG)
             .map { listWorkInfo ->
                 listWorkInfo.mapNotNull { workInfo ->
-                    val enqueuedId = workInfo.tags.find { tag -> tag.startsWith(UNIQUE_NAME_MASK) }
+                    val recognitionId = workInfo.tags.find { tag -> tag.startsWith(UNIQUE_NAME_MASK) }
                         ?.substring(UNIQUE_NAME_MASK.length)?.toIntOrNull()
-                    enqueuedId?.let { enqueuedId to workInfo.asScheduledJobStatus() }
+                    recognitionId?.let { recognitionId to workInfo.asScheduledJobStatus() }
                 }.toMap()
             }
             .conflate()
     }
 
-    private fun getUniqueWorkerName(enqueuedId: Int) = UNIQUE_NAME_MASK.plus(enqueuedId)
+    private fun getUniqueWorkerName(recognitionId: Int) = UNIQUE_NAME_MASK.plus(recognitionId)
 
     companion object {
         private const val UNIQUE_NAME_MASK = "ER_ID#"

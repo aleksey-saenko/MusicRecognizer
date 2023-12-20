@@ -9,12 +9,10 @@ interface TrackRepository {
 
     fun isEmptyFlow(): Flow<Boolean>
 
-    fun getFilteredFlow(filter: TrackFilter): Flow<List<Track>>
+    fun getTracksByFilterFlow(filter: TrackFilter): Flow<List<Track>>
 
-    suspend fun search(keyword: String, limit: Int): List<Track>
+    fun getSearchResultFlow(keyword: String, limit: Int): Flow<SearchResult>
 
-    fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult>
-
-    suspend fun deleteByMbId(vararg mbId: String)
+    suspend fun delete(vararg trackIds: String)
 
 }

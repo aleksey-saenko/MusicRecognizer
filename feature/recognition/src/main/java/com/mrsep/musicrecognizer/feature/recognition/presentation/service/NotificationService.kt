@@ -231,7 +231,7 @@ class NotificationService : Service() {
                             .setContentTitle(status.result.track.title)
                             .setContentText(status.result.track.artistWithAlbumFormatted())
                             .addOptionalBigPicture(status.result.track.artworkUrl)
-                            .addTrackDeepLinkIntent(status.result.track.mbId)
+                            .addTrackDeepLinkIntent(status.result.track.id)
                             .addOptionalShowLyricsButton(status.result.track)
                             .addShareButton(status.result.track.getSharedBody())
                     }
@@ -261,7 +261,7 @@ class NotificationService : Service() {
     private fun createPendingIntent(intent: Intent): PendingIntent {
         return TaskStackBuilder.create(this@NotificationService).run {
             addNextIntentWithParentStack(intent)
-            // FLAG_UPDATE_CURRENT to update track mbId key on each result
+            // FLAG_UPDATE_CURRENT to update trackId key on each result
             getPendingIntent(
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -393,9 +393,9 @@ class NotificationService : Service() {
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
-        mbId: String
+        trackId: String
     ): NotificationCompat.Builder {
-        val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(mbId)
+        val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(trackId)
         val pendingIntent = createPendingIntent(deepLinkIntent)
         return setContentIntent(pendingIntent)
     }
@@ -404,7 +404,7 @@ class NotificationService : Service() {
         track: Track
     ): NotificationCompat.Builder {
         if (track.lyrics == null) return this
-        val deepLinkIntent = serviceRouter.getDeepLinkIntentToLyrics(track.mbId)
+        val deepLinkIntent = serviceRouter.getDeepLinkIntentToLyrics(track.id)
         val pendingIntent = createPendingIntent(deepLinkIntent)
         return addAction(
             android.R.drawable.ic_menu_more,
@@ -522,7 +522,7 @@ class NotificationService : Service() {
         const val KEY_BACKGROUND_LAUNCH = "KEY_BACKGROUND_LAUNCH"
         const val KEY_ONE_TIME_RECOGNITION = "KEY_ONE_TIME_RECOGNITION"
 
-        const val MB_ID_EXTRA_KEY = "KEY_MB_ID"
+        const val TRACK_ID_EXTRA_KEY = "KEY_TRACK_ID"
 
 
         fun createStatusNotificationChannel(context: Context) {

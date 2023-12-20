@@ -25,22 +25,17 @@ class AdapterTrackRepository @Inject constructor(
         return trackRepositoryDo.isEmptyFlow()
     }
 
-    override fun getFilteredFlow(filter: TrackFilter): Flow<List<Track>> {
-        return trackRepositoryDo.getFilteredFlow(trackFilterMapper.reverseMap(filter))
-            .map { list -> list.map { entity -> trackMapper.map(entity) } }
+    override fun getTracksByFilterFlow(filter: TrackFilter): Flow<List<Track>> {
+        return trackRepositoryDo.getTracksByFilterFlow(trackFilterMapper.reverseMap(filter))
+            .map { trackList -> trackList.map(trackMapper::map) }
     }
 
-    override suspend fun search(keyword: String, limit: Int): List<Track> {
-        return trackRepositoryDo.search(keyword, limit)
-            .map { entity -> trackMapper.map(entity) }
+    override fun getSearchResultFlow(keyword: String, limit: Int): Flow<SearchResult> {
+        return trackRepositoryDo.getSearchResultFlow(keyword, limit).map(searchResultMapper::map)
     }
 
-    override fun searchResultFlow(keyword: String, limit: Int): Flow<SearchResult> {
-        return trackRepositoryDo.searchResultFlow(keyword, limit).map(searchResultMapper::map)
-    }
-
-    override suspend fun deleteByMbId(vararg mbId: String) {
-        trackRepositoryDo.deleteByMbId(*mbId)
+    override suspend fun delete(vararg trackIds: String) {
+        trackRepositoryDo.delete(*trackIds)
     }
 
 }

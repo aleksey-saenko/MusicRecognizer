@@ -3,68 +3,53 @@ package com.mrsep.musicrecognizer.data.track
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 
 @Dao
 interface TrackDao {
 
-    @Query("SELECT (SELECT COUNT(*) FROM track) == 0")
-    fun isEmptyFlow(): Flow<Boolean>
+    @Upsert
+    suspend fun upsert(vararg tracks: TrackEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplace(vararg track: TrackEntity)
+    @Update
+    suspend fun update(vararg tracks: TrackEntity)
 
-    @Delete
-    suspend fun delete(vararg track: TrackEntity)
+    @Transaction
+    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+        val trackList = copyKeepProperties(*tracks)
+        upsert(*trackList.toTypedArray())
+        return trackList
+    }
 
-    @Query("DELETE FROM track WHERE mb_id in (:mbId)")
-    suspend fun deleteByMbId(vararg mbId: String)
+    @Transaction
+    suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
+        val trackList = copyKeepProperties(*tracks)
+        update(*trackList.toTypedArray())
+    }
+
+    @Query("DELETE FROM track WHERE id in (:trackIds)")
+    suspend fun delete(vararg trackIds: String)
 
     @Query("DELETE FROM track")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM track WHERE NOT is_favorite")
-    suspend fun deleteAllExceptFavorites()
+    @Query("UPDATE track SET is_favorite=(:isFavorite) WHERE id=(:trackId)")
+    suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
-    @Query("DELETE FROM track WHERE is_favorite")
-    suspend fun deleteAllFavorites()
+    @Query("UPDATE track SET theme_seed_color=(:color) WHERE id=(:trackId)")
+    suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
-    @Query("UPDATE track SET is_favorite = NOT is_favorite WHERE mb_id=(:mbId)")
-    suspend fun toggleFavoriteMark(mbId: String)
+    @Query("UPDATE track SET last_recognition_date=(:recognitionDate) WHERE id=(:trackId)")
+    suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant)
 
-    @Query("UPDATE track SET theme_seed_color=(:color) WHERE mb_id=(:mbId)")
-    suspend fun updateThemeSeedColor(mbId: String, color: Int?)
+    @Query("SELECT (SELECT COUNT(*) FROM track) == 0")
+    fun isEmptyDatabaseFlow(): Flow<Boolean>
 
-    @Update
-    suspend fun update(track: TrackEntity)
+    @Query("SELECT * FROM track WHERE id=(:trackId) LIMIT 1")
+    suspend fun getTrack(trackId: String): TrackEntity?
 
-
-    @Query("SELECT COUNT(*) FROM track")
-    fun countAllFlow(): Flow<Int>
-
-    @Query("SELECT COUNT(*) FROM track WHERE is_favorite")
-    fun countFavoritesFlow(): Flow<Int>
-
-
-    @Query("SELECT * FROM track WHERE mb_id=(:mbId) LIMIT 1")
-    suspend fun getByMbId(mbId: String): TrackEntity?
-
-    @Query("SELECT * FROM track WHERE mb_id=(:mbId) LIMIT 1")
-    fun getByMbIdFlow(mbId: String): Flow<TrackEntity?>
-
-    @Query("SELECT * FROM track WHERE last_recognition_date>=(:date) LIMIT (:limit)")
-    suspend fun getAfterDate(date: Long, limit: Int): List<TrackEntity>
-
-    @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit)")
-    suspend fun getLastRecognized(limit: Int): List<TrackEntity>
-
-    @Query("SELECT * FROM track ORDER BY last_recognition_date DESC LIMIT (:limit)")
-    fun getLastRecognizedFlow(limit: Int): Flow<List<TrackEntity>>
-
-    @Query("SELECT * FROM track WHERE NOT is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
-    fun getNotFavoriteRecentsFlow(limit: Int): Flow<List<TrackEntity>>
-
-    @Query("SELECT * FROM track WHERE is_favorite ORDER BY last_recognition_date DESC LIMIT (:limit)")
-    fun getFavoritesFlow(limit: Int): Flow<List<TrackEntity>>
+    @Query("SELECT * FROM track WHERE id=(:trackId) LIMIT 1")
+    fun getTrackFlow(trackId: String): Flow<TrackEntity?>
 
     @Query(
         "SELECT * FROM track " +
@@ -73,18 +58,22 @@ interface TrackDao {
                 "ORDER BY last_recognition_date DESC " +
                 "LIMIT (:limit)"
     )
-    fun search(key: String, escapeSymbol: String, limit: Int): List<TrackEntity>
-
-    @Query(
-        "SELECT * FROM track " +
-                "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
-                "ESCAPE (:escapeSymbol) " +
-                "ORDER BY last_recognition_date DESC " +
-                "LIMIT (:limit)"
-    )
-    fun searchFlow(key: String, escapeSymbol: String, limit: Int): Flow<List<TrackEntity>>
+    fun getTracksFlowByKeyword(
+        key: String,
+        escapeSymbol: String,
+        limit: Int
+    ): Flow<List<TrackEntity>>
 
     @RawQuery(observedEntities = [TrackEntity::class])
-    fun getFlowByCustomQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
+    fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
+
+
+    private suspend fun copyKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+        return tracks.map { newTrack ->
+            getTrack(newTrack.id)?.let { oldTrack ->
+                newTrack.copy(properties = oldTrack.properties)
+            } ?: newTrack
+        }
+    }
 
 }

@@ -33,13 +33,11 @@ import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import java.lang.IllegalStateException
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-
-@Suppress("unused")
-private const val TAG = "RecognitionInteractorImpl"
 
 @Singleton
 internal class RecognitionInteractorImpl @Inject constructor(
@@ -146,9 +144,16 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Success -> {
                     recordProcess.cancelAndJoin()
-                    val newTrack = trackRepository.insertOrReplaceSaveMetadata(result.track).first()
-                    trackMetadataEnhancerScheduler.enqueue(newTrack.mbId)
-                    RecognitionStatus.Done(RecognitionResult.Success(newTrack))
+                    val nowDate = Instant.now()
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    trackRepository.setRecognitionDate(trackWithStoredProps.id, nowDate)
+                    val updatedTrack = trackWithStoredProps.copy(
+                        properties = trackWithStoredProps.properties.copy(
+                            lastRecognitionDate = nowDate
+                        )
+                    )
+                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
+                    RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                 }
             }
             resultDelegator.notify(recognitionResult)
@@ -195,15 +200,15 @@ internal class RecognitionInteractorImpl @Inject constructor(
         audioRecording: ByteArray,
         launched: Boolean
     ): RecognitionTask {
-        return enqueuedRecognitionRepository.createEnqueuedRecognition(
+        val recognitionId = enqueuedRecognitionRepository.createRecognition(
             audioRecording = audioRecording,
             title = ""
-        )?.let { enqueuedId ->
-            if (launched) {
-                enqueuedRecognitionScheduler.enqueueById(enqueuedId, forceLaunch = false)
-            }
-            RecognitionTask.Created(enqueuedId, launched)
-        } ?: RecognitionTask.Error()
+        )
+        recognitionId ?: return RecognitionTask.Error()
+        if (launched) {
+            enqueuedRecognitionScheduler.enqueue(recognitionId, forceLaunch = false)
+        }
+        return RecognitionTask.Created(recognitionId, launched)
     }
 
     // depending on the selected policy, waits for a full recording and creates a RecognitionTask

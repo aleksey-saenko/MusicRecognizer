@@ -73,6 +73,7 @@ internal fun PermissionsPage(
     ) {
         Text(
             text = stringResource(StringsR.string.permissions),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(PaddingValues(top = 24.dp))
         )

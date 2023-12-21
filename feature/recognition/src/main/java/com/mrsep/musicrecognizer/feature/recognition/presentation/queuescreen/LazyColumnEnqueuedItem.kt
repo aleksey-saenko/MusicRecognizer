@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -24,12 +23,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
@@ -37,9 +34,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -67,20 +62,20 @@ import java.time.format.FormatStyle
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LazyColumnEnqueuedItem(
-    enqueuedWithStatus: EnqueuedRecognitionWithStatus,
-    isPlaying: Boolean,
     modifier: Modifier = Modifier,
-    onDeleteEnqueued: (recognitionId: Int) -> Unit,
-    onRenameEnqueued: (recognitionId: Int, name: String) -> Unit,
-    onStartPlayRecord: (recognitionId: Int) -> Unit,
-    onStopPlayRecord: () -> Unit,
-    onEnqueueRecognition: (recognitionId: Int, forceLaunch: Boolean) -> Unit,
-    onCancelRecognition: (recognitionId: Int) -> Unit,
-    onNavigateToTrackScreen: (trackId: String) -> Unit,
+    enqueuedWithStatus: EnqueuedRecognitionWithStatus,
     menuEnabled: Boolean,
     selected: Boolean,
-    onClick: (recognitionId: Int) -> Unit,
-    onLongClick: (recognitionId: Int) -> Unit
+    isPlaying: Boolean,
+    onDeleteEnqueued: () -> Unit,
+    onRenameEnqueued: (name: String) -> Unit,
+    onEnqueueRecognition: (forceLaunch: Boolean) -> Unit,
+    onCancelRecognition: () -> Unit,
+    onNavigateToTrackScreen: (trackId: String) -> Unit,
+    onStartPlayRecord: () -> Unit,
+    onStopPlayRecord: () -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     val enqueued = enqueuedWithStatus.enqueued
     val containerColor by animateColorAsState(
@@ -99,8 +94,8 @@ internal fun LazyColumnEnqueuedItem(
                 shape = MaterialTheme.shapes.large
             )
             .combinedClickable(
-                onLongClick = { onLongClick(enqueued.id) },
-                onClick = { onClick(enqueued.id) },
+                onLongClick = onLongClick,
+                onClick = onClick,
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             )
@@ -110,13 +105,7 @@ internal fun LazyColumnEnqueuedItem(
     ) {
         Button(
             shape = CircleShape,
-            onClick = {
-                if (isPlaying) {
-                    onStopPlayRecord()
-                } else {
-                    onStartPlayRecord(enqueued.id)
-                }
-            },
+            onClick = if (isPlaying) onStopPlayRecord else onStartPlayRecord,
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier.size(48.dp)
         ) {
@@ -167,8 +156,10 @@ internal fun LazyColumnEnqueuedItem(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(top = 4.dp)
             )
-            val createdTime = enqueued.creationDate.atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+            val createdTime = remember(enqueued.creationDate) {
+                enqueued.creationDate.atZone(ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+            }
             Text(
                 text = stringResource(StringsR.string.format_created, createdTime),
                 style = MaterialTheme.typography.bodySmall,
@@ -177,148 +168,55 @@ internal fun LazyColumnEnqueuedItem(
             )
         }
         var menuExpanded by remember { mutableStateOf(false) }
-        var renameDialogVisible by remember { mutableStateOf(false) }
+        var renameDialogVisible by rememberSaveable { mutableStateOf(false) }
         Box(contentAlignment = Alignment.Center) {
             this@Row.AnimatedVisibility(
                 visible = menuEnabled,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                IconButton(onClick = { menuExpanded = !menuExpanded }, enabled = menuEnabled) {
+                IconButton(
+                    onClick = { menuExpanded = !menuExpanded },
+                    enabled = menuEnabled
+                ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = stringResource(StringsR.string.show_more)
                     )
                 }
             }
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.rename)) },
-                    onClick = {
-                        menuExpanded = false
-                        renameDialogVisible = true
-                    },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Edit,
-                            contentDescription = stringResource(StringsR.string.edit)
-                        )
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.delete)) },
-                    onClick = {
-                        menuExpanded = false
-                        onDeleteEnqueued(enqueued.id)
-                    },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Delete,
-                            contentDescription = stringResource(StringsR.string.delete)
-                        )
-                    }
-                )
-                Divider()
-                when (enqueuedWithStatus.status) {
-                    ScheduledJobStatus.INACTIVE -> {
-                        when (enqueued.result) {
-                            is RemoteRecognitionResult.Error,
-                            RemoteRecognitionResult.NoMatches,
-                            null -> {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = stringResource(StringsR.string.enqueue_recognition),
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                    },
-                                    onClick = {
-                                        menuExpanded = false
-                                        onEnqueueRecognition(enqueued.id, false)
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            painter = painterResource(UiR.drawable.baseline_schedule_send_24),
-                                            contentDescription = stringResource(StringsR.string.enqueue_recognition),
-                                        )
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = stringResource(StringsR.string.force_recognition_launch),
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                    },
-                                    onClick = {
-                                        menuExpanded = false
-                                        onEnqueueRecognition(enqueued.id, true)
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            painter = painterResource(UiR.drawable.baseline_send_24),
-                                            contentDescription = stringResource(StringsR.string.force_recognition_launch),
-                                        )
-                                    }
-                                )
-                            }
-
-                            is RemoteRecognitionResult.Success -> {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = stringResource(StringsR.string.show_track),
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                    },
-                                    onClick = {
-                                        menuExpanded = false
-                                        onNavigateToTrackScreen(enqueued.result.track.id)
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            painter = painterResource(UiR.drawable.baseline_audio_file_24),
-                                            contentDescription = stringResource(StringsR.string.show_track)
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    ScheduledJobStatus.ENQUEUED,
-                    ScheduledJobStatus.RUNNING -> {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(StringsR.string.cancel_recognition),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            },
-                            onClick = {
-                                menuExpanded = false
-                                onCancelRecognition(enqueued.id)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
-                                    contentDescription = stringResource(StringsR.string.cancel_recognition)
-                                )
-                            }
-                        )
-                    }
-                }
-            }
+            MoreMenu(
+                menuExpanded = menuExpanded,
+                enqueuedWithStatus = enqueuedWithStatus,
+                onRenameClick = {
+                    menuExpanded = false
+                    renameDialogVisible = true
+                },
+                onDeleteClick = {
+                    menuExpanded = false
+                    onDeleteEnqueued()
+                },
+                onEnqueueRecognitionClick = { forceLaunch ->
+                    menuExpanded = false
+                    onEnqueueRecognition(forceLaunch)
+                },
+                onCancelRecognitionClick = {
+                    menuExpanded = false
+                    onCancelRecognition()
+                },
+                onNavigateToTrackScreen = { trackId ->
+                    menuExpanded = false
+                    onNavigateToTrackScreen(trackId)
+                },
+                onMenuDismissRequest = { menuExpanded = false }
+            )
         }
         if (renameDialogVisible) {
             val title = getTitle(enqueued)
-            RenameDialog(
+            RenameRecognitionDialog(
                 initialName = title,
                 onConfirmClick = { newName ->
-                    onRenameEnqueued(enqueued.id, newName)
+                    onRenameEnqueued(newName)
                     renameDialogVisible = false
                 },
                 onDismissClick = {
@@ -331,63 +229,123 @@ internal fun LazyColumnEnqueuedItem(
 }
 
 @Composable
-private fun RenameDialog(
-    initialName: String,
+private fun MoreMenu(
     modifier: Modifier = Modifier,
-    onConfirmClick: (String) -> Unit,
-    onDismissClick: () -> Unit
+    menuExpanded: Boolean,
+    enqueuedWithStatus: EnqueuedRecognitionWithStatus,
+    onRenameClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onEnqueueRecognitionClick: (forceLaunch: Boolean) -> Unit,
+    onCancelRecognitionClick: () -> Unit,
+    onNavigateToTrackScreen: (trackId: String) -> Unit,
+    onMenuDismissRequest: () -> Unit
 ) {
-    var newName by rememberSaveable { mutableStateOf(initialName) }
-    AlertDialog(
-        modifier = modifier,
-        onDismissRequest = onDismissClick,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmClick(newName)
-                },
-                enabled = newName.isNotBlank()
-            ) {
-                Text(text = stringResource(StringsR.string.save))
+    DropdownMenu(
+        expanded = menuExpanded,
+        onDismissRequest = onMenuDismissRequest,
+        modifier = modifier
+    ) {
+        DropdownMenuItem(
+            text = { Text(text = stringResource(StringsR.string.rename)) },
+            onClick = onRenameClick,
+            leadingIcon = {
+                Icon(
+                    Icons.Outlined.Edit,
+                    contentDescription = stringResource(StringsR.string.edit)
+                )
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissClick) {
-                Text(text = stringResource(StringsR.string.cancel))
+        )
+        DropdownMenuItem(
+            text = { Text(text = stringResource(StringsR.string.delete)) },
+            onClick = onDeleteClick,
+            leadingIcon = {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = stringResource(StringsR.string.delete)
+                )
             }
-        },
-        title = {
-            Text(
-                text = stringResource(StringsR.string.rename),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            )
-        },
-        text = {
-            OutlinedTextField(
-                value = newName,
-                onValueChange = { newName = it },
-                trailingIcon = {
-                    Crossfade(
-                        targetState = newName.isNotEmpty(),
-                        label = ""
-                    ) { visible ->
-                        if (visible) {
-                            IconButton(onClick = { newName = "" }) {
+        )
+        Divider()
+        when (enqueuedWithStatus.status) {
+            ScheduledJobStatus.INACTIVE -> {
+                when (enqueuedWithStatus.enqueued.result) {
+                    is RemoteRecognitionResult.Error,
+                    RemoteRecognitionResult.NoMatches,
+                    null -> {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(StringsR.string.enqueue_recognition),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            },
+                            onClick = { onEnqueueRecognitionClick(false) },
+                            leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Default.Clear,
-                                    contentDescription = stringResource(StringsR.string.clear)
+                                    painter = painterResource(UiR.drawable.baseline_schedule_send_24),
+                                    contentDescription = stringResource(StringsR.string.enqueue_recognition),
                                 )
                             }
-                        }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(StringsR.string.force_recognition_launch),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            },
+                            onClick = { onEnqueueRecognitionClick(true) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.baseline_send_24),
+                                    contentDescription = stringResource(StringsR.string.force_recognition_launch),
+                                )
+                            }
+                        )
                     }
-                },
-                singleLine = true,
-                shape = MaterialTheme.shapes.small
-            )
-        },
-    )
+
+                    is RemoteRecognitionResult.Success -> {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(StringsR.string.show_track),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            },
+                            onClick = {
+                                onNavigateToTrackScreen(enqueuedWithStatus.enqueued.result.track.id)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.baseline_audio_file_24),
+                                    contentDescription = stringResource(StringsR.string.show_track)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            ScheduledJobStatus.ENQUEUED,
+            ScheduledJobStatus.RUNNING -> {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(StringsR.string.cancel_recognition),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    },
+                    onClick = onCancelRecognitionClick,
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
+                            contentDescription = stringResource(StringsR.string.cancel_recognition)
+                        )
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable

@@ -170,9 +170,9 @@
     <string name="token_preference_dialog_message">Zadajte správny AudD API token (prázdny token obmedzí vaše denné rozpoznávanie):</string>
     <string name="artwork">Artwork</string>
     <string name="delete_tracks">Odstrániť stopy</string>
-    <string name="delete_selected_tracks_dialog">Naozaj chcete odstrániť vybraté skladby? Tento proces nie je možné vrátiť späť.</string>
+    <string name="delete_selected_tracks_dialog">Naozaj chcete odstrániť vybraté skladby\? Tento proces nie je možné vrátiť späť.</string>
     <string name="delete_recognitions">Odstrániť rozpoznania</string>
-    <string name="delete_selected_recognitions_dialog">Naozaj chcete zrušiť a odstrániť vybraté naplánované rozpoznania? Tento proces nie je možné vrátiť späť.</string>
+    <string name="delete_selected_recognitions_dialog">Naozaj chcete zrušiť a odstrániť vybraté naplánované rozpoznania\? Tento proces nie je možné vrátiť späť.</string>
     <string name="stop_player">Zastaviť prehrávač</string>
     <string name="start_player">Zapnúť prehrávač</string>
     <string name="edit">Upraviť</string>

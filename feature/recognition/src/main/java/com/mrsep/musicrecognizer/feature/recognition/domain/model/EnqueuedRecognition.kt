@@ -14,11 +14,6 @@ data class EnqueuedRecognition(
 
 internal enum class ScheduledJobStatus { INACTIVE, ENQUEUED, RUNNING }
 
-internal sealed class Status {
-    data class Enqueued(val running: Boolean) : Status()
-    data class Inactive(val result: RemoteRecognitionResult?) : Status()
-}
-
 internal data class EnqueuedRecognitionWithStatus(
     val enqueued: EnqueuedRecognition,
     val status: ScheduledJobStatus

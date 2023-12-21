@@ -16,7 +16,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,7 +47,7 @@ internal class QueueScreenViewModel @Inject constructor(
             enqueuedList = enqueuedWithStatusList.toImmutableList(),
             playerStatus = playerStatus
         )
-    }.flowOn(Dispatchers.IO).stateIn(
+    }.flowOn(ioDispatcher).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = QueueScreenUiState.Loading

@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.core.ui.components
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

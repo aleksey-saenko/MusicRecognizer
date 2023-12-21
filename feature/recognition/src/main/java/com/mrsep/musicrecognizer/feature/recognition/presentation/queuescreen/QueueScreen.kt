@@ -2,11 +2,9 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -15,17 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun QueueScreen(
     viewModel: QueueScreenViewModel = hiltViewModel(),
@@ -72,18 +68,6 @@ internal fun QueueScreen(
             var deletionInProgress by rememberSaveable(state.enqueuedList) {
                 mutableStateOf(false)
             }
-            if (deleteDialogVisible) {
-                DeleteSelectedDialog(
-                    onDeleteClick = {
-                        deletionInProgress = true
-                        viewModel.cancelAndDeleteRecognition(
-                            *multiSelectionState.getSelected().toIntArray()
-                        )
-                    },
-                    onDismissClick = { deleteDialogVisible = false },
-                    inProgress = deletionInProgress
-                )
-            }
 
             Column(
                 modifier = Modifier
@@ -112,50 +96,36 @@ internal fun QueueScreen(
                 if (state.enqueuedList.isEmpty()) {
                     EmptyQueueMessage(modifier = Modifier.fillMaxSize())
                 } else {
-                    LazyColumn(
-                        contentPadding = PaddingValues(
-                            start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.nestedScroll(topBarBehaviour.nestedScrollConnection)
-                    ) {
-                        items(
-                            items = state.enqueuedList,
-                            key = { enqueuedWithStatus -> enqueuedWithStatus.enqueued.id }
-                        ) { enqueuedWithStatus ->
-                            LazyColumnEnqueuedItem(
-                                enqueuedWithStatus = enqueuedWithStatus,
-                                isPlaying = enqueuedWithStatus.enqueued.isPlaying(
-                                    state.playerStatus
-                                ),
-                                onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
-                                onRenameEnqueued = viewModel::renameRecognition,
-                                onStartPlayRecord = viewModel::startAudioPlayer,
-                                onStopPlayRecord = viewModel::stopAudioPlayer,
-                                onEnqueueRecognition = viewModel::enqueueRecognition,
-                                onCancelRecognition = viewModel::cancelRecognition,
-                                onNavigateToTrackScreen = onNavigateToTrackScreen,
-                                menuEnabled = !multiSelectionState.multiselectEnabled,
-                                selected = multiSelectionState.isSelected(
-                                    enqueuedWithStatus.enqueued.id
-                                ),
-                                onClick = { recognitionId ->
-                                    if (multiSelectionState.multiselectEnabled) {
-                                        multiSelectionState.toggleSelection(recognitionId)
-                                    }
-                                },
-                                onLongClick = multiSelectionState::toggleSelection,
-                                modifier = Modifier.animateItemPlacement()
-                            )
-                        }
-                    }
+                    RecognitionLazyColumn(
+                        lazyListState = rememberLazyListState(),
+                        multiSelectionState = multiSelectionState,
+                        recognitionList = state.enqueuedList,
+                        onNavigateToTrackScreen = onNavigateToTrackScreen,
+                        onEnqueueRecognition = viewModel::enqueueRecognition,
+                        onCancelRecognition = viewModel::cancelRecognition,
+                        onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
+                        onRenameEnqueued = viewModel::renameRecognition,
+                        playerStatus = state.playerStatus,
+                        onStartPlayRecord = viewModel::startAudioPlayer,
+                        onStopPlayRecord = viewModel::stopAudioPlayer,
+                        modifier = Modifier
+                            .nestedScroll(topBarBehaviour.nestedScrollConnection),
+                    )
                 }
+            }
+            if (deleteDialogVisible) {
+                DeleteSelectedDialog(
+                    onDeleteClick = {
+                        deletionInProgress = true
+                        viewModel.cancelAndDeleteRecognition(
+                            *multiSelectionState.getSelected().toIntArray()
+                        )
+                    },
+                    onDismissClick = { deleteDialogVisible = false },
+                    inProgress = deletionInProgress
+                )
             }
         }
     }
 
 }
-
-private fun EnqueuedRecognition.isPlaying(playerStatus: PlayerStatus) =
-    playerStatus is PlayerStatus.Started && playerStatus.record == this.recordFile
-

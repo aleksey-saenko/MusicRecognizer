@@ -188,9 +188,9 @@
     <string name="token_preference_dialog_message">Введите правильный токен AudD API (пустой токен ограничит количество распознаваний в день):</string>
     <string name="artwork">Обложка</string>
     <string name="delete_tracks">Удалить треки</string>
-    <string name="delete_selected_tracks_dialog">Вы уверены, что хотите удалить выбранные треки? Это действие нельзя отменить.</string>
+    <string name="delete_selected_tracks_dialog">Вы уверены, что хотите удалить выбранные треки\? Это действие нельзя отменить.</string>
     <string name="delete_recognitions">Удалить распознавания</string>
-    <string name="delete_selected_recognitions_dialog">Вы уверены, что хотите отменить и удалить выбранные запланированные распознавания? Это действие нельзя отменить.</string>
+    <string name="delete_selected_recognitions_dialog">Вы уверены, что хотите отменить и удалить выбранные запланированные распознавания\? Это действие нельзя отменить.</string>
     <string name="stop_player">Остановить проигрыватель</string>
     <string name="start_player">Запустить проигрыватель</string>
     <string name="edit">Редактировать</string>

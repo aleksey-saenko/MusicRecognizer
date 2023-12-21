@@ -60,6 +60,7 @@ internal fun TokenPage(
 
                 Text(
                     text = stringResource(StringsR.string.api_token),
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.padding(top = 24.dp)
                 )

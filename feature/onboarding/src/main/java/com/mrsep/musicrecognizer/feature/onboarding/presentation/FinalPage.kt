@@ -24,13 +24,14 @@ internal fun FinalPage(
     ) {
         Text(
             text = stringResource(StringsR.string.final_onboarding_page_title),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
         )
         Text(
             text = stringResource(StringsR.string.final_onboarding_page_message),
-            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .widthIn(max = 488.dp)
                 .padding(bottom = 24.dp)

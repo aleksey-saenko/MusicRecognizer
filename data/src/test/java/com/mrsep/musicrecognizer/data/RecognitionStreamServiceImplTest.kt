@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.data
 
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.audd.websocket.AuddRecognitionWebSocketService
 import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceImpl

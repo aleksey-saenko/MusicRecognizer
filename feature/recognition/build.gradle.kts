@@ -27,15 +27,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
 
-        freeCompilerArgs = freeCompilerArgs + listOf(
+        freeCompilerArgs += listOf(
             "-P",
             "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics"
-        )
-        freeCompilerArgs = freeCompilerArgs + listOf(
+                    project.buildDir.absolutePath + "/compose_metrics",
             "-P",
             "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics"
+                    project.buildDir.absolutePath + "/compose_metrics",
         )
     }
     buildFeatures {

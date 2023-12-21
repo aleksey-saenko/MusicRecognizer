@@ -5,8 +5,9 @@
 # Translators
 
 | Language | Translators |
-| :-- | :-- |
-| English | [aleksey-saenko](https://github.com/aleksey-saenko) |
-| Czech | [Fjuro](https://github.com/Fjuro) |
-| Russian | [aleksey-saenko](https://github.com/aleksey-saenko) |
-| Slovak | [tomz00](https://github.com/tomz00) |
+|:---------| :-- |
+| Czech    | [Fjuro](https://github.com/Fjuro) |
+| English  | [aleksey-saenko](https://github.com/aleksey-saenko) |
+| French   | [ysard](https://github.com/ysard) |
+| Russian  | [aleksey-saenko](https://github.com/aleksey-saenko) |
+| Slovak   | [tomz00](https://github.com/tomz00) |

@@ -1,0 +1,2 @@
+* Added french translation (@ysard)
+* Minor bug fixes

@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -199,16 +201,8 @@ private fun performWebSearch(
 ) {
     val query = uiState.getWebSearchQuery(searchParams.target, context)
     when (searchParams.provider) {
-        SearchProvider.WebDefault -> {
-            context.openWebSearchImplicitly(query)
-        }
-
-        SearchProvider.Wikipedia -> {
-            val lang = Locale.getDefault().language
-            val encodedQuery = Uri.encode(query)
-            val url = "https://$lang.wikipedia.org/wiki/Special:Search?search=$encodedQuery"
-            context.openUrlImplicitly(url)
-        }
+        SearchProvider.WebDefault -> context.openWebSearchImplicitly(query)
+        SearchProvider.Wikipedia -> context.openWikiSearch(query)
     }
 }
 
@@ -219,4 +213,20 @@ private fun TrackUiState.Success.getWebSearchQuery(
     SearchTarget.Artist -> artist
     SearchTarget.Album -> album?.run { "$this $artist" }
         ?: "$title $artist ${context.getString(StringsR.string.album)}"
+}
+
+private fun Context.openWikiSearch(query: String) {
+    val wikiSendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        `package` = "org.wikipedia"
+        putExtra(Intent.EXTRA_TEXT, query)
+    }
+    try {
+        startActivity(wikiSendIntent)
+    } catch (e: ActivityNotFoundException) {
+        val lang = Locale.getDefault().language
+        val encodedQuery = Uri.encode(query)
+        val url = "https://$lang.wikipedia.org/wiki/Special:Search?search=$encodedQuery"
+        openUrlImplicitly(url)
+    }
 }

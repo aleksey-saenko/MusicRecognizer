@@ -203,6 +203,8 @@
     <string name="purpose_track_links_service">Provides additional platform-specific track links</string>
     <string name="github_repository">GitHub repository</string>
     <string name="license_gnu_gplv3">License GNU GPLv3</string>
+    <string name="start_autoscroll">Start autoscroll</string>
+    <string name="stop_autoscroll">Stop autoscroll</string>
     <string name="lyrics_text_style">Lyrics text style</string>
     <string name="font_size">Font size</string>
     <string name="make_text_bigger_or_smaller">Make text bigger or smaller</string>

@@ -1,8 +1,10 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,9 +21,13 @@ import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LyricsScreenTopBar(
+    autoScrollAvailable: Boolean,
+    autoScrollStarted: Boolean,
     onBackPressed: () -> Unit,
     onShareClick: () -> Unit,
     onChangeTextStyleClick: () -> Unit,
+    onLaunchAutoScrollClick: () -> Unit,
+    onStopAutoScrollClick: () -> Unit,
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -37,6 +43,28 @@ internal fun LyricsScreenTopBar(
         },
         actions = {
             Row {
+                if (autoScrollAvailable) {
+                    AnimatedContent(
+                        targetState = autoScrollStarted,
+                        label = "AutoScrollButton"
+                    ) { started ->
+                        if (started) {
+                            IconButton(onClick = onStopAutoScrollClick) {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.baseline_pause_24),
+                                    contentDescription = stringResource(StringsR.string.stop_autoscroll)
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = onLaunchAutoScrollClick) {
+                                Icon(
+                                    imageVector = Icons.Default.PlayArrow,
+                                    contentDescription = stringResource(StringsR.string.start_autoscroll)
+                                )
+                            }
+                        }
+                    }
+                }
                 IconButton(onClick = onShareClick) {
                     Icon(
                         imageVector = Icons.Default.Share,

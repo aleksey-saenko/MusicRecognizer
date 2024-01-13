@@ -8,6 +8,7 @@ import androidx.datastore.dataStoreFile
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
@@ -71,7 +72,7 @@ interface PreferencesMappersModule {
 
     @Binds
     fun bindUserPreferencesDoMapper(implementation: UserPreferencesDoMapper):
-            BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>
+            Mapper<UserPreferencesProto, UserPreferencesDo>
 
     @Binds
     fun bindMusicServiceDoMapper(implementation: MusicServiceDoMapper):

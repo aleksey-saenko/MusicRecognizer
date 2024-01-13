@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.presentation
 
+import android.content.Intent
+import android.content.Intent.ACTION_MAIN
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.MusicRecognizerApp
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.startNotificationService
@@ -33,20 +36,30 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            setIntent(intent)
+            handleRecognitionRequest(intent)
+        }
+    }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        val keepSplashScreen = mutableStateOf(true)
-        splashScreen.setKeepOnScreenCondition {
-            keepSplashScreen.value
+        var keepSplashScreen = true
+        splashScreen.setKeepOnScreenCondition { keepSplashScreen }
+        if (savedInstanceState == null) {
+            handleRecognitionRequest(intent)
         }
         setupApplicationWithPreferences()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            val uiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val darkTheme = shouldUseDarkTheme(uiState)
+            val recognitionRequested by viewModel.recognitionRequested.collectAsStateWithLifecycle()
             MusicRecognizerTheme(
                 darkTheme = darkTheme,
                 dynamicColor = shouldUseDynamicColors(uiState),
@@ -68,20 +81,30 @@ class MainActivity : ComponentActivity() {
                 }
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(
+                        recognitionRequested = recognitionRequested,
+                        setRecognitionRequested = viewModel::setRecognitionRequested,
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),
                         isExpandedScreen = isExpandedScreen(windowSizeClass),
                         onboardingCompleted = isOnboardingCompleted(uiState),
                         onOnboardingClose = { this@MainActivity.finish() },
-                        hideSplashScreen = { keepSplashScreen.value = false }
+                        hideSplashScreen = { keepSplashScreen = false }
                     )
                 }
             }
         }
     }
 
+    private fun handleRecognitionRequest(intent: Intent) {
+        when (intent.action) {
+            MusicRecognizerApp.ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
+            ACTION_MAIN -> viewModel.requestRecognitionOnStartupIfPreferred()
+        }
+    }
+
+    // TODO: remove from activity after fixing device boot case
     private fun setupApplicationWithPreferences() {
         lifecycleScope.launch {
-            viewModel.uiStateStream.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .filterIsInstance<MainActivityUiState.Success>()
                 .map { state -> state.userPreferences }
                 .onEach { userPreferences ->

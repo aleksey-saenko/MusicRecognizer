@@ -83,4 +83,8 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setUsePureBlackForDarkTheme(value)
     }
 
+    override suspend fun setRecognizeOnStartup(value: Boolean) {
+        preferencesRepositoryDo.setRecognizeOnStartup(value)
+    }
+
 }

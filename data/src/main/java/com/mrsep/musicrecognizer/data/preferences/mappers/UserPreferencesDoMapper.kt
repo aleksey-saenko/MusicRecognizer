@@ -4,6 +4,7 @@ import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
@@ -17,28 +18,7 @@ class UserPreferencesDoMapper @Inject constructor(
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
     private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
-) : BidirectionalMapper<UserPreferencesProto, UserPreferencesDo> {
-
-    override fun reverseMap(input: UserPreferencesDo): UserPreferencesProto {
-        return newBuilder()
-            .setOnboardingCompleted(input.onboardingCompleted)
-            .setApiToken(input.apiToken)
-            .addAllRequiredMusicServices(
-                input.requiredMusicServices.map(musicServiceMapper::reverseMap)
-            )
-            .setNotificationServiceEnabled(input.notificationServiceEnabled)
-            .setDynamicColorsEnabled(input.dynamicColorsEnabled)
-            .setArtworkBasedThemeEnabled(input.artworkBasedThemeEnabled)
-            .setDeveloperModeEnabled(input.developerModeEnabled)
-            .setFallbackPolicy(fallbackPolicyMapper.reverseMap(input.fallbackPolicy))
-            .setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(input.lyricsFontStyle))
-            .setTrackFilter(trackFilterMapper.reverseMap(input.trackFilter))
-            .setHapticFeedback(hapticFeedbackMapper.reverseMap(input.hapticFeedback))
-            .setUseColumnForLibrary(input.useColumnForLibrary)
-            .setThemeMode(themeModeMapper.reverseMap(input.themeMode))
-            .setUsePureBlackForDarkTheme(input.usePureBlackForDarkTheme)
-            .build()
-    }
+) : Mapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun map(input: UserPreferencesProto): UserPreferencesDo {
         return UserPreferencesDo(
@@ -57,6 +37,7 @@ class UserPreferencesDoMapper @Inject constructor(
             useColumnForLibrary = input.useColumnForLibrary,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
+            recognizeOnStartup = input.recognizeOnStartup,
         )
     }
 

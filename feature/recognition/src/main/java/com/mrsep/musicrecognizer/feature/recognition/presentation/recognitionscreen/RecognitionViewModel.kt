@@ -48,26 +48,26 @@ internal class RecognitionViewModel @Inject constructor(
         if (isRecording) recorderController.maxAmplitudeFlow else flowOf(0f)
     }
 
-    fun recognizeTap() {
-        if (recognitionState.value is RecognitionStatus.Recognizing) {
-            recognitionInteractor.cancelAndResetStatus()
+    fun launchRecognition() {
+        if (isOffline.value) {
+            recognitionInteractor.launchOfflineRecognition(viewModelScope)
         } else {
-            if (isOffline.value) {
-                recognitionInteractor.launchOfflineRecognition(viewModelScope)
-            } else {
-                recognitionInteractor.launchRecognition(viewModelScope)
-            }
+            recognitionInteractor.launchRecognition(viewModelScope)
         }
+    }
+
+    fun cancelRecognition() {
+        recognitionInteractor.cancelAndResetStatus()
     }
 
     fun resetRecognitionResult() = recognitionInteractor.cancelAndResetStatus()
 
-    fun vibrateResult(isSuccess: Boolean) {
-        vibrationManager.vibrateResult(isSuccess)
-    }
-
     fun vibrateOnTap() {
         vibrationManager.vibrateOnTap()
+    }
+
+    fun vibrateResult(isSuccess: Boolean) {
+        vibrationManager.vibrateResult(isSuccess)
     }
 
 }

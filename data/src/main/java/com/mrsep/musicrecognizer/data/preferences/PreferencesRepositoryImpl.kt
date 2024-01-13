@@ -9,6 +9,7 @@ import com.mrsep.musicrecognizer.UserPreferencesProtoKt
 import com.mrsep.musicrecognizer.copy
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,7 +25,7 @@ private const val TAG = "PreferencesRepositoryImpl"
 
 class PreferencesRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<UserPreferencesProto>,
-    private val preferencesMapper: BidirectionalMapper<UserPreferencesProto, UserPreferencesDo>,
+    private val preferencesMapper: Mapper<UserPreferencesProto, UserPreferencesDo>,
     private val musicServiceMapper: BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>,
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,
@@ -101,6 +102,10 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUsePureBlackForDarkTheme(value: Boolean) {
         safeWriter { usePureBlackForDarkTheme = value }
+    }
+
+    override suspend fun setRecognizeOnStartup(value: Boolean) {
+        safeWriter { recognizeOnStartup = value }
     }
 
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {

@@ -86,6 +86,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setRecognizeOnStartup(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setRecognizeOnStartup(value)
+        }
+    }
+
 }
 
 internal sealed interface PreferencesUiState {

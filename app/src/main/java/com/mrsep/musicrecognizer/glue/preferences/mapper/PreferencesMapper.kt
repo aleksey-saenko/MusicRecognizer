@@ -35,7 +35,8 @@ class PreferencesMapper @Inject constructor(
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
             useColumnForLibrary = input.useColumnForLibrary,
             themeMode = themeModeMapper.map(input.themeMode),
-            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
+            recognizeOnStartup = input.recognizeOnStartup,
         )
     }
 

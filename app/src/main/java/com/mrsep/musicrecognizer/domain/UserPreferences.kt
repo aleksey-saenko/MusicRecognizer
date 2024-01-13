@@ -10,6 +10,7 @@ data class UserPreferences(
     val dynamicColorsEnabled: Boolean,
     val usePureBlackForDarkTheme: Boolean,
     val developerModeEnabled: Boolean,
+    val recognizeOnStartup: Boolean,
 )
 
 enum class ThemeMode { FollowSystem, AlwaysLight, AlwaysDark }

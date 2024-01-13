@@ -18,5 +18,6 @@ interface PreferencesRepository {
     suspend fun setUseColumnForLibrary(value: Boolean)
     suspend fun setThemeMode(value: ThemeMode)
     suspend fun setUsePureBlackForDarkTheme(value: Boolean)
+    suspend fun setRecognizeOnStartup(value: Boolean)
 
 }

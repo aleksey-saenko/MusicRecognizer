@@ -11,11 +11,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.withResumed
@@ -46,35 +42,32 @@ import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.navigateToLyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 
 private const val SCREEN_TRANSITION_DURATION = 300
 
-@Stable
-internal class AppState(autostartRecognition: Boolean = false) {
-    var autostartRecognition by mutableStateOf(autostartRecognition)
-}
-
 @Composable
 internal fun AppNavigation(
+    recognitionRequested: Boolean,
+    setRecognitionRequested: (Boolean) -> Unit,
     shouldShowNavRail: Boolean,
     isExpandedScreen: Boolean,
     onboardingCompleted: Boolean?,
     onOnboardingClose: () -> Unit,
     hideSplashScreen: () -> Unit
 ) {
-    val appState = remember {
-        AppState(autostartRecognition = false)
-    }
     val outerNavController = rememberNavController()
     val innerNavController = rememberNavController()
-
-    val currentOuterEntry by outerNavController.currentBackStackEntryAsState()
-    val currentInnerEntry by innerNavController.currentBackStackEntryAsState()
-    // Conditional navigation for onboarding screen
-    LaunchedEffect(onboardingCompleted, currentOuterEntry, currentInnerEntry) {
-        val outerEntry = currentOuterEntry ?: return@LaunchedEffect
+    val optionalOuterEntry by outerNavController.currentBackStackEntryAsState()
+    val optionalInnerEntry by innerNavController.currentBackStackEntryAsState()
+    // Conditional navigation for onboarding and recognition request
+    LaunchedEffect(
+        optionalOuterEntry,
+        optionalInnerEntry,
+        onboardingCompleted,
+        recognitionRequested
+    ) {
+        // optionalInnerEntry can be null, for example if nav graph is created with track deeplink
+        val outerEntry = optionalOuterEntry ?: return@LaunchedEffect
         onboardingCompleted ?: return@LaunchedEffect
         val onOnboarding = outerEntry.destination.route == OnboardingScreen.ROUTE
         when {
@@ -84,17 +77,24 @@ internal fun AppNavigation(
             onboardingCompleted && onOnboarding -> {
                 outerNavController.popBackStack()
             }
-            // hide splash screen if navigation is finished and result screen is resumed
             else -> {
-                select<Unit> {
-                    listOfNotNull(currentOuterEntry, outerEntry).forEach { entry ->
-                        launch { entry.lifecycle.withResumed(hideSplashScreen) }.onJoin
+                // navigate to recognition screen if recognition requested
+                if (recognitionRequested) {
+                    if (outerEntry.destination.route != BAR_HOST_ROUTE) {
+                        outerNavController.popBackStack(BAR_HOST_ROUTE, inclusive = false)
+                    } else if (optionalInnerEntry?.destination?.route != RecognitionScreen.ROUTE) {
+                        innerNavController.popBackStack(RecognitionScreen.ROUTE, inclusive = false)
                     }
+                }
+                // hide splash screen if onboarding navigation is finished and result screen is resumed
+                if (outerEntry.destination.route == BAR_HOST_ROUTE) {
+                    optionalInnerEntry?.lifecycle?.withResumed(hideSplashScreen)
+                } else {
+                    outerEntry.lifecycle.withResumed(hideSplashScreen)
                 }
             }
         }
     }
-
     NavHost(
         navController = outerNavController,
         startDestination = BAR_HOST_ROUTE,
@@ -106,7 +106,8 @@ internal fun AppNavigation(
             onOnboardingClose = onOnboardingClose
         )
         barNavHost(
-            appState = appState,
+            recognitionRequested = recognitionRequested,
+            setRecognitionRequested = setRecognitionRequested,
             shouldShowNavRail = shouldShowNavRail,
             outerNavController = outerNavController,
             innerNavController = innerNavController
@@ -123,9 +124,7 @@ internal fun AppNavigation(
             onNavigateToLyricsScreen = { trackId, from ->
                 outerNavController.navigateToLyricsScreen(trackId = trackId, from = from)
             },
-            onRetryRequested = {
-                appState.autostartRecognition = true
-            }
+            onRetryRequested = { setRecognitionRequested(true) }
         )
         lyricsScreen(
             onBackPressed = outerNavController::navigateUp
@@ -146,14 +145,17 @@ internal fun AppNavigation(
 private const val BAR_HOST_ROUTE = "bar_host"
 
 private fun NavGraphBuilder.barNavHost(
-    appState: AppState,
+    recognitionRequested: Boolean,
+    setRecognitionRequested: (Boolean) -> Unit,
     shouldShowNavRail: Boolean,
     outerNavController: NavController,
     innerNavController: NavHostController
 ) {
     composable(BAR_HOST_ROUTE) {
         Column(
-            modifier = Modifier.fillMaxSize().navigationBarsPadding(),
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -169,7 +171,8 @@ private fun NavGraphBuilder.barNavHost(
                     )
                 }
                 BarNavHost(
-                    appState = appState,
+                    recognitionRequested = recognitionRequested,
+                    setRecognitionRequested = setRecognitionRequested,
                     outerNavController = outerNavController,
                     innerNavController = innerNavController,
                     modifier = Modifier.weight(1f, false)
@@ -184,7 +187,8 @@ private fun NavGraphBuilder.barNavHost(
 
 @Composable
 private fun BarNavHost(
-    appState: AppState,
+    recognitionRequested: Boolean,
+    setRecognitionRequested: (Boolean) -> Unit,
     outerNavController: NavController,
     innerNavController: NavHostController,
     modifier: Modifier = Modifier
@@ -205,8 +209,8 @@ private fun BarNavHost(
             }
         )
         recognitionScreen(
-            autostart = appState.autostartRecognition,
-            onResetAutostart = { appState.autostartRecognition = false },
+            autostart = recognitionRequested,
+            onResetAutostart = { setRecognitionRequested(false) },
             onNavigateToTrackScreen = { trackId, from ->
                 outerNavController.navigateToTrackScreen(
                     trackId = trackId, isRetryAvailable = true, from = from

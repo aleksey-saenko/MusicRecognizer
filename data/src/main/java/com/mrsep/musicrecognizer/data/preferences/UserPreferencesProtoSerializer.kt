@@ -70,6 +70,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             themeMode = UserPreferencesProto.ThemeModeProto.FOLLOW_SYSTEM
             usePureBlackForDarkTheme = false
             hasDoneRequiredMusicServicesMigration = true
+            recognizeOnStartup = false
         }
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

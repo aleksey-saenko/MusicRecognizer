@@ -82,7 +82,11 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showPolicyDialog = false }
                             )
                         }
-
+                        PreferenceSwitchItem(
+                            title = stringResource(StringsR.string.recognize_on_startup),
+                            onClick = { viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup) },
+                            checked = uiState.preferences.recognizeOnStartup
+                        )
                         var showTokenDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(title = stringResource(StringsR.string.audd_api_token)) {
                             showTokenDialog = true

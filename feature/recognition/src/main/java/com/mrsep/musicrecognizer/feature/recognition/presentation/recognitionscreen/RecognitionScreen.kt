@@ -58,11 +58,6 @@ internal fun RecognitionScreen(
     val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
-    LaunchedEffect(autostart) {
-        if (autostart) viewModel.recognizeTap()
-        onResetAutostart()
-    }
-
     //region <permission handling block>
     var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
     var permissionRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
@@ -70,8 +65,7 @@ internal fun RecognitionScreen(
         Manifest.permission.RECORD_AUDIO
     ) { granted ->
         if (granted) {
-            if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
-            viewModel.recognizeTap()
+            viewModel.launchRecognition()
         } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
             permissionBlockedDialogVisible = true
         }
@@ -88,6 +82,23 @@ internal fun RecognitionScreen(
         onDismissClick = { permissionRationaleDialogVisible = false }
     )
     //endregion
+
+    fun launchRecognition() {
+        if (recorderPermissionState.status.isGranted) {
+            viewModel.launchRecognition()
+        } else if (recorderPermissionState.status.shouldShowRationale) {
+            permissionRationaleDialogVisible = true
+        } else {
+            recorderPermissionState.launchPermissionRequest()
+        }
+    }
+
+    LaunchedEffect(autostart) {
+        if (autostart) {
+            launchRecognition()
+            onResetAutostart()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -117,13 +128,11 @@ internal fun RecognitionScreen(
                 SuperButtonSection(
                     title = getButtonTitle(recognizeStatus, autostart),
                     onButtonClick = {
-                        if (recorderPermissionState.status.isGranted) {
-                            if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
-                            viewModel.recognizeTap()
-                        } else if (recorderPermissionState.status.shouldShowRationale) {
-                            permissionRationaleDialogVisible = true
+                        if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
+                        if (recognizeStatus is RecognitionStatus.Recognizing) {
+                            viewModel.cancelRecognition()
                         } else {
-                            recorderPermissionState.launchPermissionRequest()
+                            launchRecognition()
                         }
                     },
                     activated = recognizeStatus is RecognitionStatus.Recognizing,
@@ -158,7 +167,7 @@ internal fun RecognitionScreen(
                         RemoteRecognitionResult.Error.BadConnection -> BadConnectionShield(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = viewModel::recognizeTap,
+                            onRetryClick = ::launchRecognition,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -171,7 +180,7 @@ internal fun RecognitionScreen(
                             moreInfo = thisStatus.result.remoteError.cause?.stackTraceToString() ?: "",
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = viewModel::recognizeTap,
+                            onRetryClick = ::launchRecognition,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -185,7 +194,7 @@ internal fun RecognitionScreen(
                                     "Message: ${thisStatus.result.remoteError.message}",
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = viewModel::recognizeTap,
+                            onRetryClick = ::launchRecognition,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -199,7 +208,7 @@ internal fun RecognitionScreen(
                                 ?: thisStatus.result.remoteError.message,
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = viewModel::recognizeTap,
+                            onRetryClick = ::launchRecognition,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -233,7 +242,7 @@ internal fun RecognitionScreen(
                     is RecognitionResult.NoMatches -> NoMatchesShield(
                         recognitionTask = thisStatus.result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = viewModel::recognizeTap,
+                        onRetryClick = ::launchRecognition,
                         onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
                             onNavigateToQueueScreen(recognitionId)

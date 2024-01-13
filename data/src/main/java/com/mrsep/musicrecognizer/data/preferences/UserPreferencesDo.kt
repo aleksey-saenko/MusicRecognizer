@@ -17,6 +17,7 @@ data class UserPreferencesDo(
     val useColumnForLibrary: Boolean,
     val themeMode: ThemeModeDo,
     val usePureBlackForDarkTheme: Boolean,
+    val recognizeOnStartup: Boolean,
 ) {
 
     data class FallbackPolicyDo(

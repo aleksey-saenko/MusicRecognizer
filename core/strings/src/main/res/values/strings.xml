@@ -165,6 +165,7 @@
     <string name="vibrate_on_tap">Vibrate on tap</string>
     <string name="vibrate_on_result">Vibrate on result</string>
     <string name="misc">Misc</string>
+    <string name="recognize_on_startup">Recognize on startup</string>
     <string name="developer_options">Developer options</string>
     <string name="appearance">Appearance</string>
     <string name="empty_recognition_queue_message">No queued recognitions</string>

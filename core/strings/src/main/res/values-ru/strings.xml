@@ -140,6 +140,7 @@
     <string name="vibrate_on_tap">Вибрация при нажатии</string>
     <string name="vibrate_on_result">Вибрация при результате</string>
     <string name="misc">Разное</string>
+    <string name="recognize_on_startup">Распознавать при запуске</string>
     <string name="developer_options">Параметры разработчика</string>
     <string name="appearance">Внешний вид</string>
     <string name="empty_recognition_queue_message">Очередь распознавания пуста</string>

@@ -105,6 +105,8 @@ message UserPreferencesProto {
   repeated MusicServiceProto required_music_services = 35;
   bool has_done_required_music_services_migration = 36;
 
-  // NEXT AVAILABLE ID: 37
+  bool recognizeOnStartup = 37;
+
+  // NEXT AVAILABLE ID: 38
 
 }

@@ -5,9 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.domain.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.annotation.concurrent.Immutable
 import javax.inject.Inject
@@ -17,19 +22,40 @@ class MainActivityViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    val uiStateStream = preferencesRepository.userPreferencesFlow
-        .map { MainActivityUiState.Success(it) }
+    private val _recognitionRequested = MutableStateFlow(false)
+    val recognitionRequested = _recognitionRequested.asStateFlow()
+
+    val uiState = preferencesRepository.userPreferencesFlow
+        .map { preferences -> MainActivityUiState.Success(userPreferences = preferences) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MainActivityUiState.Loading
         )
 
-    fun isLoadingState() = uiStateStream.value is MainActivityUiState.Loading
+    fun setRecognitionRequested(requested: Boolean) {
+        if (requested) {
+            requestRecognition(checkStartupPreference = false)
+        } else {
+            _recognitionRequested.update { false }
+        }
+    }
 
-    fun setNotificationServiceEnabled(value: Boolean) {
+    fun requestRecognitionOnStartupIfPreferred() {
+        requestRecognition(checkStartupPreference = true)
+    }
+
+    private fun requestRecognition(checkStartupPreference: Boolean) {
         viewModelScope.launch {
-            preferencesRepository.setNotificationServiceEnabled(value)
+            val userPreferences = uiState
+                .filterIsInstance<MainActivityUiState.Success>()
+                .first()
+                .userPreferences
+            val shouldRequest = userPreferences.onboardingCompleted
+                    && (!checkStartupPreference || userPreferences.recognizeOnStartup)
+            if (shouldRequest) {
+                _recognitionRequested.update { true }
+            }
         }
     }
 
@@ -38,8 +64,8 @@ class MainActivityViewModel @Inject constructor(
 @Immutable
 sealed class MainActivityUiState {
 
-    data object Loading: MainActivityUiState()
+    data object Loading : MainActivityUiState()
 
-    data class Success(val userPreferences: UserPreferences): MainActivityUiState()
+    data class Success(val userPreferences: UserPreferences) : MainActivityUiState()
 
 }

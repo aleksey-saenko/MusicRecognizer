@@ -15,6 +15,7 @@ import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import javax.inject.Inject
+import javax.inject.Provider
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -22,7 +23,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Provider {
 
     @Inject
-    lateinit var okHttpClient: OkHttpClient
+    lateinit var okHttpClient: Provider<OkHttpClient>
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -36,7 +37,7 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
-            .okHttpClient { okHttpClient }
+            .okHttpClient { okHttpClient.get() }
             .crossfade(true)
             .respectCacheHeaders(false)
             .build()

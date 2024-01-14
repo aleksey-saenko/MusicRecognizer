@@ -1,0 +1,4 @@
+* Added option to recognize on app startup (shortcut and preference)
+* Added simple autoscroll function for lyrics
+* Added ability to select and copy lyrics text and adjust font size while zooming
+* Fixed issue with search redirecting to Wikipedia app

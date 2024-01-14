@@ -7,28 +7,35 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
+import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -44,6 +51,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
     onRetryClick: () -> Unit,
     onNavigateToQueue: (recognitionId: Int?) -> Unit
 ) {
+    val context = LocalContext.current
     BaseShield(
         modifier = modifier,
         onDismissClick = onDismissClick
@@ -80,17 +88,40 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                     shape = MaterialTheme.shapes.small,
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text(
-                        text = moreInfo,
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontFamily = FontFamily.Monospace,
-                            color = Color.Green
-                        ),
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .horizontalScroll(rememberScrollState())
-                    )
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = moreInfo,
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontFamily = FontFamily.Monospace
+                            ),
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                        )
+                        Row {
+                            TextButton(
+                                onClick = { context.copyTextToClipboard(moreInfo) },
+                            ) {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.baseline_content_copy_24),
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = stringResource(StringsR.string.copy))
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            TextButton(
+                                onClick = { context.shareText(subject = "", body = moreInfo) },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Share,
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = stringResource(StringsR.string.share))
+                            }
+                        }
+                    }
                 }
             }
         }

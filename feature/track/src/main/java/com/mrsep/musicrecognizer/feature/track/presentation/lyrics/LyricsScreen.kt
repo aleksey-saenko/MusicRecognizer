@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -203,13 +204,22 @@ internal fun LyricsScreen(
                                         enabled = !autoScrollStarted
                                     )
                             ) {
-                                SelectionContainer {
-                                    Text(
-                                        text = uiState.lyrics,
-                                        textAlign = TextAlign.Center,
-                                        style = uiState.fontStyle.toTextStyle(uiState.themeMode),
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
+                                val lyricsContent = remember(uiState) {
+                                    movableContentOf {
+                                        Text(
+                                            text = uiState.lyrics,
+                                            textAlign = TextAlign.Center,
+                                            style = uiState.fontStyle.toTextStyle(uiState.themeMode),
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                }
+                                if (autoScrollStarted) {
+                                    lyricsContent()
+                                } else {
+                                    SelectionContainer {
+                                        lyricsContent()
+                                    }
                                 }
                             }
                         }

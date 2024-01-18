@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -71,8 +73,15 @@ internal fun LyricsScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val uiStateInFlow by viewModel.uiStateStream.collectAsStateWithLifecycle()
+
+    // Clear focus to hide potential text selection popup
+    BackHandler {
+        focusManager.clearFocus()
+        onBackPressed()
+    }
 
     when (val uiState = uiStateInFlow) {
 

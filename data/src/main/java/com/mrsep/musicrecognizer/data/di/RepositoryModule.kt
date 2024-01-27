@@ -17,22 +17,22 @@ import javax.inject.Singleton
 @Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-interface RepositoryModule {
+internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindTrackRepository(implementation: TrackRepositoryImpl): TrackRepositoryDo
+    fun bindTrackRepository(impl: TrackRepositoryImpl): TrackRepositoryDo
 
     @Binds
     @Singleton
-    fun bindPreferencesRepository(implementation: PreferencesRepositoryImpl): PreferencesRepositoryDo
+    fun bindPreferencesRepository(impl: PreferencesRepositoryImpl): PreferencesRepositoryDo
 
     @Binds
     @Singleton
-    fun bindEnqueuedRecognitionRepository(implementation: EnqueuedRecognitionRepositoryImpl): EnqueuedRecognitionRepositoryDo
+    fun bindEnqRepository(impl: EnqueuedRecognitionRepositoryImpl): EnqueuedRecognitionRepositoryDo
 
     @Binds
     @Singleton
-    fun bindRecordingFileDataSource(implementation: RecordingFileDataSourceImpl): RecordingFileDataSource
+    fun bindRecordingFileDataSource(impl: RecordingFileDataSourceImpl): RecordingFileDataSource
 
 }

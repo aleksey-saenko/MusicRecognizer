@@ -1,12 +1,16 @@
 package com.mrsep.musicrecognizer.glue.onboarding.di
 
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
-import com.mrsep.musicrecognizer.data.remote.TokenValidationStatusDo
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.TokenValidationStatus
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.ConfigValidationStatusDo
+import com.mrsep.musicrecognizer.feature.onboarding.domain.model.AuddConfig
+import com.mrsep.musicrecognizer.feature.onboarding.domain.model.ConfigValidationStatus
 import com.mrsep.musicrecognizer.feature.onboarding.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.glue.onboarding.mapper.AuddConfigMapper
+import com.mrsep.musicrecognizer.glue.onboarding.mapper.ConfigValidationStatusMapper
 import com.mrsep.musicrecognizer.glue.onboarding.mapper.PreferencesMapper
-import com.mrsep.musicrecognizer.glue.onboarding.mapper.TokenValidationStatusMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +26,11 @@ interface MapperModule {
             Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
-    fun bindTokenValidationStatusMapper(implementation: TokenValidationStatusMapper):
-            Mapper<TokenValidationStatusDo, TokenValidationStatus>
+    fun bindTokenValidationStatusMapper(implementation: ConfigValidationStatusMapper):
+            Mapper<ConfigValidationStatusDo, ConfigValidationStatus>
+
+    @Binds
+    fun bindAuddConfigMapper(implementation: AuddConfigMapper):
+            BidirectionalMapper<AuddConfigDo, AuddConfig>
 
 }

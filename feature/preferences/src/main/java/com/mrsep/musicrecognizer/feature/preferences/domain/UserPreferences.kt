@@ -4,7 +4,9 @@ import kotlinx.collections.immutable.ImmutableList
 
 data class UserPreferences(
     val onboardingCompleted: Boolean,
-    val apiToken: String,
+    val currentRecognitionProvider: RecognitionProvider,
+    val auddConfig: AuddConfig,
+    val acrCloudConfig: AcrCloudConfig,
     val requiredMusicServices: ImmutableList<MusicService>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,

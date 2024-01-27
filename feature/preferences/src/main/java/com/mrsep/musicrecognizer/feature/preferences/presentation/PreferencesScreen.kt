@@ -18,9 +18,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
+import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AcrCloudServiceDialog
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AuddServiceDialog
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.getTitle
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAcrCloudPreferencesState
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAuddPreferencesState
 import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -67,7 +73,57 @@ internal fun PreferencesScreen(
                             subtitle = stringResource(StringsR.string.recognition_queue_pref_subtitle),
                             onItemClick = onNavigateToQueueScreen
                         )
+                        val currentProvider = uiState.preferences.currentRecognitionProvider
+                        var showServiceDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.recognition_provider_preference_title),
+                            subtitle = uiState.preferences.currentRecognitionProvider.getTitle(),
+                            onItemClick = { showServiceDialog = true },
+                        )
+                        if (showServiceDialog) {
+                            var visibleProvider by rememberSaveable(currentProvider) {
+                                mutableStateOf(currentProvider)
+                            }
+                            when (visibleProvider) {
+                                RecognitionProvider.Audd -> {
+                                    val state = rememberAuddPreferencesState(
+                                        uiState.preferences.auddConfig
+                                    )
+                                    AuddServiceDialog(
+                                        state = state,
+                                        currentProvider = visibleProvider,
+                                        onProviderChanged = { visibleProvider = it },
+                                        onSaveClick = {
+                                            viewModel.setAuddConfig(state.currentConfig)
+                                            viewModel.setRecognitionProvider(visibleProvider)
+                                            showServiceDialog = false
+                                        },
+                                        onDismissClick = { showServiceDialog = false }
+                                    )
+                                }
 
+                                RecognitionProvider.AcrCloud -> {
+                                    val state = rememberAcrCloudPreferencesState(
+                                        uiState.preferences.acrCloudConfig
+                                    )
+                                    AcrCloudServiceDialog(
+                                        state = state,
+                                        currentProvider = visibleProvider,
+                                        onProviderChanged = { visibleProvider = it },
+                                        onSaveClick = {
+                                            if (state.isConfigValid) {
+                                                viewModel.setAcrCloudConfig(state.currentConfig)
+                                                viewModel.setRecognitionProvider(visibleProvider)
+                                                showServiceDialog = false
+                                            } else {
+                                                state.showErrors()
+                                            }
+                                        },
+                                        onDismissClick = { showServiceDialog = false }
+                                    )
+                                }
+                            }
+                        }
                         var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.fallback_policy),
@@ -84,23 +140,11 @@ internal fun PreferencesScreen(
                         }
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.recognize_on_startup),
-                            onClick = { viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup) },
+                            onClick = {
+                                viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup)
+                            },
                             checked = uiState.preferences.recognizeOnStartup
                         )
-                        var showTokenDialog by rememberSaveable { mutableStateOf(false) }
-                        PreferenceClickableItem(title = stringResource(StringsR.string.audd_api_token)) {
-                            showTokenDialog = true
-                        }
-                        if (showTokenDialog) {
-                            ApiTokenDialog(
-                                onConfirmClick = { newToken ->
-                                    viewModel.setApiToken(newToken)
-                                    showTokenDialog = false
-                                },
-                                onDismissClick = { showTokenDialog = false },
-                                initialToken = uiState.preferences.apiToken
-                            )
-                        }
                     }
 
                     PreferenceGroup(
@@ -202,6 +246,7 @@ private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = 
     in 1..limit -> {
         map { service -> stringResource(service.titleId()) }.joinToString(", ")
     }
+
     else -> {
         take(3).map { service -> stringResource(service.titleId()) }.joinToString(", ")
             .plus(stringResource(StringsR.string.format_more_services, size - limit))

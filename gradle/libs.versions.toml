@@ -4,7 +4,7 @@ sdkMin = "26"
 sdkTarget = "34"
 
 accompanist = "0.32.0"
-androidGradlePlugin = "8.2.1"
+androidGradlePlugin = "8.2.2"
 androidxActivity = "1.8.2"
 androidxComposeBom = "2023.10.01"
 androidxComposeCompiler = "1.5.8"
@@ -34,7 +34,6 @@ okhttpCoroutines = "1.0"
 palette = "1.0.0"
 protobuf = "3.25.1"
 protobufPlugin = "0.9.4"
-retrofit = "2.9.0"
 room = "2.6.1"
 turbine = "1.0.0"
 
@@ -83,11 +82,9 @@ moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", v
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver" }
 okhttp-coroutines = { group = "ru.gildor.coroutines", name = "kotlin-coroutines-okhttp", version.ref = "okhttpCoroutines" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
-retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
-retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

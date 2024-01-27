@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.TokenValidationStatus
+import com.mrsep.musicrecognizer.feature.onboarding.domain.model.ConfigValidationStatus
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -48,7 +48,7 @@ internal fun TokenPage(
 
         is TokenPageUiState.Success -> {
             LaunchedEffect(uiState) {
-                if (uiState.tokenValidationStatus is TokenValidationStatus.Success) onTokenApplied()
+                if (uiState.configValidationStatus is ConfigValidationStatus.Success) onTokenApplied()
             }
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -109,7 +109,7 @@ internal fun TokenPage(
                         .padding(top = 4.dp)
                 )
 
-                val errorMessage = uiState.tokenValidationStatus.errorMessageOrNull()
+                val errorMessage = uiState.configValidationStatus.errorMessageOrNull()
                 var passwordVisible by rememberSaveable { mutableStateOf(false) }
                 OutlinedTextField(
                     modifier = Modifier
@@ -118,8 +118,8 @@ internal fun TokenPage(
                         .padding(top = 24.dp),
                     value = uiState.token,
                     onValueChange = onTokenChanged,
-                    readOnly = uiState.tokenValidationStatus is TokenValidationStatus.Validating,
-                    label = { Text(stringResource(StringsR.string.audd_api_token)) },
+                    readOnly = uiState.configValidationStatus is ConfigValidationStatus.Validating,
+                    label = { Text(stringResource(StringsR.string.api_token)) },
                     trailingIcon = {
                         val iconPainter = painterResource(
                             if (passwordVisible) {
@@ -129,11 +129,7 @@ internal fun TokenPage(
                             }
                         )
                         val iconDesc = stringResource(
-                            if (passwordVisible) {
-                                StringsR.string.hide_token
-                            } else {
-                                StringsR.string.show_token
-                            }
+                            if (passwordVisible) StringsR.string.hide else StringsR.string.show
                         )
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
@@ -165,7 +161,7 @@ internal fun TokenPage(
                 ) {
                     OutlinedButton(
                         onClick = onTokenSkip,
-                        enabled = uiState.tokenValidationStatus.isValidationAllowed,
+                        enabled = uiState.configValidationStatus.isValidationAllowed,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     ) {
                         Text(
@@ -174,15 +170,15 @@ internal fun TokenPage(
                     }
                     Button(
                         onClick = onTokenValidate,
-                        enabled = uiState.tokenValidationStatus.isValidationAllowed,
+                        enabled = uiState.configValidationStatus.isValidationAllowed,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     ) {
-                        when (uiState.tokenValidationStatus) {
-                            TokenValidationStatus.Success -> Text(
-                                text = stringResource(StringsR.string.token_applied)
+                        when (uiState.configValidationStatus) {
+                            ConfigValidationStatus.Success -> Text(
+                                text = stringResource(StringsR.string.applied)
                             )
 
-                            TokenValidationStatus.Validating -> Row(
+                            ConfigValidationStatus.Validating -> Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
@@ -190,7 +186,7 @@ internal fun TokenPage(
                                 VinylRotating(modifier = Modifier.size(24.dp))
                             }
 
-                            else -> Text(text = stringResource(StringsR.string.apply_api_token))
+                            else -> Text(text = stringResource(StringsR.string.apply))
                         }
                     }
                 }
@@ -203,15 +199,15 @@ internal fun TokenPage(
 
 @Stable
 @Composable
-private fun TokenValidationStatus.errorMessageOrNull() = when (this) {
-    TokenValidationStatus.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
-    TokenValidationStatus.Error.UnknownError -> stringResource(StringsR.string.unknown_error)
-    is TokenValidationStatus.Error.WrongToken -> if (isLimitReached)
+private fun ConfigValidationStatus.errorMessageOrNull() = when (this) {
+    ConfigValidationStatus.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
+    ConfigValidationStatus.Error.UnknownError -> stringResource(StringsR.string.unknown_error)
+    is ConfigValidationStatus.Error.WrongToken -> if (isLimitReached)
         stringResource(StringsR.string.token_limit_reached)
     else
         stringResource(StringsR.string.wrong_token)
-    TokenValidationStatus.Error.EmptyToken -> stringResource(StringsR.string.must_not_be_empty)
-    TokenValidationStatus.Unchecked,
-    TokenValidationStatus.Validating,
-    TokenValidationStatus.Success -> null
+    ConfigValidationStatus.Error.EmptyToken -> stringResource(StringsR.string.must_not_be_empty)
+    ConfigValidationStatus.Unchecked,
+    ConfigValidationStatus.Validating,
+    ConfigValidationStatus.Success -> null
 }

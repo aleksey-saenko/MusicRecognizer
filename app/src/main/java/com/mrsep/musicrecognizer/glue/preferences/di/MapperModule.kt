@@ -6,16 +6,25 @@ import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
+import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
+import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
+import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.glue.preferences.mapper.AcrCloudConfigMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.AuddConfigMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackPolicyMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.HapticFeedbackMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.MusicServiceMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.RecognitionProviderMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.ThemeModeMapper
 import dagger.Binds
 import dagger.Module
@@ -50,5 +59,17 @@ interface MapperModule {
     @Binds
     fun bindThemeModeMapper(implementation: ThemeModeMapper):
             BidirectionalMapper<ThemeModeDo, ThemeMode>
+
+    @Binds
+    fun bindRecognitionProviderMapper(implementation: RecognitionProviderMapper):
+            BidirectionalMapper<RecognitionProviderDo, RecognitionProvider>
+
+    @Binds
+    fun bindAuddConfigMapper(implementation: AuddConfigMapper):
+            BidirectionalMapper<AuddConfigDo, AuddConfig>
+
+    @Binds
+    fun bindAcrCloudConfigMapper(implementation: AcrCloudConfigMapper):
+            BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>
 
 }

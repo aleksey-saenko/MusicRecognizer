@@ -6,8 +6,8 @@ import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingControllerDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoderController
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSourceImpl
-import com.mrsep.musicrecognizer.data.player.MediaPlayerController
-import com.mrsep.musicrecognizer.data.player.PlayerControllerDo
+import com.mrsep.musicrecognizer.data.audioplayer.MediaPlayerController
+import com.mrsep.musicrecognizer.data.audioplayer.PlayerControllerDo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,22 +17,22 @@ import javax.inject.Singleton
 @Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-interface AudioModule {
+internal interface AudioModule {
 
     @Binds
     @Singleton
-    fun bindMediaPlayerController(implementation: MediaPlayerController): PlayerControllerDo
+    fun bindMediaPlayerController(impl: MediaPlayerController): PlayerControllerDo
 
     @Binds
     @Singleton
-    fun bindSoundSource(implementation: SoundSourceImpl): SoundSource
+    fun bindSoundSource(impl: SoundSourceImpl): SoundSource
 
     @Binds
     @Singleton
-    fun bindSoundAmplitudeSource(implementation: SoundAmplitudeSourceImpl): SoundAmplitudeSourceDo
+    fun bindSoundAmplitudeSource(impl: SoundAmplitudeSourceImpl): SoundAmplitudeSourceDo
 
     @Binds
     @Singleton
-    fun bindAudioRecordingController(implementation: AacEncoderController): AudioRecordingControllerDo
+    fun bindAudioRecordingController(impl: AacEncoderController): AudioRecordingControllerDo
 
 }

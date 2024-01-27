@@ -1,14 +1,13 @@
 package com.mrsep.musicrecognizer.feature.developermode.presentation
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
 import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
-import com.mrsep.musicrecognizer.data.player.MediaPlayerController
-import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
-import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
+import com.mrsep.musicrecognizer.data.audioplayer.MediaPlayerController
+import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,12 +23,11 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-@SuppressLint("StaticFieldLeak")
 internal class DeveloperViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val databaseFiller: DatabaseFiller,
+//    private val recognitionDatabaseFiller: EnqRecognitionDBFiller,
     private val trackRepositoryDo: TrackRepositoryDo,
-    private val recognitionServiceDo: RecognitionServiceDo,
     private val amplitudeSource: SoundAmplitudeSourceDo,
     private val encoder: AacEncoder,
     private val playerController: MediaPlayerController,
@@ -57,21 +55,14 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun prepopulateDbAssets() = processSuspend { databaseFiller.prepopulateFromAssets() }
 
-
-    fun recognizeTestFile() {
-        viewModelScope.launch {
-            val result = recognitionServiceDo.recognize(
-                token = "",
-                file = File("${appContext.filesDir.absolutePath}/testAudioChain")
-            )
-            println(result)
-        }
-    }
+    fun prepopulateRecognitionDb() { }
+//        processSuspend { recognitionDatabaseFiller.prepopulateWithStoredTracks() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val amplitudeFlow get() = isRecording.flatMapLatest { rec ->
-        if (rec) amplitudeSource.amplitudeFlow else flowOf(0f)
-    }
+    val amplitudeFlow
+        get() = isRecording.flatMapLatest { rec ->
+            if (rec) amplitudeSource.amplitudeFlow else flowOf(0f)
+        }
 
     private val _isRecording = MutableStateFlow(false)
     val isRecording = _isRecording.asStateFlow()
@@ -101,7 +92,8 @@ internal class DeveloperViewModel @Inject constructor(
     fun stopAudioRecord() {
         viewModelScope.launch(Dispatchers.IO) {
             _audioChainJob?.cancelAndJoin()
-            appContext.writeToFile(destination.toByteArray(), "testAudio")
+            val data = destination.toByteArray()
+            appContext.writeToFile(data, "testAudio")
             _isRecording.update { false }
         }
     }
@@ -116,6 +108,10 @@ internal class DeveloperViewModel @Inject constructor(
         playerController.stop()
     }
 
+}
+
+private fun Context.showToast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 }
 
 private fun Context.writeToFile(byteArray: ByteArray, filename: String) {

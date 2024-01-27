@@ -5,18 +5,19 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionR
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
 import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.recognitionScheme
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.splitter
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.step
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.splitter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -42,7 +43,7 @@ import kotlin.time.Duration.Companion.seconds
 @Singleton
 internal class RecognitionInteractorImpl @Inject constructor(
     private val recorderController: AudioRecorderController,
-    private val recognitionService: RemoteRecognitionService,
+    private val recognitionServiceFactory: RecognitionServiceFactory,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
     private val resultDelegator: RecognitionStatusDelegator,
@@ -72,10 +73,15 @@ internal class RecognitionInteractorImpl @Inject constructor(
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
+            val serviceConfig = when (userPreferences.currentRecognitionProvider) {
+                RecognitionProvider.Audd -> userPreferences.auddConfig
+                RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
+            }
+            val recognitionService = recognitionServiceFactory.getService(serviceConfig)
+
             val recordingChannel = Channel<ByteArray>(onlineScheme.stepCount)
             val remoteResult = async {
                 recognitionService.recognize(
-                    token = userPreferences.apiToken,
                     audioRecordingFlow = recordingChannel.receiveAsFlow()
                 )
             }

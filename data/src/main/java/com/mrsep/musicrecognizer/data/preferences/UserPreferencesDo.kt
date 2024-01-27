@@ -1,10 +1,15 @@
 package com.mrsep.musicrecognizer.data.preferences
 
+import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 
 data class UserPreferencesDo(
     val onboardingCompleted: Boolean,
-    val apiToken: String,
+    val currentRecognitionProvider: RecognitionProviderDo,
+    val auddConfig: AuddConfigDo,
+    val acrCloudConfig: AcrCloudConfigDo,
     val requiredMusicServices: List<MusicServiceDo>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,

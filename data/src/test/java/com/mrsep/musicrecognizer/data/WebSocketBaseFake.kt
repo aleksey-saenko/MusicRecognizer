@@ -10,7 +10,7 @@ import okhttp3.WebSocket
 import okio.ByteString
 import java.lang.IllegalStateException
 
-abstract class WebSocketBaseFake(
+internal abstract class WebSocketBaseFake(
     private val testScope: TestScope
 ) : WebSocket {
 

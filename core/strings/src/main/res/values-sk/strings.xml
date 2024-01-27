@@ -17,12 +17,9 @@
     <string name="onboarding_token_message_link">tu</string>
     <string name="onboarding_token_message_end">" získajte svoj token, ak ho ešte nemáte."</string>
     <string name="token_skip_message">Preskočenie tohto kroku obmedzí vaše denné rozpoznávanie, avšak token môžete kedykoľvek zadať neskôr v nastaveniach.</string>
-    <string name="hide_token">Skryť token</string>
-    <string name="show_token">Zobraziť token</string>
-    <string name="apply_api_token">Použiť API token</string>
+    <string name="hide">Skryť</string>
+    <string name="show">Zobraziť</string>
     <string name="skip">Preskočiť</string>
-    <string name="audd_api_token">AudD API token</string>
-    <string name="api_token">API token</string>
     <string name="validating">Overuje sa</string>
     <string name="final_onboarding_page_title">Všetko je pripravené</string>
     <string name="final_onboarding_page_message">Nastavenie bolo úspešne dokončené</string>
@@ -41,7 +38,6 @@
     <string name="permission_granted">Povolenie udelené</string>
     <string name="back">Späť</string>
     <string name="open_settings">Otvoriť nastavenia</string>
-    <string name="token_applied">Token bol použitý</string>
     <string name="notification_channel_name_control">Ovládanie upozornení</string>
     <string name="notification_channel_name_result">Výsledky rozpoznávania</string>
     <string name="notification_channel_name_scheduled_result">Výsledky plánovaného rozpoznávania</string>

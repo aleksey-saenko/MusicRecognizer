@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.glue.onboarding.di
 
+import com.mrsep.musicrecognizer.feature.onboarding.domain.ConfigValidator
 import com.mrsep.musicrecognizer.feature.onboarding.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.onboarding.domain.RecognitionService
+import com.mrsep.musicrecognizer.glue.onboarding.adapter.AdapterConfigValidator
 import com.mrsep.musicrecognizer.glue.onboarding.adapter.AdapterPreferencesRepository
-import com.mrsep.musicrecognizer.glue.onboarding.adapter.AdapterRecognitionService
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,6 +18,6 @@ interface AdapterModule {
     fun bindPreferencesRepository(implementation: AdapterPreferencesRepository): PreferencesRepository
 
     @Binds
-    fun bindAdapterRecognitionService(implementation: AdapterRecognitionService): RecognitionService
+    fun bindAdapterConfigValidator(implementation: AdapterConfigValidator): ConfigValidator
 
 }

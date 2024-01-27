@@ -17,12 +17,9 @@
     <string name="onboarding_token_message_link">ici</string>
     <string name="onboarding_token_message_end">" pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore."</string>
     <string name="token_skip_message">Ignorer cette étape limitera vos reconnaissances quotidiennes, mais vous pourrez toujours spécifier votre jeton personnel ultérieurement dans les préférences.</string>
-    <string name="hide_token">Masquer le jeton</string>
-    <string name="show_token">Afficher le jeton</string>
-    <string name="apply_api_token">Appliquer le jeton API</string>
+    <string name="hide">Masquer</string>
+    <string name="show">Afficher</string>
     <string name="skip">Passer</string>
-    <string name="audd_api_token">Jeton API AudD</string>
-    <string name="api_token">Jeton API</string>
     <string name="validating">Validation en cours</string>
     <string name="final_onboarding_page_title">Nous sommes prêts à démarrer</string>
     <string name="final_onboarding_page_message">Configuration terminée avec succès</string>
@@ -43,7 +40,6 @@
     <string name="permission_granted">Autorisation accordée</string>
     <string name="back">Retour</string>
     <string name="open_settings">Ouvrir les paramètres</string>
-    <string name="token_applied">Jeton appliqué</string>
     <string name="notification_channel_name_control">Contrôler les notifications</string>
     <string name="notification_channel_name_result">Résultats de reconnaissance</string>
     <string name="notification_channel_name_scheduled_result">Résultats de reconnaissance planifiés</string>

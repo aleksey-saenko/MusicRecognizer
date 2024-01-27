@@ -2,7 +2,9 @@ package com.mrsep.musicrecognizer.data.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.mrsep.musicrecognizer.AcrCloudConfigProto
 import com.mrsep.musicrecognizer.MusicServiceProto
+import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt
@@ -11,6 +13,9 @@ import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +29,7 @@ import javax.inject.Inject
 private const val TAG = "PreferencesRepositoryImpl"
 
 class PreferencesRepositoryImpl @Inject constructor(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val dataStore: DataStore<UserPreferencesProto>,
     private val preferencesMapper: Mapper<UserPreferencesProto, UserPreferencesDo>,
     private val musicServiceMapper: BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>,
@@ -32,7 +38,8 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val trackFilterMapper: BidirectionalMapper<TrackFilterProto, TrackFilterDo>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo>,
     private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigProto, AcrCloudConfigDo>,
+    private val recognitionProviderMapper: BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo>,
 ) : PreferencesRepositoryDo {
 
     override val userPreferencesFlow: Flow<UserPreferencesDo> = dataStore.data
@@ -40,8 +47,22 @@ class PreferencesRepositoryImpl @Inject constructor(
         .map(preferencesMapper::map)
         .flowOn(ioDispatcher)
 
-    override suspend fun setApiToken(value: String) {
-        safeWriter { apiToken = value }
+    override suspend fun setCurrentRecognitionProvider(value: RecognitionProviderDo) {
+        safeWriter {
+            currentRecognitionProvider = recognitionProviderMapper.reverseMap(value)
+        }
+    }
+
+    override suspend fun setAuddConfig(value: AuddConfigDo) {
+        safeWriter {
+            apiToken = value.apiToken
+        }
+    }
+
+    override suspend fun setAcrCloudConfig(value: AcrCloudConfigDo) {
+        safeWriter {
+            acrCloudConfig = acrCloudConfigMapper.reverseMap(value)
+        }
     }
 
     override suspend fun setOnboardingCompleted(value: Boolean) {

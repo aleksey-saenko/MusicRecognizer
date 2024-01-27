@@ -17,12 +17,9 @@
     <string name="onboarding_token_message_link">zde</string>
     <string name="onboarding_token_message_end">" pro jeho získání."</string>
     <string name="token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
-    <string name="hide_token">Skrýt token</string>
-    <string name="show_token">Zobrazit token</string>
-    <string name="apply_api_token">Použít token API</string>
+    <string name="hide">Skrýt</string>
+    <string name="show">Zobrazit</string>
     <string name="skip">Přeskočit</string>
-    <string name="audd_api_token">Token AudD API</string>
-    <string name="api_token">Token API</string>
     <string name="validating">Ověřování</string>
     <string name="final_onboarding_page_title">Jdeme na to</string>
     <string name="final_onboarding_page_message">Prvotní nastavení úspěšně dokončeno</string>
@@ -41,7 +38,6 @@
     <string name="permission_granted">Oprávnění uděleno</string>
     <string name="back">Zpět</string>
     <string name="open_settings">Otevřít nastavení</string>
-    <string name="token_applied">Token použit</string>
     <string name="notification_channel_name_control">Ovládání v oznámení</string>
     <string name="notification_channel_name_result">Výsledky rozpoznávání</string>
     <string name="notification_channel_name_scheduled_result">Výsledky naplánovaných rozpoznání</string>

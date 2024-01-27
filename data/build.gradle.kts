@@ -1,5 +1,4 @@
 import java.util.Properties
-import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.library)
@@ -20,11 +19,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        val properties = Properties()
-        if (project.rootProject.file("local.properties").canRead()) {
-            properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+        val properties = Properties().apply {
+            load(rootProject.file("local.properties").reader())
         }
-        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token", "\"\""))
+        val auddApiToken = properties["audd.api.token"]?.toString() ?: "\"\""
+        val acrCloudHost = properties["acr.cloud.host"]?.toString() ?: "\"\""
+        val acrCloudAccessKey = properties["acr.cloud.access.key"]?.toString() ?: "\"\""
+        val acrCloudAccessSecret = properties["acr.cloud.access.secret"]?.toString() ?: "\"\""
+
+        buildConfigField("String", "AUDD_TOKEN", auddApiToken)
+        buildConfigField("String", "ACR_CLOUD_HOST", acrCloudHost)
+        buildConfigField("String", "ACR_CLOUD_ACCESS_KEY", acrCloudAccessKey)
+        buildConfigField("String", "ACR_CLOUD_ACCESS_SECRET", acrCloudAccessSecret)
+
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }
 
@@ -88,9 +95,6 @@ dependencies {
     implementation(libs.okhttp.core)
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.okhttp.coroutines)
-    implementation(libs.retrofit.core)
-    implementation(libs.retrofit.converter.moshi)
-    implementation(libs.retrofit.converter.scalars)
 
     implementation(libs.moshi.core)
     implementation(libs.moshi.adapters)
@@ -99,6 +103,7 @@ dependencies {
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.turbine)
+    testImplementation(libs.okhttp.mockWebServer)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }

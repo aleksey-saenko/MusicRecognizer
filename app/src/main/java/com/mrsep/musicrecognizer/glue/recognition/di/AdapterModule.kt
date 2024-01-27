@@ -36,4 +36,7 @@ interface AdapterModule {
     @Binds
     fun bindTrackMetadataEnhancer(implementation: AdapterTrackMetadataEnhancer): TrackMetadataEnhancer
 
+    @Binds
+    fun bindRecognitionServiceFactory(implementation: AdapterRecognitionServiceFactory): RecognitionServiceFactory
+
 }

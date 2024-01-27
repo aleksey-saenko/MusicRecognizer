@@ -240,109 +240,112 @@ private fun MoreMenu(
     onNavigateToTrackScreen: (trackId: String) -> Unit,
     onMenuDismissRequest: () -> Unit
 ) {
-    DropdownMenu(
-        expanded = menuExpanded,
-        onDismissRequest = onMenuDismissRequest,
-        modifier = modifier
-    ) {
-        DropdownMenuItem(
-            text = { Text(text = stringResource(StringsR.string.rename)) },
-            onClick = onRenameClick,
-            leadingIcon = {
-                Icon(
-                    Icons.Outlined.Edit,
-                    contentDescription = stringResource(StringsR.string.edit)
-                )
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(StringsR.string.delete)) },
-            onClick = onDeleteClick,
-            leadingIcon = {
-                Icon(
-                    Icons.Outlined.Delete,
-                    contentDescription = stringResource(StringsR.string.delete)
-                )
-            }
-        )
-        Divider()
-        when (enqueuedWithStatus.status) {
-            ScheduledJobStatus.INACTIVE -> {
-                when (enqueuedWithStatus.enqueued.result) {
-                    is RemoteRecognitionResult.Error,
-                    RemoteRecognitionResult.NoMatches,
-                    null -> {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(StringsR.string.enqueue_recognition),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            },
-                            onClick = { onEnqueueRecognitionClick(false) },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_schedule_send_24),
-                                    contentDescription = stringResource(StringsR.string.enqueue_recognition),
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(StringsR.string.force_recognition_launch),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            },
-                            onClick = { onEnqueueRecognitionClick(true) },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_send_24),
-                                    contentDescription = stringResource(StringsR.string.force_recognition_launch),
-                                )
-                            }
-                        )
-                    }
+    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
+    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.medium)) {
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = onMenuDismissRequest,
+            modifier = modifier
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.rename)) },
+                onClick = onRenameClick,
+                leadingIcon = {
+                    Icon(
+                        Icons.Outlined.Edit,
+                        contentDescription = stringResource(StringsR.string.edit)
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.delete)) },
+                onClick = onDeleteClick,
+                leadingIcon = {
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = stringResource(StringsR.string.delete)
+                    )
+                }
+            )
+            Divider()
+            when (enqueuedWithStatus.status) {
+                ScheduledJobStatus.INACTIVE -> {
+                    when (enqueuedWithStatus.enqueued.result) {
+                        is RemoteRecognitionResult.Error,
+                        RemoteRecognitionResult.NoMatches,
+                        null -> {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(StringsR.string.enqueue_recognition),
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                },
+                                onClick = { onEnqueueRecognitionClick(false) },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(UiR.drawable.baseline_schedule_send_24),
+                                        contentDescription = stringResource(StringsR.string.enqueue_recognition),
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(StringsR.string.force_recognition_launch),
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                },
+                                onClick = { onEnqueueRecognitionClick(true) },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(UiR.drawable.baseline_send_24),
+                                        contentDescription = stringResource(StringsR.string.force_recognition_launch),
+                                    )
+                                }
+                            )
+                        }
 
-                    is RemoteRecognitionResult.Success -> {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(StringsR.string.show_track),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            },
-                            onClick = {
-                                onNavigateToTrackScreen(enqueuedWithStatus.enqueued.result.track.id)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(UiR.drawable.baseline_audio_file_24),
-                                    contentDescription = stringResource(StringsR.string.show_track)
-                                )
-                            }
-                        )
+                        is RemoteRecognitionResult.Success -> {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(StringsR.string.show_track),
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                },
+                                onClick = {
+                                    onNavigateToTrackScreen(enqueuedWithStatus.enqueued.result.track.id)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(UiR.drawable.baseline_audio_file_24),
+                                        contentDescription = stringResource(StringsR.string.show_track)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
-            }
 
-            ScheduledJobStatus.ENQUEUED,
-            ScheduledJobStatus.RUNNING -> {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(StringsR.string.cancel_recognition),
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                    },
-                    onClick = onCancelRecognitionClick,
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
-                            contentDescription = stringResource(StringsR.string.cancel_recognition)
-                        )
-                    }
-                )
+                ScheduledJobStatus.ENQUEUED,
+                ScheduledJobStatus.RUNNING -> {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(StringsR.string.cancel_recognition),
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        },
+                        onClick = onCancelRecognitionClick,
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
+                                contentDescription = stringResource(StringsR.string.cancel_recognition)
+                            )
+                        }
+                    )
+                }
             }
         }
     }

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "music_service_proto.proto";
+import "acr_cloud_config_proto.proto";
+import "recognition_provider_proto.proto";
 
 option java_package = "com.mrsep.musicrecognizer";
 option java_multiple_files = true;
@@ -107,6 +109,10 @@ message UserPreferencesProto {
 
   bool recognizeOnStartup = 37;
 
-  // NEXT AVAILABLE ID: 38
+  AcrCloudConfigProto acr_cloud_config = 38;
+
+  RecognitionProviderProto current_recognition_provider = 39;
+
+  // NEXT AVAILABLE ID: 40
 
 }

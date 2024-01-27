@@ -6,9 +6,15 @@ import com.mrsep.musicrecognizer.data.preferences.PreferencesRepositoryDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
+import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
+import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
+import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences.*
@@ -23,14 +29,25 @@ class AdapterPreferencesRepository @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyDo, FallbackPolicy>,
     private val hapticFeedbackMapper: BidirectionalMapper<HapticFeedbackDo, HapticFeedback>,
     private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
+    private val providerMapper: BidirectionalMapper<RecognitionProviderDo, RecognitionProvider>,
+    private val auddConfigMapper: BidirectionalMapper<AuddConfigDo, AuddConfig>,
+    private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>,
 ) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
         get() = preferencesRepositoryDo.userPreferencesFlow
             .map { prefData -> preferencesMapper.map(prefData) }
 
-    override suspend fun setApiToken(newToken: String) {
-        preferencesRepositoryDo.setApiToken(newToken)
+    override suspend fun setCurrentRecognitionProvider(value: RecognitionProvider) {
+        preferencesRepositoryDo.setCurrentRecognitionProvider(providerMapper.reverseMap(value))
+    }
+
+    override suspend fun setAuddConfig(value: AuddConfig) {
+        preferencesRepositoryDo.setAuddConfig(auddConfigMapper.reverseMap(value))
+    }
+
+    override suspend fun setAcrCloudConfig(value: AcrCloudConfig) {
+        preferencesRepositoryDo.setAcrCloudConfig(acrCloudConfigMapper.reverseMap(value))
     }
 
     override suspend fun setOnboardingCompleted(value: Boolean) {

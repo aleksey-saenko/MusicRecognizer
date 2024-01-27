@@ -1,6 +1,6 @@
 package com.mrsep.musicrecognizer.glue.recognition.adapters
 
-import com.mrsep.musicrecognizer.data.player.PlayerControllerDo
+import com.mrsep.musicrecognizer.data.audioplayer.PlayerControllerDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.PlayerController
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.glue.recognition.mapper.PlayerStatusMapper

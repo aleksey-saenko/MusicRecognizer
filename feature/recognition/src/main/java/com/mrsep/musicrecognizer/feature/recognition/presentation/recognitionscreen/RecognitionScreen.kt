@@ -177,7 +177,7 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
                             title = stringResource(StringsR.string.recording_error),
                             message = stringResource(StringsR.string.message_record_error),
-                            moreInfo = thisStatus.result.remoteError.cause?.stackTraceToString() ?: "",
+                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = ::launchRecognition,
@@ -190,8 +190,7 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
                             title = stringResource(StringsR.string.bad_network_response),
                             message = stringResource(StringsR.string.message_http_error),
-                            moreInfo = "Code: ${thisStatus.result.remoteError.code}\n" +
-                                    "Message: ${thisStatus.result.remoteError.message}",
+                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = ::launchRecognition,
@@ -204,8 +203,7 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
                             title = stringResource(StringsR.string.internal_error),
                             message = stringResource(StringsR.string.message_unhandled_error),
-                            moreInfo = thisStatus.result.remoteError.cause?.stackTraceToString()
-                                ?: thisStatus.result.remoteError.message,
+                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = ::launchRecognition,
@@ -366,3 +364,14 @@ private fun UserPreferences?.vibrateOnTap() = this?.hapticFeedback?.vibrateOnTap
 
 @Stable
 private fun UserPreferences?.vibrateOnResult() = this?.hapticFeedback?.vibrateOnResult == true
+
+private fun RemoteRecognitionResult.Error.getErrorInfo() = when (this) {
+    RemoteRecognitionResult.Error.BadConnection,
+    is RemoteRecognitionResult.Error.WrongToken -> ""
+    is RemoteRecognitionResult.Error.HttpError -> "Code:\n$code\n\nMessage:\n$message"
+    is RemoteRecognitionResult.Error.BadRecording ->
+        "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
+    is RemoteRecognitionResult.Error.UnhandledError ->
+        "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
+
+}

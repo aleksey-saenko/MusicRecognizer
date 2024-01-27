@@ -28,7 +28,7 @@ class OdesliMetadataEnhancer @Inject constructor(
 ) : TrackMetadataEnhancerDo {
 
     @OptIn(ExperimentalStdlibApi::class)
-    private val moshiAdapter = moshi.adapter<List<TrackLinkDo>>()
+    private val odesliJsonAdapter = moshi.adapter<OdesliResponseJson>()
 
     private val locale get() = appContext.resources.configuration.locales[0]
 
@@ -45,7 +45,8 @@ class OdesliMetadataEnhancer @Inject constructor(
                 val response = okHttpClient.newCall(request).await()
                 if (response.isSuccessful) {
                     try {
-                        val remoteLinks = moshiAdapter.fromJson(response.body!!.source())!!
+                        val json = odesliJsonAdapter.fromJson(response.body!!.source())!!
+                        val remoteLinks = json.toTrackLinks()
                         val newLinks = track.links.updateLinks(remoteLinks)
                         RemoteMetadataEnhancingResultDo.Success(track.copy(links = newLinks))
                     } catch (e: Exception) {
@@ -78,8 +79,8 @@ class OdesliMetadataEnhancer @Inject constructor(
     private fun getUrlsOrderedByPopularity(links: TrackEntity.Links): List<String?> {
         return with(links) {
             listOf(
-                spotify, appleMusic, amazonMusic, youtubeMusic, deezer, soundCloud, yandexMusic,
-                napster, tidal, pandora, musicBrainz, audiomack, audius, boomplay, anghami
+                spotify, appleMusic, amazonMusic, youtubeMusic, youtube, deezer, soundCloud,
+                yandexMusic, napster, tidal, pandora, musicBrainz, audiomack, audius, boomplay, anghami,
             )
         }
     }

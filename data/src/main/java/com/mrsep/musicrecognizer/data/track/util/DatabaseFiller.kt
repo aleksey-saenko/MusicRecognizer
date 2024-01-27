@@ -6,6 +6,8 @@ import android.widget.Toast
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.audd.json.AuddResponseJson
+import com.mrsep.musicrecognizer.data.remote.audd.json.toRecognitionResult
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -75,7 +77,7 @@ class DatabaseFiller @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     private suspend fun parseJsonFilesFromAssets(assetsDirectory: String): List<RemoteRecognitionResultDo> {
         return withContext(ioDispatcher) {
-            val jsonAdapter = moshi.adapter<RemoteRecognitionResultDo>()
+            val jsonAdapter = moshi.adapter<AuddResponseJson>()
 
             val fileNamesArray = try {
                 appContext.assets.list(assetsDirectory) ?: emptyArray()
@@ -86,10 +88,11 @@ class DatabaseFiller @Inject constructor(
             }
             fileNamesArray.mapNotNull { fileName ->
                 try {
-                    jsonAdapter.fromJson(
+                    val responseJson = jsonAdapter.fromJson(
                         appContext.assets.open("${assetsDirectory}/${fileName}")
                             .bufferedReader().use { it.readText() }
                     )
+                    responseJson?.toRecognitionResult()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     showNameInToast(e)

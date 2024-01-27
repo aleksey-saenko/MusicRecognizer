@@ -12,9 +12,10 @@ import kotlinx.coroutines.flow.first
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.RemoteRecognitionService
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ScheduledResultNotificationHelper
 import java.time.Instant
@@ -23,10 +24,10 @@ import java.time.Instant
 internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
+    private val recognitionServiceFactory: RecognitionServiceFactory,
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
-    private val remoteRecognitionService: RemoteRecognitionService,
     private val scheduledResultNotificationHelper: ScheduledResultNotificationHelper,
     private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
@@ -49,9 +50,14 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
             clearPreviousResult(enqueuedRecognition)
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            val result = remoteRecognitionService.recognize(
-                token = userPreferences.apiToken,
-                file = enqueuedRecognition.recordFile
+            val serviceConfig = when (userPreferences.currentRecognitionProvider) {
+                RecognitionProvider.Audd -> userPreferences.auddConfig
+                RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
+            }
+            val recognitionService = recognitionServiceFactory.getService(serviceConfig)
+
+            val result = recognitionService.recognize(
+                enqueuedRecognition.recordFile
             )
             when (result) {
                 is RemoteRecognitionResult.Success -> {

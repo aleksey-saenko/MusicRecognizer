@@ -59,6 +59,9 @@ internal fun DeveloperScreen(
                     Button(onClick = viewModel::prepopulateDbAssets) {
                         Text(text = "Load real")
                     }
+                    Button(onClick = viewModel::prepopulateRecognitionDb) {
+                        Text(text = "Load enqueued")
+                    }
                 }
             )
             val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()

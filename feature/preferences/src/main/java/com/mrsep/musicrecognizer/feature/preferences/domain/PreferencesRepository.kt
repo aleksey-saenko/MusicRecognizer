@@ -6,7 +6,9 @@ interface PreferencesRepository {
 
     val userPreferencesFlow: Flow<UserPreferences>
 
-    suspend fun setApiToken(newToken: String)
+    suspend fun setCurrentRecognitionProvider(value: RecognitionProvider)
+    suspend fun setAuddConfig(value: AuddConfig)
+    suspend fun setAcrCloudConfig(value: AcrCloudConfig)
     suspend fun setOnboardingCompleted(value: Boolean)
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)

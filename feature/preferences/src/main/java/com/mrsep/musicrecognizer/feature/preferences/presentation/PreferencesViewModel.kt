@@ -2,8 +2,11 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
+import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +28,24 @@ internal class PreferencesViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = PreferencesUiState.Loading
         )
+
+    fun setRecognitionProvider(value: RecognitionProvider) {
+        viewModelScope.launch {
+            preferencesRepository.setCurrentRecognitionProvider(value)
+        }
+    }
+
+    fun setAuddConfig(value: AuddConfig) {
+        viewModelScope.launch {
+            preferencesRepository.setAuddConfig(value)
+        }
+    }
+
+    fun setAcrCloudConfig(value: AcrCloudConfig) {
+        viewModelScope.launch {
+            preferencesRepository.setAcrCloudConfig(value)
+        }
+    }
 
     fun setNotificationServiceEnabled(value: Boolean) {
         viewModelScope.launch {
@@ -53,12 +74,6 @@ internal class PreferencesViewModel @Inject constructor(
     fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy) {
         viewModelScope.launch {
             preferencesRepository.setFallbackPolicy(fallbackPolicy)
-        }
-    }
-
-    fun setApiToken(token: String) {
-        viewModelScope.launch {
-            preferencesRepository.setApiToken(token)
         }
     }
 

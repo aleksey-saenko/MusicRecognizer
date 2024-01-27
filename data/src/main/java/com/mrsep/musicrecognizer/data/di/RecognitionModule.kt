@@ -1,11 +1,17 @@
 package com.mrsep.musicrecognizer.data.di
 
-import com.mrsep.musicrecognizer.data.remote.audd.rest.AuddRecognitionServicePure
-import com.mrsep.musicrecognizer.data.remote.audd.rest.RecognitionServiceDo
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceDo
-import com.mrsep.musicrecognizer.data.remote.audd.websocket.RecognitionStreamServiceImpl
+import com.mrsep.musicrecognizer.data.remote.ConfigValidatorDo
+import com.mrsep.musicrecognizer.data.remote.ConfigValidatorImpl
+import com.mrsep.musicrecognizer.data.remote.RecognitionServiceFactoryDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionServiceFactoryImpl
+import com.mrsep.musicrecognizer.data.remote.artwork.ArtworkFetcher
+import com.mrsep.musicrecognizer.data.remote.artwork.ArtworkFetcherImpl
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.AuddWebSocketSession
+import com.mrsep.musicrecognizer.data.remote.audd.websocket.AuddWebSocketSessionImpl
 import com.mrsep.musicrecognizer.data.remote.enhancer.TrackMetadataEnhancerDo
 import com.mrsep.musicrecognizer.data.remote.enhancer.odesli.OdesliMetadataEnhancer
+import com.mrsep.musicrecognizer.data.remote.lyrics.LyricsFetcher
+import com.mrsep.musicrecognizer.data.remote.lyrics.LyricsFetcherImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,20 +21,30 @@ import javax.inject.Singleton
 @Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-interface RecognitionModule {
+internal interface RecognitionModule {
 
     @Binds
     @Singleton
-//    fun bindRecognitionService(implementation: AuddRecognitionService): RecognitionDataService
-    fun bindRecognitionService(implementation: AuddRecognitionServicePure): RecognitionServiceDo
+    fun bindAuddWebSocketSession(impl: AuddWebSocketSessionImpl): AuddWebSocketSession
 
     @Binds
     @Singleton
-//    fun bindRemoteRecognitionStreamService(implementation: AuddRestStreamServiceImpl): RecognitionStreamServiceDo
-    fun bindRemoteRecognitionStreamService(implementation: RecognitionStreamServiceImpl): RecognitionStreamServiceDo
+    fun bindServiceFactory(impl: RecognitionServiceFactoryImpl): RecognitionServiceFactoryDo
 
     @Binds
     @Singleton
-    fun bindTrackMetadataEnhancer(implementation: OdesliMetadataEnhancer): TrackMetadataEnhancerDo
+    fun bindConfigValidator(impl: ConfigValidatorImpl): ConfigValidatorDo
+
+    @Binds
+    @Singleton
+    fun bindLyricsFetcher(impl: LyricsFetcherImpl): LyricsFetcher
+
+    @Binds
+    @Singleton
+    fun bindArtworkFetcher(impl: ArtworkFetcherImpl): ArtworkFetcher
+
+    @Binds
+    @Singleton
+    fun bindTrackMetadataEnhancer(impl: OdesliMetadataEnhancer): TrackMetadataEnhancerDo
 
 }

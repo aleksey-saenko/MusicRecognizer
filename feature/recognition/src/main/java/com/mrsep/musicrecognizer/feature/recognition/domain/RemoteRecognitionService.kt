@@ -6,14 +6,8 @@ import java.io.File
 
 interface RemoteRecognitionService {
 
-    suspend fun recognize(
-        token: String,
-        audioRecordingFlow: Flow<ByteArray>
-    ): RemoteRecognitionResult
+    suspend fun recognize(audioRecordingFlow: Flow<ByteArray>): RemoteRecognitionResult
 
-    suspend fun recognize(
-        token: String,
-        file: File
-    ): RemoteRecognitionResult
+    suspend fun recognize(file: File): RemoteRecognitionResult
 
 }

@@ -1,5 +1,8 @@
 package com.mrsep.musicrecognizer.data.preferences
 
+import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
+import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import kotlinx.coroutines.flow.Flow
 
@@ -7,7 +10,9 @@ interface PreferencesRepositoryDo {
 
     val userPreferencesFlow: Flow<UserPreferencesDo>
 
-    suspend fun setApiToken(value: String)
+    suspend fun setCurrentRecognitionProvider(value: RecognitionProviderDo)
+    suspend fun setAuddConfig(value: AuddConfigDo)
+    suspend fun setAcrCloudConfig(value: AcrCloudConfigDo)
     suspend fun setOnboardingCompleted(value: Boolean)
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)

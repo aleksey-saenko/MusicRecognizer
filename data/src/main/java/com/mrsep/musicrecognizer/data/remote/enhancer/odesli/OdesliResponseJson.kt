@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class OdesliResponseJson(
+internal data class OdesliResponseJson(
     @Json(name = "entityUniqueId")
     val entityUniqueId: String?,
     @Json(name = "userCountry")

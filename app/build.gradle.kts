@@ -1,7 +1,6 @@
 @file:Suppress(names = ["UnstableApiUsage", "SpellCheckingInspection"])
 
 import java.util.Properties
-import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
@@ -19,18 +18,16 @@ android {
         applicationId = "com.mrsep.musicrecognizer"
         minSdk = libs.versions.sdkMin.get().toInt()
         targetSdk = libs.versions.sdkTarget.get().toInt()
-        versionCode = 12
-        versionName = "1.2.3"
+        versionCode = 13
+        versionName = "1.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val properties = Properties()
-        if (project.rootProject.file("local.properties").canRead()) {
-            properties.load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+        val properties = Properties().apply {
+            load(rootProject.file("local.properties").reader())
         }
-        buildConfigField("String", "AUDD_TOKEN", properties.getProperty("api.audd.token", "\"\""))
-        buildConfigField("boolean", "DEV_OPTIONS", properties.getProperty("dev.options", "false"))
-        buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
+        val devOptionsEnabled = properties["dev.options"]?.toString() ?: "false"
+        buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
     }
 
     buildTypes {
@@ -38,7 +35,6 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             resValue("string", "app_name", "Audile[Debug]")
-            buildConfigField("boolean", "LOG_DEBUG_MODE", "true")
         }
         release {
             isMinifyEnabled = true
@@ -46,7 +42,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
         }
     }
     compileOptions {

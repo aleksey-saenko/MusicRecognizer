@@ -36,7 +36,7 @@ object LyricsScreen {
             deepLinks = listOf(navDeepLink {
                 uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
             })
-        ) { backStackEntry ->
+        ) { _ ->
             LyricsScreen(
                 onBackPressed = onBackPressed
             )

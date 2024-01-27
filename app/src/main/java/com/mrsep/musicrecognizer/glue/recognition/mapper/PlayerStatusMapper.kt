@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.glue.recognition.mapper
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.player.PlayerStatusDo
+import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import javax.inject.Inject
 

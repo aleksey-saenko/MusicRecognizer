@@ -4,11 +4,13 @@ import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
 import com.mrsep.musicrecognizer.MusicServiceProto
+import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt.fallbackPolicyProto
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt.hapticFeedbackProto
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt.lyricsFontStyleProto
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt.trackFilterProto
+import com.mrsep.musicrecognizer.acrCloudConfigProto
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.userPreferencesProto
 import java.io.InputStream
@@ -19,7 +21,13 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
     override val defaultValue: UserPreferencesProto
         get() = userPreferencesProto {
             onboardingCompleted = false
+            currentRecognitionProvider = RecognitionProviderProto.Audd
             apiToken = BuildConfig.AUDD_TOKEN
+            acrCloudConfig = acrCloudConfigProto {
+                host = BuildConfig.ACR_CLOUD_HOST.ifEmpty { "identify-eu-west-1.acrcloud.com" }
+                accessKey = BuildConfig.ACR_CLOUD_ACCESS_KEY
+                accessSecret = BuildConfig.ACR_CLOUD_ACCESS_SECRET
+            }
             requiredMusicServices.addAll(
                 // ordered by popularity
                 listOf(

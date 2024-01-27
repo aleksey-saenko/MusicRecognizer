@@ -98,7 +98,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                             modifier = Modifier
                                 .horizontalScroll(rememberScrollState())
                         )
-                        Row {
+                        Row(modifier = Modifier.padding(top = 16.dp)) {
                             TextButton(
                                 onClick = { context.copyTextToClipboard(moreInfo) },
                             ) {

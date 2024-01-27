@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.data.remote.audd.websocket
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import okhttp3.WebSocket
 
-sealed class SocketEvent {
+internal sealed class SocketEvent {
 
     data class ConnectionOpened(val webSocket: WebSocket) : SocketEvent()
 
@@ -17,4 +17,4 @@ sealed class SocketEvent {
 
 }
 
-data class ShutdownReason(val code: Int, val reason: String)
+internal data class ShutdownReason(val code: Int, val reason: String)

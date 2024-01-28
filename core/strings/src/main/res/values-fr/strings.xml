@@ -27,6 +27,7 @@
 
     <string name="format_more_services">", et %d de plus"</string>
     <string name="apply">Appliquer</string>
+    <string name="applied">Appliqué</string>
     <string name="cancel">Annuler</string>
     <string name="none">Aucun</string>
     <string name="permissions">Permissions</string>
@@ -56,7 +57,8 @@
     <string name="message_http_error">Une erreur s\'est produite lors de la requête Internet</string>
     <string name="message_unhandled_error">Une erreur interne s\'est produite</string>
     <string name="notification_message_unhandled_error">Une erreur interne s\'est produite, veuillez réessayer</string>
-    <string name="message_token_wrong_error">Veuillez définir un jeton approprié dans les préférences de l\'application et réessayer</string>
+    <string name="auth_error_message">Veuillez vérifier vos identifiants pour le service sélectionné et réessayer</string>
+    <string name="service_usage_limited_message">Votre utilisation du service a atteint sa limite. Veuillez vérifier votre plan ou réessayer plus tard</string>
     <string name="no_matches_found">Aucune correspondance trouvée</string>
     <string name="library">Bibliothèque</string>
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
@@ -65,8 +67,8 @@
     <string name="save">Enregistrer</string>
     <string name="no_matches_message">Désolé, l\'application n\'a pas pu identifier cette chanson</string>
     <string name="recording_error">Erreur d\'enregistrement</string>
-    <string name="token_limit_reached">Limite du jeton API atteinte</string>
-    <string name="wrong_token">Mauvais jeton API</string>
+    <string name="auth_error">Erreur d\'authentification</string>
+    <string name="service_usage_limited">Utilisation du service limitée</string>
     <string name="internal_error">Erreur interne</string>
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
@@ -167,8 +169,6 @@
     <string name="track_not_found_message">Quelque chose s\'est mal passé, le titre a peut-être été supprimé ou modifié incorrectement</string>
     <string name="track_not_found">Le titre n\'a pas été trouvé</string>
     <string name="loading">Chargement</string>
-    <string name="format_version">Version %s</string>
-    <string name="music_recognizing_app">Application de reconnaissance musicale</string>
     <string name="powered_by">Propulsé par</string>
     <string name="format_service">%s service</string>
     <string name="purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
@@ -182,7 +182,6 @@
     <string name="high_contrast_text">Texte à fort contraste</string>
     <string name="format_created">Créé : %s</string>
     <string name="format_scheduled_recognition_of">Reconnaissance planifiée de %s</string>
-    <string name="token_preference_dialog_message">Entrez un jeton API AudD valide (un jeton vide limitera vos reconnaissances quotidiennes) :</string>
     <string name="artwork">Œuvre</string>
     <string name="delete_tracks">Supprimer les titres</string>
     <string name="delete_selected_tracks_dialog">Êtes-vous sûr de vouloir supprimer les titres sélectionnés \? Cette opération est irréversible.</string>

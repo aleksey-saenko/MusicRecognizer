@@ -364,11 +364,8 @@ private fun getStatusMessage(enqueuedWithStatus: EnqueuedRecognitionWithStatus):
                 is RemoteRecognitionResult.Error.BadRecording -> stringResource(StringsR.string.recording_error)
                 is RemoteRecognitionResult.Error.HttpError -> stringResource(StringsR.string.bad_network_response)
                 is RemoteRecognitionResult.Error.UnhandledError -> stringResource(StringsR.string.internal_error)
-                is RemoteRecognitionResult.Error.WrongToken -> if (enqueuedWithStatus.enqueued.result.isLimitReached)
-                    stringResource(StringsR.string.token_limit_reached)
-                else
-                    stringResource(StringsR.string.wrong_token)
-
+                is RemoteRecognitionResult.Error.AuthError -> stringResource(StringsR.string.auth_error)
+                is RemoteRecognitionResult.Error.ApiUsageLimited -> stringResource(StringsR.string.service_usage_limited)
                 RemoteRecognitionResult.NoMatches -> stringResource(StringsR.string.no_matches_found)
                 is RemoteRecognitionResult.Success -> stringResource(StringsR.string.track_found)
                 null -> stringResource(StringsR.string.idle)

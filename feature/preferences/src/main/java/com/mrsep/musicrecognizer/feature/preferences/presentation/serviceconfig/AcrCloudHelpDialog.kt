@@ -78,7 +78,7 @@ internal fun AcrCloudHelpDialog(
                 Spacer(Modifier.height(16.dp))
                 Text(
                     text = stringResource(StringsR.string.acr_cloud_help_steps_title),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(12.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

@@ -19,8 +19,9 @@ sealed class ConfigValidationStatus {
     sealed class Error : ConfigValidationStatus() {
         override val isValidationAllowed = true
 
-        data class WrongToken(val isLimitReached: Boolean) : Error()
-        data object EmptyToken : Error()
+        data object Empty : Error()
+        data object AuthError : Error()
+        data object ApiUsageLimited : Error()
         data object BadConnection : Error()
         data object UnknownError : Error()
 

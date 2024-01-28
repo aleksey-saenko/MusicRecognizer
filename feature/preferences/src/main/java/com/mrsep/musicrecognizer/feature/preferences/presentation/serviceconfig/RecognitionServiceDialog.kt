@@ -111,7 +111,7 @@ private fun RecognitionServiceDialogBase(
                 )
                 RecognitionProviderDropdownMenu(
                     options = RecognitionProvider.entries.toImmutableList(),
-                    label = stringResource(StringsR.string.current_recognition_provider),
+                    label = stringResource(StringsR.string.recognition_provider_preference_title),
                     selectedOption = currentProvider,
                     onSelectOption = onProviderChanged,
                     modifier = Modifier.padding(top = 14.dp)
@@ -199,7 +199,7 @@ internal fun AuthenticationRow(
 internal fun RecognitionProvider.getTitle() = when (this) {
     RecognitionProvider.Audd -> stringResource(StringsR.string.audd)
     RecognitionProvider.AcrCloud -> stringResource(
-        StringsR.string.format_experimantal,
+        StringsR.string.format_experimental,
         stringResource(StringsR.string.acr_cloud)
     )
 }

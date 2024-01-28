@@ -25,6 +25,7 @@
     <string name="final_onboarding_page_message">Prvotní nastavení úspěšně dokončeno</string>
     <string name="get_started">Začít</string>
     <string name="apply">Použít</string>
+    <string name="applied">Aplikován</string>
     <string name="cancel">Zrušit</string>
     <string name="none">Žádný</string>
     <string name="permissions">Oprávnění</string>
@@ -54,7 +55,6 @@
     <string name="message_http_error">Při žádosti o internet se vyskytla chyba</string>
     <string name="message_unhandled_error">Vyskytla se interní chyba</string>
     <string name="notification_message_unhandled_error">Vyskytla se interní chyba, zkuste to znovu</string>
-    <string name="message_token_wrong_error">V nastavení aplikace prosím nastavte správný token a zkuste to znovu</string>
     <string name="no_matches_found">Nenalezeny žádné shody</string>
     <string name="library">Knihovna</string>
     <string name="recognition_queue">Fronta na rozpoznání</string>
@@ -63,8 +63,6 @@
     <string name="save">Uložit</string>
     <string name="no_matches_message">Omlouváme se, tuto skladbu jsme nerozeznali</string>
     <string name="recording_error">Chyba nahrávání</string>
-    <string name="token_limit_reached">Dosažen limit tokenu API</string>
-    <string name="wrong_token">Nesprávný token API</string>
     <string name="internal_error">Interní chyba</string>
     <string name="show_more">Zobrazit více</string>
     <string name="show_less">Zobrazit méně</string>
@@ -150,8 +148,6 @@
     <string name="track_not_found_message">Něco se pokazilo, skladba možná byla odebrána nebo nesprávně upravena</string>
     <string name="track_not_found">Skladba nebyla nalezena</string>
     <string name="loading">Načítání</string>
-    <string name="format_version">Verze %s</string>
-    <string name="music_recognizing_app">Aplikace pro rozpoznávání hudby</string>
     <string name="powered_by">Poháněno</string>
     <string name="github_repository">Repozitář GitHub</string>
     <string name="license_gnu_gplv3">Licence GNU GPLv3</string>
@@ -162,7 +158,6 @@
     <string name="high_contrast_text">Text s vysokým kontrastem</string>
     <string name="format_created">Vytvořeno: %s</string>
     <string name="format_scheduled_recognition_of">Naplánované rozpoznávání %s</string>
-    <string name="token_preference_dialog_message">Zadejte správný token AudD API (prázdný token omezí počet vašich denních rozpoznávání):</string>
     <string name="artwork">Obal</string>
     <string name="delete_tracks">Odstranit skladby</string>
     <string name="delete_selected_tracks_dialog">Opravdu chcete odstranit vybrané skladby\? Tato akce je nevratná.</string>

@@ -24,6 +24,8 @@
     <string name="final_onboarding_page_title">Все готово!</string>
     <string name="final_onboarding_page_message">Настройка успешно завершена</string>
     <string name="get_started">Начать</string>
+
+    <string name="format_service_auth">Аутентификация %s:</string>
     <string name="format_more_services">" и ещё %d"</string>
     <string name="apply">Применить</string>
     <string name="applied">Применено</string>
@@ -56,7 +58,8 @@
     <string name="message_http_error">При интернет запросе возникла ошибка</string>
     <string name="message_unhandled_error">Произошла внутренняя ошибка</string>
     <string name="notification_message_unhandled_error">Произошла внутренняя ошибка, попробуйте еще раз</string>
-    <string name="message_token_wrong_error">Пожалуйста, добавьте правильный токен в настройках приложения и повторите попытку</string>
+    <string name="auth_error_message">Пожалуйста, проверьте ваши учетные данные для выбранного сервиса распознавания и повторите попытку</string>
+    <string name="service_usage_limited_message">Использование вами сервиса достигло лимита. Пожалуйста, проверьте свой план или повторите попытку позже</string>
     <string name="no_matches_found">Совпадений не найдено</string>
     <string name="library">Библиотека</string>
     <string name="recognition_queue">Очередь распознавания</string>
@@ -65,8 +68,8 @@
     <string name="save">Сохранить</string>
     <string name="no_matches_message">Извините, приложение не смогло распознать эту песню</string>
     <string name="recording_error">Ошибка записи аудио</string>
-    <string name="token_limit_reached">Достигнут лимит использования API-токена</string>
-    <string name="wrong_token">Неправильный API-токен</string>
+    <string name="auth_error">Ошибка аутентификации</string>
+    <string name="service_usage_limited">Достигнут лимит запросов</string>
     <string name="internal_error">Внутренняя ошибка</string>
     <string name="show_more">Подробнее</string>
     <string name="show_less">Скрыть</string>
@@ -116,6 +119,8 @@
     <string name="other_failures">Другие ошибки</string>
     <string name="fallback_policy_pref_subtitle">Установите действия в случае неуспешных распознаваний</string>
     <string name="recognition_queue_pref_subtitle">Управляйте сохраненными распознаваниями</string>
+    <string name="recognition_provider_preference_title">Провайдер распознавания</string>
+    <string name="recognition_service_dialog_message">Выберите провайдера:</string>
     <string name="notification_service">Сервис уведомлений</string>
     <string name="notification_service_pref_subtitle">Управляйте распознаванием из уведомлений</string>
     <string name="notifications">Уведомления</string>
@@ -168,8 +173,6 @@
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
     <string name="loading">Загрузка</string>
-    <string name="format_version">Верcия %s</string>
-    <string name="music_recognizing_app">Приложение для распознавания музыки</string>
     <string name="powered_by">Работает с помощью</string>
     <string name="format_service">Сервис %s</string>
     <string name="purpose_recognition_service">Выполняет распознавание и предоставляет основную информацию о треке</string>
@@ -185,7 +188,6 @@
     <string name="high_contrast_text">Текст с высоким контрастом</string>
     <string name="format_created">Создано: %s</string>
     <string name="format_scheduled_recognition_of">Запланированное распознавание от %s</string>
-    <string name="token_preference_dialog_message">Введите правильный токен AudD API (пустой токен ограничит количество распознаваний в день):</string>
     <string name="artwork">Обложка</string>
     <string name="delete_tracks">Удалить треки</string>
     <string name="delete_selected_tracks_dialog">Вы уверены, что хотите удалить выбранные треки\? Это действие нельзя отменить.</string>
@@ -209,5 +211,21 @@
     <string name="quick_tile_permissions_blocked">Для распознавания в фоне Audile требуется разрешение на доступ к микрофону. Пожалуйста, откройте Информацию о приложении в Настройках и предоставьте это разрешение.</string>
     <string name="quick_tile_recognize">Распознать песню</string>
     <string name="quick_tile_cancel_recognition">Отменить распознавание</string>
+
+    <string name="help">Помощь</string>
+
+    <string name="audd_help_message_start">"AudD - это платный сервис, который предоставляет возможность бесплатного пробного периода. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. "</string>
+    <string name="audd_help_message_clickable">Зарегистрируйтесь</string>
+    <string name="audd_help_message_end">", если вы еще не имеете аккаунта."</string>
+    <string name="audd_help_message_empty_token">Вы можете использовать сервис в тестовых целях без предоставления токена, но обратите внимание, что это существенно ограничит количество ежедневных распознаваний.</string>
+
+    <string name="acr_cloud_help_message_start">"ACRCloud - это платный сервис, который предоставляет возможность бесплатного пробного периода и ограниченное использование в целях разработки. Для использования сервиса, вам необходимо создать аккаунт и зарегистрировать проект. Если у вас возникли какие-либо трудности, пожалуйста, обратитесь к данному "</string>
+    <string name="acr_cloud_help_message_guide_clickable">руководству</string>
+    <string name="acr_cloud_help_message_end">.</string>
+    <string name="acr_cloud_help_steps_title">Пожалуйста, обратите внимание:</string>
+    <string name="acr_cloud_help_step1">Выберите ближайший к вам географический регион, чтобы минимизировать интернет задержку</string>
+    <string name="acr_cloud_help_step2">Установите audio source как \"Recorded audio\"</string>
+    <string name="acr_cloud_help_step3">Установите audio engine на ваш выбор. Опция \"Audio fingerprinting\" обеспечивает наибольшую аккуратность для обычного использования</string>
+    <string name="acr_cloud_help_step4">Установите все флажки для 3rd party ID integration</string>
 
 </resources>

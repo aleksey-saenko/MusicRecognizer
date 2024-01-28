@@ -32,8 +32,11 @@ class RemoteRecognitionResultMapper @Inject constructor(
             is RemoteRecognitionResultDo.Error.UnhandledError ->
                 RemoteRecognitionResult.Error.UnhandledError(input.message, input.e)
 
-            is RemoteRecognitionResultDo.Error.WrongToken ->
-                RemoteRecognitionResult.Error.WrongToken(input.isLimitReached)
+            is RemoteRecognitionResultDo.Error.AuthError ->
+                RemoteRecognitionResult.Error.AuthError
+
+            is RemoteRecognitionResultDo.Error.ApiUsageLimited ->
+                RemoteRecognitionResult.Error.ApiUsageLimited
         }
     }
 }

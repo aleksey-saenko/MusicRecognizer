@@ -85,7 +85,8 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                     Result.success()
                 }
 
-                is RemoteRecognitionResult.Error.WrongToken,
+                is RemoteRecognitionResult.Error.AuthError,
+                is RemoteRecognitionResult.Error.ApiUsageLimited,
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     enqueuedRecognitionRepository.update(
                         enqueuedRecognition.copy(result = result, resultDate = Instant.now())

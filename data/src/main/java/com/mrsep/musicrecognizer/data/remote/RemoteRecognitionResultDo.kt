@@ -11,8 +11,12 @@ sealed class RemoteRecognitionResultDo {
     sealed class Error : RemoteRecognitionResultDo() {
 
         data object BadConnection : Error()
+
         data class BadRecording(val message: String = ""): Error()
-        data class WrongToken(val isLimitReached: Boolean) : Error()
+
+        data object AuthError : Error()
+
+        data object ApiUsageLimited : Error()
 
         data class HttpError(
             val code: Int,

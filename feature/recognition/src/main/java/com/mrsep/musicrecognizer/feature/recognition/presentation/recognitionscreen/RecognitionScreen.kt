@@ -31,11 +31,12 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionRes
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ApiUsageLimitedShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.NoMatchesShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ScheduledOfflineShield
-import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.WrongTokenShield
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -213,8 +214,20 @@ internal fun RecognitionScreen(
                             }
                         )
 
-                        is RemoteRecognitionResult.Error.WrongToken -> WrongTokenShield(
-                            isLimitReached = thisStatus.result.remoteError.isLimitReached,
+                        is RemoteRecognitionResult.Error.AuthError -> AuthErrorShield(
+                            recognitionTask = thisStatus.result.recognitionTask,
+                            onDismissClick = viewModel::resetRecognitionResult,
+                            onNavigateToQueue = { recognitionId ->
+                                viewModel.resetRecognitionResult()
+                                onNavigateToQueueScreen(recognitionId)
+                            },
+                            onNavigateToPreferences = {
+                                viewModel.resetRecognitionResult()
+                                onNavigateToPreferencesScreen()
+                            }
+                        )
+
+                        is RemoteRecognitionResult.Error.ApiUsageLimited -> ApiUsageLimitedShield(
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onNavigateToQueue = { recognitionId ->
@@ -367,7 +380,8 @@ private fun UserPreferences?.vibrateOnResult() = this?.hapticFeedback?.vibrateOn
 
 private fun RemoteRecognitionResult.Error.getErrorInfo() = when (this) {
     RemoteRecognitionResult.Error.BadConnection,
-    is RemoteRecognitionResult.Error.WrongToken -> ""
+    is RemoteRecognitionResult.Error.AuthError,
+    is RemoteRecognitionResult.Error.ApiUsageLimited -> ""
     is RemoteRecognitionResult.Error.HttpError -> "Code:\n$code\n\nMessage:\n$message"
     is RemoteRecognitionResult.Error.BadRecording ->
         "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"

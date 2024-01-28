@@ -44,7 +44,7 @@ internal class OnboardingViewModel @Inject constructor(
             _uiState.update {
                 TokenPageUiState.Success(
                     token = userToken,
-                    configValidationStatus = ConfigValidationStatus.Error.EmptyToken
+                    configValidationStatus = ConfigValidationStatus.Error.Empty
                 )
             }
             return

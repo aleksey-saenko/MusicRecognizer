@@ -200,13 +200,11 @@ internal fun TokenPage(
 @Stable
 @Composable
 private fun ConfigValidationStatus.errorMessageOrNull() = when (this) {
+    ConfigValidationStatus.Error.Empty -> stringResource(StringsR.string.must_not_be_empty)
+    ConfigValidationStatus.Error.AuthError -> stringResource(StringsR.string.auth_error)
+    ConfigValidationStatus.Error.ApiUsageLimited -> stringResource(StringsR.string.service_usage_limited)
     ConfigValidationStatus.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
     ConfigValidationStatus.Error.UnknownError -> stringResource(StringsR.string.unknown_error)
-    is ConfigValidationStatus.Error.WrongToken -> if (isLimitReached)
-        stringResource(StringsR.string.token_limit_reached)
-    else
-        stringResource(StringsR.string.wrong_token)
-    ConfigValidationStatus.Error.EmptyToken -> stringResource(StringsR.string.must_not_be_empty)
     ConfigValidationStatus.Unchecked,
     ConfigValidationStatus.Validating,
     ConfigValidationStatus.Success -> null

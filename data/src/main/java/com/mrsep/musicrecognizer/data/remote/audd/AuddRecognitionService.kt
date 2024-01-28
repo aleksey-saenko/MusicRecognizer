@@ -206,7 +206,6 @@ internal class AuddRecognitionService @AssistedInject constructor(
             val finalResponseAsync = async {
                 webSocketSession.startSession(config.apiToken)
                     .transform { socketEvent ->
-                        println("socketEvent=$socketEvent")
                         when (socketEvent) {
                             is SocketEvent.ConnectionClosing,
                             is SocketEvent.ConnectionClosed -> { /* NO-OP */ }
@@ -226,7 +225,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
                                 responseCounter++
                                 when (socketEvent.response) {
                                     is RemoteRecognitionResultDo.Success,
-                                    is RemoteRecognitionResultDo.Error.WrongToken,
+                                    is RemoteRecognitionResultDo.Error.AuthError,
+                                    is RemoteRecognitionResultDo.Error.ApiUsageLimited,
                                     is RemoteRecognitionResultDo.Error.BadRecording -> {
                                         emit(socketEvent.response)
                                     }

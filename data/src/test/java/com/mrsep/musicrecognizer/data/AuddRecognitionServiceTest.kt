@@ -114,7 +114,7 @@ class AuddRecognitionServiceTest {
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(
                         SocketEvent.ResponseReceived(
-                            RemoteRecognitionResultDo.Error.WrongToken(true)
+                            RemoteRecognitionResultDo.Error.ApiUsageLimited
                         )
                     )
                 }
@@ -130,7 +130,7 @@ class AuddRecognitionServiceTest {
             moshi = moshi,
         )
         val result = service.recognize(normalAudioRecordingFlow)
-        val expected = RemoteRecognitionResultDo.Error.WrongToken(true)
+        val expected = RemoteRecognitionResultDo.Error.ApiUsageLimited
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_QUEUE_DELAY + TEST_RESPONSE_DELAY
         Assert.assertEquals(expected, result)
         Assert.assertEquals(expectedTime, testScheduler.currentTime)
@@ -209,7 +209,7 @@ class AuddRecognitionServiceTest {
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(
                         SocketEvent.ResponseReceived(
-                            RemoteRecognitionResultDo.Error.WrongToken(true)
+                            RemoteRecognitionResultDo.Error.ApiUsageLimited
                         )
                     )
                 }
@@ -241,7 +241,7 @@ class AuddRecognitionServiceTest {
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(
                         SocketEvent.ResponseReceived(
-                            RemoteRecognitionResultDo.Error.WrongToken(true)
+                            RemoteRecognitionResultDo.Error.ApiUsageLimited
                         )
                     )
                 }

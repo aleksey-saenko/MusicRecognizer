@@ -26,10 +26,10 @@ class EnqueuedRecognitionMapper @Inject constructor(
                 )
 
             RemoteRecognitionResultType.WrongToken ->
-                RemoteRecognitionResult.Error.WrongToken(false)
+                RemoteRecognitionResult.Error.AuthError
 
             RemoteRecognitionResultType.LimitedToken ->
-                RemoteRecognitionResult.Error.WrongToken(true)
+                RemoteRecognitionResult.Error.ApiUsageLimited
 
             RemoteRecognitionResultType.HttpError -> {
                 val combMessage = input.enqueued.resultMessage ?: ""
@@ -64,39 +64,48 @@ class EnqueuedRecognitionMapper @Inject constructor(
         var resultMessage: String? = null
         var trackId: String? = null
         var optionalTrack: TrackEntity? = null
+
         when (val result = input.result) {
             RemoteRecognitionResult.Error.BadConnection -> {
                 resultType = RemoteRecognitionResultType.BadConnection
             }
+
             is RemoteRecognitionResult.Error.BadRecording -> {
                 resultType = RemoteRecognitionResultType.BadRecording
                 resultMessage = result.message
             }
+
             is RemoteRecognitionResult.Error.HttpError -> {
                 resultType = RemoteRecognitionResultType.HttpError
                 resultMessage = "${result.code}:${result.message}"
             }
+
             is RemoteRecognitionResult.Error.UnhandledError -> {
                 resultType = RemoteRecognitionResultType.UnhandledError
                 resultMessage = result.message
             }
-            is RemoteRecognitionResult.Error.WrongToken -> {
-                resultType =  if (result.isLimitReached) {
-                    RemoteRecognitionResultType.LimitedToken
-                } else {
-                    RemoteRecognitionResultType.WrongToken
-                }
+
+            is RemoteRecognitionResult.Error.AuthError -> {
+                resultType = RemoteRecognitionResultType.WrongToken
             }
+
+            is RemoteRecognitionResult.Error.ApiUsageLimited -> {
+                resultType = RemoteRecognitionResultType.LimitedToken
+            }
+
             RemoteRecognitionResult.NoMatches -> {
                 resultType = RemoteRecognitionResultType.NoMatches
             }
+
             is RemoteRecognitionResult.Success -> {
                 resultType = RemoteRecognitionResultType.Success
                 trackId = result.track.id
                 optionalTrack = result.track.run(trackMapper::reverseMap)
             }
+
             null -> { /* NO-OP */ }
         }
+
         return EnqueuedRecognitionEntityWithTrack(
             enqueued = EnqueuedRecognitionEntity(
                 id = input.id,

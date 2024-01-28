@@ -13,8 +13,8 @@ internal fun AcrCloudResponseJson.toRecognitionResult(): RemoteRecognitionResult
         0 -> tryToParseSuccessResult(this)
         1001 -> RemoteRecognitionResultDo.NoMatches
         2000, 2004 -> RemoteRecognitionResultDo.Error.BadRecording(getErrorMessage(this))
-        3001, 3014 -> RemoteRecognitionResultDo.Error.WrongToken(isLimitReached = false)
-        3003, 3015 -> RemoteRecognitionResultDo.Error.WrongToken(isLimitReached = true)
+        3001, 3014 -> RemoteRecognitionResultDo.Error.AuthError
+        3003, 3015 -> RemoteRecognitionResultDo.Error.ApiUsageLimited
         else -> RemoteRecognitionResultDo.Error.UnhandledError(getErrorMessage((this)))
     }
 }

@@ -46,8 +46,15 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         recognitionJob = scope.launch {
 //            debugRecognitionScreen()
             resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(2000)
-            notifySuccess(launchEnhancer = true)
+            delay(1000)
+//            notifySuccess(launchEnhancer = false)
+            val fakeResult = RecognitionStatus.Done(
+                RecognitionResult.Error(
+                    remoteError = RemoteRecognitionResult.Error.AuthError,
+                    recognitionTask = RecognitionTask.Created(123, false)
+                )
+            )
+            resultDelegator.notify(fakeResult)
 //            testAllDoneStatuses()
 //            notifyUnhandledError(RecognitionTask.Created(123, false))
 //            notifyBadConnectionError(RecognitionTask.Created(123, false))
@@ -165,10 +172,10 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         resultDelegator.notify(fakeResult)
     }
 
-    private fun notifyWrongToken(recognitionTask: RecognitionTask) {
+    private fun notifyApiUsageLimited(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.Error(
-                remoteError = RemoteRecognitionResult.Error.WrongToken(isLimitReached = true),
+                remoteError = RemoteRecognitionResult.Error.ApiUsageLimited,
                 recognitionTask = recognitionTask
             )
         )
@@ -223,11 +230,11 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         notifyBadRecordingError()
         resetToReadyWithDelay()
 
-        notifyWrongToken(taskLaunched)
+        notifyApiUsageLimited(taskLaunched)
         resetToReadyWithDelay()
-        notifyWrongToken(taskIdle)
+        notifyApiUsageLimited(taskIdle)
         resetToReadyWithDelay()
-        notifyWrongToken(taskIgnored)
+        notifyApiUsageLimited(taskIgnored)
         resetToReadyWithDelay()
 
         notifyHttpError(taskLaunched)

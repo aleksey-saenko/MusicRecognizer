@@ -172,8 +172,8 @@ private fun AuddResponseJson.Result.parseArtworkSeedColor() =
 private fun parseErrorResult(error: AuddResponseJson.Error): RemoteRecognitionResultDo {
     return when (error.errorCode) {
         300, 400, 500 -> RemoteRecognitionResultDo.Error.BadRecording(error.errorMessage)
-        901 -> RemoteRecognitionResultDo.Error.WrongToken(isLimitReached = true)
-        900 -> RemoteRecognitionResultDo.Error.WrongToken(isLimitReached = false)
+        900 -> RemoteRecognitionResultDo.Error.AuthError
+        901 -> RemoteRecognitionResultDo.Error.ApiUsageLimited
         else -> RemoteRecognitionResultDo.Error.UnhandledError(
             message = "Audd error response\n" +
                     "code=${error.errorCode}\n" +

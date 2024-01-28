@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.data.database
+package com.mrsep.musicrecognizer.data.database.migration
 
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
@@ -13,4 +13,4 @@ import androidx.room.migration.AutoMigrationSpec
     fromColumnName = "result_mb_id",
     toColumnName = "result_track_id"
 )
-internal class RenameTrackIdMigrationSpec : AutoMigrationSpec
+internal class MigrationSpec3To4RenameTrackId : AutoMigrationSpec

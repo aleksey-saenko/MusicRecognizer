@@ -32,7 +32,7 @@
     <string name="host" translatable="false">Host</string>
     <string name="access_key" translatable="false">Access key</string>
     <string name="access_secret" translatable="false">Access secret</string>
-    <string name="format_experimantal">%s (experimental)</string>
+    <string name="format_experimental" translatable="false">%s (experimental)</string>
 
     <string name="audd" translatable="false">AudD</string>
     <string name="acr_cloud" translatable="false">ACRCloud</string>
@@ -56,7 +56,6 @@
     <string name="youtube" translatable="false">YouTube</string>
     <string name="youtubeMusic" translatable="false">YouTube Music</string>
 
-    <string name="current_recognition_provider">Current provider</string>
     <string name="format_service_auth">%s authentication:</string>
     <string name="format_more_services">", and %d more"</string>
     <string name="apply">Apply</string>
@@ -90,7 +89,8 @@
     <string name="message_http_error">An error occurred during internet request</string>
     <string name="message_unhandled_error">An internal error occurred</string>
     <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
-    <string name="message_token_wrong_error">Please, set a proper token in the app preferences and retry</string>
+    <string name="auth_error_message">Please, check your credentials for the selected service and try again</string>
+    <string name="service_usage_limited_message">Your service usage has reached its limit. Please, check your plan or try again later</string>
     <string name="no_matches_found">No matches found</string>
     <string name="library">Library</string>
     <string name="recognition_queue">Recognition queue</string>
@@ -99,8 +99,8 @@
     <string name="save">Save</string>
     <string name="no_matches_message">Sorry, the app couldn\'t recognize this song</string>
     <string name="recording_error">Recording error</string>
-    <string name="token_limit_reached">API token limit reached</string>
-    <string name="wrong_token">Wrong API token</string>
+    <string name="auth_error">Authentication error</string>
+    <string name="service_usage_limited">Service usage limited</string>
     <string name="internal_error">Internal error</string>
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>
@@ -151,7 +151,7 @@
     <string name="fallback_policy_pref_subtitle">Set fallback actions after unsuccessful recognitions</string>
     <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
     <string name="recognition_provider_preference_title">Recognition provider</string>
-    <string name="recognition_service_dialog_message">Select the recognition provider to use:</string>
+    <string name="recognition_service_dialog_message">Select the recognition provider:</string>
     <string name="notification_service">Notification service</string>
     <string name="notification_service_pref_subtitle">Control recognition from notifications</string>
     <string name="notifications">Notifications</string>
@@ -204,8 +204,6 @@
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
     <string name="track_not_found">The track was not found</string>
     <string name="loading">Loading</string>
-    <string name="format_version">Version %s</string>
-    <string name="music_recognizing_app">Music recognition application</string>
     <string name="powered_by">Powered by</string>
     <string name="format_service">%s service</string>
     <string name="purpose_recognition_service">Provides song identification and primary metadata</string>
@@ -221,7 +219,6 @@
     <string name="high_contrast_text">High-contrast text</string>
     <string name="format_created">Created: %s</string>
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
-    <string name="token_preference_dialog_message">Enter a proper AudD API token (empty token will limit your daily recognitions):</string>
     <string name="artwork">Artwork</string>
     <string name="delete_tracks">Delete tracks</string>
     <string name="delete_selected_tracks_dialog">Are you sure you want to delete selected tracks\? This process cannot be undone.</string>
@@ -248,6 +245,7 @@
 
     <string name="help">Help</string>
 
+    <!-- Experimental feature part, this text can be changed in the feature. Translation is optional. -->
     <string name="audd_help_message_start">"AudD is a paid service that offers the option of a free trial period. To use this service, you need to create an account and get your private API token. "</string>
     <string name="audd_help_message_clickable">Sign up</string>
     <string name="audd_help_message_end">" if you don't have one yet."</string>
@@ -259,7 +257,8 @@
     <string name="acr_cloud_help_steps_title">Please pay attention to these steps:</string>
     <string name="acr_cloud_help_step1">Select the geographical region closest to you to minimize internet latency</string>
     <string name="acr_cloud_help_step2">Set the audio source as \"Recorded audio\"</string>
-    <string name="acr_cloud_help_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use.</string>
+    <string name="acr_cloud_help_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use</string>
     <string name="acr_cloud_help_step4">Check all the boxes for 3rd party ID integration</string>
+    <!-- The end of experimental part -->
 
 </resources>

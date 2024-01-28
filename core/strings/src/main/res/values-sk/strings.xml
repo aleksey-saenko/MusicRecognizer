@@ -25,6 +25,7 @@
     <string name="final_onboarding_page_message">Nastavenie bolo úspešne dokončené</string>
     <string name="get_started">Začať</string>
     <string name="apply">Použiť</string>
+    <string name="applied">Aplikovaný</string>
     <string name="cancel">Zrušiť</string>
     <string name="none">Žiadne</string>
     <string name="permissions">Povolenia</string>
@@ -54,7 +55,6 @@
     <string name="message_http_error">Počas internetovej požiadavky sa vyskytla chyba</string>
     <string name="message_unhandled_error">Vyskytla sa interná chyba</string>
     <string name="notification_message_unhandled_error">Vyskytla sa interná chyba, skúste to znova</string>
-    <string name="message_token_wrong_error">Nastavte správny token v nastaveniach a skúste to znova</string>
     <string name="no_matches_found">Nenájdené žiadne zhody</string>
     <string name="library">Knižnica</string>
     <string name="recognition_queue">Rozpoznávací rad</string>
@@ -63,8 +63,6 @@
     <string name="save">Uložiť</string>
     <string name="no_matches_message">Ľutujeme, aplikácii sa nepodarilo rozpoznať túto skladbu</string>
     <string name="recording_error">Chyba nahrávania</string>
-    <string name="token_limit_reached">Bol dosiahnutý limit API tokenu</string>
-    <string name="wrong_token">Zlý API token</string>
     <string name="internal_error">Interná chyba</string>
     <string name="show_more">Zobraziť viac</string>
     <string name="show_less">Zobraziť menej</string>
@@ -151,8 +149,6 @@
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>
     <string name="track_not_found">Skladba sa nenašla</string>
     <string name="loading">Načítavam</string>
-    <string name="format_version">Verzia %s</string>
-    <string name="music_recognizing_app">Aplikácia na rozpoznávanie hudby</string>
     <string name="powered_by">Poháňané</string>
     <string name="github_repository">GitHub repozitár</string>
     <string name="license_gnu_gplv3">Licencia GNU GPLv3</string>
@@ -163,7 +159,6 @@
     <string name="high_contrast_text">Text s vysokým kontrastom</string>
     <string name="format_created">Vytvorené: %s</string>
     <string name="format_scheduled_recognition_of">Plánované rozpoznanie %s</string>
-    <string name="token_preference_dialog_message">Zadajte správny AudD API token (prázdny token obmedzí vaše denné rozpoznávanie):</string>
     <string name="artwork">Artwork</string>
     <string name="delete_tracks">Odstrániť stopy</string>
     <string name="delete_selected_tracks_dialog">Naozaj chcete odstrániť vybraté skladby\? Tento proces nie je možné vrátiť späť.</string>

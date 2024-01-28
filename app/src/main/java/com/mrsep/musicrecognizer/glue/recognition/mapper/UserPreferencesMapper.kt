@@ -7,7 +7,6 @@ import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
 import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
-import com.mrsep.musicrecognizer.data.remote.RecognitionServiceConfigDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AuddConfig
@@ -16,7 +15,6 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackPolicy
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.HapticFeedback
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionServiceConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import javax.inject.Inject
 

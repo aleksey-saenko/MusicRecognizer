@@ -18,15 +18,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
-
 @Composable
-internal fun AnimatedVisibilityScope.WrongTokenShield(
+internal fun AnimatedVisibilityScope.ApiUsageLimitedShield(
     modifier: Modifier = Modifier,
-    isLimitReached: Boolean,
     recognitionTask: RecognitionTask,
     onDismissClick: () -> Unit,
     onNavigateToQueue: (recognitionId: Int?) -> Unit,
@@ -37,22 +35,18 @@ internal fun AnimatedVisibilityScope.WrongTokenShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_key_off_24),
+            painter = painterResource(UiR.drawable.baseline_speed_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )
         Text(
-            text = if (isLimitReached) {
-                stringResource(StringsR.string.token_limit_reached)
-            } else {
-                stringResource(StringsR.string.wrong_token)
-            },
+            text = stringResource(StringsR.string.service_usage_limited),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.message_token_wrong_error),
+            text = stringResource(StringsR.string.service_usage_limited_message),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )

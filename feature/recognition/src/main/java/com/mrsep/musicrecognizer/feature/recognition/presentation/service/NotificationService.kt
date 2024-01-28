@@ -205,10 +205,16 @@ class NotificationService : Service() {
                                 .addOptionalQueueButton(status.result.recognitionTask)
                         }
 
-                        is RemoteRecognitionResult.Error.WrongToken -> {
+                        is RemoteRecognitionResult.Error.AuthError -> {
                             resultNotificationBuilder()
-                                .setContentTitle(getWrongTokenTitle(status.result.remoteError.isLimitReached))
-                                .setContentText(getString(StringsR.string.message_token_wrong_error))
+                                .setContentTitle(getString(StringsR.string.auth_error))
+                                .setContentText(getString(StringsR.string.auth_error_message))
+                                .addOptionalQueueButton(status.result.recognitionTask)
+                        }
+                        is RemoteRecognitionResult.Error.ApiUsageLimited -> {
+                            resultNotificationBuilder()
+                                .setContentTitle(getString(StringsR.string.service_usage_limited))
+                                .setContentText(getString(StringsR.string.service_usage_limited_message))
                                 .addOptionalQueueButton(status.result.recognitionTask)
                         }
                     }
@@ -239,14 +245,6 @@ class NotificationService : Service() {
                 resultBuilder.buildAndNotifyAsResult()
                 cancelAndResetStatus()
             }
-        }
-    }
-
-    private fun getWrongTokenTitle(isLimitReached: Boolean): String {
-        return if (isLimitReached) {
-            getString(StringsR.string.token_limit_reached)
-        } else {
-            getString(StringsR.string.wrong_token)
         }
     }
 

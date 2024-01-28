@@ -15,7 +15,9 @@ sealed class RemoteRecognitionResult {
             val cause: Throwable? = null
         ) : Error()
 
-        data class WrongToken(val isLimitReached: Boolean) : Error()
+        data object AuthError : Error()
+
+        data object ApiUsageLimited : Error()
 
         data class HttpError(
             val code: Int,

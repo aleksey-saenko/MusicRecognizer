@@ -196,7 +196,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         is RemoteRecognitionResultDo.Success,
         RemoteRecognitionResultDo.NoMatches,
         is RemoteRecognitionResultDo.Error.BadRecording,
-        is RemoteRecognitionResultDo.Error.WrongToken,
+        is RemoteRecognitionResultDo.Error.AuthError,
+        is RemoteRecognitionResultDo.Error.ApiUsageLimited,
         is RemoteRecognitionResultDo.Error.UnhandledError -> false
 
         RemoteRecognitionResultDo.Error.BadConnection,

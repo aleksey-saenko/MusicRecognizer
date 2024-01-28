@@ -1,0 +1,2 @@
+* Added experimental support for ACRCloud music recognition service
+* Minor UI changes

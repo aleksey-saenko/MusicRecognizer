@@ -125,10 +125,11 @@
     <string name="notification_service_pref_subtitle">Управляйте распознаванием из уведомлений</string>
     <string name="notifications">Уведомления</string>
     <string name="theme">Тема</string>
-    <string name="theme_dialog_message">Выберите цветовую схему:</string>
-    <string name="theme_follow_system">Следовать системе</string>
-    <string name="theme_light">Светлая</string>
-    <string name="theme_dark">Темная</string>
+    <string name="theme_dialog_message">Выберите световой режим темы:</string>
+    <string name="theme_mode_short">Тема</string>
+    <string name="theme_follow_system_short">Системная</string>
+    <string name="theme_light_short">Светлая</string>
+    <string name="theme_dark_short">Темная</string>
     <string name="theme_use_dynamic_colors">Динамические цвета</string>
     <string name="theme_use_artwork_colors">Исп. цвета обложки</string>
     <string name="theme_use_pure_black">Исп. черный фон</string>

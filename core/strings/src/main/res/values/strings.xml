@@ -89,7 +89,7 @@
     <string name="message_http_error">An error occurred during internet request</string>
     <string name="message_unhandled_error">An internal error occurred</string>
     <string name="notification_message_unhandled_error">An internal error occurred, try again</string>
-    <string name="auth_error_message">Please, check your credentials for the selected service and try again</string>
+    <string name="auth_error_message">Please, check your credentials for the selected recognition service and try again</string>
     <string name="service_usage_limited_message">Your service usage has reached its limit. Please, check your plan or try again later</string>
     <string name="no_matches_found">No matches found</string>
     <string name="library">Library</string>
@@ -156,10 +156,11 @@
     <string name="notification_service_pref_subtitle">Control recognition from notifications</string>
     <string name="notifications">Notifications</string>
     <string name="theme">Theme</string>
-    <string name="theme_dialog_message">Select a theme mode:</string>
-    <string name="theme_follow_system">Follow system</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
+    <string name="theme_dialog_message">Select the theme mode:</string>
+    <string name="theme_mode_short">Mode</string>
+    <string name="theme_follow_system_short">Follow system</string>
+    <string name="theme_light_short">Light</string>
+    <string name="theme_dark_short">Dark</string>
     <string name="theme_use_dynamic_colors">Use dynamic colors</string>
     <string name="theme_use_artwork_colors">Use artwork colors</string>
     <string name="theme_use_pure_black">Use pure black</string>

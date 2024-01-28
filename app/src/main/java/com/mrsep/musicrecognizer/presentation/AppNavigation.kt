@@ -16,12 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.withResumed
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
@@ -220,7 +222,16 @@ private fun BarNavHost(
                 outerNavController.navigateToQueueScreen(from = from)
             },
             onNavigateToPreferencesScreen = { from ->
-                innerNavController.navigateToPreferencesScreen(from)
+                innerNavController.navigateToPreferencesScreen(
+                    from = from,
+                    navOptions = navOptions {
+                        popUpTo(innerNavController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
             }
         )
         preferencesScreen(

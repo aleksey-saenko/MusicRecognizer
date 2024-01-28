@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -22,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +60,6 @@ internal fun TrackLazyColumn(
             LazyListTrackItem(
                 track = track,
                 selected = multiSelectionState.isSelected(track.id),
-                multiselectEnabled = multiSelectionState.multiselectEnabled,
                 onClick = {
                     if (multiSelectionState.multiselectEnabled) {
                         multiSelectionState.toggleSelection(track.id)
@@ -82,29 +79,27 @@ internal fun TrackLazyColumn(
 internal fun LazyListTrackItem(
     track: TrackUi,
     selected: Boolean,
-    multiselectEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.large
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-        },
-        label = "containerColor"
-    )
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(color = containerColor, shape = shape)
+            .background(
+                color = if (selected) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+                },
+                shape = shape
+            )
             .clip(shape)
             .combinedClickable(
                 onLongClick = onLongClick,
                 onClick = onClick,
-                indication = if (multiselectEnabled) null else LocalIndication.current,
+                indication = LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
             .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.core.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,20 +25,21 @@ fun DialogSwitch(
     title: String,
     checked: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 48.dp)
-            .clip(MaterialTheme.shapes.large)
             .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                enabled = enabled,
                 role = Role.Switch,
                 onClick = onClick
             )
-            .padding(vertical = 8.dp, horizontal = 8.dp),
     ) {
         Text(
             text = title,
@@ -45,7 +48,8 @@ fun DialogSwitch(
         )
         Switch(
             checked = checked,
-            onCheckedChange = null
+            onCheckedChange = { onClick() },
+            enabled = enabled
         )
     }
 }

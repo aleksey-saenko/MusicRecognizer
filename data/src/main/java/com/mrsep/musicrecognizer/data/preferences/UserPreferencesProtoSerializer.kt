@@ -24,7 +24,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             currentRecognitionProvider = RecognitionProviderProto.Audd
             apiToken = BuildConfig.AUDD_TOKEN
             acrCloudConfig = acrCloudConfigProto {
-                host = BuildConfig.ACR_CLOUD_HOST.ifEmpty { "identify-eu-west-1.acrcloud.com" }
+                host = BuildConfig.ACR_CLOUD_HOST
                 accessKey = BuildConfig.ACR_CLOUD_ACCESS_KEY
                 accessSecret = BuildConfig.ACR_CLOUD_ACCESS_SECRET
             }

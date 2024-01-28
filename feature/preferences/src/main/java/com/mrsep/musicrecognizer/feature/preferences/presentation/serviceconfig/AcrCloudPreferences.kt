@@ -47,11 +47,14 @@ internal fun AcrCloudPreferences(
             serviceName = stringResource(StringsR.string.acr_cloud),
             onHelpClick = { helpDialogVisible = true }
         )
+        val showHostError = state.isEmptyHost && state.shouldShowErrors.value
         AcrCloudHostDropdownMenu(
             label = stringResource(StringsR.string.host),
             options = AcrCloudRegion.entries.toImmutableList(),
             host = state.host.value,
             onHostChanged = { newHost -> state.host.value = newHost },
+            error = stringResource(StringsR.string.must_not_be_empty)
+                .takeIf { showHostError },
         )
         Spacer(modifier = Modifier.height(12.dp))
         val showAccessKeyError = state.isEmptyAccessKey && state.shouldShowErrors.value
@@ -84,6 +87,7 @@ private fun AcrCloudHostDropdownMenu(
     options: ImmutableList<AcrCloudRegion>,
     host: String,
     onHostChanged: (String) -> Unit,
+    error: String? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
@@ -104,6 +108,8 @@ private fun AcrCloudHostDropdownMenu(
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                 singleLine = true,
+                supportingText = error?.let { { Text(error) } },
+                isError = (error != null),
                 shape = MaterialTheme.shapes.small,
                 keyboardOptions = KeyboardOptions(
                     autoCorrect = false,
@@ -167,6 +173,9 @@ internal class AcrCloudPreferencesState(config: AcrCloudConfig) {
         get() = host.value.isNotBlank() &&
                 accessKey.value.isNotBlank() &&
                 accessSecret.value.isNotBlank()
+
+    val isEmptyHost
+        get() = host.value.isBlank()
 
     val isEmptyAccessKey
         get() = accessKey.value.isBlank()

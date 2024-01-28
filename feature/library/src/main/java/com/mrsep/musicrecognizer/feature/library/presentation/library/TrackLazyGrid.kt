@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -49,7 +48,6 @@ internal fun TrackLazyGrid(
             LazyGridTrackItem(
                 track = track,
                 selected = multiSelectionState.isSelected(track.id),
-                multiselectEnabled = multiSelectionState.multiselectEnabled,
                 onClick = {
                     if (multiSelectionState.multiselectEnabled) {
                         multiSelectionState.toggleSelection(track.id)
@@ -69,28 +67,26 @@ internal fun TrackLazyGrid(
 internal fun LazyGridTrackItem(
     track: TrackUi,
     selected: Boolean,
-    multiselectEnabled: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.large
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            MaterialTheme.colorScheme.background
-        },
-        label = "containerColor"
-    )
     Column(
         modifier = modifier
-            .background(color = containerColor, shape = shape)
+            .background(
+                color = if (selected) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.background
+                },
+                shape = shape
+            )
             .clip(shape)
             .combinedClickable(
                 onLongClick = onLongClick,
                 onClick = onClick,
-                indication = if (multiselectEnabled) null else LocalIndication.current,
+                indication = LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
             .padding(4.dp)

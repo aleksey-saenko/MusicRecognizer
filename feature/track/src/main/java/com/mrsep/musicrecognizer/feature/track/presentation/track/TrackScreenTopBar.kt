@@ -3,22 +3,23 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-import com.mrsep.musicrecognizer.core.ui.components.ScreenScrollableTopBar
 
 internal enum class SearchProvider { WebDefault, Wikipedia }
 internal enum class SearchTarget { Track, Artist, Album }
@@ -53,14 +53,15 @@ internal fun TrackScreenTopBar(
     onShowDetailsClick: () -> Unit,
     onPerformWebSearchClick: (SearchParams) -> Unit,
     modifier: Modifier = Modifier,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
-    ScreenScrollableTopBar(
+    TopAppBar(
         modifier = modifier,
+        title = {},
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(StringsR.string.back)
                 )
             }
@@ -153,7 +154,7 @@ internal fun TrackScreenTopBar(
                                         )
                                     }
                                 )
-                                Divider()
+                                HorizontalDivider()
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(StringsR.string.delete)) },
                                     onClick = {
@@ -177,7 +178,7 @@ internal fun TrackScreenTopBar(
                                             .copy(alpha = 0.75f)
                                     )
                                 )
-                                Divider()
+                                HorizontalDivider()
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(StringsR.string.track)) },
                                     onClick = {
@@ -213,6 +214,6 @@ internal fun TrackScreenTopBar(
 
             }
         },
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = scrollBehavior
     )
 }

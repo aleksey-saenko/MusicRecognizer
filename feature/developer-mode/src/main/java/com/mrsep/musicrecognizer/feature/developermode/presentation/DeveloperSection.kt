@@ -66,7 +66,7 @@ internal fun DeveloperSection(
                 )
             }
             if (expanded) {
-                Divider(Modifier.padding(top = 8.dp, bottom = 8.dp))
+                HorizontalDivider(Modifier.padding(top = 8.dp, bottom = 8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)

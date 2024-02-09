@@ -34,6 +34,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val AUDD_URL = "https://audd.io/"
+private const val ACR_CLOUD_URL = "https://www.acrcloud.com/"
 private const val ODESLI_URL = "https://odesli.co/"
 private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
 private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
@@ -51,13 +52,13 @@ internal fun AboutScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .systemBarsPadding()
+            .fillMaxSize()
+            .navigationBarsPadding()
     ) {
         AboutScreenTopBar(
             onBackPressed = onBackPressed,
-            topAppBarScrollBehavior = topBarBehavior
+            scrollBehavior = topBarBehavior
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,16 +87,17 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 20.dp)
             ) {
                 PreferenceClickableItem(
-                    title = stringResource(
-                        StringsR.string.format_service, stringResource(StringsR.string.audd)
-                    ),
+                    title = stringResource(StringsR.string.audd),
                     subtitle = stringResource(StringsR.string.purpose_recognition_service),
                     onItemClick = { context.openUrlImplicitly(AUDD_URL) }
                 )
                 PreferenceClickableItem(
-                    title = stringResource(
-                        StringsR.string.format_service, stringResource(StringsR.string.odesli)
-                    ),
+                    title = stringResource(StringsR.string.acr_cloud),
+                    subtitle = stringResource(StringsR.string.purpose_recognition_service),
+                    onItemClick = { context.openUrlImplicitly(ACR_CLOUD_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.odesli),
                     subtitle = stringResource(StringsR.string.purpose_track_links_service),
                     onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
                 )

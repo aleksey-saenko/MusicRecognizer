@@ -223,11 +223,7 @@ private fun MusicServiceChipDefault(
                 modifier = Modifier.size(20.dp)
             )
         },
-        border = SuggestionChipDefaults.suggestionChipBorder(
-            MaterialTheme.colorScheme.outline.copy(
-                0.75f
-            )
-        ),
+        border = SuggestionChipDefaults.suggestionChipBorder(true),
         modifier = modifier
     )
 }

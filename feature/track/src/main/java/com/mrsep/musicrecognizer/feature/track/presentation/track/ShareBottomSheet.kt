@@ -137,7 +137,7 @@ internal fun ShareBottomSheet(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(modifier = Modifier.fillMaxWidth())
+            HorizontalDivider()
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
@@ -178,7 +178,7 @@ private fun ShareGroup(
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
-        Divider(modifier = Modifier.fillMaxWidth())
+        HorizontalDivider()
         Text(
             text = title,
             modifier = Modifier.padding(16.dp)

@@ -246,13 +246,13 @@
 
     <string name="help">Help</string>
 
-    <!-- Experimental feature part, this text can be changed in the feature. Translation is optional. -->
+    <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->
     <string name="audd_help_message_start">"AudD is a paid service that offers the option of a free trial period. To use this service, you need to create an account and get your private API token. "</string>
     <string name="audd_help_message_clickable">Sign up</string>
     <string name="audd_help_message_end">" if you don't have one yet."</string>
     <string name="audd_help_message_empty_token">You can try using the service for testing purposes without providing the token, but please note that this will limit your daily recognitions.</string>
 
-    <string name="acr_cloud_help_message_start">"ACRCloud is a paid service that offers the option of a free trial period and limited usage for development purposes. To use this service, you need to create an account and register an project. If you encounter any difficulties, please refer to "</string>
+    <string name="acr_cloud_help_message_start">"ACRCloud is a paid service that offers the option of a free trial period and limited usage for development purposes. To use this service, you need to create an account and register a project. If you encounter any difficulties, please refer to "</string>
     <string name="acr_cloud_help_message_guide_clickable">this guide</string>
     <string name="acr_cloud_help_message_end">.</string>
     <string name="acr_cloud_help_steps_title">Please pay attention to these steps:</string>

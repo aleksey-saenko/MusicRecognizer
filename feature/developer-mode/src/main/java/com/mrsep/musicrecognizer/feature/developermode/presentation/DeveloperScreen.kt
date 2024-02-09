@@ -25,12 +25,12 @@ internal fun DeveloperScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .systemBarsPadding()
+            .fillMaxSize()
+            .navigationBarsPadding()
     ) {
         DeveloperScreenTopBar(
-            topAppBarScrollBehavior = topBarBehaviour,
+            scrollBehavior = topBarBehaviour,
             onBackPressed = onBackPressed
         )
         AnimatedVisibility(isProcessing) {

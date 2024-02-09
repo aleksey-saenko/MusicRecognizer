@@ -28,9 +28,9 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -267,7 +267,7 @@ private fun MoreMenu(
                     )
                 }
             )
-            Divider()
+            HorizontalDivider()
             when (enqueuedWithStatus.status) {
                 ScheduledJobStatus.INACTIVE -> {
                     when (enqueuedWithStatus.enqueued.result) {

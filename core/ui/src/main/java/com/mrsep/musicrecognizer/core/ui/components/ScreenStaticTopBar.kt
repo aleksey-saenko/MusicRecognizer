@@ -1,49 +1,32 @@
 package com.mrsep.musicrecognizer.core.ui.components
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenStaticTopBar(
-    modifier: Modifier = Modifier,
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {}
-) {
-    TopAppBar(
-        title = title,
-        navigationIcon = navigationIcon,
-        actions = actions,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Unspecified,
-            scrolledContainerColor = Color.Unspecified,
-        ),
-        modifier = modifier
-    )
-}
-
-@Composable
 fun EmptyStaticTopBar(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ScreenStaticTopBar(
+    TopAppBar(
         modifier = modifier,
+        title = {},
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(StringsR.string.back)
                 )
             }
-        }
+        },
     )
 }

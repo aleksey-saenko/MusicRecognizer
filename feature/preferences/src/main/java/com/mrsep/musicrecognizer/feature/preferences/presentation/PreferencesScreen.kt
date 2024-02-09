@@ -41,7 +41,7 @@ internal fun PreferencesScreen(
 ) {
     val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
-    val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
         is PreferencesUiState.Loading -> LoadingStub(
@@ -54,10 +54,10 @@ internal fun PreferencesScreen(
         is PreferencesUiState.Success -> {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxSize()
             ) {
-                PreferencesTopBar(topAppBarScrollBehavior = topBarBehaviour)
+                PreferencesTopBar(scrollBehavior = topBarBehaviour)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

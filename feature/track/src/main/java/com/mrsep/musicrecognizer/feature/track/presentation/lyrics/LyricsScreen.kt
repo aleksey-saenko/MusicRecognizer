@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -85,25 +86,19 @@ internal fun LyricsScreen(
 
     when (val uiState = uiStateInFlow) {
 
-        LyricsUiState.Loading -> Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LyricsUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .fillMaxSize()
                 .systemBarsPadding()
-        ) {
-            EmptyStaticTopBar(onBackPressed = onBackPressed)
-            LoadingStub(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        )
 
         LyricsUiState.LyricsNotFound -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
-                .systemBarsPadding()
+                .fillMaxSize()
+                .navigationBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(
@@ -123,15 +118,11 @@ internal fun LyricsScreen(
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
-                useDarkTheme = useDarkTheme
+                useDarkTheme = useDarkTheme,
+                highContrastMode = uiState.fontStyle.isHighContrast
             ) {
-                val backgroundColor = if (uiState.fontStyle.isHighContrast) {
-                    if (useDarkTheme) Color.Black else Color.White
-                } else {
-                    MaterialTheme.colorScheme.background
-                }
                 Surface(
-                    color = backgroundColor,
+                    color = MaterialTheme.colorScheme.background,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     var autoScrollStarted by rememberSaveable { mutableStateOf(false) }
@@ -161,7 +152,7 @@ internal fun LyricsScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .systemBarsPadding()
+                            .navigationBarsPadding()
                     ) {
                         Column {
                             LyricsScreenTopBar(
@@ -178,7 +169,7 @@ internal fun LyricsScreen(
                                 onChangeTextStyleClick = { fontStyleDialogVisible = true },
                                 onLaunchAutoScrollClick = { autoScrollStarted = true },
                                 onStopAutoScrollClick = { autoScrollStarted = false },
-                                topAppBarScrollBehavior = topBarBehaviour
+                                scrollBehavior = topBarBehaviour
                             )
                             val currentFontSize = uiState.fontStyle.fontSize
                             var lyricsZoom by remember(currentFontSize) {

@@ -117,11 +117,7 @@ internal fun TrackFilterBottomSheet(
                     )
                 }
             }
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp)
-            )
+            HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -154,10 +150,7 @@ private fun FilterGroup(
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-        )
+        HorizontalDivider()
         Text(
             text = title,
             modifier = Modifier.padding(16.dp)

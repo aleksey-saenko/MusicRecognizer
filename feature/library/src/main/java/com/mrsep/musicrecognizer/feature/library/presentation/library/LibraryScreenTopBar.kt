@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -12,8 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
@@ -37,26 +34,17 @@ internal fun LibraryScreenTopBar(
     onDeleteIconClick: () -> Unit,
     onSelectAll: () -> Unit,
     onDeselectAll: () -> Unit,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
-    // since the toolbar has collapsing behavior, we have to disable the icons to avoid false positives
-    val isExpanded by remember {
-        derivedStateOf { topAppBarScrollBehavior.state.collapsedFraction < 0.6f }
-    }
     val topBarMode = if (!isLibraryEmpty) {
         if (isMultiselectEnabled) TopBarMode.MultiSelection else TopBarMode.Default
     } else {
         TopBarMode.EmptyLibrary
     }
     val transition = updateTransition(targetState = topBarMode, label = "topBarMode")
-    val topBarAlpha by animateFloatAsState(
-        targetValue = if (isExpanded) 1f else 0f,
-        label = ""
-    )
-
     TopAppBar(
-        modifier = modifier.alpha(topBarAlpha),
+        modifier = modifier,
         title = {
             Crossfade(
                 targetState = (selectedCount != 0),
@@ -81,10 +69,7 @@ internal fun LibraryScreenTopBar(
                     TopBarMode.EmptyLibrary,
                     TopBarMode.Default -> {}
 
-                    TopBarMode.MultiSelection -> IconButton(
-                        onClick = onDeselectAll,
-                        enabled = isExpanded
-                    ) {
+                    TopBarMode.MultiSelection -> IconButton(onClick = onDeselectAll) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
@@ -101,19 +86,13 @@ internal fun LibraryScreenTopBar(
                     TopBarMode.EmptyLibrary -> {}
 
                     TopBarMode.Default -> Row(horizontalArrangement = Arrangement.End) {
-                        IconButton(
-                            onClick = onSearchIconClick,
-                            enabled = isExpanded
-                        ) {
+                        IconButton(onClick = onSearchIconClick) {
                             Icon(
                                 imageVector = Icons.Filled.Search,
                                 contentDescription = stringResource(StringsR.string.search_track)
                             )
                         }
-                        IconButton(
-                            onClick = onFilterIconClick,
-                            enabled = isExpanded
-                        ) {
+                        IconButton(onClick = onFilterIconClick) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_filter_24),
                                 tint = animateColorAsState(
@@ -131,19 +110,13 @@ internal fun LibraryScreenTopBar(
                     TopBarMode.MultiSelection -> Row(
                         horizontalArrangement = Arrangement.End
                     ) {
-                        IconButton(
-                            onClick = onSelectAll,
-                            enabled = isExpanded
-                        ) {
+                        IconButton(onClick = onSelectAll) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_select_all_24),
                                 contentDescription = stringResource(StringsR.string.select_all)
                             )
                         }
-                        IconButton(
-                            onClick = onDeleteIconClick,
-                            enabled = isExpanded
-                        ) {
+                        IconButton(onClick = onDeleteIconClick) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
                                 contentDescription = stringResource(StringsR.string.delete_selected)
@@ -153,11 +126,6 @@ internal fun LibraryScreenTopBar(
                 }
             }
         },
-        scrollBehavior = topAppBarScrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Unspecified,
-            scrolledContainerColor = Color.Unspecified,
-        )
+        scrollBehavior = scrollBehavior,
     )
-
 }

@@ -45,8 +45,8 @@ internal fun LibraryScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.background)
+            .fillMaxSize(),
     ) {
         LibraryScreenTopBar(
             isLibraryEmpty = isLibraryEmpty,
@@ -59,7 +59,7 @@ internal fun LibraryScreen(
             onDeleteIconClick = { deleteDialogVisible = true },
             onSelectAll = { multiSelectionState.select(screenUiState.getTrackIdList()) },
             onDeselectAll = multiSelectionState::deselectAll,
-            topAppBarScrollBehavior = topBarBehaviour
+            scrollBehavior = topBarBehaviour
         )
         when (val uiState = screenUiState) {
             LibraryUiState.Loading -> LoadingStub(

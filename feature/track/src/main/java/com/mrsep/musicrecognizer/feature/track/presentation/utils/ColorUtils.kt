@@ -25,6 +25,8 @@ internal fun SwitchingMusicRecognizerTheme(
     seedColor: Color?,
     artworkBasedThemeEnabled: Boolean,
     useDarkTheme: Boolean,
+    usePureBlack: Boolean = false,
+    highContrastMode: Boolean = false,
     style: PaletteStyle = PaletteStyle.Vibrant,
     contrastLevel: Double = 0.0,
     animationSpec: AnimationSpec<Color> = tween(durationMillis = 800),
@@ -34,10 +36,12 @@ internal fun SwitchingMusicRecognizerTheme(
     val colorScheme: ColorScheme by remember(
         artworkBasedThemeEnabled,
         seedColor,
-        useDarkTheme
+        useDarkTheme,
+        usePureBlack,
+        highContrastMode
     ) {
         derivedStateOf {
-            if (!artworkBasedThemeEnabled || seedColor == null) {
+            val scheme = if (!artworkBasedThemeEnabled || seedColor == null) {
                 defaultColorScheme
             } else {
                 dynamicColorScheme(
@@ -47,6 +51,15 @@ internal fun SwitchingMusicRecognizerTheme(
                     contrastLevel = contrastLevel
                 )
             }
+            val newBackgroundColor = when {
+                highContrastMode -> if (useDarkTheme) Color.Black else Color.White
+                usePureBlack && useDarkTheme -> Color.Black
+                else -> return@derivedStateOf scheme
+            }
+            scheme.copy(
+                background = newBackgroundColor,
+                surface = newBackgroundColor
+            )
         }
     }
     MaterialTheme(

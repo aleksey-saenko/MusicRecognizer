@@ -32,8 +32,8 @@ internal fun QueueScreen(
     when (val state = screenState) {
         QueueScreenUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .fillMaxSize()
                 .systemBarsPadding()
         )
 
@@ -65,9 +65,9 @@ internal fun QueueScreen(
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.background)
-                    .systemBarsPadding(),
+                    .fillMaxSize()
+                    .navigationBarsPadding(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

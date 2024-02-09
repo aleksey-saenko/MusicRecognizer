@@ -56,20 +56,20 @@ internal fun OnboardingScreen(
     }
 
     BackHandler {
-        scope.launch {
-            if (pagerState.canScrollBackward) {
+        if (pagerState.canScrollBackward) {
+            scope.launch {
                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
-            } else {
-                onOnboardingClose()
             }
+        } else {
+            onOnboardingClose()
         }
     }
     HorizontalPager(
         beyondBoundsPageCount = 0,
         state = pagerState,
         modifier = Modifier
-            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
             .systemBarsPadding()
     ) { pageIndex ->
         when (pageIndex) {

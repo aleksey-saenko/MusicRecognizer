@@ -46,26 +46,19 @@ internal fun TrackScreen(
 
     when (val uiState = screenUiState) {
 
-        TrackUiState.Loading -> Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        TrackUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
+                .fillMaxSize()
                 .systemBarsPadding()
-        ) {
-            EmptyStaticTopBar(onBackPressed = onBackPressed)
-            LoadingStub(
-                modifier = Modifier.weight(weight = 1f)
-            )
-            Spacer(Modifier.height(64.dp))
-        }
+        )
 
         TrackUiState.TrackNotFound -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
-                .systemBarsPadding()
+                .fillMaxSize()
+                .navigationBarsPadding()
         ) {
             EmptyStaticTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(
@@ -135,7 +128,7 @@ internal fun TrackScreen(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.systemBarsPadding()
+                        modifier = Modifier.navigationBarsPadding()
                     ) {
                         TrackScreenTopBar(
                             onBackPressed = onBackPressed,
@@ -151,7 +144,7 @@ internal fun TrackScreen(
                             onPerformWebSearchClick = { searchParams ->
                                 performWebSearch(context, searchParams, uiState)
                             },
-                            topAppBarScrollBehavior = topBarBehaviour
+                            scrollBehavior = topBarBehaviour
                         )
                         TrackSection(
                             title = uiState.title,

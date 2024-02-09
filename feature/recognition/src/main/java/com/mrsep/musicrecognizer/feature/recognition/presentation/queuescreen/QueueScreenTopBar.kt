@@ -3,22 +3,16 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
@@ -42,16 +36,9 @@ internal fun QueueScreenTopBar(
     onDeleteSelected: () -> Unit,
     onDisableSelectionMode: () -> Unit
 ) {
-    // since the toolbar has collapsing behavior, we have to disable the icons to avoid false positives
-    val isExpanded by remember {
-        derivedStateOf { scrollBehavior.state.collapsedFraction < 0.6f }
-    }
-    val topBarAlpha by animateFloatAsState(
-        targetValue = if (isExpanded) 1f else 0f,
-        label = ""
-    )
     val transition = updateTransition(targetState = multiselectEnabled, label = "topBarMode")
     TopAppBar(
+        modifier = modifier,
         title = {
             transition.Crossfade { multiselectMode ->
                 if (multiselectMode) {
@@ -74,16 +61,16 @@ internal fun QueueScreenTopBar(
                 contentAlignment = Alignment.CenterStart
             ) { multiselectMode ->
                 if (multiselectMode) {
-                    IconButton(onClick = onDisableSelectionMode, enabled = isExpanded) {
+                    IconButton(onClick = onDisableSelectionMode) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
                         )
                     }
                 } else {
-                    IconButton(onClick = onBackPressed, enabled = isExpanded) {
+                    IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(StringsR.string.back)
                         )
                     }
@@ -96,27 +83,27 @@ internal fun QueueScreenTopBar(
                 if (multiselectMode) {
                     Row {
                         if (allSelected) {
-                            IconButton(onClick = onDeselectAll, enabled = isExpanded) {
+                            IconButton(onClick = onDeselectAll) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.baseline_deselect_24),
                                     contentDescription = stringResource(StringsR.string.deselect_all)
                                 )
                             }
                         } else {
-                            IconButton(onClick = onSelectAll, enabled = isExpanded) {
+                            IconButton(onClick = onSelectAll) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.baseline_select_all_24),
                                     contentDescription = stringResource(StringsR.string.select_all)
                                 )
                             }
                         }
-                        IconButton(onClick = onCancelSelected, enabled = isExpanded) {
+                        IconButton(onClick = onCancelSelected) {
                             Icon(
                                 painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
                                 contentDescription = stringResource(StringsR.string.cancel_selected)
                             )
                         }
-                        IconButton(onClick = onDeleteSelected, enabled = isExpanded) {
+                        IconButton(onClick = onDeleteSelected) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
                                 contentDescription = stringResource(StringsR.string.delete_selected)
@@ -126,11 +113,6 @@ internal fun QueueScreenTopBar(
                 }
             }
         },
-        scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Unspecified,
-            scrolledContainerColor = Color.Unspecified,
-        ),
-        modifier = modifier.alpha(topBarAlpha)
+        scrollBehavior = scrollBehavior
     )
 }

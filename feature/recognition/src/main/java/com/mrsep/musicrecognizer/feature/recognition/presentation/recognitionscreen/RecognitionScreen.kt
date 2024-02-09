@@ -103,8 +103,8 @@ internal fun RecognitionScreen(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
+            .fillMaxSize()
             .clip(RectangleShape)
             .statusBarsPadding(),
         contentAlignment = Alignment.Center

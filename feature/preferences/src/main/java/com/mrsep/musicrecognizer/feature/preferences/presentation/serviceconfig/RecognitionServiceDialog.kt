@@ -187,7 +187,7 @@ internal fun AuthenticationRow(
         Text(text = stringResource(StringsR.string.format_service_auth, serviceName))
         IconButton(onClick = onHelpClick) {
             Icon(
-                painter = painterResource(R.drawable.baseline_help_24),
+                painter = painterResource(R.drawable.outline_help_24),
                 contentDescription = stringResource(StringsR.string.help),
             )
         }

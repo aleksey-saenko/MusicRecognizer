@@ -75,7 +75,12 @@ fun AppNavigationBar(
             BarIconWithLine(
                 icon = {
                     Icon(
-                        painter = painterResource(destination.iconResId),
+                        painter = painterResource(
+                            if (selected)
+                                destination.iconSelectedResId
+                            else
+                                destination.iconResId
+                        ),
                         contentDescription = stringResource(
                             StringsR.string.format_navigate_to_screen,
                             stringResource(destination.titleResId)

@@ -79,7 +79,7 @@ internal fun ThemeDialog(
                             onCheckedChange = { onThemeModeSelected(ThemeMode.FollowSystem) }
                         ) {
                             Icon(
-                                painter = painterResource(UiR.drawable.baseline_auto_mode_24),
+                                painter = painterResource(UiR.drawable.outline_auto_mode_24),
                                 contentDescription = stringResource(StringsR.string.theme_follow_system_short)
                             )
                         }
@@ -88,7 +88,12 @@ internal fun ThemeDialog(
                             onCheckedChange = { onThemeModeSelected(ThemeMode.AlwaysLight) }
                         ) {
                             Icon(
-                                painter = painterResource(UiR.drawable.baseline_light_mode_24),
+                                painter = painterResource(
+                                    if (themeMode == ThemeMode.AlwaysLight)
+                                        UiR.drawable.outline_light_mode_fill1_24
+                                    else
+                                        UiR.drawable.outline_light_mode_24
+                                ),
                                 contentDescription = stringResource(StringsR.string.theme_light_short)
                             )
                         }
@@ -97,7 +102,12 @@ internal fun ThemeDialog(
                             onCheckedChange = { onThemeModeSelected(ThemeMode.AlwaysDark) }
                         ) {
                             Icon(
-                                painter = painterResource(UiR.drawable.baseline_dark_mode_24),
+                                painter = painterResource(
+                                    if (themeMode == ThemeMode.AlwaysDark)
+                                        UiR.drawable.outline_dark_mode_fill1_24
+                                    else
+                                        UiR.drawable.outline_dark_mode_24
+                                ),
                                 contentDescription = stringResource(StringsR.string.theme_dark_short)
                             )
                         }

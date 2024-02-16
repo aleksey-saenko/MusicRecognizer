@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -125,21 +126,24 @@ private fun MusicServiceChipCopy(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val shape = CircleShape
+    val back = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+    val onBack = MaterialTheme.colorScheme.onSurface
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .sizeIn(minHeight = 32.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.small
+                color = back,
+                shape = shape
             )
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(0.75f),
-                shape = MaterialTheme.shapes.small
-            )
-            .clip(MaterialTheme.shapes.small)
+//            .border(
+//                width = 1.dp,
+//                color = MaterialTheme.colorScheme.outline.copy(0.75f),
+//                shape = shape
+//            )
+            .clip(shape)
             .combinedClickable(
                 onLongClick = { context.copyTextToClipboard(link) },
                 onClick = { context.openUrlImplicitly(link) },
@@ -152,13 +156,13 @@ private fun MusicServiceChipCopy(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = onBack,
             modifier = Modifier.size(20.dp)
         )
         Text(
             text = stringResource(titleRes),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = onBack,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
     }

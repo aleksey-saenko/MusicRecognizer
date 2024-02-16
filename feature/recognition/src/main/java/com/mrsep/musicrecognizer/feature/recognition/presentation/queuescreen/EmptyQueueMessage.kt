@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.R
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun EmptyQueueMessage(
@@ -27,7 +27,7 @@ internal fun EmptyQueueMessage(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(R.drawable.baseline_list_24),
+            painter = painterResource(UiR.drawable.outline_list_24),
             contentDescription = null,
             modifier = Modifier.size(80.dp)
         )

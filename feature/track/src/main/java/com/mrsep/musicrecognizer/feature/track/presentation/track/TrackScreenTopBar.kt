@@ -2,14 +2,6 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,8 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 internal enum class SearchProvider { WebDefault, Wikipedia }
 internal enum class SearchTarget { Track, Artist, Album }
@@ -61,7 +53,7 @@ internal fun TrackScreenTopBar(
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    painter = painterResource(UiR.drawable.outline_arrow_back_24),
                     contentDescription = stringResource(StringsR.string.back)
                 )
             }
@@ -70,10 +62,12 @@ internal fun TrackScreenTopBar(
             Row {
                 IconButton(onClick = onFavoriteClick) {
                     Icon(
-                        imageVector = if (isFavorite)
-                            Icons.Default.Favorite
-                        else
-                            Icons.Default.FavoriteBorder,
+                        painter = painterResource(
+                            if (isFavorite)
+                                UiR.drawable.outline_favorite_fill1_24
+                            else
+                                UiR.drawable.outline_favorite_24
+                        ),
                         contentDescription = if (isFavorite)
                             stringResource(StringsR.string.mark_as_favorite)
                         else
@@ -83,14 +77,14 @@ internal fun TrackScreenTopBar(
                 if (isLyricsAvailable) {
                     IconButton(onClick = onLyricsClick) {
                         Icon(
-                            painter = painterResource(UiR.drawable.baseline_lyrics_24),
+                            painter = painterResource(UiR.drawable.outline_lyrics_24),
                             contentDescription = stringResource(StringsR.string.show_lyrics)
                         )
                     }
                 }
                 IconButton(onClick = onShareClick) {
                     Icon(
-                        imageVector = Icons.Default.Share,
+                        painter = painterResource(UiR.drawable.outline_share_24),
                         contentDescription = stringResource(StringsR.string.share)
                     )
                 }
@@ -100,7 +94,7 @@ internal fun TrackScreenTopBar(
                 Box {
                     IconButton(onClick = { menuSearchMode = false; menuExpanded = !menuExpanded }) {
                         Icon(
-                            imageVector = Icons.Default.MoreVert,
+                            painter = painterResource(UiR.drawable.outline_more_vert_24),
                             contentDescription = stringResource(StringsR.string.show_more)
                         )
                     }
@@ -121,7 +115,7 @@ internal fun TrackScreenTopBar(
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            painter = painterResource(UiR.drawable.baseline_travel_explore_24),
+                                            painter = painterResource(UiR.drawable.outline_travel_explore_24),
                                             contentDescription = null
                                         )
                                     },
@@ -136,7 +130,7 @@ internal fun TrackScreenTopBar(
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            painter = painterResource(UiR.drawable.ic_wikipedia),
+                                            painter = painterResource(UiR.drawable.wikipedia_logo_fill0),
                                             contentDescription = null
                                         )
                                     },
@@ -149,7 +143,7 @@ internal fun TrackScreenTopBar(
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Default.Info,
+                                            painter = painterResource(UiR.drawable.outline_info_24),
                                             contentDescription = null
                                         )
                                     }
@@ -163,7 +157,7 @@ internal fun TrackScreenTopBar(
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Default.Delete,
+                                            painter = painterResource(UiR.drawable.outline_delete_24),
                                             contentDescription = null
                                         )
                                     }

@@ -27,7 +27,7 @@ internal fun EmptyLibraryMessage(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_list_24),
+            painter = painterResource(UiR.drawable.outline_list_24),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
         )

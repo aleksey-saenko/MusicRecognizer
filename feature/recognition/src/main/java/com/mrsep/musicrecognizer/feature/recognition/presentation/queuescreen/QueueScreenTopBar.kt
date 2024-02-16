@@ -5,10 +5,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -63,14 +59,14 @@ internal fun QueueScreenTopBar(
                 if (multiselectMode) {
                     IconButton(onClick = onDisableSelectionMode) {
                         Icon(
-                            imageVector = Icons.Filled.Close,
+                            painter = painterResource(UiR.drawable.outline_close_24),
                             contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
                         )
                     }
                 } else {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(UiR.drawable.outline_arrow_back_24),
                             contentDescription = stringResource(StringsR.string.back)
                         )
                     }
@@ -85,27 +81,27 @@ internal fun QueueScreenTopBar(
                         if (allSelected) {
                             IconButton(onClick = onDeselectAll) {
                                 Icon(
-                                    painter = painterResource(UiR.drawable.baseline_deselect_24),
+                                    painter = painterResource(UiR.drawable.outline_deselect_24),
                                     contentDescription = stringResource(StringsR.string.deselect_all)
                                 )
                             }
                         } else {
                             IconButton(onClick = onSelectAll) {
                                 Icon(
-                                    painter = painterResource(UiR.drawable.baseline_select_all_24),
+                                    painter = painterResource(UiR.drawable.outline_select_all_24),
                                     contentDescription = stringResource(StringsR.string.select_all)
                                 )
                             }
                         }
                         IconButton(onClick = onCancelSelected) {
                             Icon(
-                                painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
+                                painter = painterResource(UiR.drawable.outline_cancel_schedule_send_24),
                                 contentDescription = stringResource(StringsR.string.cancel_selected)
                             )
                         }
                         IconButton(onClick = onDeleteSelected) {
                             Icon(
-                                imageVector = Icons.Filled.Delete,
+                                painter = painterResource(UiR.drawable.outline_delete_24),
                                 contentDescription = stringResource(StringsR.string.delete_selected)
                             )
                         }

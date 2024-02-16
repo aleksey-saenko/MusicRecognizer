@@ -22,11 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -128,13 +123,13 @@ internal fun LazyColumnEnqueuedItem(
             ) { playing ->
                 if (playing) {
                     Icon(
-                        painter = painterResource(UiR.drawable.baseline_pause_24),
+                        painter = painterResource(UiR.drawable.outline_pause_fill1_24),
                         contentDescription = stringResource(StringsR.string.stop_player),
                         modifier = Modifier.size(40.dp)
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Default.PlayArrow,
+                        painter = painterResource(UiR.drawable.outline_play_arrow_fill1_24),
                         contentDescription = stringResource(StringsR.string.start_player),
                         modifier = Modifier.size(40.dp)
                     )
@@ -180,7 +175,7 @@ internal fun LazyColumnEnqueuedItem(
                     enabled = menuEnabled
                 ) {
                     Icon(
-                        imageVector = Icons.Default.MoreVert,
+                        painter = painterResource(UiR.drawable.outline_more_vert_24),
                         contentDescription = stringResource(StringsR.string.show_more)
                     )
                 }
@@ -252,7 +247,7 @@ private fun MoreMenu(
                 onClick = onRenameClick,
                 leadingIcon = {
                     Icon(
-                        Icons.Outlined.Edit,
+                        painter = painterResource(UiR.drawable.outline_edit_24),
                         contentDescription = stringResource(StringsR.string.edit)
                     )
                 }
@@ -262,7 +257,7 @@ private fun MoreMenu(
                 onClick = onDeleteClick,
                 leadingIcon = {
                     Icon(
-                        Icons.Outlined.Delete,
+                        painter = painterResource(UiR.drawable.outline_delete_24),
                         contentDescription = stringResource(StringsR.string.delete)
                     )
                 }
@@ -284,7 +279,7 @@ private fun MoreMenu(
                                 onClick = { onEnqueueRecognitionClick(false) },
                                 leadingIcon = {
                                     Icon(
-                                        painter = painterResource(UiR.drawable.baseline_schedule_send_24),
+                                        painter = painterResource(UiR.drawable.outline_schedule_send_24),
                                         contentDescription = stringResource(StringsR.string.enqueue_recognition),
                                     )
                                 }
@@ -299,7 +294,7 @@ private fun MoreMenu(
                                 onClick = { onEnqueueRecognitionClick(true) },
                                 leadingIcon = {
                                     Icon(
-                                        painter = painterResource(UiR.drawable.baseline_send_24),
+                                        painter = painterResource(UiR.drawable.outline_send_24),
                                         contentDescription = stringResource(StringsR.string.force_recognition_launch),
                                     )
                                 }
@@ -319,7 +314,7 @@ private fun MoreMenu(
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        painter = painterResource(UiR.drawable.baseline_audio_file_24),
+                                        painter = painterResource(UiR.drawable.outline_audio_file_24),
                                         contentDescription = stringResource(StringsR.string.show_track)
                                     )
                                 }
@@ -340,7 +335,7 @@ private fun MoreMenu(
                         onClick = onCancelRecognitionClick,
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(UiR.drawable.baseline_cancel_schedule_send_24),
+                                painter = painterResource(UiR.drawable.outline_cancel_schedule_send_24),
                                 contentDescription = stringResource(StringsR.string.cancel_recognition)
                             )
                         }

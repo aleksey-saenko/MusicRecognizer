@@ -3,8 +3,6 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,9 +16,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R
+import com.mrsep.musicrecognizer.core.ui.R as UiR
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun RenameRecognitionDialog(
@@ -40,17 +40,17 @@ internal fun RenameRecognitionDialog(
                 },
                 enabled = newName.isNotBlank()
             ) {
-                Text(text = stringResource(R.string.save))
+                Text(text = stringResource(StringsR.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissClick) {
-                Text(text = stringResource(R.string.cancel))
+                Text(text = stringResource(StringsR.string.cancel))
             }
         },
         title = {
             Text(
-                text = stringResource(R.string.rename),
+                text = stringResource(StringsR.string.rename),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -68,8 +68,8 @@ internal fun RenameRecognitionDialog(
                         if (visible) {
                             IconButton(onClick = { newName = "" }) {
                                 Icon(
-                                    imageVector = Icons.Default.Clear,
-                                    contentDescription = stringResource(R.string.clear)
+                                    painter = painterResource(UiR.drawable.outline_close_24),
+                                    contentDescription = stringResource(StringsR.string.clear)
                                 )
                             }
                         }

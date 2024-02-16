@@ -68,7 +68,7 @@ internal fun AutoScrollPanel(
         Spacer(modifier = Modifier.height(12.dp))
         FilledIconButton(onClick = onStopScrollClick) {
             Icon(
-                painter = painterResource(UiR.drawable.baseline_pause_24),
+                painter = painterResource(UiR.drawable.outline_pause_fill1_24),
                 contentDescription = stringResource(StringsR.string.stop_autoscroll)
             )
         }

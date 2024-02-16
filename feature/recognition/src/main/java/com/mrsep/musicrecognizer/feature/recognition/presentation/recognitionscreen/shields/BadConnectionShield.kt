@@ -36,7 +36,7 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_cloud_off_24),
+            painter = painterResource(UiR.drawable.outline_cloud_off_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )

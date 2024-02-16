@@ -8,19 +8,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
+import com.mrsep.musicrecognizer.core.ui.R as UiR
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun AnimatedVisibilityScope.NoMatchesShield(
@@ -35,7 +35,7 @@ internal fun AnimatedVisibilityScope.NoMatchesShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            imageVector = Icons.Default.Search,
+            painter = painterResource(UiR.drawable.outline_search_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )

@@ -34,11 +34,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.mrsep.musicrecognizer.core.ui.R
 import com.mrsep.musicrecognizer.core.ui.components.MultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableList
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -105,7 +105,7 @@ internal fun LazyListTrackItem(
             .fillMaxWidth()
     ) {
         val placeholder = forwardingPainter(
-            painter = painterResource(R.drawable.baseline_album_24),
+            painter = painterResource(UiR.drawable.outline_album_fill1_24),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             alpha = 0.2f
         )

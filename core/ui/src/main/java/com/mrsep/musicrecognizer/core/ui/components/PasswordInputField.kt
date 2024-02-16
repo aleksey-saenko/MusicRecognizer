@@ -38,9 +38,9 @@ fun PasswordInputField(
         trailingIcon = {
             val iconPainter = painterResource(
                 if (passwordVisible) {
-                    UiR.drawable.baseline_visibility_off_24
+                    UiR.drawable.outline_visibility_off_24
                 } else {
-                    UiR.drawable.baseline_visibility_24
+                    UiR.drawable.outline_visibility_24
                 }
             )
             val iconDesc = stringResource(

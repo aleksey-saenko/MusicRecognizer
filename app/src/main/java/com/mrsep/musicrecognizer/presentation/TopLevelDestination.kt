@@ -11,21 +11,25 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscr
 enum class TopLevelDestination(
     val route: String,
     @StringRes val titleResId: Int,
-    @DrawableRes val iconResId: Int
+    @DrawableRes val iconResId: Int,
+    @DrawableRes val iconSelectedResId: Int
 ) {
     Library(
         route = LibraryScreen.ROUTE,
         titleResId = StringsR.string.library,
-        iconResId = UiR.drawable.baseline_library_music_24
+        iconResId = UiR.drawable.outline_library_music_24,
+        iconSelectedResId = UiR.drawable.outline_library_music_fill1_24
     ),
     Recognition(
         route = RecognitionScreen.ROUTE,
         titleResId = StringsR.string.recognition,
-        iconResId = UiR.drawable.ic_lines_wave
+        iconResId = UiR.drawable.ic_lines_wave,
+        iconSelectedResId = UiR.drawable.ic_lines_wave
     ),
     Preferences(
         route = PreferencesScreen.ROUTE,
         titleResId = StringsR.string.preferences,
-        iconResId = UiR.drawable.baseline_preferences_24
+        iconResId = UiR.drawable.outline_settings_24,
+        iconSelectedResId = UiR.drawable.outline_settings_fill1_24
     )
 }

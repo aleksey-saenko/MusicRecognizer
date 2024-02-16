@@ -41,7 +41,7 @@ internal fun AlbumArtwork(
     modifier: Modifier = Modifier
 ) {
     val placeholder = forwardingPainter(
-        painter = painterResource(UiR.drawable.baseline_album_24),
+        painter = painterResource(UiR.drawable.outline_album_fill1_24),
         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
         alpha = 0.3f
     )

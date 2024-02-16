@@ -16,19 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationButton
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationShield
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -64,7 +64,7 @@ internal fun AnimatedVisibilityScope.BaseShield(
                     )
             ) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                    painter = painterResource(UiR.drawable.outline_close_24),
                     contentDescription = stringResource(StringsR.string.close),
                     modifier = Modifier.size(24.dp)
                 )

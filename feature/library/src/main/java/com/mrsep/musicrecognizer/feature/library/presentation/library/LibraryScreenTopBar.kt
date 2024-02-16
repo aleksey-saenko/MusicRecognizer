@@ -3,10 +3,6 @@ package com.mrsep.musicrecognizer.feature.library.presentation.library
 import androidx.compose.animation.*
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
-import com.mrsep.musicrecognizer.core.ui.R
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 private enum class TopBarMode { EmptyLibrary, Default, MultiSelection }
@@ -71,7 +67,7 @@ internal fun LibraryScreenTopBar(
 
                     TopBarMode.MultiSelection -> IconButton(onClick = onDeselectAll) {
                         Icon(
-                            imageVector = Icons.Filled.Close,
+                            painter = painterResource(UiR.drawable.outline_close_24),
                             contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
                         )
                     }
@@ -88,13 +84,13 @@ internal fun LibraryScreenTopBar(
                     TopBarMode.Default -> Row(horizontalArrangement = Arrangement.End) {
                         IconButton(onClick = onSearchIconClick) {
                             Icon(
-                                imageVector = Icons.Filled.Search,
+                                painter = painterResource(UiR.drawable.outline_search_24),
                                 contentDescription = stringResource(StringsR.string.search_track)
                             )
                         }
                         IconButton(onClick = onFilterIconClick) {
                             Icon(
-                                painter = painterResource(R.drawable.baseline_filter_24),
+                                painter = painterResource(UiR.drawable.outline_filter_list_24),
                                 tint = animateColorAsState(
                                     if (isFilterApplied)
                                         MaterialTheme.colorScheme.primary
@@ -112,13 +108,13 @@ internal fun LibraryScreenTopBar(
                     ) {
                         IconButton(onClick = onSelectAll) {
                             Icon(
-                                painter = painterResource(R.drawable.baseline_select_all_24),
+                                painter = painterResource(UiR.drawable.outline_select_all_24),
                                 contentDescription = stringResource(StringsR.string.select_all)
                             )
                         }
                         IconButton(onClick = onDeleteIconClick) {
                             Icon(
-                                imageVector = Icons.Filled.Delete,
+                                painter = painterResource(UiR.drawable.outline_delete_24),
                                 contentDescription = stringResource(StringsR.string.delete_selected)
                             )
                         }

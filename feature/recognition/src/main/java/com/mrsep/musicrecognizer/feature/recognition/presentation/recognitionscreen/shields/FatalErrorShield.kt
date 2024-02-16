@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +55,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.ic_error_filled_24),
+            painter = painterResource(UiR.drawable.outline_error_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )
@@ -103,7 +101,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                                 onClick = { context.copyTextToClipboard(moreInfo) },
                             ) {
                                 Icon(
-                                    painter = painterResource(UiR.drawable.baseline_content_copy_24),
+                                    painter = painterResource(UiR.drawable.outline_content_copy_24),
                                     contentDescription = null
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -114,7 +112,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                                 onClick = { context.shareText(subject = "", body = moreInfo) },
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Share,
+                                    painter = painterResource(UiR.drawable.outline_share_24),
                                     contentDescription = null
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))

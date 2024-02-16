@@ -35,7 +35,7 @@ internal fun AnimatedVisibilityScope.ApiUsageLimitedShield(
         onDismissClick = onDismissClick
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.baseline_speed_24),
+            painter = painterResource(UiR.drawable.outline_speed_24),
             modifier = Modifier.size(64.dp),
             contentDescription = null
         )

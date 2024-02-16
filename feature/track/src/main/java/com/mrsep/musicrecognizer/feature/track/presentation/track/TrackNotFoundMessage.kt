@@ -28,7 +28,7 @@ internal fun TrackNotFoundMessage(
         modifier = modifier.padding(16.dp)
     ) {
         Icon(
-            painter = painterResource(UiR.drawable.ic_error_filled_24),
+            painter = painterResource(UiR.drawable.outline_error_24),
             contentDescription = null,
             modifier = Modifier.size(80.dp)
         )

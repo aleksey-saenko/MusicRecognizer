@@ -14,7 +14,6 @@ object RecognitionQueueScreen {
     const val ROUTE = "queue"
 
     fun NavGraphBuilder.queueScreen(
-        onBackPressed: () -> Unit,
         onNavigateToTrackScreen: (trackId: String, from: NavBackStackEntry) -> Unit
     ) {
         composable(
@@ -24,7 +23,6 @@ object RecognitionQueueScreen {
             })
         ) { backStackEntry ->
             QueueScreen(
-                onBackPressed = onBackPressed,
                 onNavigateToTrackScreen = { trackId ->
                     onNavigateToTrackScreen(trackId, backStackEntry)
                 }

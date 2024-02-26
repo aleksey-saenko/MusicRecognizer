@@ -66,7 +66,8 @@
     <string name="internal_error">Interní chyba</string>
     <string name="show_more">Zobrazit více</string>
     <string name="show_less">Zobrazit méně</string>
-    <string name="empty_library_message">Zde budou zobrazeny vaše nedávno rozpoznané a oblíbené skladby</string>
+    <string name="empty_library_message">Žádné rozpoznané skladby</string>
+    <string name="empty_library_sub_message">Zde budou zobrazeny vaše nedávno rozpoznané a oblíbené skladby</string>
     <string name="untitled_recognition">Nepojmenované rozpoznání</string>
     <string name="enqueue_recognition">Zařadit rozpoznání do fronty</string>
     <string name="cancel_recognition">Zrušit rozpoznání</string>
@@ -143,6 +144,11 @@
     <string name="mark_as_favorite">Označit jako oblíbené</string>
     <string name="unmark_as_favorite">Zrušit označení jako oblíbené</string>
     <string name="show_lyrics">Zobrazit texty</string>
+    <string name="web_search">Vyhledávání na webu</string>
+    <string name="web">Web</string>
+    <string name="search">Vyhledávání</string>
+    <string name="search_for">Vyhledávání</string>
+    <string name="search_in">Vyhledávání v</string>
     <string name="track_info">Informace o skladbě</string>
     <string name="format_date_of_last_recognition">Datum posledního rozpoznávání:\n%s</string>
     <string name="track_not_found_message">Něco se pokazilo, skladba možná byla odebrána nebo nesprávně upravena</string>
@@ -151,9 +157,12 @@
     <string name="powered_by">Poháněno</string>
     <string name="github_repository">Repozitář GitHub</string>
     <string name="license_gnu_gplv3">Licence GNU GPLv3</string>
-    <string name="lyrics_text_style">Styl textů</string>
+    <string name="text_style">Styl textů</string>
     <string name="font_size">Velikost písma</string>
-    <string name="make_text_bigger_or_smaller">Zvětšení nebo zmenšení písma</string>
+    <string name="font_size_small">Malý</string>
+    <string name="font_size_normal">Normální</string>
+    <string name="font_size_large">Velký</string>
+    <string name="font_size_huge">Obrovský</string>
     <string name="bold_text">Tučný text</string>
     <string name="high_contrast_text">Text s vysokým kontrastem</string>
     <string name="format_created">Vytvořeno: %s</string>

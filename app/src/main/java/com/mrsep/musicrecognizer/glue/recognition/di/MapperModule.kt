@@ -49,10 +49,6 @@ interface MapperModule {
             Mapper<RemoteRecognitionResultDo, RemoteRecognitionResult>
 
     @Binds
-    fun bindMusicServiceMapper(implementation: MusicServiceMapper):
-            Mapper<MusicServiceDo, MusicService>
-
-    @Binds
     fun bindAudioRecordingMapper(implementation: AudioRecordingMapper):
             Mapper<RecognitionScheme, RecognitionSchemeDo>
 

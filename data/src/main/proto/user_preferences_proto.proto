@@ -9,6 +9,8 @@ option java_multiple_files = true;
 
 message UserPreferencesProto {
 
+  reserved 32;
+
   bool onboarding_completed = 1;
   string api_token = 2;
 
@@ -93,7 +95,6 @@ message UserPreferencesProto {
   }
 
   HapticFeedbackProto haptic_feedback = 31;
-  bool use_column_for_library = 32;
 
   enum ThemeModeProto {
     FOLLOW_SYSTEM = 0;
@@ -113,6 +114,9 @@ message UserPreferencesProto {
 
   RecognitionProviderProto current_recognition_provider = 39;
 
-  // NEXT AVAILABLE ID: 40
+  bool use_grid_for_library = 40;
+  bool use_grid_for_recognition_queue = 41;
+
+  // NEXT AVAILABLE ID: 42
 
 }

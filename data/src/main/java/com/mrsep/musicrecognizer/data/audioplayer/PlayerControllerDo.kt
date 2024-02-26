@@ -7,7 +7,7 @@ interface PlayerControllerDo {
     val statusFlow: Flow<PlayerStatusDo>
     val playbackPositionFlow: Flow<Int>
 
-    fun start(file: File)
+    fun start(id: Int, file: File)
     fun stop()
     fun pause()
     fun resume()

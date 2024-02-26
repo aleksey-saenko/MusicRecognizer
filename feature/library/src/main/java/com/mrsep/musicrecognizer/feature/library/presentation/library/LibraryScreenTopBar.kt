@@ -25,9 +25,9 @@ internal fun LibraryScreenTopBar(
     isMultiselectEnabled: Boolean,
     selectedCount: Int,
     totalCount: Int,
-    onSearchIconClick: () -> Unit,
-    onFilterIconClick: () -> Unit,
-    onDeleteIconClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onFilterClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     onSelectAll: () -> Unit,
     onDeselectAll: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
@@ -82,13 +82,13 @@ internal fun LibraryScreenTopBar(
                     TopBarMode.EmptyLibrary -> {}
 
                     TopBarMode.Default -> Row(horizontalArrangement = Arrangement.End) {
-                        IconButton(onClick = onSearchIconClick) {
+                        IconButton(onClick = onSearchClick) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_search_24),
                                 contentDescription = stringResource(StringsR.string.search_track)
                             )
                         }
-                        IconButton(onClick = onFilterIconClick) {
+                        IconButton(onClick = onFilterClick) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_filter_list_24),
                                 tint = animateColorAsState(
@@ -112,7 +112,7 @@ internal fun LibraryScreenTopBar(
                                 contentDescription = stringResource(StringsR.string.select_all)
                             )
                         }
-                        IconButton(onClick = onDeleteIconClick) {
+                        IconButton(onClick = onDeleteClick) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_delete_24),
                                 contentDescription = stringResource(StringsR.string.delete_selected)

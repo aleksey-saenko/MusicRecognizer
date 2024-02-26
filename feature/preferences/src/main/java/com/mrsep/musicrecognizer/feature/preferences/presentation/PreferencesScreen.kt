@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -36,19 +35,18 @@ internal fun PreferencesScreen(
     viewModel: PreferencesViewModel = hiltViewModel(),
     showDeveloperOptions: Boolean,
     onNavigateToAboutScreen: () -> Unit,
-    onNavigateToQueueScreen: () -> Unit,
     onNavigateToDeveloperScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
-    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
         is PreferencesUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
-                .systemBarsPadding()
+                .fillMaxSize()
+                .statusBarsPadding()
         )
 
         is PreferencesUiState.Success -> {
@@ -63,22 +61,14 @@ internal fun PreferencesScreen(
                         .fillMaxSize()
                         .nestedScroll(topBarBehaviour.nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start,
                 ) {
                     PreferenceGroup(title = stringResource(StringsR.string.recognition)) {
-                        PreferenceClickableItem(
-                            title = stringResource(StringsR.string.recognition_queue),
-                            subtitle = stringResource(StringsR.string.recognition_queue_pref_subtitle),
-                            onItemClick = onNavigateToQueueScreen
-                        )
                         val currentProvider = uiState.preferences.currentRecognitionProvider
                         var showServiceDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.recognition_provider_preference_title),
                             subtitle = uiState.preferences.currentRecognitionProvider.getTitle(),
-                            onItemClick = { showServiceDialog = true },
+                            onItemClick = { showServiceDialog = true }
                         )
                         if (showServiceDialog) {
                             var visibleProvider by rememberSaveable(currentProvider) {
@@ -146,21 +136,15 @@ internal fun PreferencesScreen(
                             checked = uiState.preferences.recognizeOnStartup
                         )
                     }
-
-                    PreferenceGroup(
-                        title = stringResource(StringsR.string.notifications),
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
+                    Spacer(Modifier.height(16.dp))
+                    PreferenceGroup(title = stringResource(StringsR.string.notifications)) {
                         NotificationServiceSwitch(
                             serviceEnabled = uiState.preferences.notificationServiceEnabled,
                             setServiceEnabled = viewModel::setNotificationServiceEnabled
                         )
                     }
-
-                    PreferenceGroup(
-                        title = stringResource(StringsR.string.appearance),
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
+                    Spacer(Modifier.height(16.dp))
+                    PreferenceGroup(title = stringResource(StringsR.string.appearance)) {
                         var showThemeDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.theme),
@@ -194,17 +178,21 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showServicesDialog = false }
                             )
                         }
-                        val useColumnForLibrary = uiState.preferences.useColumnForLibrary
+                        val useGridForLibrary = uiState.preferences.useGridForLibrary
                         PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.use_list_for_library),
-                            onClick = { viewModel.setUseColumnForLibrary(!useColumnForLibrary) },
-                            checked = useColumnForLibrary
+                            title = stringResource(StringsR.string.use_grid_for_library),
+                            onClick = { viewModel.setUseGridForLibrary(!useGridForLibrary) },
+                            checked = useGridForLibrary
+                        )
+                        val useGridForQueue = uiState.preferences.useGridForRecognitionQueue
+                        PreferenceSwitchItem(
+                            title = stringResource(StringsR.string.use_grid_for_queue),
+                            onClick = { viewModel.setUseGridForQueue(!useGridForQueue) },
+                            checked = useGridForQueue
                         )
                     }
-                    PreferenceGroup(
-                        title = stringResource(StringsR.string.misc),
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
+                    Spacer(Modifier.height(16.dp))
+                    PreferenceGroup(title = stringResource(StringsR.string.misc)) {
                         val vibratorAvailable = remember {
                             context.getDefaultVibrator().hasVibrator()
                         }
@@ -233,6 +221,7 @@ internal fun PreferencesScreen(
                             )
                         }
                     }
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

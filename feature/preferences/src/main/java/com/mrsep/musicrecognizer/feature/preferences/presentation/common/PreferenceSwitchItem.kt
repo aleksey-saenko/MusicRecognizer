@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun PreferenceSwitchItem(
@@ -20,46 +19,44 @@ internal fun PreferenceSwitchItem(
     checked: Boolean,
     onClick: () -> Unit
 ) {
-    PreferenceSurface(
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 76.dp)
+            .clickable(
+                onClick = onClick,
+                enabled = enabled
+            )
+            .padding(vertical = 8.dp, horizontal = 24.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
-                .clickable(
-                    onClick = onClick,
-                    enabled = enabled
-                )
-                .padding(16.dp)
+                .weight(1f)
+                .alpha(if (enabled) 1f else 0.7f)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .alpha(if (enabled) 1f else 0.7f)
-            ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (!subtitle.isNullOrBlank()) {
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 20.sp),
-                    maxLines = 1,
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (!subtitle.isNullOrBlank()) {
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
             }
-            Switch(
-                checked = checked,
-                enabled = enabled,
-                onCheckedChange = null
-            )
         }
+        Spacer(modifier = Modifier.width(16.dp))
+        Switch(
+            checked = checked,
+            enabled = enabled,
+            onCheckedChange = null
+        )
     }
 }

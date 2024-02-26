@@ -142,17 +142,17 @@ private fun RecognitionProviderDropdownMenu(
             modifier = modifier
         ) {
             OutlinedTextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                readOnly = true,
                 value = selectedOption.getTitle(),
                 onValueChange = {},
+                readOnly = true,
                 label = { Text(text = label) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                 singleLine = true,
-                shape = MaterialTheme.shapes.small
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -198,8 +198,5 @@ internal fun AuthenticationRow(
 @Composable
 internal fun RecognitionProvider.getTitle() = when (this) {
     RecognitionProvider.Audd -> stringResource(StringsR.string.audd)
-    RecognitionProvider.AcrCloud -> stringResource(
-        StringsR.string.format_experimental,
-        stringResource(StringsR.string.acr_cloud)
-    )
+    RecognitionProvider.AcrCloud -> stringResource(StringsR.string.acr_cloud)
 }

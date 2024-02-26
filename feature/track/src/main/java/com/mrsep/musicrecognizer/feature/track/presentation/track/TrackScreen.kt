@@ -7,6 +7,8 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,13 +38,12 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun TrackScreen(
     viewModel: TrackViewModel = hiltViewModel(),
     isExpandedScreen: Boolean,
-    isRetryAvailable: Boolean,
+    isRetryAllowed: Boolean,
     onBackPressed: () -> Unit,
     onNavigateToLyricsScreen: (trackId: String) -> Unit,
     onRetryRequested: () -> Unit,
     onTrackDeleted: () -> Unit
 ) {
-    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val screenUiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
     when (val uiState = screenUiState) {
@@ -126,30 +128,35 @@ internal fun TrackScreen(
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.navigationBarsPadding()
-                    ) {
-                        TrackScreenTopBar(
-                            onBackPressed = onBackPressed,
-                            isFavorite = uiState.isFavorite,
-                            onFavoriteClick = {
-                                viewModel.setFavorite(uiState.trackId, !uiState.isFavorite)
-                            },
-                            isLyricsAvailable = uiState.lyrics != null,
-                            onLyricsClick = { onNavigateToLyricsScreen(uiState.trackId) },
-                            onShareClick = { shareSheetActive = !shareSheetActive },
-                            onDeleteClick = { viewModel.deleteTrack(uiState.trackId) },
-                            onShowDetailsClick = { extraDataDialogVisible = true },
+                    val screenScrollState = rememberScrollState()
+                    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
+
+                    var showSearchBottomSheet by remember { mutableStateOf(false) }
+                    if (showSearchBottomSheet) {
+                        WebSearchBottomSheet(
+                            sheetState = rememberModalBottomSheetState(true),
                             onPerformWebSearchClick = { searchParams ->
                                 performWebSearch(context, searchParams, uiState)
                             },
+                            onDismissRequest = { showSearchBottomSheet = false },
+                        )
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                    ) {
+                        TrackScreenTopBar(
+                            onBackPressed = onBackPressed,
+                            onShareClick = { shareSheetActive = !shareSheetActive },
+                            onDeleteClick = { viewModel.deleteTrack(uiState.trackId) },
+                            onShowDetailsClick = { extraDataDialogVisible = true },
                             scrollBehavior = topBarBehaviour
                         )
                         TrackSection(
                             title = uiState.title,
                             artist = uiState.artist,
-                            albumAndYear = uiState.run { year?.let { "$album - $year" } ?: album },
+                            album = uiState.album,
+                            year = uiState.year,
                             artworkUrl = uiState.artworkUrl,
                             trackLinks = uiState.requiredLinks,
                             isLoadingLinks = uiState.isLoadingLinks,
@@ -162,14 +169,32 @@ internal fun TrackScreen(
                                     seedColor.toArgb()
                                 )
                             },
-                            isRetryAvailable = isRetryAvailable,
+                            modifier = Modifier
+                                .weight(1f)
+//                                .nestedScroll(bottomBarBehaviour.nestedScrollConnection)
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .verticalScroll(screenScrollState)
+
+                        )
+                        TrackActionsBottomBar(
+                            scrollBehavior = null,
+                            isFavorite = uiState.isFavorite,
+                            isLyricsAvailable = uiState.lyrics != null,
+                            isRetryAllowed = isRetryAllowed,
+                            onFavoriteClick = {
+                                viewModel.setFavorite(uiState.trackId, !uiState.isFavorite)
+                            },
+                            onLyricsClick = {
+                                onNavigateToLyricsScreen(uiState.trackId)
+                            },
+                            onSearchClick = {
+                                showSearchBottomSheet = true
+                            },
                             onRetryRequested = {
                                 trackDismissed = true
                                 viewModel.deleteTrack(uiState.trackId)
                                 onRetryRequested()
-                            },
-                            onCopyToClipboard = { context.copyTextToClipboard(it) },
-                            modifier = Modifier.fillMaxSize()
+                            }
                         )
                     }
                 }

@@ -56,21 +56,18 @@ object TrackScreen {
             }),
             popExitTransition = {
                 when (initialState.savedStateHandle[KEY_LAST_ACTION] ?: TrackAction.NoAction) {
-                    TrackAction.Deleted -> {
-                        fadeOut(
-                            animationSpec = tween(durationMillis = 250, delayMillis = 50)
-                        ) + scaleOut(
-                            animationSpec = tween(durationMillis = 400),
-                            targetScale = 0.85f
-                        )
-                    }
+                    TrackAction.Deleted -> fadeOut(
+                        animationSpec = tween(durationMillis = 250, delayMillis = 50)
+                    ) + scaleOut(
+                        animationSpec = tween(durationMillis = 400),
+                        targetScale = 0.85f
+                    )
 
-                    TrackAction.Dismissed -> {
-                        slideOutVertically(
-                            animationSpec = tween(durationMillis = 300),
-                            targetOffsetY = { fullHeight -> -fullHeight / 2 }
-                        ) + fadeOut(tween(durationMillis = 250))
-                    }
+                    TrackAction.Dismissed -> slideOutVertically(
+                        animationSpec = tween(durationMillis = 300),
+                        targetOffsetY = { fullHeight -> -fullHeight / 2 }
+                    ) + fadeOut(tween(durationMillis = 250))
+
 
                     TrackAction.NoAction -> null
                 }
@@ -78,7 +75,7 @@ object TrackScreen {
         ) { backStackEntry ->
             TrackScreen(
                 isExpandedScreen = isExpandedScreen,
-                isRetryAvailable = backStackEntry.arguments?.getBoolean(ARG_RETRY) ?: false,
+                isRetryAllowed = backStackEntry.arguments?.getBoolean(ARG_RETRY) ?: false,
                 onBackPressed = onBackPressed,
                 onNavigateToLyricsScreen = { trackId ->
                     onNavigateToLyricsScreen(trackId, backStackEntry)

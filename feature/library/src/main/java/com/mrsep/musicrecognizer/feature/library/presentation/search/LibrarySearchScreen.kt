@@ -8,16 +8,17 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.StrokeCap
@@ -74,7 +76,7 @@ internal fun LibrarySearchScreen(
             .zIndex(1f)
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxSize()
-            .systemBarsPadding()
+            .navigationBarsPadding()
     ) {
         SearchBar(
             modifier = Modifier
@@ -173,19 +175,22 @@ private fun SearchResultLazyColumn(
                 ) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        items(
+                        itemsIndexed(
                             items = result.data,
-                            key = { track -> track.id }
-                        ) { track ->
-                            TrackSearchItem(
-                                track = track,
-                                keyword = result.keyword,
-                                onClick = { onTrackClick(track.id) },
-                                modifier = Modifier.animateItemPlacement()
-                            )
+                            key = { _, track -> track.id }
+                        ) { index, track ->
+                            Column(modifier = Modifier.animateItemPlacement()) {
+                                TrackSearchItem(
+                                    track = track,
+                                    keyword = result.keyword,
+                                    onClick = { onTrackClick(track.id) },
+                                    contentPadding = PaddingValues(vertical = 5.dp, horizontal = 12.dp)
+                                )
+                                if (index != result.data.lastIndex) {
+                                    HorizontalDivider(modifier = Modifier.alpha(0.2f))
+                                }
+                            }
                         }
                     }
                 }

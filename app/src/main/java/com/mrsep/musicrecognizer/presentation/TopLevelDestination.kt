@@ -6,30 +6,37 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
 
 enum class TopLevelDestination(
     val route: String,
     @StringRes val titleResId: Int,
-    @DrawableRes val iconResId: Int,
-    @DrawableRes val iconSelectedResId: Int
+    @DrawableRes val selectedIconResId: Int,
+    @DrawableRes val unselectedIconResId: Int
 ) {
-    Library(
-        route = LibraryScreen.ROUTE,
-        titleResId = StringsR.string.library,
-        iconResId = UiR.drawable.outline_library_music_24,
-        iconSelectedResId = UiR.drawable.outline_library_music_fill1_24
-    ),
     Recognition(
         route = RecognitionScreen.ROUTE,
         titleResId = StringsR.string.recognition,
-        iconResId = UiR.drawable.ic_lines_wave,
-        iconSelectedResId = UiR.drawable.ic_lines_wave
+        selectedIconResId = UiR.drawable.ic_lines_24,
+        unselectedIconResId = UiR.drawable.ic_lines_24
+    ),
+    Library(
+        route = LibraryScreen.ROUTE,
+        titleResId = StringsR.string.library,
+        selectedIconResId = UiR.drawable.outline_library_music_fill1_24,
+        unselectedIconResId = UiR.drawable.outline_library_music_24
+    ),
+    Queue(
+        route = RecognitionQueueScreen.ROUTE,
+        titleResId = StringsR.string.queue,
+        selectedIconResId = UiR.drawable.outline_overview_fill1_24,
+        unselectedIconResId = UiR.drawable.outline_overview_24
     ),
     Preferences(
         route = PreferencesScreen.ROUTE,
         titleResId = StringsR.string.preferences,
-        iconResId = UiR.drawable.outline_settings_24,
-        iconSelectedResId = UiR.drawable.outline_settings_fill1_24
+        selectedIconResId = UiR.drawable.outline_settings_fill1_24,
+        unselectedIconResId = UiR.drawable.outline_settings_24
     )
 }

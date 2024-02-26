@@ -7,20 +7,17 @@ import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
 import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
-import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AuddConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackPolicy
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.HapticFeedback
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import javax.inject.Inject
 
 class UserPreferencesMapper @Inject constructor(
     private val fallbackActionMapper: Mapper<FallbackActionDo, FallbackAction>,
-    private val musicServiceMapper: Mapper<MusicServiceDo, MusicService>,
     private val providerMapper: Mapper<RecognitionProviderDo, RecognitionProvider>,
     private val auddConfigMapper: BidirectionalMapper<AuddConfigDo, AuddConfig>,
     private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>,
@@ -33,11 +30,6 @@ class UserPreferencesMapper @Inject constructor(
             currentRecognitionProvider = providerMapper.map(input.currentRecognitionProvider),
             auddConfig = auddConfigMapper.map(input.auddConfig),
             acrCloudConfig = acrCloudConfigMapper.map(input.acrCloudConfig),
-            notificationServiceEnabled = input.notificationServiceEnabled,
-            dynamicColorsEnabled = input.dynamicColorsEnabled,
-            developerModeEnabled = input.developerModeEnabled,
-            requiredMusicServices = input.requiredMusicServices
-                .map(musicServiceMapper::map),
             fallbackPolicy = FallbackPolicy(
                 noMatches = fallbackActionMapper.map(input.fallbackPolicy.noMatches),
                 badConnection = fallbackActionMapper.map(input.fallbackPolicy.badConnection),
@@ -46,7 +38,8 @@ class UserPreferencesMapper @Inject constructor(
             hapticFeedback = HapticFeedback(
                 vibrateOnTap = input.hapticFeedback.vibrateOnTap,
                 vibrateOnResult = input.hapticFeedback.vibrateOnResult
-            )
+            ),
+            useGridForRecognitionQueue = input.useGridForRecognitionQueue
         )
     }
 

@@ -2,6 +2,8 @@ package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -35,7 +37,17 @@ internal fun EmptyLibraryMessage(
             text = stringResource(Strings.string.empty_library_message),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = stringResource(Strings.string.empty_library_sub_message),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        )
+        Spacer(Modifier.height(56.dp))
     }
 }

@@ -77,8 +77,8 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
         var causeExpanded by rememberSaveable { mutableStateOf(false) }
         Box(
             modifier = Modifier
-                .fillMaxWidth()
                 .animateContentSize()
+                .fillMaxWidth()
         ) {
             if (causeExpanded) {
                 Surface(

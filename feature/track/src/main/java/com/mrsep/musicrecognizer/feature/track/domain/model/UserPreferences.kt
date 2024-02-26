@@ -10,7 +10,8 @@ data class UserPreferences(
     data class LyricsFontStyle(
         val fontSize: FontSize,
         val isBold: Boolean,
-        val isHighContrast: Boolean
+        val isHighContrast: Boolean,
+//        val alignToStart: Boolean
     )
 
 }

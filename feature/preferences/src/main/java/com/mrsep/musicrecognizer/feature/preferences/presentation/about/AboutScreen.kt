@@ -45,7 +45,7 @@ internal fun AboutScreen(
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current
-    val topBarBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val version = rememberSaveable { context.getAppVersion() }
 
     Column(
@@ -66,8 +66,8 @@ internal fun AboutScreen(
                 .fillMaxSize()
                 .nestedScroll(topBarBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
-                .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp)
         ) {
+            Spacer(Modifier.height(4.dp))
             AppLogo(
                 modifier = Modifier.size(120.dp)
             )
@@ -82,10 +82,8 @@ internal fun AboutScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(top = 2.dp)
             )
-            PreferenceGroup(
-                title = stringResource(StringsR.string.powered_by),
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
+            Spacer(Modifier.height(16.dp))
+            PreferenceGroup(title = stringResource(StringsR.string.powered_by)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.audd),
                     subtitle = stringResource(StringsR.string.purpose_recognition_service),
@@ -102,10 +100,8 @@ internal fun AboutScreen(
                     onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
                 )
             }
-            PreferenceGroup(
-                title = stringResource(StringsR.string.misc),
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
+            Spacer(Modifier.height(16.dp))
+            PreferenceGroup(title = stringResource(StringsR.string.misc)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.github_repository),
                     onItemClick = { context.openUrlImplicitly(GITHUB_REPO_URL) }

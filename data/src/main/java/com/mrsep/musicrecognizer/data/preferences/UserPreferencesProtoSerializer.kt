@@ -52,7 +52,8 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             notificationServiceEnabled = false
             dynamicColorsEnabled = true
             artworkBasedThemeEnabled = false
-            useColumnForLibrary = false
+            useGridForLibrary = false
+            useGridForRecognitionQueue = false
             developerModeEnabled = false // was true in first public builds, reset for using
             fallbackPolicy = fallbackPolicyProto {
                 noMatches = UserPreferencesProto.FallbackActionProto.IGNORE

@@ -6,14 +6,19 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.lifecycle.withResumed
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -131,12 +136,6 @@ internal fun AppNavigation(
         lyricsScreen(
             onBackPressed = outerNavController::navigateUp
         )
-        queueScreen(
-            onBackPressed = outerNavController::navigateUp,
-            onNavigateToTrackScreen = { trackId, from ->
-                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
-            }
-        )
         aboutScreen(onBackPressed = outerNavController::navigateUp)
         developerScreen(
             onBackPressed = outerNavController::navigateUp
@@ -155,22 +154,22 @@ private fun NavGraphBuilder.barNavHost(
 ) {
     composable(BAR_HOST_ROUTE) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.weight(1f, false)
+                modifier = Modifier
+                    .weight(1f, false)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
+                    )
             ) {
                 if (shouldShowNavRail) {
-                    AppNavigationRail(
-                        navController = innerNavController,
-                        modifier = Modifier.statusBarsPadding()
-                    )
+                    AppNavigationRail(navController = innerNavController)
+                    VerticalDivider(modifier = Modifier.alpha(0.2f))
                 }
                 BarNavHost(
                     recognitionRequested = recognitionRequested,
@@ -202,14 +201,6 @@ private fun BarNavHost(
         enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
-        libraryScreen(
-            onTrackClick = { trackId, from ->
-                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
-            },
-            onTrackSearchClick = { from ->
-                outerNavController.navigateToLibrarySearchScreen(from = from)
-            }
-        )
         recognitionScreen(
             autostart = recognitionRequested,
             onResetAutostart = { setRecognitionRequested(false) },
@@ -219,7 +210,16 @@ private fun BarNavHost(
                 )
             },
             onNavigateToQueueScreen = { _, from ->
-                outerNavController.navigateToQueueScreen(from = from)
+                innerNavController.navigateToQueueScreen(
+                    from = from,
+                    navOptions = navOptions {
+                        popUpTo(innerNavController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
             },
             onNavigateToPreferencesScreen = { from ->
                 innerNavController.navigateToPreferencesScreen(
@@ -234,13 +234,23 @@ private fun BarNavHost(
                 )
             }
         )
+        libraryScreen(
+            onTrackClick = { trackId, from ->
+                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
+            },
+            onTrackSearchClick = { from ->
+                outerNavController.navigateToLibrarySearchScreen(from = from)
+            }
+        )
+        queueScreen(
+            onNavigateToTrackScreen = { trackId, from ->
+                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
+            }
+        )
         preferencesScreen(
             showDeveloperOptions = BuildConfig.DEV_OPTIONS,
             onNavigateToAboutScreen = { from ->
                 outerNavController.navigateToAboutScreen(from)
-            },
-            onNavigateToQueueScreen = { from ->
-                outerNavController.navigateToQueueScreen(from)
             },
             onNavigateToDeveloperScreen = { from ->
                 outerNavController.navigateToDeveloperScreen(from)

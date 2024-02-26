@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -45,7 +45,7 @@ internal fun TrackLazyGrid(
         modifier = modifier
     ) {
         items(items = trackList, key = { track -> track.id }) { track ->
-            LazyGridTrackItem(
+            TrackLazyGridItem(
                 track = track,
                 selected = multiSelectionState.isSelected(track.id),
                 onClick = {
@@ -64,12 +64,13 @@ internal fun TrackLazyGrid(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun LazyGridTrackItem(
+internal fun TrackLazyGridItem(
     track: TrackUi,
     selected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showRecognitionDate: Boolean = true,
     shape: Shape = MaterialTheme.shapes.large
 ) {
     Column(
@@ -94,8 +95,8 @@ internal fun LazyGridTrackItem(
     ) {
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.outline_album_fill1_24),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-            alpha = 0.2f
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+            alpha = 0.3f
         )
         AsyncImage(
             model = track.artworkUrl,
@@ -104,6 +105,10 @@ internal fun LazyGridTrackItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .shadow(
+                    elevation = 1.dp,
+                    shape = shape
+                )
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     shape = shape
@@ -115,8 +120,7 @@ internal fun LazyGridTrackItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 6.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(horizontal = 4.dp, vertical = 8.dp)
         ) {
             Text(
                 text = track.title,
@@ -130,8 +134,18 @@ internal fun LazyGridTrackItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.alpha(0.95f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Spacer(Modifier.height(2.dp))
+            if (showRecognitionDate) {
+                Text(
+                    text = track.recognitionDate,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

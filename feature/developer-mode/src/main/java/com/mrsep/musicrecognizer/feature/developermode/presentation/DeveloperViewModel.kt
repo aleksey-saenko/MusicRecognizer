@@ -100,7 +100,7 @@ internal class DeveloperViewModel @Inject constructor(
 
     fun startPlayer() {
         if (_audioChainJob == null || _audioChainJob?.isCompleted == true) {
-            playerController.start(File("${appContext.filesDir.absolutePath}/testAudio"))
+            playerController.start(id = 0, file = File("${appContext.filesDir.absolutePath}/testAudio"))
         }
     }
 

@@ -22,7 +22,6 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun QueueScreenTopBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
-    onBackPressed: () -> Unit,
     multiselectEnabled: Boolean,
     selectedCount: Int,
     totalCount: Int,
@@ -61,13 +60,6 @@ internal fun QueueScreenTopBar(
                         Icon(
                             painter = painterResource(UiR.drawable.outline_close_24),
                             contentDescription = stringResource(StringsR.string.disable_multi_selection_mode)
-                        )
-                    }
-                } else {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                            contentDescription = stringResource(StringsR.string.back)
                         )
                     }
                 }

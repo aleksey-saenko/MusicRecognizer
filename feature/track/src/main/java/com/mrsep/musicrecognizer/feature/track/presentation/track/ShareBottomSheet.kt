@@ -65,19 +65,19 @@ internal fun ShareBottomSheet(
         val shareAllowed = titleSelected || artistSelected || albumSelected ||
                 yearSelected || selectedMusicServices.isNotEmpty() || lyricsSelected
 
+        Text(
+            text = stringResource(StringsR.string.share_options),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(Modifier.height(16.dp))
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Text(
-                text = stringResource(StringsR.string.share_options),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            ShareGroup(
-                title = stringResource(StringsR.string.metadata),
-                modifier = Modifier.padding(top = 24.dp)
-            ) {
+            ShareGroup(title = stringResource(StringsR.string.metadata)) {
                 FlowRow(
-                    modifier = Modifier.padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     FilterChip(
                         selected = titleSelected,
@@ -112,13 +112,12 @@ internal fun ShareBottomSheet(
                     }
                 }
             }
-            ShareGroup(
-                title = stringResource(StringsR.string.music_services_links),
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
+            ShareGroup(title = stringResource(StringsR.string.music_services_links)) {
                 FlowRow(
-                    modifier = Modifier.padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     trackLinks.forEach { (_, serviceType) ->
                         val selected = selectedMusicServices.contains(serviceType)
@@ -136,38 +135,35 @@ internal fun ShareBottomSheet(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                TextButton(
-                    onClick = { onCopyClick(buildStringToShare()) },
-                    enabled = shareAllowed
-                ) {
-                    Text(
-                        text = stringResource(StringsR.string.copy),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-                TextButton(
-                    onClick = { onShareClick(buildStringToShare()) },
-                    enabled = shareAllowed
-                ) {
-                    Text(
-                        text = stringResource(StringsR.string.share),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            }
-            Spacer(Modifier.height(12.dp))
         }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            TextButton(
+                onClick = { onCopyClick(buildStringToShare()) },
+                enabled = shareAllowed
+            ) {
+                Text(
+                    text = stringResource(StringsR.string.copy),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+            TextButton(
+                onClick = { onShareClick(buildStringToShare()) },
+                enabled = shareAllowed
+            ) {
+                Text(
+                    text = stringResource(StringsR.string.share),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
     }
 }
 
@@ -178,11 +174,14 @@ private fun ShareGroup(
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
-        HorizontalDivider()
         Text(
             text = title,
-            modifier = Modifier.padding(16.dp)
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
+        Spacer(modifier = Modifier.height(8.dp))
         content()
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }

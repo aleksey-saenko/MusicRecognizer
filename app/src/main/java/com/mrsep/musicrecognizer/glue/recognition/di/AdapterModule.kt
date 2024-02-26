@@ -22,9 +22,6 @@ interface AdapterModule {
     fun bindTrackRepository(implementation: AdapterTrackRepository): TrackRepository
 
     @Binds
-    fun bindRecognitionService(implementation: AdapterRecognitionService): RemoteRecognitionService
-
-    @Binds
     fun bindRecorderController(implementation: AdapterRecorderController): AudioRecorderController
 
     @Binds

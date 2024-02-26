@@ -113,8 +113,12 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { hapticFeedback = hapticFeedbackMapper.reverseMap(value) }
     }
 
-    override suspend fun setUseColumnForLibrary(value: Boolean) {
-        safeWriter { useColumnForLibrary = value }
+    override suspend fun setUseGridForLibrary(value: Boolean) {
+        safeWriter { useGridForLibrary = value }
+    }
+
+    override suspend fun setUseGridForRecognitionQueue(value: Boolean) {
+        safeWriter { useGridForRecognitionQueue = value }
     }
 
     override suspend fun setThemeMode(value: ThemeModeDo) {

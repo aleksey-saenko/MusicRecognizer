@@ -2,8 +2,11 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,16 +20,15 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
+import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerStatusUi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun QueueScreen(
     viewModel: QueueScreenViewModel = hiltViewModel(),
-    onBackPressed: () -> Unit,
     onNavigateToTrackScreen: (trackId: String) -> Unit
 ) {
-    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
     val screenState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
 
     when (val state = screenState) {
@@ -41,7 +43,7 @@ internal fun QueueScreen(
             val context = LocalContext.current
             val playerStatus = state.playerStatus
             LaunchedEffect(playerStatus) {
-                if (playerStatus is PlayerStatus.Error) {
+                if (playerStatus is PlayerStatusUi.Error) {
                     Toast.makeText(context, playerStatus.message, Toast.LENGTH_LONG).show()
                 }
             }
@@ -62,23 +64,20 @@ internal fun QueueScreen(
             var deletionInProgress by rememberSaveable(state.enqueuedList) {
                 mutableStateOf(false)
             }
-
             Column(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.background)
-                    .fillMaxSize()
-                    .navigationBarsPadding(),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 QueueScreenTopBar(
                     scrollBehavior = topBarBehaviour,
-                    onBackPressed = onBackPressed,
                     multiselectEnabled = multiSelectionState.multiselectEnabled,
                     selectedCount = multiSelectionState.selectedCount,
                     totalCount = state.enqueuedList.size,
                     onSelectAll = {
-                        multiSelectionState.select(state.enqueuedList.map { it.enqueued.id })
+                        multiSelectionState.select(state.enqueuedList.map { it.id })
                     },
                     onDeselectAll = multiSelectionState::deselectAll,
                     onCancelSelected = {
@@ -87,24 +86,52 @@ internal fun QueueScreen(
                     onDeleteSelected = { deleteDialogVisible = true },
                     onDisableSelectionMode = multiSelectionState::deselectAll
                 )
-                if (state.enqueuedList.isEmpty()) {
-                    EmptyQueueMessage(modifier = Modifier.fillMaxSize())
-                } else {
-                    RecognitionLazyColumn(
-                        lazyListState = rememberLazyListState(),
-                        multiSelectionState = multiSelectionState,
-                        recognitionList = state.enqueuedList,
-                        onNavigateToTrackScreen = onNavigateToTrackScreen,
-                        onEnqueueRecognition = viewModel::enqueueRecognition,
-                        onCancelRecognition = viewModel::cancelRecognition,
-                        onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
-                        onRenameEnqueued = viewModel::renameRecognition,
-                        playerStatus = state.playerStatus,
-                        onStartPlayRecord = viewModel::startAudioPlayer,
-                        onStopPlayRecord = viewModel::stopAudioPlayer,
-                        modifier = Modifier
-                            .nestedScroll(topBarBehaviour.nestedScrollConnection),
-                    )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (state.useGridLayout) {
+                        RecognitionLazyGrid(
+                            lazyGridState = rememberLazyGridState(),
+                            multiSelectionState = multiSelectionState,
+                            recognitionList = state.enqueuedList,
+                            onNavigateToTrackScreen = onNavigateToTrackScreen,
+                            onEnqueueRecognition = viewModel::enqueueRecognition,
+                            onCancelRecognition = viewModel::cancelRecognition,
+                            onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
+                            onRenameEnqueued = viewModel::renameRecognition,
+                            playerStatus = state.playerStatus,
+                            onStartPlayRecord = viewModel::startAudioPlayer,
+                            onStopPlayRecord = viewModel::stopAudioPlayer,
+                            modifier = Modifier
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .fillMaxSize()
+                        )
+                    } else {
+                        RecognitionLazyColumn(
+                            lazyListState = rememberLazyListState(),
+                            multiSelectionState = multiSelectionState,
+                            recognitionList = state.enqueuedList,
+                            onNavigateToTrackScreen = onNavigateToTrackScreen,
+                            onEnqueueRecognition = viewModel::enqueueRecognition,
+                            onCancelRecognition = viewModel::cancelRecognition,
+                            onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
+                            onRenameEnqueued = viewModel::renameRecognition,
+                            playerStatus = state.playerStatus,
+                            onStartPlayRecord = viewModel::startAudioPlayer,
+                            onStopPlayRecord = viewModel::stopAudioPlayer,
+                            modifier = Modifier
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .fillMaxSize()
+                        )
+                    }
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = state.enqueuedList.isEmpty(),
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        EmptyQueueMessage(Modifier.fillMaxSize())
+                    }
                 }
             }
             if (deleteDialogVisible) {

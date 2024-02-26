@@ -5,12 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PlayerController
+import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
+import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerStatusUi
+import com.mrsep.musicrecognizer.feature.recognition.presentation.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -22,9 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class QueueScreenViewModel @Inject constructor(
+    preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val recognitionScheduler: EnqueuedRecognitionScheduler,
     private val playerController: PlayerController,
+    private val dateFormatter: AppDateTimeFormatter,
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -41,11 +47,15 @@ internal class QueueScreenViewModel @Inject constructor(
                 )
             }
         },
-        flow2 = playerController.statusFlow
-    ) { enqueuedWithStatusList, playerStatus ->
+        flow2 = playerController.statusFlow,
+        flow3 = preferencesRepository.userPreferencesFlow
+    ) { enqueuedWithStatusList, playerStatus, preferences ->
         QueueScreenUiState.Success(
-            enqueuedList = enqueuedWithStatusList.toImmutableList(),
-            playerStatus = playerStatus
+            enqueuedList = enqueuedWithStatusList
+                .map { it.toUi(dateFormatter) }
+                .toImmutableList(),
+            playerStatus = playerStatus.toUi(),
+            useGridLayout = preferences.useGridForRecognitionQueue
         )
     }.flowOn(ioDispatcher).stateIn(
         scope = viewModelScope,
@@ -82,7 +92,7 @@ internal class QueueScreenViewModel @Inject constructor(
     fun startAudioPlayer(recognitionId: Int) {
         viewModelScope.launch {
             enqueuedRecognitionRepository.getRecordingForRecognition(recognitionId)?.let { recording ->
-                playerController.start(recording)
+                playerController.start(recognitionId, recording)
             }
         }
     }
@@ -99,8 +109,9 @@ internal sealed class QueueScreenUiState {
     data object Loading : QueueScreenUiState()
 
     data class Success(
-        val enqueuedList: ImmutableList<EnqueuedRecognitionWithStatus>,
-        val playerStatus: PlayerStatus
+        val enqueuedList: ImmutableList<EnqueuedRecognitionUi>,
+        val playerStatus: PlayerStatusUi,
+        val useGridLayout: Boolean
     ) : QueueScreenUiState()
 
 }

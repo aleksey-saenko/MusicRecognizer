@@ -103,17 +103,17 @@ private fun FallbackActionsDropdownMenu(
             modifier = modifier
         ) {
             OutlinedTextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                readOnly = true,
                 value = selectedOption.getTitle(),
                 onValueChange = {},
+                readOnly = true,
                 label = { Text(text = label) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                 singleLine = true,
-                shape = MaterialTheme.shapes.small
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,

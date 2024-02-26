@@ -20,9 +20,8 @@ internal fun DeveloperScreen(
     onBackPressed: () -> Unit,
     viewModel: DeveloperViewModel = hiltViewModel()
 ) {
-    val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
     val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
-
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)

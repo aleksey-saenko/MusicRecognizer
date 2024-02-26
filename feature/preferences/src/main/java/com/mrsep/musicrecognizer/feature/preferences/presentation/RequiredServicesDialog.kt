@@ -113,7 +113,7 @@ private fun MusicServiceCheckbox(
             )
             Text(
                 text = stringResource(service.titleId()),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
         }

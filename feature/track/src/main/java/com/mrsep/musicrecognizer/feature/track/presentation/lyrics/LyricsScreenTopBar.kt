@@ -71,7 +71,7 @@ internal fun LyricsScreenTopBar(
                 IconButton(onClick = onChangeTextStyleClick) {
                     Icon(
                         painter = painterResource(UiR.drawable.outline_format_size_24),
-                        contentDescription = stringResource(StringsR.string.lyrics_text_style)
+                        contentDescription = stringResource(StringsR.string.text_style)
                     )
                 }
             }

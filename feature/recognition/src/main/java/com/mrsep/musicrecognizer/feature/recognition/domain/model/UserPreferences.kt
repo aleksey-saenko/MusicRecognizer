@@ -5,12 +5,9 @@ data class UserPreferences(
     val currentRecognitionProvider: RecognitionProvider,
     val auddConfig: AuddConfig,
     val acrCloudConfig: AcrCloudConfig,
-    val requiredMusicServices: List<MusicService>,
-    val notificationServiceEnabled: Boolean,
-    val dynamicColorsEnabled: Boolean,
-    val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
+    val useGridForRecognitionQueue: Boolean,
 )
 
 data class HapticFeedback(

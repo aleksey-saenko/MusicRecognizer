@@ -21,8 +21,8 @@ class AdapterPlayerController @Inject constructor(
     override val playbackPositionFlow: Flow<Int>
         get() = playerControllerDo.playbackPositionFlow
 
-    override fun start(file: File) {
-        playerControllerDo.start(file)
+    override fun start(id: Int, file: File) {
+        playerControllerDo.start(id, file)
     }
 
     override fun pause() {

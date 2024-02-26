@@ -14,7 +14,7 @@ class UserPreferencesMapper @Inject constructor(
     override fun map(input: UserPreferencesDo): UserPreferences {
         return UserPreferences(
             trackFilter = trackFilterMapper.map(input.trackFilter),
-            useColumnForLibrary = input.useColumnForLibrary
+            useGridForLibrary = input.useGridForLibrary
         )
     }
 

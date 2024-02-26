@@ -34,7 +34,7 @@ class MediaPlayerController @Inject constructor(
     private val _statusFlow = MutableStateFlow<PlayerStatusDo>(PlayerStatusDo.Idle)
     override val statusFlow = _statusFlow.asStateFlow()
 
-    override fun start(file: File) {
+    override fun start(id: Int, file: File) {
         try {
             stopWithStatus(PlayerStatusDo.Idle)
             player = MediaPlayer().apply {
@@ -45,6 +45,7 @@ class MediaPlayerController @Inject constructor(
                 }
                 setOnErrorListener { _, what, extra ->
                     val errorStatus = PlayerStatusDo.Error(
+                        id = id,
                         record = file,
                         message = "what=$what, extra=$extra"
                     )
@@ -55,6 +56,7 @@ class MediaPlayerController @Inject constructor(
                     mediaPlayer.start()
                     _statusFlow.update {
                         PlayerStatusDo.Started(
+                            id = id,
                             record = file,
                             duration = mediaPlayer.duration.milliseconds
                         )
@@ -67,6 +69,7 @@ class MediaPlayerController @Inject constructor(
             e.printStackTrace()
             _statusFlow.update {
                 PlayerStatusDo.Error(
+                    id = id,
                     record = file,
                     message = e::class.java.simpleName
                 )
@@ -82,6 +85,7 @@ class MediaPlayerController @Inject constructor(
                 positionPollingJob?.cancel()
                 _statusFlow.update {
                     PlayerStatusDo.Paused(
+                        id = currentStatus.id,
                         record = currentStatus.record,
                         duration = (player?.duration ?: -1).milliseconds
                     )
@@ -100,6 +104,7 @@ class MediaPlayerController @Inject constructor(
                 launchPositionPolling()
                 _statusFlow.update {
                     PlayerStatusDo.Started(
+                        id = currentStatus.id,
                         record = currentStatus.record,
                         duration = (player?.duration ?: -1).milliseconds
                     )
@@ -128,9 +133,11 @@ class MediaPlayerController @Inject constructor(
 
     private fun launchPositionPolling() {
         positionPollingJob = playerCoroutineScope.launch {
-            while (player?.isPlaying == true) {
-                player?.currentPosition?.run { _currentPosition.send(this) }
-                delay(POSITION_POLLING_RATE_MS)
+            runCatching {
+                while (player?.isPlaying == true) {
+                    player?.currentPosition?.run { _currentPosition.send(this) }
+                    delay(POSITION_POLLING_RATE_MS)
+                }
             }
         }
     }

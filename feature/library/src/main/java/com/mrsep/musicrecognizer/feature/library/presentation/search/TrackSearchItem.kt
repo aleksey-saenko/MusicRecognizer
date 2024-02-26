@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -36,23 +37,21 @@ internal fun TrackSearchItem(
     keyword: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.large
+    shape: Shape = MaterialTheme.shapes.medium,
+    showRecognitionDate: Boolean = true,
+    contentPadding: PaddingValues
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                shape = shape
-            )
-            .clip(shape)
-            .clickable(onClick = onClick)
             .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(contentPadding)
     ) {
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.outline_album_fill1_24),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-            alpha = 0.2f
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+            alpha = 0.3f
         )
         AsyncImage(
             model = track.artworkUrl,
@@ -61,20 +60,25 @@ internal fun TrackSearchItem(
             contentDescription = stringResource(StringsR.string.artwork),
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .shadow(
+                    elevation = 1.dp,
+                    shape = shape
+                )
                 .background(
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                     shape = shape
                 )
                 .clip(shape)
-                .heightIn(max = 112.dp)
+                .heightIn(max = 108.dp)
                 .aspectRatio(1f, true)
         )
+        Spacer(Modifier.width(10.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 112.dp)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .heightIn(min = 108.dp)
+                .padding(vertical = 2.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
                 text = highlightKeyword(track.title, keyword),
@@ -87,26 +91,29 @@ internal fun TrackSearchItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.alpha(0.9f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = track.albumAndYear?.run { highlightKeyword(this, keyword) }
-                    ?: AnnotatedString(""),
+                text = track.album?.run { highlightKeyword(this, keyword) }
+                    ?: AnnotatedString(" "),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.alpha(0.9f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = track.recognitionDate,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .alpha(0.72f)
-                    .align(Alignment.End)
-            )
+            if (showRecognitionDate) {
+                Spacer(Modifier.weight(1f))
+                Text(
+                    text = track.recognitionDate,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .alpha(0.9f)
+                        .align(Alignment.End)
+                )
+            }
         }
     }
 }

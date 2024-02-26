@@ -102,4 +102,11 @@ internal fun ColorScheme.switch(animationSpec: AnimationSpec<Color>) = copy(
     surfaceTint = animateColorAsState(surfaceTint, animationSpec, "").value,
     outlineVariant = animateColorAsState(outlineVariant, animationSpec, "").value,
     scrim = animateColorAsState(scrim, animationSpec, "").value,
+    surfaceBright = animateColorAsState(surfaceBright, animationSpec, "").value,
+    surfaceDim = animateColorAsState(surfaceDim, animationSpec, "").value,
+    surfaceContainer = animateColorAsState(surfaceContainer, animationSpec, "").value,
+    surfaceContainerHigh = animateColorAsState(surfaceContainerHigh, animationSpec, "").value,
+    surfaceContainerHighest = animateColorAsState(surfaceContainerHighest, animationSpec, "").value,
+    surfaceContainerLow = animateColorAsState(surfaceContainerLow, animationSpec, "").value,
+    surfaceContainerLowest = animateColorAsState(surfaceContainerLowest, animationSpec, "").value,
 )

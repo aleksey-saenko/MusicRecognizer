@@ -98,12 +98,9 @@ private fun AcrCloudHostDropdownMenu(
             modifier = modifier
         ) {
             OutlinedTextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
+                onValueChange = onHostChanged,
                 readOnly = true,
                 value = host,
-                onValueChange = onHostChanged,
                 label = { Text(text = label) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
@@ -115,7 +112,10 @@ private fun AcrCloudHostDropdownMenu(
                     autoCorrect = false,
                     keyboardType = KeyboardType.Ascii,
                     imeAction = ImeAction.Done
-                )
+                ),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,

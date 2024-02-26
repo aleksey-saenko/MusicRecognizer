@@ -88,8 +88,12 @@ class AdapterPreferencesRepository @Inject constructor(
         )
     }
 
-    override suspend fun setUseColumnForLibrary(value: Boolean) {
-        preferencesRepositoryDo.setUseColumnForLibrary(value)
+    override suspend fun setUseGridForLibrary(value: Boolean) {
+        preferencesRepositoryDo.setUseGridForLibrary(value)
+    }
+
+    override suspend fun setUseGridForRecognitionQueue(value: Boolean) {
+        preferencesRepositoryDo.setUseGridForRecognitionQueue(value)
     }
 
     override suspend fun setThemeMode(value: ThemeMode) {

@@ -12,7 +12,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
@@ -34,13 +33,13 @@ internal fun LibraryScreen(
     val multiSelectionState = rememberMultiSelectionState<String>(screenUiState)
     var deleteDialogVisible by rememberSaveable(screenUiState) { mutableStateOf(false) }
     var deletionInProgress by rememberSaveable(screenUiState) { mutableStateOf(false) }
+    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     BackHandler(
         enabled = multiSelectionState.multiselectEnabled,
         onBack = multiSelectionState::deselectAll
     )
 
-    val topBarBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,9 +53,9 @@ internal fun LibraryScreen(
             isMultiselectEnabled = multiSelectionState.multiselectEnabled,
             selectedCount = multiSelectionState.selectedCount,
             totalCount = screenUiState.getTrackCount(),
-            onSearchIconClick = onTrackSearchClick,
-            onFilterIconClick = { filterSheetActive = !filterSheetActive },
-            onDeleteIconClick = { deleteDialogVisible = true },
+            onSearchClick = onTrackSearchClick,
+            onFilterClick = { filterSheetActive = !filterSheetActive },
+            onDeleteClick = { deleteDialogVisible = true },
             onSelectAll = { multiSelectionState.select(screenUiState.getTrackIdList()) },
             onDeselectAll = multiSelectionState::deselectAll,
             scrollBehavior = topBarBehaviour
@@ -67,9 +66,7 @@ internal fun LibraryScreen(
             )
 
             LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+                modifier = Modifier.fillMaxSize()
             )
 
             is LibraryUiState.Success -> Box(
@@ -78,24 +75,7 @@ internal fun LibraryScreen(
             ) {
                 var newFilterApplied by rememberSaveable { mutableStateOf(false) }
 
-                if (uiState.useColumnLayout) {
-                    val lazyListState = rememberLazyListState()
-                    TrackLazyColumn(
-                        trackList = uiState.trackList,
-                        onTrackClick = onTrackClick,
-                        lazyListState = lazyListState,
-                        multiSelectionState = multiSelectionState,
-                        modifier = Modifier
-                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                            .fillMaxSize()
-                    )
-                    LaunchedEffect(uiState.trackFilter) {
-                        if (newFilterApplied) {
-                            lazyListState.animateScrollToItem(0)
-                            newFilterApplied = false
-                        }
-                    }
-                } else {
+                if (uiState.useGridLayout) {
                     val lazyGridState = rememberLazyGridState()
                     TrackLazyGrid(
                         trackList = uiState.trackList,
@@ -109,6 +89,23 @@ internal fun LibraryScreen(
                     LaunchedEffect(uiState.trackFilter) {
                         if (newFilterApplied) {
                             lazyGridState.animateScrollToItem(0)
+                            newFilterApplied = false
+                        }
+                    }
+                } else {
+                    val lazyListState = rememberLazyListState()
+                    TrackLazyColumn(
+                        trackList = uiState.trackList,
+                        onTrackClick = onTrackClick,
+                        lazyListState = lazyListState,
+                        multiSelectionState = multiSelectionState,
+                        modifier = Modifier
+                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                            .fillMaxSize()
+                    )
+                    LaunchedEffect(uiState.trackFilter) {
+                        if (newFilterApplied) {
+                            lazyListState.animateScrollToItem(0)
                             newFilterApplied = false
                         }
                     }

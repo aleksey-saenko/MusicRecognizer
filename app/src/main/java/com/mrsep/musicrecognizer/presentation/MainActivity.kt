@@ -72,10 +72,10 @@ class MainActivity : ComponentActivity() {
                             Color.TRANSPARENT,
                             Color.TRANSPARENT,
                         ) { darkTheme },
-                        navigationBarStyle = SystemBarStyle.auto(
-                            lightScrim,
-                            darkScrim,
-                        ) { darkTheme },
+                        navigationBarStyle = if (darkTheme)
+                            SystemBarStyle.dark(Color.TRANSPARENT)
+                        else
+                            SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
                     )
                     onDispose {}
                 }
@@ -167,6 +167,3 @@ private fun shouldUsePureBlack(
     MainActivityUiState.Loading -> false
     is MainActivityUiState.Success -> uiState.userPreferences.usePureBlackForDarkTheme
 }
-
-private val lightScrim = Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
-private val darkScrim = Color.argb(0x80, 0x1b, 0x1b, 0x1b)

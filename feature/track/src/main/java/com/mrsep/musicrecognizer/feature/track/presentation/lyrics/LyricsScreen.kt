@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -108,11 +109,17 @@ internal fun LyricsScreen(
 
         is LyricsUiState.Success -> {
             val useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
-            var fontStyleDialogVisible by rememberSaveable { mutableStateOf(false) }
+            var showFontStyleBottomSheet by rememberSaveable { mutableStateOf(false) }
+            val fontStyleBottomSheetState = rememberModalBottomSheetState(true)
             val lyricsScrollState = rememberScrollState()
             val autoScrollAvailable by remember {
                 derivedStateOf {
                     with(lyricsScrollState) { canScrollForward || canScrollBackward }
+                }
+            }
+            fun hideFontStyleBottomSheet() {
+                scope.launch { fontStyleBottomSheetState.hide() }.invokeOnCompletion {
+                    if (!fontStyleBottomSheetState.isVisible) showFontStyleBottomSheet = false
                 }
             }
             SwitchingMusicRecognizerTheme(
@@ -166,7 +173,7 @@ internal fun LyricsScreen(
                                         body = "$trackInfo\n\n${uiState.lyrics}"
                                     )
                                 },
-                                onChangeTextStyleClick = { fontStyleDialogVisible = true },
+                                onChangeTextStyleClick = { showFontStyleBottomSheet = true },
                                 onLaunchAutoScrollClick = { autoScrollStarted = true },
                                 onStopAutoScrollClick = { autoScrollStarted = false },
                                 scrollBehavior = topBarBehaviour
@@ -261,11 +268,12 @@ internal fun LyricsScreen(
                         }
                     }
                 }
-                if (fontStyleDialogVisible) {
-                    FontStyleDialog(
+                if (showFontStyleBottomSheet) {
+                    FontStyleBottomSheet(
+                        sheetState = fontStyleBottomSheetState,
                         fontStyle = uiState.fontStyle,
                         onFontStyleChanged = viewModel::setLyricsFontStyle,
-                        onDismissClick = { fontStyleDialogVisible = false }
+                        onDismissClick = ::hideFontStyleBottomSheet
                     )
                 }
             }

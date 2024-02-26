@@ -73,7 +73,8 @@
     <string name="internal_error">Внутренняя ошибка</string>
     <string name="show_more">Подробнее</string>
     <string name="show_less">Скрыть</string>
-    <string name="empty_library_message">Здесь будут отображаться недавно распознанные и избранные треки</string>
+    <string name="empty_library_message">Нет распознанных треков</string>
+    <string name="empty_library_sub_message">Здесь будут отображаться недавно распознанные и избранные треки</string>
     <string name="untitled_recognition">Без названия</string>
     <string name="enqueue_recognition">Поставить в очередь</string>
     <string name="force_recognition_launch">Принудительный старт</string>
@@ -92,7 +93,7 @@
     <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
     <string name="reset">Сбросить</string>
     <string name="filters">Фильтры</string>
-    <string name="filter_favorite_status">Статус избранного</string>
+    <string name="filter_favorite_status">Избранные</string>
     <string name="all">Все</string>
     <string name="filter_only_favorites">Только избранные</string>
     <string name="filter_exclude_favorites">Исключить избранные</string>
@@ -137,6 +138,7 @@
     <string name="required_services_dialog">Выберите музыкальные сервисы, для которых вы хотите видеть веб-ссылки (если доступны):</string>
     <string name="use_grid_for_library">Библиотека в виде сетки</string>
     <string name="use_list_for_library">Библиотека в виде списка</string>
+    <string name="use_grid_for_queue">Очередь в виде сетки</string>
     <string name="vibration_feedback">Вибрация</string>
     <string name="vibration_feedback_dialog_title">Вибрация</string>
     <string name="vibration_feedback_dialog_message">Настройте вибрацию для конкретных действий в приложении:</string>
@@ -146,8 +148,8 @@
     <string name="recognize_on_startup">Распознавать при запуске</string>
     <string name="developer_options">Параметры разработчика</string>
     <string name="appearance">Внешний вид</string>
-    <string name="empty_recognition_queue_message">Очередь распознавания пуста</string>
-    <string name="empty_recognition_queue_sub_message">В случае неуспешного распознавания приложение может добавить распознавание в очередь в соответствии с настройками</string>
+    <string name="empty_recognition_queue_message">Нет распознаваний в очереди</string>
+    <string name="empty_recognition_queue_sub_message">При отсутствии сети или в случае неуспеха распознавание может быть добавленно в очередь в соответствии с настройками</string>
     <string name="recognition_scheduled">Распознавание запланировано</string>
     <string name="offline_mode">Офлайн-режим</string>
     <string name="allow_the_app_to_access_the_microphone">Разрешите приложению доступ к микрофону</string>
@@ -167,7 +169,10 @@
     <string name="unmark_as_favorite">Снять отметку избранного</string>
     <string name="show_lyrics">Показать текст песни</string>
     <string name="web_search">Веб-поиск</string>
-    <string name="search_for">Найти</string>
+    <string name="web">Веб</string>
+    <string name="search">Поиск</string>
+    <string name="search_for">Поиск по</string>
+    <string name="search_in">Поиск в</string>
     <string name="format_open_website_or_app">Открыть %s</string>
     <string name="track_info">О треке</string>
     <string name="format_date_of_last_recognition">Дата последнего распознавания:\n%s</string>
@@ -182,9 +187,12 @@
     <string name="license_gnu_gplv3">Лицензия GNU GPLv3</string>
     <string name="start_autoscroll">Запустить авто прокрутку</string>
     <string name="stop_autoscroll">Остановить авто прокрутку</string>
-    <string name="lyrics_text_style">Стиль текста песни</string>
+    <string name="text_style">Стиль текста</string>
     <string name="font_size">Размер шрифта</string>
-    <string name="make_text_bigger_or_smaller">Увеличить или уменьшить текст</string>
+    <string name="font_size_small">Маленький</string>
+    <string name="font_size_normal">Обычный</string>
+    <string name="font_size_large">Большой</string>
+    <string name="font_size_huge">Огромный</string>
     <string name="bold_text">Жирный текст</string>
     <string name="high_contrast_text">Текст с высоким контрастом</string>
     <string name="format_created">Создано: %s</string>

@@ -18,8 +18,7 @@ class ArtworkFetcherImpl @Inject constructor(
     private val deezerJsonAdapter = moshi.adapter<DeezerJson>()
 
     override suspend fun fetchUrl(track: TrackEntity): String? {
-        val deezerTrackLink = track.links.deezer ?: return null
-        return fetchDeezerSource(deezerTrackLink)
+        return track.links.deezer?.run { fetchDeezerSource(this) }
     }
 
     private suspend fun fetchDeezerSource(deezerTrackUrl: String): String? {
@@ -33,6 +32,7 @@ class ArtworkFetcherImpl @Inject constructor(
             if (!response.isSuccessful) return null
             val deezerJson = deezerJsonAdapter.fromJson(response.body!!.source())!!
             deezerJson.album?.run { coverXl ?: coverBig ?: coverMedium }
+                ?: deezerJson.artist?.run { pictureXl ?: pictureBig ?: pictureMedium }
         } catch (e: Exception) {
             e.printStackTrace()
             null

@@ -7,6 +7,7 @@ import com.mrsep.musicrecognizer.core.common.util.getAppVersion
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.data.ConnectivityManagerNetworkMonitor
 import com.mrsep.musicrecognizer.data.NetworkMonitorDo
+import com.mrsep.musicrecognizer.data.remote.enhancer.odesli.OdesliApiProviderAdapter
 import com.mrsep.musicrecognizer.data.util.HttpFileLoggingInterceptor
 import com.squareup.moshi.Moshi
 import dagger.Binds
@@ -27,7 +28,9 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(OdesliApiProviderAdapter())
+        .build()
 
     @Provides
     @Singleton

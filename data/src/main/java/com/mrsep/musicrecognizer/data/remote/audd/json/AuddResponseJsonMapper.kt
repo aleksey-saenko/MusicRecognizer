@@ -120,19 +120,33 @@ private fun String.takeUrlIfValid() = replaceHttpWithHttps().takeIf { isUrlValid
 private fun AuddResponseJson.Result.toArtworkLink(): String? {
     return deezerJson?.album?.run { coverXl ?: coverBig }?.takeUrlIfValid()
         ?: appleMusic?.artwork?.toArtworkLink(true)?.takeUrlIfValid()
-        ?: spotify?.album?.images?.firstOrNull()?.url?.takeUrlIfValid()
+        ?: spotify?.album?.toArtworkLink(true)?.takeUrlIfValid()
+        ?: deezerJson?.artist?.run { pictureXl ?: pictureBig }?.takeUrlIfValid()
+
         ?: appleMusic?.artwork?.toArtworkLink(false)?.takeUrlIfValid()
+        ?: spotify?.album?.toArtworkLink(false)?.takeUrlIfValid()
         ?: deezerJson?.album?.run { coverMedium ?: coverSmall }?.takeUrlIfValid()
+        ?: deezerJson?.artist?.run { pictureMedium ?: pictureSmall }?.takeUrlIfValid()
+}
+
+// assume that the first one in the list is the highest res
+private fun SpotifyJson.Album.toArtworkLink(requireHiRes: Boolean): String? {
+    return images?.firstOrNull()?.run {
+        if (width == null || height == null || url == null) return null
+        if (requireHiRes && isLowResArtwork(width, height)) return null
+        url
+    }
 }
 
 private fun AppleMusicJson.Artwork.toArtworkLink(requireHiRes: Boolean): String? {
     if (width == null || height == null || url == null) return null
-    val isLowResArtwork = width < 700 || height < 700
-    if (requireHiRes && isLowResArtwork) return null
+    if (requireHiRes && isLowResArtwork(width, height)) return null
     val isDefaultResAvailable = width >= 1000 && height >= 1000
     val selectedRes = if (isDefaultResAvailable) "1000x1000" else "${width}x${height}"
     return url.replaceFirst("{w}x{h}", selectedRes, true)
 }
+
+private fun isLowResArtwork(width: Int, height: Int) = width < 700 || height < 700
 
 private fun AuddResponseJson.Result.parseSpotifyLink() =
     spotify?.externalUrls?.spotify?.takeUrlIfValid()

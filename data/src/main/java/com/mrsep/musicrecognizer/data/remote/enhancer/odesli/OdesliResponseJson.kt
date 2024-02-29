@@ -11,9 +11,31 @@ internal data class OdesliResponseJson(
     val userCountry: String?,
     @Json(name = "pageUrl")
     val pageUrl: String?,
+    @Json(name = "entitiesByUniqueId")
+    val entitiesByUniqueId: Map<String, Entity>?,
     @Json(name = "linksByPlatform")
     val linksByPlatform: LinksByPlatform?,
 ) {
+
+    @JsonClass(generateAdapter = true)
+    data class Entity(
+        @Json(name = "id")
+        val id: String?,
+        @Json(name = "type")
+        val type: String?,
+        @Json(name = "title")
+        val title: String?,
+        @Json(name = "artistName")
+        val artistName: String?,
+        @Json(name = "thumbnailUrl")
+        val thumbnailUrl: String?,
+        @Json(name = "thumbnailWidth")
+        val thumbnailWidth: Int?,
+        @Json(name = "thumbnailHeight")
+        val thumbnailHeight: Int?,
+        @Json(name = "apiProvider")
+        val apiProvider: OdesliApiProvider?,
+    )
 
     @JsonClass(generateAdapter = true)
     data class LinksByPlatform(
@@ -184,3 +206,24 @@ internal data class OdesliErrorResponseJson(
     @Json(name = "code")
     val message: String?,
 )
+
+// Ordered in artwork parsing priority
+internal enum class OdesliApiProvider {
+    Spotify,
+    Itunes,
+    Deezer,
+    Amazon,
+    Napster,
+    Tidal,
+    Pandora,
+    Soundcloud,
+    Youtube,
+    Yandex,
+    Spinrilla,
+    Audius,
+    Audiomack,
+    Anghami,
+    Boomplay,
+    Google,
+    Unknown,
+}

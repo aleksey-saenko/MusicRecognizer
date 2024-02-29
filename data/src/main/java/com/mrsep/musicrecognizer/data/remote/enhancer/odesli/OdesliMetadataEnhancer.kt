@@ -48,8 +48,9 @@ class OdesliMetadataEnhancer @Inject constructor(
                 try {
                     if (response.isSuccessful) {
                         val json = odesliJsonAdapter.fromJson(response.body!!.source())!!
-                        val remoteLinks = json.toTrackLinks()
-                        val newLinks = track.links.updateLinks(remoteLinks)
+                        val trackLinks = json.toTrackLinks()
+                        val artworkUrl = track.links.artwork ?: json.toArtworkUrl()
+                        val newLinks = track.links.updateLinks(artworkUrl, trackLinks)
                         RemoteMetadataEnhancingResultDo.Success(track.copy(links = newLinks))
                     } else {
                         val json = odesliErrorJsonAdapter.fromJson(response.body!!.source())!!
@@ -87,9 +88,13 @@ class OdesliMetadataEnhancer @Inject constructor(
         }
     }
 
-    private fun TrackEntity.Links.updateLinks(links: List<TrackLinkDo>): TrackEntity.Links {
-        val linksMap = links.associate { link -> link.service to link.url }
+    private fun TrackEntity.Links.updateLinks(
+        artworkUrl: String?,
+        trackLinks: List<TrackLinkDo>
+    ): TrackEntity.Links {
+        val linksMap = trackLinks.associate { link -> link.service to link.url }
         return copy(
+            artwork = artwork ?: artworkUrl,
             amazonMusic = amazonMusic ?: linksMap[MusicServiceDo.AmazonMusic],
             anghami = anghami ?: linksMap[MusicServiceDo.Anghami],
             appleMusic = appleMusic ?: linksMap[MusicServiceDo.AppleMusic],

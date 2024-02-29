@@ -24,3 +24,15 @@ internal fun OdesliResponseJson.toTrackLinks(): List<TrackLinkDo> {
         )
     } ?: emptyList()
 }
+
+internal fun OdesliResponseJson.toArtworkUrl(): String? {
+    val sortedEntities = entitiesByUniqueId?.values
+        ?.sortedBy { it.apiProvider?.ordinal }
+    val hiRes = sortedEntities?.firstNotNullOfOrNull { entity ->
+        entity.thumbnailUrl?.takeIf {
+            entity.thumbnailHeight != null && entity.thumbnailWidth != null
+                    && entity.thumbnailHeight >= 500 && entity.thumbnailWidth >= 500
+        }
+    }
+    return hiRes ?: sortedEntities?.firstNotNullOfOrNull { entity -> entity.thumbnailUrl }
+}

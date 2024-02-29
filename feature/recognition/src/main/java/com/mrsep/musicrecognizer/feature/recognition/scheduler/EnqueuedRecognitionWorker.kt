@@ -59,6 +59,21 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
             val result = recognitionService.recognize(
                 enqueuedRecognition.recordFile
             )
+
+            suspend fun handleRetryOnAttempt(): Result {
+                return if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
+                    val log = "$TAG canceled, forceLaunch=$forceLaunch, " +
+                            "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
+                    Log.w(TAG, log)
+                    enqueuedRecognitionRepository.update(
+                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
+                    )
+                    Result.failure()
+                } else {
+                    Result.retry()
+                }
+            }
+
             when (result) {
                 is RemoteRecognitionResult.Success -> {
                     val nowDate = Instant.now()
@@ -70,8 +85,10 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                         )
                     )
                     val updatedResult = result.copy(track = updatedTrack)
-                    val updatedEnqueued =
-                        enqueuedRecognition.copy(result = updatedResult, resultDate = Instant.now())
+                    val updatedEnqueued = enqueuedRecognition.copy(
+                        result = updatedResult,
+                        resultDate = Instant.now()
+                    )
                     enqueuedRecognitionRepository.update(updatedEnqueued)
                     trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
                     scheduledResultNotificationHelper.notify(updatedEnqueued)
@@ -85,30 +102,29 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                     Result.success()
                 }
 
+                RemoteRecognitionResult.Error.BadConnection -> handleRetryOnAttempt()
+
+                is RemoteRecognitionResult.Error.HttpError -> {
+                    if (result.code in 400..499) {
+                        enqueuedRecognitionRepository.update(
+                            enqueuedRecognition.copy(result = result, resultDate = Instant.now())
+                        )
+                        Result.failure()
+                    } else {
+                        handleRetryOnAttempt()
+                    }
+                }
+
                 is RemoteRecognitionResult.Error.AuthError,
                 is RemoteRecognitionResult.Error.ApiUsageLimited,
-                is RemoteRecognitionResult.Error.BadRecording -> {
+                is RemoteRecognitionResult.Error.BadRecording,
+                is RemoteRecognitionResult.Error.UnhandledError -> {
                     enqueuedRecognitionRepository.update(
                         enqueuedRecognition.copy(result = result, resultDate = Instant.now())
                     )
                     Result.failure()
                 }
 
-                RemoteRecognitionResult.Error.BadConnection,
-                is RemoteRecognitionResult.Error.HttpError,
-                is RemoteRecognitionResult.Error.UnhandledError -> {
-                    if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
-                        val log = "$TAG canceled, forceLaunch=$forceLaunch, " +
-                                "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
-                        Log.w(TAG, log)
-                        enqueuedRecognitionRepository.update(
-                            enqueuedRecognition.copy(result = result, resultDate = Instant.now())
-                        )
-                        Result.failure()
-                    } else {
-                        Result.retry()
-                    }
-                }
             }
         }
 
@@ -121,7 +137,6 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
             )
         }
     }
-
 
     companion object {
         const val TAG = "EnqueuedRecognitionWorker"

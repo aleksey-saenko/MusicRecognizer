@@ -176,3 +176,11 @@ internal data class OdesliResponseJson(
     }
 
 }
+
+@JsonClass(generateAdapter = true)
+internal data class OdesliErrorResponseJson(
+    @Json(name = "statusCode")
+    val code: Int?,
+    @Json(name = "code")
+    val message: String?,
+)

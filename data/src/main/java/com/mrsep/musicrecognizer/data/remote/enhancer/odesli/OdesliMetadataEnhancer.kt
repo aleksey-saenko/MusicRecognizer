@@ -29,6 +29,8 @@ class OdesliMetadataEnhancer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     private val odesliJsonAdapter = moshi.adapter<OdesliResponseJson>()
+    @OptIn(ExperimentalStdlibApi::class)
+    private val odesliErrorJsonAdapter = moshi.adapter<OdesliErrorResponseJson>()
 
     private val locale get() = appContext.resources.configuration.locales[0]
 
@@ -43,23 +45,24 @@ class OdesliMetadataEnhancer @Inject constructor(
             val request = Request.Builder().url(getRequestUrl(queryUrl)).get().build()
             try {
                 val response = okHttpClient.newCall(request).await()
-                if (response.isSuccessful) {
-                    try {
+                try {
+                    if (response.isSuccessful) {
                         val json = odesliJsonAdapter.fromJson(response.body!!.source())!!
                         val remoteLinks = json.toTrackLinks()
                         val newLinks = track.links.updateLinks(remoteLinks)
                         RemoteMetadataEnhancingResultDo.Success(track.copy(links = newLinks))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        RemoteMetadataEnhancingResultDo.Error.UnhandledError(
-                            message = e.message ?: "",
-                            cause = e
+                    } else {
+                        val json = odesliErrorJsonAdapter.fromJson(response.body!!.source())!!
+                        RemoteMetadataEnhancingResultDo.Error.HttpError(
+                            code = json.code ?: response.code,
+                            message = json.message ?: response.message
                         )
                     }
-                } else {
-                    RemoteMetadataEnhancingResultDo.Error.HttpError(
-                        code = response.code,
-                        message = response.message
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    RemoteMetadataEnhancingResultDo.Error.UnhandledError(
+                        message = e.message ?: "",
+                        cause = e
                     )
                 }
             } catch (e: IOException) {
@@ -73,7 +76,6 @@ class OdesliMetadataEnhancer @Inject constructor(
                 )
             }
         }
-
     }
 
     private fun getUrlsOrderedByPopularity(links: TrackEntity.Links): List<String?> {

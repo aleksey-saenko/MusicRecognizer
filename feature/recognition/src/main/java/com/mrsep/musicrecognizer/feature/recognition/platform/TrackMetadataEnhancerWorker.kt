@@ -38,27 +38,38 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
         return withContext(ioDispatcher) {
             val oldTrack = trackRepository.getTrack(trackId)
                 ?: return@withContext Result.failure()
-            when (val enhancingResult = trackMetadataEnhancer.enhance(oldTrack)) {
+            when (val result = trackMetadataEnhancer.enhance(oldTrack)) {
                 is RemoteMetadataEnhancingResult.Success -> {
-                    trackRepository.updateKeepProperties(enhancingResult.track)
+                    trackRepository.updateKeepProperties(result.track)
                     Result.success()
                 }
 
                 RemoteMetadataEnhancingResult.NoEnhancement -> Result.success()
 
-                is RemoteMetadataEnhancingResult.Error.UnhandledError -> Result.failure()
+                RemoteMetadataEnhancingResult.Error.BadConnection -> handleRetryOnAttempt()
 
-                RemoteMetadataEnhancingResult.Error.BadConnection,
                 is RemoteMetadataEnhancingResult.Error.HttpError -> {
-                    val log = "$TAG canceled, attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
-                    if (runAttemptCount >= MAX_ATTEMPTS) {
+                    if (result.code in 400..499) {
+                        val log = "$TAG canceled, remote result code=${result.code}, " +
+                                "message=${result.message}"
                         Log.w(TAG, log)
                         Result.failure()
                     } else {
-                        Result.retry()
+                        handleRetryOnAttempt()
                     }
                 }
+
+                is RemoteMetadataEnhancingResult.Error.UnhandledError -> Result.failure()
             }
+        }
+    }
+
+    private fun handleRetryOnAttempt(): Result {
+        return if (runAttemptCount >= MAX_ATTEMPTS) {
+            Log.w(TAG, "$TAG canceled, attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS")
+            Result.failure()
+        } else {
+            Result.retry()
         }
     }
 

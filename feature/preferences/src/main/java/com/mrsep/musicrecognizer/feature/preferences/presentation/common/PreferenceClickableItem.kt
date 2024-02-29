@@ -23,7 +23,7 @@ internal fun PreferenceClickableItem(
             .fillMaxWidth()
             .heightIn(min = 76.dp)
             .clickable { onItemClick() }
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
             .alpha(if (enabled) 1f else 0.7f)
     ) {
         Text(

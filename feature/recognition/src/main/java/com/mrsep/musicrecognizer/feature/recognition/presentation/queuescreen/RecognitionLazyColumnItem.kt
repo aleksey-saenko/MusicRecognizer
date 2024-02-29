@@ -62,9 +62,9 @@ internal fun RecognitionLazyColumnItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showCreationDate: Boolean = true,
     contentPadding: PaddingValues,
     shape: Shape = MaterialTheme.shapes.medium,
-    showCreationDate: Boolean = true,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (selected)
@@ -87,7 +87,7 @@ internal fun RecognitionLazyColumnItem(
     ) {
         Box(
             modifier = Modifier
-                .heightIn(max = 108.dp)
+                .heightIn(max = 100.dp)
                 .aspectRatio(1f)
                 .shadow(
                     elevation = 1.dp,
@@ -141,7 +141,7 @@ internal fun RecognitionLazyColumnItem(
         Spacer(Modifier.width(10.dp))
         Column(
             modifier = Modifier
-                .heightIn(min = 108.dp)
+                .heightIn(min = 100.dp)
                 .padding(vertical = 2.dp)
                 .weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)

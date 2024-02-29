@@ -69,14 +69,14 @@ internal fun TrackSearchItem(
                     shape = shape
                 )
                 .clip(shape)
-                .heightIn(max = 108.dp)
+                .heightIn(max = 100.dp)
                 .aspectRatio(1f, true)
         )
         Spacer(Modifier.width(10.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 108.dp)
+                .heightIn(min = 100.dp)
                 .padding(vertical = 2.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {

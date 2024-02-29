@@ -6,6 +6,8 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -121,10 +123,11 @@ internal fun RecognitionScreen(
             enter = enterTransitionButton,
             exit = exitTransitionButton,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.Center
             ) {
                 SuperButtonSection(
                     title = getButtonTitle(recognizeStatus, autostart),
@@ -139,7 +142,6 @@ internal fun RecognitionScreen(
                     activated = recognizeStatus is RecognitionStatus.Recognizing,
                     amplitudeFactor = ampFlow,
                     modifier = Modifier
-                        .weight(1f)
                         .padding(
                             horizontal = 24.dp,
                             vertical = 24.dp
@@ -147,7 +149,9 @@ internal fun RecognitionScreen(
                 )
                 OfflineModePopup(
                     visible = isOffline,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp)
                 )
             }
         }

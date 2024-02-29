@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R
@@ -30,15 +29,15 @@ internal fun OfflineModePopup(
         modifier = modifier
     ) {
         Surface(
-            color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp).copy(alpha = 0.9f),
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
             shape = CircleShape,
         ) {
             Text(
                 text = stringResource(R.string.offline_mode),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.alpha(0.9f).padding(24.dp)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
             )
         }
-
     }
 }

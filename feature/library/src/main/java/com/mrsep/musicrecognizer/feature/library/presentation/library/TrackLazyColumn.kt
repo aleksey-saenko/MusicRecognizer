@@ -93,9 +93,9 @@ internal fun TrackLazyColumnItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.medium,
     showRecognitionDate: Boolean = true,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    shape: Shape = MaterialTheme.shapes.medium,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (selected)
@@ -138,14 +138,14 @@ internal fun TrackLazyColumnItem(
                     shape = shape
                 )
                 .clip(shape)
-                .heightIn(max = 108.dp)
+                .heightIn(max = 100.dp)
                 .aspectRatio(1f, true)
         )
         Spacer(Modifier.width(10.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 108.dp)
+                .heightIn(min = 100.dp)
                 .padding(vertical = 2.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -164,14 +164,14 @@ internal fun TrackLazyColumnItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
-            Text(
-                text = track.album ?: " ",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(0.9f)
-            )
+//            Text(
+//                text = track.album ?: " ",
+//                maxLines = 1,
+//                overflow = TextOverflow.Ellipsis,
+//                style = MaterialTheme.typography.bodyMedium,
+//                color = MaterialTheme.colorScheme.onSurfaceVariant,
+//                modifier = Modifier.fillMaxWidth(0.9f)
+//            )
             if (showRecognitionDate) {
                 Spacer(Modifier.weight(1f))
                 Text(

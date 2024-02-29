@@ -73,9 +73,9 @@ internal fun TrackActionsBottomBar(
                             UiR.drawable.outline_favorite_24
                     ),
                     contentDescription = if (isFavorite)
-                        stringResource(StringsR.string.mark_as_favorite)
-                    else
                         stringResource(StringsR.string.unmark_as_favorite)
+                    else
+                        stringResource(StringsR.string.mark_as_favorite)
                 )
             }
         }

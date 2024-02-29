@@ -57,8 +57,9 @@ internal fun RecognitionLazyGridItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showCreationDate: Boolean = true,
     contentPadding: PaddingValues,
-    shape: Shape = MaterialTheme.shapes.medium
+    shape: Shape = MaterialTheme.shapes.medium,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (selected)
@@ -151,14 +152,16 @@ internal fun RecognitionLazyGridItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(2.dp))
-            Text(
-                text = recognition.creationDateShort,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Start
-            )
+            if (showCreationDate) {
+                Text(
+                    text = recognition.creationDateShort,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start
+                )
+            }
         }
     }
 }

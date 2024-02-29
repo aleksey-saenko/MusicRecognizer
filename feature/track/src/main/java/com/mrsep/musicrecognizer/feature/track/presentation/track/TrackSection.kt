@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -54,7 +53,7 @@ internal fun TrackSection(
                     .fillMaxWidth(0.33f)
                     .aspectRatio(1f)
             )
-            Column {
+            Column(modifier = Modifier.padding(end = 16.dp)) {
                 TrackInfoColumn(
                     title = title,
                     artist = artist,
@@ -74,7 +73,6 @@ internal fun TrackSection(
                 )
                 Spacer(Modifier.height(16.dp))
             }
-            Spacer(Modifier.width(16.dp))
         }
     } else {
         Column(

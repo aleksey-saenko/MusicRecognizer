@@ -28,7 +28,7 @@ internal fun PreferenceSwitchItem(
                 onClick = onClick,
                 enabled = enabled
             )
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Column(
             modifier = Modifier

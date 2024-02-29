@@ -71,7 +71,7 @@ internal fun TrackLazyGridItem(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     showRecognitionDate: Boolean = true,
-    shape: Shape = MaterialTheme.shapes.large
+    shape: Shape = MaterialTheme.shapes.medium
 ) {
     Column(
         modifier = modifier

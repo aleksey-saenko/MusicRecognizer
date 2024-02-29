@@ -64,6 +64,7 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
                 fontSize = UserPreferencesProto.FontSizeProto.NORMAL
                 isBold = false
                 isHighContrast = false
+                alignToStart = false
             }
             trackFilter = trackFilterProto {
                 favoritesMode = UserPreferencesProto.FavoritesModeProto.ALL

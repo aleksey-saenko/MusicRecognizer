@@ -215,7 +215,10 @@ internal fun LyricsScreen(
                                     movableContentOf {
                                         Text(
                                             text = uiState.lyrics,
-                                            textAlign = TextAlign.Center,
+                                            textAlign = if (uiState.fontStyle.alignToStart)
+                                                TextAlign.Start
+                                            else
+                                                TextAlign.Center,
                                             style = uiState.fontStyle.toTextStyle(uiState.themeMode),
                                             modifier = Modifier.fillMaxWidth()
                                         )
@@ -232,7 +235,12 @@ internal fun LyricsScreen(
                         }
                         var autoScrollSpeed by rememberSaveable { mutableFloatStateOf(1f) }
                         val scrollInProgress = lyricsScrollState.isScrollInProgress
-                        LaunchedEffect(autoScrollStarted, autoScrollSpeed, scrollInProgress) {
+                        LaunchedEffect(
+                            autoScrollStarted,
+                            autoScrollSpeed,
+                            scrollInProgress,
+                            uiState.fontStyle,
+                        ) {
                             if (autoScrollStarted) {
                                 val scrollFraction =
                                     1 - lyricsScrollState.value.toFloat() / lyricsScrollState.maxValue

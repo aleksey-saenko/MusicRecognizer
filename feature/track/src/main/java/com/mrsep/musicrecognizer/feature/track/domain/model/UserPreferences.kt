@@ -11,7 +11,7 @@ data class UserPreferences(
         val fontSize: FontSize,
         val isBold: Boolean,
         val isHighContrast: Boolean,
-//        val alignToStart: Boolean
+        val alignToStart: Boolean
     )
 
 }

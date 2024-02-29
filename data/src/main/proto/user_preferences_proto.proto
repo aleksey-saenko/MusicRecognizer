@@ -7,6 +7,9 @@ import "recognition_provider_proto.proto";
 option java_package = "com.mrsep.musicrecognizer";
 option java_multiple_files = true;
 
+// initially, an inconvenient numbering and nesting were chosen,
+// it might be worth considering a migration
+
 message UserPreferencesProto {
 
   reserved 32;
@@ -55,6 +58,7 @@ message UserPreferencesProto {
     FontSizeProto font_size = 18;
     bool is_bold = 19;
     bool is_high_contrast = 20;
+    bool align_to_start = 42;
   }
 
   LyricsFontStyleProto lyrics_font_style = 21;
@@ -117,6 +121,6 @@ message UserPreferencesProto {
   bool use_grid_for_library = 40;
   bool use_grid_for_recognition_queue = 41;
 
-  // NEXT AVAILABLE ID: 42
+  // NEXT AVAILABLE ID: 43
 
 }

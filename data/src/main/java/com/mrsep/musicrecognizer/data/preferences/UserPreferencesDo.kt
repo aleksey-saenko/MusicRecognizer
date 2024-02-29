@@ -35,7 +35,8 @@ data class UserPreferencesDo(
     data class LyricsFontStyleDo(
         val fontSize: FontSizeDo,
         val isBold: Boolean,
-        val isHighContrast: Boolean
+        val isHighContrast: Boolean,
+        val alignToStart: Boolean,
     )
 
     data class TrackFilterDo(

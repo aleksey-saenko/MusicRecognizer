@@ -61,6 +61,14 @@ internal fun FontStyleBottomSheet(
             Spacer(Modifier.height(8.dp))
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 BottomBarSwitch(
+                    title = stringResource(StringsR.string.align_to_start),
+                    checked = fontStyle.alignToStart,
+                    onClick = {
+                        val style = fontStyle.copy(alignToStart = !fontStyle.alignToStart)
+                        onFontStyleChanged(style)
+                    }
+                )
+                BottomBarSwitch(
                     title = stringResource(StringsR.string.bold_text),
                     checked = fontStyle.isBold,
                     onClick = {

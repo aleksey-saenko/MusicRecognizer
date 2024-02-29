@@ -142,6 +142,7 @@
     <string name="vibrate_on_tap">Vibrer lors d\'une pression</string>
     <string name="vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="misc">Divers</string>
+    <string name="recognize_on_startup">Reconnaître au démarrage</string>
     <string name="developer_options">Options de développement</string>
     <string name="appearance">Apparence</string>
     <string name="empty_recognition_queue_message">Aucune reconnaissance en attente</string>
@@ -187,6 +188,7 @@
     <string name="font_size_normal">Normal</string>
     <string name="font_size_large">Grand</string>
     <string name="font_size_huge">Enorme</string>
+    <string name="align_to_start">Aligner au début</string>
     <string name="bold_text">Texte en gras</string>
     <string name="high_contrast_text">Texte à fort contraste</string>
     <string name="format_created">Créé : %s</string>

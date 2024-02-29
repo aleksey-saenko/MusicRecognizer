@@ -193,6 +193,7 @@
     <string name="font_size_normal">Обычный</string>
     <string name="font_size_large">Большой</string>
     <string name="font_size_huge">Огромный</string>
+    <string name="align_to_start">Выровнять по левому краю</string>
     <string name="bold_text">Жирный текст</string>
     <string name="high_contrast_text">Текст с высоким контрастом</string>
     <string name="format_created">Создано: %s</string>

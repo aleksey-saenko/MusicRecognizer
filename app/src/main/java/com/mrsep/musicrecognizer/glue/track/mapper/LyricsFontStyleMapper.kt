@@ -19,7 +19,8 @@ class LyricsFontStyleMapper @Inject constructor() :
                 FontSizeDo.Huge -> FontSize.Huge
             },
             isBold = input.isBold,
-            isHighContrast = input.isHighContrast
+            isHighContrast = input.isHighContrast,
+            alignToStart = input.alignToStart,
         )
     }
 
@@ -32,7 +33,8 @@ class LyricsFontStyleMapper @Inject constructor() :
                 FontSize.Huge -> FontSizeDo.Huge
             },
             isBold = input.isBold,
-            isHighContrast = input.isHighContrast
+            isHighContrast = input.isHighContrast,
+            alignToStart = input.alignToStart
         )
     }
 

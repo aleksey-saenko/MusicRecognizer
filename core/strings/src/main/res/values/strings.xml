@@ -224,6 +224,7 @@
     <string name="font_size_normal">Normal</string>
     <string name="font_size_large">Large</string>
     <string name="font_size_huge">Huge</string>
+    <string name="align_to_start">Align to start</string>
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
     <string name="format_created">Created: %s</string>

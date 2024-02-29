@@ -163,6 +163,7 @@
     <string name="font_size_normal">Normální</string>
     <string name="font_size_large">Velký</string>
     <string name="font_size_huge">Obrovský</string>
+    <string name="align_to_start">Zarovnat na začátek</string>
     <string name="bold_text">Tučný text</string>
     <string name="high_contrast_text">Text s vysokým kontrastem</string>
     <string name="format_created">Vytvořeno: %s</string>

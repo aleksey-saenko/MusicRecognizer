@@ -164,6 +164,7 @@
     <string name="font_size_normal">Normálny</string>
     <string name="font_size_large">Veľký</string>
     <string name="font_size_huge">Obrovský</string>
+    <string name="align_to_start">Zarovnať na začiatok</string>
     <string name="bold_text">Tučný text</string>
     <string name="high_contrast_text">Text s vysokým kontrastom</string>
     <string name="format_created">Vytvorené: %s</string>

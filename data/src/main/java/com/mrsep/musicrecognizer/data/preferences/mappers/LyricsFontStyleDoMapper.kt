@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.preferences.mappers
 
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.LyricsFontStyleProto
+import com.mrsep.musicrecognizer.UserPreferencesProtoKt.lyricsFontStyleProto
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
@@ -15,16 +16,18 @@ class LyricsFontStyleDoMapper @Inject constructor(
         return UserPreferencesDo.LyricsFontStyleDo(
             fontSize = fontSizeMapper.map(input.fontSize),
             isBold = input.isBold,
-            isHighContrast = input.isHighContrast
+            isHighContrast = input.isHighContrast,
+            alignToStart = input.alignToStart
         )
     }
 
     override fun reverseMap(input: UserPreferencesDo.LyricsFontStyleDo): LyricsFontStyleProto {
-        return LyricsFontStyleProto.newBuilder()
-            .setFontSize(fontSizeMapper.reverseMap(input.fontSize))
-            .setIsBold(input.isBold)
-            .setIsHighContrast(input.isHighContrast)
-            .build()
+        return lyricsFontStyleProto {
+            fontSize = fontSizeMapper.reverseMap(input.fontSize)
+            isBold = input.isBold
+            isHighContrast = input.isHighContrast
+            alignToStart = input.alignToStart
+        }
     }
 
 }

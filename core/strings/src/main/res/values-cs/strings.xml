@@ -151,6 +151,8 @@
     <string name="search_in">Vyhledávání v</string>
     <string name="track_info">Informace o skladbě</string>
     <string name="format_date_of_last_recognition">Datum posledního rozpoznávání:\n%s</string>
+    <string name="format_track_duration">Délka skladby: %s</string>
+    <string name="format_recognized_at">Rozpoznáno v: %s</string>
     <string name="track_not_found_message">Něco se pokazilo, skladba možná byla odebrána nebo nesprávně upravena</string>
     <string name="track_not_found">Skladba nebyla nalezena</string>
     <string name="loading">Načítání</string>

@@ -9,6 +9,8 @@ internal data class SpotifyJson(
     val album: Album?,
     @Json(name = "artists")
     val artists: List<Artist?>?,
+    @Json(name = "duration_ms")
+    val durationMillis: Int?,
     @Json(name = "external_urls")
     val externalUrls: ExternalUrls?,
     @Json(name = "name")

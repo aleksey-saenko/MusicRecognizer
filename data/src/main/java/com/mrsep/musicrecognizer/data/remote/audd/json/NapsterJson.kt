@@ -12,5 +12,7 @@ internal data class NapsterJson(
     @Json(name = "artistName")
     val artistName: String?,
     @Json(name = "albumName")
-    val albumName: String?
+    val albumName: String?,
+    @Json(name = "playbackSeconds")
+    val durationSeconds: Int?
 )

@@ -13,7 +13,7 @@ import java.io.File
 import java.time.Instant
 import javax.inject.Inject
 
-class EnqueuedRecognitionRepositoryImpl @Inject constructor(
+internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     private val recordingFileDataSource: RecordingFileDataSource,
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,

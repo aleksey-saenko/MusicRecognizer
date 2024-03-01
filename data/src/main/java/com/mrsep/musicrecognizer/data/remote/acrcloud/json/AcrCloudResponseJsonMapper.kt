@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.remote.acrcloud.json
 
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,6 +40,8 @@ private fun tryToParseMusic(
         artist = artist,
         album = music.album?.name,
         releaseDate = music.releaseDate?.run(::parseReleaseDate),
+        duration = music.durationMs?.toLong()?.run(Duration::ofMillis),
+        recognizedAt = music.playOffsetMs?.toLong()?.run(Duration::ofMillis),
         lyrics = null,
         links = TrackEntity.Links(
             artwork = null,

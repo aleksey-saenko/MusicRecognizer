@@ -15,19 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
-import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 internal fun ShareBottomSheet(
-    title: String,
-    artist: String,
-    album: String?,
-    year: String?,
-    lyrics: String?,
-    trackLinks: ImmutableList<TrackLink>,
+    track: TrackUi,
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     onShareClick: (String) -> Unit,
@@ -40,22 +33,22 @@ internal fun ShareBottomSheet(
         windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
-        var titleSelected by rememberSaveable(title) { mutableStateOf(true) }
-        var artistSelected by rememberSaveable(artist) { mutableStateOf(true) }
-        var albumSelected by rememberSaveable(album) { mutableStateOf(false) }
-        var yearSelected by rememberSaveable(year) { mutableStateOf(false) }
-        var selectedMusicServices by rememberSaveable(trackLinks) {
+        var titleSelected by rememberSaveable(track.title) { mutableStateOf(true) }
+        var artistSelected by rememberSaveable(track.artist) { mutableStateOf(true) }
+        var albumSelected by rememberSaveable(track.album) { mutableStateOf(false) }
+        var yearSelected by rememberSaveable(track.year) { mutableStateOf(false) }
+        var selectedMusicServices by rememberSaveable(track.trackLinks) {
             mutableStateOf(setOf<MusicService>())
         }
-        var lyricsSelected by rememberSaveable(year) { mutableStateOf(false) }
+        var lyricsSelected by rememberSaveable(track.year) { mutableStateOf(false) }
 
         fun buildStringToShare() = buildString {
-            if (titleSelected) append(title)
-            if (artistSelected) if (isNotBlank()) append(" - $artist") else append(artist)
-            if (albumSelected) if (isNotBlank()) append(" - $album") else append(album)
-            if (yearSelected) if (isNotBlank()) append(" ($year)") else append(year)
-            if (lyricsSelected) if (isNotEmpty()) append("\n\n$lyrics") else append(lyrics)
-            trackLinks
+            if (titleSelected) append(track.title)
+            if (artistSelected) if (isNotBlank()) append(" - ${track.artist}") else append(track.artist)
+            if (albumSelected) if (isNotBlank()) append(" - ${track.album}") else append(track.album)
+            if (yearSelected) if (isNotBlank()) append(" (${track.year})") else append(track.year)
+            if (lyricsSelected) if (isNotEmpty()) append("\n\n${track.lyrics}") else append(track.lyrics)
+            track.trackLinks
                 .filter { selectedMusicServices.contains(it.service) }
                 .joinToString("\n") { it.url }
                 .takeIf { serviceUrls -> serviceUrls.isNotBlank() }?.let { serviceUrls ->
@@ -89,21 +82,21 @@ internal fun ShareBottomSheet(
                         onClick = { artistSelected = !artistSelected },
                         label = { Text(text = stringResource(StringsR.string.artist)) }
                     )
-                    album?.let {
+                    track.album?.let {
                         FilterChip(
                             selected = albumSelected,
                             onClick = { albumSelected = !albumSelected },
                             label = { Text(text = stringResource(StringsR.string.album)) }
                         )
                     }
-                    year?.let {
+                    track.year?.let {
                         FilterChip(
                             selected = yearSelected,
                             onClick = { yearSelected = !yearSelected },
                             label = { Text(text = stringResource(StringsR.string.year)) }
                         )
                     }
-                    lyrics?.let {
+                    track.lyrics?.let {
                         FilterChip(
                             selected = lyricsSelected,
                             onClick = { lyricsSelected = !lyricsSelected },
@@ -119,7 +112,7 @@ internal fun ShareBottomSheet(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 ) {
-                    trackLinks.forEach { (_, serviceType) ->
+                    track.trackLinks.forEach { (_, serviceType) ->
                         val selected = selectedMusicServices.contains(serviceType)
                         FilterChip(
                             selected = selected,

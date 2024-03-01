@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 import java.time.Instant
 import javax.inject.Inject
 
-class TrackRepositoryImpl @Inject constructor(
+internal class TrackRepositoryImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase

@@ -3,23 +3,17 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.track.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.track.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
+import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import javax.annotation.concurrent.Immutable
 import javax.inject.Inject
 
@@ -87,18 +81,8 @@ internal sealed class TrackUiState {
     data object TrackNotFound : TrackUiState()
 
     data class Success(
-        val trackId: String,
-        val title: String,
-        val artist: String,
-        val album: String?,
-        val year: String?,
-        val lyrics: String?,
-        val artworkUrl: String?,
-        val requiredLinks: ImmutableList<TrackLink>,
-        val isLoadingLinks: Boolean,
-        val isFavorite: Boolean,
-        val lastRecognitionDate: String,
-        val themeSeedColor: Int?,
+        val track: TrackUi,
+        val isMetadataEnhancerRunning: Boolean,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
     ) : TrackUiState()
@@ -109,26 +93,13 @@ private fun Track.toUiState(
     preferences: UserPreferences,
     isMetadataEnhancerRunning: Boolean
 ): TrackUiState.Success {
-    val linkMap = trackLinks.associate { link -> link.service to link.url }
-    val requiredLinks = preferences.requiredMusicServices
-        .mapNotNull { service -> linkMap[service]?.let { url -> TrackLink(url, service) } }
-        .toImmutableList()
+    val trackUi = this.toUi(preferences.requiredMusicServices)
     return TrackUiState.Success(
-        trackId = this.id,
-        title = this.title,
-        artist = this.artist,
-        album = this.album,
-        year = this.releaseDate?.year?.toString(),
-        lyrics = this.lyrics,
-        artworkUrl = this.artworkUrl,
-        isFavorite = this.properties.isFavorite,
-        lastRecognitionDate = this.properties.lastRecognitionDate.format(FormatStyle.MEDIUM),
-        themeSeedColor = this.properties.themeSeedColor,
+        track = this.toUi(preferences.requiredMusicServices),
         themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-        requiredLinks = requiredLinks,
-        isLoadingLinks = isMetadataEnhancerRunning &&
-                requiredLinks.hasMissingLink(preferences.requiredMusicServices)
+        isMetadataEnhancerRunning = isMetadataEnhancerRunning &&
+                trackUi.trackLinks.hasMissingLink(preferences.requiredMusicServices),
     )
 }
 
@@ -137,5 +108,3 @@ private fun List<TrackLink>.hasMissingLink(requiredServices: List<MusicService>)
     return requiredServices.any { service -> !availableServicesSet.contains(service) }
 }
 
-private fun Instant.format(style: FormatStyle) = this.atZone(ZoneId.systemDefault())
-    .format(DateTimeFormatter.ofLocalizedDateTime(style))

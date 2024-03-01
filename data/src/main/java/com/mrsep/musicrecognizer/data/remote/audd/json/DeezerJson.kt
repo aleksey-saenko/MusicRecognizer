@@ -9,6 +9,8 @@ internal data class DeezerJson(
     val title: String?,
     @Json(name = "link")
     val link: String?,
+    @Json(name = "duration")
+    val durationSeconds: Int?,
     @Json(name = "release_date")
     val releaseDate: String?,
     @Json(name = "artist")

@@ -207,6 +207,8 @@
     <string name="format_open_website_or_app">Open %s</string>
     <string name="track_info">Track info</string>
     <string name="format_date_of_last_recognition">Date of last recognition:\n%s</string>
+    <string name="format_track_duration">Track duration: %s</string>
+    <string name="format_recognized_at">Recognized at: %s</string>
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
     <string name="track_not_found">The track was not found</string>
     <string name="loading">Loading</string>

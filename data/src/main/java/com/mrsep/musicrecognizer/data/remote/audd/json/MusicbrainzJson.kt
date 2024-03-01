@@ -9,6 +9,8 @@ internal data class MusicbrainzJson(
     val id: String?,
     @Json(name = "title")
     val title: String?,
+    @Json(name = "length")
+    val durationMillis: Int?,
     @Json(name = "artist-credit")
     val artistCredit: List<ArtistCredit?>?
 ) {

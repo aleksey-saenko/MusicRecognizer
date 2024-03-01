@@ -16,6 +16,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             artist = input.artist,
             album = input.album,
             releaseDate = input.releaseDate,
+            duration = input.duration,
+            recognizedAt = input.recognizedAt,
             lyrics = input.lyrics,
             artworkUrl = input.links.artwork,
             trackLinks = with(input.links) {
@@ -53,6 +55,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             artist = input.artist,
             album = input.album,
             releaseDate = input.releaseDate,
+            duration = input.duration,
+            recognizedAt = input.recognizedAt,
             lyrics = input.lyrics,
             links = run {
                 val linkMap = input.trackLinks.associate { link -> link.service to link.url }

@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.track
 
 import androidx.room.*
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 
@@ -16,6 +17,10 @@ data class TrackEntity(
     val album: String?,
     @ColumnInfo(name = "release_date")
     val releaseDate: LocalDate?,
+    @ColumnInfo(name = "duration")
+    val duration: Duration?,
+    @ColumnInfo(name = "recognized_at")
+    val recognizedAt: Duration?,
     @ColumnInfo(name = "lyrics")
     val lyrics: String?,
     @Embedded(prefix = "link_")

@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.track.util
 
 import com.mrsep.musicrecognizer.data.track.TrackEntity
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -19,6 +20,8 @@ internal fun getFakeTrackList(
             artist = "Artist #${index + startIndex}",
             releaseDate = LocalDate.now()
                 .minus(index * 10L, ChronoUnit.DAYS),
+            duration = Duration.ofSeconds(210),
+            recognizedAt = Duration.ofSeconds(157),
             album = "Album #${index + startIndex}",
             lyrics = "lyrics #${index + startIndex}",
             links = TrackEntity.Links(

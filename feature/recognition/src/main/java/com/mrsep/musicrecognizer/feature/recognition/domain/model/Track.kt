@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.model
 
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 
@@ -9,6 +10,8 @@ data class Track(
     val artist: String,
     val album: String?,
     val releaseDate: LocalDate?,
+    val duration: Duration?,
+    val recognizedAt: Duration?,
     val lyrics: String?,
     val artworkUrl: String?,
     val trackLinks: List<TrackLink>,

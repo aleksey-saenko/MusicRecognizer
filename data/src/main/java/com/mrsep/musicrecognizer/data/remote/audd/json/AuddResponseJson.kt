@@ -23,6 +23,8 @@ internal data class AuddResponseJson(
         val album: String?,
         @Json(name = "release_date")
         val releaseDate: String?,
+        @Json(name = "timecode")
+        val timecode: String?,
         @Json(name = "song_link")
         val auddSongLink: String?,
         @Json(name = "deezer")

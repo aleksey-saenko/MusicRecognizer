@@ -11,6 +11,8 @@ internal data class AppleMusicJson(
     val artistName: String?,
     @Json(name = "url")
     val url: String?,
+    @Json(name = "durationInMillis")
+    val durationInMillis: Int?,
     @Json(name = "releaseDate")
     val releaseDate: String?,
     @Json(name = "name")

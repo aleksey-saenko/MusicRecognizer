@@ -71,7 +71,7 @@ internal fun TrackScreen(
 
         is TrackUiState.Success -> {
             SwitchingMusicRecognizerTheme(
-                seedColor = uiState.themeSeedColor?.run(::Color),
+                seedColor = uiState.track.themeSeedColor?.run(::Color),
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
                 useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             ) {
@@ -89,12 +89,7 @@ internal fun TrackScreen(
 
                 if (shareSheetActive) {
                     ShareBottomSheet(
-                        title = uiState.title,
-                        artist = uiState.artist,
-                        album = uiState.album,
-                        year = uiState.year,
-                        lyrics = uiState.lyrics,
-                        trackLinks = uiState.requiredLinks,
+                        track = uiState.track,
                         sheetState = shareSheetState,
                         onDismissRequest = { hideShareSheet() },
                         onCopyClick = { textToCopy ->
@@ -114,7 +109,7 @@ internal fun TrackScreen(
                 var extraDataDialogVisible by remember { mutableStateOf(false) }
                 if (extraDataDialogVisible) {
                     TrackExtrasDialog(
-                        lastRecognitionDate = uiState.lastRecognitionDate,
+                        track = uiState.track,
                         onDismissClick = { extraDataDialogVisible = false }
                     )
                 }
@@ -136,7 +131,7 @@ internal fun TrackScreen(
                         WebSearchBottomSheet(
                             sheetState = rememberModalBottomSheetState(true),
                             onPerformWebSearchClick = { searchParams ->
-                                performWebSearch(context, searchParams, uiState)
+                                performWebSearch(context, searchParams, uiState.track)
                             },
                             onDismissRequest = { showSearchBottomSheet = false },
                         )
@@ -148,24 +143,19 @@ internal fun TrackScreen(
                         TrackScreenTopBar(
                             onBackPressed = onBackPressed,
                             onShareClick = { shareSheetActive = !shareSheetActive },
-                            onDeleteClick = { viewModel.deleteTrack(uiState.trackId) },
+                            onDeleteClick = { viewModel.deleteTrack(uiState.track.id) },
                             onShowDetailsClick = { extraDataDialogVisible = true },
                             scrollBehavior = topBarBehaviour
                         )
                         TrackSection(
-                            title = uiState.title,
-                            artist = uiState.artist,
-                            album = uiState.album,
-                            year = uiState.year,
-                            artworkUrl = uiState.artworkUrl,
-                            trackLinks = uiState.requiredLinks,
-                            isLoadingLinks = uiState.isLoadingLinks,
+                            track = uiState.track,
+                            isLoadingLinks = uiState.isMetadataEnhancerRunning,
                             isExpandedScreen = isExpandedScreen,
                             onArtworkCached = { artworkUri = it },
                             createSeedColor = uiState.artworkBasedThemeEnabled,
                             onSeedColor = { seedColor ->
                                 viewModel.setThemeSeedColor(
-                                    uiState.trackId,
+                                    uiState.track.id,
                                     seedColor.toArgb()
                                 )
                             },
@@ -178,21 +168,21 @@ internal fun TrackScreen(
                         )
                         TrackActionsBottomBar(
                             scrollBehavior = null,
-                            isFavorite = uiState.isFavorite,
-                            isLyricsAvailable = uiState.lyrics != null,
+                            isFavorite = uiState.track.isFavorite,
+                            isLyricsAvailable = uiState.track.lyrics != null,
                             isRetryAllowed = isRetryAllowed,
                             onFavoriteClick = {
-                                viewModel.setFavorite(uiState.trackId, !uiState.isFavorite)
+                                viewModel.setFavorite(uiState.track.id, !uiState.track.isFavorite)
                             },
                             onLyricsClick = {
-                                onNavigateToLyricsScreen(uiState.trackId)
+                                onNavigateToLyricsScreen(uiState.track.id)
                             },
                             onSearchClick = {
                                 showSearchBottomSheet = true
                             },
                             onRetryRequested = {
                                 trackDismissed = true
-                                viewModel.deleteTrack(uiState.trackId)
+                                viewModel.deleteTrack(uiState.track.id)
                                 onRetryRequested()
                             }
                         )
@@ -215,16 +205,16 @@ internal fun shouldUseDarkTheme(
 private fun performWebSearch(
     context: Context,
     searchParams: SearchParams,
-    uiState: TrackUiState.Success
+    track: TrackUi
 ) {
-    val query = uiState.getWebSearchQuery(searchParams.target, context)
+    val query = track.getWebSearchQuery(searchParams.target, context)
     when (searchParams.provider) {
         SearchProvider.WebDefault -> context.openWebSearchImplicitly(query)
         SearchProvider.Wikipedia -> context.openWikiSearch(query)
     }
 }
 
-private fun TrackUiState.Success.getWebSearchQuery(
+private fun TrackUi.getWebSearchQuery(
     target: SearchTarget, context: Context
 ) = when (target) {
     SearchTarget.Track -> "$title $artist"

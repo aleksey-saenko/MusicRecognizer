@@ -5,6 +5,7 @@ import android.text.Html
 import android.util.Patterns
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -44,6 +45,8 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
             artist = trackArtist,
             album = result.parseAlbum(),
             releaseDate = result.parseReleaseDate(),
+            duration = result.parseTrackDuration(),
+            recognizedAt = result.timecode?.run(::parseRecognizedAt),
             lyrics = result.parseLyrics(),
             links = TrackEntity.Links(
                 artwork = result.toArtworkLink(),
@@ -99,6 +102,26 @@ private fun AuddResponseJson.Result.parseAlbum(): String? {
         ?: album?.takeIf { it.isNotBlank() }
         ?: spotify?.album?.name?.takeIf { it.isNotBlank() }
         ?: napster?.albumName?.takeIf { it.isNotBlank() }
+}
+
+private fun AuddResponseJson.Result.parseTrackDuration(): Duration? {
+    return appleMusic?.durationInMillis?.toLong()?.run(Duration::ofMillis)
+        ?: spotify?.durationMillis?.toLong()?.run(Duration::ofMillis)
+        ?: deezerJson?.durationSeconds?.toLong()?.run(Duration::ofSeconds)
+        ?: napster?.durationSeconds?.toLong()?.run(Duration::ofSeconds)
+        ?: musicbrainz?.firstOrNull()?.durationMillis?.toLong()?.run(Duration::ofMillis)
+}
+
+private fun parseRecognizedAt(input: String): Duration? {
+    return runCatching {
+        val timeParts = input.split(":").map { it.toLong() }
+        when (timeParts.size) {
+            1 -> Duration.ofSeconds(timeParts[0])
+            2 -> Duration.ofMinutes(timeParts[0]).plusSeconds(timeParts[1])
+            3 -> Duration.ofHours(timeParts[0]).plusMinutes(timeParts[1]).plusSeconds(timeParts[2])
+            else -> null
+        }
+    }.getOrNull()
 }
 
 private fun String.toLocalDate() =

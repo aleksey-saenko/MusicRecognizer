@@ -3,10 +3,6 @@ package com.mrsep.musicrecognizer.feature.library.domain.model
 import java.time.Instant
 import java.time.LocalDate
 
-/*
- * MusicBrainz Recording Identifier uses as id (primary) or random UUID (secondary)
- * https://musicbrainz.org/doc/MusicBrainz_Identifier
- */
 data class Track(
     val id: String,
     val title: String,

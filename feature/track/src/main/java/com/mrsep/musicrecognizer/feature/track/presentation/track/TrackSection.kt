@@ -22,18 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun TrackSection(
-    title: String,
-    artist: String,
-    album: String?,
-    year: String?,
-    artworkUrl: String?,
+    track: TrackUi,
     isLoadingLinks: Boolean,
-    trackLinks: ImmutableList<TrackLink>,
     isExpandedScreen: Boolean,
     onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
@@ -43,7 +37,7 @@ internal fun TrackSection(
     if (isExpandedScreen) {
         Row(modifier = modifier) {
             AlbumArtwork(
-                url = artworkUrl,
+                url = track.artworkUrl,
                 onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
@@ -55,10 +49,10 @@ internal fun TrackSection(
             )
             Column(modifier = Modifier.padding(end = 16.dp)) {
                 TrackInfoColumn(
-                    title = title,
-                    artist = artist,
-                    album = album,
-                    year = year,
+                    title = track.title,
+                    artist = track.artist,
+                    album = track.album,
+                    year = track.year,
                     modifier = Modifier
                         .animateContentSize()
                         .fillMaxWidth()
@@ -66,7 +60,7 @@ internal fun TrackSection(
                 Spacer(Modifier.height(16.dp))
                 MusicServiceChipsFlowRow(
                     isLoading = isLoadingLinks,
-                    trackLinks = trackLinks,
+                    trackLinks = track.trackLinks,
                     modifier = Modifier
                         .animateContentSize(animationSpec = tween(2000))
                         .fillMaxWidth()
@@ -80,7 +74,7 @@ internal fun TrackSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AlbumArtwork(
-                url = artworkUrl,
+                url = track.artworkUrl,
                 onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
@@ -91,10 +85,10 @@ internal fun TrackSection(
             )
             Spacer(Modifier.height(16.dp))
             TrackInfoColumn(
-                title = title,
-                artist = artist,
-                album = album,
-                year = year,
+                title = track.title,
+                artist = track.artist,
+                album = track.album,
+                year = track.year,
                 modifier = Modifier
                     .animateContentSize()
                     .fillMaxWidth()
@@ -103,7 +97,7 @@ internal fun TrackSection(
             Spacer(Modifier.height(8.dp))
             MusicServiceChipsFlowRow(
                 isLoading = isLoadingLinks,
-                trackLinks = trackLinks,
+                trackLinks = track.trackLinks,
                 modifier = Modifier
                     .animateContentSize(animationSpec = tween(500))
                     .fillMaxWidth()
@@ -119,12 +113,21 @@ internal fun TrackSection(
 private fun Preview() {
     MusicRecognizerTheme(dynamicColor = false) {
         TrackSection(
-            title = "Track title",
-            artist = "Track artist",
-            album = "Track album",
-            year = "2024",
-            artworkUrl = null,
-            trackLinks = MusicService.entries.map { TrackLink("", it) }.toImmutableList(),
+            track = TrackUi(
+                id = "1",
+                title = "Track title",
+                artist = "Track artist",
+                album = "Track album",
+                year = "2024",
+                artworkUrl = null,
+                trackLinks = MusicService.entries.map { TrackLink("", it) }.toImmutableList(),
+                isFavorite = false,
+                duration = "2:45",
+                recognizedAt = "2:22",
+                lastRecognitionDate = "Now",
+                themeSeedColor = null,
+                lyrics = null
+            ),
             isLoadingLinks = false,
             isExpandedScreen = true,
             onArtworkCached = {},

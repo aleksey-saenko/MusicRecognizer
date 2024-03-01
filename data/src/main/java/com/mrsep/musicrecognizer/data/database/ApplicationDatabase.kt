@@ -15,22 +15,24 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
         TrackEntity::class,
         EnqueuedRecognitionEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4, spec = MigrationSpec3To4RenameTrackId::class),
+        AutoMigration(from = 4, to = 5),
     ]
 )
 @TypeConverters(
     value = [
         FileRoomConverter::class,
         InstantRoomConverter::class,
+        DurationRoomConverter::class,
         LocalDateRoomConverter::class,
     ]
 )
-abstract class ApplicationDatabase : RoomDatabase() {
+internal abstract class ApplicationDatabase : RoomDatabase() {
 
     abstract fun trackDao(): TrackDao
 

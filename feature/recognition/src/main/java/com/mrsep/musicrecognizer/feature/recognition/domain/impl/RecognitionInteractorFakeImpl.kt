@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -99,6 +100,8 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
             artist = "Pink Floyd",
             album = "Meddle",
             releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
+            duration = Duration.ofSeconds(210),
+            recognizedAt = Duration.ofSeconds(157),
             lyrics = "lyrics stub",
             artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
 //            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",

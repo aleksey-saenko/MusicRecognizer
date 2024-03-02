@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
@@ -83,18 +84,6 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setUseGridForLibrary(value: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.setUseGridForLibrary(value)
-        }
-    }
-
-    fun setUseGridForQueue(value: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.setUseGridForRecognitionQueue(value)
-        }
-    }
-
     fun setThemeMode(value: ThemeMode) {
         viewModelScope.launch {
             preferencesRepository.setThemeMode(value)
@@ -115,7 +104,11 @@ internal class PreferencesViewModel @Inject constructor(
 
 }
 
-internal sealed interface PreferencesUiState {
-    data object Loading : PreferencesUiState
-    data class Success(val preferences: UserPreferences) : PreferencesUiState
+@Immutable
+internal sealed class PreferencesUiState {
+
+    data object Loading : PreferencesUiState()
+
+    data class Success(val preferences: UserPreferences) : PreferencesUiState()
+
 }

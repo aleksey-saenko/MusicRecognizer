@@ -17,8 +17,6 @@ interface PreferencesRepository {
     suspend fun setRequiredMusicServices(services: List<MusicService>)
     suspend fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy)
     suspend fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback)
-    suspend fun setUseGridForLibrary(value: Boolean)
-    suspend fun setUseGridForRecognitionQueue(value: Boolean)
     suspend fun setThemeMode(value: ThemeMode)
     suspend fun setUsePureBlackForDarkTheme(value: Boolean)
     suspend fun setRecognizeOnStartup(value: Boolean)

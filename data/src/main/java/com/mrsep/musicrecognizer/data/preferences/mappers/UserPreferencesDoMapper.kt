@@ -46,6 +46,8 @@ class UserPreferencesDoMapper @Inject constructor(
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
             useGridForLibrary = input.useGridForLibrary,
             useGridForRecognitionQueue = input.useGridForRecognitionQueue,
+            showRecognitionDateInLibrary = input.showRecognitionDateInLibrary,
+            showCreationDateInQueue = input.showCreationDateInQueue,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
             recognizeOnStartup = input.recognizeOnStartup,

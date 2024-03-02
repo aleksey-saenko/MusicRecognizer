@@ -8,6 +8,7 @@ data class UserPreferences(
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
     val useGridForRecognitionQueue: Boolean,
+    val showCreationDateInQueue: Boolean,
 )
 
 data class HapticFeedback(

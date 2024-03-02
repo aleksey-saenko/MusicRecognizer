@@ -178,18 +178,6 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showServicesDialog = false }
                             )
                         }
-                        val useGridForLibrary = uiState.preferences.useGridForLibrary
-                        PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.use_grid_for_library),
-                            onClick = { viewModel.setUseGridForLibrary(!useGridForLibrary) },
-                            checked = useGridForLibrary
-                        )
-                        val useGridForQueue = uiState.preferences.useGridForRecognitionQueue
-                        PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.use_grid_for_queue),
-                            onClick = { viewModel.setUseGridForQueue(!useGridForQueue) },
-                            checked = useGridForQueue
-                        )
                     }
                     Spacer(Modifier.height(16.dp))
                     PreferenceGroup(title = stringResource(StringsR.string.misc)) {

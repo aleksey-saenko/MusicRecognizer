@@ -39,7 +39,8 @@ class UserPreferencesMapper @Inject constructor(
                 vibrateOnTap = input.hapticFeedback.vibrateOnTap,
                 vibrateOnResult = input.hapticFeedback.vibrateOnResult
             ),
-            useGridForRecognitionQueue = input.useGridForRecognitionQueue
+            useGridForRecognitionQueue = input.useGridForRecognitionQueue,
+            showCreationDateInQueue = input.showCreationDateInQueue,
         )
     }
 

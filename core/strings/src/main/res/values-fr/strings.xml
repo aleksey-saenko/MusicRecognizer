@@ -133,9 +133,9 @@
     <string name="theme_use_pure_black">Noir pur</string>
     <string name="music_services_links">Liens vers les services musicaux</string>
     <string name="required_services_dialog">Choisissez les services musicaux pour lesquels vous souhaiteriez voir des liens web (si disponibles) :</string>
-    <string name="use_grid_for_library">Grille pour la bibliothèque</string>
-    <string name="use_list_for_library">Liste pour la bibliothèque</string>
-    <string name="use_grid_for_queue">Grille pour la file d\'attente</string>
+    <string name="use_grid_layout">Utiliser la grille</string>
+    <string name="show_recognition_date">Afficher la date</string>
+    <string name="show_creation_date">Afficher la date</string>
     <string name="vibration_feedback">Retour par vibration</string>
     <string name="vibration_feedback_dialog_title">Retour par vibration</string>
     <string name="vibration_feedback_dialog_message">Configurez le retour par vibration pour certaines actions dans l\'application :</string>

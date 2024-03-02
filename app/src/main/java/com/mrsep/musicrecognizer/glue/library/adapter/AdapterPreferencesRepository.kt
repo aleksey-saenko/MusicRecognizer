@@ -24,4 +24,12 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setTrackFilter(trackFilterMapper.reverseMap(value))
     }
 
+    override suspend fun setUseGridForLibrary(value: Boolean) {
+        preferencesRepositoryDo.setUseGridForLibrary(value)
+    }
+
+    override suspend fun setShowRecognitionDateInLibrary(value: Boolean) {
+        preferencesRepositoryDo.setShowRecognitionDateInLibrary(value)
+    }
+
 }

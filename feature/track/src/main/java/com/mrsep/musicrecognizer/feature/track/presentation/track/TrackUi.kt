@@ -10,7 +10,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import javax.annotation.concurrent.Immutable
 
+@Immutable
 internal data class TrackUi(
     val id: String,
     val title: String,

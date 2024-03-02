@@ -167,9 +167,9 @@
     <string name="theme_use_pure_black">Use pure black</string>
     <string name="music_services_links">Music service links</string>
     <string name="required_services_dialog">Choose the music services for which you would like to see web links (if available):</string>
-    <string name="use_grid_for_library">Use grid for library</string>
-    <string name="use_list_for_library">Use list layout for library</string>
-    <string name="use_grid_for_queue">Use grid for queue</string>
+    <string name="use_grid_layout">Use grid layout</string>
+    <string name="show_recognition_date">Show recognition date</string>
+    <string name="show_creation_date">Show creation date</string>
     <string name="vibration_feedback">Vibration feedback</string>
     <string name="vibration_feedback_dialog_title">Vibration feedback</string>
     <string name="vibration_feedback_dialog_message">Configure vibration feedback for certain in-app actions:</string>

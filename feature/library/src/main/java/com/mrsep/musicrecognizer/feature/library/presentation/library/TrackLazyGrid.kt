@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -34,6 +35,7 @@ internal fun TrackLazyGrid(
     onTrackClick: (trackId: String) -> Unit,
     lazyGridState: LazyGridState,
     multiSelectionState: MultiSelectionState<String>,
+    showRecognitionDate: Boolean,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -56,6 +58,7 @@ internal fun TrackLazyGrid(
                     }
                 },
                 onLongClick = { multiSelectionState.toggleSelection(track.id) },
+                showRecognitionDate = showRecognitionDate,
                 modifier = Modifier.animateItemPlacement()
             )
         }
@@ -70,7 +73,7 @@ internal fun TrackLazyGridItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    showRecognitionDate: Boolean = true,
+    showRecognitionDate: Boolean,
     shape: Shape = MaterialTheme.shapes.medium
 ) {
     Column(
@@ -124,26 +127,26 @@ internal fun TrackLazyGridItem(
         ) {
             Text(
                 text = track.title,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleMedium
-
             )
             Text(
                 text = track.artist,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.height(2.dp))
             if (showRecognitionDate) {
                 Text(
                     text = track.recognitionDate,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    textAlign = TextAlign.Start
                 )
             }
         }

@@ -22,4 +22,12 @@ class AdapterPreferencesRepository @Inject constructor(
         preferencesRepositoryDo.setNotificationServiceEnabled(value)
     }
 
+    override suspend fun setUseGridForQueue(value: Boolean) {
+        preferencesRepositoryDo.setUseGridForRecognitionQueue(value)
+    }
+
+    override suspend fun setShowCreationDateInQueue(value: Boolean) {
+        preferencesRepositoryDo.setShowCreationDateInQueue(value)
+    }
+
 }

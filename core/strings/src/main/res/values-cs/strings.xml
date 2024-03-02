@@ -116,6 +116,9 @@
     <string name="notifications">Oznámení</string>
     <string name="music_services_links">Odkazy na hudební služby</string>
     <string name="required_services_dialog">Vyberte hudební služby, pro které chcete zobrazit webové odkazy (pokud jsou k dispozici):</string>
+    <string name="use_grid_layout">Použít mřížku</string>
+    <string name="show_recognition_date">Zobrazit datum</string>
+    <string name="show_creation_date">Zobrazit datum</string>
     <string name="vibration_feedback">Vibrační odezva</string>
     <string name="vibration_feedback_dialog_title">Vibrační odezva</string>
     <string name="vibration_feedback_dialog_message">Přizpůsobení vibrační odezvy pro určité akce v aplikaci:</string>

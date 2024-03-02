@@ -21,6 +21,8 @@ data class UserPreferencesDo(
     val hapticFeedback: HapticFeedbackDo,
     val useGridForLibrary: Boolean,
     val useGridForRecognitionQueue: Boolean,
+    val showRecognitionDateInLibrary: Boolean,
+    val showCreationDateInQueue: Boolean,
     val themeMode: ThemeModeDo,
     val usePureBlackForDarkTheme: Boolean,
     val recognizeOnStartup: Boolean,

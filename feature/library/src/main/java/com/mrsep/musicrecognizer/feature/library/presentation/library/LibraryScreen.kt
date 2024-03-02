@@ -28,10 +28,9 @@ internal fun LibraryScreen(
 ) {
     val scope = rememberCoroutineScope()
     val screenUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isLibraryEmpty = screenUiState !is LibraryUiState.Success
-    var filterSheetActive by rememberSaveable { mutableStateOf(false) }
     val multiSelectionState = rememberMultiSelectionState<String>(screenUiState)
-    var deleteDialogVisible by rememberSaveable(screenUiState) { mutableStateOf(false) }
+    var showFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable(screenUiState) { mutableStateOf(false) }
     var deletionInProgress by rememberSaveable(screenUiState) { mutableStateOf(false) }
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -40,78 +39,85 @@ internal fun LibraryScreen(
         onBack = multiSelectionState::deselectAll
     )
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.background)
-            .fillMaxSize(),
-    ) {
-        LibraryScreenTopBar(
-            isLibraryEmpty = isLibraryEmpty,
-            isFilterApplied = screenUiState.isFilterApplied(),
-            isMultiselectEnabled = multiSelectionState.multiselectEnabled,
-            selectedCount = multiSelectionState.selectedCount,
-            totalCount = screenUiState.getTrackCount(),
-            onSearchClick = onTrackSearchClick,
-            onFilterClick = { filterSheetActive = !filterSheetActive },
-            onDeleteClick = { deleteDialogVisible = true },
-            onSelectAll = { multiSelectionState.select(screenUiState.getTrackIdList()) },
-            onDeselectAll = multiSelectionState::deselectAll,
-            scrollBehavior = topBarBehaviour
+    when (val uiState = screenUiState) {
+        LibraryUiState.Loading -> LoadingStub(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .statusBarsPadding()
         )
-        when (val uiState = screenUiState) {
-            LibraryUiState.Loading -> LoadingStub(
-                modifier = Modifier.fillMaxSize()
-            )
 
-            LibraryUiState.EmptyLibrary -> EmptyLibraryMessage(
-                modifier = Modifier.fillMaxSize()
+        is LibraryUiState.Success -> Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+        ) {
+            LibraryScreenTopBar(
+                isLibraryEmpty = uiState.isEmptyLibrary,
+                isFilterApplied = uiState.trackFilter.isDefault.not(),
+                isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+                selectedCount = multiSelectionState.selectedCount,
+                totalCount = uiState.trackList.size,
+                onSearchClick = onTrackSearchClick,
+                onFilterClick = { showFilterBottomSheet = !showFilterBottomSheet },
+                onDeleteClick = { showDeleteDialog = true },
+                onSelectAll = { multiSelectionState.select(uiState.trackList.map { it.id }) },
+                onDeselectAll = multiSelectionState::deselectAll,
+                useGridLayout = uiState.useGridLayout,
+                onChangeUseGridLayout = viewModel::setUseGrid,
+                showRecognitionDate = uiState.showRecognitionDate,
+                onChangeShowRecognitionDate = viewModel::setShowRecognitionDate,
+                scrollBehavior = topBarBehaviour
             )
-
-            is LibraryUiState.Success -> Box(
+            Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
                 var newFilterApplied by rememberSaveable { mutableStateOf(false) }
-
-                if (uiState.useGridLayout) {
-                    val lazyGridState = rememberLazyGridState()
-                    TrackLazyGrid(
-                        trackList = uiState.trackList,
-                        onTrackClick = onTrackClick,
-                        lazyGridState = lazyGridState,
-                        multiSelectionState = multiSelectionState,
-                        modifier = Modifier
-                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                            .fillMaxSize()
-                    )
-                    LaunchedEffect(uiState.trackFilter) {
-                        if (newFilterApplied) {
-                            lazyGridState.animateScrollToItem(0)
-                            newFilterApplied = false
+                AnimatedContent(
+                    targetState = uiState.useGridLayout,
+                    label = "Layout"
+                ) { useGrid ->
+                    if (useGrid) {
+                        val lazyGridState = rememberLazyGridState()
+                        TrackLazyGrid(
+                            trackList = uiState.trackList,
+                            onTrackClick = onTrackClick,
+                            lazyGridState = lazyGridState,
+                            multiSelectionState = multiSelectionState,
+                            showRecognitionDate = uiState.showRecognitionDate,
+                            modifier = Modifier
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .fillMaxSize()
+                        )
+                        LaunchedEffect(uiState.trackFilter) {
+                            if (newFilterApplied) {
+                                lazyGridState.animateScrollToItem(0)
+                                newFilterApplied = false
+                            }
                         }
-                    }
-                } else {
-                    val lazyListState = rememberLazyListState()
-                    TrackLazyColumn(
-                        trackList = uiState.trackList,
-                        onTrackClick = onTrackClick,
-                        lazyListState = lazyListState,
-                        multiSelectionState = multiSelectionState,
-                        modifier = Modifier
-                            .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                            .fillMaxSize()
-                    )
-                    LaunchedEffect(uiState.trackFilter) {
-                        if (newFilterApplied) {
-                            lazyListState.animateScrollToItem(0)
-                            newFilterApplied = false
+                    } else {
+                        val lazyListState = rememberLazyListState()
+                        TrackLazyColumn(
+                            trackList = uiState.trackList,
+                            onTrackClick = onTrackClick,
+                            lazyListState = lazyListState,
+                            multiSelectionState = multiSelectionState,
+                            showRecognitionDate = uiState.showRecognitionDate,
+                            modifier = Modifier
+                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                .fillMaxSize()
+                        )
+                        LaunchedEffect(uiState.trackFilter) {
+                            if (newFilterApplied) {
+                                lazyListState.animateScrollToItem(0)
+                                newFilterApplied = false
+                            }
                         }
                     }
                 }
                 androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.trackList.isEmpty(),
+                    visible = !uiState.isEmptyLibrary && uiState.trackList.isEmpty(),
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
@@ -122,22 +128,31 @@ internal fun LibraryScreen(
                     )
                 }
 
-                val filterSheetState = rememberModalBottomSheetState(
-                    skipPartiallyExpanded = true
-                )
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = uiState.isEmptyLibrary,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    EmptyLibraryMessage(
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .fillMaxSize()
+                    )
+                }
+
+                val filterSheetState = rememberModalBottomSheetState(true)
+
                 fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
                     scope.launch { filterSheetState.hide() }.invokeOnCompletion {
-                        if (!filterSheetState.isVisible) filterSheetActive = false
+                        if (!filterSheetState.isVisible) showFilterBottomSheet = false
                         newTrackFilter?.let {
                             newFilterApplied = true
                             viewModel.applyFilter(newTrackFilter)
                         }
                     }
                 }
-                if (filterSheetActive) {
-                    val filterState = rememberTrackFilterState(
-                        initialTrackFilter = uiState.trackFilter
-                    )
+                if (showFilterBottomSheet) {
+                    val filterState = rememberTrackFilterState(uiState.trackFilter)
                     TrackFilterBottomSheet(
                         sheetState = filterSheetState,
                         filterState = filterState,
@@ -149,42 +164,18 @@ internal fun LibraryScreen(
                     )
                 }
 
-                if (deleteDialogVisible) {
+                if (showDeleteDialog) {
                     DeleteSelectedDialog(
                         onDeleteClick = {
                             deletionInProgress = true
                             val selectedIds = multiSelectionState.getSelected()
                             viewModel.deleteTracks(selectedIds)
                         },
-                        onDismissClick = { deleteDialogVisible = false },
+                        onDismissClick = { showDeleteDialog = false },
                         inProgress = deletionInProgress
                     )
                 }
             }
         }
-    }
-}
-
-@Stable
-private fun LibraryUiState.isFilterApplied(): Boolean {
-    return when (this) {
-        is LibraryUiState.Success -> !trackFilter.isDefault
-        else -> false
-    }
-}
-
-@Stable
-private fun LibraryUiState.getTrackCount(): Int {
-    return when (this) {
-        is LibraryUiState.Success -> trackList.size
-        else -> 0
-    }
-}
-
-@Stable
-private fun LibraryUiState.getTrackIdList(): List<String> {
-    return when (this) {
-        is LibraryUiState.Success -> trackList.map { it.id }
-        else -> emptyList()
     }
 }

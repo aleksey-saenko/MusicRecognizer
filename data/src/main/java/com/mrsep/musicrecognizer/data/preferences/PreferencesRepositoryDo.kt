@@ -25,6 +25,8 @@ interface PreferencesRepositoryDo {
     suspend fun setHapticFeedback(value: UserPreferencesDo.HapticFeedbackDo)
     suspend fun setUseGridForLibrary(value: Boolean)
     suspend fun setUseGridForRecognitionQueue(value: Boolean)
+    suspend fun setShowRecognitionDateInLibrary(value: Boolean)
+    suspend fun setShowCreationDateInQueue(value: Boolean)
     suspend fun setThemeMode(value: ThemeModeDo)
     suspend fun setUsePureBlackForDarkTheme(value: Boolean)
     suspend fun setRecognizeOnStartup(value: Boolean)

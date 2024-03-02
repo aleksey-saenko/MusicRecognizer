@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class QueueScreenViewModel @Inject constructor(
-    preferencesRepository: PreferencesRepository,
+    private val preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val recognitionScheduler: EnqueuedRecognitionScheduler,
     private val playerController: PlayerController,
@@ -51,11 +51,12 @@ internal class QueueScreenViewModel @Inject constructor(
         flow3 = preferencesRepository.userPreferencesFlow
     ) { enqueuedWithStatusList, playerStatus, preferences ->
         QueueScreenUiState.Success(
-            enqueuedList = enqueuedWithStatusList
+            recognitionList = enqueuedWithStatusList
                 .map { it.toUi(dateFormatter) }
                 .toImmutableList(),
             playerStatus = playerStatus.toUi(),
-            useGridLayout = preferences.useGridForRecognitionQueue
+            useGridLayout = preferences.useGridForRecognitionQueue,
+            showCreationDate = preferences.showCreationDateInQueue,
         )
     }.flowOn(ioDispatcher).stateIn(
         scope = viewModelScope,
@@ -101,6 +102,18 @@ internal class QueueScreenViewModel @Inject constructor(
         playerController.stop()
     }
 
+    fun setUseGridLayout(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUseGridForQueue(value)
+        }
+    }
+
+    fun setShowCreationDate(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setShowCreationDateInQueue(value)
+        }
+    }
+
 }
 
 @Immutable
@@ -109,9 +122,10 @@ internal sealed class QueueScreenUiState {
     data object Loading : QueueScreenUiState()
 
     data class Success(
-        val enqueuedList: ImmutableList<EnqueuedRecognitionUi>,
+        val recognitionList: ImmutableList<EnqueuedRecognitionUi>,
         val playerStatus: PlayerStatusUi,
-        val useGridLayout: Boolean
+        val useGridLayout: Boolean,
+        val showCreationDate: Boolean,
     ) : QueueScreenUiState()
 
 }

@@ -57,7 +57,7 @@ internal fun RecognitionLazyGridItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    showCreationDate: Boolean = true,
+    showCreationDate: Boolean,
     contentPadding: PaddingValues,
     shape: Shape = MaterialTheme.shapes.medium,
 ) {

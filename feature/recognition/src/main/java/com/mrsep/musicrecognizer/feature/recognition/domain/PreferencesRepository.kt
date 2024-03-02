@@ -8,5 +8,7 @@ interface PreferencesRepository {
     val userPreferencesFlow: Flow<UserPreferences>
 
     suspend fun setNotificationServiceEnabled(value: Boolean)
+    suspend fun setUseGridForQueue(value: Boolean)
+    suspend fun setShowCreationDateInQueue(value: Boolean)
 
 }

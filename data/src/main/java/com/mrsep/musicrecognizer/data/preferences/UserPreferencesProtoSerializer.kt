@@ -54,6 +54,8 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
             artworkBasedThemeEnabled = false
             useGridForLibrary = false
             useGridForRecognitionQueue = false
+            showRecognitionDateInLibrary = false
+            showCreationDateInQueue = false
             developerModeEnabled = false // was true in first public builds, reset for using
             fallbackPolicy = fallbackPolicyProto {
                 noMatches = UserPreferencesProto.FallbackActionProto.IGNORE

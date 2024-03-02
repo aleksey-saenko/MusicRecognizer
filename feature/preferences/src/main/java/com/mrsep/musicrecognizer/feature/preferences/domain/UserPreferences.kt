@@ -14,8 +14,6 @@ data class UserPreferences(
     val developerModeEnabled: Boolean,
     val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
-    val useGridForLibrary: Boolean,
-    val useGridForRecognitionQueue: Boolean,
     val themeMode: ThemeMode,
     val usePureBlackForDarkTheme: Boolean,
     val recognizeOnStartup: Boolean,

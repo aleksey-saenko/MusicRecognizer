@@ -121,6 +121,14 @@ class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { useGridForRecognitionQueue = value }
     }
 
+    override suspend fun setShowRecognitionDateInLibrary(value: Boolean) {
+        safeWriter { showRecognitionDateInLibrary = value }
+    }
+
+    override suspend fun setShowCreationDateInQueue(value: Boolean) {
+        safeWriter { showCreationDateInQueue = value }
+    }
+
     override suspend fun setThemeMode(value: ThemeModeDo) {
         safeWriter { themeMode = themeModeMapper.reverseMap(value) }
     }

@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
@@ -30,13 +31,17 @@ internal fun LibraryScreenTopBar(
     onDeleteClick: () -> Unit,
     onSelectAll: () -> Unit,
     onDeselectAll: () -> Unit,
+    useGridLayout: Boolean,
+    showRecognitionDate: Boolean,
+    onChangeUseGridLayout: (Boolean) -> Unit,
+    onChangeShowRecognitionDate: (Boolean) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
-    val topBarMode = if (!isLibraryEmpty) {
-        if (isMultiselectEnabled) TopBarMode.MultiSelection else TopBarMode.Default
-    } else {
-        TopBarMode.EmptyLibrary
+    val topBarMode = when {
+        isLibraryEmpty -> TopBarMode.EmptyLibrary
+        isMultiselectEnabled -> TopBarMode.MultiSelection
+        else -> TopBarMode.Default
     }
     val transition = updateTransition(targetState = topBarMode, label = "topBarMode")
     TopAppBar(
@@ -63,7 +68,8 @@ internal fun LibraryScreenTopBar(
             ) { mode ->
                 when (mode) {
                     TopBarMode.EmptyLibrary,
-                    TopBarMode.Default -> {}
+                    TopBarMode.Default -> {
+                    }
 
                     TopBarMode.MultiSelection -> IconButton(onClick = onDeselectAll) {
                         Icon(
@@ -101,6 +107,12 @@ internal fun LibraryScreenTopBar(
                                 contentDescription = stringResource(StringsR.string.filters)
                             )
                         }
+                        LibraryDropdownMenu(
+                            useGridLayout = useGridLayout,
+                            onChangeUseGridLayout = onChangeUseGridLayout,
+                            showRecognitionDate = showRecognitionDate,
+                            onChangeShowRecognitionDate = onChangeShowRecognitionDate,
+                        )
                     }
 
                     TopBarMode.MultiSelection -> Row(
@@ -124,4 +136,59 @@ internal fun LibraryScreenTopBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+@Composable
+private fun LibraryDropdownMenu(
+    modifier: Modifier = Modifier,
+    useGridLayout: Boolean,
+    onChangeUseGridLayout: (Boolean) -> Unit,
+    showRecognitionDate: Boolean,
+    onChangeShowRecognitionDate: (Boolean) -> Unit,
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        IconButton(onClick = { menuExpanded = !menuExpanded }) {
+            Icon(
+                painter = painterResource(UiR.drawable.outline_more_vert_24),
+                contentDescription = stringResource(StringsR.string.show_more)
+            )
+        }
+        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
+        MaterialTheme(
+            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        ) {
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
+                    onClick = { onChangeUseGridLayout(!useGridLayout) },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.outline_check_24),
+                            contentDescription = null,
+                            modifier = Modifier.graphicsLayer {
+                                alpha = if (useGridLayout) 1f else 0f
+                            }
+                        )
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(StringsR.string.show_recognition_date)) },
+                    onClick = { onChangeShowRecognitionDate(!showRecognitionDate) },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.outline_check_24),
+                            contentDescription = null,
+                            modifier = Modifier.graphicsLayer {
+                                alpha = if (showRecognitionDate) 1f else 0f
+                            }
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

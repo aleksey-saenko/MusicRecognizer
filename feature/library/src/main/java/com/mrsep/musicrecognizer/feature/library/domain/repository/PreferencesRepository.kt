@@ -9,5 +9,7 @@ interface PreferencesRepository {
     val userPreferencesFlow: Flow<UserPreferences>
 
     suspend fun setTrackFilter(value: TrackFilter)
+    suspend fun setUseGridForLibrary(value: Boolean)
+    suspend fun setShowRecognitionDateInLibrary(value: Boolean)
 
 }

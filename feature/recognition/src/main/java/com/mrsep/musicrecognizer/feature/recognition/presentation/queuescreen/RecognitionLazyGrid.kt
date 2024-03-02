@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 internal fun RecognitionLazyGrid(
     modifier: Modifier = Modifier,
     lazyGridState: LazyGridState,
+    showCreationDate: Boolean,
     multiSelectionState: MultiSelectionState<Int>,
     recognitionList: ImmutableList<EnqueuedRecognitionUi>,
     onNavigateToTrackScreen: (trackId: String) -> Unit,
@@ -70,6 +71,7 @@ internal fun RecognitionLazyGrid(
                     }
                 },
                 onLongClick = { multiSelectionState.toggleSelection(recognition.id) },
+                showCreationDate = showCreationDate,
                 modifier = Modifier.animateItemPlacement(),
                 contentPadding = PaddingValues(4.dp)
             )

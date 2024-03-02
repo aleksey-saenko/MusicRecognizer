@@ -62,7 +62,7 @@ internal fun RecognitionLazyColumnItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    showCreationDate: Boolean = true,
+    showCreationDate: Boolean,
     contentPadding: PaddingValues,
     shape: Shape = MaterialTheme.shapes.medium,
 ) {
@@ -171,8 +171,8 @@ internal fun RecognitionLazyColumnItem(
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.End,
                     modifier = Modifier
-                        .align(Alignment.End)
                         .alpha(0.9f)
+                        .align(Alignment.End)
                 )
             }
         }

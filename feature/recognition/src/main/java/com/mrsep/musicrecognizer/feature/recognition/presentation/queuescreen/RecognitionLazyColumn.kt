@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 internal fun RecognitionLazyColumn(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState,
+    showCreationDate: Boolean,
     multiSelectionState: MultiSelectionState<Int>,
     recognitionList: ImmutableList<EnqueuedRecognitionUi>,
     onNavigateToTrackScreen: (trackId: String) -> Unit,
@@ -68,6 +69,7 @@ internal fun RecognitionLazyColumn(
                         }
                     },
                     onLongClick = { multiSelectionState.toggleSelection(recognition.id) },
+                    showCreationDate = showCreationDate,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 5.dp)
                 )
                 if (index != recognitionList.lastIndex) {

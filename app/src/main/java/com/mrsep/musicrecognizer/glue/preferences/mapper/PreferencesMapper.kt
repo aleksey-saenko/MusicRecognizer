@@ -44,8 +44,6 @@ class PreferencesMapper @Inject constructor(
                 .toImmutableList(),
             fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
-            useGridForLibrary = input.useGridForLibrary,
-            useGridForRecognitionQueue = input.useGridForRecognitionQueue,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
             recognizeOnStartup = input.recognizeOnStartup,

@@ -1,0 +1,2 @@
+* Multiple UI changes
+* Added additional sources to obtain track artwork

@@ -209,7 +209,6 @@ internal fun PreferencesScreen(
                             )
                         }
                     }
-                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

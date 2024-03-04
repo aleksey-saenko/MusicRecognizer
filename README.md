@@ -1,9 +1,9 @@
 # Audile
 
 Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
-This application uses [AudD](https://audd.io/) service to perform song identification and [Odesli](https://odesli.co/) service to retrieve additional platform-specific track links.
+This application uses [AudD](https://audd.io/) and [ACRCloud](https://www.acrcloud.com/) services to perform song identification and [Odesli](https://odesli.co/) service to retrieve additional platform-specific track links.
 
-[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/en/packages/com.mrsep.musicrecognizer/)
+[<img src="./img/get-it-on-f-droid.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/en/packages/com.mrsep.musicrecognizer/)
 [<img src="./img/get-it-on-github.png" alt="Get it on GitHub" height="80">](https://github.com/aleksey-saenko/MusicRecognizer/releases/)
 
 F-Droid releases cannot be upgraded to other releases as they are compiled and signed by [F-Droid](https://f-droid.org/docs/).
@@ -16,14 +16,6 @@ F-Droid releases cannot be upgraded to other releases as they are compiled and s
 * **Library** - All recognized tracks are stored in the application's library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
 * **Preferences** - The application has a number of options for customizing its behavior and appearance, which can be found on the settings screen.
 
-## Tech
-
-Audile is written in Kotlin and runs on Android 8.0 or higher.  
-App architecture inspired by clean arch practices. The application is modularized with a feature-based approach (definitely overkill for such small app).  
-UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
-The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
-Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.  
-
 ## Screenshots
 [<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png "Recognition screen")
 [<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/01.png "Track screen")
@@ -34,9 +26,17 @@ Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Mos
 [<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/06.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/06.png "Queue screen")
 [<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/07.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/07.png "Preferences screen")
 
+## Tech
+
+Audile is written in Kotlin and runs on Android 8.0 or higher.  
+App architecture inspired by clean arch practices. The application is modularized with a feature-based approach.  
+UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
+The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
+Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.
+
 ## API Key
 
-This application uses AudD service as a Music Recognition API. Please note that AudD service is not free, and you will need a special API token provided by the service to use this application. If you don't have an API token, you can sign up for a trial one.
+This application uses AudD service as a primary Music Recognition API. Please note that AudD service is not free, and you will need a special API token provided by the service to use this application. If you don't have an API token, you can sign up for a trial one.
 
 There is also the option to use the app without a token, but please note that this will significantly restrict the number of daily recognitions that can be performed. Please keep in mind that this behavior is not guaranteed by the service and can be restricted at any time.
 

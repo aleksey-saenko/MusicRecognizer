@@ -50,7 +50,7 @@ import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
 
-private const val SCREEN_TRANSITION_DURATION = 220
+private const val SCREEN_TRANSITION_DURATION = 250
 
 @Composable
 internal fun AppNavigation(
@@ -133,13 +133,9 @@ internal fun AppNavigation(
             },
             onRetryRequested = { setRecognitionRequested(true) }
         )
-        lyricsScreen(
-            onBackPressed = outerNavController::navigateUp
-        )
+        lyricsScreen(onBackPressed = outerNavController::navigateUp)
         aboutScreen(onBackPressed = outerNavController::navigateUp)
-        developerScreen(
-            onBackPressed = outerNavController::navigateUp
-        )
+        developerScreen(onBackPressed = outerNavController::navigateUp)
     }
 }
 

@@ -18,8 +18,8 @@ android {
         applicationId = "com.mrsep.musicrecognizer"
         minSdk = libs.versions.sdkMin.get().toInt()
         targetSdk = libs.versions.sdkTarget.get().toInt()
-        versionCode = 14
-        versionName = "1.4.0"
+        versionCode = 15
+        versionName = "1.4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -50,15 +50,16 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
-        )
+        if (project.findProperty("enableComposeCompilerReports") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
+            )
+        }
     }
     buildFeatures {
         compose = true

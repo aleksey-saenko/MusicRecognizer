@@ -24,14 +24,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
 
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
-        )
+        if (project.findProperty("enableComposeCompilerReports") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
+            )
+        }
     }
     buildFeatures {
         compose = true

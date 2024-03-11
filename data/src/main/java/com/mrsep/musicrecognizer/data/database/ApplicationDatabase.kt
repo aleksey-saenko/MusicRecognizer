@@ -4,7 +4,7 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mrsep.musicrecognizer.data.database.migration.MigrationSpec3To4RenameTrackId
+import com.mrsep.musicrecognizer.data.database.migration.AutoMigrationSpec3To4
 import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionDao
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
 import com.mrsep.musicrecognizer.data.track.TrackDao
@@ -15,12 +15,12 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
         TrackEntity::class,
         EnqueuedRecognitionEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
-        AutoMigration(from = 3, to = 4, spec = MigrationSpec3To4RenameTrackId::class),
+        AutoMigration(from = 3, to = 4, spec = AutoMigrationSpec3To4::class),
         AutoMigration(from = 4, to = 5),
     ]
 )

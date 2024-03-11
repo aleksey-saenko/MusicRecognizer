@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PreferencesMapper @Inject constructor(
     private val musicServiceMapper: Mapper<MusicServiceDo, MusicService>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleDo, LyricsFontStyle>,
-    private val themeModeMapper: BidirectionalMapper<ThemeModeDo, ThemeMode>,
+    private val themeModeMapper: Mapper<ThemeModeDo, ThemeMode>,
 ) : Mapper<UserPreferencesDo, UserPreferences> {
 
     override fun map(input: UserPreferencesDo): UserPreferences {

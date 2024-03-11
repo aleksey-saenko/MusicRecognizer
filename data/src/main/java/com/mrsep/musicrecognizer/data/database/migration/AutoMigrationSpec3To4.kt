@@ -13,4 +13,4 @@ import androidx.room.migration.AutoMigrationSpec
     fromColumnName = "result_mb_id",
     toColumnName = "result_track_id"
 )
-internal class MigrationSpec3To4RenameTrackId : AutoMigrationSpec
+internal class AutoMigrationSpec3To4 : AutoMigrationSpec

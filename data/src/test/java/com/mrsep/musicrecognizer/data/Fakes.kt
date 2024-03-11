@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data
 
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -14,6 +15,10 @@ internal val fakeTrack = TrackEntity(
     artist = "Pink Floyd",
     album = "Meddle",
     releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
+    duration = null,
+    recognizedAt = null,
+    recognizedBy = RecognitionProviderDo.Audd,
+    recognitionDate = Instant.now(),
     lyrics = "lyrics stub",
     links = TrackEntity.Links(
         artwork = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
@@ -34,11 +39,11 @@ internal val fakeTrack = TrackEntity(
         youtube = null,
         youtubeMusic = null
     ),
-    properties = TrackEntity.Properties(
-        lastRecognitionDate = Instant.now(),
+    themeSeedColor = null,
+    isViewed = false,
+    userProperties = TrackEntity.UserProperties(
         isFavorite = false,
-        themeSeedColor = null
-    )
+    ),
 )
 
 internal fun emptyAudioRecordingFlow(delayBeforeClose: Long) = flow<ByteArray> {

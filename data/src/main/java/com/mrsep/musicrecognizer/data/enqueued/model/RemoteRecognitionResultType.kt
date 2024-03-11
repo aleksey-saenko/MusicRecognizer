@@ -5,8 +5,8 @@ enum class RemoteRecognitionResultType {
     NoMatches,
     BadConnection,
     BadRecording,
-    WrongToken,
-    LimitedToken,
+    AuthError,
+    ApiUsageLimited,
     HttpError,
     UnhandledError
 }

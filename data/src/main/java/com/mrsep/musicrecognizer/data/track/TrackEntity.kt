@@ -1,11 +1,17 @@
 package com.mrsep.musicrecognizer.data.track
 
 import androidx.room.*
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 
-@Entity(tableName = "track")
+@Entity(
+    tableName = "track",
+    indices = [
+        Index(value = ["is_viewed"]),
+    ],
+)
 data class TrackEntity(
     @PrimaryKey @ColumnInfo(name = "id")
     val id: String,
@@ -21,12 +27,20 @@ data class TrackEntity(
     val duration: Duration?,
     @ColumnInfo(name = "recognized_at")
     val recognizedAt: Duration?,
+    @ColumnInfo(name = "recognized_by")
+    val recognizedBy: RecognitionProviderDo,
+    @ColumnInfo(name = "recognition_date")
+    val recognitionDate: Instant,
     @ColumnInfo(name = "lyrics")
     val lyrics: String?,
     @Embedded(prefix = "link_")
     val links: Links,
+    @ColumnInfo(name = "theme_seed_color")
+    val themeSeedColor: Int?,
+    @ColumnInfo(name = "is_viewed")
+    val isViewed: Boolean,
     @Embedded
-    val properties: Properties
+    val userProperties: UserProperties,
 ) {
 
     data class Links(
@@ -66,13 +80,10 @@ data class TrackEntity(
         val youtubeMusic: String?,
     )
 
-    data class Properties(
-        @ColumnInfo(name = "last_recognition_date")
-        val lastRecognitionDate: Instant,
+    /** Properties that should not change on update in case of re-recognition */
+    data class UserProperties(
         @ColumnInfo(name = "is_favorite")
         val isFavorite: Boolean,
-        @ColumnInfo(name = "theme_seed_color")
-        val themeSeedColor: Int?,
     )
 
 }

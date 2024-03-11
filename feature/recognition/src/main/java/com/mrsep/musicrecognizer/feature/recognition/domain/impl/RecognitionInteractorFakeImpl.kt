@@ -8,6 +8,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInt
 import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
@@ -95,13 +96,14 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private suspend fun notifySuccess(launchEnhancer: Boolean) {
         val fakeTrack = Track(
             id = persistentUUID,
-//            id = UUID.randomUUID().toString(),
             title = "Echoes", //#${kotlin.random.Random.nextInt()}
             artist = "Pink Floyd",
             album = "Meddle",
             releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
             duration = Duration.ofSeconds(210),
             recognizedAt = Duration.ofSeconds(157),
+            recognizedBy = RecognitionProvider.Audd,
+            recognitionDate = Instant.now(),
             lyrics = "lyrics stub",
             artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
 //            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
@@ -120,24 +122,17 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 TrackLink("", MusicService.Napster),
                 TrackLink("", MusicService.MusicBrainz),
             ),
-            properties = Track.Properties(
-                lastRecognitionDate = Instant.now(),
+            themeSeedColor = null,
+            isViewed = false,
+            userProperties = Track.UserProperties(
                 isFavorite = false,
-                themeSeedColor = null
             )
         )
-        val nowDate = Instant.now()
-        val trackWithStoredProps = trackRepository.upsertKeepProperties(fakeTrack)[0]
-        trackRepository.setRecognitionDate(trackWithStoredProps.id, nowDate)
-        val updatedTrack = trackWithStoredProps.copy(
-            properties = trackWithStoredProps.properties.copy(
-                lastRecognitionDate = nowDate
-            )
-        )
+        val upsertedTrack = trackRepository.upsertKeepUserProperties(fakeTrack)[0]
         if (launchEnhancer) {
-            enhancerScheduler.enqueue(updatedTrack.id)
+            enhancerScheduler.enqueue(upsertedTrack.id)
         }
-        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
+        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(upsertedTrack))
         resultDelegator.notify(fakeResult)
     }
 

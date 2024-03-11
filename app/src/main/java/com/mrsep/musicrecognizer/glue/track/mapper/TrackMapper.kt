@@ -1,13 +1,13 @@
 package com.mrsep.musicrecognizer.glue.track.mapper
 
-import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import javax.inject.Inject
 
-class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track> {
+class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
 
     override fun map(input: TrackEntity): Track {
         return Track(
@@ -40,51 +40,10 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                     youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
-            properties = Track.Properties(
-                lastRecognitionDate = input.properties.lastRecognitionDate,
-                isFavorite = input.properties.isFavorite,
-                themeSeedColor = input.properties.themeSeedColor
-            )
-        )
-    }
-
-    override fun reverseMap(input: Track): TrackEntity {
-        return TrackEntity(
-            id = input.id,
-            title = input.title,
-            artist = input.artist,
-            album = input.album,
-            releaseDate = input.releaseDate,
-            duration = input.duration,
-            recognizedAt = input.recognizedAt,
-            lyrics = input.lyrics,
-            links = run {
-                val linkMap = input.trackLinks.associate { link -> link.service to link.url }
-                TrackEntity.Links(
-                    artwork = input.artworkUrl,
-                    amazonMusic = linkMap[MusicService.AmazonMusic],
-                    anghami = linkMap[MusicService.Anghami],
-                    appleMusic = linkMap[MusicService.AppleMusic],
-                    audiomack = linkMap[MusicService.Audiomack],
-                    audius = linkMap[MusicService.Audius],
-                    boomplay = linkMap[MusicService.Boomplay],
-                    deezer = linkMap[MusicService.Deezer],
-                    musicBrainz = linkMap[MusicService.MusicBrainz],
-                    napster = linkMap[MusicService.Napster],
-                    pandora = linkMap[MusicService.Pandora],
-                    soundCloud = linkMap[MusicService.Soundcloud],
-                    spotify = linkMap[MusicService.Spotify],
-                    tidal = linkMap[MusicService.Tidal],
-                    yandexMusic = linkMap[MusicService.YandexMusic],
-                    youtube = linkMap[MusicService.Youtube],
-                    youtubeMusic = linkMap[MusicService.YoutubeMusic],
-                )
-            },
-            properties = TrackEntity.Properties(
-                lastRecognitionDate = input.properties.lastRecognitionDate,
-                isFavorite = input.properties.isFavorite,
-                themeSeedColor = input.properties.themeSeedColor
-            )
+            themeSeedColor = input.themeSeedColor,
+            recognitionDate = input.recognitionDate,
+            isViewed = input.isViewed,
+            isFavorite = input.userProperties.isFavorite,
         )
     }
 

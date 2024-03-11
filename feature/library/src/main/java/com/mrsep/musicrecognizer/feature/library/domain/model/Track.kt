@@ -10,12 +10,7 @@ data class Track(
     val album: String?,
     val releaseDate: LocalDate?,
     val artworkUrl: String?,
-    val properties: Properties
-) {
-
-    data class Properties(
-        val lastRecognitionDate: Instant,
-        val isFavorite: Boolean
-    )
-
-}
+    val recognitionDate: Instant,
+    val isViewed: Boolean,
+    val isFavorite: Boolean,
+)

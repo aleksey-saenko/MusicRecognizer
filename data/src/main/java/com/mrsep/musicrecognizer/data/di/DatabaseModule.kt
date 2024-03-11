@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.di
 import android.content.Context
 import androidx.room.Room
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
+import com.mrsep.musicrecognizer.data.database.migration.Migration5To6
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,11 @@ internal class RoomModule {
             appContext,
             ApplicationDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+            .addMigrations(
+                Migration5To6,
+            )
+            .build()
     }
 
 }

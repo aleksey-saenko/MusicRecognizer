@@ -22,6 +22,6 @@ internal fun Track.toUi(dateTimeFormatter: AppDateTimeFormatter) = TrackUi(
     album = this.album,
     artworkUrl = this.artworkUrl,
     recognitionDate = dateTimeFormatter.formatRelativeToToday(
-        this.properties.lastRecognitionDate.atZone(ZoneId.systemDefault())
+        this.recognitionDate.atZone(ZoneId.systemDefault())
     )
 )

@@ -37,15 +37,15 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    override suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return withContext(persistentCoroutineContext) {
-            trackDao.upsertKeepProperties(*tracks)
+            trackDao.upsertKeepUserProperties(*tracks)
         }
     }
 
-    override suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
+    override suspend fun updateKeepUserProperties(vararg tracks: TrackEntity) {
         return withContext(persistentCoroutineContext) {
-            trackDao.updateKeepProperties(*tracks)
+            trackDao.updateKeepUserProperties(*tracks)
         }
     }
 
@@ -147,12 +147,12 @@ private fun UserPreferencesDo.TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery 
     }
     if (hasUserDateLimits) {
         builder.append(if (whereUsed) " AND" else " WHERE")
-        builder.append(" last_recognition_date BETWEEN ? and ?")
+        builder.append(" recognition_date BETWEEN ? and ?")
         params.add(this.dateRange.first)
         params.add(this.dateRange.last)
     }
     val sortByColumn = when (this.sortBy) {
-        SortByDo.RecognitionDate -> "last_recognition_date"
+        SortByDo.RecognitionDate -> "recognition_date"
         SortByDo.Title -> "title"
         SortByDo.Artist -> "artist"
         SortByDo.ReleaseDate -> "release_date"

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 @Dao
-interface EnqueuedRecognitionDao {
+internal interface EnqueuedRecognitionDao {
 
     @Insert
     suspend fun insert(recognition: EnqueuedRecognitionEntity): Long

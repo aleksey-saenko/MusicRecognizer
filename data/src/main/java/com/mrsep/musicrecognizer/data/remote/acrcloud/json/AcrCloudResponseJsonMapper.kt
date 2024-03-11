@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.data.remote.acrcloud.json
 
+import com.github.f4b6a3.uuid.UuidCreator
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.time.Duration
@@ -11,7 +13,7 @@ import java.util.UUID
 
 internal fun AcrCloudResponseJson.toRecognitionResult(): RemoteRecognitionResultDo {
     return when (status.code) {
-        0 -> tryToParseSuccessResult(this)
+        0 -> parseSuccessResult(this)
         1001 -> RemoteRecognitionResultDo.NoMatches
         2000, 2004 -> RemoteRecognitionResultDo.Error.BadRecording(getErrorMessage(this))
         3001, 3014 -> RemoteRecognitionResultDo.Error.AuthError
@@ -20,13 +22,13 @@ internal fun AcrCloudResponseJson.toRecognitionResult(): RemoteRecognitionResult
     }
 }
 
-private fun tryToParseSuccessResult(json: AcrCloudResponseJson): RemoteRecognitionResultDo {
-    return json.metadata?.music?.firstOrNull()?.run(::tryToParseMusic)
-        ?: json.metadata?.humming?.firstOrNull()?.run(::tryToParseMusic)
+private fun parseSuccessResult(json: AcrCloudResponseJson): RemoteRecognitionResultDo {
+    return json.metadata?.music?.firstOrNull()?.run(::parseMusic)
+        ?: json.metadata?.humming?.firstOrNull()?.run(::parseMusic)
         ?: RemoteRecognitionResultDo.NoMatches
 }
 
-private fun tryToParseMusic(
+private fun parseMusic(
     music: AcrCloudResponseJson.Metadata.Music
 ): RemoteRecognitionResultDo.Success? {
     val title = music.title
@@ -34,14 +36,15 @@ private fun tryToParseMusic(
     if (title == null || artist == null) return null
 
     val track = TrackEntity(
-        // TODO: must not be random to define the same track
-        id = UUID.randomUUID().toString(),
+        id = createTrackId(music),
         title = music.title,
         artist = artist,
         album = music.album?.name,
         releaseDate = music.releaseDate?.run(::parseReleaseDate),
         duration = music.durationMs?.toLong()?.run(Duration::ofMillis),
         recognizedAt = music.playOffsetMs?.toLong()?.run(Duration::ofMillis),
+        recognizedBy = RecognitionProviderDo.AcrCloud,
+        recognitionDate = Instant.now(),
         lyrics = null,
         links = TrackEntity.Links(
             artwork = null,
@@ -62,13 +65,22 @@ private fun tryToParseMusic(
             youtube = parseYoutubeUrl(music),
             youtubeMusic = null
         ),
-        properties = TrackEntity.Properties(
-            lastRecognitionDate = Instant.now(),
+        themeSeedColor = null,
+        isViewed = false,
+        userProperties = TrackEntity.UserProperties(
             isFavorite = false,
-            themeSeedColor = null
-        )
+        ),
     )
     return RemoteRecognitionResultDo.Success(track)
+}
+
+private fun createTrackId(music: AcrCloudResponseJson.Metadata.Music): String {
+    return music.acrid?.let {
+        // Define some namespace for AcrCloud to distinguish result UUIDs in cases
+        // when tracks recognized by different providers have the same remote ID
+        val acrCloudIdNamespace = "b2f226c2-e0e8-45d1-884f-856a8c59f174"
+        UuidCreator.getNameBasedSha1(acrCloudIdNamespace, music.acrid).toString()
+    } ?: UUID.randomUUID().toString()
 }
 
 private fun parseDeezerUrl(music: AcrCloudResponseJson.Metadata.Music): String? {

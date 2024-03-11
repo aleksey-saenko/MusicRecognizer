@@ -3,6 +3,8 @@ package com.mrsep.musicrecognizer.data.remote.audd.json
 import android.graphics.Color
 import android.text.Html
 import android.util.Patterns
+import com.github.f4b6a3.uuid.UuidCreator
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.time.Duration
@@ -36,17 +38,18 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
         return RemoteRecognitionResultDo.NoMatches
     }
     val mediaItems = result.lyricsJson?.parseMediaItems()
-    val trackId = result.musicbrainz?.firstOrNull()?.id ?: UUID.randomUUID().toString()
 
     return RemoteRecognitionResultDo.Success(
         data = TrackEntity(
-            id = trackId,
+            id = createTrackId(result),
             title = trackTitle,
             artist = trackArtist,
             album = result.parseAlbum(),
             releaseDate = result.parseReleaseDate(),
             duration = result.parseTrackDuration(),
             recognizedAt = result.timecode?.run(::parseRecognizedAt),
+            recognizedBy = RecognitionProviderDo.Audd,
+            recognitionDate = Instant.now(),
             lyrics = result.parseLyrics(),
             links = TrackEntity.Links(
                 artwork = result.toArtworkLink(),
@@ -67,16 +70,23 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
                 youtube = mediaItems?.parseYoutubeLink(),
                 youtubeMusic = null
             ),
-            properties = TrackEntity.Properties(
-                lastRecognitionDate = Instant.now(),
+            themeSeedColor = null,
+            isViewed = false,
+            userProperties = TrackEntity.UserProperties(
                 isFavorite = false,
-                //TODO: need to test matching the color by palette
-                themeSeedColor = null //json.result.parseArtworkSeedColor()
-            )
+            ),
         )
     )
 }
 
+private fun createTrackId(result: AuddResponseJson.Result): String {
+    return result.auddSongLink?.let {
+        // Define some namespace for Audd to distinguish result UUIDs in cases
+        // when tracks recognized by different providers have the same remote ID
+        val auddIdNamespace = "bbfa96d0-dae8-4273-912a-0d9e2e1931c2"
+        return UuidCreator.getNameBasedSha1(auddIdNamespace, result.auddSongLink).toString()
+    } ?: UUID.randomUUID().toString()
+}
 
 private fun AuddResponseJson.Result.parseTrackTitle(): String? {
     return appleMusic?.name?.takeIf { it.isNotBlank() }
@@ -224,7 +234,6 @@ private fun getUnknownError(): RemoteRecognitionResultDo {
     return RemoteRecognitionResultDo.Error.UnhandledError(message)
 }
 
-
 /*
 https://docs.audd.io/#common-errors
 We have about 40 different error codes. The common errors:
@@ -244,4 +253,4 @@ We have about 40 different error codes. The common errors:
     Possibly, the audio file is too small.
     #100 — An unknown error. Contact us in this case.
 
- */
+*/

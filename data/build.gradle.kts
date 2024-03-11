@@ -100,6 +100,8 @@ dependencies {
     implementation(libs.moshi.adapters)
     ksp(libs.moshi.codegen)
 
+    implementation(libs.uuid.creator)
+
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.turbine)

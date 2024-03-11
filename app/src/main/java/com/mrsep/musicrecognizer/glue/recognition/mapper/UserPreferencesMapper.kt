@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class UserPreferencesMapper @Inject constructor(
     private val fallbackActionMapper: Mapper<FallbackActionDo, FallbackAction>,
-    private val providerMapper: Mapper<RecognitionProviderDo, RecognitionProvider>,
+    private val providerMapper: BidirectionalMapper<RecognitionProviderDo, RecognitionProvider>,
     private val auddConfigMapper: BidirectionalMapper<AuddConfigDo, AuddConfig>,
     private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>,
 ) :

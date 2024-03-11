@@ -14,14 +14,9 @@ data class Track(
     val recognizedAt: Duration?,
     val lyrics: String?,
     val artworkUrl: String?,
+    val themeSeedColor: Int?,
     val trackLinks: List<TrackLink>,
-    val properties: Properties
-) {
-
-    data class Properties(
-        val lastRecognitionDate: Instant,
-        val isFavorite: Boolean,
-        val themeSeedColor: Int?
-    )
-
-}
+    val recognitionDate: Instant,
+    val isViewed: Boolean,
+    val isFavorite: Boolean,
+)

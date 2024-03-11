@@ -1,13 +1,17 @@
 package com.mrsep.musicrecognizer.glue.recognition.mapper
 
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.TrackLink
 import javax.inject.Inject
 
-class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track> {
+class TrackMapper @Inject constructor(
+    private val providerMapper: BidirectionalMapper<RecognitionProviderDo, RecognitionProvider>
+) : BidirectionalMapper<TrackEntity, Track> {
 
     override fun map(input: TrackEntity): Track {
         return Track(
@@ -18,6 +22,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             releaseDate = input.releaseDate,
             duration = input.duration,
             recognizedAt = input.recognizedAt,
+            recognizedBy = providerMapper.map(input.recognizedBy),
+            recognitionDate = input.recognitionDate,
             lyrics = input.lyrics,
             artworkUrl = input.links.artwork,
             trackLinks = with(input.links) {
@@ -40,10 +46,10 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                     youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
-            properties = Track.Properties(
-                lastRecognitionDate = input.properties.lastRecognitionDate,
-                isFavorite = input.properties.isFavorite,
-                themeSeedColor = input.properties.themeSeedColor
+            themeSeedColor = input.themeSeedColor,
+            isViewed = input.isViewed,
+            userProperties = Track.UserProperties(
+                isFavorite = input.userProperties.isFavorite,
             )
         )
     }
@@ -57,6 +63,8 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
             releaseDate = input.releaseDate,
             duration = input.duration,
             recognizedAt = input.recognizedAt,
+            recognizedBy = providerMapper.reverseMap(input.recognizedBy),
+            recognitionDate = input.recognitionDate,
             lyrics = input.lyrics,
             links = run {
                 val linkMap = input.trackLinks.associate { link -> link.service to link.url }
@@ -80,11 +88,11 @@ class TrackMapper @Inject constructor() : BidirectionalMapper<TrackEntity, Track
                     youtubeMusic = linkMap[MusicService.YoutubeMusic],
                 )
             },
-            properties = TrackEntity.Properties(
-                lastRecognitionDate = input.properties.lastRecognitionDate,
-                isFavorite = input.properties.isFavorite,
-                themeSeedColor = input.properties.themeSeedColor
-            )
+            themeSeedColor = input.themeSeedColor,
+            isViewed = input.isViewed,
+            userProperties = TrackEntity.UserProperties(
+                isFavorite = input.userProperties.isFavorite,
+            ),
         )
     }
 

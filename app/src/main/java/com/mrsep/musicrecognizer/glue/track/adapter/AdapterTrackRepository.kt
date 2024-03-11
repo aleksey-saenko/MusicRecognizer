@@ -1,6 +1,6 @@
 package com.mrsep.musicrecognizer.glue.track.adapter
 
-import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class AdapterTrackRepository @Inject constructor(
     private val trackRepositoryDo: TrackRepositoryDo,
-    private val trackMapper: BidirectionalMapper<TrackEntity, Track>
+    private val trackMapper: Mapper<TrackEntity, Track>
 ) : TrackRepository {
 
     override fun getTrackFlow(trackId: String): Flow<Track?> {

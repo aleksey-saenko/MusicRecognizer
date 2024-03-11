@@ -56,16 +56,14 @@ class DatabaseFiller @Inject constructor(
                     .mapIndexed { index, result ->
                         val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
-                                copy(properties = result.data.properties.copy(isFavorite = true))
+                                copy(userProperties = result.data.userProperties.copy(isFavorite = true))
                             } else {
                                 this
                             }
                         }
                         entity.copy(
-                            properties = entity.properties.copy(
-                                lastRecognitionDate = Instant.now()
-                                    .minus(index * 500L, ChronoUnit.HOURS)
-                            )
+                            recognitionDate = Instant.now()
+                                .minus(index * 500L, ChronoUnit.HOURS)
                         )
                     }.toTypedArray()
                 trackRepository.upsert(*trackList)

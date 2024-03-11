@@ -25,10 +25,10 @@ class EnqueuedRecognitionMapper @Inject constructor(
                     message = input.enqueued.resultMessage ?: ""
                 )
 
-            RemoteRecognitionResultType.WrongToken ->
+            RemoteRecognitionResultType.AuthError ->
                 RemoteRecognitionResult.Error.AuthError
 
-            RemoteRecognitionResultType.LimitedToken ->
+            RemoteRecognitionResultType.ApiUsageLimited ->
                 RemoteRecognitionResult.Error.ApiUsageLimited
 
             RemoteRecognitionResultType.HttpError -> {
@@ -86,11 +86,11 @@ class EnqueuedRecognitionMapper @Inject constructor(
             }
 
             is RemoteRecognitionResult.Error.AuthError -> {
-                resultType = RemoteRecognitionResultType.WrongToken
+                resultType = RemoteRecognitionResultType.AuthError
             }
 
             is RemoteRecognitionResult.Error.ApiUsageLimited -> {
-                resultType = RemoteRecognitionResultType.LimitedToken
+                resultType = RemoteRecognitionResultType.ApiUsageLimited
             }
 
             RemoteRecognitionResult.NoMatches -> {

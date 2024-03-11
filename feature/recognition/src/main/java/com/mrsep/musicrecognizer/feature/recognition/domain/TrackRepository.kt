@@ -5,9 +5,9 @@ import java.time.Instant
 
 interface TrackRepository {
 
-    suspend fun upsertKeepProperties(vararg tracks: Track): List<Track>
+    suspend fun upsertKeepUserProperties(vararg tracks: Track): List<Track>
 
-    suspend fun updateKeepProperties(vararg tracks: Track)
+    suspend fun updateKeepUserProperties(vararg tracks: Track)
 
     suspend fun getTrack(trackId: String): Track?
 

@@ -35,10 +35,10 @@ interface MapperModule {
 
     @Binds
     fun bindThemeModeMapper(implementation: ThemeModeMapper):
-            BidirectionalMapper<ThemeModeDo, ThemeMode>
+            Mapper<ThemeModeDo, ThemeMode>
 
     @Binds
     fun bindTrackMapper(implementation: TrackMapper):
-            BidirectionalMapper<TrackEntity, Track>
+            Mapper<TrackEntity, Track>
 
 }

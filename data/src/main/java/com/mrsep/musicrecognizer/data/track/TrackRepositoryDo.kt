@@ -8,9 +8,9 @@ interface TrackRepositoryDo {
 
     suspend fun upsert(vararg tracks: TrackEntity)
 
-    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity>
+    suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity>
 
-    suspend fun updateKeepProperties(vararg tracks: TrackEntity)
+    suspend fun updateKeepUserProperties(vararg tracks: TrackEntity)
 
     suspend fun update(vararg tracks: TrackEntity)
 

@@ -70,7 +70,7 @@ interface MapperModule {
 
     @Binds
     fun bindRecognitionProviderMapper(implementation: RecognitionProviderMapper):
-            Mapper<RecognitionProviderDo, RecognitionProvider>
+            BidirectionalMapper<RecognitionProviderDo, RecognitionProvider>
 
     @Binds
     fun bindAuddConfigMapper(implementation: AuddConfigMapper):

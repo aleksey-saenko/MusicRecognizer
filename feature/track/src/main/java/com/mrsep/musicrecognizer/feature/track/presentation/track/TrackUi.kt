@@ -46,9 +46,9 @@ internal fun Track.toUi(
         recognizedAt = this.recognizedAt?.format(),
         lyrics = this.lyrics,
         artworkUrl = this.artworkUrl,
-        isFavorite = this.properties.isFavorite,
-        lastRecognitionDate = this.properties.lastRecognitionDate.format(FormatStyle.MEDIUM),
-        themeSeedColor = this.properties.themeSeedColor,
+        isFavorite = this.isFavorite,
+        lastRecognitionDate = this.recognitionDate.format(FormatStyle.MEDIUM),
+        themeSeedColor = this.themeSeedColor,
         trackLinks = filteredTrackLinks
     )
 }

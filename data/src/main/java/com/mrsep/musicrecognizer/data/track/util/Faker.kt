@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.track.util
 
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.time.Duration
 import java.time.Instant
@@ -22,6 +23,8 @@ internal fun getFakeTrackList(
                 .minus(index * 10L, ChronoUnit.DAYS),
             duration = Duration.ofSeconds(210),
             recognizedAt = Duration.ofSeconds(157),
+            recognizedBy = RecognitionProviderDo.entries.random(),
+            recognitionDate = Instant.now().minus(index * index * 10L, ChronoUnit.HOURS),
             album = "Album #${index + startIndex}",
             lyrics = "lyrics #${index + startIndex}",
             links = TrackEntity.Links(
@@ -43,12 +46,11 @@ internal fun getFakeTrackList(
                 youtube = "",
                 youtubeMusic = "",
             ),
-            properties = TrackEntity.Properties(
-                lastRecognitionDate = Instant.now()
-                    .minus(index * index * 10L, ChronoUnit.HOURS),
+            themeSeedColor = null,
+            isViewed = true,
+            userProperties = TrackEntity.UserProperties(
                 isFavorite = favorites,
-                themeSeedColor = null
-            )
+            ),
         )
     }
 }

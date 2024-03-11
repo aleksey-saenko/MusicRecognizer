@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import java.lang.IllegalStateException
-import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -150,16 +149,9 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Success -> {
                     recordProcess.cancelAndJoin()
-                    val nowDate = Instant.now()
-                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
-                    trackRepository.setRecognitionDate(trackWithStoredProps.id, nowDate)
-                    val updatedTrack = trackWithStoredProps.copy(
-                        properties = trackWithStoredProps.properties.copy(
-                            lastRecognitionDate = nowDate
-                        )
-                    )
-                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
-                    RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
+                    val upsertedTrack = trackRepository.upsertKeepUserProperties(result.track)[0]
+                    trackMetadataEnhancerScheduler.enqueue(upsertedTrack.id)
+                    RecognitionStatus.Done(RecognitionResult.Success(upsertedTrack))
                 }
             }
             resultDelegator.notify(recognitionResult)

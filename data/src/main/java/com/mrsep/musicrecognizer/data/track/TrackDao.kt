@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 @Dao
-interface TrackDao {
+internal interface TrackDao {
 
     @Upsert
     suspend fun upsert(vararg tracks: TrackEntity)
@@ -15,15 +15,15 @@ interface TrackDao {
     suspend fun update(vararg tracks: TrackEntity)
 
     @Transaction
-    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
-        val trackList = copyKeepProperties(*tracks)
+    suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+        val trackList = copyKeepUserProperties(*tracks)
         upsert(*trackList.toTypedArray())
         return trackList
     }
 
     @Transaction
-    suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
-        val trackList = copyKeepProperties(*tracks)
+    suspend fun updateKeepUserProperties(vararg tracks: TrackEntity) {
+        val trackList = copyKeepUserProperties(*tracks)
         update(*trackList.toTypedArray())
     }
 
@@ -39,7 +39,7 @@ interface TrackDao {
     @Query("UPDATE track SET theme_seed_color=(:color) WHERE id=(:trackId)")
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
-    @Query("UPDATE track SET last_recognition_date=(:recognitionDate) WHERE id=(:trackId)")
+    @Query("UPDATE track SET recognition_date=(:recognitionDate) WHERE id=(:trackId)")
     suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant)
 
     @Query("SELECT (SELECT COUNT(*) FROM track) == 0")
@@ -55,7 +55,7 @@ interface TrackDao {
         "SELECT * FROM track " +
                 "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
                 "ESCAPE (:escapeSymbol) " +
-                "ORDER BY last_recognition_date DESC " +
+                "ORDER BY recognition_date DESC " +
                 "LIMIT (:limit)"
     )
     fun getTracksFlowByKeyword(
@@ -68,10 +68,10 @@ interface TrackDao {
     fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
 
 
-    private suspend fun copyKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    private suspend fun copyKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return tracks.map { newTrack ->
             getTrack(newTrack.id)?.let { oldTrack ->
-                newTrack.copy(properties = oldTrack.properties)
+                newTrack.copy(userProperties = oldTrack.userProperties)
             } ?: newTrack
         }
     }

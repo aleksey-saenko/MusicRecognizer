@@ -144,7 +144,7 @@ class NotificationService : Service() {
             IntentFilter().apply {
                 addAction(RECOGNIZE_ACTION)
                 addAction(CANCEL_RECOGNITION_ACTION)
-                addAction(DISMISS_STATUS_ACTION)
+                addAction(DISABLE_SERVICE_ACTION)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
@@ -165,6 +165,7 @@ class NotificationService : Service() {
                     statusNotificationBuilder()
                         .setContentText(getString(StringsR.string.tap_to_recognize_the_song))
                         .addRecognizeButtonAndIntent()
+                        .addOptionalDisableButton()
                         .buildAndNotifyAsStatus()
                 }
             }
@@ -335,6 +336,25 @@ class NotificationService : Service() {
         ).setContentIntent(pendingIntent)
     }
 
+    // status notification is ongoing for API 33 and below
+    // starting from API 34, users can disable the service by dismissing the notification
+    private fun NotificationCompat.Builder.addOptionalDisableButton(): NotificationCompat.Builder {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                getString(StringsR.string.notification_button_disable_service),
+                PendingIntent.getBroadcast(
+                    this@NotificationService,
+                    0,
+                    Intent(DISABLE_SERVICE_ACTION).setPackage(packageName),
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+        } else {
+            this
+        }
+    }
+
     private fun NotificationCompat.Builder.addCancelButton(): NotificationCompat.Builder {
         return addAction(
             android.R.drawable.ic_menu_close_clear_cancel,
@@ -372,7 +392,7 @@ class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(DISMISS_STATUS_ACTION).setPackage(packageName),
+                Intent(DISABLE_SERVICE_ACTION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -494,7 +514,7 @@ class NotificationService : Service() {
                     cancelAndResetStatus()
                 }
 
-                DISMISS_STATUS_ACTION -> {
+                DISABLE_SERVICE_ACTION -> {
                     serviceScope.launch {
                         preferencesRepository.setNotificationServiceEnabled(false)
                         stopSelf()
@@ -513,7 +533,7 @@ class NotificationService : Service() {
 
         const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.recognize"
         const val CANCEL_RECOGNITION_ACTION = "com.mrsep.musicrecognizer.action.cancel_recognition"
-        const val DISMISS_STATUS_ACTION = "com.mrsep.musicrecognizer.action.dismiss_notification"
+        const val DISABLE_SERVICE_ACTION = "com.mrsep.musicrecognizer.action.disable_service"
         const val SHOW_TRACK_ACTION = "com.mrsep.musicrecognizer.action.show_track"
         const val SHOW_LYRICS_ACTION = "com.mrsep.musicrecognizer.action.show_lyrics"
 

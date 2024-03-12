@@ -47,6 +47,7 @@
     <string name="notification_channel_desc_scheduled_result">Umožňuje získávat výsledky naplánovaných rozpoznání skrze oznámení</string>
     <string name="message_record_error">Při nahrávání zvuku se vyskytla chyba</string>
     <string name="notification_message_recording_error">Při nahrávání zvuku se vyskytla chyba, zkuste to znovu</string>
+    <string name="notification_button_disable_service">Deaktivovat</string>
     <string name="please_check_network_status">Zkontrolujte prosím vaši síť</string>
     <string name="saved_recording_message">Vzorek zvuku byl uložen</string>
     <string name="manual_recognition_message">rozpoznávání můžete kdykoli spustit ručně</string>

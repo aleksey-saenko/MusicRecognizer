@@ -81,6 +81,7 @@
     <string name="notification_channel_desc_scheduled_result">Allows to receive scheduled recognition results via notifications</string>
     <string name="message_record_error">An error occurred during audio recording</string>
     <string name="notification_message_recording_error">An error occurred during audio recording, try again</string>
+    <string name="notification_button_disable_service">Stop service</string>
     <string name="please_check_network_status">Please, check your network status</string>
     <string name="saved_recording_message">The audio sample was saved</string>
     <string name="manual_recognition_message">you can launch recognition whenever you want manually</string>

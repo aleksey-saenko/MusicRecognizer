@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class LyricsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    trackRepository: TrackRepository,
+    private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
@@ -31,13 +31,15 @@ internal class LyricsViewModel @Inject constructor(
         track?.let {
             track.lyrics?.let { lyrics ->
                 LyricsUiState.Success(
+                    trackId = track.id,
                     title = track.title,
                     artist = track.artist,
                     lyrics = lyrics,
                     fontStyle = preferences.lyricsFontStyle,
                     themeSeedColor = track.themeSeedColor,
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-                    themeMode = preferences.themeMode
+                    themeMode = preferences.themeMode,
+                    isTrackViewed = track.isViewed,
                 )
             }
         } ?: LyricsUiState.LyricsNotFound
@@ -54,6 +56,12 @@ internal class LyricsViewModel @Inject constructor(
         }
     }
 
+    fun setTrackAsViewed(trackId: String) {
+        viewModelScope.launch {
+            trackRepository.setAsViewed(trackId)
+        }
+    }
+
 }
 
 @Immutable
@@ -64,13 +72,15 @@ internal sealed class LyricsUiState {
     data object LyricsNotFound : LyricsUiState()
 
     data class Success(
+        val trackId: String,
         val title: String,
         val artist: String,
         val lyrics: String,
         val fontStyle: UserPreferences.LyricsFontStyle,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
-        val themeMode: ThemeMode
+        val themeMode: ThemeMode,
+        val isTrackViewed: Boolean,
     ) : LyricsUiState()
 
 }

@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
-import java.time.Instant
 import javax.inject.Inject
 
 internal class TrackRepositoryImpl @Inject constructor(
@@ -55,15 +54,15 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setThemeSeedColor(trackId: String, color: Int?) {
+    override suspend fun setAsViewed(trackId: String) {
         withContext(persistentCoroutineContext) {
-            trackDao.setThemeSeedColor(trackId, color)
+            trackDao.setAsViewed(trackId)
         }
     }
 
-    override suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant) {
+    override suspend fun setThemeSeedColor(trackId: String, color: Int?) {
         withContext(persistentCoroutineContext) {
-            trackDao.setRecognitionDate(trackId, recognitionDate)
+            trackDao.setThemeSeedColor(trackId, color)
         }
     }
 
@@ -81,6 +80,12 @@ internal class TrackRepositoryImpl @Inject constructor(
 
     override fun isEmptyFlow(): Flow<Boolean> {
         return trackDao.isEmptyDatabaseFlow()
+            .distinctUntilChanged()
+            .flowOn(ioDispatcher)
+    }
+
+    override fun getUnviewedCountFlow(): Flow<Int> {
+        return trackDao.getUnviewedCountFlow()
             .distinctUntilChanged()
             .flowOn(ioDispatcher)
     }

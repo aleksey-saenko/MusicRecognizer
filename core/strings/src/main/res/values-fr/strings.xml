@@ -92,6 +92,7 @@
     <string name="web_browser_not_found_toast">Navigateur web non trouvé</string>
     <string name="cannot_share_toast">Impossible de trouver une application pour partager</string>
     <string name="reset">Réinitialiser</string>
+    <string name="format_amount_of_new_tracks">%s nouvelles pistes</string>
     <string name="filters">Filtres</string>
     <string name="filter_favorite_status">Statut favori</string>
     <string name="all">Tout</string>

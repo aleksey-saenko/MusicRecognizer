@@ -151,7 +151,7 @@ internal fun RecognitionLazyColumnItem(
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.95f)
             )
             Text(
                 text = recognition.getStatusMessage(false),
@@ -159,7 +159,7 @@ internal fun RecognitionLazyColumnItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.95f)
             )
             if (showCreationDate) {
                 Spacer(Modifier.weight(1f))

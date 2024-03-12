@@ -7,11 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -45,6 +47,7 @@ import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.ui.R as UiR
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -124,12 +127,7 @@ internal fun TrackLazyColumnItem(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
             alpha = 0.3f
         )
-        AsyncImage(
-            model = track.artworkUrl,
-            fallback = placeholder,
-            error = placeholder,
-            contentDescription = stringResource(com.mrsep.musicrecognizer.core.strings.R.string.artwork),
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .shadow(
                     elevation = 1.dp,
@@ -142,7 +140,23 @@ internal fun TrackLazyColumnItem(
                 .clip(shape)
                 .heightIn(max = 100.dp)
                 .aspectRatio(1f, true)
-        )
+        ) {
+            AsyncImage(
+                model = track.artworkUrl,
+                fallback = placeholder,
+                error = placeholder,
+                contentDescription = stringResource(StringsR.string.artwork),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            if (!track.isViewed) {
+                UnviewedTrackBadge(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(6.dp)
+                )
+            }
+        }
         Spacer(Modifier.width(10.dp))
         Column(
             modifier = Modifier
@@ -156,7 +170,7 @@ internal fun TrackLazyColumnItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.95f)
             )
             Text(
                 text = track.artist,
@@ -164,16 +178,8 @@ internal fun TrackLazyColumnItem(
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.95f)
             )
-//            Text(
-//                text = track.album ?: " ",
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis,
-//                style = MaterialTheme.typography.bodyMedium,
-//                color = MaterialTheme.colorScheme.onSurfaceVariant,
-//                modifier = Modifier.fillMaxWidth(0.9f)
-//            )
             if (showRecognitionDate) {
                 Spacer(Modifier.weight(1f))
                 Text(

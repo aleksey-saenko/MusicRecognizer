@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.data.track
 
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import kotlinx.coroutines.flow.Flow
-import java.time.Instant
 
 interface TrackRepositoryDo {
 
@@ -16,9 +15,9 @@ interface TrackRepositoryDo {
 
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
-    suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant)
-
     suspend fun setFavorite(trackId: String, isFavorite: Boolean)
+
+    suspend fun setAsViewed(trackId: String)
 
     suspend fun delete(vararg trackIds: String)
 
@@ -26,8 +25,9 @@ interface TrackRepositoryDo {
 
     suspend fun getTrack(trackId: String): TrackEntity?
 
-
     fun isEmptyFlow(): Flow<Boolean>
+
+    fun getUnviewedCountFlow(): Flow<Int>
 
     fun getTrackFlow(trackId: String): Flow<TrackEntity?>
 

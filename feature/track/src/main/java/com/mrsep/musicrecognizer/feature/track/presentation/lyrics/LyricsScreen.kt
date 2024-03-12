@@ -108,6 +108,9 @@ internal fun LyricsScreen(
         }
 
         is LyricsUiState.Success -> {
+            LaunchedEffect(uiState.isTrackViewed) {
+                if (!uiState.isTrackViewed) viewModel.setTrackAsViewed(uiState.trackId)
+            }
             val useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             var showFontStyleBottomSheet by rememberSaveable { mutableStateOf(false) }
             val fontStyleBottomSheetState = rememberModalBottomSheetState(true)

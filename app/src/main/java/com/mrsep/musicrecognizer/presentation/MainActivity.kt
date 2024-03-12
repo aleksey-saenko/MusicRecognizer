@@ -60,6 +60,8 @@ class MainActivity : ComponentActivity() {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val darkTheme = shouldUseDarkTheme(uiState)
             val recognitionRequested by viewModel.recognitionRequested.collectAsStateWithLifecycle()
+            val unviewedTracksCount = viewModel.unviewedTracksCount.collectAsStateWithLifecycle()
+
             MusicRecognizerTheme(
                 darkTheme = darkTheme,
                 dynamicColor = shouldUseDynamicColors(uiState),
@@ -81,6 +83,7 @@ class MainActivity : ComponentActivity() {
                 }
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(
+                        unviewedTracksCount = unviewedTracksCount,
                         recognitionRequested = recognitionRequested,
                         setRecognitionRequested = viewModel::setRecognitionRequested,
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),

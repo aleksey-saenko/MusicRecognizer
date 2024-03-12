@@ -93,6 +93,7 @@
     <string name="web_browser_not_found_toast">Веб-браузер не найден</string>
     <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
     <string name="reset">Сбросить</string>
+    <string name="format_amount_of_new_tracks">%s новых треков</string>
     <string name="filters">Фильтры</string>
     <string name="filter_favorite_status">Избранные</string>
     <string name="all">Все</string>

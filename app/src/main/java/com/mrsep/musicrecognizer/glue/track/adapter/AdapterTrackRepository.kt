@@ -31,4 +31,8 @@ class AdapterTrackRepository @Inject constructor(
         trackRepositoryDo.setThemeSeedColor(trackId, color)
     }
 
+    override suspend fun setAsViewed(trackId: String) {
+        trackRepositoryDo.setAsViewed(trackId)
+    }
+
 }

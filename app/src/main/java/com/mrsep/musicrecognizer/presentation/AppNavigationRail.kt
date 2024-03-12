@@ -5,40 +5,47 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun AppNavigationRail(
+    unviewedTracksCount: State<Int>,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
     NavigationRail(modifier = modifier) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
         TopLevelDestination.entries.forEach { destinationEntry ->
-            val selected =
-                currentDestination?.hierarchy?.any { it.route == destinationEntry.route } == true
+            val selected = currentDestination.isDestinationInHierarchy(destinationEntry)
             NavigationRailItem(
                 selected = selected,
                 icon = {
-                    if (selected) {
-                        Icon(
-                            painter = painterResource(destinationEntry.selectedIconResId),
-                            contentDescription = null
+                    when (destinationEntry) {
+                        TopLevelDestination.Library -> LibraryNavigationIcon(
+                            selected = selected,
+                            unviewedTracksCount = unviewedTracksCount
                         )
-                    } else {
-                        Icon(
-                            painter = painterResource(destinationEntry.unselectedIconResId),
-                            contentDescription = null
-                        )
+
+                        else -> if (selected) {
+                            Icon(
+                                painter = painterResource(destinationEntry.selectedIconResId),
+                                contentDescription = null
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(destinationEntry.unselectedIconResId),
+                                contentDescription = null
+                            )
+                        }
                     }
                 },
                 label = {

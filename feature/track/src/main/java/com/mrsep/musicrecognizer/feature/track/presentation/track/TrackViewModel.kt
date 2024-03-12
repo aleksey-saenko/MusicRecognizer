@@ -20,8 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val trackRepository: TrackRepository,
     preferencesRepository: PreferencesRepository,
+    private val trackRepository: TrackRepository,
     private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler
 ) : ViewModel() {
 
@@ -71,6 +71,12 @@ internal class TrackViewModel @Inject constructor(
         }
     }
 
+    fun setTrackAsViewed(trackId: String) {
+        viewModelScope.launch {
+            trackRepository.setAsViewed(trackId)
+        }
+    }
+
 }
 
 @Immutable
@@ -82,6 +88,7 @@ internal sealed class TrackUiState {
 
     data class Success(
         val track: TrackUi,
+        val isTrackViewed: Boolean,
         val isMetadataEnhancerRunning: Boolean,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
@@ -96,6 +103,7 @@ private fun Track.toUiState(
     val trackUi = this.toUi(preferences.requiredMusicServices)
     return TrackUiState.Success(
         track = this.toUi(preferences.requiredMusicServices),
+        isTrackViewed = this.isViewed,
         themeMode = preferences.themeMode,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         isMetadataEnhancerRunning = isMetadataEnhancerRunning &&

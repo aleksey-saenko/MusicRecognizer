@@ -85,6 +85,8 @@
     <string name="web_browser_not_found_toast">Webový prehliadač sa nenašiel</string>
     <string name="cannot_share_toast">Nebola nájdená žiadna aplikácia na zdieľanie</string>
     <string name="reset">Obnoviť</string>
+    <string name="unviewed_track_label">NOVÝ</string>
+    <string name="format_amount_of_new_tracks">%s nových skladieb</string>
     <string name="filters">Filtre</string>
     <string name="filter_favorite_status">Obľúbený stav</string>
     <string name="all">Všetko</string>

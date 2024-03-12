@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -101,25 +102,35 @@ internal fun TrackLazyGridItem(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
             alpha = 0.3f
         )
-        AsyncImage(
-            model = track.artworkUrl,
-            fallback = placeholder,
-            error = placeholder,
-            contentDescription = stringResource(StringsR.string.artwork),
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .shadow(
                     elevation = 1.dp,
                     shape = shape
                 )
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                     shape = shape
                 )
                 .clip(shape)
                 .aspectRatio(1f)
-
-        )
+        ) {
+            AsyncImage(
+                model = track.artworkUrl,
+                fallback = placeholder,
+                error = placeholder,
+                contentDescription = stringResource(StringsR.string.artwork),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            if (!track.isViewed) {
+                UnviewedTrackBadge(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(6.dp)
+                )
+            }
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()

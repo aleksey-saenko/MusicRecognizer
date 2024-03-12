@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,6 +55,7 @@ private const val SCREEN_TRANSITION_DURATION = 250
 
 @Composable
 internal fun AppNavigation(
+    unviewedTracksCount: State<Int>,
     recognitionRequested: Boolean,
     setRecognitionRequested: (Boolean) -> Unit,
     shouldShowNavRail: Boolean,
@@ -113,6 +115,7 @@ internal fun AppNavigation(
             onOnboardingClose = onOnboardingClose
         )
         barNavHost(
+            unviewedTracksCount = unviewedTracksCount,
             recognitionRequested = recognitionRequested,
             setRecognitionRequested = setRecognitionRequested,
             shouldShowNavRail = shouldShowNavRail,
@@ -142,6 +145,7 @@ internal fun AppNavigation(
 private const val BAR_HOST_ROUTE = "bar_host"
 
 private fun NavGraphBuilder.barNavHost(
+    unviewedTracksCount: State<Int>,
     recognitionRequested: Boolean,
     setRecognitionRequested: (Boolean) -> Unit,
     shouldShowNavRail: Boolean,
@@ -164,7 +168,10 @@ private fun NavGraphBuilder.barNavHost(
                     )
             ) {
                 if (shouldShowNavRail) {
-                    AppNavigationRail(navController = innerNavController)
+                    AppNavigationRail(
+                        unviewedTracksCount = unviewedTracksCount,
+                        navController = innerNavController
+                    )
                     VerticalDivider(modifier = Modifier.alpha(0.2f))
                 }
                 BarNavHost(
@@ -176,7 +183,10 @@ private fun NavGraphBuilder.barNavHost(
                 )
             }
             if (!shouldShowNavRail) {
-                AppNavigationBar(navController = innerNavController)
+                AppNavigationBar(
+                    unviewedTracksCount = unviewedTracksCount,
+                    navController = innerNavController
+                )
             }
         }
     }

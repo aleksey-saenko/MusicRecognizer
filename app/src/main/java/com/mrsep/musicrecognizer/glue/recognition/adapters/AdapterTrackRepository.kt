@@ -5,7 +5,6 @@ import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
-import java.time.Instant
 import javax.inject.Inject
 
 class AdapterTrackRepository @Inject constructor(
@@ -27,10 +26,6 @@ class AdapterTrackRepository @Inject constructor(
 
     override suspend fun getTrack(trackId: String): Track? {
         return trackRepositoryDo.getTrack(trackId)?.run(trackMapper::map)
-    }
-
-    override suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant) {
-        trackRepositoryDo.setRecognitionDate(trackId, recognitionDate)
     }
 
 }

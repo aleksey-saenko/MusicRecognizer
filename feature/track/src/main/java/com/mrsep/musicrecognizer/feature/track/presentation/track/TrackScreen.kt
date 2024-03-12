@@ -70,6 +70,9 @@ internal fun TrackScreen(
         }
 
         is TrackUiState.Success -> {
+            LaunchedEffect(uiState.isTrackViewed) {
+                if (!uiState.isTrackViewed) viewModel.setTrackAsViewed(uiState.track.id)
+            }
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.track.themeSeedColor?.run(::Color),
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,

@@ -124,6 +124,9 @@
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
     <string name="reset">Reset</string>
+    <string name="unviewed_track_label">NEW</string>
+    <!--    This label must be no longer than 5 characters, otherwise leave it without translation or replace it with "+1"-->
+    <string name="format_amount_of_new_tracks">%s new tracks</string>
     <string name="filters">Filters</string>
     <string name="filter_favorite_status">Favorite status</string>
     <string name="all">All</string>

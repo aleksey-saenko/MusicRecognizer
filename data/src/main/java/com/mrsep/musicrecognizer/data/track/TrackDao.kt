@@ -3,7 +3,6 @@ package com.mrsep.musicrecognizer.data.track
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
-import java.time.Instant
 
 @Dao
 internal interface TrackDao {
@@ -36,14 +35,17 @@ internal interface TrackDao {
     @Query("UPDATE track SET is_favorite=(:isFavorite) WHERE id=(:trackId)")
     suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
+    @Query("UPDATE track SET is_viewed=1 WHERE id=(:trackId)")
+    suspend fun setAsViewed(trackId: String)
+
     @Query("UPDATE track SET theme_seed_color=(:color) WHERE id=(:trackId)")
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
-    @Query("UPDATE track SET recognition_date=(:recognitionDate) WHERE id=(:trackId)")
-    suspend fun setRecognitionDate(trackId: String, recognitionDate: Instant)
-
     @Query("SELECT (SELECT COUNT(*) FROM track) == 0")
     fun isEmptyDatabaseFlow(): Flow<Boolean>
+
+    @Query("SELECT COUNT(*) FROM track WHERE is_viewed=0")
+    fun getUnviewedCountFlow(): Flow<Int>
 
     @Query("SELECT * FROM track WHERE id=(:trackId) LIMIT 1")
     suspend fun getTrack(trackId: String): TrackEntity?

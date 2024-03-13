@@ -122,17 +122,21 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 TrackLink("", MusicService.Napster),
                 TrackLink("", MusicService.MusicBrainz),
             ),
-            themeSeedColor = null,
-            isViewed = false,
-            userProperties = Track.UserProperties(
+            properties = Track.Properties(
                 isFavorite = false,
+                isViewed = false,
+                themeSeedColor = null,
             )
         )
-        val upsertedTrack = trackRepository.upsertKeepUserProperties(fakeTrack)[0]
+        val trackWithStoredProps = trackRepository.upsertKeepProperties(fakeTrack)[0]
+        trackRepository.setViewed(trackWithStoredProps.id, false)
+        val updatedTrack = trackWithStoredProps.copy(
+            properties = trackWithStoredProps.properties.copy(isViewed = false)
+        )
         if (launchEnhancer) {
-            enhancerScheduler.enqueue(upsertedTrack.id)
+            enhancerScheduler.enqueue(updatedTrack.id)
         }
-        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(upsertedTrack))
+        val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
         resultDelegator.notify(fakeResult)
     }
 

@@ -40,10 +40,10 @@ class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
                     youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
-            themeSeedColor = input.themeSeedColor,
+            themeSeedColor = input.properties.themeSeedColor,
             recognitionDate = input.recognitionDate,
-            isViewed = input.isViewed,
-            isFavorite = input.userProperties.isFavorite,
+            isViewed = input.properties.isViewed,
+            isFavorite = input.properties.isFavorite,
         )
     }
 

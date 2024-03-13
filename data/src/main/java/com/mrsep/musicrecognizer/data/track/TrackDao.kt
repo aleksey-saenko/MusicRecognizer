@@ -14,15 +14,15 @@ internal interface TrackDao {
     suspend fun update(vararg tracks: TrackEntity)
 
     @Transaction
-    suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
-        val trackList = copyKeepUserProperties(*tracks)
+    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+        val trackList = copyKeepProperties(*tracks)
         upsert(*trackList.toTypedArray())
         return trackList
     }
 
     @Transaction
-    suspend fun updateKeepUserProperties(vararg tracks: TrackEntity) {
-        val trackList = copyKeepUserProperties(*tracks)
+    suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
+        val trackList = copyKeepProperties(*tracks)
         update(*trackList.toTypedArray())
     }
 
@@ -35,8 +35,8 @@ internal interface TrackDao {
     @Query("UPDATE track SET is_favorite=(:isFavorite) WHERE id=(:trackId)")
     suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
-    @Query("UPDATE track SET is_viewed=1 WHERE id=(:trackId)")
-    suspend fun setAsViewed(trackId: String)
+    @Query("UPDATE track SET is_viewed=(:isViewed) WHERE id=(:trackId)")
+    suspend fun setViewed(trackId: String, isViewed: Boolean)
 
     @Query("UPDATE track SET theme_seed_color=(:color) WHERE id=(:trackId)")
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
@@ -70,10 +70,10 @@ internal interface TrackDao {
     fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
 
 
-    private suspend fun copyKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    private suspend fun copyKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return tracks.map { newTrack ->
             getTrack(newTrack.id)?.let { oldTrack ->
-                newTrack.copy(userProperties = oldTrack.userProperties)
+                newTrack.copy(properties = oldTrack.properties)
             } ?: newTrack
         }
     }

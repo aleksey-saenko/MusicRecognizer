@@ -16,14 +16,14 @@ data class Track(
     val recognitionDate: Instant,
     val lyrics: String?,
     val artworkUrl: String?,
-    val themeSeedColor: Int?,
     val trackLinks: List<TrackLink>,
-    val isViewed: Boolean,
-    val userProperties: UserProperties,
+    val properties: Properties,
 ) {
 
-    data class UserProperties(
+    data class Properties(
         val isFavorite: Boolean,
+        val isViewed: Boolean,
+        val themeSeedColor: Int?,
     )
 
 }

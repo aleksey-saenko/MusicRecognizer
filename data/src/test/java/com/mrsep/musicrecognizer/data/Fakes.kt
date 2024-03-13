@@ -39,10 +39,10 @@ internal val fakeTrack = TrackEntity(
         youtube = null,
         youtubeMusic = null
     ),
-    themeSeedColor = null,
-    isViewed = false,
-    userProperties = TrackEntity.UserProperties(
+    properties = TrackEntity.Properties(
         isFavorite = false,
+        isViewed = false,
+        themeSeedColor = null,
     ),
 )
 

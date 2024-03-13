@@ -149,9 +149,13 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Success -> {
                     recordProcess.cancelAndJoin()
-                    val upsertedTrack = trackRepository.upsertKeepUserProperties(result.track)[0]
-                    trackMetadataEnhancerScheduler.enqueue(upsertedTrack.id)
-                    RecognitionStatus.Done(RecognitionResult.Success(upsertedTrack))
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    trackRepository.setViewed(trackWithStoredProps.id, false)
+                    val updatedTrack = trackWithStoredProps.copy(
+                        properties = trackWithStoredProps.properties.copy(isViewed = false)
+                    )
+                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
+                    RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                 }
             }
             resultDelegator.notify(recognitionResult)

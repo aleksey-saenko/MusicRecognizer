@@ -46,10 +46,10 @@ internal fun getFakeTrackList(
                 youtube = "",
                 youtubeMusic = "",
             ),
-            themeSeedColor = null,
-            isViewed = true,
-            userProperties = TrackEntity.UserProperties(
+            properties = TrackEntity.Properties(
                 isFavorite = favorites,
+                isViewed = true,
+                themeSeedColor = null,
             ),
         )
     }

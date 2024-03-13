@@ -40,7 +40,7 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
                 ?: return@withContext Result.failure()
             when (val result = trackMetadataEnhancer.enhance(oldTrack)) {
                 is RemoteMetadataEnhancingResult.Success -> {
-                    trackRepository.updateKeepUserProperties(result.track)
+                    trackRepository.updateKeepProperties(result.track)
                     Result.success()
                 }
 

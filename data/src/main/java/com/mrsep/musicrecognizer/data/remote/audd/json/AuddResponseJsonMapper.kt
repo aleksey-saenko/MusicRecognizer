@@ -70,10 +70,10 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
                 youtube = mediaItems?.parseYoutubeLink(),
                 youtubeMusic = null
             ),
-            themeSeedColor = null,
-            isViewed = false,
-            userProperties = TrackEntity.UserProperties(
+            properties = TrackEntity.Properties(
                 isFavorite = false,
+                isViewed = false,
+                themeSeedColor = null,
             ),
         )
     )

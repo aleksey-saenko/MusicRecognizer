@@ -7,9 +7,9 @@ interface TrackRepositoryDo {
 
     suspend fun upsert(vararg tracks: TrackEntity)
 
-    suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity>
+    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity>
 
-    suspend fun updateKeepUserProperties(vararg tracks: TrackEntity)
+    suspend fun updateKeepProperties(vararg tracks: TrackEntity)
 
     suspend fun update(vararg tracks: TrackEntity)
 
@@ -17,7 +17,7 @@ interface TrackRepositoryDo {
 
     suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
-    suspend fun setAsViewed(trackId: String)
+    suspend fun setViewed(trackId: String, isViewed: Boolean)
 
     suspend fun delete(vararg trackIds: String)
 

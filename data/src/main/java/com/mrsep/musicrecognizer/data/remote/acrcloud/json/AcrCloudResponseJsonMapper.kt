@@ -65,10 +65,10 @@ private fun parseMusic(
             youtube = parseYoutubeUrl(music),
             youtubeMusic = null
         ),
-        themeSeedColor = null,
-        isViewed = false,
-        userProperties = TrackEntity.UserProperties(
+        properties = TrackEntity.Properties(
             isFavorite = false,
+            isViewed = false,
+            themeSeedColor = null,
         ),
     )
     return RemoteRecognitionResultDo.Success(track)

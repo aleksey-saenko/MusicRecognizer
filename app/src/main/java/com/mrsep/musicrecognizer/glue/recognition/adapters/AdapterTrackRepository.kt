@@ -12,20 +12,24 @@ class AdapterTrackRepository @Inject constructor(
     private val trackMapper: BidirectionalMapper<TrackEntity, Track>
 ) : TrackRepository {
 
-    override suspend fun upsertKeepUserProperties(vararg tracks: Track): List<Track> {
-        return trackRepositoryDo.upsertKeepUserProperties(
+    override suspend fun upsertKeepProperties(vararg tracks: Track): List<Track> {
+        return trackRepositoryDo.upsertKeepProperties(
             *tracks.map(trackMapper::reverseMap).toTypedArray()
         ).map(trackMapper::map)
     }
 
-    override suspend fun updateKeepUserProperties(vararg tracks: Track) {
-        trackRepositoryDo.updateKeepUserProperties(
+    override suspend fun updateKeepProperties(vararg tracks: Track) {
+        trackRepositoryDo.updateKeepProperties(
             *tracks.map(trackMapper::reverseMap).toTypedArray()
         )
     }
 
     override suspend fun getTrack(trackId: String): Track? {
         return trackRepositoryDo.getTrack(trackId)?.run(trackMapper::map)
+    }
+
+    override suspend fun setViewed(trackId: String, isViewed: Boolean) {
+        trackRepositoryDo.setViewed(trackId, isViewed)
     }
 
 }

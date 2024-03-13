@@ -35,12 +35,8 @@ data class TrackEntity(
     val lyrics: String?,
     @Embedded(prefix = "link_")
     val links: Links,
-    @ColumnInfo(name = "theme_seed_color")
-    val themeSeedColor: Int?,
-    @ColumnInfo(name = "is_viewed")
-    val isViewed: Boolean,
     @Embedded
-    val userProperties: UserProperties,
+    val properties: Properties,
 ) {
 
     data class Links(
@@ -80,10 +76,13 @@ data class TrackEntity(
         val youtubeMusic: String?,
     )
 
-    /** Properties that should not change on update in case of re-recognition */
-    data class UserProperties(
+    data class Properties(
         @ColumnInfo(name = "is_favorite")
         val isFavorite: Boolean,
+        @ColumnInfo(name = "is_viewed")
+        val isViewed: Boolean,
+        @ColumnInfo(name = "theme_seed_color")
+        val themeSeedColor: Int?,
     )
 
 }

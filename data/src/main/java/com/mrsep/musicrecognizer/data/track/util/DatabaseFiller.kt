@@ -56,7 +56,7 @@ class DatabaseFiller @Inject constructor(
                     .mapIndexed { index, result ->
                         val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
-                                copy(userProperties = result.data.userProperties.copy(isFavorite = true))
+                                copy(properties = result.data.properties.copy(isFavorite = true))
                             } else {
                                 this
                             }

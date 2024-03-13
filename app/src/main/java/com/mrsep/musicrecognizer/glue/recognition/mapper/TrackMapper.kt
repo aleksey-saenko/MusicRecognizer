@@ -46,10 +46,10 @@ class TrackMapper @Inject constructor(
                     youtubeMusic?.run { TrackLink(this, MusicService.YoutubeMusic) },
                 )
             },
-            themeSeedColor = input.themeSeedColor,
-            isViewed = input.isViewed,
-            userProperties = Track.UserProperties(
-                isFavorite = input.userProperties.isFavorite,
+            properties = Track.Properties(
+                isFavorite = input.properties.isFavorite,
+                isViewed = input.properties.isViewed,
+                themeSeedColor = input.properties.themeSeedColor,
             )
         )
     }
@@ -88,10 +88,10 @@ class TrackMapper @Inject constructor(
                     youtubeMusic = linkMap[MusicService.YoutubeMusic],
                 )
             },
-            themeSeedColor = input.themeSeedColor,
-            isViewed = input.isViewed,
-            userProperties = TrackEntity.UserProperties(
-                isFavorite = input.userProperties.isFavorite,
+            properties = TrackEntity.Properties(
+                isFavorite = input.properties.isFavorite,
+                isViewed = input.properties.isViewed,
+                themeSeedColor = input.properties.themeSeedColor,
             ),
         )
     }

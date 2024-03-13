@@ -16,8 +16,8 @@ class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
             releaseDate = input.releaseDate,
             artworkUrl = input.links.artwork,
             recognitionDate = input.recognitionDate,
-            isViewed = input.isViewed,
-            isFavorite = input.userProperties.isFavorite,
+            isViewed = input.properties.isViewed,
+            isFavorite = input.properties.isFavorite,
         )
     }
 

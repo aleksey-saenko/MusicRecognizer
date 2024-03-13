@@ -76,14 +76,18 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
 
             when (result) {
                 is RemoteRecognitionResult.Success -> {
-                    val upsertedTrack = trackRepository.upsertKeepUserProperties(result.track)[0]
-                    val updatedResult = result.copy(track = upsertedTrack)
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    trackRepository.setViewed(trackWithStoredProps.id, false)
+                    val updatedTrack = trackWithStoredProps.copy(
+                        properties = trackWithStoredProps.properties.copy(isViewed = false)
+                    )
+                    val updatedResult = result.copy(track = updatedTrack)
                     val updatedEnqueued = enqueuedRecognition.copy(
                         result = updatedResult,
                         resultDate = Instant.now()
                     )
                     enqueuedRecognitionRepository.update(updatedEnqueued)
-                    trackMetadataEnhancerScheduler.enqueue(upsertedTrack.id)
+                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
                     scheduledResultNotificationHelper.notify(updatedEnqueued)
                     Result.success()
                 }

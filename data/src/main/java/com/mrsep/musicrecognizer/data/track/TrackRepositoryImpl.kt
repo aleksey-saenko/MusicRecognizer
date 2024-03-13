@@ -36,15 +36,15 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun upsertKeepUserProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    override suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return withContext(persistentCoroutineContext) {
-            trackDao.upsertKeepUserProperties(*tracks)
+            trackDao.upsertKeepProperties(*tracks)
         }
     }
 
-    override suspend fun updateKeepUserProperties(vararg tracks: TrackEntity) {
+    override suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
         return withContext(persistentCoroutineContext) {
-            trackDao.updateKeepUserProperties(*tracks)
+            trackDao.updateKeepProperties(*tracks)
         }
     }
 
@@ -54,9 +54,9 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setAsViewed(trackId: String) {
+    override suspend fun setViewed(trackId: String, isViewed: Boolean) {
         withContext(persistentCoroutineContext) {
-            trackDao.setAsViewed(trackId)
+            trackDao.setViewed(trackId, isViewed)
         }
     }
 

@@ -32,7 +32,7 @@ class AdapterTrackRepository @Inject constructor(
     }
 
     override suspend fun setAsViewed(trackId: String) {
-        trackRepositoryDo.setAsViewed(trackId)
+        trackRepositoryDo.setViewed(trackId, true)
     }
 
 }

@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "track",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `duration` INTEGER, `recognized_at` INTEGER, `recognized_by` TEXT NOT NULL, `recognition_date` INTEGER NOT NULL, `lyrics` TEXT, `theme_seed_color` INTEGER, `is_viewed` INTEGER NOT NULL, `link_artwork` TEXT, `link_amazon_music` TEXT, `link_anghami` TEXT, `link_apple_music` TEXT, `link_audiomack` TEXT, `link_audius` TEXT, `link_boomplay` TEXT, `link_deezer` TEXT, `link_musicbrainz` TEXT, `link_napster` TEXT, `link_pandora` TEXT, `link_soundcloud` TEXT, `link_spotify` TEXT, `link_tidal` TEXT, `link_yandex_music` TEXT, `link_youtube` TEXT, `link_youtube_music` TEXT, `is_favorite` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `duration` INTEGER, `recognized_at` INTEGER, `recognized_by` TEXT NOT NULL, `recognition_date` INTEGER NOT NULL, `lyrics` TEXT, `link_artwork` TEXT, `link_amazon_music` TEXT, `link_anghami` TEXT, `link_apple_music` TEXT, `link_audiomack` TEXT, `link_audius` TEXT, `link_boomplay` TEXT, `link_deezer` TEXT, `link_musicbrainz` TEXT, `link_napster` TEXT, `link_pandora` TEXT, `link_soundcloud` TEXT, `link_spotify` TEXT, `link_tidal` TEXT, `link_yandex_music` TEXT, `link_youtube` TEXT, `link_youtube_music` TEXT, `is_favorite` INTEGER NOT NULL, `is_viewed` INTEGER NOT NULL, `theme_seed_color` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -67,18 +67,6 @@
             "columnName": "lyrics",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "themeSeedColor",
-            "columnName": "theme_seed_color",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isViewed",
-            "columnName": "is_viewed",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "links.artwork",
@@ -183,10 +171,22 @@
             "notNull": false
           },
           {
-            "fieldPath": "userProperties.isFavorite",
+            "fieldPath": "properties.isFavorite",
             "columnName": "is_favorite",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "properties.isViewed",
+            "columnName": "is_viewed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "properties.themeSeedColor",
+            "columnName": "theme_seed_color",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {

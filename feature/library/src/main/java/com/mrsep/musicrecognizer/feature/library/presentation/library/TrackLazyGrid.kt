@@ -109,7 +109,7 @@ internal fun TrackLazyGridItem(
                     shape = shape
                 )
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = shape
                 )
                 .clip(shape)

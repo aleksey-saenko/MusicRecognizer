@@ -10,7 +10,6 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +34,7 @@ internal fun AutoScrollPanel(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shape = CircleShape
             )
     ) {

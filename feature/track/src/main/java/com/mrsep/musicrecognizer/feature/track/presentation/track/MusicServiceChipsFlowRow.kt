@@ -94,9 +94,8 @@ internal fun MusicServiceChip(
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        tonalElevation = 2.dp,
         shadowElevation = 1.dp,
     ) {
         Row(

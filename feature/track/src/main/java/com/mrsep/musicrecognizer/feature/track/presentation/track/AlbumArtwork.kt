@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -95,7 +94,7 @@ internal fun AlbumArtwork(
                 shape = MaterialTheme.shapes.extraLarge
             )
             .background(
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = MaterialTheme.shapes.extraLarge
             )
     )

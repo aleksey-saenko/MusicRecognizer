@@ -23,7 +23,7 @@ internal fun PreferenceSwitchItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 72.dp)
+            .heightIn(min = 76.dp)
             .clickable(
                 onClick = onClick,
                 enabled = enabled

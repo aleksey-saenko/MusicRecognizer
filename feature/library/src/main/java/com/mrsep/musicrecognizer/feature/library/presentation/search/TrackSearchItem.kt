@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -65,7 +64,7 @@ internal fun TrackSearchItem(
                     shape = shape
                 )
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = shape
                 )
                 .clip(shape)

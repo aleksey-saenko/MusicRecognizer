@@ -214,14 +214,16 @@ private fun BottomSheetAction(
             .clickable(onClick = onClick)
             .minimumInteractiveComponentSize()
             .fillMaxWidth()
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(Modifier.width(4.dp))
         Icon(
             painter = painterResource(iconResId),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             contentDescription = null
         )
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(16.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,

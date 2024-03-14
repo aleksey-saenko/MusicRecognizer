@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.presentation
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -100,10 +101,11 @@ fun LibraryNavigationIcon(
     val badgeText = if (unviewedTracksCount.value < 1000) "${unviewedTracksCount.value}" else "999+"
     BadgedBox(
         badge = {
+            // delay the entrance to avoid showing while animation after recognition is playing
             androidx.compose.animation.AnimatedVisibility(
                 visible = unviewedTracksCount.value != 0,
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut(),
+                enter = fadeIn(tween(delayMillis = 1000)) + scaleIn(tween(delayMillis = 1000)),
+                exit = fadeOut(tween()) + scaleOut(tween()),
                 label = "Badge visibility",
             ) {
                 Badge {

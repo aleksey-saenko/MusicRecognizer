@@ -105,6 +105,7 @@ internal fun ShareBottomSheet(
                     }
                 }
             }
+            Spacer(Modifier.height(8.dp))
             ShareGroup(title = stringResource(StringsR.string.music_services_links)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -129,6 +130,7 @@ internal fun ShareBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(8.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
@@ -167,14 +169,15 @@ private fun ShareGroup(
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
+        Spacer(Modifier.height(4.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(12.dp))
         content()
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(Modifier.height(4.dp))
     }
 }

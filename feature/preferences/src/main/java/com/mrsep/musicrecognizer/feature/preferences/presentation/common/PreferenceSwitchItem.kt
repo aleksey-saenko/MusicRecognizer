@@ -23,12 +23,12 @@ internal fun PreferenceSwitchItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 76.dp)
+            .heightIn(min = 72.dp)
             .clickable(
                 onClick = onClick,
                 enabled = enabled
             )
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
@@ -37,7 +37,7 @@ internal fun PreferenceSwitchItem(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

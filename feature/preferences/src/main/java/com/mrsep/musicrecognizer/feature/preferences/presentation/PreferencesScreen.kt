@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -136,6 +137,7 @@ internal fun PreferencesScreen(
                             checked = uiState.preferences.recognizeOnStartup
                         )
                     }
+                    HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
                     PreferenceGroup(title = stringResource(StringsR.string.notifications)) {
                         NotificationServiceSwitch(
@@ -143,6 +145,7 @@ internal fun PreferencesScreen(
                             setServiceEnabled = viewModel::setNotificationServiceEnabled
                         )
                     }
+                    HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
                     PreferenceGroup(title = stringResource(StringsR.string.appearance)) {
                         var showThemeDialog by rememberSaveable { mutableStateOf(false) }
@@ -179,6 +182,7 @@ internal fun PreferencesScreen(
                             )
                         }
                     }
+                    HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
                     PreferenceGroup(title = stringResource(StringsR.string.misc)) {
                         val vibratorAvailable = remember {

@@ -35,7 +35,7 @@ internal fun NoFilteredTracksMessage(
         )
         Text(
             text = stringResource(Strings.string.no_tracks_match_filter),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )

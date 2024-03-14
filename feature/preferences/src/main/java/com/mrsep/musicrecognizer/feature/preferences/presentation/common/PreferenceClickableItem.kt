@@ -21,14 +21,14 @@ internal fun PreferenceClickableItem(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 76.dp)
+            .heightIn(min = 72.dp)
             .clickable { onItemClick() }
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(16.dp)
             .alpha(if (enabled) 1f else 0.7f)
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

@@ -36,8 +36,8 @@ internal fun TrackActionsBottomBar(
             if (isLyricsAvailable) {
                 FloatingActionButton(
                     onClick = onLyricsClick,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     elevation = FloatingActionButtonDefaults.elevation(
                         defaultElevation = 2.dp
                     ),

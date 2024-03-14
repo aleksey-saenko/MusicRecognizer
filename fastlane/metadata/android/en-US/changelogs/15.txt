@@ -1,0 +1,2 @@
+* Added badges for unviewed tracks (e.g. recognized from queue)
+* Minor UI changes and bug fixes

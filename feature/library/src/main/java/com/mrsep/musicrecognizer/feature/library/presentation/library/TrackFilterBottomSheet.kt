@@ -61,7 +61,7 @@ internal fun TrackFilterBottomSheet(
                     )
                 }
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
             FilterGroup(title = stringResource(StringsR.string.filter_sort_by)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -91,7 +91,7 @@ internal fun TrackFilterBottomSheet(
                     )
                 }
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
             FilterGroup(title = stringResource(StringsR.string.filter_order_By)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -112,6 +112,7 @@ internal fun TrackFilterBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(8.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -143,14 +144,15 @@ private fun FilterGroup(
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
+        Spacer(Modifier.height(4.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Spacer(Modifier.height(8.dp))
-        content()
         Spacer(Modifier.height(12.dp))
+        content()
+        Spacer(Modifier.height(4.dp))
     }
 }

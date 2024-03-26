@@ -1,0 +1,1 @@
+* Fixed crash during database migration on app startup on Android 10 and below

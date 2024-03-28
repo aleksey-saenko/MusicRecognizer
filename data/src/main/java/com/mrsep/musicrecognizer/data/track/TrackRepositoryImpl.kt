@@ -108,22 +108,26 @@ internal class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getSearchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo> {
-        val searchKey = createSearchKeyForSQLite(keyword)
-        return trackDao.getTracksFlowByKeyword(searchKey, ESCAPE_SYMBOL, limit)
+    override fun getSearchResultFlow(query: String, searchScope: Set<TrackDataFieldDo>): Flow<SearchResultDo> {
+        val searchPattern = createSearchPatternForSQLite(query)
+        return trackDao.getTracksFlowByPattern(searchPattern, ESCAPE_SYMBOL, searchScope)
             .map<List<TrackEntity>, SearchResultDo> { list ->
                 SearchResultDo.Success(
-                    keyword = keyword,
+                    query = query,
+                    searchScope = searchScope,
                     data = list
                 )
             }
-            .onStart { emit(SearchResultDo.Pending(keyword)) }
+            .onStart { emit(SearchResultDo.Pending(query, searchScope)) }
             .flowOn(ioDispatcher)
     }
 
-    private fun createSearchKeyForSQLite(word: String): String {
-        return "%" + word.replace("%", "${ESCAPE_SYMBOL}%")
-            .replace("_", "${ESCAPE_SYMBOL}_") + "%"
+    private fun createSearchPatternForSQLite(query: String): String {
+        return query
+            .replace(ESCAPE_SYMBOL, "${ESCAPE_SYMBOL}/")
+            .replace("%", "${ESCAPE_SYMBOL}%")
+            .replace("_", "${ESCAPE_SYMBOL}_")
+            .run { "%$this%" }
     }
 
     companion object {

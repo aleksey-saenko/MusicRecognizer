@@ -26,14 +26,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
+import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
+import kotlinx.collections.immutable.ImmutableSet
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun TrackSearchItem(
     track: TrackUi,
-    keyword: String,
+    query: String,
+    searchScope: ImmutableSet<TrackDataField>,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.medium,
@@ -80,21 +83,32 @@ internal fun TrackSearchItem(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
-                text = highlightKeyword(track.title, keyword),
+                text = if (searchScope.contains(TrackDataField.Title)) {
+                    highlightQueryPart(track.title, query)
+                } else {
+                    AnnotatedString(track.title)
+                },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = highlightKeyword(track.artist, keyword),
+                text = if (searchScope.contains(TrackDataField.Artist)) {
+                    highlightQueryPart(track.artist, query)
+                } else {
+                    AnnotatedString(track.artist)
+                },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = track.album?.run { highlightKeyword(this, keyword) }
-                    ?: AnnotatedString(" "),
+                text = if (track.album != null && searchScope.contains(TrackDataField.Album)) {
+                     highlightQueryPart(track.album, query)
+                } else {
+                    AnnotatedString(track.album ?: " ")
+                },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
@@ -119,8 +133,8 @@ internal fun TrackSearchItem(
 
 @Composable
 @Stable
-private fun highlightKeyword(text: String, keyword: String): AnnotatedString {
-    if (keyword.isBlank()) return AnnotatedString(text)
+private fun highlightQueryPart(text: String, query: String): AnnotatedString {
+    if (query.isBlank()) return AnnotatedString(text)
     val spanStyle = SpanStyle(
         color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.SemiBold
@@ -128,8 +142,8 @@ private fun highlightKeyword(text: String, keyword: String): AnnotatedString {
     return buildAnnotatedString {
         var start = 0
         while (true) {
-            val first = text.indexOf(keyword, start, ignoreCase = true).takeIf { it != -1 } ?: break
-            val end = first + keyword.length
+            val first = text.indexOf(query, start, ignoreCase = true).takeIf { it != -1 } ?: break
+            val end = first + query.length
             append(text.substring(start, first))
             withStyle(spanStyle) {
                 append(text.substring(first, end))

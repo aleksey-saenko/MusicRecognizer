@@ -4,12 +4,15 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.track.SearchResultDo
+import com.mrsep.musicrecognizer.data.track.TrackDataFieldDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import com.mrsep.musicrecognizer.feature.library.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.library.mapper.SearchResultMapper
+import com.mrsep.musicrecognizer.glue.library.mapper.TrackDataFieldMapper
 import com.mrsep.musicrecognizer.glue.library.mapper.TrackFilterMapper
 import com.mrsep.musicrecognizer.glue.library.mapper.TrackMapper
 import com.mrsep.musicrecognizer.glue.library.mapper.UserPreferencesMapper
@@ -33,6 +36,10 @@ interface MapperModule {
     @Binds
     fun bindTrackFilterMapper(implementation: TrackFilterMapper):
             BidirectionalMapper<UserPreferencesDo.TrackFilterDo, TrackFilter>
+
+    @Binds
+    fun bindTrackDataFieldMapper(implementation: TrackDataFieldMapper):
+            BidirectionalMapper<TrackDataFieldDo, TrackDataField>
 
     @Binds
     fun bindUserPreferencesMapper(implementation: UserPreferencesMapper):

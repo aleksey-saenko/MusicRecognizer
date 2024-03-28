@@ -54,16 +54,30 @@ internal interface TrackDao {
     fun getTrackFlow(trackId: String): Flow<TrackEntity?>
 
     @Query(
-        "SELECT * FROM track " +
-                "WHERE title LIKE (:key) OR artist LIKE (:key) OR album LIKE (:key)" +
-                "ESCAPE (:escapeSymbol) " +
-                "ORDER BY recognition_date DESC " +
-                "LIMIT (:limit)"
+        """
+            SELECT * FROM track WHERE 
+                CASE 
+                    WHEN 'Title' IN (:searchScope) 
+                    THEN title LIKE (:pattern) ESCAPE (:escapeSymbol) 
+                    ELSE 0 
+                END 
+                OR CASE 
+                    WHEN 'Artist' IN (:searchScope) 
+                    THEN artist LIKE (:pattern) ESCAPE (:escapeSymbol) 
+                    ELSE 0 
+                END 
+                OR CASE 
+                    WHEN 'Album' IN (:searchScope) 
+                    THEN album LIKE (:pattern) ESCAPE (:escapeSymbol) 
+                    ELSE 0 
+                END 
+            ORDER BY recognition_date DESC
+        """
     )
-    fun getTracksFlowByKeyword(
-        key: String,
+    fun getTracksFlowByPattern(
+        pattern: String,
         escapeSymbol: String,
-        limit: Int
+        searchScope: Set<TrackDataFieldDo>
     ): Flow<List<TrackEntity>>
 
     @RawQuery(observedEntities = [TrackEntity::class])

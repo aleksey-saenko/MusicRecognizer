@@ -18,8 +18,8 @@ android {
         applicationId = "com.mrsep.musicrecognizer"
         minSdk = libs.versions.sdkMin.get().toInt()
         targetSdk = libs.versions.sdkTarget.get().toInt()
-        versionCode = 16
-        versionName = "1.4.2"
+        versionCode = 17
+        versionName = "1.4.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

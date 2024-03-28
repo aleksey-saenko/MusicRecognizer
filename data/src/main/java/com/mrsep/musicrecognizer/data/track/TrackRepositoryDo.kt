@@ -33,6 +33,6 @@ interface TrackRepositoryDo {
 
     fun getTracksByFilterFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>>
 
-    fun getSearchResultFlow(keyword: String, limit: Int): Flow<SearchResultDo>
+    fun getSearchResultFlow(query: String, searchScope: Set<TrackDataFieldDo>): Flow<SearchResultDo>
 
 }

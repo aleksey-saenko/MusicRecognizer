@@ -1,0 +1,10 @@
+<b>Audile</b> yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.
+Bu uygulama, Müzik Tanıma API'si olarak AudD® hizmetini kullanır.
+
+<b>Özellikler:</b>
+
+<b>Tanıma</b> - Audile, tek bir tıklamayla şarkı tanıma işlemi gerçekleştirmenizi sağlar. İnternet yoksa uygulama kaydı kaydedecek ve tanıma işlemi tekrar çevrimiçi olduğunuzda yürütülecektir. Başarısız tanıma için varsayılan davranışı (internet yok, eşleşme yok, başka bir başarısızlık) tercihler aracılığıyla özelleştirebilirsiniz.
+<b>Bildirim servisi</b> - Uygulamayı bildirim çekmecesinden kullanabilirsiniz. Tanıma sürecini yönetin ve parça hakkında bilgi alın.
+<b>Parça hakkında</b> - Başarılı bir tanıma durumunda, parça hakkında isim, sanatçı, albüm ve yıl, sanat eseri, popüler müzik servislerinde bu parçaya bağlantılar, şarkı sözleri gibi bilgiler sağlanır.
+<b>Kütüphane</b> - Tanınan tüm parçalar uygulamanın kütüphanesinde saklanır. Parçaları filtreleyebilir, bir sık kullanılanlar koleksiyonu oluşturabilir, parçaları arayabilir veya parçaları silebilirsiniz.
+<b>Tercihler</b> - Uygulamanın davranışını ve görünümünü özelleştirmek için ayarlar ekranında bulunabilecek bir dizi seçenek vardır.

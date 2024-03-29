@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Audile</string>
     <string name="tap_to_recognize">Tanımak için dokun</string>
     <string name="tap_to_recognize_the_song">Şarkıyı tanımak için dokun</string>
     <string name="recognize">Tanı</string>
     <string name="listening">Dinleme</string>
-    <string name="listening_with_ellipsis">Dinleniyor...</string>
+    <string name="listening_with_ellipsis">Dinleniyor…</string>
     <string name="trying_one_more_time">Bir kez daha deniyorum</string>
     <string name="listening_last_attempt">Dinliyor… Son teşebbüs…</string>
     <string name="preferences">Tercihler</string>
@@ -13,12 +12,10 @@
     <string name="onboarding_welcome_message">Audile, yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
     <string name="onboarding_permission_message_start">"Uygulamanın düzgün çalışması için ses kaydı izni gerekiyor. Bu izni vererek, kaydedilen verilerinizin "</string>
     <string name="onboarding_permission_message_link">uzaktan hizmet</string>
-    <string name="onboarding_permission_message_end">" for music recognition. Uygulama bu verileri başka bir amaçla kullanmıyor ."</string>
-    <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
-    <string name="onboarding_token_message_start">"Uygulama, ücretsiz olmayan ve özel bir API belirteci gerektiren AudD müzik tanıma hizmetini kullanıyor. Kaydol"</string>
+    <string name="onboarding_permission_message_end">" for music recognition. Uygulama bu verileri başka bir amaçla kullanmıyor."</string>
+    <string name="onboarding_token_message_start">"Uygulama, ücretsiz olmayan ve özel bir API belirteci gerektiren AudD müzik tanıma hizmetini kullanıyor. Kaydol "</string>
     <string name="onboarding_token_message_link">buradan</string>
-    <string name="onboarding_token_message_end">"henüz deneme jetonunuz yoksa, deneme jetonunuzu almak için."</string>
-    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
+    <string name="onboarding_token_message_end">" henüz deneme jetonunuz yoksa, deneme jetonunuzu almak için."</string>
     <string name="token_skip_message">Bu adımı atlamak günlük tanımalarınızı sınırlayacaktır, ancak kişisel jetonunuzu daha sonra tercihlerde belirtebilirsiniz.</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>
@@ -27,31 +24,6 @@
     <string name="final_onboarding_page_title">Yola çıkmaya hazırız</string>
     <string name="final_onboarding_page_message">Kurulum başarıyla tamamlandı</string>
     <string name="get_started">Başlayın</string>
-    <string name="api_token" translatable="false">API token</string>
-    <string name="host" translatable="false">Host</string>
-    <string name="access_key" translatable="false">Access key</string>
-    <string name="access_secret" translatable="false">Access secret</string>
-    <string name="format_experimental" translatable="false">%s (experimental)</string>
-    <string name="audd" translatable="false">AudD</string>
-    <string name="acr_cloud" translatable="false">ACRCloud</string>
-    <string name="odesli" translatable="false">Odesli</string>
-    <string name="wikipedia" translatable="false">Wikipedia</string>
-    <string name="amazon_music" translatable="false">Amazon Music</string>
-    <string name="anghami" translatable="false">Anghami</string>
-    <string name="apple_music" translatable="false">Apple Music</string>
-    <string name="audiomack" translatable="false">Audiomack</string>
-    <string name="audius" translatable="false">Audius</string>
-    <string name="boomplay" translatable="false">Boomplay</string>
-    <string name="deezer" translatable="false">Deezer</string>
-    <string name="musicbrainz" translatable="false">MusicBrainz</string>
-    <string name="napster" translatable="false">Napster</string>
-    <string name="pandora" translatable="false">Pandora</string>
-    <string name="soundcloud" translatable="false">SoundCloud</string>
-    <string name="spotify" translatable="false">Spotify</string>
-    <string name="tidal" translatable="false">Tidal</string>
-    <string name="yandex_music" translatable="false">Yandex Music</string>
-    <string name="youtube" translatable="false">YouTube</string>
-    <string name="youtubeMusic" translatable="false">YouTube Music</string>
     <string name="format_service_auth">%s kimlik doğrulaması:</string>
     <string name="format_more_services">"ve %d daha"</string>
     <string name="apply">Uygula</string>
@@ -121,7 +93,6 @@
     <string name="cannot_share_toast">Paylaşılacak herhangi bir uygulama bulunamıyor</string>
     <string name="reset">Sıfırla</string>
     <string name="unviewed_track_label">YENİ</string>
-    <!--    This label must be no longer than 5 characters, otherwise leave it without translation or replace it with "+1"-->
     <string name="format_amount_of_new_tracks">%s yeni parça</string>
     <string name="filters">Filtreler</string>
     <string name="filter_favorite_status">Favori durum</string>
@@ -212,7 +183,7 @@
     <string name="track_not_found_message">Bir şeyler yanlış gitti, parça yanlışlıkla kaldırılmış veya değiştirilmiş olabilir</string>
     <string name="track_not_found">Parça bulunamadı</string>
     <string name="loading">Yükleniyor</string>
-    <string name="powered_by">Destekleyen:</string>
+    <string name="powered_by">Destekleyen</string>
     <string name="format_service">%s hizmet</string>
     <string name="purpose_recognition_service">Şarkı tanıması ve birincil meta veriler sağlar</string>
     <string name="purpose_track_links_service">Platforma özgü ek parça bağlantıları sağlar</string>
@@ -250,23 +221,21 @@
     <string name="album">Albüm</string>
     <string name="year">Yıl</string>
     <string name="lyrics">Şarkı Sözleri</string>
-    <string name="quick_tile_permissions_blocked_api33">Arka plan tanıma işlemini gerçekleştirmek için Audile'in mikrofona erişmesi ve bildirim gönderebilmesi gerekir. Lütfen Ayarlar'da Uygulama bilgilerini açın ve bu izinleri verin.</string>
-    <string name="quick_tile_permissions_blocked">Arka plan tanıma işlemini gerçekleştirmek için Audile'in mikrofona erişmesi gerekir. Lütfen Ayarlar'da Uygulama bilgilerini açın ve bu izni verin.</string>
+    <string name="quick_tile_permissions_blocked_api33">Arka plan tanıma işlemini gerçekleştirmek için Audile\'in mikrofona erişmesi ve bildirim gönderebilmesi gerekir. Lütfen Ayarlar\'da Uygulama bilgilerini açın ve bu izinleri verin.</string>
+    <string name="quick_tile_permissions_blocked">Arka plan tanıma işlemini gerçekleştirmek için Audile\'in mikrofona erişmesi gerekir. Lütfen Ayarlar\'da Uygulama bilgilerini açın ve bu izni verin.</string>
     <string name="quick_tile_recognize">Şarkıyı tanı</string>
     <string name="quick_tile_cancel_recognition">Tanımayı iptal et</string>
     <string name="help">Yardım</string>
-    <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->
-    <string name="audd_help_message_start">"AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API jetonunuzu almanız gerekir ."</string>
+    <string name="audd_help_message_start">"AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API jetonunuzu almanız gerekir."</string>
     <string name="audd_help_message_clickable">Kaydolun</string>
-    <string name="audd_help_message_end">"Henüz bir tane yoksa."</string>
+    <string name="audd_help_message_end">", henüz bir tane yoksa."</string>
     <string name="audd_help_message_empty_token">Tokeni sağlamadan hizmeti test amacıyla kullanmayı deneyebilirsiniz, ancak bunun günlük tanınırlığınızı sınırlayacağını lütfen unutmayın.</string>
-    <string name="acr_cloud_help_message_start">"ACRCloud, ücretsiz deneme süresi ve geliştirme amacıyla sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen bakınız"</string>
+    <string name="acr_cloud_help_message_start">"ACRCloud, ücretsiz deneme süresi ve geliştirme amacıyla sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen bakınız "</string>
     <string name="acr_cloud_help_message_guide_clickable">bu rehber</string>
     <string name="acr_cloud_help_message_end">.</string>
     <string name="acr_cloud_help_steps_title">Lütfen şu adımlara dikkat edin:</string>
     <string name="acr_cloud_help_step1">İnternet gecikmesini en aza indirmek için size en yakın coğrafi bölgeyi seçin</string>
-    <string name="acr_cloud_help_step2">Ses kaynağını \"Kaydedilen ses\" olarak ayarlayın</string>
-    <string name="acr_cloud_help_step3">Seçtiğiniz ses motorunu ayarlayın. \"Sesli parmak izi\" seçeneği genel kullanım için en doğru olanıdır</string>
+    <string name="acr_cloud_help_step2">Ses kaynağını \"Recorded audio\" olarak ayarlayın</string>
+    <string name="acr_cloud_help_step3">Seçtiğiniz ses motorunu ayarlayın. \"Audio fingerprinting\" seçeneği genel kullanım için en doğru olanıdır</string>
     <string name="acr_cloud_help_step4">3. taraf kimlik entegrasyonu için tüm kutuları işaretleyin</string>
-    <!-- The end of experimental part -->
 </resources>

@@ -1,21 +1,17 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.musicrecognizer.android.library)
+    alias(libs.plugins.musicrecognizer.android.hilt)
 
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.protobuf)
 }
 
 android {
     namespace = "com.mrsep.musicrecognizer.data"
-    compileSdk = libs.versions.sdkCompile.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.sdkMin.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
@@ -40,18 +36,8 @@ android {
             buildConfigField("boolean", "LOG_DEBUG_MODE", "true")
         }
         release {
-            isMinifyEnabled = false
             buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 
     ksp {
@@ -59,33 +45,20 @@ android {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            resources.excludes += "DebugProbesKt.bin"
-        }
-    }
     buildFeatures {
         buildConfig = true
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
-    implementation(project(":core:strings"))
-    implementation(project(":core:common"))
+    implementation(projects.core.strings)
+    implementation(projects.core.common)
 
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.kotlinx.collectionImmutable)
 
     implementation(libs.androidx.datastoreCore)
     implementation(libs.protobuf.kotlin.lite)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)

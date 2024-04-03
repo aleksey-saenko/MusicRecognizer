@@ -3,21 +3,16 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-
-    alias(libs.plugins.kapt)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.musicrecognizer.android.application)
+    alias(libs.plugins.musicrecognizer.android.application.compose)
+    alias(libs.plugins.musicrecognizer.android.hilt)
 }
 
 android {
     namespace = "com.mrsep.musicrecognizer"
-    compileSdk = libs.versions.sdkCompile.get().toInt()
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        minSdk = libs.versions.sdkMin.get().toInt()
-        targetSdk = libs.versions.sdkTarget.get().toInt()
         versionCode = 17
         versionName = "1.4.3"
 
@@ -44,29 +39,8 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-        if (project.findProperty("enableComposeCompilerReports") == "true") {
-            freeCompilerArgs += listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                        layout.buildDirectory.asFile.get().resolve("compose_metrics").canonicalPath,
-            )
-        }
-    }
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
     }
     packaging {
         resources {
@@ -79,37 +53,24 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 hilt {
     enableAggregatingTask = true
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:strings"))
-    implementation(project(":core:common"))
-    implementation(project(":feature:library"))
-    implementation(project(":feature:track"))
-    implementation(project(":feature:recognition"))
-    implementation(project(":feature:preferences"))
-    implementation(project(":feature:onboarding"))
-    implementation(project(":feature:developer-mode"))
+    implementation(projects.data)
+    implementation(projects.core.ui)
+    implementation(projects.core.strings)
+    implementation(projects.core.common)
+    implementation(projects.feature.library)
+    implementation(projects.feature.track)
+    implementation(projects.feature.recognition)
+    implementation(projects.feature.preferences)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.developerMode)
 
-    implementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui.toolingPreview)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.testManifest)
-    androidTestImplementation(libs.androidx.compose.ui.testJunit)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
@@ -123,9 +84,6 @@ dependencies {
 
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.kotlinx.collectionImmutable)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     implementation(libs.coil.compose)
 

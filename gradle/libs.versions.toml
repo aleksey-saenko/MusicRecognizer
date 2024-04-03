@@ -5,6 +5,7 @@ sdkTarget = "34"
 
 accompanist = "0.34.0"
 androidGradlePlugin = "8.3.1"
+androidTools = "31.3.1"
 androidxActivity = "1.8.2"
 androidxComposeBom = "2024.03.00"
 androidxComposeCompiler = "1.5.11"
@@ -92,6 +93,13 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 uuid-creator = { module = "com.github.f4b6a3:uuid-creator", version.ref = "uuidCreator" }
 
+# Dependencies of the included build-logic
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+kapt-gradlePlugin = { group = "org.jetbrains.kotlin.kapt", name = "org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlin" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -100,3 +108,11 @@ kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+
+# Plugins defined by this project
+musicrecognizer-android-application = { id = "musicrecognizer.android.application", version = "unspecified" }
+musicrecognizer-android-application-compose = { id = "musicrecognizer.android.application.compose", version = "unspecified" }
+musicrecognizer-android-library = { id = "musicrecognizer.android.library", version = "unspecified" }
+musicrecognizer-android-library-compose = { id = "musicrecognizer.android.library.compose", version = "unspecified" }
+musicrecognizer-android-feature = { id = "musicrecognizer.android.feature", version = "unspecified" }
+musicrecognizer-android-hilt = { id = "musicrecognizer.android.hilt", version = "unspecified" }

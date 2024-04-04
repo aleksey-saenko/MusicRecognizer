@@ -11,3 +11,4 @@
 | French   | [ysard](https://github.com/ysard) |
 | Russian  | [aleksey-saenko](https://github.com/aleksey-saenko) |
 | Slovak   | [tomz00](https://github.com/tomz00) |
+| Turkish  | [mikropsoft](https://github.com/mikropsoft) |

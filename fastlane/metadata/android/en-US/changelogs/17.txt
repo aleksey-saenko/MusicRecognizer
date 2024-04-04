@@ -1,0 +1,2 @@
+* Added option to adjust search scope in the library
+* Added Turkish translation (@mikropsoft)

@@ -40,6 +40,7 @@
     <string name="notification_permission_denied_message">Les demandes précédentes pour autoriser l\'application à envoyer des notifications ont été refusées. Sans cette autorisation, le service de notification ne peut pas fonctionner correctement. Vous pouvez changer votre décision dans les paramètres.</string>
     <string name="permission_granted">Autorisation accordée</string>
     <string name="back">Retour</string>
+    <string name="forward">Suivant</string>
     <string name="open_settings">Ouvrir les paramètres</string>
     <string name="notification_channel_name_control">Contrôler les notifications</string>
     <string name="notification_channel_name_result">Résultats de reconnaissance</string>

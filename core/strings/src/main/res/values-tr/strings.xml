@@ -40,6 +40,7 @@
     <string name="notification_permission_denied_message">Uygulamanın bildirim göndermesine izin vermek için önceki istekler reddedildi. Bu izin olmadan bildirim hizmeti düzgün çalışamaz. Kararınızı ayarlardan değiştirebilirsiniz.</string>
     <string name="permission_granted">İzin verildi</string>
     <string name="back">Geri</string>
+    <string name="forward">İleri</string>
     <string name="open_settings">Ayarları açın</string>
     <string name="notification_channel_name_control">Kontrol bildirimleri</string>
     <string name="notification_channel_name_result">Tanıma sonuçları</string>

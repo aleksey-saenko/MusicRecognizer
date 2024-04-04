@@ -71,16 +71,6 @@ internal class OnboardingViewModel @Inject constructor(
 
     }
 
-    fun skipTokenApplying() {
-        val userToken = (_uiState.value as? TokenPageUiState.Success)?.token ?: ""
-        _uiState.update {
-            TokenPageUiState.Success(
-                token = userToken,
-                configValidationStatus = ConfigValidationStatus.Success
-            )
-        }
-    }
-
     fun setTokenField(value: String) {
         _uiState.update {
             TokenPageUiState.Success(

@@ -38,6 +38,7 @@
     <string name="notification_permission_denied_message">Predchádzajúce žiadosti o povolenie aplikácie odosielať upozornenia boli zamietnuté. Bez tohto povolenia služba upozornení nemôže správne fungovať. Svoje rozhodnutie môžete zmeniť prostredníctvom nastavení.</string>
     <string name="permission_granted">Povolenie udelené</string>
     <string name="back">Späť</string>
+    <string name="forward">Vpred</string>
     <string name="open_settings">Otvoriť nastavenia</string>
     <string name="notification_channel_name_control">Ovládanie upozornení</string>
     <string name="notification_channel_name_result">Výsledky rozpoznávania</string>

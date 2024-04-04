@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,44 +28,44 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_TAG"
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TokenPage(
     modifier: Modifier = Modifier,
     uiState: TokenPageUiState,
     onTokenChanged: (String) -> Unit,
-    onTokenSkip: () -> Unit,
     onTokenValidate: () -> Unit,
     onTokenApplied: () -> Unit
 ) {
     val context = LocalContext.current
     when (uiState) {
-        TokenPageUiState.Loading -> Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize()
-        ) {
-            LoadingStub(modifier = Modifier.weight(weight = 1f))
-        }
+        TokenPageUiState.Loading -> LoadingStub(
+            modifier = modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+        )
 
         is TokenPageUiState.Success -> {
-            LaunchedEffect(uiState) {
-                if (uiState.configValidationStatus is ConfigValidationStatus.Success) onTokenApplied()
+            var isTokenApplied by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(uiState.configValidationStatus) {
+                when (uiState.configValidationStatus) {
+                    ConfigValidationStatus.Success -> if (!isTokenApplied) {
+                        isTokenApplied = true
+                        onTokenApplied()
+                    }
+                    else -> isTokenApplied = false
+                }
             }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier
-                    .fillMaxSize()
-                    .padding(PaddingValues(24.dp)),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(24.dp),
             ) {
-
                 Text(
                     text = stringResource(StringsR.string.api_token),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(top = 24.dp)
+                    style = MaterialTheme.typography.headlineLarge
                 )
-
                 val annotatedText = buildAnnotatedString {
                     append(stringResource(StringsR.string.onboarding_token_message_start))
                     withStyle(
@@ -81,7 +82,7 @@ internal fun TokenPage(
                     }
                     append(stringResource(StringsR.string.onboarding_token_message_end))
                 }
-
+                Spacer(Modifier.height(24.dp))
                 ClickableText(
                     text = annotatedText,
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -97,25 +98,22 @@ internal fun TokenPage(
                             context.openUrlImplicitly(link)
                         }
                     },
-                    modifier = Modifier
-                        .widthIn(max = 488.dp)
-                        .padding(top = 24.dp)
+                    modifier = Modifier.widthIn(max = 488.dp)
                 )
+                Spacer(Modifier.height(12.dp))
                 Text(
                     text = stringResource(StringsR.string.token_skip_message),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .widthIn(max = 488.dp)
-                        .padding(top = 4.dp)
+                    modifier = Modifier.widthIn(max = 488.dp)
                 )
 
+                Spacer(Modifier.height(24.dp))
                 val errorMessage = uiState.configValidationStatus.errorMessageOrNull()
                 var passwordVisible by rememberSaveable { mutableStateOf(false) }
                 OutlinedTextField(
                     modifier = Modifier
                         .widthIn(min = 56.dp, max = 488.dp)
-                        .fillMaxWidth(0.95f)
-                        .padding(top = 24.dp),
+                        .fillMaxWidth(0.95f),
                     value = uiState.token,
                     onValueChange = onTokenChanged,
                     readOnly = uiState.configValidationStatus is ConfigValidationStatus.Validating,
@@ -154,47 +152,31 @@ internal fun TokenPage(
                     shape = MaterialTheme.shapes.small
                 )
 
-                FlowRow(
-                    modifier = Modifier.padding(top = 20.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = onTokenValidate,
+                    enabled = uiState.configValidationStatus.isValidationAllowed,
+                    modifier = Modifier.widthIn(min = 240.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = onTokenSkip,
-                        enabled = uiState.configValidationStatus.isValidationAllowed,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
-                        Text(
-                            text = stringResource(StringsR.string.skip)
+                    when (uiState.configValidationStatus) {
+                        ConfigValidationStatus.Success -> Text(
+                            text = stringResource(StringsR.string.applied)
                         )
-                    }
-                    Button(
-                        onClick = onTokenValidate,
-                        enabled = uiState.configValidationStatus.isValidationAllowed,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
-                        when (uiState.configValidationStatus) {
-                            ConfigValidationStatus.Success -> Text(
-                                text = stringResource(StringsR.string.applied)
-                            )
 
-                            ConfigValidationStatus.Validating -> Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(text = stringResource(StringsR.string.validating))
-                                VinylRotating(modifier = Modifier.size(24.dp))
-                            }
-
-                            else -> Text(text = stringResource(StringsR.string.apply))
+                        ConfigValidationStatus.Validating -> Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(text = stringResource(StringsR.string.validating))
+                            VinylRotating(modifier = Modifier.size(20.dp))
                         }
+
+                        else -> Text(text = stringResource(StringsR.string.apply))
                     }
                 }
             }
         }
     }
-
-
 }
 
 @Stable

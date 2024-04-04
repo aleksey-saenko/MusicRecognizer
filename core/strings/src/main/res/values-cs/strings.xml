@@ -38,6 +38,7 @@
     <string name="notification_permission_denied_message">Předchozí žádosti o povolení posílání oznámení byly zamítnuty. Bez tohoto povolení nemůže služba oznámení správně fungovat. Rozhodnutí můžete změnit prostřednictvím nastavení.</string>
     <string name="permission_granted">Oprávnění uděleno</string>
     <string name="back">Zpět</string>
+    <string name="forward">Dopředu</string>
     <string name="open_settings">Otevřít nastavení</string>
     <string name="notification_channel_name_control">Ovládání v oznámení</string>
     <string name="notification_channel_name_result">Výsledky rozpoznávání</string>

@@ -11,15 +11,9 @@ object OnboardingScreen {
 
     const val ROUTE = "onboarding"
 
-    fun NavGraphBuilder.onboardingScreen(
-        onOnboardingCompleted: () -> Unit,
-        onOnboardingClose: () -> Unit
-    ) {
+    fun NavGraphBuilder.onboardingScreen(onOnboardingClose: () -> Unit) {
         composable(ROUTE) {
-            OnboardingScreen(
-                onOnboardingCompleted = onOnboardingCompleted,
-                onOnboardingClose = onOnboardingClose,
-            )
+            OnboardingScreen(onOnboardingClose = onOnboardingClose)
         }
     }
 

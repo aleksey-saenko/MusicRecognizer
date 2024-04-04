@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import android.Manifest
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
@@ -42,9 +43,9 @@ internal fun PermissionsPage(
     val recorderPermissionState = rememberPermissionState(
         Manifest.permission.RECORD_AUDIO
     ) { granted ->
-        if (!granted && !context.findActivity()
-                .shouldShowRationale(Manifest.permission.RECORD_AUDIO)
-        ) {
+        if (granted) {
+            onPermissionsGranted()
+        } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
             permissionBlockedDialogVisible = true
         }
     }
@@ -60,22 +61,18 @@ internal fun PermissionsPage(
         onDismissClick = { permissionRationaleDialogVisible = false }
     )
     //endregion
-    LaunchedEffect(recorderPermissionState.status.isGranted) {
-        if (recorderPermissionState.status.isGranted) {
-            onPermissionsGranted()
-        }
-    }
 
     Column(
-        modifier = modifier.padding(PaddingValues(horizontal = 24.dp)),
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(StringsR.string.permissions),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(PaddingValues(top = 24.dp))
+            style = MaterialTheme.typography.headlineLarge
         )
         val annotatedText = buildAnnotatedString {
             append(stringResource(StringsR.string.onboarding_permission_message_start))
@@ -93,6 +90,7 @@ internal fun PermissionsPage(
             }
             append(stringResource(StringsR.string.onboarding_permission_message_end))
         }
+        Spacer(Modifier.height(24.dp))
         ClickableText(
             text = annotatedText,
             style = MaterialTheme.typography.bodyLarge.copy(
@@ -108,14 +106,11 @@ internal fun PermissionsPage(
                     context.openUrlImplicitly(link)
                 }
             },
-            modifier = Modifier
-                .widthIn(max = 488.dp)
-                .padding(top = 24.dp)
+            modifier = Modifier.widthIn(max = 488.dp)
         )
+        Spacer(Modifier.height(24.dp))
         Button(
-            modifier = Modifier
-                .padding(top = 24.dp)
-                .widthIn(min = 240.dp),
+            modifier = Modifier.widthIn(min = 240.dp),
             enabled = !recorderPermissionState.status.isGranted,
             onClick = {
                 if (recorderPermissionState.status.shouldShowRationale) {
@@ -136,5 +131,4 @@ internal fun PermissionsPage(
             )
         }
     }
-
 }

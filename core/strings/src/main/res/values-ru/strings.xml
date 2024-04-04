@@ -41,6 +41,7 @@
     <string name="notification_permission_denied_message">Предыдущие запросы на разрешение приложению отправлять уведомления были отклонены. Без этого разрешения сервис уведомлений не может работать должным образом. Вы можете изменить свое решение через настройки.</string>
     <string name="permission_granted">Разрешение предоставлено</string>
     <string name="back">Назад</string>
+    <string name="forward">Вперед</string>
     <string name="open_settings">Открыть настройки</string>
     <string name="notification_channel_name_control">Управляющие уведомления</string>
     <string name="notification_channel_name_result">Результаты распознаваний</string>

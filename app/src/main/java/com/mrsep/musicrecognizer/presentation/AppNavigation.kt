@@ -110,10 +110,7 @@ internal fun AppNavigation(
         enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
-        onboardingScreen(
-            onOnboardingCompleted = { },
-            onOnboardingClose = onOnboardingClose
-        )
+        onboardingScreen(onOnboardingClose = onOnboardingClose)
         barNavHost(
             unviewedTracksCount = unviewedTracksCount,
             recognitionRequested = recognitionRequested,

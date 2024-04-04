@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun WormPageIndicator(
+internal fun PageIndicator(
     totalPages: Int,
     currentPage: Int,
     modifier: Modifier = Modifier,
@@ -30,8 +30,8 @@ internal fun WormPageIndicator(
         value = currentPage in 0 until totalPages,
         lazyMessage = { "Current page index is out of range." }
     )
-
-    val rowWidth = (indicatorSize * (selectedMultiplier + (totalPages - 1))) + (spacing * (totalPages - 1))
+    val rowWidth = (indicatorSize * (selectedMultiplier + (totalPages - 1))) +
+            (spacing * (totalPages - 1))
 
     Row(
         modifier = modifier
@@ -41,20 +41,19 @@ internal fun WormPageIndicator(
         for (i in 0 until totalPages) {
             val selected = i == currentPage
 
-            val height = indicatorSize
-            val width: Dp by animateDpAsState(
+            val width by animateDpAsState(
                 targetValue = if (selected) indicatorSize * selectedMultiplier else indicatorSize,
                 label = "WidthSize"
             )
 
             Canvas(
                 modifier = Modifier
-                    .size(width, height),
+                    .size(width = width, height = indicatorSize),
                 onDraw = {
                     drawRoundRect(
                         color = color,
-                        cornerRadius = CornerRadius(height.toPx() / 2),
-                        size = Size(width.toPx(), height.toPx())
+                        cornerRadius = CornerRadius(indicatorSize.toPx() / 2),
+                        size = Size(width = width.toPx(), height = indicatorSize.toPx())
                     )
                 }
             )

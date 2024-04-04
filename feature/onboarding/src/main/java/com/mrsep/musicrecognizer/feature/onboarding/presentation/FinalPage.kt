@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -18,28 +19,27 @@ internal fun FinalPage(
     onOnboardingCompleted: () -> Unit
 ) {
     Column(
-        modifier = modifier.padding(PaddingValues(horizontal = 24.dp)),
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(StringsR.string.final_onboarding_page_title),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(PaddingValues(vertical = 24.dp))
+            style = MaterialTheme.typography.headlineLarge
         )
+        Spacer(Modifier.height(24.dp))
         Text(
             text = stringResource(StringsR.string.final_onboarding_page_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .widthIn(max = 488.dp)
-                .padding(bottom = 24.dp)
+            modifier = Modifier.widthIn(max = 488.dp)
         )
+        Spacer(Modifier.height(24.dp))
         Button(
-            modifier = Modifier
-                .padding(bottom = 24.dp)
-                .widthIn(min = 240.dp),
+            modifier = Modifier.widthIn(min = 240.dp),
             onClick = onOnboardingCompleted
         ) {
             Text(text = stringResource(StringsR.string.get_started))

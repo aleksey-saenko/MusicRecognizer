@@ -72,6 +72,7 @@
     <string name="notification_permission_denied_message">Previous requests to allow the app to send notifications have been denied. Without this permission, the notification service can\'t work properly. You can change your decision through the settings.</string>
     <string name="permission_granted">Permission granted</string>
     <string name="back">Back</string>
+    <string name="forward">Forward</string>
     <string name="open_settings">Open settings</string>
     <string name="notification_channel_name_control">Control notifications</string>
     <string name="notification_channel_name_result">Recognition results</string>

@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +17,9 @@ internal fun WelcomePage(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(24.dp),
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -25,13 +28,12 @@ internal fun WelcomePage(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge
         )
+        Spacer(Modifier.height(24.dp))
         Text(
             text = stringResource(StringsR.string.onboarding_welcome_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .widthIn(max = 488.dp)
-                .padding(top = 24.dp)
+            modifier = Modifier.widthIn(max = 488.dp)
         )
     }
 }

@@ -1,1 +1,1 @@
-Müzik tanıma uygulaması
+Müzik algılama uygulaması

@@ -4,16 +4,16 @@ sdkMin = "26"
 sdkTarget = "34"
 
 accompanist = "0.34.0"
-androidGradlePlugin = "8.3.1"
-androidTools = "31.3.1"
-androidxActivity = "1.8.2"
-androidxComposeBom = "2024.04.00"
-androidxComposeCompiler = "1.5.11"
-androidxCore = "1.12.0"
+androidGradlePlugin = "8.4.0"
+androidTools = "31.4.0"
+androidxActivity = "1.9.0"
+androidxComposeBom = "2024.05.00"
+androidxComposeCompiler = "1.5.14"
+androidxCore = "1.13.1"
 androidxCoreSplashscreen = "1.0.1"
-androidxDataStore = "1.0.0"
+androidxDataStore = "1.1.1"
 androidxEspresso = "3.5.1"
-#androidxGlance = "1.0.0"
+androidxGlance = "1.1.0-rc01"
 androidxLifecycle = "2.7.0"
 androidxLifecycleViewmodelCompose = "2.7.0"
 androidxNavigation = "2.7.0"
@@ -24,11 +24,11 @@ hilt = "2.51.1"
 hiltExt = "1.2.0"
 junit4 = "4.13.2"
 junitExt = "1.1.5"
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 kotlinxCoroutines = "1.8.0"
 kotlinxCollectionImmutable = "0.3.7"
-ksp = "1.9.23-1.0.19"
-materialKolor = "1.4.4"
+ksp = "1.9.24-1.0.20"
+materialKolor = "1.5.0"
 moshi = "1.15.1"
 okhttpBom = "4.12.0"
 okhttpCoroutines = "1.0"
@@ -55,9 +55,9 @@ androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-datastoreCore = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
-#androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
-#androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
-#androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
+androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
+androidx-glanceAppWidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
+androidx-glanceMaterial3 = { group = "androidx.glance", name = "glance-material3", version.ref = "androidxGlance" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltExt" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }

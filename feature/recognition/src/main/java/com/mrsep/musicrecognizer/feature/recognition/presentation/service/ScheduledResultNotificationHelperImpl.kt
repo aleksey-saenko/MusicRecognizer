@@ -8,12 +8,14 @@ import android.app.Service
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getCachedImageOrNull
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
@@ -56,7 +58,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
                 .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
             appContext.getString(StringsR.string.format_scheduled_recognition_of, dateFormatted)
         }
-        val contentText = "${track.title} - ${track.artistWithAlbumFormatted()}"
+        val contentText = "${track.title} - ${track.artist}"
 
         val notification = NotificationCompat.Builder(appContext, ENQUEUED_RESULT_CHANNEL_ID)
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
@@ -68,7 +70,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
             .setCategory(Notification.CATEGORY_MESSAGE)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
-            .addOptionalBigPicture(track.artworkUrl)
+            .addOptionalBigPicture(track.artworkUrl, track.title, track.artistWithAlbumFormatted())
             .addTrackDeepLinkIntent(track.id)
             .addShowLyricsButton(track)
             .addShareButton(track.getSharedBody())
@@ -77,15 +79,32 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     }
 
     private suspend fun NotificationCompat.Builder.addOptionalBigPicture(
-        url: String?
+        url: String?,
+        contentTitle: String,
+        contentText: String
     ): NotificationCompat.Builder {
-        return url?.let {
-            appContext.fetchBitmapOrNull(url)?.let { bitmap ->
-                setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(bitmap)
-                )
-            }
-        } ?: this
+        if (url == null) return this
+        // Images should be ≤ 450dp wide, 2:1 aspect ratio
+        val imageWidthPx = appContext.dpToPx(450f).toInt()
+        val imageHeightPx = imageWidthPx / 2
+        val bitmap = appContext.getCachedImageOrNull(
+            url = url,
+            widthPx = imageWidthPx,
+            heightPx = imageHeightPx,
+        ) ?: return this
+        return setStyle(
+            NotificationCompat.BigPictureStyle()
+                .bigPicture(bitmap)
+                .setBigContentTitle(contentTitle)
+                .setSummaryText(contentText)
+                .run {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        showBigPictureWhenCollapsed(true)
+                    } else {
+                        this
+                    }
+                }
+        )
     }
 
     private fun createPendingIntent(intent: Intent): PendingIntent {
@@ -141,5 +160,4 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     companion object {
         private const val ENQUEUED_RESULT_CHANNEL_ID = "com.mrsep.musicrecognizer.enqueued_result"
     }
-
 }

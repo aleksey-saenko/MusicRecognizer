@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.startNotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -23,7 +23,7 @@ import javax.inject.Inject
  * */
 
 @AndroidEntryPoint
-class BootCompletedReceiver : BroadcastReceiver() {
+class ServiceStartupReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
@@ -33,14 +33,19 @@ class BootCompletedReceiver : BroadcastReceiver() {
     lateinit var appScope: CoroutineScope
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED ||
+            intent.action == Intent.ACTION_MY_PACKAGE_REPLACED
+        ) {
             appScope.launch {
                 val userPreferences = preferencesRepository.userPreferencesFlow.first()
                 if (userPreferences.notificationServiceEnabled) {
-                    context.startNotificationService(backgroundLaunch = true)
+                    context.startForegroundService(
+                        Intent(context, NotificationService::class.java)
+                            .setAction(NotificationService.HOLD_MODE_ON_ACTION)
+                            .putExtra(NotificationService.KEY_RESTRICTED_START, true)
+                    )
                 }
             }
         }
     }
-
 }

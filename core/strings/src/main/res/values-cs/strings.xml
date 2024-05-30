@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tap_to_recognize">Klepněte pro rozpoznání</string>
-    <string name="tap_to_recognize_the_song">Klepněte pro rozpoznání skladby</string>
+
     <string name="recognize">Rozpoznat</string>
     <string name="listening">Poslouchám</string>
-    <string name="listening_with_ellipsis">Poslouchám…</string>
+    <string name="please_wait">Prosím čekejte</string>
     <string name="trying_one_more_time">Ještě jeden pokus</string>
-    <string name="listening_last_attempt">Poslouchám… Poslední pokus…</string>
+
+    <string name="tap_to_try_again_short">Klepněte pro nový pokus</string>
+    <string name="identify_while_using_another_app_short">Identifikujte hudbu během používání aplikací</string>
+
     <string name="preferences">Nastavení</string>
     <string name="welcome">Vítejte</string>
     <string name="onboarding_welcome_message">Audile je aplikace pro rozpoznávání hudby, která vám rychle a spolehlivě pomůže rozpoznat skladbu, která hraje poblíž vás.</string>
@@ -19,7 +22,6 @@
     <string name="token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
     <string name="hide">Skrýt</string>
     <string name="show">Zobrazit</string>
-    <string name="skip">Přeskočit</string>
     <string name="validating">Ověřování</string>
     <string name="final_onboarding_page_title">Jdeme na to</string>
     <string name="final_onboarding_page_message">Prvotní nastavení úspěšně dokončeno</string>
@@ -30,12 +32,9 @@
     <string name="none">Žádný</string>
     <string name="permissions">Oprávnění</string>
     <string name="request_permission">Požádat o oprávnění</string>
-    <string name="microphone_access">Přístup k mikrofonu</string>
-    <string name="microphone_permission_rationale_message">Chcete-li provádět rozpoznávání hudby, musíte povolit přístup k mikrofonu.</string>
-    <string name="microphone_permission_denied_message">Předchozí žádosti o přístup k mikrofonu byly zamítnuty. Bez tohoto oprávnění nemůže aplikace provádět rozpoznávání hudby. Rozhodnutí můžete změnit prostřednictvím nastavení.</string>
-    <string name="sending_notifications">Posílání oznámení</string>
-    <string name="notification_permission_rationale_message">Chcete-li povolit službu oznámení, musíte aplikaci povolit zasílání oznámení.</string>
-    <string name="notification_permission_denied_message">Předchozí žádosti o povolení posílání oznámení byly zamítnuty. Bez tohoto povolení nemůže služba oznámení správně fungovat. Rozhodnutí můžete změnit prostřednictvím nastavení.</string>
+    <string name="recorder_permission_rationale_message">Pro provádění rozpoznání hudby potřebuje aplikace přístup k vašemu mikrofonu.</string>
+    <string name="notificaiton_permission_rationale_message">Pro ovládání rozpoznávání a získání výsledků, i když je aplikace minimalizována, je potřeba povolení k odesílání upozornění.</string>
+    <string name="permissions_denied_message">Předchozí žádosti o povolení byly zamítnuty. Můžete své rozhodnutí změnit v nastavení.</string>
     <string name="permission_granted">Oprávnění uděleno</string>
     <string name="back">Zpět</string>
     <string name="forward">Dopředu</string>
@@ -114,7 +113,6 @@
     <string name="fallback_policy_dialog_message">Nastavte výchozí záložní akci pro každý typ neúspěšného výsledku:</string>
     <string name="other_failures">Jiná selhání</string>
     <string name="fallback_policy_pref_subtitle">Nastavte záložních akci po neúspěšném rozpoznání</string>
-    <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
     <string name="notification_service">Služba oznámení</string>
     <string name="notification_service_pref_subtitle">Ovládání rozpoznávání skrze oznámení</string>
     <string name="notifications">Oznámení</string>
@@ -135,10 +133,7 @@
     <string name="empty_recognition_queue_sub_message">V případě neúspěšného rozpoznání může aplikace zadat rozpoznání podle zvolené záložní politiky.</string>
     <string name="recognition_scheduled">Rozpoznání naplánováno</string>
     <string name="offline_mode">Režim offline</string>
-    <string name="allow_the_app_to_access_the_microphone">Povolte aplikaci přístup k mikrofonu</string>
-    <string name="notification_service_initializing">Inicializace služby oznámení</string>
     <string name="disable_multi_selection_mode">Zakázat režim vícenásobné volby</string>
-    <string name="deselect_all">Zrušit výběr všeho</string>
     <string name="select_all">Vybrat vše</string>
     <string name="cancel_selected">Zrušit vybrané</string>
     <string name="delete_selected">Odstranit vybrané</string>
@@ -185,6 +180,6 @@
     <string name="stop_player">Zastavit přehrávač</string>
     <string name="start_player">Spustit přehrávač</string>
     <string name="edit">Upravit</string>
-    <string name="format_navigate_to_screen">Přejít na obrazovku %s</string>
+    <string name="recognition_widget_description">Rozpoznávejte píseň jedním klepnutím</string>
 
 </resources>

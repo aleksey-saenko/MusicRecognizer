@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Audile</string>
+
+    <!-- Full versions, mainly used for the main screen -->
     <string name="tap_to_recognize">Tap to recognize</string>
-    <string name="tap_to_recognize_the_song">Tap to recognize the song</string>
     <string name="recognize">Recognize</string>
     <string name="listening">Listening</string>
-    <string name="listening_with_ellipsis">Listening…</string>
+    <string name="please_wait">Please wait</string>
     <string name="trying_one_more_time">Trying one more time</string>
-    <string name="listening_last_attempt">Listening… The last attempt…</string>
+
+    <!-- Short versions, used for notifications and widgets -->
+    <string name="tap_to_recognize_short">Tap to recognize</string>
+    <string name="tap_to_try_again_short">Tap to try again</string>
+    <string name="identify_while_using_another_app_short">Identify while any app open</string>
+
     <string name="preferences">Preferences</string>
     <string name="welcome">Welcome</string>
     <string name="onboarding_welcome_message">Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
@@ -22,7 +28,6 @@
     <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify your personal token later in preferences.</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
-    <string name="skip">Skip</string>
     <string name="validating">Validating</string>
     <string name="final_onboarding_page_title">We are ready to go</string>
     <string name="final_onboarding_page_message">Setup completed successfully</string>
@@ -32,7 +37,6 @@
     <string name="host" translatable="false">Host</string>
     <string name="access_key" translatable="false">Access key</string>
     <string name="access_secret" translatable="false">Access secret</string>
-    <string name="format_experimental" translatable="false">%s (experimental)</string>
 
     <string name="audd" translatable="false">AudD</string>
     <string name="acr_cloud" translatable="false">ACRCloud</string>
@@ -64,12 +68,9 @@
     <string name="none">None</string>
     <string name="permissions">Permissions</string>
     <string name="request_permission">Request permission</string>
-    <string name="microphone_access">Microphone access</string>
-    <string name="microphone_permission_rationale_message">To perform music recognition, you need to grant access to the microphone.</string>
-    <string name="microphone_permission_denied_message">Previous requests for microphone access have been denied. Without this permission, the application can\'t perform music recognition. You can change your decision through the settings.</string>
-    <string name="sending_notifications">Sending notifications</string>
-    <string name="notification_permission_rationale_message">To enable the notification service, you need to allow the application to send notifications to you.</string>
-    <string name="notification_permission_denied_message">Previous requests to allow the app to send notifications have been denied. Without this permission, the notification service can\'t work properly. You can change your decision through the settings.</string>
+    <string name="recorder_permission_rationale_message">To perform music recognition, the app needs access to your microphone.</string>
+    <string name="notificaiton_permission_rationale_message">To control recognition and get result even when the app is minimized, it requires permission to send notifications.</string>
+    <string name="permissions_denied_message">Previous permissions requests have been denied. You can change your decision through the settings.</string>
     <string name="permission_granted">Permission granted</string>
     <string name="back">Back</string>
     <string name="forward">Forward</string>
@@ -155,7 +156,6 @@
     <string name="fallback_policy_dialog_message">Set the default fallback action for each type of unsuccessful result:</string>
     <string name="other_failures">Other failures</string>
     <string name="fallback_policy_pref_subtitle">Set fallback actions after unsuccessful recognitions</string>
-    <string name="recognition_queue_pref_subtitle">Manage your saved recognitions</string>
     <string name="recognition_provider_preference_title">Recognition provider</string>
     <string name="recognition_service_dialog_message">Select the recognition provider:</string>
     <string name="notification_service">Notification service</string>
@@ -188,10 +188,7 @@
     <string name="empty_recognition_queue_sub_message">In offline or on failure, a recognition can be queued according to the chosen fallback policy</string>
     <string name="recognition_scheduled">Recognition scheduled</string>
     <string name="offline_mode">Offline mode</string>
-    <string name="allow_the_app_to_access_the_microphone">Allow the app to access the microphone</string>
-    <string name="notification_service_initializing">Notification service is initializing</string>
     <string name="disable_multi_selection_mode">Disable multi selection mode</string>
-    <string name="deselect_all">Deselect all</string>
     <string name="select_all">Select all</string>
     <string name="cancel_selected">Cancel selected</string>
     <string name="delete_selected">Delete selected</string>
@@ -218,7 +215,6 @@
     <string name="track_not_found">The track was not found</string>
     <string name="loading">Loading</string>
     <string name="powered_by">Powered by</string>
-    <string name="format_service">%s service</string>
     <string name="purpose_recognition_service">Provides song identification and primary metadata</string>
     <string name="purpose_track_links_service">Provides additional platform-specific track links</string>
     <string name="github_repository">GitHub repository</string>
@@ -244,7 +240,6 @@
     <string name="stop_player">Stop player</string>
     <string name="start_player">Start player</string>
     <string name="edit">Edit</string>
-    <string name="format_navigate_to_screen">Navigate to %s screen</string>
     <string name="share_options">Share options</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
@@ -255,8 +250,6 @@
     <string name="album">Album</string>
     <string name="year">Year</string>
     <string name="lyrics">Lyrics</string>
-    <string name="quick_tile_permissions_blocked_api33">To perform background recognition, Audile requires access to the microphone and the ability to send notifications. Please open App info in Settings, and grant these permissions.</string>
-    <string name="quick_tile_permissions_blocked">To perform background recognition, Audile requires access to the microphone. Please open App info in Settings, and grant this permission.</string>
     <string name="quick_tile_recognize">Recognize song</string>
     <string name="quick_tile_cancel_recognition">Cancel recognition</string>
 
@@ -277,5 +270,7 @@
     <string name="acr_cloud_help_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use</string>
     <string name="acr_cloud_help_step4">Check all the boxes for 3rd party ID integration</string>
     <!-- The end of experimental part -->
+
+    <string name="recognition_widget_description">Recognize the song in one tap</string>
 
 </resources>

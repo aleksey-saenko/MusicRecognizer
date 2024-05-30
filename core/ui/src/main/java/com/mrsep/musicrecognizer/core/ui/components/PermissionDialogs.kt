@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.core.ui.components
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -12,59 +13,47 @@ import androidx.compose.ui.res.stringResource
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
-fun NotificationsPermissionRationaleDialog(
+fun RecognitionPermissionsRationaleDialog(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit
 ) {
     PermissionRationaleDialog(
-        title = stringResource(StringsR.string.sending_notifications),
-        text = stringResource(StringsR.string.notification_permission_rationale_message),
+        title = stringResource(StringsR.string.permissions),
+        text = buildString {
+            append(stringResource(StringsR.string.recorder_permission_rationale_message))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                append(" ")
+                append(stringResource(StringsR.string.notificaiton_permission_rationale_message))
+            }
+        },
         onConfirmClick = onConfirmClick,
         onDismissClick = onDismissClick
     )
 }
 
 @Composable
-fun NotificationsPermissionBlockedDialog(
+fun RecognitionPermissionsBlockedDialog(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit
 ) {
     PermissionBlockedDialog(
-        title = stringResource(StringsR.string.sending_notifications),
-        text = stringResource(StringsR.string.notification_permission_denied_message),
+        title = stringResource(StringsR.string.permissions),
+        text = buildString {
+            append(stringResource(StringsR.string.recorder_permission_rationale_message))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                append(" ")
+                append(stringResource(StringsR.string.notificaiton_permission_rationale_message))
+            }
+            append("\n")
+            append(stringResource(StringsR.string.permissions_denied_message))
+        },
         onConfirmClick = onConfirmClick,
         onDismissClick = onDismissClick
     )
 }
 
 @Composable
-fun RecorderPermissionRationaleDialog(
-    onConfirmClick: () -> Unit,
-    onDismissClick: () -> Unit
-) {
-    PermissionRationaleDialog(
-        title = stringResource(StringsR.string.microphone_access),
-        text = stringResource(StringsR.string.microphone_permission_rationale_message),
-        onConfirmClick = onConfirmClick,
-        onDismissClick = onDismissClick
-    )
-}
-
-@Composable
-fun RecorderPermissionBlockedDialog(
-    onConfirmClick: () -> Unit,
-    onDismissClick: () -> Unit
-) {
-    PermissionBlockedDialog(
-        title = stringResource(StringsR.string.microphone_access),
-        text = stringResource(StringsR.string.microphone_permission_denied_message),
-        onConfirmClick = onConfirmClick,
-        onDismissClick = onDismissClick
-    )
-}
-
-@Composable
-internal fun PermissionBlockedDialog(
+private fun PermissionBlockedDialog(
     title: String,
     text: String,
     onConfirmClick: () -> Unit,
@@ -102,7 +91,7 @@ internal fun PermissionBlockedDialog(
 }
 
 @Composable
-internal fun PermissionRationaleDialog(
+private fun PermissionRationaleDialog(
     title: String,
     text: String,
     onConfirmClick: () -> Unit,

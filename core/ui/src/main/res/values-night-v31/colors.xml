@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_container">@android:color/system_accent1_700</color>
+    <color name="on_surface">@android:color/system_neutral2_100</color>
+</resources>

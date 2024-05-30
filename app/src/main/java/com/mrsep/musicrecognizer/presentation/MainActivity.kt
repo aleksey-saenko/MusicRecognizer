@@ -20,33 +20,32 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.mrsep.musicrecognizer.MusicRecognizerApp
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.startNotificationService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.stopNotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
+    private var isServiceStartupHandled = false
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.let {
-            setIntent(intent)
-            handleRecognitionRequest(intent)
-        }
+        setIntent(intent)
+        handleRecognitionRequest(intent)
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         var keepSplashScreen = true
@@ -54,7 +53,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) {
             handleRecognitionRequest(intent)
         }
-        setupApplicationWithPreferences()
+        enableEdgeToEdge()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -97,6 +96,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!isServiceStartupHandled) {
+            startNotificationServiceOnDemand()
+        }
+    }
+
     private fun handleRecognitionRequest(intent: Intent) {
         when (intent.action) {
             MusicRecognizerApp.ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
@@ -104,22 +110,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // TODO: remove from activity after fixing device boot case
-    private fun setupApplicationWithPreferences() {
+    // Start previously started service if it was force killed for some reason
+    private fun startNotificationServiceOnDemand() {
         lifecycleScope.launch {
-            viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            val shouldTurnOnService = viewModel.uiState
                 .filterIsInstance<MainActivityUiState.Success>()
-                .map { state -> state.userPreferences }
-                .onEach { userPreferences ->
-                    when (userPreferences.notificationServiceEnabled) {
-                        true -> startNotificationService()
-                        false -> stopNotificationService()
+                .map { it.userPreferences.notificationServiceEnabled }
+                .first()
+            if (shouldTurnOnService) {
+                startService(
+                    Intent(
+                        this@MainActivity,
+                        NotificationService::class.java
+                    ).apply {
+                        action = NotificationService.HOLD_MODE_ON_ACTION
+                        putExtra(NotificationService.KEY_RESTRICTED_START, false)
                     }
-                }
-                .launchIn(this)
+                )
+            }
+            isServiceStartupHandled = true
         }
     }
-
 }
 
 @Stable

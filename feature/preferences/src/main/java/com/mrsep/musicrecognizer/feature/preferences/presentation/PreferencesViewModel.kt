@@ -7,6 +7,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
 import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class PreferencesViewModel @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val preferencesRouter: PreferencesRouter,
 ) : ViewModel() {
 
     val uiFlow = preferencesRepository.userPreferencesFlow
@@ -51,6 +53,11 @@ internal class PreferencesViewModel @Inject constructor(
     fun setNotificationServiceEnabled(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setNotificationServiceEnabled(value)
+            if (value) {
+                preferencesRouter.startServiceHoldMode()
+            } else {
+                preferencesRouter.stopServiceHoldMode()
+            }
         }
     }
 
@@ -110,5 +117,4 @@ internal sealed class PreferencesUiState {
     data object Loading : PreferencesUiState()
 
     data class Success(val preferences: UserPreferences) : PreferencesUiState()
-
 }

@@ -23,8 +23,6 @@ interface TrackRepositoryDo {
 
     suspend fun deleteAll()
 
-    suspend fun getTrack(trackId: String): TrackEntity?
-
     fun isEmptyFlow(): Flow<Boolean>
 
     fun getUnviewedCountFlow(): Flow<Int>
@@ -34,5 +32,4 @@ interface TrackRepositoryDo {
     fun getTracksByFilterFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>>
 
     fun getSearchResultFlow(query: String, searchScope: Set<TrackDataFieldDo>): Flow<SearchResultDo>
-
 }

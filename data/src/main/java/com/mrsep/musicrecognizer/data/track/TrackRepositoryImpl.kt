@@ -90,12 +90,6 @@ internal class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun getTrack(trackId: String): TrackEntity? {
-        return withContext(ioDispatcher) {
-            trackDao.getTrack(trackId)
-        }
-    }
-
     override fun getTrackFlow(trackId: String): Flow<TrackEntity?> {
         return trackDao.getTrackFlow(trackId)
             .flowOn(ioDispatcher)
@@ -133,7 +127,6 @@ internal class TrackRepositoryImpl @Inject constructor(
     companion object {
         private const val ESCAPE_SYMBOL = "/"
     }
-
 }
 
 private fun UserPreferencesDo.TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery {

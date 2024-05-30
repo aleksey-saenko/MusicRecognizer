@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.MusicRecognizer" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@color/compose_background_light</item>
+    <style name="NightAdjusted.Theme.MusicRecognizer" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/surface</item>
+    </style>
+
+    <style name="Theme.MusicRecognizer" parent="NightAdjusted.Theme.MusicRecognizer"/>
+
+    <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="Theme.MusicRecognizer.Splash" parent="NightAdjusted.Theme.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.MusicRecognizer</item>
     </style>
 
 </resources>

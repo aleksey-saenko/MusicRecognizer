@@ -5,9 +5,8 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionR
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
-import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.recognitionScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.step
@@ -25,11 +24,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transformWhile
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
@@ -45,14 +47,13 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val recognitionServiceFactory: RecognitionServiceFactory,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    private val resultDelegator: RecognitionStatusDelegator,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler,
     private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
-) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
+) : RecognitionInteractor {
 
-    override val screenRecognitionStatus get() = resultDelegator.screenState
-    override val serviceRecognitionStatus get() = resultDelegator.serviceState
+    private val _status = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
+    override val status = _status.asStateFlow()
 
     private val onlineScheme = recognitionScheme(true) {
         step(4_000.milliseconds)
@@ -62,14 +63,14 @@ internal class RecognitionInteractorImpl @Inject constructor(
     }
 
     private val offlineScheme = recognitionScheme(false) {
-        step(10.seconds)
+        step(5.seconds)
     }
 
     private var recognitionJob: Job? = null
 
     override fun launchRecognition(scope: CoroutineScope) {
         launchRecognitionIfPreviousCompleted(scope) {
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            _status.update { RecognitionStatus.Recognizing(false) }
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
             val serviceConfig = when (userPreferences.currentRecognitionProvider) {
@@ -94,7 +95,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                             val isExtraTry = (index >= onlineScheme.extraTryIndex)
                             if (index <= onlineScheme.lastStepIndex) {
                                 recordingChannel.send(recording)
-                                resultDelegator.notify(RecognitionStatus.Recognizing(isExtraTry))
+                                _status.update { RecognitionStatus.Recognizing(isExtraTry) }
                             }
                         }
                         if (result.isFailure || index == onlineScheme.lastStepIndex) {
@@ -105,7 +106,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     }.last()
             }
 
-            val result = select {
+            val result = select<RemoteRecognitionResult> {
                 remoteResult.onAwait { remoteRecognitionResult -> remoteRecognitionResult }
                 recordProcess.onAwait { recordingResult: Result<ByteArray> ->
                     recordingResult.exceptionOrNull()?.let { cause ->
@@ -113,7 +114,6 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     } ?: remoteResult.await()
                 }
             }
-
             val recognitionResult = when (result) {
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     // bad recording result can be sent by server or by recording job,
@@ -158,34 +158,40 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                 }
             }
-            resultDelegator.notify(recognitionResult)
+            _status.update { recognitionResult }
         }
     }
 
     override fun launchOfflineRecognition(scope: CoroutineScope) {
         launchRecognitionIfPreviousCompleted(scope) {
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
+            _status.update { RecognitionStatus.Recognizing(false) }
             val fullRecording = recorderController.audioRecordingFlow(offlineScheme).firstOrNull()
                 ?: Result.failure(IllegalStateException("Empty audio recording flow"))
             fullRecording.onSuccess { recording ->
                 val task = enqueueRecognition(recording, true)
                 val result = RecognitionResult.ScheduledOffline(task)
-                resultDelegator.notify(RecognitionStatus.Done(result))
+                _status.update { RecognitionStatus.Done(result) }
             }.onFailure { cause ->
                 val error = RecognitionResult.Error(
                     RemoteRecognitionResult.Error.BadRecording(cause = cause),
                     RecognitionTask.Ignored
                 )
-                resultDelegator.notify(RecognitionStatus.Done(error))
+                _status.update { RecognitionStatus.Done(error) }
             }
         }
     }
 
     override fun cancelAndResetStatus() {
         if (recognitionJob?.isCompleted == true) {
-            resultDelegator.notify(RecognitionStatus.Ready)
+            _status.update { RecognitionStatus.Ready }
         } else {
             recognitionJob?.cancel()
+        }
+    }
+
+    override fun resetFinalStatus() {
+        _status.update { oldStatus ->
+            if (oldStatus is RecognitionStatus.Done) RecognitionStatus.Ready else oldStatus
         }
     }
 
@@ -236,9 +242,8 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private fun Job.setCancellationHandler() = apply {
         invokeOnCompletion { cause ->
             when (cause) {
-                is CancellationException -> resultDelegator.notify(RecognitionStatus.Ready)
+                is CancellationException -> _status.update { RecognitionStatus.Ready }
             }
         }
     }
-
 }

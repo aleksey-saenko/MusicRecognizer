@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen
 
 import android.Manifest
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -13,19 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionBlockedDialog
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionRationaleDialog
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.recognition.BuildConfig
@@ -62,52 +59,65 @@ internal fun RecognitionScreen(
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
 
     //region <permission handling block>
-    var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
-    var permissionRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val recorderPermissionState = rememberPermissionState(
-        Manifest.permission.RECORD_AUDIO
-    ) { granted ->
-        if (granted) {
+    var showPermissionsRationaleDialog by rememberSaveable { mutableStateOf(false) }
+    var showPermissionsBlockedDialog by rememberSaveable { mutableStateOf(false) }
+    val requiredPermissionsState = rememberMultiplePermissionsState(
+        permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            listOf(Manifest.permission.RECORD_AUDIO)
+        } else {
+            listOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
+        }
+    ) { results ->
+        if (results.all { (_, isGranted) -> isGranted }) {
             viewModel.launchRecognition()
-        } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
-            permissionBlockedDialogVisible = true
+        } else {
+            val activity = context.findActivity()
+            showPermissionsBlockedDialog = results
+                .any { (permission, isGranted) ->
+                    !isGranted && !activity.shouldShowRationale(permission)
+                }
         }
     }
-    if (permissionBlockedDialogVisible) RecorderPermissionBlockedDialog(
-        onConfirmClick = { permissionBlockedDialogVisible = false },
-        onDismissClick = { permissionBlockedDialogVisible = false }
-    )
-    if (permissionRationaleDialogVisible) RecorderPermissionRationaleDialog(
-        onConfirmClick = {
-            permissionRationaleDialogVisible = false
-            recorderPermissionState.launchPermissionRequest()
-        },
-        onDismissClick = { permissionRationaleDialogVisible = false }
-    )
+    if (showPermissionsRationaleDialog) {
+        RecognitionPermissionsRationaleDialog(
+            onConfirmClick = {
+                showPermissionsRationaleDialog = false
+                requiredPermissionsState.launchMultiplePermissionRequest()
+            },
+            onDismissClick = { showPermissionsRationaleDialog = false }
+        )
+    }
+    if (showPermissionsBlockedDialog) {
+        RecognitionPermissionsBlockedDialog(
+            onConfirmClick = { showPermissionsBlockedDialog = false },
+            onDismissClick = { showPermissionsBlockedDialog = false }
+        )
+    }
     //endregion
 
     fun launchRecognition() {
-        if (recorderPermissionState.status.isGranted) {
+        if (requiredPermissionsState.allPermissionsGranted) {
             viewModel.launchRecognition()
-        } else if (recorderPermissionState.status.shouldShowRationale) {
-            permissionRationaleDialogVisible = true
+        } else if (requiredPermissionsState.shouldShowRationale) {
+            showPermissionsRationaleDialog = true
         } else {
-            recorderPermissionState.launchPermissionRequest()
+            requiredPermissionsState.launchMultiplePermissionRequest()
         }
     }
 
-    LaunchedEffect(autostart) {
-        if (autostart) {
-            launchRecognition()
-            onResetAutostart()
+    LaunchedEffect(autostart, recognizeStatus) {
+        if (!autostart) return@LaunchedEffect
+        when (recognizeStatus) {
+            RecognitionStatus.Ready -> launchRecognition()
+            is RecognitionStatus.Recognizing,
+            is RecognitionStatus.Done -> onResetAutostart()
         }
     }
 
     Box(
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.background)
+            .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
-            .clip(RectangleShape)
             .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
@@ -132,6 +142,7 @@ internal fun RecognitionScreen(
                 SuperButtonSection(
                     title = getButtonTitle(recognizeStatus, autostart),
                     onButtonClick = {
+                        if (recognizeStatus.isDone()) return@SuperButtonSection
                         if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
                         if (recognizeStatus is RecognitionStatus.Recognizing) {
                             viewModel.cancelRecognition()
@@ -141,11 +152,7 @@ internal fun RecognitionScreen(
                     },
                     activated = recognizeStatus is RecognitionStatus.Recognizing,
                     amplitudeFactor = ampFlow,
-                    modifier = Modifier
-                        .padding(
-                            horizontal = 24.dp,
-                            vertical = 24.dp
-                        )
+                    modifier = Modifier.padding(24.dp)
                 )
                 OfflineModePopup(
                     visible = isOffline,
@@ -365,6 +372,7 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Bool
         } else {
             stringResource(StringsR.string.tap_to_recognize)
         }
+
         is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTry) {
             stringResource(StringsR.string.trying_one_more_time)
         } else {
@@ -386,9 +394,11 @@ private fun RemoteRecognitionResult.Error.getErrorInfo() = when (this) {
     RemoteRecognitionResult.Error.BadConnection,
     is RemoteRecognitionResult.Error.AuthError,
     is RemoteRecognitionResult.Error.ApiUsageLimited -> ""
+
     is RemoteRecognitionResult.Error.HttpError -> "Code:\n$code\n\nMessage:\n$message"
     is RemoteRecognitionResult.Error.BadRecording ->
         "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
+
     is RemoteRecognitionResult.Error.UnhandledError ->
         "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
 

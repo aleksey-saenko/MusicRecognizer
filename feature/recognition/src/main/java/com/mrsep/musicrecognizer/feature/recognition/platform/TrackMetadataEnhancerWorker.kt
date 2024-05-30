@@ -19,6 +19,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteMetadata
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 @HiltWorker
@@ -36,7 +37,7 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
         checkNotNull(trackId) { "$TAG requires track ID as parameter" }
 
         return withContext(ioDispatcher) {
-            val oldTrack = trackRepository.getTrack(trackId)
+            val oldTrack = trackRepository.getTrackFlow(trackId).first()
                 ?: return@withContext Result.failure()
             when (val result = trackMetadataEnhancer.enhance(oldTrack)) {
                 is RemoteMetadataEnhancingResult.Success -> {

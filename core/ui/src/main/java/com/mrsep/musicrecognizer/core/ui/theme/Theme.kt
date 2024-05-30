@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val lightColorScheme = lightColorScheme(
+val lightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -52,7 +52,7 @@ private val lightColorScheme = lightColorScheme(
     surfaceContainerLowest = md_theme_light_surfaceContainerLowest,
 )
 
-private val darkColorScheme = darkColorScheme(
+val darkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,

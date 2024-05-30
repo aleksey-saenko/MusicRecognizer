@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -38,7 +38,7 @@ internal fun PagerControls(
             label = "PreviousPageButton"
         ) { visible ->
             if (visible) {
-                FilledTonalIconButton(
+                IconButton(
                     onClick = onPreviousPageClick,
                     modifier = Modifier.padding(8.dp),
                 ) {
@@ -61,7 +61,7 @@ internal fun PagerControls(
             label = "NextPageButton"
         ) { visible ->
             if (visible) {
-                FilledTonalIconButton(
+                IconButton(
                     onClick = onNextPageClick,
                     modifier = Modifier.padding(8.dp),
                 ) {

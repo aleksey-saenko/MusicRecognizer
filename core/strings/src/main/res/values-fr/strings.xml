@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tap_to_recognize">Appuyez pour identifier</string>
-    <string name="tap_to_recognize_the_song">Appuyez pour identifier la chanson</string>
     <string name="recognize">Identifier</string>
     <string name="listening">Écoute en cours</string>
-    <string name="listening_with_ellipsis">Écoute en cours…</string>
+    <string name="please_wait">Veuillez patienter</string>
     <string name="trying_one_more_time">Essayer une fois de plus</string>
-    <string name="listening_last_attempt">Écoute en cours… La dernière tentative…</string>
+
+    <string name="tap_to_try_again_short">Tapez pour réessayer</string>
+    <string name="identify_while_using_another_app_short">Identifiez la musique dans d’autres applis</string>
+
     <string name="preferences">Préférences</string>
     <string name="welcome">Bienvenue</string>
     <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui peut vous aider à identifier rapidement et précisément une piste musicale jouée à proximité de vous.</string>
@@ -19,7 +21,6 @@
     <string name="token_skip_message">Ignorer cette étape limitera vos reconnaissances quotidiennes, mais vous pourrez toujours spécifier votre jeton personnel ultérieurement dans les préférences.</string>
     <string name="hide">Masquer</string>
     <string name="show">Afficher</string>
-    <string name="skip">Passer</string>
     <string name="validating">Validation en cours</string>
     <string name="final_onboarding_page_title">Nous sommes prêts à démarrer</string>
     <string name="final_onboarding_page_message">Configuration terminée avec succès</string>
@@ -32,12 +33,9 @@
     <string name="none">Aucun</string>
     <string name="permissions">Permissions</string>
     <string name="request_permission">Demander l\'autorisation</string>
-    <string name="microphone_access">Accès au microphone</string>
-    <string name="microphone_permission_rationale_message">Pour effectuer une reconnaissance musicale, vous devez accorder l\'accès au microphone.</string>
-    <string name="microphone_permission_denied_message">Les demandes précédentes d\'accès au microphone ont été refusées. Sans cette autorisation, l\'application ne peut pas effectuer de reconnaissance musicale. Vous pouvez changer votre décision dans les paramètres.</string>
-    <string name="sending_notifications">Envoi des notifications</string>
-    <string name="notification_permission_rationale_message">Pour activer le service de notification, vous devez autoriser l\'application à vous envoyer des notifications.</string>
-    <string name="notification_permission_denied_message">Les demandes précédentes pour autoriser l\'application à envoyer des notifications ont été refusées. Sans cette autorisation, le service de notification ne peut pas fonctionner correctement. Vous pouvez changer votre décision dans les paramètres.</string>
+    <string name="recorder_permission_rationale_message">Pour effectuer la reconnaissance musicale, l\'application a besoin d\'accéder à votre microphone.</string>
+    <string name="notificaiton_permission_rationale_message">Pour contrôler la reconnaissance et obtenir le résultat même lorsque l\'application est minimisée, elle nécessite l\'autorisation d\'envoyer des notifications.</string>
+    <string name="permissions_denied_message">Les demandes de permissions précédentes ont été refusées. Vous pouvez changer votre décision à travers les paramètres.</string>
     <string name="permission_granted">Autorisation accordée</string>
     <string name="back">Retour</string>
     <string name="forward">Suivant</string>
@@ -121,7 +119,6 @@
     <string name="fallback_policy_dialog_message">Définir l\'action de secours par défaut pour chaque type de résultat infructueux :</string>
     <string name="other_failures">Autres échecs</string>
     <string name="fallback_policy_pref_subtitle">Définir les actions de secours après des reconnaissances infructueuses</string>
-    <string name="recognition_queue_pref_subtitle">Gérez vos reconnaissances enregistrées</string>
     <string name="notification_service">Service de notification</string>
     <string name="notification_service_pref_subtitle">Contrôlez la reconnaissance à partir des notifications</string>
     <string name="notifications">Notifications</string>
@@ -152,10 +149,7 @@
     <string name="empty_recognition_queue_sub_message">Sur échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours</string>
     <string name="recognition_scheduled">Reconnaissance planifiée</string>
     <string name="offline_mode">Mode hors ligne</string>
-    <string name="allow_the_app_to_access_the_microphone">Autoriser l\'application à accéder au microphone</string>
-    <string name="notification_service_initializing">Le service de notification est en cours d\'initialisation</string>
     <string name="disable_multi_selection_mode">Désactiver le mode de sélection multiple</string>
-    <string name="deselect_all">Désélectionner tout</string>
     <string name="select_all">Sélectionner tout</string>
     <string name="cancel_selected">Annuler la sélection</string>
     <string name="delete_selected">Supprimer la sélection</string>
@@ -182,7 +176,6 @@
     <string name="track_not_found">Le titre n\'a pas été trouvé</string>
     <string name="loading">Chargement</string>
     <string name="powered_by">Propulsé par</string>
-    <string name="format_service">%s service</string>
     <string name="purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
     <string name="purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
     <string name="github_repository">Dépôt GitHub</string>
@@ -206,7 +199,6 @@
     <string name="stop_player">Arrêter le lecteur</string>
     <string name="start_player">Démarrer le lecteur</string>
     <string name="edit">Éditer</string>
-    <string name="format_navigate_to_screen">Accéder à l\'écran %s</string>
     <string name="share_options">Options de partage</string>
     <string name="copy">Copier</string>
     <string name="copied">Copié</string>
@@ -217,9 +209,8 @@
     <string name="album">Album</string>
     <string name="year">Année</string>
     <string name="lyrics">Paroles</string>
-    <string name="quick_tile_permissions_blocked_api33">Pour effectuer une reconnaissance en arrière-plan, Audile nécessite l\'accès au microphone et la capacité d\'envoyer des notifications. Veuillez ouvrir les infos de l\'application dans les paramètres et accorder ces autorisations.</string>
-    <string name="quick_tile_permissions_blocked">Pour effectuer une reconnaissance en arrière-plan, Audile nécessite l\'accès au microphone. Veuillez ouvrir les infos de l\'application dans les paramètres et accorder cette autorisation.</string>
     <string name="quick_tile_recognize">Identifier la chanson</string>
     <string name="quick_tile_cancel_recognition">Annuler la reconnaissance</string>
+    <string name="recognition_widget_description">Reconnaître la chanson en un seul tap</string>
 
 </resources>

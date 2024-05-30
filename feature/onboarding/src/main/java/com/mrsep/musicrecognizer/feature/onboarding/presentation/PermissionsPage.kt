@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -18,11 +19,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionBlockedDialog
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionRationaleDialog
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
@@ -36,31 +35,43 @@ internal fun PermissionsPage(
     modifier: Modifier = Modifier,
     onPermissionsGranted: () -> Unit
 ) {
+    // region <permission handling block>
     val context = LocalContext.current
-    //region <permission handling block>
-    var permissionBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
-    var permissionRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val recorderPermissionState = rememberPermissionState(
-        Manifest.permission.RECORD_AUDIO
-    ) { granted ->
-        if (granted) {
+    var showPermissionsRationaleDialog by rememberSaveable { mutableStateOf(false) }
+    var showPermissionsBlockedDialog by rememberSaveable { mutableStateOf(false) }
+    val requiredPermissionsState = rememberMultiplePermissionsState(
+        permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            listOf(Manifest.permission.RECORD_AUDIO)
+        } else {
+            listOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
+        }
+    ) { results ->
+        if (results.all { (_, isGranted) -> isGranted }) {
             onPermissionsGranted()
-        } else if (!context.findActivity().shouldShowRationale(Manifest.permission.RECORD_AUDIO)) {
-            permissionBlockedDialogVisible = true
+        } else {
+            val activity = context.findActivity()
+            showPermissionsBlockedDialog = results
+                .any { (permission, isGranted) ->
+                    !isGranted && !activity.shouldShowRationale(permission)
+                }
         }
     }
-    if (permissionBlockedDialogVisible) RecorderPermissionBlockedDialog(
-        onConfirmClick = { permissionBlockedDialogVisible = false },
-        onDismissClick = { permissionBlockedDialogVisible = false }
-    )
-    if (permissionRationaleDialogVisible) RecorderPermissionRationaleDialog(
-        onConfirmClick = {
-            permissionRationaleDialogVisible = false
-            recorderPermissionState.launchPermissionRequest()
-        },
-        onDismissClick = { permissionRationaleDialogVisible = false }
-    )
-    //endregion
+    if (showPermissionsRationaleDialog) {
+        RecognitionPermissionsRationaleDialog(
+            onConfirmClick = {
+                showPermissionsRationaleDialog = false
+                requiredPermissionsState.launchMultiplePermissionRequest()
+            },
+            onDismissClick = { showPermissionsRationaleDialog = false }
+        )
+    }
+    if (showPermissionsBlockedDialog) {
+        RecognitionPermissionsBlockedDialog(
+            onConfirmClick = { showPermissionsBlockedDialog = false },
+            onDismissClick = { showPermissionsBlockedDialog = false }
+        )
+    }
+    // endregion
 
     Column(
         modifier = modifier
@@ -108,21 +119,29 @@ internal fun PermissionsPage(
             },
             modifier = Modifier.widthIn(max = 488.dp)
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = stringResource(StringsR.string.notificaiton_permission_rationale_message),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.widthIn(max = 488.dp)
+            )
+        }
         Spacer(Modifier.height(24.dp))
         Button(
             modifier = Modifier.widthIn(min = 240.dp),
-            enabled = !recorderPermissionState.status.isGranted,
+            enabled = !requiredPermissionsState.allPermissionsGranted,
             onClick = {
-                if (recorderPermissionState.status.shouldShowRationale) {
-                    permissionRationaleDialogVisible = true
+                if (requiredPermissionsState.shouldShowRationale) {
+                    showPermissionsRationaleDialog = true
                 } else {
-                    recorderPermissionState.launchPermissionRequest()
+                    requiredPermissionsState.launchMultiplePermissionRequest()
                 }
             }
         ) {
             Text(
                 text = stringResource(
-                    if (recorderPermissionState.status.isGranted) {
+                    if (requiredPermissionsState.allPermissionsGranted) {
                         StringsR.string.permission_granted
                     } else {
                         StringsR.string.request_permission

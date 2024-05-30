@@ -4,8 +4,7 @@ package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
@@ -19,6 +18,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
@@ -35,92 +36,71 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
     private val enhancerScheduler: TrackMetadataEnhancerScheduler,
-    private val resultDelegator: RecognitionStatusDelegator
-) : ScreenRecognitionInteractor, ServiceRecognitionInteractor {
+) : RecognitionInteractor {
 
-    override val screenRecognitionStatus get() = resultDelegator.screenState
-    override val serviceRecognitionStatus get() = resultDelegator.serviceState
+    override val status = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
 
     private var recognitionJob: Job? = null
 
     override fun launchRecognition(scope: CoroutineScope) {
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
-//            debugRecognitionScreen()
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(1000)
-//            notifySuccess(launchEnhancer = false)
-            val fakeResult = RecognitionStatus.Done(
-                RecognitionResult.Error(
-                    remoteError = RemoteRecognitionResult.Error.AuthError,
-                    recognitionTask = RecognitionTask.Created(123, false)
-                )
-            )
-            resultDelegator.notify(fakeResult)
+            status.update { RecognitionStatus.Recognizing(false) }
+            delay(2_000)
+            status.update { RecognitionStatus.Recognizing(true) }
+            delay(2_000)
+            notifySuccess(launchEnhancer = false)
+//            notifyNoMatches(RecognitionTask.Ignored)
 //            testAllDoneStatuses()
+//            notifyBadRecordingError()
 //            notifyUnhandledError(RecognitionTask.Created(123, false))
 //            notifyBadConnectionError(RecognitionTask.Created(123, false))
         }.setCancellationHandler()
     }
 
-    private suspend fun debugRecognitionScreen() {
-        while (true) {
-            resultDelegator.notify(RecognitionStatus.Recognizing(false))
-            delay(2000)
-            resultDelegator.notify(RecognitionStatus.Ready)
-            delay(2000)
-        }
-    }
-
     override fun launchOfflineRecognition(scope: CoroutineScope) {
         launchRecognition(scope)
-//        if (recognitionJob?.isCompleted == false) return
-//        recognitionJob = scope.launch {
-//            resultDelegator.notify(RecognitionStatus.Recognizing(false))
-//            delay(1_000)
-//            resultDelegator.notify(RecognitionStatus.Recognizing(true))
-//            delay(1_000)
-//            notifySuccess()
-//        }.setCancellationHandler()
     }
 
     override fun cancelAndResetStatus() {
         if (recognitionJob?.isCompleted == true) {
-            resultDelegator.notify(RecognitionStatus.Ready)
+            status.update { RecognitionStatus.Ready }
         } else {
             recognitionJob?.cancel()
         }
     }
 
+    override fun resetFinalStatus() {
+        status.update { oldStatus ->
+            if (oldStatus is RecognitionStatus.Done) RecognitionStatus.Ready else oldStatus
+        }
+    }
+
 
     private suspend fun notifySuccess(launchEnhancer: Boolean) {
+        val stubUrl = "https://www.google.com/search?q=stub"
         val fakeTrack = Track(
             id = persistentUUID,
-            title = "Echoes", //#${kotlin.random.Random.nextInt()}
+            title = "Atom Heart Mother",
             artist = "Pink Floyd",
-            album = "Meddle",
-            releaseDate = LocalDate.parse("1971-10-30", DateTimeFormatter.ISO_DATE),
+            album = "Stub",
+            releaseDate = LocalDate.parse("1970-10-02", DateTimeFormatter.ISO_DATE),
             duration = Duration.ofSeconds(210),
             recognizedAt = Duration.ofSeconds(157),
             recognizedBy = RecognitionProvider.Audd,
             recognitionDate = Instant.now(),
             lyrics = "lyrics stub",
-            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
+            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/10/PinkFloyd-album-atomheartmother.jpg",
+//            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
 //            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
             trackLinks = listOf(
-                TrackLink(
-                    "https://music.apple.com/us/album/copycat/1440898929?i=1440899117",
-                    MusicService.AppleMusic
-                ),
-                TrackLink(
-                    "https://open.spotify.com/track/5w7wuzMzsDer96KqxafeRK",
-                    MusicService.Spotify
-                ),
-                TrackLink("", MusicService.Soundcloud),
-                TrackLink("", MusicService.Youtube),
-                TrackLink("", MusicService.Deezer),
-                TrackLink("", MusicService.Napster),
-                TrackLink("", MusicService.MusicBrainz),
+                TrackLink(stubUrl, MusicService.AppleMusic),
+                TrackLink(stubUrl, MusicService.Spotify),
+                TrackLink(stubUrl, MusicService.Soundcloud),
+                TrackLink(stubUrl, MusicService.Youtube),
+                TrackLink(stubUrl, MusicService.Deezer),
+                TrackLink(stubUrl, MusicService.Napster),
+                TrackLink(stubUrl, MusicService.MusicBrainz),
             ),
             properties = Track.Properties(
                 isFavorite = false,
@@ -137,12 +117,12 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
             enhancerScheduler.enqueue(updatedTrack.id)
         }
         val fakeResult = RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private suspend fun resetToReadyWithDelay() {
         delay(3000)
-        resultDelegator.notify(RecognitionStatus.Ready)
+        status.update { RecognitionStatus.Ready }
         delay(2000)
     }
 
@@ -154,7 +134,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 recognitionTask = recognitionTask
             )
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private fun notifyBadRecordingError() {
@@ -164,14 +144,14 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 recognitionTask = RecognitionTask.Ignored
             )
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private fun notifyNoMatches(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(
             RecognitionResult.NoMatches(recognitionTask = recognitionTask)
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private fun notifyApiUsageLimited(recognitionTask: RecognitionTask) {
@@ -181,7 +161,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 recognitionTask = recognitionTask
             )
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private fun notifyHttpError(recognitionTask: RecognitionTask) {
@@ -194,7 +174,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 recognitionTask = recognitionTask
             )
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private fun notifyUnhandledError(recognitionTask: RecognitionTask) {
@@ -207,7 +187,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 recognitionTask = recognitionTask
             )
         )
-        resultDelegator.notify(fakeResult)
+        status.update { fakeResult }
     }
 
     private suspend fun testAllDoneStatuses() {
@@ -260,7 +240,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         invokeOnCompletion { cause ->
             when (cause) {
                 is CancellationException -> {
-                    resultDelegator.notify(RecognitionStatus.Ready)
+                    status.update { RecognitionStatus.Ready }
                 }
             }
         }
@@ -271,5 +251,4 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
             UUID.randomUUID().toString()
         }
     }
-
 }

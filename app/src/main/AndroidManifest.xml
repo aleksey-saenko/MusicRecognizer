@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -15,28 +16,29 @@
         android:name=".MusicRecognizerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MusicRecognizer"
-        android:enableOnBackInvokedCallback="true"
+        android:theme="@style/Theme.MusicRecognizer.Splash"
         tools:targetApi="34">
 
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MusicRecognizer">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="mrsep.musicrecognizer.com"
                     android:scheme="app" />
@@ -45,27 +47,20 @@
 
         <activity
             android:name=".feature.recognition.presentation.service.NotificationServiceActivity"
+            android:excludeFromRecents="true"
             android:exported="false"
             android:taskAffinity=""
-            android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.NoDisplay" />
-
-        <!--    Disabled due to microphone restriction of foreground service that was launched from background-->
-        <receiver
-            android:name=".BootCompletedReceiver"
-            android:enabled="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <service
             android:name=".feature.recognition.presentation.service.NotificationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="microphone" />
+            android:foregroundServiceType="microphone|specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Service start type on microphone restriction (on device reboot)" />
+        </service>
 
         <service
             android:name=".feature.recognition.presentation.service.OneTimeRecognitionTileService"
@@ -74,14 +69,43 @@
             android:icon="@drawable/ic_retro_microphone"
             android:label="@string/quick_tile_recognize"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="true" />
-            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
                 android:value="false" />
+
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".ServiceStartupReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".feature.recognition.widget.RecognitionWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recognition_widget_info" />
+            <meta-data
+                android:name="com.samsung.android.appwidget.provider"
+                android:resource="@xml/recognition_widget_samsung_info" />
+        </receiver>
 
         <!-- https://developer.android.com/guide/background/persistent/configuration/custom-configuration -->
         <!-- Disable android.startup completely. -->

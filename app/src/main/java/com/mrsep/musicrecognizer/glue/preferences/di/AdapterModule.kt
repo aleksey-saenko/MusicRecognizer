@@ -1,7 +1,9 @@
 package com.mrsep.musicrecognizer.glue.preferences.di
 
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
 import com.mrsep.musicrecognizer.glue.preferences.adapter.AdapterPreferencesRepository
+import com.mrsep.musicrecognizer.glue.preferences.adapter.AdapterPreferencesRouter
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,6 @@ interface AdapterModule {
     @Binds
     fun bindPreferencesRepository(implementation: AdapterPreferencesRepository): PreferencesRepository
 
+    @Binds
+    fun bindPreferencesRouter(implementation: AdapterPreferencesRouter): PreferencesRouter
 }

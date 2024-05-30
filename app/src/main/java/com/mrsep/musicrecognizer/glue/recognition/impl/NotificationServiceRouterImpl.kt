@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import androidx.core.net.toUri
-import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceRouter
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
@@ -25,17 +24,14 @@ class NotificationServiceRouterImpl @Inject constructor(
         return getDeepLinkIntent(LyricsScreen.createDeepLink(trackId).toUri())
     }
 
-    override fun getDeepLinkIntentToRecognitionQueue(): Intent {
-        return getDeepLinkIntent(RecognitionQueueScreen.createDeepLink().toUri())
-    }
-
     private fun getDeepLinkIntent(uri: Uri): Intent {
         return Intent(
             Intent.ACTION_VIEW,
             uri,
             appContext,
             MainActivity::class.java
-        ).apply { addFlags(FLAG_ACTIVITY_NEW_TASK) }
+        ).apply {
+            addFlags(FLAG_ACTIVITY_NEW_TASK)
+        }
     }
-
 }

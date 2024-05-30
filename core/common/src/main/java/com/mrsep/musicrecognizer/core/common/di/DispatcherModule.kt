@@ -22,7 +22,7 @@ class DispatcherModule {
 
     @MainDispatcher
     @Provides
-    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
 
 }
 

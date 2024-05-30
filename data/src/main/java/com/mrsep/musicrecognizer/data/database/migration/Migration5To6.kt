@@ -13,7 +13,7 @@ internal val Migration5To6 = object : Migration(5, 6) {
     }
 
     private fun migrateTrackTable(db: SupportSQLiteDatabase) {
-        // APIs lower than 30 have SQLite 3.22 by default, which does not support RENAME COLUMN
+        // APIs lower than 30 have SQLite < v3.25.0 by default, which does not support RENAME COLUMN
         val renameAllowed = db.isSQLiteVersionAtLeast("3.25.0")
             ?: (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q)
         if (renameAllowed) {
@@ -39,5 +39,4 @@ internal val Migration5To6 = object : Migration(5, 6) {
             END
         """)
     }
-
 }

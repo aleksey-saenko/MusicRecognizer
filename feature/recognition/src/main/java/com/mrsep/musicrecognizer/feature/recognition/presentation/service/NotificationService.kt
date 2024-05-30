@@ -9,132 +9,208 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
-import android.net.Uri
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
 import android.os.Build
-import android.provider.Settings
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.updateAll
+import com.mrsep.musicrecognizer.core.common.DispatchersProvider
+import com.mrsep.musicrecognizer.core.ui.util.dpToPx
+import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
+import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.impl.MutableRecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.fetchBitmapOrNull
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.downloadImageToDiskCache
+import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getCachedImageOrNull
 import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
+import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import java.lang.IllegalArgumentException
+import kotlinx.coroutines.flow.transformWhile
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-
-/**
- * When designing behavior, consider these restrictions:
- * https://issuetracker.google.com/issues/36961721
- * https://developer.android.com/guide/components/activities/background-starts
- * https://developer.android.com/about/versions/12/behavior-changes-12#notification-trampolines
- * https://developer.android.com/guide/components/foreground-services#bg-access-restrictions
- */
 
 @AndroidEntryPoint
 class NotificationService : Service() {
 
     @Inject
-    lateinit var preferencesRepository: PreferencesRepository
+    lateinit var recognitionInteractor: RecognitionInteractor
+
     @Inject
-    lateinit var recognitionInteractor: ServiceRecognitionInteractor
+    @MainScreenStatusHolder
+    internal lateinit var screenStatusHolder: MutableRecognitionStatusHolder
+
+    @Inject
+    @WidgetStatusHolder
+    internal lateinit var widgetStatusHolder: MutableRecognitionStatusHolder
+
     @Inject
     lateinit var serviceRouter: NotificationServiceRouter
+
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
+
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
     @Inject
-    @IoDispatcher
-    lateinit var ioDispatcher: CoroutineDispatcher
+    lateinit var dispatchersProvider: DispatchersProvider
 
-    private val serviceScope by lazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
+    private val serviceScope by lazy {
+        CoroutineScope(dispatchersProvider.main + SupervisorJob())
+    }
 
-    private val actionReceiver = ActionBroadcastReceiver()
+    private val actionReceiver by lazy { ActionBroadcastReceiver() }
+    private var isActionReceiverRegistered = false
 
-    private val notificationManager by lazy { getNotificationManager() }
+    private val notificationManager by lazy {
+        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
 
-    private val recognitionState get() = recognitionInteractor.serviceRecognitionStatus
-    private val isReadyToRecognize get() = recognitionState.value is RecognitionStatus.Ready
+    private var recognitionJob: Job? = null
+    private val isRecognitionJobActive get() = recognitionJob?.isActive == true
+    private var recognitionCancelingJob: Job? = null
+    private val isRecognitionCancelingJobActive get() = recognitionCancelingJob?.isActive == true
 
-    private var notificationSendingJob: Job? = null
+    // Service started from background (e.g., on device boot) doesn't have microphone access
+    private var isMicrophoneRestricted = false
 
-    private var oneTimeMode = true
-    private var oneTimeRecognitionLaunched = false
-    // can be used to design background startup behaviour, not used now
-    private var microphoneRestricted = true
+    private var isStartedForeground = false
 
-    override fun onBind(intent: Intent?) = null
+    // If true, the service must stay started foreground after recognition completion,
+    // even if recognition screen is resumed
+    private var isHoldModeActive = false
+
+
+    override fun onBind(intent: Intent) = null
 
     override fun onCreate() {
         super.onCreate() // required by hilt injection
-        val initialNotification = statusNotificationBuilder()
-            .setContentText(getString(StringsR.string.notification_service_initializing))
-            .build()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Check again because user can restrict permissions when the app is in the background,
-            // which can lead to service restarting without required permissions
-            val startAllowed = checkNotificationServicePermissions()
-            if (startAllowed) {
-                startForeground(
-                    STATUS_NOTIFICATION_ID,
-                    initialNotification,
-                    FOREGROUND_SERVICE_TYPE_MICROPHONE
-                )
-                registerActionReceiver()
-            } else {
-                serviceScope.launch {
-                    preferencesRepository.setNotificationServiceEnabled(false)
-                    stopSelf()
-                }
+        // Check again because permissions can be restricted in any time,
+        // which can lead sticky service to restart foreground with SecurityException
+        val startAllowed = checkNotificationServicePermissions()
+        if (!startAllowed) {
+            Log.e(
+                "NotificationService",
+                "Service start is not allowed due to restricted permissions"
+            )
+            runBlocking {
+                preferencesRepository.setNotificationServiceEnabled(false)
+                stopSelf()
             }
-        } else {
-            startForeground(STATUS_NOTIFICATION_ID, initialNotification)
-            registerActionReceiver()
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        var oneTimeRequested = false
-        intent?.run {
-            microphoneRestricted = getBooleanExtra(KEY_BACKGROUND_LAUNCH, true)
-            oneTimeRequested = getBooleanExtra(KEY_ONE_TIME_RECOGNITION, false)
-        }
-
-        if (oneTimeRequested) {
-            if (isReadyToRecognize) {
-                notificationSendingJob ?: registerRecognitionStateObserver()
+        when (intent?.action) {
+            LAUNCH_RECOGNITION_ACTION -> {
+                val foregroundRequested = intent.getBooleanExtra(
+                    KEY_FOREGROUND_REQUESTED,
+                    true
+                )
+                // Consider that all launch recognition requests are performed from widgets,
+                // notifications or another pending actions
+                // that grant microphone access for the service
+                if (foregroundRequested && (!isStartedForeground || isMicrophoneRestricted)) {
+                    isMicrophoneRestricted = false
+                    // This also restarts foreground with microphone type
+                    continueInForeground()
+                }
+                isMicrophoneRestricted = false
                 launchRecognition()
-            } else {
-                cancelAndResetStatus()
             }
-        } else {
-            notificationSendingJob ?: registerRecognitionStateObserver()
-            oneTimeMode = false
-        }
 
-        return if (oneTimeMode) START_NOT_STICKY else START_STICKY
+            CANCEL_RECOGNITION_ACTION -> {
+                if (isRecognitionJobActive) {
+                    cancelRecognitionJob()
+                } else if (!isHoldModeActive) {
+                    stopSelf()
+                }
+            }
+
+            // Start with null intent is considered as restart of sticky service with hold mode on
+            // isMicrophoneRestricted is true when service is started on device boot without microphone access
+            null,
+            HOLD_MODE_ON_ACTION -> {
+                isMicrophoneRestricted = intent?.getBooleanExtra(
+                    KEY_RESTRICTED_START,
+                    true
+                ) ?: true
+                isHoldModeActive = true
+                if (!isStartedForeground) continueInForeground()
+            }
+
+            HOLD_MODE_OFF_ACTION -> {
+                isHoldModeActive = false
+                if (!isRecognitionJobActive) {
+                    stopSelf()
+                }
+            }
+
+            else -> {
+                throw IllegalStateException("NotificationService: Unknown start intent")
+            }
+        }
+        return if (isHoldModeActive) START_STICKY else START_NOT_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        try {
-            unregisterReceiver(actionReceiver)
-        } catch (_: IllegalArgumentException) {
-            // receiver was not registered, no-op
-        }
+        unregisterActionReceiver()
         serviceScope.cancel()
+    }
+
+    // Can be called even if the service is already in foreground state
+    // with FOREGROUND_SERVICE_TYPE_SPECIAL_USE to restart with FOREGROUND_SERVICE_TYPE_MICROPHONE
+    private fun continueInForeground() {
+        val initialNotification = if (isRecognitionJobActive) {
+            statusNotificationBuilder()
+                .setContentTitle(getString(StringsR.string.listening))
+                .setContentText(getString(StringsR.string.please_wait))
+                .addCancelButton()
+                .build()
+        } else {
+            statusNotificationBuilder()
+                .setContentTitle(getString(StringsR.string.tap_to_recognize_short))
+                .setContentText(getString(StringsR.string.identify_while_using_another_app_short))
+                .addRecognizeContentIntent()
+                .addOptionalDisableButton()
+                .build()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(
+                STATUS_NOTIFICATION_ID,
+                initialNotification,
+                if (isMicrophoneRestricted)
+                    FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                else
+                    FOREGROUND_SERVICE_TYPE_MICROPHONE
+            )
+
+        } else {
+            startForeground(STATUS_NOTIFICATION_ID, initialNotification)
+        }
+        isStartedForeground = true
+        if (!isActionReceiverRegistered) registerActionReceiver()
+    }
+
+    private fun continueInBackground() {
+        unregisterActionReceiver()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        isStartedForeground = false
     }
 
     private fun registerActionReceiver() {
@@ -142,119 +218,18 @@ class NotificationService : Service() {
             this,
             actionReceiver,
             IntentFilter().apply {
-                addAction(RECOGNIZE_ACTION)
-                addAction(CANCEL_RECOGNITION_ACTION)
-                addAction(DISABLE_SERVICE_ACTION)
+                addAction(CANCEL_RECOGNITION_LOCAL_ACTION)
+                addAction(DISABLE_SERVICE_LOCAL_ACTION)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
+        isActionReceiverRegistered = true
     }
 
-    private fun registerRecognitionStateObserver() {
-        notificationSendingJob = serviceScope.launch {
-            recognitionState.collectLatest(::handleRecognitionStatus)
-        }
-    }
-
-    private suspend fun handleRecognitionStatus(status: RecognitionStatus) {
-        when (status) {
-            RecognitionStatus.Ready -> {
-                if (oneTimeMode) {
-                    if (oneTimeRecognitionLaunched) stopSelf()
-                } else {
-                    statusNotificationBuilder()
-                        .setContentText(getString(StringsR.string.tap_to_recognize_the_song))
-                        .addRecognizeButtonAndIntent()
-                        .addOptionalDisableButton()
-                        .buildAndNotifyAsStatus()
-                }
-            }
-
-            is RecognitionStatus.Recognizing -> {
-                oneTimeRecognitionLaunched = true
-                // cancel last result notification if it exists
-                // cancel microphone permission notification if it exists
-                // TODO: consider to create a channel for warnings
-                notificationManager.cancel(RESULT_NOTIFICATION_ID)
-                statusNotificationBuilder()
-                    .setContentText(getListeningMessage(status.extraTry))
-                    .addCancelButton()
-                    .buildAndNotifyAsStatus()
-            }
-
-            is RecognitionStatus.Done -> {
-                val resultBuilder = when (status.result) {
-                    is RecognitionResult.Error -> when (status.result.remoteError) {
-                        RemoteRecognitionResult.Error.BadConnection -> {
-                            resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.bad_internet_connection))
-                                .setContentText(getString(StringsR.string.please_check_network_status))
-                                .addOptionalQueueButton(status.result.recognitionTask)
-                        }
-
-                        is RemoteRecognitionResult.Error.BadRecording -> {
-                            resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.recording_error))
-                                .setContentText(getString(StringsR.string.notification_message_recording_error))
-                        }
-
-                        is RemoteRecognitionResult.Error.HttpError,
-                        is RemoteRecognitionResult.Error.UnhandledError -> {
-                            resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.internal_error))
-                                .setContentText(getString(StringsR.string.notification_message_unhandled_error))
-                                .addOptionalQueueButton(status.result.recognitionTask)
-                        }
-
-                        is RemoteRecognitionResult.Error.AuthError -> {
-                            resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.auth_error))
-                                .setContentText(getString(StringsR.string.auth_error_message))
-                                .addOptionalQueueButton(status.result.recognitionTask)
-                        }
-                        is RemoteRecognitionResult.Error.ApiUsageLimited -> {
-                            resultNotificationBuilder()
-                                .setContentTitle(getString(StringsR.string.service_usage_limited))
-                                .setContentText(getString(StringsR.string.service_usage_limited_message))
-                                .addOptionalQueueButton(status.result.recognitionTask)
-                        }
-                    }
-
-                    is RecognitionResult.ScheduledOffline -> {
-                        resultNotificationBuilder()
-                            .setContentTitle(getString(StringsR.string.recognition_scheduled))
-                            .addOptionalQueueButton(status.result.recognitionTask)
-                    }
-
-                    is RecognitionResult.NoMatches -> {
-                        resultNotificationBuilder()
-                            .setContentTitle(getString(StringsR.string.no_matches_found))
-                            .setContentText(getString(StringsR.string.no_matches_message))
-                            .addOptionalQueueButton(status.result.recognitionTask)
-                    }
-
-                    is RecognitionResult.Success -> {
-                        resultNotificationBuilder()
-                            .setContentTitle(status.result.track.title)
-                            .setContentText(status.result.track.artistWithAlbumFormatted())
-                            .addOptionalBigPicture(status.result.track.artworkUrl)
-                            .addTrackDeepLinkIntent(status.result.track.id)
-                            .addOptionalShowLyricsButton(status.result.track)
-                            .addShareButton(status.result.track.getSharedBody())
-                    }
-                }
-                resultBuilder.buildAndNotifyAsResult()
-                cancelAndResetStatus()
-            }
-        }
-    }
-
-    private fun getListeningMessage(extraTry: Boolean): String {
-        return if (extraTry) {
-            getString(StringsR.string.listening_last_attempt)
-        } else {
-            getString(StringsR.string.listening_with_ellipsis)
-        }
+    private fun unregisterActionReceiver() {
+        if (!isActionReceiverRegistered) return
+        unregisterReceiver(actionReceiver)
+        isActionReceiverRegistered = false
     }
 
     private fun createPendingIntent(intent: Intent): PendingIntent {
@@ -276,6 +251,7 @@ class NotificationService : Service() {
             .setOngoing(true) // can be dismissed since API 34
             .setCategory(Notification.CATEGORY_STATUS)
             .setSilent(true) // to avoid alert sound in recording
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .addDismissIntent()
     }
 
@@ -289,55 +265,27 @@ class NotificationService : Service() {
             .setOngoing(false)
             .setAutoCancel(true)
             .setCategory(Notification.CATEGORY_MESSAGE)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
     }
 
     @SuppressLint("LaunchActivityFromNotification")
-    private fun NotificationCompat.Builder.addAppPreferencesButtonAndIntent(): NotificationCompat.Builder {
-        val appSettingsIntent = Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", packageName, null)
-        )
-        val pendingIntent = createPendingIntent(appSettingsIntent)
-        return addAction(
-            android.R.drawable.ic_menu_preferences,
-            getString(StringsR.string.open_settings),
-            pendingIntent
-        ).setContentIntent(pendingIntent)
-    }
-
-    @SuppressLint("LaunchActivityFromNotification")
-    private fun NotificationCompat.Builder.addRecognizeButtonAndIntent(): NotificationCompat.Builder {
-//        can be implemented by transparent activity to grant microphone access,
-//        but it leads to minimizing previous launched app
-
-//        val mediateActivityIntent = Intent(
-//            this@NotificationService,
-//            NotificationServiceActivity::class.java
-//        ).apply {
-//            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            action = RECOGNIZE_ACTION
-//        }
-//        val pendingIntent = createPendingIntent(mediateActivityIntent)
-//        return addAction(
-//            android.R.drawable.ic_menu_search,
-//            getString(StringsR.string.recognize),
-//            pendingIntent
-//        ).setContentIntent(pendingIntent)
-        val pendingIntent = PendingIntent.getBroadcast(
+    private fun NotificationCompat.Builder.addRecognizeContentIntent(): NotificationCompat.Builder {
+        val intent = Intent(
             this@NotificationService,
-            0,
-            Intent(RECOGNIZE_ACTION).setPackage(packageName),
-            PendingIntent.FLAG_IMMUTABLE
+            NotificationService::class.java
+        ).apply {
+            action = LAUNCH_RECOGNITION_ACTION
+        }
+        val pendingIntent = PendingIntent.getService(
+            this@NotificationService, 0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        return addAction(
-            android.R.drawable.ic_menu_search,
-            getString(StringsR.string.recognize),
-            pendingIntent
-        ).setContentIntent(pendingIntent)
+        return setContentIntent(pendingIntent)
     }
 
-    // status notification is ongoing for API 33 and below
-    // starting from API 34, users can disable the service by dismissing the notification
+    // Status notification is ongoing for API 33 and below
+    // Starting from API 34, users can disable the service by dismissing control notification
     private fun NotificationCompat.Builder.addOptionalDisableButton(): NotificationCompat.Builder {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             addAction(
@@ -346,7 +294,7 @@ class NotificationService : Service() {
                 PendingIntent.getBroadcast(
                     this@NotificationService,
                     0,
-                    Intent(DISABLE_SERVICE_ACTION).setPackage(packageName),
+                    Intent(DISABLE_SERVICE_LOCAL_ACTION).setPackage(packageName),
                     PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -362,29 +310,10 @@ class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(CANCEL_RECOGNITION_ACTION).setPackage(packageName),
+                Intent(CANCEL_RECOGNITION_LOCAL_ACTION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
-    }
-
-    private fun NotificationCompat.Builder.addOptionalQueueButton(
-        task: RecognitionTask
-    ): NotificationCompat.Builder {
-        return when (task) {
-            is RecognitionTask.Created -> {
-                val deepLinkIntent = serviceRouter.getDeepLinkIntentToRecognitionQueue()
-                val pendingIntent = createPendingIntent(deepLinkIntent)
-                return addAction(
-                    android.R.drawable.ic_menu_preferences,
-                    getString(StringsR.string.recognition_queue),
-                    pendingIntent
-                )
-            }
-
-            is RecognitionTask.Error,
-            RecognitionTask.Ignored -> this
-        }
     }
 
     private fun NotificationCompat.Builder.addDismissIntent(): NotificationCompat.Builder {
@@ -392,22 +321,39 @@ class NotificationService : Service() {
             PendingIntent.getBroadcast(
                 this@NotificationService,
                 0,
-                Intent(DISABLE_SERVICE_ACTION).setPackage(packageName),
+                Intent(DISABLE_SERVICE_LOCAL_ACTION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
     }
 
     private suspend fun NotificationCompat.Builder.addOptionalBigPicture(
-        url: String?
+        url: String?,
+        contentTitle: String,
+        contentText: String
     ): NotificationCompat.Builder {
-        return url?.let {
-            this@NotificationService.fetchBitmapOrNull(url)?.let { bitmap ->
-                setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(bitmap)
-                )
-            }
-        } ?: this
+        if (url == null) return this
+        // Images should be ≤ 450dp wide, 2:1 aspect ratio
+        val imageWidthPx = dpToPx(450f).toInt()
+        val imageHeightPx = imageWidthPx / 2
+        val bitmap = getCachedImageOrNull(
+            url = url,
+            widthPx = imageWidthPx,
+            heightPx = imageHeightPx,
+        ) ?: return this
+        return setStyle(
+            NotificationCompat.BigPictureStyle()
+                .bigPicture(bitmap)
+                .setBigContentTitle(contentTitle)
+                .setSummaryText(contentText)
+                .run {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        showBigPictureWhenCollapsed(true)
+                    } else {
+                        this
+                    }
+                }
+        )
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
@@ -460,67 +406,251 @@ class NotificationService : Service() {
     }
 
     private fun launchRecognition() {
-        serviceScope.launch {
+        if (isRecognitionJobActive) return
+        if (isRecognitionCancelingJobActive) return
+        if (recognitionInteractor.status.value != RecognitionStatus.Ready) return
+
+        recognitionJob = serviceScope.launch {
+            val foregroundStateSwitcher = launch {
+                screenStatusHolder.isStatusObserving.collect { isScreenObserving ->
+                    if (isHoldModeActive || !isScreenObserving) {
+                        if (!isStartedForeground) continueInForeground()
+                    } else {
+                        if (isStartedForeground) continueInBackground()
+                    }
+                }
+            }
             if (networkMonitor.isOffline.first()) {
-                recognitionInteractor.launchOfflineRecognition(this)
+                recognitionInteractor.launchOfflineRecognition(serviceScope)
             } else {
-                recognitionInteractor.launchRecognition(this)
+                recognitionInteractor.launchRecognition(serviceScope)
+            }
+            recognitionInteractor.status.transformWhile { status ->
+                emit(status)
+                status !is RecognitionStatus.Done
+            }.collect { status ->
+                when (status) {
+                    RecognitionStatus.Ready -> {} // NO-OP
+
+                    is RecognitionStatus.Recognizing -> {
+                        // Cancel last result notification if it exists
+                        notificationManager.cancel(RESULT_NOTIFICATION_ID)
+
+                        screenStatusHolder.updateStatus(status)
+                        widgetStatusHolder.updateStatus(status)
+                        requestWidgetsUpdate()
+                        requestQuickTileUpdate()
+
+                        if (isStartedForeground) {
+                            notifyRecognizing(status.extraTry)
+                        }
+                    }
+
+                    is RecognitionStatus.Done -> {
+                        if (status.result is RecognitionResult.Success) {
+                            status.result.track.artworkUrl?.let { artworkUrl ->
+                                downloadImageToDiskCache(artworkUrl)
+                            }
+                        }
+                        val isScreenUpdated = screenStatusHolder.updateStatusIfObserving(status)
+                        if (isScreenUpdated) {
+                            widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+                        } else {
+                            val resultBuilder = createResultNotification(status.result)
+                            screenStatusHolder.updateStatus(RecognitionStatus.Ready)
+                            if (hasActiveWidgets()) {
+                                widgetStatusHolder.updateStatus(status)
+                            } else {
+                                widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+                            }
+                            resultBuilder.buildAndNotifyAsResult()
+                        }
+                        requestWidgetsUpdate()
+                        requestQuickTileUpdate()
+                        recognitionInteractor.resetFinalStatus()
+                    }
+                }
+            }
+
+            foregroundStateSwitcher.cancelAndJoin()
+            if (isHoldModeActive) {
+                notifyReady()
+            } else {
+                stopSelf()
             }
         }
     }
 
-    private fun cancelAndResetStatus() {
-        if (oneTimeMode) {
-            notificationSendingJob?.cancel()
+    private fun notifyReady() {
+        statusNotificationBuilder()
+            .setContentTitle(getString(StringsR.string.tap_to_recognize_short))
+            .setContentText(getString(StringsR.string.identify_while_using_another_app_short))
+            .addRecognizeContentIntent()
+            .addOptionalDisableButton()
+            .buildAndNotifyAsStatus()
+    }
+
+    private fun notifyRecognizing(extraTry: Boolean) {
+        statusNotificationBuilder()
+            .setContentTitle(getString(StringsR.string.listening))
+            .setContentText(
+                if (extraTry) {
+                    getString(StringsR.string.trying_one_more_time)
+                } else {
+                    getString(StringsR.string.please_wait)
+                }
+            )
+            .addCancelButton()
+            .buildAndNotifyAsStatus()
+    }
+
+    private suspend fun createResultNotification(
+        result: RecognitionResult
+    ): NotificationCompat.Builder {
+        return when (result) {
+            is RecognitionResult.Error -> when (result.remoteError) {
+                RemoteRecognitionResult.Error.BadConnection -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.bad_internet_connection))
+                        .setContentText(getString(StringsR.string.please_check_network_status))
+                }
+
+                is RemoteRecognitionResult.Error.BadRecording -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.recording_error))
+                        .setContentText(getString(StringsR.string.notification_message_recording_error))
+                }
+
+                is RemoteRecognitionResult.Error.HttpError -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.bad_network_response))
+                        .setContentText(getString(StringsR.string.message_http_error))
+                }
+
+                is RemoteRecognitionResult.Error.UnhandledError -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.internal_error))
+                        .setContentText(getString(StringsR.string.notification_message_unhandled_error))
+                }
+
+                is RemoteRecognitionResult.Error.AuthError -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.auth_error))
+                        .setContentText(getString(StringsR.string.auth_error_message))
+                }
+
+                is RemoteRecognitionResult.Error.ApiUsageLimited -> {
+                    resultNotificationBuilder()
+                        .setContentTitle(getString(StringsR.string.service_usage_limited))
+                        .setContentText(getString(StringsR.string.service_usage_limited_message))
+                }
+            }
+
+            is RecognitionResult.ScheduledOffline -> {
+                resultNotificationBuilder()
+                    .setContentTitle(getString(StringsR.string.recognition_scheduled))
+                    .setContentText(
+                        if (result.recognitionTask is RecognitionTask.Created) {
+                            val extraMessage = if (result.recognitionTask.launched) {
+                                getString(StringsR.string.auto_recognition_message_network)
+                            } else {
+                                getString(StringsR.string.manual_recognition_message)
+                            }
+                            getString(StringsR.string.saved_recording_message) + ", $extraMessage"
+                        } else {
+                            getString(StringsR.string.recognition_scheduled)
+                        }
+                    )
+            }
+
+            is RecognitionResult.NoMatches -> {
+                resultNotificationBuilder()
+                    .setContentTitle(getString(StringsR.string.no_matches_found))
+                    .setContentText(getString(StringsR.string.no_matches_message))
+            }
+
+            is RecognitionResult.Success -> {
+                resultNotificationBuilder()
+                    .setContentTitle(result.track.title)
+                    .setContentText(result.track.artist)
+                    .addOptionalBigPicture(
+                        url = result.track.artworkUrl,
+                        contentTitle = result.track.title,
+                        contentText = result.track.artistWithAlbumFormatted()
+                    )
+                    .addTrackDeepLinkIntent(result.track.id)
+                    .addOptionalShowLyricsButton(result.track)
+                    .addShareButton(result.track.getSharedBody())
+            }
+        }
+    }
+
+    private suspend fun hasActiveWidgets(): Boolean {
+        return GlanceAppWidgetManager(this)
+            .getGlanceIds(RecognitionWidget::class.java)
+            .isNotEmpty()
+    }
+
+    private suspend fun requestWidgetsUpdate() {
+        RecognitionWidget().updateAll(this)
+    }
+
+    private fun requestQuickTileUpdate() {
+        OneTimeRecognitionTileService.requestListeningState(this)
+    }
+
+    private fun cancelRecognitionJob() {
+        recognitionCancelingJob = serviceScope.launch {
+            recognitionJob?.cancelAndJoin()
             recognitionInteractor.cancelAndResetStatus()
-            stopSelf()
+            screenStatusHolder.updateStatus(RecognitionStatus.Ready)
+            widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+            requestWidgetsUpdate()
+            requestQuickTileUpdate()
+            if (isHoldModeActive) {
+                notifyReady()
+            } else {
+                stopSelf()
+            }
+        }
+    }
+
+    private fun checkNotificationServicePermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+                    PackageManager.PERMISSION_GRANTED)
         } else {
-            recognitionInteractor.cancelAndResetStatus()
+            (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+                    PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) ==
+                    PackageManager.PERMISSION_GRANTED)
         }
     }
 
     private inner class ActionBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                RECOGNIZE_ACTION -> {
-                    val permissionGranted = ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.RECORD_AUDIO
-                    )
-                    if (permissionGranted == PackageManager.PERMISSION_GRANTED) {
-                        if (isReadyToRecognize) {
-                            launchRecognition()
-                        } else {
-                            cancelAndResetStatus()
-                        }
-                    } else {
-                        serviceScope.launch {
-                            // wait for the end of notification drawer closing animation
-                            // to see notification bubble
-                            val drawerAnimationDuration =
-                                resources.getInteger(android.R.integer.config_longAnimTime)
-                            delay(drawerAnimationDuration.toLong())
-                            resultNotificationBuilder()
-                                .setContentTitle(context.getString(StringsR.string.permissions))
-                                .setContentText(getString(StringsR.string.allow_the_app_to_access_the_microphone))
-                                .setAutoCancel(true)
-                                .addAppPreferencesButtonAndIntent()
-                                .buildAndNotifyAsResult()
-                        }
-                    }
+
+                CANCEL_RECOGNITION_LOCAL_ACTION -> {
+                    cancelRecognitionJob()
                 }
 
-                CANCEL_RECOGNITION_ACTION -> {
-                    cancelAndResetStatus()
-                }
-
-                DISABLE_SERVICE_ACTION -> {
+                DISABLE_SERVICE_LOCAL_ACTION -> {
                     serviceScope.launch {
-                        preferencesRepository.setNotificationServiceEnabled(false)
-                        stopSelf()
+                        if (isHoldModeActive) {
+                            preferencesRepository.setNotificationServiceEnabled(false)
+                            isHoldModeActive = false
+                        }
+                        if (isRecognitionJobActive) {
+                            cancelRecognitionJob()
+                        } else {
+                            stopSelf()
+                        }
                     }
                 }
-
             }
         }
     }
@@ -531,74 +661,65 @@ class NotificationService : Service() {
         private const val STATUS_NOTIFICATION_ID = 1
         private const val RESULT_NOTIFICATION_ID = 2
 
-        const val RECOGNIZE_ACTION = "com.mrsep.musicrecognizer.action.recognize"
-        const val CANCEL_RECOGNITION_ACTION = "com.mrsep.musicrecognizer.action.cancel_recognition"
-        const val DISABLE_SERVICE_ACTION = "com.mrsep.musicrecognizer.action.disable_service"
-        const val SHOW_TRACK_ACTION = "com.mrsep.musicrecognizer.action.show_track"
-        const val SHOW_LYRICS_ACTION = "com.mrsep.musicrecognizer.action.show_lyrics"
+        // Actions for local broadcasting
+        private const val CANCEL_RECOGNITION_LOCAL_ACTION =
+            "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
+        private const val DISABLE_SERVICE_LOCAL_ACTION =
+            "com.mrsep.musicrecognizer.service.action.local.disable_service"
 
-        const val KEY_BACKGROUND_LAUNCH = "KEY_BACKGROUND_LAUNCH"
-        const val KEY_ONE_TIME_RECOGNITION = "KEY_ONE_TIME_RECOGNITION"
+        // See isMicrophoneRestricted
+        const val KEY_RESTRICTED_START = "KEY_RESTRICTED_START"
 
-        const val TRACK_ID_EXTRA_KEY = "KEY_TRACK_ID"
+        // True if the launch occurs from the background (widget, tile),
+        // and false if the launch occurs from main activity
+        const val KEY_FOREGROUND_REQUESTED = "KEY_FOREGROUND_REQUESTED"
 
+        const val LAUNCH_RECOGNITION_ACTION =
+            "com.mrsep.musicrecognizer.service.action.launch_recognition"
+        const val CANCEL_RECOGNITION_ACTION =
+            "com.mrsep.musicrecognizer.service.action.cancel_recognition"
+        const val HOLD_MODE_ON_ACTION = "com.mrsep.musicrecognizer.service.action.hold_mode_on"
+        const val HOLD_MODE_OFF_ACTION = "com.mrsep.musicrecognizer.service.action.hold_mode_off"
+
+        fun cancelResultNotification(context: Context) {
+            with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
+                cancel(RESULT_NOTIFICATION_ID)
+            }
+        }
 
         fun createStatusNotificationChannel(context: Context) {
             val name = context.getString(StringsR.string.notification_channel_name_control)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
-                description = context.getString(StringsR.string.notification_channel_desc_control)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                setShowBadge(false)
-                enableLights(false)
-                enableVibration(false)
+            val channel =
+                NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
+                    description =
+                        context.getString(StringsR.string.notification_channel_desc_control)
+                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                    setShowBadge(false)
+                    enableLights(false)
+                    enableVibration(false)
+                }
+            with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
+                createNotificationChannel(channel)
             }
-            context.getNotificationManager().createNotificationChannel(channel)
         }
 
         fun createResultNotificationChannel(context: Context) {
             val name = context.getString(StringsR.string.notification_channel_name_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
-                description = context.getString(StringsR.string.notification_channel_desc_result)
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                setShowBadge(true)
-                enableLights(true)
-                enableVibration(true)
-                vibrationPattern = longArrayOf(100, 100, 100, 100)
+            val channel =
+                NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
+                    description =
+                        context.getString(StringsR.string.notification_channel_desc_result)
+                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                    setShowBadge(true)
+                    enableLights(true)
+                    enableVibration(true)
+                    vibrationPattern = longArrayOf(100, 100, 100, 100)
+                }
+            with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
+                createNotificationChannel(channel)
             }
-            context.getNotificationManager().createNotificationChannel(channel)
         }
-    }
-
-}
-
-fun Context.startNotificationService(
-    backgroundLaunch: Boolean = false,
-    oneTimeRecognition: Boolean = false
-) {
-    val intent = Intent(this, NotificationService::class.java).apply {
-        putExtra(NotificationService.KEY_BACKGROUND_LAUNCH, backgroundLaunch)
-        putExtra(NotificationService.KEY_ONE_TIME_RECOGNITION, oneTimeRecognition)
-    }
-    startForegroundService(intent)
-}
-
-fun Context.stopNotificationService() {
-    stopService(Intent(this, NotificationService::class.java))
-}
-
-private fun Context.getNotificationManager() =
-    getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
-
-private fun Context.checkNotificationServicePermissions(): Boolean {
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-        (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED)
-    } else {
-        (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED &&
-        ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                PackageManager.PERMISSION_GRANTED)
     }
 }

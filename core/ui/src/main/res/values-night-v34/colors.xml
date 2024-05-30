@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_container">@android:color/system_primary_container_dark</color>
+    <color name="surface_container_high">@android:color/system_surface_container_high_dark</color>
+    <color name="surface_container_highest">@android:color/system_surface_container_highest_dark</color>
+    <color name="surface">@android:color/system_surface_dark</color>
+    <color name="on_surface">@android:color/system_on_surface_dark</color>
+</resources>

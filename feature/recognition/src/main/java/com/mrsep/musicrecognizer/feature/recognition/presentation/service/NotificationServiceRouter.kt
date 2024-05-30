@@ -7,7 +7,4 @@ interface NotificationServiceRouter {
     fun getDeepLinkIntentToTrack(trackId: String): Intent
 
     fun getDeepLinkIntentToLyrics(trackId: String): Intent
-
-    fun getDeepLinkIntentToRecognitionQueue(): Intent
-
 }

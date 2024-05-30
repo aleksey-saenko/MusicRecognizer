@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_container">#FF004881</color>
+    <color name="surface_container_high">#FF252A33</color>
+    <color name="surface_container_highest">#FF2F353E</color>
+    <color name="surface">#FF0E141C</color>
+    <color name="on_surface">#FFDDE3EE</color>
+</resources>

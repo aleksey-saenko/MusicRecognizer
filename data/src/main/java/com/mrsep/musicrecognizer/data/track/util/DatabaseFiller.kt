@@ -56,14 +56,20 @@ class DatabaseFiller @Inject constructor(
                     .mapIndexed { index, result ->
                         val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
-                                copy(properties = result.data.properties.copy(isFavorite = true))
+                                copy(properties = result.data.properties.copy(
+                                    isFavorite = true,
+                                    isViewed = true)
+                                )
                             } else {
                                 this
                             }
                         }
                         entity.copy(
                             recognitionDate = Instant.now()
-                                .minus(index * 500L, ChronoUnit.HOURS)
+                                .minus(index * 500L, ChronoUnit.HOURS),
+                            properties = entity.properties.copy(
+                                isViewed = true
+                            )
                         )
                     }.toTypedArray()
                 trackRepository.upsert(*trackList)
@@ -106,5 +112,4 @@ class DatabaseFiller @Inject constructor(
             Toast.makeText(appContext, e::class.simpleName, Toast.LENGTH_LONG).show()
         }
     }
-
 }

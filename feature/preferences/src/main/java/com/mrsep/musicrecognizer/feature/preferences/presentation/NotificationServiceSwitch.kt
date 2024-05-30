@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
 import android.Manifest
-import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,13 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
-import com.mrsep.musicrecognizer.core.ui.components.NotificationsPermissionBlockedDialog
-import com.mrsep.musicrecognizer.core.ui.components.NotificationsPermissionRationaleDialog
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionBlockedDialog
-import com.mrsep.musicrecognizer.core.ui.components.RecorderPermissionRationaleDialog
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
+import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
@@ -31,98 +26,58 @@ internal fun NotificationServiceSwitch(
     serviceEnabled: Boolean,
     setServiceEnabled: (Boolean) -> Unit
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        //region <permission handling block>
-        val context = LocalContext.current
-        var recordBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
-        var recordRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
-        var notificationBlockedDialogVisible by rememberSaveable { mutableStateOf(false) }
-        var notificationRationaleDialogVisible by rememberSaveable { mutableStateOf(false) }
-
-        val notificationsPermissionState = rememberPermissionState(
-            Manifest.permission.POST_NOTIFICATIONS
-        ) { granted ->
-            if (granted) {
-                setServiceEnabled(true)
-            } else if (context.isPermissionBlocked(Manifest.permission.POST_NOTIFICATIONS)) {
-                notificationBlockedDialogVisible = true
-            }
+    //region <permission handling block>
+    val context = LocalContext.current
+    var showPermissionsRationaleDialog by rememberSaveable { mutableStateOf(false) }
+    var showPermissionsBlockedDialog by rememberSaveable { mutableStateOf(false) }
+    val requiredPermissionsState = rememberMultiplePermissionsState(
+        permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            listOf(Manifest.permission.RECORD_AUDIO)
+        } else {
+            listOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
         }
-        val recordPermissionState = rememberPermissionState(
-            Manifest.permission.RECORD_AUDIO
-        ) { granted ->
-            if (granted) {
-                notificationsPermissionState.launchPermissionRequest()
-            } else if (context.isPermissionBlocked(Manifest.permission.RECORD_AUDIO)) {
-                recordBlockedDialogVisible = true
-            }
-        }
-
-        if (recordBlockedDialogVisible) RecorderPermissionBlockedDialog(
-            onConfirmClick = { recordBlockedDialogVisible = false },
-            onDismissClick = { recordBlockedDialogVisible = false }
-        )
-        if (recordRationaleDialogVisible) RecorderPermissionRationaleDialog(
-            onConfirmClick = {
-                recordRationaleDialogVisible = false
-                recordPermissionState.launchPermissionRequest()
-            },
-            onDismissClick = { recordRationaleDialogVisible = false }
-        )
-        if (notificationBlockedDialogVisible) NotificationsPermissionBlockedDialog(
-            onConfirmClick = {
-                notificationBlockedDialogVisible = false
-            },
-            onDismissClick = {
-                notificationBlockedDialogVisible = false
-            }
-        )
-        if (notificationRationaleDialogVisible) NotificationsPermissionRationaleDialog(
-            onConfirmClick = {
-                notificationRationaleDialogVisible = false
-                notificationsPermissionState.launchPermissionRequest()
-            },
-            onDismissClick = {
-                notificationRationaleDialogVisible = false
-            }
-        )
-        //endregion
-        PreferenceSwitchItem(
-            title = stringResource(StringsR.string.notification_service),
-            subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
-            onClick = {
-                if (serviceEnabled) {
-                    setServiceEnabled(false)
-                } else {
-                    if (recordPermissionState.status.isGranted &&
-                        notificationsPermissionState.status.isGranted
-                    ) {
-                        setServiceEnabled(true)
-                    } else if (!recordPermissionState.status.isGranted &&
-                        recordPermissionState.status.shouldShowRationale
-                    ) {
-                        recordRationaleDialogVisible = true
-                    } else if (!notificationsPermissionState.status.isGranted &&
-                        notificationsPermissionState.status.shouldShowRationale
-                    ) {
-                        notificationRationaleDialogVisible = true
-                    } else {
-                        recordPermissionState.launchPermissionRequest()
-                    }
+    ) { results ->
+        if (results.all { (_, isGranted) -> isGranted }) {
+            setServiceEnabled(true)
+        } else {
+            val activity = context.findActivity()
+            showPermissionsBlockedDialog = results
+                .any { (permission, isGranted) ->
+                    !isGranted && !activity.shouldShowRationale(permission)
                 }
+        }
+    }
+    if (showPermissionsRationaleDialog) {
+        RecognitionPermissionsRationaleDialog(
+            onConfirmClick = {
+                showPermissionsRationaleDialog = false
+                requiredPermissionsState.launchMultiplePermissionRequest()
             },
-            checked = serviceEnabled
-        )
-    } else {
-        PreferenceSwitchItem(
-            modifier = modifier,
-            title = stringResource(StringsR.string.notification_service),
-            subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
-            onClick = { setServiceEnabled(!serviceEnabled) },
-            checked = serviceEnabled
+            onDismissClick = { showPermissionsRationaleDialog = false }
         )
     }
+    if (showPermissionsBlockedDialog) {
+        RecognitionPermissionsBlockedDialog(
+            onConfirmClick = { showPermissionsBlockedDialog = false },
+            onDismissClick = { showPermissionsBlockedDialog = false }
+        )
+    }
+    //endregion
+    PreferenceSwitchItem(
+        modifier = modifier,
+        title = stringResource(StringsR.string.notification_service),
+        subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
+        onClick = {
+            if (serviceEnabled) {
+                setServiceEnabled(false)
+            } else if (requiredPermissionsState.allPermissionsGranted) {
+                setServiceEnabled(true)
+            } else if (requiredPermissionsState.shouldShowRationale) {
+                showPermissionsRationaleDialog = true
+            } else {
+                requiredPermissionsState.launchMultiplePermissionRequest()
+            }
+        },
+        checked = serviceEnabled
+    )
 }
-
-private fun Context.isPermissionBlocked(permission: String) =
-    !findActivity().shouldShowRationale(permission)

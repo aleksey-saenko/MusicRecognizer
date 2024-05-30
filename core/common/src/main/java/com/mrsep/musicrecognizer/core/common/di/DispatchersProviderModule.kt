@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Suppress("unused")
 @Module
@@ -13,6 +14,6 @@ import dagger.hilt.components.SingletonComponent
 interface DispatchersProviderModule {
 
     @Binds
+    @Singleton
     fun bindDispatchersProvider(implementation: DefaultDispatchersProvider): DispatchersProvider
-
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tap_to_recognize">Algılamak için dokun</string>
-    <string name="tap_to_recognize_the_song">Şarkıyı algılamak için dokun</string>
-    <string name="recognize">Algıla</string>
-    <string name="listening">Dinleniyor</string>
-    <string name="listening_with_ellipsis">Dinleniyor…</string>
-    <string name="trying_one_more_time">Bir kez daha deneniyor</string>
-    <string name="listening_last_attempt">Dinleniyor… Son deneme…</string>
+    <string name="tap_to_recognize">Tanımak için dokun</string>
+    <string name="recognize">Tanı</string>
+    <string name="listening">Dinleme</string>
+    <string name="please_wait">Lütfen bekleyin</string>
+    <string name="trying_one_more_time">Bir kez daha deniyorum</string>
+
+    <string name="tap_to_try_again_short">Tekrar denemek için dokunun</string>
+    <string name="identify_while_using_another_app_short">Başka bir uygulamayı kullanırken çalan müziği bul</string>
+
     <string name="preferences">Tercihler</string>
     <string name="welcome">Hoş geldiniz</string>
     <string name="onboarding_welcome_message">Audile, yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde bulabilmenize yardımcı olabilecek bir müzik algılama uygulamasıdır.</string>
@@ -19,7 +21,6 @@
     <string name="token_skip_message">Bu adımı atlamak günlük algılamalarınızı sınırlayacaktır, ancak kişisel jetonunuzu daha sonra tercihlerde belirtebilirsiniz.</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>
-    <string name="skip">Atla</string>
     <string name="validating">Doğrulanıyor</string>
     <string name="final_onboarding_page_title">Yola çıkmaya hazırsın</string>
     <string name="final_onboarding_page_message">Kurulum başarıyla tamamlandı</string>
@@ -32,14 +33,12 @@
     <string name="none">Yok</string>
     <string name="permissions">İzinler</string>
     <string name="request_permission">İzin iste</string>
-    <string name="microphone_access">Mikrofon erişimi</string>
-    <string name="microphone_permission_rationale_message">Müzik algılama işlemini gerçekleştirmek için mikrofona erişim izni vermeniz gerekir.</string>
-    <string name="microphone_permission_denied_message">Önceki mikrofon erişim talepleri reddedildi. Bu izin olmadan uygulama müzik algılama işlemini gerçekleştiremez. Kararınızı ayarlardan değiştirebilirsiniz.</string>
-    <string name="sending_notifications">Bildirimler gönderiliyor</string>
-    <string name="notification_permission_rationale_message">Bildirim hizmetini etkinleştirmek için uygulamanın size bildirim göndermesine izin vermeniz gerekir.</string>
-    <string name="notification_permission_denied_message">Uygulamanın bildirim göndermesine izin vermek için önceki istekler reddedildi. Bu izin olmadan bildirim hizmeti düzgün çalışamaz. Kararınızı ayarlardan değiştirebilirsiniz.</string>
+    <string name="recorder_permission_rationale_message">Müzik tanıma işlemini gerçekleştirmek için, uygulamanın mikrofonunuza erişimine ihtiyaç vardır.</string>
+    <string name="notificaiton_permission_rationale_message">Tanımayı kontrol etmek ve uygulama küçültüldüğünde bile sonucu almak için bildirim gönderme iznine ihtiyacı vardır.</string>
+    <string name="permissions_denied_message">Önceki izin talepleri reddedildi. Ayarlar üzerinden kararınızı değiştirebilirsiniz.</string>
     <string name="permission_granted">İzin verildi</string>
     <string name="back">Geri</string>
+    <string name="forward">İleri</string>
     <string name="open_settings">Ayarları açın</string>
     <string name="notification_channel_name_control">Kontrol bildirimleri</string>
     <string name="notification_channel_name_result">Algılama sonuçları</string>
@@ -119,13 +118,12 @@
     <string name="fallback_policy">Yedek algılama davranışı</string>
     <string name="fallback_policy_dialog_title">Yedek algılama davranışı</string>
     <string name="fallback_policy_dialog_message">Her başarısız sonuç türü için varsayılan yedek eylemi ayarlayın:</string>
-    <string name="other_failures">Diğer arızalar durumunda</string>
-    <string name="fallback_policy_pref_subtitle">Başarısız algılamalardan sonra yedek eylemleri ayarlayın</string>
-    <string name="recognition_queue_pref_subtitle">Kaydedilen algılamaları yönetin</string>
-    <string name="recognition_provider_preference_title">Algılama sağlayıcısı</string>
-    <string name="recognition_service_dialog_message">Algılama sağlayıcısını seçin:</string>
-    <string name="notification_service">Bildirim hizmeti</string>
-    <string name="notification_service_pref_subtitle">Bildirimlerden algılama kontrolü</string>
+    <string name="other_failures">Diğer arızalar</string>
+    <string name="fallback_policy_pref_subtitle">Başarısız tanımalardan sonra geri dönüş eylemlerini ayarlayın</string>
+    <string name="recognition_provider_preference_title">Tanıma sağlayıcısı</string>
+    <string name="recognition_service_dialog_message">Tanıma sağlayıcısını seçin:</string>
+    <string name="notification_service">Bildirim servisi</string>
+    <string name="notification_service_pref_subtitle">Bildirimlerden tanıma kontrolü</string>
     <string name="notifications">Bildirimler</string>
     <string name="theme">Tema</string>
     <string name="theme_dialog_message">Tema modunu seçin:</string>
@@ -154,10 +152,7 @@
     <string name="empty_recognition_queue_sub_message">Çevrimdışı veya başarısız olduğunda, bir algılama seçilen yedek davranışa göre kuyruğa alınabilir</string>
     <string name="recognition_scheduled">Algılama planlandı</string>
     <string name="offline_mode">Çevrimdışı mod</string>
-    <string name="allow_the_app_to_access_the_microphone">Uygulamanın mikrofona erişmesine izin ver</string>
-    <string name="notification_service_initializing">Bildirim hizmeti başlatılıyor</string>
     <string name="disable_multi_selection_mode">Çoklu seçim modunu devre dışı bırak</string>
-    <string name="deselect_all">Tüm seçimleri kaldır</string>
     <string name="select_all">Tümünü seç</string>
     <string name="cancel_selected">Seçileni iptal et</string>
     <string name="delete_selected">Seçileni sil</string>
@@ -184,8 +179,7 @@
     <string name="track_not_found">Parça bulunamadı</string>
     <string name="loading">Yükleniyor</string>
     <string name="powered_by">Destekleyen</string>
-    <string name="format_service">%s hizmet</string>
-    <string name="purpose_recognition_service">Şarkı algılaması ve birincil meta veriler sağlar</string>
+    <string name="purpose_recognition_service">Şarkı tanıması ve birincil meta veriler sağlar</string>
     <string name="purpose_track_links_service">Platforma özgü ek parça bağlantıları sağlar</string>
     <string name="github_repository">GitHub deposu</string>
     <string name="license_gnu_gplv3">Lisans GNU GPLv3</string>
@@ -210,7 +204,6 @@
     <string name="stop_player">Oynatıcıyı durdur</string>
     <string name="start_player">Oynatıcıyı başlat</string>
     <string name="edit">Düzenle</string>
-    <string name="format_navigate_to_screen">%s ekranına git</string>
     <string name="share_options">Paylaşım seçenekleri</string>
     <string name="copy">Kopyala</string>
     <string name="copied">Kopyalandı</string>
@@ -221,10 +214,8 @@
     <string name="album">Albüm</string>
     <string name="year">Yıl</string>
     <string name="lyrics">Şarkı Sözleri</string>
-    <string name="quick_tile_permissions_blocked_api33">Arka plan algılama işlemini gerçekleştirmek için Audile\'in mikrofona erişmesi ve bildirim gönderebilmesi gerekir. Lütfen Ayarlar\'da Uygulama bilgilerini açın ve bu izinleri verin.</string>
-    <string name="quick_tile_permissions_blocked">Arka plan algılama işlemini gerçekleştirmek için Audile\'in mikrofona erişmesi gerekir. Lütfen Ayarlar\'da Uygulama bilgilerini açın ve bu izni verin.</string>
-    <string name="quick_tile_recognize">Şarkıyı algıla</string>
-    <string name="quick_tile_cancel_recognition">Algılamayı iptal et</string>
+    <string name="quick_tile_recognize">Şarkıyı tanı</string>
+    <string name="quick_tile_cancel_recognition">Tanımayı iptal et</string>
     <string name="help">Yardım</string>
     <string name="audd_help_message_start">"AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API jetonunuzu almanız gerekir. Henüz bir tane yoksa"</string>
     <string name="audd_help_message_clickable">Kaydolmayı</string>
@@ -238,4 +229,6 @@
     <string name="acr_cloud_help_step2">Ses kaynağını \"Recorded audio\" olarak ayarlayın</string>
     <string name="acr_cloud_help_step3">Seçtiğiniz ses motorunu ayarlayın. \"Audio fingerprinting\" seçeneği genel kullanım için en doğru olanıdır</string>
     <string name="acr_cloud_help_step4">3. taraf kimlik entegrasyonu için tüm kutuları işaretleyin</string>
+    <string name="recognition_widget_description">Şarkıyı tek bir dokunuşla tanıyın</string>
+
 </resources>

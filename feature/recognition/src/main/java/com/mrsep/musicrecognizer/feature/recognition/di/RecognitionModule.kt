@@ -1,13 +1,13 @@
 package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.ScreenRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.ServiceRecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorFakeImpl
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
 import com.mrsep.musicrecognizer.feature.recognition.platform.TrackMetadataEnhancerSchedulerImpl
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,15 +21,14 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindScreenRecognitionInteractor(implementation: RecognitionInteractorImpl):
-//    fun bindScreenRecognitionInteractor(implementation: RecognitionInteractorFakeImpl):
-            ScreenRecognitionInteractor
+    fun bindRecognitionInteractor(implementation: RecognitionInteractorImpl):
+//    fun bindRecognitionInteractor(implementation: RecognitionInteractorFakeImpl):
+            RecognitionInteractor
 
     @Binds
     @Singleton
-    fun bindServiceRecognitionInteractor(implementation: RecognitionInteractorImpl):
-//    fun bindServiceRecognitionInteractor(implementation: RecognitionInteractorFakeImpl):
-            ServiceRecognitionInteractor
+    fun bindScreenRecognitionController(implementation: ScreenRecognitionControllerImpl):
+            ScreenRecognitionController
 
     @Binds
     @Singleton
@@ -39,5 +38,4 @@ internal interface RecognitionModule {
     @Binds
     fun bindTrackMetadataEnhancerScheduler(implementation: TrackMetadataEnhancerSchedulerImpl):
             TrackMetadataEnhancerScheduler
-
 }

@@ -1,0 +1,4 @@
+* Added recognition widget for home screen
+* Added auto start for enabled notification service on device reboot
+* Improved notification service appearance and behaviour
+* Updated Turkish translation (@mikropsoft)

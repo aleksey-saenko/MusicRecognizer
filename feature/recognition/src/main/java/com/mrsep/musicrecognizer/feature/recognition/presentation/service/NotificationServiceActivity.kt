@@ -22,20 +22,21 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 class NotificationServiceActivity : ComponentActivity() {
 
-    private var isDialogDismissListenerEnabled = true
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { result: Map<String, Boolean> ->
+        val denied = result.mapNotNull { (permission, isGranted) ->
+            permission.takeIf { !isGranted }
+        }
         when {
-            result.all { (_, isGranted) -> isGranted } -> onLaunchRecognition()
-            result.any { (permission, _) -> !shouldShowRequestPermissionRationale(permission) } -> {
+            denied.isEmpty() -> onLaunchRecognition()
+
+            denied.any { permission -> !shouldShowRequestPermissionRationale(permission) } -> {
                 showPermissionsBlockedDialog()
             }
 
             else -> finish()
         }
-        isDialogDismissListenerEnabled = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +79,7 @@ class NotificationServiceActivity : ComponentActivity() {
 
     private fun onCancelRecognition() {
         startService(
-            Intent(this, NotificationServiceActivity::class.java)
+            Intent(this, NotificationService::class.java)
                 .setAction(NotificationService.CANCEL_RECOGNITION_ACTION)
         )
         finish()
@@ -107,6 +108,7 @@ class NotificationServiceActivity : ComponentActivity() {
     }
 
     private fun showPermissionsRationaleDialog() {
+        var isDialogDismissListenerEnabled = true
         AlertDialog.Builder(this, getPermissionDialogTheme())
             .setTitle(StringsR.string.permissions)
             .setMessage(
@@ -118,9 +120,10 @@ class NotificationServiceActivity : ComponentActivity() {
                     }
                 }
             )
-            .setPositiveButton(getString(StringsR.string.request_permission)) { _, _ ->
+            .setPositiveButton(getString(StringsR.string.request_permission)) { dialog, _ ->
                 isDialogDismissListenerEnabled = false
                 requestPermissionLauncher.launch(getRequiredPermissionsForRecognition())
+                dialog.dismiss()
             }
             .setNegativeButton(getString(StringsR.string.not_now)) { dialog, _ ->
                 dialog.dismiss()
@@ -152,8 +155,9 @@ class NotificationServiceActivity : ComponentActivity() {
             )
         if (appSettingsIntent.resolveActivity(packageManager) != null) {
             dialogBuilder
-                .setPositiveButton(getString(StringsR.string.open_settings)) { _, _ ->
+                .setPositiveButton(getString(StringsR.string.open_settings)) { dialog, _ ->
                     startActivity(appSettingsIntent)
+                    dialog.dismiss()
                 }
                 .setNegativeButton(getString(StringsR.string.not_now)) { dialog, _ ->
                     dialog.dismiss()

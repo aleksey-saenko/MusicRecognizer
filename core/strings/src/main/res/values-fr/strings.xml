@@ -6,6 +6,7 @@
     <string name="please_wait">Veuillez patienter</string>
     <string name="trying_one_more_time">Essayer une fois de plus</string>
 
+    <string name="tap_to_recognize_short">Appuyez pour identifier</string>
     <string name="tap_to_try_again_short">Tapez pour réessayer</string>
     <string name="identify_while_using_another_app_short">Identifiez la musique dans d’autres applis</string>
 
@@ -143,7 +144,6 @@
     <string name="vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="misc">Divers</string>
     <string name="recognize_on_startup">Reconnaître au démarrage</string>
-    <string name="developer_options">Options de développement</string>
     <string name="appearance">Apparence</string>
     <string name="empty_recognition_queue_message">Aucune reconnaissance en attente</string>
     <string name="empty_recognition_queue_sub_message">Sur échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours</string>

@@ -182,7 +182,7 @@
     <string name="vibrate_on_result">Vibrate on result</string>
     <string name="misc">Misc</string>
     <string name="recognize_on_startup">Recognize on startup</string>
-    <string name="developer_options">Developer options</string>
+    <string name="developer_options" translatable="false">Developer options</string>
     <string name="appearance">Appearance</string>
     <string name="empty_recognition_queue_message">No queued recognitions</string>
     <string name="empty_recognition_queue_sub_message">In offline or on failure, a recognition can be queued according to the chosen fallback policy</string>

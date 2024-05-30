@@ -147,7 +147,6 @@
     <string name="vibrate_on_result">Вибрация при результате</string>
     <string name="misc">Разное</string>
     <string name="recognize_on_startup">Распознавать при запуске</string>
-    <string name="developer_options">Параметры разработчика</string>
     <string name="appearance">Внешний вид</string>
     <string name="empty_recognition_queue_message">Нет распознаваний в очереди</string>
     <string name="empty_recognition_queue_sub_message">При отсутствии сети или в случае неуспеха распознавание может быть добавленно в очередь в соответствии с настройками</string>

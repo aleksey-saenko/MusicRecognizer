@@ -6,6 +6,7 @@
     <string name="please_wait">Prosím počkajte</string>
     <string name="trying_one_more_time">Pokúšam sa ešte raz</string>
 
+    <string name="tap_to_recognize_short">Klepnutím rozpoznáte</string>
     <string name="tap_to_try_again_short">Kliknite pre opakovanie</string>
     <string name="identify_while_using_another_app_short">Identifikovať hudbu pri používaní iných aplikácií</string>
 
@@ -127,7 +128,6 @@
     <string name="vibrate_on_tap">Vibrovať pri klepnutí</string>
     <string name="vibrate_on_result">Vibrovať pri výsledku</string>
     <string name="misc">Rôzne</string>
-    <string name="developer_options">Nastavenia pre vývojárov</string>
     <string name="appearance">Vzhľad</string>
     <string name="empty_recognition_queue_message">Žiadne rozpoznávanie vo fronte</string>
     <string name="empty_recognition_queue_sub_message">V prípade neúspešného rozpoznania môže aplikácia zaradiť rozpoznanie podľa zvolenej záložnej politiky</string>

@@ -7,6 +7,7 @@
     <string name="please_wait">Prosím čekejte</string>
     <string name="trying_one_more_time">Ještě jeden pokus</string>
 
+    <string name="tap_to_recognize_short">Klepněte pro rozpoznání</string>
     <string name="tap_to_try_again_short">Klepněte pro nový pokus</string>
     <string name="identify_while_using_another_app_short">Identifikujte hudbu během používání aplikací</string>
 
@@ -127,7 +128,6 @@
     <string name="vibrate_on_tap">Vibrace při klepnutí</string>
     <string name="vibrate_on_result">Vibrace při výsledku</string>
     <string name="misc">Různé</string>
-    <string name="developer_options">Vývojářská nastavení</string>
     <string name="appearance">Vzhled</string>
     <string name="empty_recognition_queue_message">Žádná rozpoznávání ve frontě</string>
     <string name="empty_recognition_queue_sub_message">V případě neúspěšného rozpoznání může aplikace zadat rozpoznání podle zvolené záložní politiky.</string>

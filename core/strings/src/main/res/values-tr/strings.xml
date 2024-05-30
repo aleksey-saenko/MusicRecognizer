@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tap_to_recognize">Tanımak için dokun</string>
-    <string name="recognize">Tanı</string>
-    <string name="listening">Dinleme</string>
+    <string name="tap_to_recognize">Algılamak için dokun</string>
+    <string name="recognize">Algıla</string>
+    <string name="listening">Dinleniyor</string>
     <string name="please_wait">Lütfen bekleyin</string>
-    <string name="trying_one_more_time">Bir kez daha deniyorum</string>
+    <string name="trying_one_more_time">Bir kez daha deneniyor</string>
 
+    <string name="tap_to_recognize_short">Algılamak için dokun</string>
     <string name="tap_to_try_again_short">Tekrar denemek için dokunun</string>
     <string name="identify_while_using_another_app_short">Başka bir uygulamayı kullanırken çalan müziği bul</string>
 
@@ -118,12 +119,12 @@
     <string name="fallback_policy">Yedek algılama davranışı</string>
     <string name="fallback_policy_dialog_title">Yedek algılama davranışı</string>
     <string name="fallback_policy_dialog_message">Her başarısız sonuç türü için varsayılan yedek eylemi ayarlayın:</string>
-    <string name="other_failures">Diğer arızalar</string>
-    <string name="fallback_policy_pref_subtitle">Başarısız tanımalardan sonra geri dönüş eylemlerini ayarlayın</string>
-    <string name="recognition_provider_preference_title">Tanıma sağlayıcısı</string>
-    <string name="recognition_service_dialog_message">Tanıma sağlayıcısını seçin:</string>
-    <string name="notification_service">Bildirim servisi</string>
-    <string name="notification_service_pref_subtitle">Bildirimlerden tanıma kontrolü</string>
+    <string name="other_failures">Diğer arızalar durumunda</string>
+    <string name="fallback_policy_pref_subtitle">Başarısız algılamalardan sonra yedek eylemleri ayarlayın</string>
+    <string name="recognition_provider_preference_title">Algılama sağlayıcısı</string>
+    <string name="recognition_service_dialog_message">Algılama sağlayıcısını seçin:</string>
+    <string name="notification_service">Bildirim hizmeti</string>
+    <string name="notification_service_pref_subtitle">Bildirimlerden algılama kontrolü</string>
     <string name="notifications">Bildirimler</string>
     <string name="theme">Tema</string>
     <string name="theme_dialog_message">Tema modunu seçin:</string>
@@ -146,7 +147,6 @@
     <string name="vibrate_on_result">Sonuca göre titreştir</string>
     <string name="misc">Çeşitli</string>
     <string name="recognize_on_startup">Başlangıçta algıla</string>
-    <string name="developer_options">Geliştirici seçenekleri</string>
     <string name="appearance">Görünüm</string>
     <string name="empty_recognition_queue_message">Kuyrukta algılama yok</string>
     <string name="empty_recognition_queue_sub_message">Çevrimdışı veya başarısız olduğunda, bir algılama seçilen yedek davranışa göre kuyruğa alınabilir</string>
@@ -179,7 +179,7 @@
     <string name="track_not_found">Parça bulunamadı</string>
     <string name="loading">Yükleniyor</string>
     <string name="powered_by">Destekleyen</string>
-    <string name="purpose_recognition_service">Şarkı tanıması ve birincil meta veriler sağlar</string>
+    <string name="purpose_recognition_service">Şarkı algılaması ve birincil meta veriler sağlar</string>
     <string name="purpose_track_links_service">Platforma özgü ek parça bağlantıları sağlar</string>
     <string name="github_repository">GitHub deposu</string>
     <string name="license_gnu_gplv3">Lisans GNU GPLv3</string>
@@ -214,8 +214,8 @@
     <string name="album">Albüm</string>
     <string name="year">Yıl</string>
     <string name="lyrics">Şarkı Sözleri</string>
-    <string name="quick_tile_recognize">Şarkıyı tanı</string>
-    <string name="quick_tile_cancel_recognition">Tanımayı iptal et</string>
+    <string name="quick_tile_recognize">Şarkıyı algıla</string>
+    <string name="quick_tile_cancel_recognition">Algılamayı iptal et</string>
     <string name="help">Yardım</string>
     <string name="audd_help_message_start">"AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API jetonunuzu almanız gerekir. Henüz bir tane yoksa"</string>
     <string name="audd_help_message_clickable">Kaydolmayı</string>

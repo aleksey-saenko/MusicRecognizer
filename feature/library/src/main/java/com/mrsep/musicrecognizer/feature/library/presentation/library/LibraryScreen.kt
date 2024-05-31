@@ -93,6 +93,7 @@ internal fun LibraryScreen(
                         LaunchedEffect(uiState.trackFilter) {
                             if (newFilterApplied) {
                                 lazyGridState.animateScrollToItem(0)
+                                topBarBehaviour.state.contentOffset = 0f
                                 newFilterApplied = false
                             }
                         }
@@ -111,6 +112,7 @@ internal fun LibraryScreen(
                         LaunchedEffect(uiState.trackFilter) {
                             if (newFilterApplied) {
                                 lazyListState.animateScrollToItem(0)
+                                topBarBehaviour.state.contentOffset = 0f
                                 newFilterApplied = false
                             }
                         }

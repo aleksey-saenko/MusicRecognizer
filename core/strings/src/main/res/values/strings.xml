@@ -126,8 +126,9 @@
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
     <string name="reset">Reset</string>
-    <string name="unviewed_track_label">NEW</string>
+    <string name="mark_all_as_viewed">Mark all as viewed</string>
     <!--    This label must be no longer than 5 characters, otherwise leave it without translation or replace it with "+1"-->
+    <string name="unviewed_track_label">NEW</string>
     <string name="format_amount_of_new_tracks">%s new tracks</string>
     <string name="filters">Filters</string>
     <string name="filter_favorite_status">Favorite status</string>
@@ -240,7 +241,6 @@
     <string name="stop_player">Stop player</string>
     <string name="start_player">Start player</string>
     <string name="edit">Edit</string>
-    <string name="share_options">Share options</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
     <string name="metadata">Metadata</string>

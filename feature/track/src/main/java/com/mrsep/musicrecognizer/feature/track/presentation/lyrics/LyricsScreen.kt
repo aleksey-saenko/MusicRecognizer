@@ -3,6 +3,9 @@ package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -238,6 +241,22 @@ internal fun LyricsScreen(
                         }
                         var autoScrollSpeed by rememberSaveable { mutableFloatStateOf(1f) }
                         val scrollInProgress = lyricsScrollState.isScrollInProgress
+                        // Top bar doesn't collapse on manual (auto) scroll, so do it here
+                        LaunchedEffect(autoScrollStarted) {
+                            if (!autoScrollStarted) return@LaunchedEffect
+                            with(topBarBehaviour) {
+                                if (state.collapsedFraction < 0.99f) {
+                                    animate(
+                                        initialValue = state.heightOffset,
+                                        targetValue = state.heightOffsetLimit,
+                                        animationSpec = spring(stiffness = Spring.StiffnessMedium)
+                                    ) { value, _ ->
+                                        state.heightOffset = value
+                                    }
+                                    state.contentOffset = state.heightOffsetLimit
+                                }
+                            }
+                        }
                         LaunchedEffect(
                             autoScrollStarted,
                             autoScrollSpeed,
@@ -247,13 +266,13 @@ internal fun LyricsScreen(
                             if (autoScrollStarted) {
                                 val scrollFraction =
                                     1 - lyricsScrollState.value.toFloat() / lyricsScrollState.maxValue
-                                // 3.5 min default, adjust in 1.75..7 min
-                                val scrollDuration =
-                                    (210 / autoScrollSpeed * scrollFraction * 1000).toInt()
+                                // 3.5 min default (210 seconds), adjust in 1.75..7 min
+                                val trackDurationMs = uiState.trackDurationMs ?: 210_000
+                                val scrollDurationMs = trackDurationMs / autoScrollSpeed * scrollFraction
                                 lyricsScrollState.animateScrollTo(
                                     value = lyricsScrollState.maxValue,
                                     animationSpec = tween(
-                                        durationMillis = scrollDuration,
+                                        durationMillis = scrollDurationMs.toInt(),
                                         easing = LinearEasing
                                     )
                                 )

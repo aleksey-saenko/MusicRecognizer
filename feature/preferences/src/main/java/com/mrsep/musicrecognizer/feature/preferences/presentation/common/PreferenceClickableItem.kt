@@ -21,7 +21,7 @@ internal fun PreferenceClickableItem(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 76.dp)
+            .heightIn(min = 80.dp)
             .clickable { onItemClick() }
             .padding(16.dp)
             .alpha(if (enabled) 1f else 0.7f)

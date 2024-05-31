@@ -59,7 +59,7 @@ internal fun ShareBottomSheet(
                 yearSelected || selectedMusicServices.isNotEmpty() || lyricsSelected
 
         Text(
-            text = stringResource(StringsR.string.share_options),
+            text = stringResource(StringsR.string.share),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )

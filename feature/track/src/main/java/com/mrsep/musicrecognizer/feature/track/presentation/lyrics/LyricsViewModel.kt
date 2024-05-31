@@ -40,6 +40,7 @@ internal class LyricsViewModel @Inject constructor(
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
                     themeMode = preferences.themeMode,
                     isTrackViewed = track.isViewed,
+                    trackDurationMs = track.duration?.toMillis()?.toInt()
                 )
             }
         } ?: LyricsUiState.LyricsNotFound
@@ -81,6 +82,7 @@ internal sealed class LyricsUiState {
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
         val isTrackViewed: Boolean,
+        val trackDurationMs: Int?,
     ) : LyricsUiState()
 
 }

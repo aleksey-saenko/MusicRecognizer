@@ -53,7 +53,6 @@ internal class TrackViewModel @Inject constructor(
     fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
-            trackMetadataEnhancerScheduler.cancel(trackId)
             trackRepository.delete(trackId)
             _trackExistingState.update { false }
         }

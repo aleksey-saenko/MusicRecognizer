@@ -9,12 +9,7 @@ class AdapterTrackMetadataEnhancerScheduler @Inject constructor(
     private val outerMetadataEnhancerScheduler: OuterMetadataEnhancerScheduler
 ) : TrackMetadataEnhancerScheduler {
 
-    override fun cancel(trackId: String) {
-        outerMetadataEnhancerScheduler.cancel(trackId)
-    }
-
     override fun isRunning(trackId: String): Flow<Boolean> {
         return outerMetadataEnhancerScheduler.isRunning(trackId)
     }
-
 }

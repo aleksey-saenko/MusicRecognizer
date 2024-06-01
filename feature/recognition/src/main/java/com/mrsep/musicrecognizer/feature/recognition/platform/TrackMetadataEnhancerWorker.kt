@@ -12,15 +12,15 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
-import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancer
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteMetadataEnhancingResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.mapLatest
 
 @HiltWorker
 internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
@@ -28,41 +28,44 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val trackRepository: TrackRepository,
     private val trackMetadataEnhancer: TrackMetadataEnhancer,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun doWork(): Result {
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
         val trackId = inputData.getString(INPUT_KEY_TRACK_ID)
         checkNotNull(trackId) { "$TAG requires track ID as parameter" }
 
-        return withContext(ioDispatcher) {
-            val oldTrack = trackRepository.getTrackFlow(trackId).first()
-                ?: return@withContext Result.failure()
-            when (val result = trackMetadataEnhancer.enhance(oldTrack)) {
-                is RemoteMetadataEnhancingResult.Success -> {
-                    trackRepository.updateKeepProperties(result.track)
-                    Result.success()
-                }
-
-                RemoteMetadataEnhancingResult.NoEnhancement -> Result.success()
-
-                RemoteMetadataEnhancingResult.Error.BadConnection -> handleRetryOnAttempt()
-
-                is RemoteMetadataEnhancingResult.Error.HttpError -> {
-                    if (result.code in 400..499) {
-                        val log = "$TAG canceled, remote result code=${result.code}, " +
-                                "message=${result.message}"
-                        Log.w(TAG, log)
-                        Result.failure()
-                    } else {
-                        handleRetryOnAttempt()
+        return trackRepository.getTrackFlow(trackId)
+            .distinctUntilChangedBy { track -> track?.id }
+            .mapLatest { oldTrack ->
+                // Null means that track was not found or was deleted in process
+                if (oldTrack == null) return@mapLatest Result.failure()
+                when (val result = trackMetadataEnhancer.enhance(oldTrack)) {
+                    is RemoteMetadataEnhancingResult.Success -> {
+                        trackRepository.updateKeepProperties(result.track)
+                        Result.success()
                     }
-                }
 
-                is RemoteMetadataEnhancingResult.Error.UnhandledError -> Result.failure()
+                    RemoteMetadataEnhancingResult.NoEnhancement -> Result.success()
+
+                    RemoteMetadataEnhancingResult.Error.BadConnection -> handleRetryOnAttempt()
+
+                    is RemoteMetadataEnhancingResult.Error.HttpError -> {
+                        if (result.code in 400..499) {
+                            val log = "$TAG canceled, remote result code=${result.code}, " +
+                                    "message=${result.message}"
+                            Log.w(TAG, log)
+                            Result.failure()
+                        } else {
+                            handleRetryOnAttempt()
+                        }
+                    }
+
+                    is RemoteMetadataEnhancingResult.Error.UnhandledError -> Result.failure()
+                }
             }
-        }
+            .first()
     }
 
     private fun handleRetryOnAttempt(): Result {
@@ -97,7 +100,5 @@ internal class TrackMetadataEnhancerWorker @AssistedInject constructor(
                 .setInputData(data)
                 .build()
         }
-
     }
-
 }

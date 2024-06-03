@@ -69,7 +69,7 @@ internal fun RecognitionLazyColumnItem(
         targetValue = if (selected)
             MaterialTheme.colorScheme.secondaryContainer
         else
-            MaterialTheme.colorScheme.background,
+            MaterialTheme.colorScheme.surface,
         label = "containerColor"
     )
     Row(

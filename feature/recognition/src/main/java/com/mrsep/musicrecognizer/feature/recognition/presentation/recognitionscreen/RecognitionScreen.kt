@@ -139,10 +139,10 @@ internal fun RecognitionScreen(
                     .verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
-                SuperButtonSection(
+                RecognitionButtonWithTitle(
                     title = getButtonTitle(recognizeStatus, autostart),
                     onButtonClick = {
-                        if (recognizeStatus.isDone()) return@SuperButtonSection
+                        if (recognizeStatus.isDone()) return@RecognitionButtonWithTitle
                         if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
                         if (recognizeStatus is RecognitionStatus.Recognizing) {
                             viewModel.cancelRecognition()

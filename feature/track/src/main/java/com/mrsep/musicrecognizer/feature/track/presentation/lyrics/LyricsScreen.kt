@@ -92,7 +92,7 @@ internal fun LyricsScreen(
 
         LyricsUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .systemBarsPadding()
         )
@@ -100,7 +100,7 @@ internal fun LyricsScreen(
         LyricsUiState.LyricsNotFound -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
@@ -135,7 +135,7 @@ internal fun LyricsScreen(
                 highContrastMode = uiState.fontStyle.isHighContrast
             ) {
                 Surface(
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     var autoScrollStarted by rememberSaveable { mutableStateOf(false) }

@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
@@ -77,17 +79,18 @@ internal fun TrackLazyGridItem(
     showRecognitionDate: Boolean,
     shape: Shape = MaterialTheme.shapes.medium
 ) {
+    val containerColor by animateColorAsState(
+        targetValue = if (selected)
+            MaterialTheme.colorScheme.secondaryContainer
+        else
+            MaterialTheme.colorScheme.surface,
+        label = "containerColor"
+    )
     Column(
         modifier = modifier
-            .background(
-                color = if (selected) {
-                    MaterialTheme.colorScheme.secondaryContainer
-                } else {
-                    MaterialTheme.colorScheme.background
-                },
-                shape = shape
-            )
+            .fillMaxSize()
             .clip(shape)
+            .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
                 onLongClick = onLongClick,
                 onClick = onClick,
@@ -95,7 +98,7 @@ internal fun TrackLazyGridItem(
                 interactionSource = remember { MutableInteractionSource() }
             )
             .padding(4.dp)
-            .fillMaxSize()
+
     ) {
         val placeholder = forwardingPainter(
             painter = painterResource(UiR.drawable.outline_album_fill1_24),

@@ -28,7 +28,7 @@ import kotlin.math.pow
  * @property activatedColor secondary color of lines
  */
 @Immutable
-data class WaveAnimatedProperties(
+internal data class WaveAnimatedProperties(
     val lineWidthFactor: Float = 0.045f,
     val spaceWidthFactor: Float = 1.3f,
     val periods: Int = 2,

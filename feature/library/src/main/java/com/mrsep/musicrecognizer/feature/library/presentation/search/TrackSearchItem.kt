@@ -103,17 +103,15 @@ internal fun TrackSearchItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Text(
-                text = if (track.album != null && searchScope.contains(TrackDataField.Album)) {
-                     highlightQueryPart(track.album, query)
-                } else {
-                    AnnotatedString(track.album ?: " ")
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (track.album != null && searchScope.contains(TrackDataField.Album)) {
+                Text(
+                    text = highlightQueryPart(track.album, query),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             if (showRecognitionDate) {
                 Spacer(Modifier.weight(1f))
                 Text(

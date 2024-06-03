@@ -12,47 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun SuperButton(
-    activated: Boolean,
-    amplitudeFactor: Float,
-    onClick: () -> Unit,
-    onLongPress: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(contentAlignment = Alignment.Center, modifier = modifier) {
-        RippleAnimated(
-            activated = activated,
-            modifier = Modifier.size(256.dp),
-            startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
-            baseColor = MaterialTheme.colorScheme.primary,
-            activatedColor = MaterialTheme.colorScheme.primary,
-            circlesCount = 7,
-            animationSpeed = 12_000
-        )
-        AnimatedEnhancedButton(
-            modifier = Modifier
-                .size(176.dp),
-            activated = activated,
-            onClick = onClick,
-            onLongPress = onLongPress
-        ) {
-            WaveAnimated(
-                activated = activated,
-                amplitudeFactor = amplitudeFactor,
-                properties = WaveAnimatedProperties(
-                    baseColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f),
-                    activatedColor = MaterialTheme.colorScheme.onPrimaryContainer
-                ),
-                modifier = Modifier
-                    .fillMaxHeight(0.65f)
-                    .fillMaxWidth(0.9f)
-            )
-        }
-    }
-}
-
-@Composable
-internal fun SuperButtonSection(
+internal fun RecognitionButtonWithTitle(
     title: String,
     activated: Boolean,
     amplitudeFactor: Float,
@@ -96,11 +56,54 @@ internal fun SuperButtonSection(
             )
         }
 
-        SuperButton(
+        RecognitionButton(
             onClick = onButtonClick,
             onLongPress = onButtonClick,
             activated = activated,
             amplitudeFactor = amplitudeFactor,
         )
+    }
+}
+
+@Composable
+private fun RecognitionButton(
+    activated: Boolean,
+    amplitudeFactor: Float,
+    onClick: () -> Unit,
+    onLongPress: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        RippleAnimated(
+            activated = activated,
+            modifier = Modifier.size(256.dp),
+            startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
+            baseColor = MaterialTheme.colorScheme.primary,
+            activatedColor = MaterialTheme.colorScheme.primary,
+            circlesCount = 7,
+            animationSpeed = 12_000
+        )
+        BasicRecognitionButton(
+            modifier = Modifier
+                .size(176.dp),
+            activated = activated,
+            onClick = onClick,
+            onLongPress = onLongPress
+        ) {
+            WaveAnimated(
+                activated = activated,
+                amplitudeFactor = amplitudeFactor,
+                properties = WaveAnimatedProperties(
+                    baseColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f),
+                    activatedColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                modifier = Modifier
+                    .fillMaxHeight(0.65f)
+                    .fillMaxWidth(0.9f)
+            )
+        }
     }
 }

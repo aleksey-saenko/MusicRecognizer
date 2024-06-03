@@ -45,7 +45,7 @@ internal fun PreferencesScreen(
     when (val uiState = uiStateInFlow) {
         is PreferencesUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .statusBarsPadding()
         )
@@ -53,7 +53,7 @@ internal fun PreferencesScreen(
         is PreferencesUiState.Success -> {
             Column(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.background)
+                    .background(color = MaterialTheme.colorScheme.surface)
                     .fillMaxSize()
             ) {
                 PreferencesTopBar(scrollBehavior = topBarBehaviour)

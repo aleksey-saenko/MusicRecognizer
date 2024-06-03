@@ -50,7 +50,7 @@ internal fun TrackScreen(
 
         TrackUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .systemBarsPadding()
         )
@@ -58,7 +58,7 @@ internal fun TrackScreen(
         TrackUiState.TrackNotFound -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
@@ -123,7 +123,7 @@ internal fun TrackScreen(
                 }
 
                 Surface(
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val screenScrollState = rememberScrollState()

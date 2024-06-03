@@ -8,19 +8,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
-fun EnhancedButton(
+internal fun BasicRecognitionButton(
     activated: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     modifier: Modifier = Modifier,
     longPressDelay: Long = 1_000,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val interaction by interactionSource.interactions.collectAsState(initial = null)
@@ -35,18 +35,42 @@ fun EnhancedButton(
                 buttonLongPressed = true
                 updatedOnLongPress()
             }
+
             is PressInteraction.Release -> {
                 if (buttonLongPressed)
                     buttonLongPressed = false
                 else
                     updatedOnClick()
             }
+
             is PressInteraction.Cancel -> {}
         }
     }
+
+    val buttonScaleFactor = remember { Animatable(1f) }
+    LaunchedEffect(activated) {
+        buttonScaleFactor.animateTo(
+            targetValue = 1.1f,
+            animationSpec = SpringSpec(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+        buttonScaleFactor.animateTo(
+            targetValue = 1f,
+            animationSpec = SpringSpec(
+                dampingRatio = Spring.DampingRatioHighBouncy,
+                stiffness = Spring.StiffnessVeryLow
+            )
+        )
+    }
+
     Button(
         onClick = { },
-        modifier = modifier,
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonScaleFactor.value
+            scaleY = buttonScaleFactor.value
+        },
         enabled = true,
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
@@ -66,39 +90,5 @@ fun EnhancedButton(
         contentPadding = ButtonDefaults.ContentPadding,
         interactionSource = interactionSource,
         content = content
-    )
-}
-
-@Composable
-fun AnimatedEnhancedButton(
-    activated: Boolean,
-    onClick: () -> Unit,
-    onLongPress: () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
-) {
-    val buttonSize = remember { Animatable(1f) }
-    LaunchedEffect(activated) {
-        buttonSize.animateTo(
-            targetValue = 1.1f,
-            animationSpec = SpringSpec(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        )
-        buttonSize.animateTo(
-            targetValue = 1f,
-            animationSpec = SpringSpec(
-                dampingRatio = Spring.DampingRatioHighBouncy,
-                stiffness = Spring.StiffnessVeryLow
-            )
-        )
-    }
-    EnhancedButton(
-        modifier = modifier.scale(buttonSize.value),
-        activated = activated,
-        onClick = onClick,
-        onLongPress = onLongPress,
-        content = content,
     )
 }

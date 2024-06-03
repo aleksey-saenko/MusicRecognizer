@@ -35,7 +35,7 @@ internal fun QueueScreen(
     when (val uiState = screenUiState) {
         QueueScreenUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .statusBarsPadding()
         )
@@ -67,7 +67,7 @@ internal fun QueueScreen(
             }
             Column(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.background)
+                    .background(color = MaterialTheme.colorScheme.surface)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -144,7 +144,7 @@ internal fun QueueScreen(
                     ) {
                         EmptyQueueMessage(
                             modifier = Modifier
-                                .background(color = MaterialTheme.colorScheme.background)
+                                .background(color = MaterialTheme.colorScheme.surface)
                                 .fillMaxSize()
                         )
                     }

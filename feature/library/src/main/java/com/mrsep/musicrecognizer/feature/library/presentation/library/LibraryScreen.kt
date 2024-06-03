@@ -42,14 +42,14 @@ internal fun LibraryScreen(
     when (val uiState = screenUiState) {
         LibraryUiState.Loading -> LoadingStub(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .statusBarsPadding()
         )
 
         is LibraryUiState.Success -> Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
             LibraryScreenTopBar(
@@ -125,7 +125,7 @@ internal fun LibraryScreen(
                 ) {
                     NoFilteredTracksMessage(
                         modifier = Modifier
-                            .background(color = MaterialTheme.colorScheme.background)
+                            .background(color = MaterialTheme.colorScheme.surface)
                             .fillMaxSize()
                     )
                 }
@@ -137,7 +137,7 @@ internal fun LibraryScreen(
                 ) {
                     EmptyLibraryMessage(
                         modifier = Modifier
-                            .background(color = MaterialTheme.colorScheme.background)
+                            .background(color = MaterialTheme.colorScheme.surface)
                             .fillMaxSize()
                     )
                 }

@@ -24,7 +24,7 @@ internal fun DeveloperScreen(
     val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.background)
+            .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
             .navigationBarsPadding()
     ) {
@@ -47,8 +47,8 @@ internal fun DeveloperScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             ButtonGroup(
-                title = "DATABASE",
-                content = {
+                title = "Database",
+                buttons = {
                     Button(onClick = viewModel::clearDb) {
                         Text(text = "Clear")
                     }
@@ -65,11 +65,19 @@ internal fun DeveloperScreen(
             )
             val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
             val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
-            val amplitude by viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
+            val amplitude = viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
             ButtonGroup(
                 title = "AudioRecorder (with encoder)",
-                subtitle = "soundLevel = $amplitude",
+                subtitle = "soundLevel = ${amplitude.value}",
                 content = {
+                    AmplitudeVisualizerSmooth(
+                        currentValue = amplitude,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                    )
+                },
+                buttons = {
                     Button(
                         onClick = {
                             if (isRecording) {
@@ -80,7 +88,7 @@ internal fun DeveloperScreen(
                         },
                         enabled = !isPlaying
                     ) {
-                        Text(text = if (isRecording) "Stop rec" else "Start rec")
+                        Text(text = if (isRecording) "Stop REC" else "Start REC")
                     }
                     Button(
                         onClick = {
@@ -107,7 +115,8 @@ private fun ButtonGroup(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
-    content: @Composable RowScope.() -> Unit
+    content: (@Composable () -> Unit)? = null,
+    buttons: @Composable RowScope.() -> Unit
 ) {
     Surface(
         tonalElevation = 1.dp,
@@ -115,6 +124,7 @@ private fun ButtonGroup(
         modifier = modifier
     ) {
         Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -122,21 +132,21 @@ private fun ButtonGroup(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
             )
             subtitle?.let {
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 8.dp)
                 )
+            }
+            content?.let {
+                content()
             }
             FlowRow(
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                content = content
+                content = buttons
             )
         }
     }
-
 }

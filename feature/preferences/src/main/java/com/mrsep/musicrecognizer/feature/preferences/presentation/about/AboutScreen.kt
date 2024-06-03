@@ -54,7 +54,7 @@ internal fun AboutScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.background)
+            .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
             .navigationBarsPadding()
     ) {

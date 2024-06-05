@@ -25,6 +25,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.kapt.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
 }
 
 tasks {

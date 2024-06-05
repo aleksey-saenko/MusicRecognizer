@@ -20,6 +20,8 @@ androidxNavigation = "2.7.0"
 androidxWindowManager = "1.2.0"
 androidxWork = "2.9.0"
 coil = "2.6.0"
+detektPlugin = "1.23.6"
+detektCompose = "0.4.3"
 hilt = "2.51.1"
 hiltExt = "1.2.0"
 junit4 = "4.13.2"
@@ -69,6 +71,8 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 androidx-windowManager = { group = "androidx.window", name = "window", version.ref = "androidxWindowManager" }
 androidx-workKtx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWork" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektPlugin" }
+detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detektCompose" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
@@ -99,6 +103,7 @@ android-tools-common = { group = "com.android.tools", name = "common", version.r
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 kapt-gradlePlugin = { group = "org.jetbrains.kotlin.kapt", name = "org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlin" }
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detektPlugin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -108,6 +113,7 @@ kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
 
 # Plugins defined by this project
 musicrecognizer-android-application = { id = "musicrecognizer.android.application", version = "unspecified" }

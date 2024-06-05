@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.data
 
 import android.content.Context
 import android.net.ConnectivityManager
-
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
@@ -25,7 +24,6 @@ class ConnectivityManagerNetworkMonitor @Inject constructor(
             channel.close()
             return@callbackFlow
         }
-
 
         fun update() {
             channel.trySend(connectivityManager.isCurrentlyConnected().not())
@@ -63,10 +61,8 @@ class ConnectivityManagerNetworkMonitor @Inject constructor(
         .distinctUntilChanged()
         .conflate()
 
-
     private fun ConnectivityManager.isCurrentlyConnected() =
         activeNetwork
             ?.let(::getNetworkCapabilities)
             ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
-
 }

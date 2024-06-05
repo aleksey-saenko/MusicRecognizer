@@ -14,5 +14,4 @@ interface TrackRepository {
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
     suspend fun setAsViewed(trackId: String)
-
 }

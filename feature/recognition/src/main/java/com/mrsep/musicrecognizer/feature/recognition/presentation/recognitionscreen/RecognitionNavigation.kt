@@ -41,5 +41,4 @@ object RecognitionScreen {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }

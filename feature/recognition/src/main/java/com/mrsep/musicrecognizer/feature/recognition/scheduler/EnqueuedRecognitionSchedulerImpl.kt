@@ -69,7 +69,6 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
     companion object {
         private const val UNIQUE_NAME_MASK = "ER_ID#"
     }
-
 }
 
 private fun WorkInfo?.asScheduledJobStatus(): ScheduledJobStatus {
@@ -81,9 +80,9 @@ private fun WorkInfo?.asScheduledJobStatus(): ScheduledJobStatus {
             WorkInfo.State.SUCCEEDED,
             WorkInfo.State.FAILED -> ScheduledJobStatus.INACTIVE
 
-            WorkInfo.State.BLOCKED -> throw IllegalStateException(
-                "EnqueuedRecognitionWorker implemented without a chain of workers"
-            )
+            WorkInfo.State.BLOCKED -> {
+                error("EnqueuedRecognitionWorker implemented without a chain of workers")
+            }
         }
     } ?: ScheduledJobStatus.INACTIVE
 }

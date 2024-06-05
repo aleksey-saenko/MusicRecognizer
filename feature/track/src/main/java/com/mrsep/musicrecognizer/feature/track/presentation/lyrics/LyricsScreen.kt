@@ -89,7 +89,6 @@ internal fun LyricsScreen(
     }
 
     when (val uiState = uiStateInFlow) {
-
         LyricsUiState.Loading -> LoadingStub(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
@@ -221,10 +220,11 @@ internal fun LyricsScreen(
                                     movableContentOf {
                                         Text(
                                             text = uiState.lyrics,
-                                            textAlign = if (uiState.fontStyle.alignToStart)
+                                            textAlign = if (uiState.fontStyle.alignToStart) {
                                                 TextAlign.Start
-                                            else
-                                                TextAlign.Center,
+                                            } else {
+                                                TextAlign.Center
+                                            },
                                             style = uiState.fontStyle.toTextStyle(uiState.themeMode),
                                             modifier = Modifier.fillMaxWidth()
                                         )

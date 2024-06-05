@@ -9,10 +9,10 @@ import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.UserPreferencesProtoKt
 import com.mrsep.musicrecognizer.copy
-import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
 import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
@@ -166,5 +166,4 @@ class PreferencesRepositoryImpl @Inject constructor(
             }
         }
     }
-
 }

@@ -27,7 +27,8 @@ fun VinylRotating(
         animationSpec = infiniteRepeatable(
             animation = tween(animationDuration, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
-        ), label = "VinylRotation"
+        ),
+        label = "VinylRotation"
 
     )
     VinylStatic(
@@ -57,11 +58,11 @@ fun VinylStatic(
         )
 
         drawCircle(
-            //base layer
+            // base layer
             color = color.copy(alpha = 0.1f),
             radius = totalSize / 2,
         )
-        drawCircle( //record surface
+        drawCircle( // record surface
             color = color.copy(alpha = 0.4f),
             radius = surfaceRadius,
             style = Stroke(
@@ -69,7 +70,7 @@ fun VinylStatic(
             )
         )
         drawCircle(
-            //center dot
+            // center dot
             color = color.copy(alpha = 0.3f),
             radius = totalSize / 25,
         )
@@ -122,6 +123,5 @@ fun VinylStatic(
                 )
             }
         }
-
     }
 }

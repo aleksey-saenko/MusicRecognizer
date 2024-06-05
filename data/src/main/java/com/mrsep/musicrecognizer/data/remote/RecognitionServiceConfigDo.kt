@@ -12,6 +12,6 @@ data class AcrCloudConfigDo(
     val accessSecret: String,
 ) : RecognitionServiceConfigDo()
 
-//data class AudioTagConfigDo(
+// data class AudioTagConfigDo(
 //    val apiKey: String,
-//) : RecognitionServiceConfigDo()
+// ) : RecognitionServiceConfigDo()

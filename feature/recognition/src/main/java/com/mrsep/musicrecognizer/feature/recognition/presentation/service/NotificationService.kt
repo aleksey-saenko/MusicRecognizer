@@ -93,7 +93,6 @@ class NotificationService : Service() {
     // even if recognition screen is resumed
     private var isHoldModeActive = false
 
-
     override fun onBind(intent: Intent) = null
 
     override fun onCreate() {
@@ -194,12 +193,12 @@ class NotificationService : Service() {
             startForeground(
                 STATUS_NOTIFICATION_ID,
                 initialNotification,
-                if (isMicrophoneRestricted)
+                if (isMicrophoneRestricted) {
                     FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-                else
+                } else {
                     FOREGROUND_SERVICE_TYPE_MICROPHONE
+                }
             )
-
         } else {
             startForeground(STATUS_NOTIFICATION_ID, initialNotification)
         }
@@ -255,7 +254,6 @@ class NotificationService : Service() {
             .addDismissIntent()
     }
 
-
     private fun resultNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_RESULT_CHANNEL_ID)
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
@@ -277,7 +275,8 @@ class NotificationService : Service() {
             action = LAUNCH_RECOGNITION_ACTION
         }
         val pendingIntent = PendingIntent.getService(
-            this@NotificationService, 0,
+            this@NotificationService,
+            0,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -633,7 +632,6 @@ class NotificationService : Service() {
     private inner class ActionBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-
                 CANCEL_RECOGNITION_LOCAL_ACTION -> {
                     cancelRecognitionJob()
                 }

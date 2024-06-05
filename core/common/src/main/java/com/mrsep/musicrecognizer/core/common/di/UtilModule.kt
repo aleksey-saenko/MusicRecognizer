@@ -14,5 +14,4 @@ internal interface UtilModule {
 
     @Binds
     fun bindAppDateTimeFormatter(implementation: AppDateTimeFormatterImpl): AppDateTimeFormatter
-
 }

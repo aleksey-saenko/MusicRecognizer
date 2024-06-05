@@ -52,7 +52,6 @@ data class UserPreferencesDo(
         val vibrateOnTap: Boolean,
         val vibrateOnResult: Boolean,
     )
-
 }
 
 enum class FallbackActionDo { Ignore, Save, SaveAndLaunch }

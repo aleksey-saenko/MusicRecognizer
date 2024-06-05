@@ -56,9 +56,11 @@ class DatabaseFiller @Inject constructor(
                     .mapIndexed { index, result ->
                         val entity = result.data.run {
                             if (index < 9) { // make first 9 tracks favorites
-                                copy(properties = result.data.properties.copy(
-                                    isFavorite = true,
-                                    isViewed = true)
+                                copy(
+                                    properties = result.data.properties.copy(
+                                        isFavorite = true,
+                                        isViewed = true
+                                    )
                                 )
                             } else {
                                 this
@@ -86,26 +88,25 @@ class DatabaseFiller @Inject constructor(
             val fileNamesArray = try {
                 appContext.assets.list(assetsDirectory) ?: emptyArray()
             } catch (e: IOException) {
-                e.printStackTrace()
+                Log.e(this::class.simpleName, "Error during file read", e)
                 showNameInToast(e)
                 return@withContext emptyList()
             }
             fileNamesArray.mapNotNull { fileName ->
                 try {
                     val responseJson = jsonAdapter.fromJson(
-                        appContext.assets.open("${assetsDirectory}/${fileName}")
+                        appContext.assets.open("$assetsDirectory/$fileName")
                             .bufferedReader().use { it.readText() }
                     )
                     responseJson?.toRecognitionResult()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e(this::class.simpleName, "Error during file parsing ($fileName)", e)
                     showNameInToast(e)
                     null
                 }
             }
         }
     }
-
 
     private suspend fun showNameInToast(e: Exception) {
         withContext(mainDispatcher) {

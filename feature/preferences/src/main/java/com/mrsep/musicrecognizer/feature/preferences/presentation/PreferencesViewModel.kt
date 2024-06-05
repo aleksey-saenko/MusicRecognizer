@@ -108,7 +108,6 @@ internal class PreferencesViewModel @Inject constructor(
             preferencesRepository.setRecognizeOnStartup(value)
         }
     }
-
 }
 
 @Immutable

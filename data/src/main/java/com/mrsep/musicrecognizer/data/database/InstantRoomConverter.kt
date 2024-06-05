@@ -14,5 +14,4 @@ internal class InstantRoomConverter {
     fun timestampToInstant(epochSecond: Long): Instant {
         return Instant.ofEpochSecond(epochSecond)
     }
-
 }

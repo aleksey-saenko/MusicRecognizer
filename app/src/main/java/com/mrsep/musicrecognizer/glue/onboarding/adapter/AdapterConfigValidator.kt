@@ -16,7 +16,7 @@ class AdapterConfigValidator @Inject constructor(
     private val configValidator: ConfigValidatorDo,
     private val configValidationStatusMapper: Mapper<ConfigValidationStatusDo, ConfigValidationStatus>,
     private val auddConfigMapper: BidirectionalMapper<AuddConfigDo, AuddConfig>
-): ConfigValidator {
+) : ConfigValidator {
 
     override suspend fun validate(config: RecognitionServiceConfig): ConfigValidationStatus {
         val configDo = when (config) {
@@ -25,5 +25,4 @@ class AdapterConfigValidator @Inject constructor(
         }
         return configValidationStatusMapper.map(configValidator.validate(configDo))
     }
-
 }

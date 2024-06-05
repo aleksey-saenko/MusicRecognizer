@@ -28,8 +28,5 @@ sealed class RemoteRecognitionResult {
             val message: String = "",
             val cause: Throwable? = null
         ) : Error()
-
     }
-
 }
-

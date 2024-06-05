@@ -40,5 +40,4 @@ interface MapperModule {
     @Binds
     fun bindTrackMapper(implementation: TrackMapper):
             Mapper<TrackEntity, Track>
-
 }

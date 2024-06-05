@@ -7,13 +7,12 @@ import javax.inject.Inject
 interface RecognitionServiceFactoryDo {
 
     fun getService(config: RecognitionServiceConfigDo): RecognitionServiceDo
-
 }
 
 internal class RecognitionServiceFactoryImpl @Inject constructor(
     private val acrCloudRecognitionServiceFactory: AcrCloudRecognitionService.Factory,
     private val auddRecognitionServiceFactory: AuddRecognitionService.Factory
-): RecognitionServiceFactoryDo {
+) : RecognitionServiceFactoryDo {
 
     override fun getService(config: RecognitionServiceConfigDo): RecognitionServiceDo {
         return when (config) {
@@ -21,5 +20,4 @@ internal class RecognitionServiceFactoryImpl @Inject constructor(
             is AuddConfigDo -> auddRecognitionServiceFactory.create(config)
         }
     }
-
 }

@@ -84,5 +84,4 @@ internal class AuddWebSocketSessionImpl @Inject constructor(
         private const val WEB_SOCKET_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
         private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
     }
-
 }

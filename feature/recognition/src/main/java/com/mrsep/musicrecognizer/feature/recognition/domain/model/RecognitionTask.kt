@@ -5,11 +5,10 @@ sealed class RecognitionTask {
     data class Created(
         val id: Int,
         val launched: Boolean
-    ): RecognitionTask()
+    ) : RecognitionTask()
 
     // corresponds "do not create enqueued recognition after bad recognition result"
-    data object Ignored: RecognitionTask()
+    data object Ignored : RecognitionTask()
 
-    data class Error(val cause: Throwable? = null): RecognitionTask()
-
+    data class Error(val cause: Throwable? = null) : RecognitionTask()
 }

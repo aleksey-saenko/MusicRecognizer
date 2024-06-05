@@ -60,7 +60,7 @@ internal fun RequiredServicesDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    //workaround for first element https://issuetracker.google.com/issues/209652366
+                    // Workaround for first element https://issuetracker.google.com/issues/209652366
                     itemsIndexed(
                         items = fullList,
                         key = { index, (service, _) -> if (index == 0) Random.nextInt() else service }

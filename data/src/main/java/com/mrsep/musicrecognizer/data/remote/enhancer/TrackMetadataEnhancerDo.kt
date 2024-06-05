@@ -5,5 +5,4 @@ import com.mrsep.musicrecognizer.data.track.TrackEntity
 interface TrackMetadataEnhancerDo {
 
     suspend fun enhance(track: TrackEntity): RemoteMetadataEnhancingResultDo
-
 }

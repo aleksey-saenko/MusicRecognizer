@@ -20,7 +20,6 @@ class CoroutineScopeModule {
     fun provideApplicationScope(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
-
 }
 
 @Retention(AnnotationRetention.RUNTIME)

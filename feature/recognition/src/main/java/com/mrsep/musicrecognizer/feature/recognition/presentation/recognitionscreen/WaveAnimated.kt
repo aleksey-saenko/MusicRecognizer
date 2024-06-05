@@ -82,8 +82,8 @@ internal fun WaveAnimated(
                     animation = tween(properties.animationSpeed, easing = EaseInOutSine),
                     repeatMode = RepeatMode.Reverse,
                     initialStartOffset = StartOffset(
-                        offsetMillis = properties.animationSpeed / (linesCount - 1)
-                                * index * properties.periods,
+                        offsetMillis = properties.animationSpeed / (linesCount - 1) *
+                            index * properties.periods,
                         offsetType = StartOffsetType.FastForward
                     )
                 ),
@@ -93,14 +93,15 @@ internal fun WaveAnimated(
         val gaussianFactors = remember(linesCount) { generateGaussianList(linesCount) }
 
         val startXOffset = lineWidthPx / 2 +
-                (maxWidthPx - linesCount * lineWidthPx - spaceCount * spaceWidthPx) / 2
+            (maxWidthPx - linesCount * lineWidthPx - spaceCount * spaceWidthPx) / 2
         Canvas(modifier = Modifier.fillMaxSize()) {
             val centerY = this.size.height / 2
             animatables.map { lineLengthPx * it.value }.forEachIndexed { index, thisLineLength ->
-                val xOffset = if (properties.inverseDirection)
+                val xOffset = if (properties.inverseDirection) {
                     startXOffset + lineSpaceWidthPx * index * 1f
-                else
+                } else {
                     maxWidthPx - startXOffset - lineSpaceWidthPx * index * 1f
+                }
                 val calcHalfLength = (thisLineLength / 2) * gaussianFactors[index] * smoothAmplFactor
                 drawLine(
                     color = currentColor,
@@ -112,7 +113,6 @@ internal fun WaveAnimated(
             }
         }
     }
-
 }
 
 private fun generateGaussianList(size: Int): List<Float> {

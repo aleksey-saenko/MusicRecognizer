@@ -9,5 +9,4 @@ interface RemoteRecognitionService {
     suspend fun recognize(audioRecordingFlow: Flow<ByteArray>): RemoteRecognitionResult
 
     suspend fun recognize(file: File): RemoteRecognitionResult
-
 }

@@ -29,5 +29,4 @@ class LyricsFontStyleDoMapper @Inject constructor(
             alignToStart = input.alignToStart
         }
     }
-
 }

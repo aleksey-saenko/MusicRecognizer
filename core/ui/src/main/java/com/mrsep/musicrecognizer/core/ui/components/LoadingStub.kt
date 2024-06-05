@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-private const val appearanceDelay = 1500
+private const val AppearanceDelay = 1500
 
 @Composable
 fun LoadingStub(
@@ -35,10 +35,10 @@ fun LoadingStub(
         }
         AnimatedVisibility(
             visibleState = visibleState,
-            enter = fadeIn(tween(delayMillis = appearanceDelay)) +
-                    scaleIn(tween(delayMillis = appearanceDelay)),
-            exit = fadeOut(tween(delayMillis = appearanceDelay)) +
-                    scaleOut(tween(delayMillis = appearanceDelay)),
+            enter = fadeIn(tween(delayMillis = AppearanceDelay)) +
+                    scaleIn(tween(delayMillis = AppearanceDelay)),
+            exit = fadeOut(tween(delayMillis = AppearanceDelay)) +
+                    scaleOut(tween(delayMillis = AppearanceDelay)),
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

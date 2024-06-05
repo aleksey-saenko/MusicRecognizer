@@ -2,9 +2,9 @@
 
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
+import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
@@ -76,7 +76,6 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         }
     }
 
-
     private suspend fun notifySuccess(launchEnhancer: Boolean) {
         val stubUrl = "https://www.google.com/search?q=stub"
         val fakeTrack = Track(
@@ -125,7 +124,6 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         status.update { RecognitionStatus.Ready }
         delay(2000)
     }
-
 
     private fun notifyBadConnectionError(recognitionTask: RecognitionTask) {
         val fakeResult = RecognitionStatus.Done(

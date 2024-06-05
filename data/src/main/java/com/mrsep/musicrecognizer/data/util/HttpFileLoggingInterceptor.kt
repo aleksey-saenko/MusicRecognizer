@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.util
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,17 +16,13 @@ import java.io.File
 
 internal class HttpFileLoggingInterceptor(
     private val appContext: Context,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) : Interceptor {
 
     private val rootDir = "${appContext.filesDir.absolutePath}/http_logger/"
 
     init {
-        try {
-            File(rootDir).run { if (!exists()) mkdir() }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        File(rootDir).run { if (!exists()) mkdir() }
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -62,16 +59,12 @@ internal class HttpFileLoggingInterceptor(
                     stream.write(data)
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                val message = "Error during log file writing"
+                Log.e(this::class.simpleName, message, e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        appContext,
-                        "LogToStorage failed, check stacktrace",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(appContext, message, Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
-
 }

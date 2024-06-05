@@ -15,5 +15,4 @@ class PlayerStatusMapper @Inject constructor() : Mapper<PlayerStatusDo, PlayerSt
             is PlayerStatusDo.Error -> PlayerStatus.Error(input.id, input.record, input.message)
         }
     }
-
 }

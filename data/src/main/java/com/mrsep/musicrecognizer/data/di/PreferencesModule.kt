@@ -13,18 +13,18 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
+import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.RequiredMusicServicesMigration
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
 import com.mrsep.musicrecognizer.data.preferences.mappers.AcrCloudConfigDoMapper
-import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
-import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackPolicyDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.HapticFeedbackDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.LyricsFontStyleDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.MusicServiceDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.RecognitionProviderDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.ThemeModeDoMapper
@@ -68,7 +68,6 @@ internal object PreferencesModule {
             produceFile = { appContext.dataStoreFile(USER_PREFERENCES_STORE) }
         )
     }
-
 }
 
 @Suppress("unused")
@@ -119,5 +118,4 @@ internal interface PreferencesMappersModule {
     @Binds
     fun bindRecognitionProviderDoMapper(impl: RecognitionProviderDoMapper):
             BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo>
-
 }

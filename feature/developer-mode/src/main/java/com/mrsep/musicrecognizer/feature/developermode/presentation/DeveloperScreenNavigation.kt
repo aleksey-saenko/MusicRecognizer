@@ -27,5 +27,4 @@ object DeveloperScreenNavigation {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }

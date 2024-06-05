@@ -34,5 +34,4 @@ internal interface RepositoryModule {
     @Binds
     @Singleton
     fun bindRecordingFileDataSource(impl: RecordingFileDataSourceImpl): RecordingFileDataSource
-
 }

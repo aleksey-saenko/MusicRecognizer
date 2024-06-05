@@ -24,5 +24,4 @@ sealed class PlayerStatusDo {
         val record: File,
         val message: String
     ) : PlayerStatusDo()
-
 }

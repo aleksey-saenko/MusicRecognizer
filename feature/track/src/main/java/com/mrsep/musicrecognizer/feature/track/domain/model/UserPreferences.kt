@@ -13,7 +13,6 @@ data class UserPreferences(
         val isHighContrast: Boolean,
         val alignToStart: Boolean
     )
-
 }
 
 enum class FontSize {

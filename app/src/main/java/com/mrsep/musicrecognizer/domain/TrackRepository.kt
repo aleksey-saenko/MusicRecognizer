@@ -5,5 +5,4 @@ import kotlinx.coroutines.flow.Flow
 interface TrackRepository {
 
     fun getUnviewedCountFlow(): Flow<Int>
-
 }

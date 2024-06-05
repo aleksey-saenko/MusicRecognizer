@@ -18,5 +18,4 @@ class PreferencesMapper @Inject constructor(
             auddConfig = auddConfigMapper.map(input.auddConfig)
         )
     }
-
 }

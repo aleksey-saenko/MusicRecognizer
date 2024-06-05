@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import javax.inject.Inject
 
-class RecognitionProviderDoMapper @Inject constructor():
+class RecognitionProviderDoMapper @Inject constructor() :
     BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo> {
 
     override fun reverseMap(input: RecognitionProviderDo): RecognitionProviderProto {
@@ -22,5 +22,4 @@ class RecognitionProviderDoMapper @Inject constructor():
             RecognitionProviderProto.AcrCloud -> RecognitionProviderDo.AcrCloud
         }
     }
-
 }

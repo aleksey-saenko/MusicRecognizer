@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class FallbackPolicyMapper @Inject constructor(
     private val actionMapper: BidirectionalMapper<FallbackActionDo, FallbackAction>
-): BidirectionalMapper<FallbackPolicyDo, FallbackPolicy> {
+) : BidirectionalMapper<FallbackPolicyDo, FallbackPolicy> {
 
     override fun map(input: FallbackPolicyDo): FallbackPolicy {
         return FallbackPolicy(
@@ -26,5 +26,4 @@ class FallbackPolicyMapper @Inject constructor(
             anotherFailure = actionMapper.reverseMap(input.anotherFailure)
         )
     }
-
 }

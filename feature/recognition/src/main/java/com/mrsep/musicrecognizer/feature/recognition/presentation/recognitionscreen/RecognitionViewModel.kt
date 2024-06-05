@@ -72,7 +72,6 @@ internal class RecognitionViewModel @Inject constructor(
     }
 }
 
-
 internal interface ScreenRecognitionController {
     fun launchRecognition()
     fun cancelRecognition()

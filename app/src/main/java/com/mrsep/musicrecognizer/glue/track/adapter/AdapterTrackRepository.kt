@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.glue.track.adapter
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import kotlinx.coroutines.flow.Flow
@@ -34,5 +34,4 @@ class AdapterTrackRepository @Inject constructor(
     override suspend fun setAsViewed(trackId: String) {
         trackRepositoryDo.setViewed(trackId, true)
     }
-
 }

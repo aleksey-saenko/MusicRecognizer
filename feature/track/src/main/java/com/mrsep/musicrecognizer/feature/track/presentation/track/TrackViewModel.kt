@@ -49,7 +49,6 @@ internal class TrackViewModel @Inject constructor(
         initialValue = TrackUiState.Loading
     )
 
-
     fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
@@ -75,7 +74,6 @@ internal class TrackViewModel @Inject constructor(
             trackRepository.setAsViewed(trackId)
         }
     }
-
 }
 
 @Immutable
@@ -92,7 +90,6 @@ internal sealed class TrackUiState {
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
     ) : TrackUiState()
-
 }
 
 private fun Track.toUiState(
@@ -114,4 +111,3 @@ private fun List<TrackLink>.hasMissingLink(requiredServices: List<MusicService>)
     val availableServicesSet = map { link -> link.service }.toSet()
     return requiredServices.any { service -> !availableServicesSet.contains(service) }
 }
-

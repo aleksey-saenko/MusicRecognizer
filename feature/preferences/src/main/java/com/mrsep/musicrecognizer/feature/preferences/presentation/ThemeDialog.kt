@@ -91,10 +91,11 @@ internal fun ThemeDialog(
                         ) {
                             Icon(
                                 painter = painterResource(
-                                    if (themeMode == ThemeMode.AlwaysLight)
+                                    if (themeMode == ThemeMode.AlwaysLight) {
                                         UiR.drawable.outline_light_mode_fill1_24
-                                    else
+                                    } else {
                                         UiR.drawable.outline_light_mode_24
+                                    }
                                 ),
                                 contentDescription = stringResource(StringsR.string.theme_light_short)
                             )
@@ -105,10 +106,11 @@ internal fun ThemeDialog(
                         ) {
                             Icon(
                                 painter = painterResource(
-                                    if (themeMode == ThemeMode.AlwaysDark)
+                                    if (themeMode == ThemeMode.AlwaysDark) {
                                         UiR.drawable.outline_dark_mode_fill1_24
-                                    else
+                                    } else {
                                         UiR.drawable.outline_dark_mode_24
+                                    }
                                 ),
                                 contentDescription = stringResource(StringsR.string.theme_dark_short)
                             )

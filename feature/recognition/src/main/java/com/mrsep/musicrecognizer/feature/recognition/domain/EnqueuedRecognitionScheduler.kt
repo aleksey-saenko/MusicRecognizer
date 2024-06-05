@@ -14,5 +14,4 @@ internal interface EnqueuedRecognitionScheduler {
     fun getJobStatusFlow(recognitionId: Int): Flow<ScheduledJobStatus>
 
     fun getJobStatusForAllFlow(): Flow<Map<Int, ScheduledJobStatus>>
-
 }

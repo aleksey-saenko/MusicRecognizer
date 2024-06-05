@@ -44,5 +44,4 @@ class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
     companion object {
         private const val UNIQUE_NAME_MASK = "METADATA_ENHANCER_ID#"
     }
-
 }

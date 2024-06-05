@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private enum class TopBarMode { EmptyQueue, Default, MultiSelection }
 

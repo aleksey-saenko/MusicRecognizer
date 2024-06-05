@@ -53,5 +53,4 @@ class UserPreferencesDoMapper @Inject constructor(
             recognizeOnStartup = input.recognizeOnStartup,
         )
     }
-
 }

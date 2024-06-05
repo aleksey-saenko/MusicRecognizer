@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.data.audioplayer
 
 import android.media.MediaPlayer
+import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +67,6 @@ class MediaPlayerController @Inject constructor(
                 prepareAsync()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             _statusFlow.update {
                 PlayerStatusDo.Error(
                     id = id,
@@ -91,7 +91,7 @@ class MediaPlayerController @Inject constructor(
                     )
                 }
             } catch (e: IllegalStateException) {
-                e.printStackTrace()
+                Log.e(this::class.simpleName, "Pause command at illegal time", e)
             }
         }
     }
@@ -110,7 +110,7 @@ class MediaPlayerController @Inject constructor(
                     )
                 }
             } catch (e: IllegalStateException) {
-                e.printStackTrace()
+                Log.e(this::class.simpleName, "Resume command at illegal time", e)
             }
         }
     }
@@ -124,7 +124,7 @@ class MediaPlayerController @Inject constructor(
         try {
             player?.stop()
         } catch (e: IllegalStateException) {
-            e.printStackTrace()
+            Log.e(this::class.simpleName, "Stop command at illegal time", e)
         }
         player?.release()
         player = null
@@ -152,5 +152,4 @@ class MediaPlayerController @Inject constructor(
     companion object {
         private const val POSITION_POLLING_RATE_MS = 100L
     }
-
 }

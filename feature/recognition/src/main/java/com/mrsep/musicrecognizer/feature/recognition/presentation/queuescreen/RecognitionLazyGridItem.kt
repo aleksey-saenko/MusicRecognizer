@@ -42,8 +42,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -61,10 +61,11 @@ internal fun RecognitionLazyGridItem(
     shape: Shape = MaterialTheme.shapes.medium,
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (selected)
+        targetValue = if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
-        else
-            MaterialTheme.colorScheme.surface,
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
         label = "containerColor"
     )
     Column(

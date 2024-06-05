@@ -45,8 +45,8 @@ import com.mrsep.musicrecognizer.core.ui.components.MultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableList
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -102,10 +102,11 @@ internal fun TrackLazyColumnItem(
     shape: Shape = MaterialTheme.shapes.medium,
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (selected)
+        targetValue = if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
-        else
-            MaterialTheme.colorScheme.surface,
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
         label = "containerColor"
     )
     Row(

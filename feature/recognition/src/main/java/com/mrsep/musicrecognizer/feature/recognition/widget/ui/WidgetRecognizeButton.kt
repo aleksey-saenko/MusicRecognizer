@@ -20,8 +20,8 @@ import androidx.glance.layout.size
 import androidx.glance.layout.width
 import com.mrsep.musicrecognizer.feature.recognition.R
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.getButtonSectionWidth
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun WidgetRecognizeButton(

@@ -113,7 +113,6 @@ internal class QueueScreenViewModel @Inject constructor(
             preferencesRepository.setShowCreationDateInQueue(value)
         }
     }
-
 }
 
 @Immutable
@@ -127,5 +126,4 @@ internal sealed class QueueScreenUiState {
         val useGridLayout: Boolean,
         val showCreationDate: Boolean,
     ) : QueueScreenUiState()
-
 }

@@ -24,7 +24,5 @@ sealed class ConfigValidationStatus {
         data object ApiUsageLimited : Error()
         data object BadConnection : Error()
         data object UnknownError : Error()
-
     }
-
 }

@@ -5,5 +5,4 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionSer
 interface RecognitionServiceFactory {
 
     fun getService(config: RecognitionServiceConfig): RemoteRecognitionService
-
 }

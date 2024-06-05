@@ -19,5 +19,4 @@ interface AdapterModule {
 
     @Binds
     fun bindAdapterConfigValidator(implementation: AdapterConfigValidator): ConfigValidator
-
 }

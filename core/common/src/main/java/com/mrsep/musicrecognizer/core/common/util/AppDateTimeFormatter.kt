@@ -9,12 +9,11 @@ import javax.inject.Inject
 interface AppDateTimeFormatter {
 
     fun formatRelativeToToday(dateTime: ZonedDateTime): String
-
 }
 
 internal class AppDateTimeFormatterImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
-): AppDateTimeFormatter {
+) : AppDateTimeFormatter {
 
     override fun formatRelativeToToday(dateTime: ZonedDateTime): String {
         val now = ZonedDateTime.now()
@@ -26,8 +25,9 @@ internal class AppDateTimeFormatterImpl @Inject constructor(
             else -> DateUtils.FORMAT_ABBREV_ALL
         }
         return DateUtils.formatDateTime(
-            appContext, dateTime.toInstant().toEpochMilli(), format
+            appContext,
+            dateTime.toInstant().toEpochMilli(),
+            format
         )
     }
-
 }

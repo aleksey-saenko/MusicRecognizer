@@ -15,5 +15,4 @@ interface TrackRepository {
     fun getSearchResultFlow(query: String, searchScope: Set<TrackDataField>): Flow<SearchResult>
 
     suspend fun delete(vararg trackIds: String)
-
 }

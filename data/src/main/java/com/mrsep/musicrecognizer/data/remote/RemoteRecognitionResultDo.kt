@@ -12,7 +12,7 @@ sealed class RemoteRecognitionResultDo {
 
         data object BadConnection : Error()
 
-        data class BadRecording(val message: String = ""): Error()
+        data class BadRecording(val message: String = "") : Error()
 
         data object AuthError : Error()
 
@@ -21,13 +21,11 @@ sealed class RemoteRecognitionResultDo {
         data class HttpError(
             val code: Int,
             val message: String
-        ): Error()
+        ) : Error()
 
         data class UnhandledError(
             val message: String = "",
             val e: Throwable? = null
         ) : Error()
-
     }
-
 }

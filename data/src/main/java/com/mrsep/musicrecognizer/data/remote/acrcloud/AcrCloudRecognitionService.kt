@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.acrcloud
 
+import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
 import com.mrsep.musicrecognizer.data.remote.RecognitionServiceDo
@@ -219,7 +220,7 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             val rawHmac = mac.doFinal(data)
             Base64.Default.encode(rawHmac)
         } catch (e: java.lang.Exception) {
-            e.printStackTrace()
+            Log.e(this::class.simpleName, "Error during signature encryption", e)
             ""
         }
     }
@@ -242,5 +243,4 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         private const val RETRY_ON_ERROR_LIMIT = 1
         private const val TIMEOUT_AFTER_RECORDING_FINISHED = 10_000L
     }
-
 }

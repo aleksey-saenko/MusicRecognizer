@@ -84,6 +84,4 @@ data class TrackEntity(
         @ColumnInfo(name = "theme_seed_color")
         val themeSeedColor: Int?,
     )
-
 }
-

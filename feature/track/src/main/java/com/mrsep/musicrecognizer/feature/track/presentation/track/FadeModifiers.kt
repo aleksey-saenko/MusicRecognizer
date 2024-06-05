@@ -58,7 +58,6 @@ internal fun Modifier.rowFadingEdge(
                 )
             }
         }
-
     }
 )
 
@@ -93,6 +92,5 @@ internal fun Modifier.rowFadingEdge(
                 )
             )
         }
-
     }
 )

@@ -32,5 +32,4 @@ internal data class AppleMusicJson(
         @Json(name = "bgColor")
         val backgroundColor: String?
     )
-
 }

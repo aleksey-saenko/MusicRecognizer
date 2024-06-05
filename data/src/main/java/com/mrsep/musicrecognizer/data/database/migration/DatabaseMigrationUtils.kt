@@ -19,11 +19,11 @@ internal object DatabaseMigrationUtils {
 
     private fun compareSQLiteVersions(version1: String, version2: String): Int {
         val pattern = Regex("^\\d+(\\.\\d+)*\$")
-        if (!pattern.matches(version1)) {
-            throw IllegalArgumentException("Incorrect version format:$version1")
+        require(pattern.matches(version1)) {
+            "Incorrect version format:$version1"
         }
-        if (!pattern.matches(version2)) {
-            throw IllegalArgumentException("Incorrect version format:$version2")
+        require(pattern.matches(version2)) {
+            "Incorrect version format:$version2"
         }
         val partsThis = version1.split('.')
         val partsOther = version2.split('.')
@@ -40,4 +40,3 @@ internal object DatabaseMigrationUtils {
         return 0
     }
 }
-

@@ -18,5 +18,4 @@ internal interface NotificationHelperModule {
     fun bindScheduledResultNotificationHelper(
         implementation: ScheduledResultNotificationHelperImpl
     ): ScheduledResultNotificationHelper
-
 }

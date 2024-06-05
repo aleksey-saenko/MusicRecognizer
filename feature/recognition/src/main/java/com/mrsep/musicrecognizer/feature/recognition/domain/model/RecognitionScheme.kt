@@ -78,11 +78,10 @@ class RecognitionScheme(
             check(steps.isNotEmpty()) { "RecognitionScheme must have at least 1 step" }
             return RecognitionScheme(
                 steps = steps,
-                sendTotalAtEnd= sendTotalAtEnd,
+                sendTotalAtEnd = sendTotalAtEnd,
                 extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
             )
         }
-
     }
 
     companion object {
@@ -103,8 +102,5 @@ class RecognitionScheme(
         fun Builder.splitter(startOfExtraTry: Boolean = false) {
             addSplitter(startOfExtraTry)
         }
-
     }
-
-
 }

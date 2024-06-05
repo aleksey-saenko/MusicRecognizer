@@ -29,5 +29,4 @@ class SearchResultMapper @Inject constructor(
             )
         }
     }
-
 }

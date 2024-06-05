@@ -99,5 +99,4 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setRecognizeOnStartup(value: Boolean) {
         preferencesRepositoryDo.setRecognizeOnStartup(value)
     }
-
 }

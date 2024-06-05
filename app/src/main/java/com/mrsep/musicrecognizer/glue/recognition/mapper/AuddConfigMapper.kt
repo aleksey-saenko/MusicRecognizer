@@ -18,5 +18,4 @@ class AuddConfigMapper @Inject constructor() : BidirectionalMapper<AuddConfigDo,
             apiToken = input.apiToken
         )
     }
-
 }

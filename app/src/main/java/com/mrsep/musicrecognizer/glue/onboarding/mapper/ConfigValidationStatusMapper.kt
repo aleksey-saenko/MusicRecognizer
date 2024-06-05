@@ -27,5 +27,4 @@ class ConfigValidationStatusMapper @Inject constructor() :
             ConfigValidationStatusDo.Success -> ConfigValidationStatus.Success
         }
     }
-
 }

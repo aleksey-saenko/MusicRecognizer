@@ -50,5 +50,4 @@ class AdapterEnqueuedRepository @Inject constructor(
             enqueuedMapper.reverseMap(recognition).enqueued
         )
     }
-
 }

@@ -3,7 +3,6 @@ package com.mrsep.musicrecognizer.data.remote.enhancer.odesli
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
-
 internal class OdesliApiProviderAdapter {
 
     @FromJson

@@ -21,9 +21,7 @@ interface EnqueuedRecognitionRepositoryDo {
 
     suspend fun getRecognitionWithTrack(recognitionId: Int): EnqueuedRecognitionEntityWithTrack?
 
-
     fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
 
     fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
-
 }

@@ -46,5 +46,4 @@ internal interface RecognitionModule {
     @Binds
     @Singleton
     fun bindTrackMetadataEnhancer(impl: OdesliMetadataEnhancer): TrackMetadataEnhancerDo
-
 }

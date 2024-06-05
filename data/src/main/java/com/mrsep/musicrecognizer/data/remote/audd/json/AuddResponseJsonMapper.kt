@@ -175,7 +175,7 @@ private fun AppleMusicJson.Artwork.toArtworkLink(requireHiRes: Boolean): String?
     if (width == null || height == null || url == null) return null
     if (requireHiRes && isLowResArtwork(width, height)) return null
     val isDefaultResAvailable = width >= 1000 && height >= 1000
-    val selectedRes = if (isDefaultResAvailable) "1000x1000" else "${width}x${height}"
+    val selectedRes = if (isDefaultResAvailable) "1000x1000" else "${width}x$height"
     return url.replaceFirst("{w}x{h}", selectedRes, true)
 }
 
@@ -214,7 +214,6 @@ private fun AuddResponseJson.Result.parseArtworkSeedColor() =
     this.appleMusic?.artwork?.backgroundColor?.run {
         runCatching { Color.parseColor("#$this") }.getOrNull()
     }
-
 
 private fun parseErrorResult(error: AuddResponseJson.Error): RemoteRecognitionResultDo {
     return when (error.errorCode) {

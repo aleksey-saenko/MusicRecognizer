@@ -33,5 +33,4 @@ object PreferencesScreen {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }

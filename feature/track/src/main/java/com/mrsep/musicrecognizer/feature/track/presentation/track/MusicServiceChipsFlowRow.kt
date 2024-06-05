@@ -37,8 +37,8 @@ import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

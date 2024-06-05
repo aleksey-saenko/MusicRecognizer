@@ -22,7 +22,6 @@ data class FallbackPolicy(
     val anotherFailure: FallbackAction
 )
 
-
 enum class FallbackAction(val save: Boolean, val launch: Boolean) {
 
     Ignore(false, false),
@@ -31,5 +30,4 @@ enum class FallbackAction(val save: Boolean, val launch: Boolean) {
 
     operator fun component1() = save
     operator fun component2() = launch
-
 }

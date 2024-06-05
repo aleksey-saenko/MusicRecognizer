@@ -2,9 +2,9 @@ package com.mrsep.musicrecognizer.glue.recognition.di
 
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.audiorecord.RecognitionSchemeDo
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
-import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
@@ -12,18 +12,16 @@ import com.mrsep.musicrecognizer.data.remote.AuddConfigDo
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
 import com.mrsep.musicrecognizer.data.remote.enhancer.RemoteMetadataEnhancingResultDo
-import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AuddConfig
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteMetadataEnhancingResult
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.glue.recognition.mapper.*
@@ -79,5 +77,4 @@ interface MapperModule {
     @Binds
     fun bindAcrCloudConfigMapper(implementation: AcrCloudConfigMapper):
             BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>
-
 }

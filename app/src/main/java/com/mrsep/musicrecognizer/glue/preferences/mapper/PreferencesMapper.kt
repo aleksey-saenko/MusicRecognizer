@@ -49,5 +49,4 @@ class PreferencesMapper @Inject constructor(
             recognizeOnStartup = input.recognizeOnStartup,
         )
     }
-
 }

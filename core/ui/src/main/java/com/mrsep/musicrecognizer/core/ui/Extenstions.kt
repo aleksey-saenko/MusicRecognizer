@@ -12,7 +12,7 @@ fun Context.findActivity(): Activity {
         if (context is Activity) return context
         context = context.baseContext
     }
-    throw IllegalStateException("Should be called in the context of an Activity")
+    error("Should be called in the context of an Activity")
 }
 
 fun Activity.shouldShowRationale(permission: String): Boolean {

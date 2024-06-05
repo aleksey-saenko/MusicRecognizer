@@ -129,4 +129,3 @@ internal fun OnboardingScreen(
         )
     }
 }
-

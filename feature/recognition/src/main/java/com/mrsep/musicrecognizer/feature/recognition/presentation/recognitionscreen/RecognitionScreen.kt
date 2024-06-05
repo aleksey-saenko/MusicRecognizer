@@ -31,11 +31,11 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionSta
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ApiUsageLimitedShield
+import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.NoMatchesShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ScheduledOfflineShield
-import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -303,7 +303,6 @@ internal fun RecognitionScreen(
             }
         }
     }
-
 }
 
 private val enterTransitionButton = slideInVertically(
@@ -341,25 +340,25 @@ private val exitTransitionButton = slideOutVertically(
 )
 
 private val transitionSpecShield:
-        AnimatedContentTransitionScope<RecognitionStatus>.() -> ContentTransform = {
-    fadeIn(
-        animationSpec = tween(
-            durationMillis = animationDurationShield,
-            delayMillis = animationDurationButton
-        )
-    ).togetherWith(
-        fadeOut(
+    AnimatedContentTransitionScope<RecognitionStatus>.() -> ContentTransform = {
+        fadeIn(
             animationSpec = tween(
                 durationMillis = animationDurationShield,
-                delayMillis = 0
+                delayMillis = animationDurationButton
             )
+        ).togetherWith(
+            fadeOut(
+                animationSpec = tween(
+                    durationMillis = animationDurationShield,
+                    delayMillis = 0
+                )
+            )
+        ).using(
+            SizeTransform { _, _ ->
+                snap(delayMillis = animationDurationShield)
+            }
         )
-    ).using(
-        SizeTransform { _, _ ->
-            snap(delayMillis = animationDurationShield)
-        }
-    )
-}
+    }
 
 private fun RecognitionStatus.isDone() = this is RecognitionStatus.Done
 private fun RecognitionStatus.isNotDone() = !isDone()
@@ -380,7 +379,6 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Bool
         }
 
         is RecognitionStatus.Done -> " "
-
     }
 }
 
@@ -401,5 +399,4 @@ private fun RemoteRecognitionResult.Error.getErrorInfo() = when (this) {
 
     is RemoteRecognitionResult.Error.UnhandledError ->
         "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
-
 }

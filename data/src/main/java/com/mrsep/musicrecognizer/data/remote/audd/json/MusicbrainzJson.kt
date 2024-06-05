@@ -20,5 +20,4 @@ internal data class MusicbrainzJson(
         @Json(name = "name")
         val name: String?
     )
-
 }

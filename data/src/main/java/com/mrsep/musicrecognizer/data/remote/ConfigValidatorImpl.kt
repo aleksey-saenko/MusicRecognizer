@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 internal class ConfigValidatorImpl @Inject constructor(
     private val recognitionServiceFactory: RecognitionServiceFactoryDo
-): ConfigValidatorDo {
+) : ConfigValidatorDo {
 
     override suspend fun validate(config: RecognitionServiceConfigDo): ConfigValidationStatusDo {
         val service = recognitionServiceFactory.getService(config)
@@ -21,5 +21,4 @@ internal class ConfigValidatorImpl @Inject constructor(
     companion object {
         private const val AUDIO_SAMPLE_URL = "https://audd.tech/example.mp3"
     }
-
 }

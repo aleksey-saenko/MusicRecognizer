@@ -51,9 +51,11 @@ object TrackScreen {
                 navArgument(ARG_TRACK_ID) { type = NavType.StringType },
                 navArgument(ARG_RETRY) { type = NavType.BoolType },
             ),
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
-            }),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                }
+            ),
             popExitTransition = {
                 when (initialState.savedStateHandle[KEY_LAST_ACTION] ?: TrackAction.NoAction) {
                     TrackAction.Deleted -> fadeOut(
@@ -67,7 +69,6 @@ object TrackScreen {
                         animationSpec = tween(durationMillis = 300),
                         targetOffsetY = { fullHeight -> -fullHeight / 2 }
                     ) + fadeOut(tween(durationMillis = 250))
-
 
                     TrackAction.NoAction -> null
                 }
@@ -90,7 +91,6 @@ object TrackScreen {
                     onBackPressed()
                 }
             )
-
         }
     }
 
@@ -103,13 +103,11 @@ object TrackScreen {
         if (from.lifecycleIsResumed) {
             this.navigate(route = routeWithArgs(trackId, isRetryAvailable), navOptions = navOptions)
         }
-
     }
 
     fun createDeepLink(trackId: String, isRetryAvailable: Boolean = false): String {
         return "$ROOT_DEEP_LINK/${routeWithArgs(trackId, isRetryAvailable)}"
     }
-
 }
 
 private enum class TrackAction { NoAction, Deleted, Dismissed }

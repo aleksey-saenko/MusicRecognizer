@@ -20,5 +20,4 @@ interface PreferencesRepository {
     suspend fun setThemeMode(value: ThemeMode)
     suspend fun setUsePureBlackForDarkTheme(value: Boolean)
     suspend fun setRecognizeOnStartup(value: Boolean)
-
 }

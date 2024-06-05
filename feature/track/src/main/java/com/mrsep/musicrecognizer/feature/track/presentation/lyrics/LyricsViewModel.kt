@@ -62,7 +62,6 @@ internal class LyricsViewModel @Inject constructor(
             trackRepository.setAsViewed(trackId)
         }
     }
-
 }
 
 @Immutable
@@ -84,5 +83,4 @@ internal sealed class LyricsUiState {
         val isTrackViewed: Boolean,
         val trackDurationMs: Int?,
     ) : LyricsUiState()
-
 }

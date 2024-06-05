@@ -25,5 +25,4 @@ data class Track(
         val isViewed: Boolean,
         val themeSeedColor: Int?,
     )
-
 }

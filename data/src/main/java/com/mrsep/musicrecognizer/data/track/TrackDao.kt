@@ -83,7 +83,6 @@ internal interface TrackDao {
     @RawQuery(observedEntities = [TrackEntity::class])
     fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
 
-
     private suspend fun copyKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
         return tracks.map { newTrack ->
             getTrack(newTrack.id)?.let { oldTrack ->
@@ -91,5 +90,4 @@ internal interface TrackDao {
             } ?: newTrack
         }
     }
-
 }

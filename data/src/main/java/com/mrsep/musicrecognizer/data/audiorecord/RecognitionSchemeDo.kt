@@ -11,5 +11,4 @@ class RecognitionSchemeDo(
         val timestamp: Duration,
         val splitter: Boolean
     )
-
 }

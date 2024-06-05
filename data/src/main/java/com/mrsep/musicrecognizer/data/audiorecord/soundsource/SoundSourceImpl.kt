@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.util.Log
 import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -107,8 +106,7 @@ class SoundSourceImpl @Inject constructor() : SoundSource {
             audioRecordRef?.release()
         }
     }
-        .catch {cause ->
-            Log.e(TAG, "An error occurred during audio recording", cause)
+        .catch { cause ->
             emit(Result.failure(cause))
         }
         .shareIn(
@@ -126,7 +124,6 @@ class SoundSourceImpl @Inject constructor() : SoundSource {
             yield()
         }
     }
-
 }
 
 private fun FloatArray.toByteArray(): ByteArray {

@@ -19,11 +19,11 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.glue.preferences.mapper.AcrCloudConfigMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.AuddConfigMapper
-import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackPolicyMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.HapticFeedbackMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.MusicServiceMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RecognitionProviderMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.ThemeModeMapper
 import dagger.Binds
@@ -71,5 +71,4 @@ interface MapperModule {
     @Binds
     fun bindAcrCloudConfigMapper(implementation: AcrCloudConfigMapper):
             BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>
-
 }

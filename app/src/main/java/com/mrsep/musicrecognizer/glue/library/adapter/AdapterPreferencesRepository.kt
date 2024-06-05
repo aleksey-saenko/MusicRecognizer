@@ -31,5 +31,4 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setShowRecognitionDateInLibrary(value: Boolean) {
         preferencesRepositoryDo.setShowRecognitionDateInLibrary(value)
     }
-
 }

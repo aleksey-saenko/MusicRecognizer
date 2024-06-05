@@ -5,5 +5,4 @@ internal interface VibrationManager {
     fun vibrateResult(isSuccess: Boolean)
 
     fun vibrateOnTap()
-
 }

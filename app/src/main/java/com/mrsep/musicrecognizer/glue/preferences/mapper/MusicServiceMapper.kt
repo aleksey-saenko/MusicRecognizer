@@ -49,5 +49,4 @@ class MusicServiceMapper @Inject constructor() :
             MusicServiceDo.YoutubeMusic -> MusicService.YoutubeMusic
         }
     }
-
 }

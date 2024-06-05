@@ -4,10 +4,10 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionS
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorImpl
-import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
 import com.mrsep.musicrecognizer.feature.recognition.platform.TrackMetadataEnhancerSchedulerImpl
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

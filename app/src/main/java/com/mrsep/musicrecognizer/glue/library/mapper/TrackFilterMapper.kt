@@ -52,5 +52,4 @@ class TrackFilterMapper @Inject constructor() :
             }
         )
     }
-
 }

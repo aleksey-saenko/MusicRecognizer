@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationButton
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.animationDurationShield
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

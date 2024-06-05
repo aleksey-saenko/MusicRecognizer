@@ -18,9 +18,11 @@ object RecognitionQueueScreen {
     ) {
         composable(
             route = ROUTE,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
-            })
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                }
+            )
         ) { backStackEntry ->
             QueueScreen(
                 onNavigateToTrackScreen = { trackId ->
@@ -42,5 +44,4 @@ object RecognitionQueueScreen {
     fun createDeepLink(): String {
         return "$ROOT_DEEP_LINK/$ROUTE"
     }
-
 }

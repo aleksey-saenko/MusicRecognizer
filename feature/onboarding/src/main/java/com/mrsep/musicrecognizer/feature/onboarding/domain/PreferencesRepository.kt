@@ -10,5 +10,4 @@ interface PreferencesRepository {
 
     suspend fun setAuddConfig(value: AuddConfig)
     suspend fun setOnboardingCompleted(value: Boolean)
-
 }

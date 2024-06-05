@@ -21,5 +21,4 @@ class HapticFeedbackMapper @Inject constructor() :
             vibrateOnResult = input.vibrateOnResult
         )
     }
-
 }

@@ -10,5 +10,4 @@ interface PreferencesRepository {
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setUseGridForQueue(value: Boolean)
     suspend fun setShowCreationDateInQueue(value: Boolean)
-
 }

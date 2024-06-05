@@ -35,5 +35,4 @@ interface AdapterModule {
 
     @Binds
     fun bindRecognitionServiceFactory(implementation: AdapterRecognitionServiceFactory): RecognitionServiceFactory
-
 }

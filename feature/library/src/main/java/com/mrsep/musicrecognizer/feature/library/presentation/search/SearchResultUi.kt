@@ -28,7 +28,6 @@ internal sealed class SearchResultUi {
     ) : SearchResultUi() {
         val isEmpty get() = data.isEmpty()
     }
-
 }
 
 internal fun SearchResult.toUi(

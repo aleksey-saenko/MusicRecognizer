@@ -45,8 +45,6 @@ class AdapterRecognitionServiceFactory @Inject constructor(
                     serviceDo.recognize(recording = file)
                 )
             }
-
         }
     }
-
 }

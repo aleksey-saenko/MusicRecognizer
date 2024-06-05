@@ -4,7 +4,6 @@ import android.media.AudioFormat
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
-import android.util.Log
 import com.mrsep.musicrecognizer.data.audiorecord.AudioEncoderDispatcher
 import com.mrsep.musicrecognizer.data.audiorecord.AudioEncoderHandler
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSource
@@ -25,11 +24,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToLong
 
-private const val TAG = "AacEncoder"
-
 @Singleton
 class AacEncoder @Inject constructor(
-    private val audioSource: SoundSource
+    private val audioSource: SoundSource,
 ) {
 
     val aacPacketsFlow: Flow<Result<AacPacket>> = channelFlow<Result<AacPacket>> {
@@ -88,7 +85,6 @@ class AacEncoder @Inject constructor(
             }.launchIn(this)
 
             val callback = object : MediaCodec.Callback() {
-                private val callbackTag = "MediaCodec.Callback"
                 override fun onInputBufferAvailable(codec: MediaCodec, bufferId: Int) {
                     if (bufferId >= 0) inputBufferIdChannel.trySendBlocking(bufferId)
                 }
@@ -96,11 +92,10 @@ class AacEncoder @Inject constructor(
                 override fun onOutputBufferAvailable(
                     codec: MediaCodec,
                     bufferId: Int,
-                    bufferInfo: MediaCodec.BufferInfo
+                    bufferInfo: MediaCodec.BufferInfo,
                 ) {
-                    if (bufferId >= 0 &&
-                        ((bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != MediaCodec.BUFFER_FLAG_CODEC_CONFIG)
-                    ) {
+                    val configFlag = bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG
+                    if (bufferId >= 0 && (configFlag != MediaCodec.BUFFER_FLAG_CODEC_CONFIG)) {
                         codec.getOutputBuffer(bufferId)?.let { outputBuffer ->
                             val encodedSize = outputBuffer.remaining()
                             val destination = ByteArray(encodedSize + 7)
@@ -116,7 +111,7 @@ class AacEncoder @Inject constructor(
                 }
 
                 override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
-                    throw RuntimeException("Code:${e.errorCode}, message:${e.message}", e.cause)
+                    throw e
                 }
 
                 override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
@@ -131,13 +126,12 @@ class AacEncoder @Inject constructor(
         }
     }
         .catch { cause ->
-            Log.e(TAG, "An error occurred during audio encoding", cause)
             emit(Result.failure(cause))
         }
         .flowOn(AudioEncoderDispatcher)
 
-    //accept AAC LC (Low Complexity) only !
-    //see https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio
+    // Accepts AAC LC (Low Complexity) only !
+    // See https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio
     private fun ByteArray.addAdtsHeader(length: Int, audioFormat: AudioFormat) {
         val packetLen = length + 7
         require(this.size == packetLen)
@@ -168,5 +162,4 @@ class AacEncoder @Inject constructor(
         this[5] = ((packetLen and 7 shl 5) + 0x1F).toByte()
         this[6] = 0xFC.toByte()
     }
-
 }

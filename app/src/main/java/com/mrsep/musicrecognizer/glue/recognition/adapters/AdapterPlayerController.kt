@@ -36,5 +36,4 @@ class AdapterPlayerController @Inject constructor(
     override fun stop() {
         playerControllerDo.stop()
     }
-
 }

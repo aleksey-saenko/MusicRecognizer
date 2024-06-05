@@ -33,14 +33,15 @@ object LyricsScreen {
         composable(
             route = ROUTE,
             arguments = listOf(navArgument(ARG_TRACK_ID) { type = NavType.StringType }),
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
-            })
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                }
+            )
         ) { _ ->
             LyricsScreen(
                 onBackPressed = onBackPressed
             )
-
         }
     }
 
@@ -52,11 +53,9 @@ object LyricsScreen {
         if (from.lifecycleIsResumed) {
             this.navigate(route = routeWithArgs(trackId), navOptions = navOptions)
         }
-
     }
 
     fun createDeepLink(trackId: String): String {
         return "$ROOT_DEEP_LINK/${routeWithArgs(trackId)}"
     }
-
 }

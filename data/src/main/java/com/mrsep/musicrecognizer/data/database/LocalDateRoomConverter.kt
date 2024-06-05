@@ -14,5 +14,4 @@ internal class LocalDateRoomConverter {
     fun localDateToTimestamp(date: LocalDate): Long {
         return date.toEpochDay()
     }
-
 }

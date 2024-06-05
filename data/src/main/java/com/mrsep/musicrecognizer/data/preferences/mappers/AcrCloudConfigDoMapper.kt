@@ -24,5 +24,4 @@ class AcrCloudConfigDoMapper @Inject constructor() :
             accessSecret = input.accessSecret
         }
     }
-
 }

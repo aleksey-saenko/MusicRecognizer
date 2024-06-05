@@ -68,7 +68,6 @@ internal class OnboardingViewModel @Inject constructor(
                 )
             }
         }
-
     }
 
     fun setTokenField(value: String) {
@@ -86,7 +85,6 @@ internal class OnboardingViewModel @Inject constructor(
             preferencesRepository.setOnboardingCompleted(value)
         }
     }
-
 }
 
 @Immutable
@@ -98,5 +96,4 @@ internal sealed class TokenPageUiState {
         val token: String,
         val configValidationStatus: ConfigValidationStatus
     ) : TokenPageUiState()
-
 }

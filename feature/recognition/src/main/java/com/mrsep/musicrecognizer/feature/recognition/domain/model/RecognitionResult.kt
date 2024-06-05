@@ -12,5 +12,4 @@ sealed class RecognitionResult {
         val remoteError: RemoteRecognitionResult.Error,
         val recognitionTask: RecognitionTask
     ) : RecognitionResult()
-
 }

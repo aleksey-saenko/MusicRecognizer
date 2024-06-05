@@ -11,5 +11,4 @@ interface TrackMetadataEnhancerScheduler {
     fun cancelAll()
 
     fun isRunning(trackId: String): Flow<Boolean>
-
 }

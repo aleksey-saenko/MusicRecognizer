@@ -32,9 +32,7 @@ internal sealed class RemoteRecognitionResultUi {
             val message: String = "",
             val eStackTrace: String? = null
         ) : Error()
-
     }
-
 }
 
 internal fun RemoteRecognitionResult.toUi() = when (this) {

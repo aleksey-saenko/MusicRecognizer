@@ -5,5 +5,4 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecogn
 internal interface ScheduledResultNotificationHelper {
 
     suspend fun notify(enqueuedRecognition: EnqueuedRecognition)
-
 }

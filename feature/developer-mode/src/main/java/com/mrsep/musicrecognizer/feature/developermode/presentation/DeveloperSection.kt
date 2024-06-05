@@ -56,10 +56,11 @@ internal fun DeveloperSection(
                 }
                 Image(
                     painter = painterResource(
-                        if (expanded)
+                        if (expanded) {
                             UiR.drawable.outline_keyboard_arrow_up_24
-                        else
+                        } else {
                             UiR.drawable.outline_keyboard_arrow_down_24
+                        }
                     ),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
@@ -112,9 +113,6 @@ internal fun DeveloperSection(
                     Button(onClick = onFakeRecognizeClick) { Text(text = "Fake") }
                 }
             }
-
         }
     }
-
 }
-

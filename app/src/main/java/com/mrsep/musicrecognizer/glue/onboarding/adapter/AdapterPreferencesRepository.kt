@@ -29,5 +29,4 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setOnboardingCompleted(value: Boolean) {
         preferencesRepositoryDo.setOnboardingCompleted(value)
     }
-
 }

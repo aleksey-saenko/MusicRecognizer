@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.data.preferences.mappers
 
-import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.UserPreferencesProto.HapticFeedbackProto
+import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.HapticFeedbackDo
 import javax.inject.Inject
 
@@ -21,5 +21,4 @@ class HapticFeedbackDoMapper @Inject constructor() :
             .setVibrateOnResult(input.vibrateOnResult)
             .build()
     }
-
 }

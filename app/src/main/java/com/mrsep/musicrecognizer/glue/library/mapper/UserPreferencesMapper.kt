@@ -18,5 +18,4 @@ class UserPreferencesMapper @Inject constructor(
             showRecognitionDateInLibrary = input.showRecognitionDateInLibrary
         )
     }
-
 }

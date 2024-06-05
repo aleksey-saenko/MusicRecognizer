@@ -4,10 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
-import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.audioplayer.MediaPlayerController
 import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
+import com.mrsep.musicrecognizer.data.audiorecord.SoundAmplitudeSourceDo
+import com.mrsep.musicrecognizer.data.audiorecord.encoder.AacEncoder
 import com.mrsep.musicrecognizer.data.track.TrackRepositoryDo
 import com.mrsep.musicrecognizer.data.track.util.DatabaseFiller
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -107,7 +107,6 @@ internal class DeveloperViewModel @Inject constructor(
     fun stopPlayer() {
         playerController.stop()
     }
-
 }
 
 private fun Context.showToast(text: String) {

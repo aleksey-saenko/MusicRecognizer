@@ -1,8 +1,7 @@
 package com.mrsep.musicrecognizer.data.remote.acrcloud.json
 
-import com.squareup.moshi.JsonClass
-
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 internal data class AcrCloudResponseJson(
@@ -174,9 +173,7 @@ internal data class AcrCloudResponseJson(
                 @Json(name = "id")
                 val id: Int?
             )
-
         }
-
     }
 
     @JsonClass(generateAdapter = true)
@@ -188,6 +185,4 @@ internal data class AcrCloudResponseJson(
         @Json(name = "code")
         val code: Int
     )
-
 }
-

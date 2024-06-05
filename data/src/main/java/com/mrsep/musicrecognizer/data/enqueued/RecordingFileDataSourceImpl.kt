@@ -13,7 +13,7 @@ private const val TAG = "RecordingFileDataSourceImpl"
 class RecordingFileDataSourceImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-): RecordingFileDataSource {
+) : RecordingFileDataSource {
 
     private val recordsDirPath = "${appContext.filesDir.absolutePath}/enqueued_records"
 
@@ -43,7 +43,6 @@ class RecordingFileDataSourceImpl @Inject constructor(
         }.getOrNull()
     }
 
-
     override suspend fun delete(file: File): Boolean {
         return withContext(ioDispatcher) {
             var numTries = 0
@@ -72,5 +71,4 @@ class RecordingFileDataSourceImpl @Inject constructor(
             allDeleted
         }
     }
-
 }

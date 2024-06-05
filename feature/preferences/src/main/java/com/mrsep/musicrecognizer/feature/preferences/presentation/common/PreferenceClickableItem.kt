@@ -43,5 +43,4 @@ internal fun PreferenceClickableItem(
             )
         }
     }
-
 }

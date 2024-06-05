@@ -14,5 +14,4 @@ sealed class SearchResult {
         override val searchScope: Set<TrackDataField>,
         val data: List<Track>
     ) : SearchResult()
-
 }

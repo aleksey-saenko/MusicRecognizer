@@ -32,5 +32,4 @@ interface MapperModule {
     @Binds
     fun bindAuddConfigMapper(implementation: AuddConfigMapper):
             BidirectionalMapper<AuddConfigDo, AuddConfig>
-
 }

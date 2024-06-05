@@ -8,12 +8,10 @@ import javax.inject.Inject
 class AudioRecordingMapper @Inject constructor() :
     Mapper<RecognitionScheme, RecognitionSchemeDo> {
 
-
     override fun map(input: RecognitionScheme): RecognitionSchemeDo {
         return RecognitionSchemeDo(
             steps = input.steps.map { step -> RecognitionSchemeDo.Step(step.timestamp, step.splitter) },
             sendTotalAtEnd = input.sendTotalAtEnd
         )
     }
-
 }

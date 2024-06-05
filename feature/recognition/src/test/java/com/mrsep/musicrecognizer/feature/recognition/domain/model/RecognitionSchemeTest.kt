@@ -45,5 +45,4 @@ class RecognitionSchemeTest {
             Assert.assertTrue(sendTotalAtEnd)
         }
     }
-
 }

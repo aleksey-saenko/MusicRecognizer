@@ -21,5 +21,4 @@ class RecognitionProviderMapper @Inject constructor() :
             RecognitionProvider.AcrCloud -> RecognitionProviderDo.AcrCloud
         }
     }
-
 }

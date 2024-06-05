@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transformWhile
-import java.lang.IllegalStateException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.inject.Inject
@@ -32,8 +31,9 @@ class SoundAmplitudeSourceImpl @Inject constructor(
 ) : SoundAmplitudeSourceDo {
 
     override val amplitudeFlow = (soundSource.params?.let { params ->
-        if (params.audioFormat.channelCount != 1)
-            throw IllegalStateException("SoundAmplitudeSourceImpl supports mono channel AudioSource only")
+        check(params.audioFormat.channelCount == 1) {
+            "SoundAmplitudeSourceImpl supports mono channel AudioSource only"
+        }
         val relativeMaximumFlow = when (params.audioFormat.encoding) {
             AudioFormat.ENCODING_PCM_16BIT -> soundSource.pcmChunkFlow
                 .transformWhile {pcmChunkResult ->
@@ -118,13 +118,8 @@ class SoundAmplitudeSourceImpl @Inject constructor(
     private fun FloatArray.calculateRms() =
         sqrt(fold(0f) { acc, float -> acc + float.pow(2) }.div(size))
 
-
     companion object {
         private const val SILENCE_THRESHOLD = -50f
         private const val MOVING_AVERAGE_WINDOW_SIZE = 15
     }
-
 }
-
-
-

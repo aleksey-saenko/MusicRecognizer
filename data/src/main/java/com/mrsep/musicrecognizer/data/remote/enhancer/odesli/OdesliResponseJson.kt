@@ -79,7 +79,7 @@ internal data class OdesliResponseJson(
         @Json(name = "googleStore")
         val googleStore: GoogleStore?,
 
-        ) {
+    ) {
 
         @JsonClass(generateAdapter = true)
         data class AmazonMusic(
@@ -194,9 +194,7 @@ internal data class OdesliResponseJson(
             @Json(name = "url")
             val url: String?
         )
-
     }
-
 }
 
 @JsonClass(generateAdapter = true)

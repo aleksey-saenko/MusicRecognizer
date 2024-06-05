@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.data.remote.audd.json
 
-import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 internal data class AuddResponseJson(
@@ -48,8 +48,4 @@ internal data class AuddResponseJson(
         @Json(name = "error_message")
         val errorMessage: String
     )
-
 }
-
-
-

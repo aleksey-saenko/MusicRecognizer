@@ -25,6 +25,4 @@ object OnboardingScreen {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }
-

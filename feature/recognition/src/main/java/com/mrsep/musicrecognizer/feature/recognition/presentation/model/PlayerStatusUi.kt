@@ -22,7 +22,6 @@ internal sealed class PlayerStatusUi {
         val id: Int,
         val message: String
     ) : PlayerStatusUi()
-
 }
 
 internal fun PlayerStatus.toUi() = when (this) {

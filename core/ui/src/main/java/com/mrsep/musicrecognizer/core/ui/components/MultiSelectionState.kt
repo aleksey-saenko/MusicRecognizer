@@ -16,7 +16,7 @@ class MultiSelectionState<T>(selectedIds: List<T>) {
 
     val selectedCount get() = selectedIds.size
 
-    val multiselectEnabled get () = selectedIds.isNotEmpty()
+    val multiselectEnabled get() = selectedIds.isNotEmpty()
 
     fun select(ids: List<T>) {
         selectedIds.putAll(ids.associateWith { Unit })

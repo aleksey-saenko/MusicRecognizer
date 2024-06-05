@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.artwork
 
+import android.util.Log
 import com.mrsep.musicrecognizer.data.remote.audd.json.DeezerJson
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.squareup.moshi.Moshi
@@ -34,9 +35,8 @@ class ArtworkFetcherImpl @Inject constructor(
             deezerJson.album?.run { coverXl ?: coverBig ?: coverMedium }
                 ?: deezerJson.artist?.run { pictureXl ?: pictureBig ?: pictureMedium }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(this::class.simpleName, "Error during artwork fetching ($requestUrl)", e)
             null
         }
     }
-
 }

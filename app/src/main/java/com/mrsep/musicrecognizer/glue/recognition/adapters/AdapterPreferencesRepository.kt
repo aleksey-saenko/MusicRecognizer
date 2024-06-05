@@ -29,5 +29,4 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setShowCreationDateInQueue(value: Boolean) {
         preferencesRepositoryDo.setShowCreationDateInQueue(value)
     }
-
 }

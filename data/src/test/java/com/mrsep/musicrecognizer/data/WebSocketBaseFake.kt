@@ -67,5 +67,4 @@ internal abstract class WebSocketBaseFake(
     override fun send(text: String): Boolean {
         throw IllegalStateException("Not required in tests")
     }
-
 }

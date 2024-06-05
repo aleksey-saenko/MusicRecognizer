@@ -37,5 +37,4 @@ internal abstract class ApplicationDatabase : RoomDatabase() {
     abstract fun trackDao(): TrackDao
 
     abstract fun enqueuedRecognitionDao(): EnqueuedRecognitionDao
-
 }

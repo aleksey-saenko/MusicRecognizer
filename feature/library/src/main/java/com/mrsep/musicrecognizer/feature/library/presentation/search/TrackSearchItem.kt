@@ -29,8 +29,8 @@ import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableSet
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun TrackSearchItem(

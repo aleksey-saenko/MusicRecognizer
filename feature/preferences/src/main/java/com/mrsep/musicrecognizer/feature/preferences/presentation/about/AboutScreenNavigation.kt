@@ -25,6 +25,4 @@ object AboutScreenNavigation {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }
-

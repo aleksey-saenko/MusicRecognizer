@@ -14,7 +14,6 @@ internal sealed class SocketEvent {
     data class ConnectionClosed(val shutdownReason: ShutdownReason) : SocketEvent()
 
     data class ConnectionFailed(val throwable: Throwable) : SocketEvent()
-
 }
 
 internal data class ShutdownReason(val code: Int, val reason: String)

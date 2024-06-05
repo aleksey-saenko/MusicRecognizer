@@ -83,8 +83,4 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     override fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>> {
         return dao.getAllRecognitionsWithTrackFlow().flowOn(ioDispatcher)
     }
-
 }
-
-
-

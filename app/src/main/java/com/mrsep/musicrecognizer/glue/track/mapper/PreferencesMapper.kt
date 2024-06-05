@@ -27,5 +27,4 @@ class PreferencesMapper @Inject constructor(
             themeMode = themeModeMapper.map(input.themeMode)
         )
     }
-
 }

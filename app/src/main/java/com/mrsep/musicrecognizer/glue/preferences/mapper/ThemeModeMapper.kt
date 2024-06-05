@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import javax.inject.Inject
 
-class ThemeModeMapper @Inject constructor():
+class ThemeModeMapper @Inject constructor() :
     BidirectionalMapper<ThemeModeDo, ThemeMode> {
 
     override fun map(input: ThemeModeDo): ThemeMode {
@@ -23,5 +23,4 @@ class ThemeModeMapper @Inject constructor():
             ThemeMode.AlwaysDark -> ThemeModeDo.AlwaysDark
         }
     }
-
 }

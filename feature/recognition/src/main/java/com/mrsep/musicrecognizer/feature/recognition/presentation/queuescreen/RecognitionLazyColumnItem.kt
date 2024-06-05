@@ -47,8 +47,8 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -66,10 +66,11 @@ internal fun RecognitionLazyColumnItem(
     shape: Shape = MaterialTheme.shapes.medium,
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (selected)
+        targetValue = if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
-        else
-            MaterialTheme.colorScheme.surface,
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
         label = "containerColor"
     )
     Row(
@@ -203,8 +204,12 @@ internal fun EnqueuedRecognitionUi.getStatusMessage(concise: Boolean): String {
         ScheduledJobStatus.ENQUEUED -> stringResource(StringsR.string.enqueued)
         ScheduledJobStatus.RUNNING -> stringResource(StringsR.string.running)
     }
-    return if (concise) statusDescription else stringResource(
-        StringsR.string.format_status,
+    return if (concise) {
         statusDescription
-    )
+    } else {
+        stringResource(
+            StringsR.string.format_status,
+            statusDescription
+        )
+    }
 }

@@ -48,5 +48,4 @@ internal data class SpotifyJson(
         @Json(name = "spotify")
         val spotify: String?
     )
-
 }

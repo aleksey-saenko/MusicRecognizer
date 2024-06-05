@@ -43,5 +43,4 @@ class UserPreferencesMapper @Inject constructor(
             showCreationDateInQueue = input.showCreationDateInQueue,
         )
     }
-
 }

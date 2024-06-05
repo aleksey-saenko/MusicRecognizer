@@ -230,7 +230,6 @@ class AuddRecognitionServiceTest {
         Assert.assertEquals(expectedTime, testScheduler.currentTime)
     }
 
-
     @Test
     fun `empty audio recording flow = return bad recording`() = scope.runTest {
         val webSocket = object : WebSocketBaseFake(this) {
@@ -261,8 +260,6 @@ class AuddRecognitionServiceTest {
         Assert.assertTrue(result is RemoteRecognitionResultDo.Error.BadRecording)
         Assert.assertEquals(delayBeforeFlowClose, testScheduler.currentTime)
     }
-
-
 }
 
 private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : AuddWebSocketSession {
@@ -270,5 +267,4 @@ private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : AuddWeb
     override suspend fun startSession(apiToken: String): Flow<SocketEvent> = flow {
         emitAll(webSocket.outputChannel)
     }
-
 }

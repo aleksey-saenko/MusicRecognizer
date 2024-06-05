@@ -13,7 +13,8 @@ fun Context.getAppVersion(): String = try {
             PackageManager.PackageInfoFlags.of(0)
         )?.versionName
     } else {
-        @Suppress("DEPRECATION") packageManager?.getPackageInfo(
+        @Suppress("DEPRECATION")
+        packageManager?.getPackageInfo(
             packageName,
             0
         )?.versionName

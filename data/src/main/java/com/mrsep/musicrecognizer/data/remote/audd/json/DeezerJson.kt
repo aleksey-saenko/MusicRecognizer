@@ -50,5 +50,4 @@ internal data class DeezerJson(
         @Json(name = "cover_xl")
         val coverXl: String?
     )
-
 }

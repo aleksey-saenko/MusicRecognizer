@@ -60,14 +60,13 @@ class MainActivityViewModel @Inject constructor(
                 .filterIsInstance<MainActivityUiState.Success>()
                 .first()
                 .userPreferences
-            val shouldRequest = userPreferences.onboardingCompleted
-                    && (ignoreStartupPreference || userPreferences.recognizeOnStartup)
+            val shouldRequest = userPreferences.onboardingCompleted &&
+                    (ignoreStartupPreference || userPreferences.recognizeOnStartup)
             if (shouldRequest) {
                 _recognitionRequested.update { true }
             }
         }
     }
-
 }
 
 @Immutable
@@ -76,5 +75,4 @@ sealed class MainActivityUiState {
     data object Loading : MainActivityUiState()
 
     data class Success(val userPreferences: UserPreferences) : MainActivityUiState()
-
 }

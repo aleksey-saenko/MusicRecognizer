@@ -19,7 +19,5 @@ sealed class RemoteMetadataEnhancingResult {
             val message: String = "",
             val cause: Throwable? = null
         ) : Error()
-
     }
-
 }

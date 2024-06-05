@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.audd.json
 
+import android.util.Log
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -14,7 +15,7 @@ internal data class LyricsJson(
 ) {
 
     @JsonClass(generateAdapter = true)
-     data class MediaItem(
+    data class MediaItem(
         @Json(name = "provider")
         val provider: String?,
         @Json(name = "url")
@@ -31,10 +32,9 @@ internal data class LyricsJson(
         val mediaItems = try {
             adapter.fromJson(media)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(this::class.simpleName, "Error during json parsing", e)
             emptyList()
         }
         return mediaItems ?: emptyList()
     }
-
 }

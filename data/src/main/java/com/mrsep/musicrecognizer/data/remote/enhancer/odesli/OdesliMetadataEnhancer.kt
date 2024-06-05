@@ -29,6 +29,7 @@ class OdesliMetadataEnhancer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     private val odesliJsonAdapter = moshi.adapter<OdesliResponseJson>()
+
     @OptIn(ExperimentalStdlibApi::class)
     private val odesliErrorJsonAdapter = moshi.adapter<OdesliErrorResponseJson>()
 
@@ -60,17 +61,14 @@ class OdesliMetadataEnhancer @Inject constructor(
                         )
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
                     RemoteMetadataEnhancingResultDo.Error.UnhandledError(
                         message = e.message ?: "",
                         cause = e
                     )
                 }
             } catch (e: IOException) {
-                e.printStackTrace()
                 RemoteMetadataEnhancingResultDo.Error.BadConnection
             } catch (e: Exception) {
-                e.printStackTrace()
                 RemoteMetadataEnhancingResultDo.Error.UnhandledError(
                     message = e.message ?: "",
                     cause = e
@@ -125,5 +123,4 @@ class OdesliMetadataEnhancer @Inject constructor(
             .addQueryParameter("songIfSingle", "true")
             .build()
     }
-
 }

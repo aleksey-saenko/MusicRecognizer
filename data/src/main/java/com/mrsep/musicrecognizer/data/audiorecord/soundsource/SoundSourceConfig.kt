@@ -32,5 +32,4 @@ class SoundSourceConfig(
             else -> throw IllegalArgumentException("Unsupported encoding")
         }
     }
-
 }

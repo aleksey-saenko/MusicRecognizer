@@ -67,7 +67,6 @@ class NotificationServiceActivity : ComponentActivity() {
         }
     }
 
-
     private fun onLaunchRecognition() {
         startForegroundService(
             Intent(this, NotificationService::class.java)

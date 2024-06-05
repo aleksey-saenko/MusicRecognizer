@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.glue.preferences.mapper
 
-import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
+import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
 import javax.inject.Inject
 
@@ -23,5 +23,4 @@ class FallbackActionMapper @Inject constructor() :
             FallbackAction.SaveAndLaunch -> FallbackActionDo.SaveAndLaunch
         }
     }
-
 }

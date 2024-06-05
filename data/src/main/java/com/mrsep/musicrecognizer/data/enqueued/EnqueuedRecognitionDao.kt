@@ -41,5 +41,4 @@ internal interface EnqueuedRecognitionDao {
     @Transaction
     @Query("SELECT * FROM enqueued_recognition ORDER BY creation_date DESC")
     fun getAllRecognitionsWithTrackFlow(): Flow<List<EnqueuedRecognitionEntityWithTrack>>
-
 }

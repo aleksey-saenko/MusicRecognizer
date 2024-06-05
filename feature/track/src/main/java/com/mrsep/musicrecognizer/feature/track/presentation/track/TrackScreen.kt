@@ -47,7 +47,6 @@ internal fun TrackScreen(
     val screenUiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
     when (val uiState = screenUiState) {
-
         TrackUiState.Loading -> LoadingStub(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
@@ -217,9 +216,7 @@ private fun performWebSearch(
     }
 }
 
-private fun TrackUi.getWebSearchQuery(
-    target: SearchTarget, context: Context
-) = when (target) {
+private fun TrackUi.getWebSearchQuery(target: SearchTarget, context: Context) = when (target) {
     SearchTarget.Track -> "$title $artist"
     SearchTarget.Artist -> artist
     SearchTarget.Album -> album?.run { "$this $artist" }

@@ -13,5 +13,4 @@ interface RecognitionServiceDo {
     suspend fun recognize(url: URL): RemoteRecognitionResultDo
 
     suspend fun recognize(recordingFlow: Flow<ByteArray>): RemoteRecognitionResultDo
-
 }

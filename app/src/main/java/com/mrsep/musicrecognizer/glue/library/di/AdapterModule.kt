@@ -15,11 +15,8 @@ import dagger.hilt.components.SingletonComponent
 interface AdapterModule {
 
     @Binds
-    fun bindTrackRepository(implementation: AdapterTrackRepository):
-            TrackRepository
+    fun bindTrackRepository(implementation: AdapterTrackRepository): TrackRepository
 
     @Binds
-    fun bindPreferencesRepository(implementation: AdapterPreferencesRepository):
-            PreferencesRepository
-
+    fun bindPreferencesRepository(implementation: AdapterPreferencesRepository): PreferencesRepository
 }

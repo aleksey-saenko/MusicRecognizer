@@ -46,5 +46,4 @@ class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
             isFavorite = input.properties.isFavorite,
         )
     }
-
 }

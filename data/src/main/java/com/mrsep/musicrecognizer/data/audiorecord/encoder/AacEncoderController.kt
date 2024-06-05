@@ -41,10 +41,11 @@ class AacEncoderController @Inject constructor(
                         packetsList.subList(nextPacketIndexAfterSplitter, packetsList.size)
                     combineAndEmit(selectedPackets)
                     if (currentRecStep.splitter) {
-                        if (scheme.sendTotalAtEnd)
+                        if (scheme.sendTotalAtEnd) {
                             nextPacketIndexAfterSplitter = packetsList.lastIndex + 1
-                        else
+                        } else {
                             packetsList.clear()
+                        }
                     }
                     if (currentRecStepIndex == scheme.steps.lastIndex && scheme.sendTotalAtEnd) {
                         combineAndEmit(packetsList)
@@ -52,7 +53,6 @@ class AacEncoderController @Inject constructor(
                     currentRecStepIndex++
                 }
             }
-
     }
         .flowOn(defaultDispatcher)
 
@@ -62,5 +62,4 @@ class AacEncoderController @Inject constructor(
             .fold(ByteBuffer.allocate(totalSize)) { acc, array -> acc.put(array) }.array()
         emit(Result.success(totalData))
     }
-
 }

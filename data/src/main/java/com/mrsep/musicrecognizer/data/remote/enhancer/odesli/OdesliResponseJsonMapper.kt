@@ -30,8 +30,8 @@ internal fun OdesliResponseJson.toArtworkUrl(): String? {
         ?.sortedBy { it.apiProvider?.ordinal }
     val hiRes = sortedEntities?.firstNotNullOfOrNull { entity ->
         entity.thumbnailUrl?.takeIf {
-            entity.thumbnailHeight != null && entity.thumbnailWidth != null
-                    && entity.thumbnailHeight >= 500 && entity.thumbnailWidth >= 500
+            entity.thumbnailHeight != null && entity.thumbnailWidth != null &&
+                entity.thumbnailHeight >= 500 && entity.thumbnailWidth >= 500
         }
     }
     return hiRes ?: sortedEntities?.firstNotNullOfOrNull { entity -> entity.thumbnailUrl }

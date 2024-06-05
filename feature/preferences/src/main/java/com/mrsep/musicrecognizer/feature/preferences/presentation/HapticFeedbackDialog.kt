@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun HapticFeedbackDialog(

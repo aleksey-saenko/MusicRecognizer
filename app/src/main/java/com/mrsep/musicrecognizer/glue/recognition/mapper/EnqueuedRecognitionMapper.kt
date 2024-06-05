@@ -36,9 +36,7 @@ class EnqueuedRecognitionMapper @Inject constructor(
                 val code = combMessage.substringBefore(
                     ":", "-1"
                 ).toIntOrNull() ?: -1
-                val message = combMessage.substringAfter(
-                    ":", "Unexpected error"
-                )
+                val message = combMessage.substringAfter(":", "Unexpected error")
                 RemoteRecognitionResult.Error.HttpError(code, message)
             }
 

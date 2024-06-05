@@ -29,7 +29,6 @@ data class UserPreferences(
         val vibrateOnTap: Boolean,
         val vibrateOnResult: Boolean,
     )
-
 }
 
 enum class FallbackAction(val save: Boolean, val launch: Boolean) {

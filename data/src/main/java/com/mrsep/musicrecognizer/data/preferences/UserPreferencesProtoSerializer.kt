@@ -91,11 +91,9 @@ object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
         } catch (exception: InvalidProtocolBufferException) {
             throw CorruptionException("Cannot read proto.", exception)
         }
-
     }
 
     override suspend fun writeTo(t: UserPreferencesProto, output: OutputStream) {
         t.writeTo(output)
     }
-
 }

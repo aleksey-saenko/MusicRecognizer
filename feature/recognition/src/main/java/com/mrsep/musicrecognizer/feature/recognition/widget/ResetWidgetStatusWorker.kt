@@ -6,13 +6,13 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.selects.select

@@ -27,8 +27,8 @@ import com.mrsep.musicrecognizer.feature.track.presentation.utils.getDominantCol
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

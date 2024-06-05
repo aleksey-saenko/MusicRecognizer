@@ -67,5 +67,4 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
         const val ACTION_RECOGNIZE = "com.mrsep.musicrecognizer.intent.action.RECOGNIZE"
         private const val RECOGNIZE_SHORTCUT_ID = "RecognizeShortcutId"
     }
-
 }

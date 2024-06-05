@@ -21,5 +21,4 @@ interface EnqueuedRecognitionRepository {
     suspend fun delete(vararg recognitionIds: Int)
 
     suspend fun deleteAll()
-
 }

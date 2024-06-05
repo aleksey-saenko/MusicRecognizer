@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private enum class TopBarMode { EmptyLibrary, Default, MultiSelection }
 
@@ -98,10 +98,11 @@ internal fun LibraryScreenTopBar(
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_filter_list_24),
                                 tint = animateColorAsState(
-                                    if (isFilterApplied)
+                                    if (isFilterApplied) {
                                         MaterialTheme.colorScheme.primary
-                                    else
-                                        LocalContentColor.current,
+                                    } else {
+                                        LocalContentColor.current
+                                    },
                                     label = "FilterIconColor"
                                 ).value,
                                 contentDescription = stringResource(StringsR.string.filters)

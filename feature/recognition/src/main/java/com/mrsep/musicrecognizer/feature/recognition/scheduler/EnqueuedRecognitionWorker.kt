@@ -5,19 +5,19 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
+import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ScheduledResultNotificationHelper
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import java.time.Instant
 
 @HiltWorker
@@ -121,10 +121,8 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                     )
                     Result.failure()
                 }
-
             }
         }
-
     }
 
     private suspend fun clearPreviousResult(enqueued: EnqueuedRecognition) {
@@ -165,7 +163,5 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 .setInputData(data)
                 .build()
         }
-
     }
-
 }

@@ -6,5 +6,4 @@ import com.mrsep.musicrecognizer.feature.onboarding.domain.model.RecognitionServ
 interface ConfigValidator {
 
     suspend fun validate(config: RecognitionServiceConfig): ConfigValidationStatus
-
 }

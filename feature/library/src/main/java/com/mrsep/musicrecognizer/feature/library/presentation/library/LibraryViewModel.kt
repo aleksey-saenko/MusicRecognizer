@@ -83,7 +83,6 @@ internal class LibraryViewModel @Inject constructor(
             preferencesRepository.setShowRecognitionDateInLibrary(value)
         }
     }
-
 }
 
 @Immutable
@@ -98,5 +97,4 @@ internal sealed class LibraryUiState {
         val useGridLayout: Boolean,
         val showRecognitionDate: Boolean
     ) : LibraryUiState()
-
 }

@@ -31,13 +31,13 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import com.mrsep.musicrecognizer.feature.recognition.R
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.artworkToTextPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.contentPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTextSize
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTopPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.titleTextSize
-import com.mrsep.musicrecognizer.feature.recognition.R
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 // Assume that the bitmap is loaded with appropriate (pre-calculated) size

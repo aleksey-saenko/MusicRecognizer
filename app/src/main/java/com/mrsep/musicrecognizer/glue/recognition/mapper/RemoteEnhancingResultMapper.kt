@@ -30,5 +30,4 @@ class RemoteEnhancingResultMapper @Inject constructor(
                 RemoteMetadataEnhancingResult.Success(trackMapper.map(input.track))
         }
     }
-
 }

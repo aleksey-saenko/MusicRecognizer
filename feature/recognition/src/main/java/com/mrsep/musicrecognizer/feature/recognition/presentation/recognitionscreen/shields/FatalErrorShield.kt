@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun AnimatedVisibilityScope.FatalErrorShield(
@@ -134,10 +134,11 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = if (causeExpanded)
+                    text = if (causeExpanded) {
                         stringResource(StringsR.string.show_less)
-                    else
+                    } else {
                         stringResource(StringsR.string.show_more)
+                    }
                 )
             }
 

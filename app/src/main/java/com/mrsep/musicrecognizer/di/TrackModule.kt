@@ -17,15 +17,13 @@ interface TrackModule {
     @Binds
     fun bindTrackRepository(implementation: AdapterTrackRepository):
             TrackRepository
-
 }
 
 class AdapterTrackRepository @Inject constructor(
     private val trackRepositoryDo: TrackRepositoryDo,
-): TrackRepository {
+) : TrackRepository {
 
     override fun getUnviewedCountFlow(): Flow<Int> {
         return trackRepositoryDo.getUnviewedCountFlow()
     }
-
 }

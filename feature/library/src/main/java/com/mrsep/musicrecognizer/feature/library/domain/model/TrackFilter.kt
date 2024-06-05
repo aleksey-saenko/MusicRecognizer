@@ -19,7 +19,6 @@ data class TrackFilter(
             orderBy = OrderBy.Desc
         )
     }
-
 }
 
 enum class FavoritesMode { All, OnlyFavorites, ExcludeFavorites }

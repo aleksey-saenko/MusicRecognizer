@@ -38,13 +38,14 @@ import kotlin.coroutines.coroutineContext
 class RecognitionWidget : GlanceAppWidget() {
 
     /* Unlike responsive mode, it makes building flex layouts easier
-    * and does not keep bitmaps in memory for each size */
+     * and does not keep bitmaps in memory for each size */
     override val sizeMode = SizeMode.Exact
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val hiltEntryPoint = EntryPointAccessors.fromApplication(
-            context, RecognitionWidgetEntryPoint::class.java
+            context,
+            RecognitionWidgetEntryPoint::class.java
         )
         val router = hiltEntryPoint.serviceRouter()
         val widgetStatusHolder = hiltEntryPoint.widgetStatusHolder()
@@ -60,13 +61,13 @@ class RecognitionWidget : GlanceAppWidget() {
         }.stateIn(scope = CoroutineScope(glanceCoroutineContext))
 
         /* Glance can't round image corners prior to API 31
-        * so we must do it on-demand based on the required image size */
+         * so we must do it on-demand based on the required image size */
         fun widgetUiFlow(widgetLayout: RecognitionWidgetLayout) = statusFlow.mapLatest { status ->
             WidgetUiState(
                 status = status,
                 artwork = if (widgetLayout.showArtwork &&
-                    status is RecognitionStatus.Done
-                    && status.result is RecognitionResult.Success
+                    status is RecognitionStatus.Done &&
+                    status.result is RecognitionResult.Success
                 ) {
                     status.result.track.artworkUrl?.let { artworkUrl ->
                         context.getCachedImageOrNull(
@@ -145,7 +146,8 @@ internal class ResetWidgetFinalState : ActionCallback {
         parameters: ActionParameters
     ) {
         val hiltEntryPoint = EntryPointAccessors.fromApplication(
-            context, RecognitionWidgetEntryPoint::class.java
+            context,
+            RecognitionWidgetEntryPoint::class.java
         )
         val widgetStatusHolder = hiltEntryPoint.widgetStatusHolder()
         widgetStatusHolder.resetFinalStatus()

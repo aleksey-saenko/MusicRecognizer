@@ -14,5 +14,4 @@ internal class FileRoomConverter {
     fun fileToString(file: File): String {
         return file.absolutePath
     }
-
 }

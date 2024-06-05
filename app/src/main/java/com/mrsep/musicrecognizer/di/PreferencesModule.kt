@@ -27,13 +27,12 @@ interface PreferencesModule {
     @Binds
     fun bindPreferencesRepository(implementation: AdapterPreferencesRepository):
             PreferencesRepository
-
 }
 
 class AdapterPreferencesRepository @Inject constructor(
     private val preferencesRepositoryDo: PreferencesRepositoryDo,
     private val preferencesMapper: Mapper<UserPreferencesDo, UserPreferences>
-): PreferencesRepository {
+) : PreferencesRepository {
 
     override val userPreferencesFlow: Flow<UserPreferences>
         get() = preferencesRepositoryDo.userPreferencesFlow
@@ -42,7 +41,6 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setNotificationServiceEnabled(value: Boolean) {
         preferencesRepositoryDo.setNotificationServiceEnabled(value)
     }
-
 }
 
 class PreferencesMapper @Inject constructor() :
@@ -63,5 +61,4 @@ class PreferencesMapper @Inject constructor() :
             recognizeOnStartup = input.recognizeOnStartup
         )
     }
-
 }

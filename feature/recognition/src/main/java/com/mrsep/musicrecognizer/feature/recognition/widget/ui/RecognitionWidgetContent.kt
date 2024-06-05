@@ -24,10 +24,10 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionRes
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetDefaultBackgroundRadius
-import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.dividerHorizontalPadding
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetDefaultBackgroundRadius
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetPadding
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -81,7 +81,6 @@ internal fun RecognitionWidgetContent(
                 onLaunchRecognition = onLaunchRecognition,
                 onCancelRecognition = onCancelRecognition
             )
-
         }
     }
 }

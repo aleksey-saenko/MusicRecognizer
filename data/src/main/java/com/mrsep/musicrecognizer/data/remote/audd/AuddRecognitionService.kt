@@ -122,7 +122,6 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     val responseJson = responseJsonAdapter.fromJson(response.body!!.source())!!
                     responseJson.toRecognitionResult()
                 } catch (e: Exception) {
-                    e.printStackTrace()
                     RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
                 }
             } else {
@@ -132,10 +131,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
                 )
             }
         } catch (e: IOException) {
-            e.printStackTrace()
             RemoteRecognitionResultDo.Error.BadConnection
         } catch (e: Exception) {
-            e.printStackTrace()
             RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
@@ -282,7 +279,6 @@ internal class AuddRecognitionService @AssistedInject constructor(
         private const val TIMEOUT_RECORDING_SENDING = 8_000L
         private const val WEB_SOCKET_RECONNECT_LIMIT = 1
     }
-
 }
 
 private enum class SendingJobResult {

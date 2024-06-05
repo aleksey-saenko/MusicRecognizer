@@ -8,5 +8,4 @@ interface PreferencesRepository {
     val userPreferencesFlow: Flow<UserPreferences>
 
     suspend fun setLyricsFontStyle(value: UserPreferences.LyricsFontStyle)
-
 }

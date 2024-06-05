@@ -12,11 +12,10 @@ internal object FontUtils {
         fontSize: TextUnit,
         lines: Int
     ): Int {
-        if (!fontSize.isSp) throw IllegalArgumentException("Font size must be sp")
+        require(fontSize.isSp) { "Font size must be sp" }
         val titleTextView = TextView(context).apply {
             this.minLines = lines
             this.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize.value)
-
         }
         titleTextView.measure(0, 0)
         return titleTextView.measuredHeight

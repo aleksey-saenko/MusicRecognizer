@@ -14,5 +14,4 @@ internal class DurationRoomConverter {
     fun timestampToDuration(millis: Long): Duration {
         return Duration.ofMillis(millis)
     }
-
 }

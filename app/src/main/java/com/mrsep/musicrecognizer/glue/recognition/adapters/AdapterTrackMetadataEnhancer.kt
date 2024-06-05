@@ -20,5 +20,4 @@ class AdapterTrackMetadataEnhancer @Inject constructor(
         val trackEntity = trackMapper.reverseMap(track)
         return trackMetadataEnhancerDo.enhance(trackEntity).run(resultMapper::map)
     }
-
 }

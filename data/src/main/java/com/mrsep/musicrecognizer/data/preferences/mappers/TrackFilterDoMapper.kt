@@ -63,5 +63,4 @@ class TrackFilterDoMapper @Inject constructor() :
             .setEndDate(input.dateRange.last)
             .build()
     }
-
 }

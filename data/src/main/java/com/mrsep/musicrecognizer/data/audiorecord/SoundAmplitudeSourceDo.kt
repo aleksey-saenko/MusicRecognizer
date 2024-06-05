@@ -5,5 +5,4 @@ import kotlinx.coroutines.flow.Flow
 interface SoundAmplitudeSourceDo {
 
     val amplitudeFlow: Flow<Float>
-
 }

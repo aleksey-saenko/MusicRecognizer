@@ -25,5 +25,4 @@ class AdapterPreferencesRepository @Inject constructor(
     override suspend fun setLyricsFontStyle(value: LyricsFontStyle) {
         preferencesRepositoryDo.setLyricsFontStyle(lyricsFontStyleMapper.reverseMap(value))
     }
-
 }

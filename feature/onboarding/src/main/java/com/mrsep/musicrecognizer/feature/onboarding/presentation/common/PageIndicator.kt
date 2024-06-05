@@ -31,7 +31,7 @@ internal fun PageIndicator(
         lazyMessage = { "Current page index is out of range." }
     )
     val rowWidth = (indicatorSize * (selectedMultiplier + (totalPages - 1))) +
-            (spacing * (totalPages - 1))
+        (spacing * (totalPages - 1))
 
     Row(
         modifier = modifier

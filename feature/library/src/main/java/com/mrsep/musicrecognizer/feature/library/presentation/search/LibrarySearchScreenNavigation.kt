@@ -31,6 +31,4 @@ object LibrarySearchScreen {
             this.navigate(route = ROUTE, navOptions = navOptions)
         }
     }
-
 }
-

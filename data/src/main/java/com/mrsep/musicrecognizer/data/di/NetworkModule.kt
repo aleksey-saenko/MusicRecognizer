@@ -55,7 +55,6 @@ internal object NetworkModule {
             }
             .build()
     }
-
 }
 
 @Suppress("unused")
@@ -65,7 +64,6 @@ internal interface NetworkMonitorModule {
 
     @Binds
     fun bindNetworkMonitor(impl: ConnectivityManagerNetworkMonitor): NetworkMonitorDo
-
 }
 
 private class UserAgentInterceptor(appContext: Context) : Interceptor {
@@ -80,5 +78,4 @@ private class UserAgentInterceptor(appContext: Context) : Interceptor {
                 .build()
         )
     }
-
 }

@@ -23,7 +23,6 @@ class DispatcherModule {
     @MainDispatcher
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
-
 }
 
 @Retention(AnnotationRetention.BINARY)

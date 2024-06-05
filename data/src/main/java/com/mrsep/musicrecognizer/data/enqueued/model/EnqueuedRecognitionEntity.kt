@@ -11,13 +11,15 @@ import java.time.Instant
 
 @Entity(
     tableName = "enqueued_recognition",
-    foreignKeys = [ForeignKey(
-        entity = TrackEntity::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("result_track_id"),
-        onDelete = ForeignKey.SET_NULL,
-        onUpdate = ForeignKey.CASCADE
-    )],
+    foreignKeys = [
+        ForeignKey(
+            entity = TrackEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("result_track_id"),
+            onDelete = ForeignKey.SET_NULL,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ],
     indices = [Index(value = ["result_track_id"])]
 )
 data class EnqueuedRecognitionEntity(

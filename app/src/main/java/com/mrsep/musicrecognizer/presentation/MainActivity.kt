@@ -73,10 +73,11 @@ class MainActivity : ComponentActivity() {
                             Color.TRANSPARENT,
                             Color.TRANSPARENT,
                         ) { darkTheme },
-                        navigationBarStyle = if (darkTheme)
+                        navigationBarStyle = if (darkTheme) {
                             SystemBarStyle.dark(Color.TRANSPARENT)
-                        else
+                        } else {
                             SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                        }
                     )
                     onDispose {}
                 }
@@ -148,7 +149,6 @@ private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean? {
         is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
     }
 }
-
 
 @Stable
 fun shouldShowBottomBar(windowSizeClass: WindowSizeClass) =

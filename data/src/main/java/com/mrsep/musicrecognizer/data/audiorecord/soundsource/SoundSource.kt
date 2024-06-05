@@ -11,5 +11,4 @@ interface SoundSource {
     val params: SoundSourceConfig?
 
     val pcmChunkFlow: SharedFlow<Result<ByteArray>>
-
 }

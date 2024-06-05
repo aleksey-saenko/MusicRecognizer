@@ -80,7 +80,7 @@ private fun RecognitionButton(
         RippleAnimated(
             activated = activated,
             modifier = Modifier.size(256.dp),
-            startOffset = 0.5f, //should be a bit less than buttonSize/rippleSize
+            startOffset = 0.5f, // Should be a bit less than buttonSize/rippleSize
             baseColor = MaterialTheme.colorScheme.primary,
             activatedColor = MaterialTheme.colorScheme.primary,
             circlesCount = 7,

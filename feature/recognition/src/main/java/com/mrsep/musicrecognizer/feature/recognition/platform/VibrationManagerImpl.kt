@@ -31,7 +31,7 @@ internal class VibrationManagerImpl @Inject constructor(
 
     private val tapEffect by lazy {
         val timings = longArrayOf(50)
-        val amplitudes  = intArrayOf(-1)
+        val amplitudes = intArrayOf(-1)
         VibrationEffect.createWaveform(timings, amplitudes, -1)
     }
 
@@ -61,5 +61,4 @@ internal class VibrationManagerImpl @Inject constructor(
             vibrator.vibrate(vibrationEffect, audioAttributes)
         }
     }
-
 }

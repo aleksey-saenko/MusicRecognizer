@@ -20,5 +20,4 @@ class AdapterRecorderController @Inject constructor(
     override suspend fun audioRecordingFlow(scheme: RecognitionScheme): Flow<Result<ByteArray>> {
         return audioRecordingControllerDo.audioRecordingFlow(recognitionSchemeMapper.map(scheme))
     }
-
 }

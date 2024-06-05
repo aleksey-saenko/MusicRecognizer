@@ -27,7 +27,8 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindTrackMapper(implementation: TrackMapper): Mapper<TrackEntity, Track>
+    fun bindTrackMapper(implementation: TrackMapper):
+            Mapper<TrackEntity, Track>
 
     @Binds
     fun bindRemoteTrackResultMapper(implementation: SearchResultMapper):
@@ -44,5 +45,4 @@ interface MapperModule {
     @Binds
     fun bindUserPreferencesMapper(implementation: UserPreferencesMapper):
             Mapper<UserPreferencesDo, UserPreferences>
-
 }

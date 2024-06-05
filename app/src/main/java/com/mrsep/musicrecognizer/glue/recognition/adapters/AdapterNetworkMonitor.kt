@@ -7,9 +7,8 @@ import javax.inject.Inject
 
 class AdapterNetworkMonitor @Inject constructor(
     private val networkMonitorDo: NetworkMonitorDo
-): NetworkMonitor {
+) : NetworkMonitor {
 
     override val isOffline: Flow<Boolean>
         get() = networkMonitorDo.isOffline
-    
 }

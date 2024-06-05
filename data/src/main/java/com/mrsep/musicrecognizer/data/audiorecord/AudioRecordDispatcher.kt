@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.data.audiorecord
 
 import android.os.Handler
-import android.os.Process
 import android.os.HandlerThread
+import android.os.Process
 import kotlinx.coroutines.android.asCoroutineDispatcher
 
 /**
@@ -17,7 +17,6 @@ internal val AudioRecordHandler = HandlerThread(
     .apply { start() }
     .run { Handler(this.looper) }
 internal val AudioRecordDispatcher = AudioRecordHandler.asCoroutineDispatcher()
-
 
 internal val AudioEncoderHandler = HandlerThread(
     "myEncoderThread",

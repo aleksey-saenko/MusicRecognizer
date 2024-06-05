@@ -37,10 +37,11 @@ internal fun BasicRecognitionButton(
             }
 
             is PressInteraction.Release -> {
-                if (buttonLongPressed)
+                if (buttonLongPressed) {
                     buttonLongPressed = false
-                else
+                } else {
                     updatedOnClick()
+                }
             }
 
             is PressInteraction.Cancel -> {}

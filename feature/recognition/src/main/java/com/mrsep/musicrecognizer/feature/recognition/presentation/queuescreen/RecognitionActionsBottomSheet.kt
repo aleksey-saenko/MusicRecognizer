@@ -38,8 +38,8 @@ import com.mrsep.musicrecognizer.core.strings.R
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,7 +172,6 @@ internal fun RecognitionActionsBottomSheet(
                                         onClick = { onEnqueueRecognition(true) }
                                     )
                                 }
-
                             }
                         }
                     }

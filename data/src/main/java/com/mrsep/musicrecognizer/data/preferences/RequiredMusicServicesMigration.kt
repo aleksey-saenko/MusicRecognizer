@@ -29,5 +29,4 @@ internal object RequiredMusicServicesMigration : DataMigration<UserPreferencesPr
     }
 
     override suspend fun cleanUp() = Unit
-
 }

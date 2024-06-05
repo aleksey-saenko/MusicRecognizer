@@ -11,5 +11,4 @@ interface RecordingFileDataSource {
     suspend fun delete(file: File): Boolean
 
     suspend fun deleteAll(): Boolean
-
 }

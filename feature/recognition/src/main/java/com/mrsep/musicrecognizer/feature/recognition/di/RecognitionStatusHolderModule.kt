@@ -36,7 +36,6 @@ internal interface RecognitionStatusHolderModule {
     @Binds
     fun bindWidgetHolder(@WidgetStatusHolder implementation: MutableRecognitionStatusHolder):
             RecognitionStatusHolder
-
 }
 
 @Retention(AnnotationRetention.BINARY)

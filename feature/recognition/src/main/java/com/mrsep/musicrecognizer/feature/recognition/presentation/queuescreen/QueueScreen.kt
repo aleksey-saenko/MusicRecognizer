@@ -164,5 +164,4 @@ internal fun QueueScreen(
             }
         }
     }
-
 }

@@ -8,5 +8,4 @@ interface AudioRecorderController {
     val maxAmplitudeFlow: Flow<Float>
 
     suspend fun audioRecordingFlow(scheme: RecognitionScheme): Flow<Result<ByteArray>>
-
 }

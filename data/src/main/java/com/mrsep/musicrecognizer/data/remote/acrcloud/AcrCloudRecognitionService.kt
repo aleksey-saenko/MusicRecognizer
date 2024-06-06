@@ -78,8 +78,12 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
                 .url("https://${config.host}$ENDPOINT")
                 .post(multipartBody)
                 .build()
-            try {
-                val response = okHttpClient.newCall(request).await()
+            val response = try {
+                okHttpClient.newCall(request).await()
+            } catch (e: IOException) {
+                return@withContext RemoteRecognitionResultDo.Error.BadConnection
+            }
+            response.use {
                 if (response.isSuccessful) {
                     val remoteResult = try {
                         val responseJson = acrJsonAdapter.fromJson(response.body!!.source())!!
@@ -112,10 +116,6 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
                         message = response.message
                     )
                 }
-            } catch (e: IOException) {
-                RemoteRecognitionResultDo.Error.BadConnection
-            } catch (e: Exception) {
-                RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
             }
         }
     }
@@ -134,19 +134,19 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     override suspend fun recognize(url: URL): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             val request = Request.Builder().url(url).build()
-            try {
-                val response = okHttpClient.newCall(request).await()
-                val recording = response.body?.bytes()?.takeIf { it.isNotEmpty() }
+            val response = try {
+                okHttpClient.newCall(request).await()
+            } catch (e: IOException) {
+                return@withContext RemoteRecognitionResultDo.Error.BadConnection
+            }
+            response.use {
+                val recording = response.body!!.bytes().takeIf { it.isNotEmpty() }
                 if (recording != null) {
                     recognize(recording)
                 } else {
                     val message = "Remote file is unavailable [$url]"
                     RemoteRecognitionResultDo.Error.BadRecording(message)
                 }
-            } catch (e: IOException) {
-                RemoteRecognitionResultDo.Error.BadConnection
-            } catch (e: Exception) {
-                RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
             }
         }
     }

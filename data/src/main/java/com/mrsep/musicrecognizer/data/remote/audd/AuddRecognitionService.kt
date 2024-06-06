@@ -52,7 +52,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     private val webSocketSession: AuddWebSocketSession,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val okHttpClient: OkHttpClient,
-    moshi: Moshi
+    moshi: Moshi,
 ) : RecognitionServiceDo {
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -77,7 +77,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     private fun MultipartBody.Builder.addByteArrayAsMultipartBody(
-        byteArray: ByteArray
+        byteArray: ByteArray,
     ): MultipartBody.Builder {
         return this.addFormDataPart(
             "file",
@@ -87,7 +87,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     private fun MultipartBody.Builder.addFileAsMultipartBody(
-        file: File
+        file: File,
     ): MultipartBody.Builder {
         return this.addFormDataPart(
             "file",
@@ -97,13 +97,13 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     private fun MultipartBody.Builder.addUrlAsMultipartBody(
-        url: URL
+        url: URL,
     ): MultipartBody.Builder {
         return this.addFormDataPart("url", url.toExternalForm())
     }
 
     private suspend inline fun baseHttpCall(
-        dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder
+        dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder,
     ): RemoteRecognitionResultDo {
         val multipartBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -115,8 +115,13 @@ internal class AuddRecognitionService @AssistedInject constructor(
             .url(AUDD_REST_BASE_URL)
             .post(multipartBody)
             .build()
-        return try {
-            val response = okHttpClient.newCall(request).await()
+
+        val response = try {
+            okHttpClient.newCall(request).await()
+        } catch (e: IOException) {
+            return RemoteRecognitionResultDo.Error.BadConnection
+        }
+        return response.use {
             if (response.isSuccessful) {
                 try {
                     val responseJson = responseJsonAdapter.fromJson(response.body!!.source())!!
@@ -130,16 +135,12 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     message = response.message
                 )
             }
-        } catch (e: IOException) {
-            RemoteRecognitionResultDo.Error.BadConnection
-        } catch (e: Exception) {
-            RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun recognize(
-        recordingFlow: Flow<ByteArray>
+        recordingFlow: Flow<ByteArray>,
     ): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
             val recordingChannel = Channel<ByteArray>(Channel.UNLIMITED)
@@ -205,7 +206,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     .transform { socketEvent ->
                         when (socketEvent) {
                             is SocketEvent.ConnectionClosing,
-                            is SocketEvent.ConnectionClosed -> { /* NO-OP */ }
+                            is SocketEvent.ConnectionClosed -> {} // NO-OP
+
                             is SocketEvent.ConnectionFailed -> {
                                 lastResponse = RemoteRecognitionResultDo.Error.BadConnection
                                 if (retryCounter == WEB_SOCKET_RECONNECT_LIMIT) {

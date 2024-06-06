@@ -63,7 +63,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     }
 
     private val offlineScheme = recognitionScheme(false) {
-        step(5.seconds)
+        step(10.seconds)
     }
 
     private var recognitionJob: Job? = null

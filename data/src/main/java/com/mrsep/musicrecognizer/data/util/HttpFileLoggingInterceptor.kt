@@ -40,7 +40,7 @@ internal class HttpFileLoggingInterceptor(
             }
             json.toResponseBody(body.contentType())
         } else {
-            val responseData = body.source().readByteArray()
+            val responseData = body.bytes()
             response.receivedResponseAtMillis
             val responseFile = File("$rootDir/${responseTime}_${host}_")
             writeLogFile(responseFile, responseData)

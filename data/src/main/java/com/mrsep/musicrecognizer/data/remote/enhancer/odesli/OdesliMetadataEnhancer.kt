@@ -44,8 +44,12 @@ class OdesliMetadataEnhancer @Inject constructor(
 
         return withContext(ioDispatcher) {
             val request = Request.Builder().url(getRequestUrl(queryUrl)).get().build()
-            try {
-                val response = okHttpClient.newCall(request).await()
+            val response = try {
+                okHttpClient.newCall(request).await()
+            } catch (e: IOException) {
+                return@withContext RemoteMetadataEnhancingResultDo.Error.BadConnection
+            }
+            response.use {
                 try {
                     if (response.isSuccessful) {
                         val json = odesliJsonAdapter.fromJson(response.body!!.source())!!
@@ -54,10 +58,10 @@ class OdesliMetadataEnhancer @Inject constructor(
                         val newLinks = track.links.updateLinks(artworkUrl, trackLinks)
                         RemoteMetadataEnhancingResultDo.Success(track.copy(links = newLinks))
                     } else {
-                        val json = odesliErrorJsonAdapter.fromJson(response.body!!.source())!!
+                        val json = odesliErrorJsonAdapter.fromJson(response.body!!.source())
                         RemoteMetadataEnhancingResultDo.Error.HttpError(
-                            code = json.code ?: response.code,
-                            message = json.message ?: response.message
+                            code = json?.code ?: response.code,
+                            message = json?.message ?: response.message
                         )
                     }
                 } catch (e: Exception) {
@@ -66,13 +70,6 @@ class OdesliMetadataEnhancer @Inject constructor(
                         cause = e
                     )
                 }
-            } catch (e: IOException) {
-                RemoteMetadataEnhancingResultDo.Error.BadConnection
-            } catch (e: Exception) {
-                RemoteMetadataEnhancingResultDo.Error.UnhandledError(
-                    message = e.message ?: "",
-                    cause = e
-                )
             }
         }
     }

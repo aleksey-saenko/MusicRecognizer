@@ -160,6 +160,7 @@
     <string name="loading">Načítavam</string>
     <string name="powered_by">Poháňané</string>
     <string name="github_repository">GitHub repozitár</string>
+    <string name="privacy_policy">Zásady ochrany osobných údajov</string>
     <string name="license_gnu_gplv3">Licencia GNU GPLv3</string>
     <string name="text_style">Štýl textu</string>
     <string name="font_size">Veľkosť písma</string>

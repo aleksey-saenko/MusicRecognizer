@@ -160,6 +160,7 @@
     <string name="loading">Načítání</string>
     <string name="powered_by">Poháněno</string>
     <string name="github_repository">Repozitář GitHub</string>
+    <string name="privacy_policy">Zásady ochrany soukromí</string>
     <string name="license_gnu_gplv3">Licence GNU GPLv3</string>
     <string name="text_style">Styl textů</string>
     <string name="font_size">Velikost písma</string>

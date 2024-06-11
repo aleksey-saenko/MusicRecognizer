@@ -179,6 +179,7 @@
     <string name="purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
     <string name="purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
     <string name="github_repository">Dépôt GitHub</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
     <string name="license_gnu_gplv3">Licence GNU GPLv3</string>
     <string name="text_style">Style de texte</string>
     <string name="font_size">Taille de la police</string>

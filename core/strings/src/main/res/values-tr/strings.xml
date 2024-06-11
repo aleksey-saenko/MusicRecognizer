@@ -182,6 +182,7 @@
     <string name="purpose_recognition_service">Şarkı algılaması ve birincil meta veriler sağlar</string>
     <string name="purpose_track_links_service">Platforma özgü ek parça bağlantıları sağlar</string>
     <string name="github_repository">GitHub deposu</string>
+    <string name="privacy_policy">Gizlilik politikası</string>
     <string name="license_gnu_gplv3">Lisans GNU GPLv3</string>
     <string name="start_autoscroll">Otomatik kaydırmayı başlat</string>
     <string name="stop_autoscroll">Otomatik kaydırmayı durdur</string>

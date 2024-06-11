@@ -39,6 +39,7 @@ private const val AUDD_URL = "https://audd.io/"
 private const val ACR_CLOUD_URL = "https://www.acrcloud.com/"
 private const val ODESLI_URL = "https://odesli.co/"
 private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
+private const val PRIVACY_POLICY_URL = "https://github.com/aleksey-saenko/MusicRecognizer/blob/master/PRIVACY.md"
 private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,6 +109,10 @@ internal fun AboutScreen(
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.github_repository),
                     onItemClick = { context.openUrlImplicitly(GITHUB_REPO_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.privacy_policy),
+                    onItemClick = { context.openUrlImplicitly(PRIVACY_POLICY_URL) }
                 )
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.license_gnu_gplv3),

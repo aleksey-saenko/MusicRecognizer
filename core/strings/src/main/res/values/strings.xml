@@ -219,6 +219,7 @@
     <string name="purpose_recognition_service">Provides song identification and primary metadata</string>
     <string name="purpose_track_links_service">Provides additional platform-specific track links</string>
     <string name="github_repository">GitHub repository</string>
+    <string name="privacy_policy">Privacy policy</string>
     <string name="license_gnu_gplv3">License GNU GPLv3</string>
     <string name="start_autoscroll">Start autoscroll</string>
     <string name="stop_autoscroll">Stop autoscroll</string>

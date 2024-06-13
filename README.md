@@ -11,7 +11,7 @@ F-Droid releases cannot be upgraded to other releases as they are compiled and s
 ## Features
 
 * **Recognition** - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet, and the recognition process will be executed when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
-* **Notification service** - You can use the application from the notification drawer. Manage the recognition process and receive information about the track.
+* **Background Usage** - Use the application seamlessly from the notification drawer, home screen widget, or quick settings tile. Manage the recognition process and obtain track information without launching the app.
 * **About track** - In case of successful recognition, information about the track, such as the name, artist, album and year, artwork, links to this track on popular music services, lyrics is provided.
 * **Library** - All recognized tracks are stored in the application's library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
 * **Preferences** - The application has a number of options for customizing its behavior and appearance, which can be found on the settings screen.
@@ -32,7 +32,7 @@ Audile is written in Kotlin and runs on Android 8.0 or higher.
 App architecture inspired by clean arch practices. The application is modularized with a feature-based approach.  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
 The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
-Stack: Kotlin, Coroutines, Jetpack Compose, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.
+Stack: Kotlin, Coroutines, Jetpack Compose, Glance, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.
 
 ## API Key
 

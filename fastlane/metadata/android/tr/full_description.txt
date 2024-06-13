@@ -1,10 +1,10 @@
 <b>Audile</b> yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde bulabilmenize yardımcı olabilecek bir müzik algılama uygulamasıdır.
-Bu uygulama, Müzik Algılama API'si olarak AudD® hizmetini kullanır.
+Uygulama, şarkı tanımlama işlemini gerçekleştirmek için AudD ve ACRCloud hizmetlerini ve platforma özgü ek parça bağlantılarını almak için Odesli hizmetini kullanır.
 
 <b>Özellikler:</b>
 
 <b>Tanıma</b> - Audile, tek bir tıklamayla şarkı algılama işlemi gerçekleştirmenizi sağlar. İnternet yoksa uygulama kaydı kaydedecek ve algılama işlemi tekrar çevrimiçi olduğunuzda yürütülecektir. Başarısız algılama için varsayılan davranışı (internet yok, eşleşme yok, başka bir başarısızlık) gibi tercihler aracılığıyla özelleştirebilirsiniz.
-<b>Bildirim servisi</b> - Uygulamayı bildirim çekmecesinden kullanabilirsiniz. Algılama sürecini yönetin ve parça hakkında bilgi alın.
+<b>Arka Plan Kullanımı</b> - Uygulamayı bildirim çekmecesinden, ana ekran widget'ından veya hızlı ayarlar bölmesinden sorunsuz bir şekilde kullanın. Algılama sürecini yönetin ve uygulamayı başlatmadan parça bilgisi alın.
 <b>Parça hakkında</b> - Başarılı bir algılama durumunda, parça hakkında isim, sanatçı, albüm ve yıl, sanat eseri, popüler müzik servislerinde bu parçaya bağlantılar, şarkı sözleri gibi bilgiler sağlanır.
 <b>Kütüphane</b> - Algılanan tüm parçalar uygulamanın kütüphanesinde saklanır. Parçaları filtreleyebilir, bir sık kullanılanlar koleksiyonu oluşturabilir, parçaları arayabilir veya parçaları silebilirsiniz.
 <b>Tercihler</b> - Uygulamanın davranışını ve görünümünü özelleştirmek için ayarlar ekranında bulunabilecek bir dizi seçenek vardır.

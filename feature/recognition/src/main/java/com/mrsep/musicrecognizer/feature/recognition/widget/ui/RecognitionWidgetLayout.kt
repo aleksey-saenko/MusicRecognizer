@@ -12,6 +12,7 @@ import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.core.ui.util.pxToDp
+import com.mrsep.musicrecognizer.feature.recognition.R
 import com.mrsep.musicrecognizer.feature.recognition.widget.util.FontUtils.measureTextViewHeight
 import com.mrsep.musicrecognizer.feature.recognition.widget.util.ImageUtils
 import com.mrsep.musicrecognizer.feature.recognition.widget.util.ImageUtils.getMaxWidgetMemoryAllowedSizeInBytes
@@ -83,17 +84,17 @@ internal sealed class RecognitionWidgetLayout(
         }
 
         @Composable
-        fun widgetInnerRadius(): Dp {
-            val context = LocalContext.current
-            var innerRadius = widgetDefaultInnerRadius
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                runCatching {
-                    context.resources.getDimension(android.R.dimen.system_app_widget_inner_radius)
-                }.onSuccess { radiusPx ->
-                    innerRadius = context.pxToDp(radiusPx).dp
+        fun widgetInnerRadius(): Dp = with(LocalContext.current) {
+            val systemInnerRadiusDefined = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                    resources.getResourceName(android.R.dimen.system_app_widget_inner_radius) != null
+            val innerRadiusPx = resources.getDimension(
+                if (systemInnerRadiusDefined) {
+                    android.R.dimen.system_app_widget_inner_radius
+                } else {
+                    R.dimen.widget_inner_radius
                 }
-            }
-            return innerRadius
+            )
+            return pxToDp(innerRadiusPx).dp
         }
 
         @Composable
@@ -111,9 +112,6 @@ internal sealed class RecognitionWidgetLayout(
             val cornerRadiusPx = (imageDensity * widgetInnerRadius().value).toInt()
             return artworkSizePx to cornerRadiusPx
         }
-
-        private val widgetDefaultInnerRadius = 20.dp
-        val widgetDefaultBackgroundRadius = 28.dp
 
         val widgetPadding = 8.dp
         val contentPadding = 8.dp

@@ -26,7 +26,6 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTas
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.dividerHorizontalPadding
-import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetDefaultBackgroundRadius
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.widgetPadding
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -49,15 +48,15 @@ internal fun RecognitionWidgetContent(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     val systemBackgroundRadiusDefined = LocalContext.current.resources
                         .getResourceName(android.R.dimen.system_app_widget_background_radius) != null
-                    if (systemBackgroundRadiusDefined) {
-                        GlanceModifier
-                            .background(UiR.color.surface_container_high)
-                            .cornerRadius(android.R.dimen.system_app_widget_background_radius)
-                    } else {
-                        GlanceModifier
-                            .background(UiR.color.surface_container_high)
-                            .cornerRadius(widgetDefaultBackgroundRadius)
-                    }
+                    GlanceModifier
+                        .background(UiR.color.surface_container_high)
+                        .cornerRadius(
+                            if (systemBackgroundRadiusDefined) {
+                                android.R.dimen.system_app_widget_background_radius
+                            } else {
+                                R.dimen.widget_background_radius
+                            }
+                        )
                 } else {
                     GlanceModifier
                         .background(ImageProvider(R.drawable.widget_background_shape))

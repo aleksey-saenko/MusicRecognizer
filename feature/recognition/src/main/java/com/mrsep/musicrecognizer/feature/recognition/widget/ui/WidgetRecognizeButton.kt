@@ -49,7 +49,7 @@ internal fun WidgetRecognizeButton(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    provider = ImageProvider(UiR.drawable.outline_lines_48),
+                    provider = ImageProvider(UiR.drawable.ic_lines_24),
                     contentDescription = context.getString(StringsR.string.recognize),
                     modifier = GlanceModifier.size(24.dp),
                     colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface)

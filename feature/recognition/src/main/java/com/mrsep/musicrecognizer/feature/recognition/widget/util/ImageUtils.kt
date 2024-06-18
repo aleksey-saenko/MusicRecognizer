@@ -6,7 +6,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-object ImageUtils {
+internal object ImageUtils {
 
     private const val BYTES_PER_PIXEL = 4
 

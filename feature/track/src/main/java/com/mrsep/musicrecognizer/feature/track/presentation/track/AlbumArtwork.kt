@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmapOrNull
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -34,10 +36,11 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 @Composable
 internal fun AlbumArtwork(
     url: String?,
+    onArtworkClick: () -> Unit,
     onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
     onSeedColorCreated: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val placeholder = forwardingPainter(
         painter = painterResource(UiR.drawable.outline_album_fill1_24),
@@ -96,6 +99,10 @@ internal fun AlbumArtwork(
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = MaterialTheme.shapes.extraLarge
+            )
+            .clickable(
+                enabled = painter.state is AsyncImagePainter.State.Success,
+                onClick = onArtworkClick
             )
     )
 }

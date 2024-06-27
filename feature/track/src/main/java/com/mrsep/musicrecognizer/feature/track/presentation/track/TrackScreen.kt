@@ -4,6 +4,11 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -42,7 +47,7 @@ internal fun TrackScreen(
     onBackPressed: () -> Unit,
     onNavigateToLyricsScreen: (trackId: String) -> Unit,
     onRetryRequested: () -> Unit,
-    onTrackDeleted: () -> Unit
+    onTrackDeleted: () -> Unit,
 ) {
     val screenUiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
 
@@ -69,66 +74,111 @@ internal fun TrackScreen(
         }
 
         is TrackUiState.Success -> {
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
+            var artworkUri by remember { mutableStateOf<Uri?>(null) }
+            var showShareSheet by rememberSaveable { mutableStateOf(false) }
+            var showArtworkShield by rememberSaveable { mutableStateOf(false) }
+            var showTrackExtrasDialog by rememberSaveable { mutableStateOf(false) }
+            var showSearchBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+            val shareSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            fun hideShareSheet() {
+                scope.launch { shareSheetState.hide() }.invokeOnCompletion {
+                    if (!shareSheetState.isVisible) showShareSheet = false
+                }
+            }
+
+            val trackExistenceState by viewModel.trackExistingState.collectAsStateWithLifecycle()
+            var trackDismissed by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(trackExistenceState) {
+                if (!trackExistenceState && !trackDismissed) onTrackDeleted()
+            }
+
             LaunchedEffect(uiState.isTrackViewed) {
                 if (!uiState.isTrackViewed) viewModel.setTrackAsViewed(uiState.track.id)
             }
+
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.track.themeSeedColor?.run(::Color),
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
                 useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
             ) {
-                val context = LocalContext.current
-                val scope = rememberCoroutineScope()
-                var artworkUri by remember { mutableStateOf<Uri?>(null) }
-                var shareSheetActive by rememberSaveable { mutableStateOf(false) }
-                val shareSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        val screenScrollState = rememberScrollState()
+                        val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            TrackScreenTopBar(
+                                onBackPressed = onBackPressed,
+                                onShareClick = { showShareSheet = !showShareSheet },
+                                onDeleteClick = { viewModel.deleteTrack(uiState.track.id) },
+                                onShowDetailsClick = { showTrackExtrasDialog = true },
+                                scrollBehavior = topBarBehaviour
+                            )
+                            TrackSection(
+                                track = uiState.track,
+                                isLoadingLinks = uiState.isMetadataEnhancerRunning,
+                                isExpandedScreen = isExpandedScreen,
+                                onArtworkClick = { showArtworkShield = true },
+                                onArtworkCached = { artworkUri = it },
+                                createSeedColor = uiState.artworkBasedThemeEnabled,
+                                onSeedColor = { seedColor ->
+                                    viewModel.setThemeSeedColor(
+                                        uiState.track.id,
+                                        seedColor.toArgb()
+                                    )
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+//                                .nestedScroll(bottomBarBehaviour.nestedScrollConnection)
+                                    .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                    .verticalScroll(screenScrollState)
 
-                fun hideShareSheet() {
-                    scope.launch { shareSheetState.hide() }.invokeOnCompletion {
-                        if (!shareSheetState.isVisible) shareSheetActive = false
-                    }
-                }
-
-                if (shareSheetActive) {
-                    ShareBottomSheet(
-                        track = uiState.track,
-                        sheetState = shareSheetState,
-                        onDismissRequest = { hideShareSheet() },
-                        onCopyClick = { textToCopy ->
-                            hideShareSheet()
-                            context.copyTextToClipboard(textToCopy)
-                        },
-                        onShareClick = { textToShare ->
-                            hideShareSheet()
-                            context.shareText(
-                                subject = "",
-                                body = textToShare
+                            )
+                            TrackActionsBottomBar(
+                                scrollBehavior = null,
+                                isFavorite = uiState.track.isFavorite,
+                                isLyricsAvailable = uiState.track.lyrics != null,
+                                isRetryAllowed = isRetryAllowed,
+                                onFavoriteClick = {
+                                    viewModel.setFavorite(uiState.track.id, !uiState.track.isFavorite)
+                                },
+                                onLyricsClick = {
+                                    onNavigateToLyricsScreen(uiState.track.id)
+                                },
+                                onSearchClick = {
+                                    showSearchBottomSheet = true
+                                },
+                                onRetryRequested = {
+                                    trackDismissed = true
+                                    viewModel.deleteTrack(uiState.track.id)
+                                    onRetryRequested()
+                                }
                             )
                         }
-                    )
-                }
-
-                var extraDataDialogVisible by remember { mutableStateOf(false) }
-                if (extraDataDialogVisible) {
-                    TrackExtrasDialog(
-                        track = uiState.track,
-                        onDismissClick = { extraDataDialogVisible = false }
-                    )
-                }
-                val trackExistenceState by viewModel.trackExistingState.collectAsStateWithLifecycle()
-                var trackDismissed by rememberSaveable { mutableStateOf(false) }
-                LaunchedEffect(trackExistenceState) {
-                    if (!trackExistenceState && !trackDismissed) onTrackDeleted()
-                }
-
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val screenScrollState = rememberScrollState()
-                    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
-
-                    var showSearchBottomSheet by remember { mutableStateOf(false) }
+                    }
+                    if (showShareSheet) {
+                        ShareBottomSheet(
+                            track = uiState.track,
+                            sheetState = shareSheetState,
+                            onDismissRequest = { hideShareSheet() },
+                            onCopyClick = { textToCopy ->
+                                hideShareSheet()
+                                context.copyTextToClipboard(textToCopy)
+                            },
+                            onShareClick = { textToShare ->
+                                hideShareSheet()
+                                context.shareText(
+                                    subject = "",
+                                    body = textToShare
+                                )
+                            }
+                        )
+                    }
                     if (showSearchBottomSheet) {
                         WebSearchBottomSheet(
                             sheetState = rememberModalBottomSheetState(true),
@@ -138,56 +188,26 @@ internal fun TrackScreen(
                             onDismissRequest = { showSearchBottomSheet = false },
                         )
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                    ) {
-                        TrackScreenTopBar(
-                            onBackPressed = onBackPressed,
-                            onShareClick = { shareSheetActive = !shareSheetActive },
-                            onDeleteClick = { viewModel.deleteTrack(uiState.track.id) },
-                            onShowDetailsClick = { extraDataDialogVisible = true },
-                            scrollBehavior = topBarBehaviour
-                        )
-                        TrackSection(
+                    if (showTrackExtrasDialog) {
+                        TrackExtrasDialog(
                             track = uiState.track,
-                            isLoadingLinks = uiState.isMetadataEnhancerRunning,
-                            isExpandedScreen = isExpandedScreen,
-                            onArtworkCached = { artworkUri = it },
-                            createSeedColor = uiState.artworkBasedThemeEnabled,
-                            onSeedColor = { seedColor ->
-                                viewModel.setThemeSeedColor(
-                                    uiState.track.id,
-                                    seedColor.toArgb()
-                                )
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-//                                .nestedScroll(bottomBarBehaviour.nestedScrollConnection)
-                                .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                                .verticalScroll(screenScrollState)
-
+                            onDismissClick = { showTrackExtrasDialog = false }
                         )
-                        TrackActionsBottomBar(
-                            scrollBehavior = null,
-                            isFavorite = uiState.track.isFavorite,
-                            isLyricsAvailable = uiState.track.lyrics != null,
-                            isRetryAllowed = isRetryAllowed,
-                            onFavoriteClick = {
-                                viewModel.setFavorite(uiState.track.id, !uiState.track.isFavorite)
-                            },
-                            onLyricsClick = {
-                                onNavigateToLyricsScreen(uiState.track.id)
-                            },
-                            onSearchClick = {
-                                showSearchBottomSheet = true
-                            },
-                            onRetryRequested = {
-                                trackDismissed = true
-                                viewModel.deleteTrack(uiState.track.id)
-                                onRetryRequested()
-                            }
-                        )
+                    }
+                    uiState.track.artworkUrl?.let {
+                        AnimatedVisibility(
+                            visible = showArtworkShield,
+                            enter = fadeIn(spring(stiffness = Spring.StiffnessMedium)),
+                            exit = fadeOut(spring(stiffness = Spring.StiffnessMedium)),
+                        ) {
+                            AlbumArtworkShield(
+                                artworkUrl = uiState.track.artworkUrl,
+                                album = uiState.track.album,
+                                year = uiState.track.year,
+                                onBackPressed = { showArtworkShield = false },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 }
             }
@@ -207,7 +227,7 @@ internal fun shouldUseDarkTheme(
 private fun performWebSearch(
     context: Context,
     searchParams: SearchParams,
-    track: TrackUi
+    track: TrackUi,
 ) {
     val query = track.getWebSearchQuery(searchParams.target, context)
     when (searchParams.provider) {

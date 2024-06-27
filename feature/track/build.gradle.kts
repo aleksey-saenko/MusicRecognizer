@@ -11,4 +11,5 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.coil.compose)
     implementation(libs.materialKolor)
+    implementation(libs.zoomable)
 }

@@ -29,15 +29,17 @@ internal fun TrackSection(
     track: TrackUi,
     isLoadingLinks: Boolean,
     isExpandedScreen: Boolean,
+    onArtworkClick: () -> Unit,
     onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
     onSeedColor: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (isExpandedScreen) {
         Row(modifier = modifier) {
             AlbumArtwork(
                 url = track.artworkUrl,
+                onArtworkClick = onArtworkClick,
                 onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
@@ -75,6 +77,7 @@ internal fun TrackSection(
         ) {
             AlbumArtwork(
                 url = track.artworkUrl,
+                onArtworkClick = onArtworkClick,
                 onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
@@ -130,6 +133,7 @@ private fun Preview() {
             ),
             isLoadingLinks = false,
             isExpandedScreen = true,
+            onArtworkClick = {},
             onArtworkCached = {},
             createSeedColor = false,
             onSeedColor = {},

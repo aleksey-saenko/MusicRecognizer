@@ -1,0 +1,4 @@
+* Added full-screen artwork viewer
+* Added privacy policy
+* Adjusted widget radius for devices with MD2 (Android 11 and lower)
+* Minor bug fixes and UI changes

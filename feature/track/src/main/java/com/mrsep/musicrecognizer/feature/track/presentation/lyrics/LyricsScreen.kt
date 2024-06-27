@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -51,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -77,6 +79,7 @@ internal fun LyricsScreen(
     viewModel: LyricsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val topBarBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -122,11 +125,6 @@ internal fun LyricsScreen(
                     with(lyricsScrollState) { canScrollForward || canScrollBackward }
                 }
             }
-            fun hideFontStyleBottomSheet() {
-                scope.launch { fontStyleBottomSheetState.hide() }.invokeOnCompletion {
-                    if (!fontStyleBottomSheetState.isVisible) showFontStyleBottomSheet = false
-                }
-            }
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
@@ -146,6 +144,12 @@ internal fun LyricsScreen(
                         hideScrollPanelJob = scope.launch {
                             delay(3_500)
                             autoScrollPanelVisible = false
+                        }
+                    }
+                    DisposableEffect(autoScrollStarted) {
+                        view.keepScreenOn = autoScrollStarted
+                        onDispose {
+                            view.keepScreenOn = false
                         }
                     }
                     LaunchedEffect(autoScrollStarted) {
@@ -301,9 +305,9 @@ internal fun LyricsScreen(
                 if (showFontStyleBottomSheet) {
                     FontStyleBottomSheet(
                         sheetState = fontStyleBottomSheetState,
+                        onDismissClick = { showFontStyleBottomSheet = false },
                         fontStyle = uiState.fontStyle,
                         onFontStyleChanged = viewModel::setLyricsFontStyle,
-                        onDismissClick = ::hideFontStyleBottomSheet
                     )
                 }
             }

@@ -46,13 +46,13 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 internal fun RecognitionActionsBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
+    onDismissRequest: () -> Unit,
     recognition: EnqueuedRecognitionUi,
     onEnqueueRecognition: (forceLaunch: Boolean) -> Unit,
     onCancelRecognition: () -> Unit,
     onNavigateToTrackScreen: (trackId: String) -> Unit,
     onRenameEnqueued: () -> Unit,
     onDeleteEnqueued: () -> Unit,
-    onDismissRequest: () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,

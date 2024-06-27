@@ -144,13 +144,13 @@ internal fun LibraryScreen(
 
                 val filterSheetState = rememberModalBottomSheetState(true)
 
-                fun hideFilterSheet(newTrackFilter: TrackFilter? = null) {
+                fun hideFilterSheet(newTrackFilter: TrackFilter) {
                     scope.launch { filterSheetState.hide() }.invokeOnCompletion {
-                        if (!filterSheetState.isVisible) showFilterBottomSheet = false
-                        newTrackFilter?.let {
-                            newFilterApplied = true
-                            viewModel.applyFilter(newTrackFilter)
+                        if (!filterSheetState.isVisible) {
+                            showFilterBottomSheet = false
                         }
+                        newFilterApplied = true
+                        viewModel.applyFilter(newTrackFilter)
                     }
                 }
                 if (showFilterBottomSheet) {
@@ -158,7 +158,7 @@ internal fun LibraryScreen(
                     TrackFilterBottomSheet(
                         sheetState = filterSheetState,
                         filterState = filterState,
-                        onDismissRequest = ::hideFilterSheet,
+                        onDismissRequest = { showFilterBottomSheet = false },
                         onApplyClick = {
                             val newFilter = filterState.makeFilter()
                             hideFilterSheet(newFilter)

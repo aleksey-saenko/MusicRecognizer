@@ -20,9 +20,9 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 internal fun TrackFilterBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
-    filterState: TrackFilterState,
     onDismissRequest: () -> Unit,
-    onApplyClick: () -> Unit
+    filterState: TrackFilterState,
+    onApplyClick: () -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,

@@ -90,7 +90,7 @@ internal fun RecognitionLazyColumn(
                 RecognitionActionsBottomSheet(
                     sheetState = actionsSheetState,
                     recognition = recognition,
-                    onDismissRequest = ::hideActionsSheet,
+                    onDismissRequest = { showActionsSheet = false },
                     onDeleteEnqueued = {
                         hideActionsSheet { onDeleteEnqueued(recognition.id) }
                     },

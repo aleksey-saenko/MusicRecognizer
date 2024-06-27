@@ -77,15 +77,21 @@ internal fun TrackScreen(
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
             var artworkUri by remember { mutableStateOf<Uri?>(null) }
-            var showShareSheet by rememberSaveable { mutableStateOf(false) }
             var showArtworkShield by rememberSaveable { mutableStateOf(false) }
             var showTrackExtrasDialog by rememberSaveable { mutableStateOf(false) }
+            var showShareSheet by rememberSaveable { mutableStateOf(false) }
             var showSearchBottomSheet by rememberSaveable { mutableStateOf(false) }
 
             val shareSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            val searchSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             fun hideShareSheet() {
                 scope.launch { shareSheetState.hide() }.invokeOnCompletion {
                     if (!shareSheetState.isVisible) showShareSheet = false
+                }
+            }
+            fun hideSearchSheet() {
+                scope.launch { searchSheetState.hide() }.invokeOnCompletion {
+                    if (!searchSheetState.isVisible) showSearchBottomSheet = false
                 }
             }
 
@@ -163,9 +169,9 @@ internal fun TrackScreen(
                     }
                     if (showShareSheet) {
                         ShareBottomSheet(
-                            track = uiState.track,
                             sheetState = shareSheetState,
-                            onDismissRequest = { hideShareSheet() },
+                            onDismissRequest = { showShareSheet = false },
+                            track = uiState.track,
                             onCopyClick = { textToCopy ->
                                 hideShareSheet()
                                 context.copyTextToClipboard(textToCopy)
@@ -181,11 +187,12 @@ internal fun TrackScreen(
                     }
                     if (showSearchBottomSheet) {
                         WebSearchBottomSheet(
-                            sheetState = rememberModalBottomSheetState(true),
+                            sheetState = searchSheetState,
+                            onDismissRequest = { showSearchBottomSheet = false },
                             onPerformWebSearchClick = { searchParams ->
+                                hideSearchSheet()
                                 performWebSearch(context, searchParams, uiState.track)
                             },
-                            onDismissRequest = { showSearchBottomSheet = false },
                         )
                     }
                     if (showTrackExtrasDialog) {

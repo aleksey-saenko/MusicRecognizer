@@ -24,7 +24,8 @@ class PreferencesMapper @Inject constructor(
                 .map(musicServiceMapper::map),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
-            themeMode = themeModeMapper.map(input.themeMode)
+            themeMode = themeModeMapper.map(input.themeMode),
+            usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
         )
     }
 }

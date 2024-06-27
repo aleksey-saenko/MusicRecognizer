@@ -22,7 +22,7 @@ internal class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler
+    trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
 ) : ViewModel() {
 
     private val args = TrackScreen.Args(savedStateHandle)
@@ -89,6 +89,7 @@ internal sealed class TrackUiState {
         val isMetadataEnhancerRunning: Boolean,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
+        val usePureBlackForDarkTheme: Boolean,
     ) : TrackUiState()
 }
 
@@ -100,10 +101,11 @@ private fun Track.toUiState(
     return TrackUiState.Success(
         track = this.toUi(preferences.requiredMusicServices),
         isTrackViewed = this.isViewed,
-        themeMode = preferences.themeMode,
-        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         isMetadataEnhancerRunning = isMetadataEnhancerRunning &&
                 trackUi.trackLinks.hasMissingLink(preferences.requiredMusicServices),
+        artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+        themeMode = preferences.themeMode,
+        usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
     )
 }
 

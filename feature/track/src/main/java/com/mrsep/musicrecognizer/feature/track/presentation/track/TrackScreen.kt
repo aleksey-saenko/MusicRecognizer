@@ -108,7 +108,8 @@ internal fun TrackScreen(
             SwitchingMusicRecognizerTheme(
                 seedColor = uiState.track.themeSeedColor?.run(::Color),
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
-                useDarkTheme = shouldUseDarkTheme(uiState.themeMode)
+                useDarkTheme = shouldUseDarkTheme(uiState.themeMode),
+                usePureBlackForDarkTheme = uiState.usePureBlackForDarkTheme,
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Surface(modifier = Modifier.fillMaxSize()) {

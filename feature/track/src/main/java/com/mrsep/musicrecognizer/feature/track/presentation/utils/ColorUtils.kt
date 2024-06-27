@@ -25,7 +25,7 @@ internal fun SwitchingMusicRecognizerTheme(
     seedColor: Color?,
     artworkBasedThemeEnabled: Boolean,
     useDarkTheme: Boolean,
-    usePureBlack: Boolean = false,
+    usePureBlackForDarkTheme: Boolean,
     highContrastMode: Boolean = false,
     style: PaletteStyle = PaletteStyle.Vibrant,
     contrastLevel: Double = 0.0,
@@ -37,7 +37,7 @@ internal fun SwitchingMusicRecognizerTheme(
         artworkBasedThemeEnabled,
         seedColor,
         useDarkTheme,
-        usePureBlack,
+        usePureBlackForDarkTheme,
         highContrastMode
     ) {
         derivedStateOf {
@@ -53,7 +53,7 @@ internal fun SwitchingMusicRecognizerTheme(
             }
             val newBackgroundColor = when {
                 highContrastMode -> if (useDarkTheme) Color.Black else Color.White
-                usePureBlack && useDarkTheme -> Color.Black
+                usePureBlackForDarkTheme && useDarkTheme -> Color.Black
                 else -> return@derivedStateOf scheme
             }
             scheme.copy(

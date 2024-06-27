@@ -129,7 +129,8 @@ internal fun LyricsScreen(
                 seedColor = uiState.themeSeedColor?.run { Color(this) },
                 artworkBasedThemeEnabled = uiState.artworkBasedThemeEnabled,
                 useDarkTheme = useDarkTheme,
-                highContrastMode = uiState.fontStyle.isHighContrast
+                usePureBlackForDarkTheme = uiState.usePureBlackForDarkTheme,
+                highContrastMode = uiState.fontStyle.isHighContrast,
             ) {
                 Surface(
                     color = MaterialTheme.colorScheme.surface,

@@ -39,6 +39,7 @@ internal class LyricsViewModel @Inject constructor(
                     themeSeedColor = track.themeSeedColor,
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
                     themeMode = preferences.themeMode,
+                    usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
                     isTrackViewed = track.isViewed,
                     trackDurationMs = track.duration?.toMillis()?.toInt()
                 )
@@ -80,6 +81,7 @@ internal sealed class LyricsUiState {
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
+        val usePureBlackForDarkTheme: Boolean,
         val isTrackViewed: Boolean,
         val trackDurationMs: Int?,
     ) : LyricsUiState()

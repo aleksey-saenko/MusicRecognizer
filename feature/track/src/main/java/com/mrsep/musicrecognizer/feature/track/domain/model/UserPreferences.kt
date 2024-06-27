@@ -5,6 +5,7 @@ data class UserPreferences(
     val lyricsFontStyle: LyricsFontStyle,
     val artworkBasedThemeEnabled: Boolean,
     val themeMode: ThemeMode,
+    val usePureBlackForDarkTheme: Boolean,
 ) {
 
     data class LyricsFontStyle(

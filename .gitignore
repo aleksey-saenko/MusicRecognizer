@@ -93,3 +93,6 @@ lint/tmp/
 ### Android Patch ###
 gen-external-apklibs
 output.json
+
+# Kotlin
+.kotlin

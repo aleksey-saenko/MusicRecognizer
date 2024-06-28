@@ -26,10 +26,10 @@ hilt = "2.51.1"
 hiltExt = "1.2.0"
 junit4 = "4.13.2"
 junitExt = "1.2.1"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 kotlinxCoroutines = "1.8.1"
 kotlinxCollectionImmutable = "0.3.7"
-ksp = "1.9.24-1.0.20"
+ksp = "2.0.0-1.0.22"
 materialKolor = "1.6.2"
 moshi = "1.15.1"
 okhttpBom = "4.12.0"
@@ -102,6 +102,7 @@ zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 kapt-gradlePlugin = { group = "org.jetbrains.kotlin.kapt", name = "org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlin" }
@@ -110,6 +111,7 @@ detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gr
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

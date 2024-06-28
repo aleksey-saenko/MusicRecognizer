@@ -34,7 +34,7 @@ class SoundAmplitudeSourceImpl @Inject constructor(
         check(params.audioFormat.channelCount == 1) {
             "SoundAmplitudeSourceImpl supports mono channel AudioSource only"
         }
-        val relativeMaximumFlow = when (params.audioFormat.encoding) {
+        val relativeMaximumFlow: Flow<Float> = when (params.audioFormat.encoding) {
             AudioFormat.ENCODING_PCM_16BIT -> soundSource.pcmChunkFlow
                 .transformWhile {pcmChunkResult ->
                     var takeWhile = true

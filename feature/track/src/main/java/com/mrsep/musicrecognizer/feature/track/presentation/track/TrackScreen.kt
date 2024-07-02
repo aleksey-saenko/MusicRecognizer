@@ -76,7 +76,6 @@ internal fun TrackScreen(
         is TrackUiState.Success -> {
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
-            var artworkUri by remember { mutableStateOf<Uri?>(null) }
             var showArtworkShield by rememberSaveable { mutableStateOf(false) }
             var showTrackExtrasDialog by rememberSaveable { mutableStateOf(false) }
             var showShareSheet by rememberSaveable { mutableStateOf(false) }
@@ -131,7 +130,6 @@ internal fun TrackScreen(
                                 isLoadingLinks = uiState.isMetadataEnhancerRunning,
                                 isExpandedScreen = isExpandedScreen,
                                 onArtworkClick = { showArtworkShield = true },
-                                onArtworkCached = { artworkUri = it },
                                 createSeedColor = uiState.artworkBasedThemeEnabled,
                                 onSeedColor = { seedColor ->
                                     viewModel.setThemeSeedColor(
@@ -210,6 +208,8 @@ internal fun TrackScreen(
                         ) {
                             AlbumArtworkShield(
                                 artworkUrl = uiState.track.artworkUrl,
+                                title = uiState.track.title,
+                                artist = uiState.track.artist,
                                 album = uiState.track.album,
                                 year = uiState.track.year,
                                 onBackPressed = { showArtworkShield = false },

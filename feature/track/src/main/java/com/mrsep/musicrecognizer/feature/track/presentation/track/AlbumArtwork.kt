@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,12 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmapOrNull
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
@@ -32,12 +28,10 @@ import kotlinx.coroutines.withContext
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun AlbumArtwork(
     url: String?,
     onArtworkClick: () -> Unit,
-    onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
     onSeedColorCreated: (Color) -> Unit,
     modifier: Modifier = Modifier,
@@ -48,7 +42,6 @@ internal fun AlbumArtwork(
         alpha = 0.3f
     )
     val context = LocalContext.current
-    val imageLoader = LocalContext.current.imageLoader
     val scope = rememberCoroutineScope()
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context)
@@ -66,21 +59,6 @@ internal fun AlbumArtwork(
                     state.result.drawable.toBitmapOrNull()?.getDominantColor()?.let { seedColor ->
                         withContext(Dispatchers.Main) {
                             onSeedColorCreated(seedColor)
-                        }
-                    }
-                }
-            }
-            scope.launch(Dispatchers.IO) {
-                state.result.diskCacheKey?.let { diskCacheKey ->
-                    imageLoader.diskCache?.openSnapshot(diskCacheKey)?.let { snapshot ->
-                        val cacheUri = FileProvider.getUriForFile(
-                            context,
-                            "${context.packageName}.fileprovider",
-                            snapshot.data.toFile()
-                        )
-                        snapshot.close()
-                        withContext(Dispatchers.Main) {
-                            onArtworkCached(cacheUri)
                         }
                     }
                 }

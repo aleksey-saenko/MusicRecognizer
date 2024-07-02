@@ -25,11 +25,17 @@ fun Context.openWebSearchImplicitly(query: String) {
     )
 }
 
-fun Context.shareImageWithText(subject: String, body: String, imageUri: Uri) {
+fun Context.shareImageWithText(
+    subject: String,
+    body: String,
+    imageUri: Uri,
+    mimeType: String = "image/jpg",
+) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
-        type = "image/*"
+        type = mimeType
         putExtra(Intent.EXTRA_SUBJECT, subject)
         putExtra(Intent.EXTRA_TEXT, body)
+        clipData = ClipData.newRawUri(body, imageUri)
         putExtra(Intent.EXTRA_STREAM, imageUri)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }

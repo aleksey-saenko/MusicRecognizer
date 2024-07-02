@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
-import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ internal fun TrackSection(
     isLoadingLinks: Boolean,
     isExpandedScreen: Boolean,
     onArtworkClick: () -> Unit,
-    onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
     onSeedColor: (Color) -> Unit,
     modifier: Modifier = Modifier,
@@ -40,7 +38,6 @@ internal fun TrackSection(
             AlbumArtwork(
                 url = track.artworkUrl,
                 onArtworkClick = onArtworkClick,
-                onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
                 modifier = Modifier
@@ -78,7 +75,6 @@ internal fun TrackSection(
             AlbumArtwork(
                 url = track.artworkUrl,
                 onArtworkClick = onArtworkClick,
-                onArtworkCached = onArtworkCached,
                 createSeedColor = createSeedColor,
                 onSeedColorCreated = onSeedColor,
                 modifier = Modifier
@@ -134,7 +130,6 @@ private fun Preview() {
             isLoadingLinks = false,
             isExpandedScreen = true,
             onArtworkClick = {},
-            onArtworkCached = {},
             createSeedColor = false,
             onSeedColor = {},
             modifier = Modifier.verticalScroll(rememberScrollState())

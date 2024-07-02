@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -55,7 +56,9 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.mrsep.musicrecognizer.core.ui.findActivity
-import com.mrsep.musicrecognizer.core.ui.util.shareText
+import com.mrsep.musicrecognizer.core.ui.util.shareImageWithText
+import com.mrsep.musicrecognizer.feature.track.presentation.utils.ImageShareUtils.getImageFileForSharing
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -66,6 +69,8 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 @Composable
 internal fun AlbumArtworkShield(
     artworkUrl: String,
+    title: String,
+    artist: String,
     album: String?,
     year: String?,
     onBackPressed: () -> Unit,
@@ -73,6 +78,8 @@ internal fun AlbumArtworkShield(
 ) {
     BackHandler(onBack = onBackPressed)
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val sharingJob = remember { mutableStateOf<Job?>(null) }
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomBarBehaviour = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val zoomState = rememberZoomState()
@@ -159,7 +166,25 @@ internal fun AlbumArtworkShield(
                 },
                 actions = {
                     IconButton(
-                        onClick = { context.shareText(subject = "", body = artworkUrl) }
+                        onClick = {
+                            if (sharingJob.value?.isActive == true) return@IconButton
+                            sharingJob.value = scope.launch {
+                                val fileNameUnprocessed = album ?: "$title - $artist"
+                                val imageUri = getImageFileForSharing(
+                                    imageUrl = artworkUrl,
+                                    fileName = fileNameUnprocessed,
+                                    fileNameFallback = context.getString(StringsR.string.artwork),
+                                    context = context
+                                )
+                                imageUri?.let {
+                                    context.shareImageWithText(
+                                        subject = "",
+                                        body = fileNameUnprocessed,
+                                        imageUri = imageUri
+                                    )
+                                }
+                            }
+                        }
                     ) {
                         Icon(
                             painter = painterResource(UiR.drawable.outline_share_24),

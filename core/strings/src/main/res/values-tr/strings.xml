@@ -7,7 +7,7 @@
     <string name="please_wait">Lütfen bekleyin</string>
     <string name="trying_one_more_time">Bir kez daha deneniyor</string>
 
-    <!-- Kısa versiyonlar, bildirimler ve widget'lar için kullanılır -->
+    <!-- Kısa versiyonlar, bildirimler ve widget\'lar için kullanılır -->
     <string name="tap_to_recognize_short">Tanımak için dokun</string>
     <string name="tap_to_try_again_short">Tekrar denemek için dokun</string>
     <string name="identify_while_using_another_app_short">Herhangi bir uygulama açıkken tanımla</string>
@@ -169,12 +169,12 @@
     <string name="mark_as_favorite">Favori olarak işaretle</string>
     <string name="unmark_as_favorite">Favori işaretini kaldır</string>
     <string name="show_lyrics">Sözleri göster</string>
-    <string name="web_search">Web'de ara</string>
+    <string name="web_search">Web\'de ara</string>
     <string name="web">Web</string>
     <string name="search">Ara</string>
     <string name="search_for">Şunu ara</string>
     <string name="search_in">Şurada ara</string>
-    <string name="format_open_website_or_app">%s'i aç</string>
+    <string name="format_open_website_or_app">%s\'i aç</string>
     <string name="track_info">Parça bilgisi</string>
     <string name="format_date_of_last_recognition">Son tanıma tarihi:\n%s</string>
     <string name="format_track_duration">Parça süresi: %s</string>
@@ -200,7 +200,7 @@
     <string name="bold_text">Kalın metin</string>
     <string name="high_contrast_text">Yüksek kontrastlı metin</string>
     <string name="format_created">Oluşturulma: %s</string>
-    <string name="format_scheduled_recognition_of">%s'in planlanmış tanıması</string>
+    <string name="format_scheduled_recognition_of">%s\'in planlanmış tanıması</string>
     <string name="artwork">Kapak resmi</string>
     <string name="delete_tracks">Parçaları sil</string>
     <string name="delete_selected_tracks_dialog">Seçili parçaları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>

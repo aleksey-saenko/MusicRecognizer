@@ -1,0 +1,4 @@
+* Added ability to share artwork as file, not as URL link
+* Widget was added to keyguard category to allow its use on lockscreen on devices that support this feature (@liz-desartiges)
+* Added Portuguese (Brazil) translation (@lucasmz-dev)
+* Updated Turkish translation (@mikropsoft)

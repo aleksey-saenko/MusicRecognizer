@@ -13,6 +13,7 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 
 internal class HttpFileLoggingInterceptor(
     private val appContext: Context,
@@ -58,7 +59,7 @@ internal class HttpFileLoggingInterceptor(
                 logFile.outputStream().use { stream ->
                     stream.write(data)
                 }
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 val message = "Error during log file writing"
                 Log.e(this::class.simpleName, message, e)
                 withContext(Dispatchers.Main) {

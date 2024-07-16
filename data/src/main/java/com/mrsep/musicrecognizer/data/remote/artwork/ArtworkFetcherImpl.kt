@@ -6,6 +6,7 @@ import com.mrsep.musicrecognizer.data.remote.audd.json.DeezerJson
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -41,6 +42,8 @@ class ArtworkFetcherImpl @Inject constructor(
                 deezerJson.album?.run { coverXl ?: coverBig ?: coverMedium }
                     ?: deezerJson.artist?.run { pictureXl ?: pictureBig ?: pictureMedium }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(this::class.simpleName, "Error during artwork fetching ($requestUrl)", e)
             null

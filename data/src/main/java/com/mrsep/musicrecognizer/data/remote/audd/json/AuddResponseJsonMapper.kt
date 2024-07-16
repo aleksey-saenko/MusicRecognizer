@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.remote.audd.json
 
 import android.graphics.Color
 import android.text.Html
+import android.util.Log
 import android.util.Patterns
 import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
@@ -11,7 +12,10 @@ import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.UUID
+
+private const val TAG = "AuddResponseJsonMapper"
 
 internal fun AuddResponseJson.toRecognitionResult(): RemoteRecognitionResultDo {
     return when (status) {
@@ -123,7 +127,7 @@ private fun AuddResponseJson.Result.parseTrackDuration(): Duration? {
 }
 
 private fun parseRecognizedAt(input: String): Duration? {
-    return runCatching {
+    return try {
         val timeParts = input.split(":").map { it.toLong() }
         when (timeParts.size) {
             1 -> Duration.ofSeconds(timeParts[0])
@@ -131,11 +135,20 @@ private fun parseRecognizedAt(input: String): Duration? {
             3 -> Duration.ofHours(timeParts[0]).plusMinutes(timeParts[1]).plusSeconds(timeParts[2])
             else -> null
         }
-    }.getOrNull()
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to parse track duration", e)
+        null
+    }
 }
 
-private fun String.toLocalDate() =
-    runCatching { LocalDate.parse(this, DateTimeFormatter.ISO_DATE) }.getOrNull()
+private fun String.toLocalDate(): LocalDate? {
+    return try {
+        LocalDate.parse(this, DateTimeFormatter.ISO_DATE)
+    } catch (e: DateTimeParseException) {
+        Log.e(TAG, "Failed to parse track release date", e)
+        null
+    }
+}
 
 private fun AuddResponseJson.Result.parseReleaseDate(): LocalDate? {
     return appleMusic?.releaseDate?.toLocalDate()
@@ -210,10 +223,16 @@ private fun AuddResponseJson.Result.parseLyrics() = this.lyricsJson?.lyrics?.run
     ).toString().trim().takeIf { it.isNotBlank() }
 }
 
-private fun AuddResponseJson.Result.parseArtworkSeedColor() =
-    this.appleMusic?.artwork?.backgroundColor?.run {
-        runCatching { Color.parseColor("#$this") }.getOrNull()
+private fun AuddResponseJson.Result.parseArtworkSeedColor(): Int? {
+    return this.appleMusic?.artwork?.backgroundColor?.run {
+        try {
+            Color.parseColor("#$this")
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Failed to parse artwork color", e)
+            null
+        }
     }
+}
 
 private fun parseErrorResult(error: AuddResponseJson.Error): RemoteRecognitionResultDo {
     return when (error.errorCode) {

@@ -122,12 +122,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
 
     override suspend fun recognize(recording: File): RemoteRecognitionResultDo {
         return withContext(ioDispatcher) {
-            try {
-                val bytes = recording.readBytes()
-                recognize(bytes)
-            } catch (e: Exception) {
-                RemoteRecognitionResultDo.Error.UnhandledError(message = e.message ?: "", e = e)
-            }
+            val bytes = recording.readBytes()
+            recognize(bytes)
         }
     }
 
@@ -219,7 +215,7 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             mac.init(signingKey)
             val rawHmac = mac.doFinal(data)
             Base64.Default.encode(rawHmac)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             Log.e(this::class.simpleName, "Error during signature encryption", e)
             ""
         }

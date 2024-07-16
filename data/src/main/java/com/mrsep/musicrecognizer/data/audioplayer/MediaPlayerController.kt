@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.audioplayer
 import android.media.MediaPlayer
 import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
-import java.lang.IllegalStateException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.milliseconds
 private const val TAG = "MediaPlayerController"
 
 class MediaPlayerController @Inject constructor(
-    @DefaultDispatcher private val pollingDispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val pollingDispatcher: CoroutineDispatcher,
 ) : PlayerControllerDo {
 
     private var player: MediaPlayer? = null
@@ -133,11 +133,14 @@ class MediaPlayerController @Inject constructor(
 
     private fun launchPositionPolling() {
         positionPollingJob = playerCoroutineScope.launch {
-            runCatching {
+            try {
                 while (player?.isPlaying == true) {
                     player?.currentPosition?.run { _currentPosition.send(this) }
                     delay(POSITION_POLLING_RATE_MS)
                 }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: IllegalStateException) {
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.data.database.migration
 
+import android.util.Log
 import androidx.core.database.getStringOrNull
 import androidx.sqlite.db.SupportSQLiteDatabase
 
@@ -7,7 +8,12 @@ internal object DatabaseMigrationUtils {
 
     internal fun SupportSQLiteDatabase.isSQLiteVersionAtLeast(version: String): Boolean? {
         val thisVersion = querySQLiteVersion() ?: return null
-        return runCatching { (compareSQLiteVersions(thisVersion, version) != -1) }.getOrNull()
+        return try {
+            compareSQLiteVersions(thisVersion, version) != -1
+        } catch (e: Exception) {
+            Log.e(this::class.simpleName, "Failed to parse SQLiteVersion", e)
+            null
+        }
     }
 
     private fun SupportSQLiteDatabase.querySQLiteVersion(): String? {

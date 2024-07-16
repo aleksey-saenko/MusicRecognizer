@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.channelFlow
@@ -55,6 +56,8 @@ class LyricsFetcherImpl @Inject constructor(
                 val json = lyristJsonAdapter.fromJson(response.body!!.source())!!
                 json.lyrics?.takeIf { it.isNotBlank() }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
             null
@@ -77,6 +80,8 @@ class LyricsFetcherImpl @Inject constructor(
                     }.takeIf { it.isNotBlank() }
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
             null

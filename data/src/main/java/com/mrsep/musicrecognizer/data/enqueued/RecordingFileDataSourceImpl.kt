@@ -6,9 +6,8 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
-
-private const val TAG = "RecordingFileDataSourceImpl"
 
 class RecordingFileDataSourceImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
@@ -22,7 +21,7 @@ class RecordingFileDataSourceImpl @Inject constructor(
     }
 
     override suspend fun write(recording: ByteArray): File? {
-        return runCatching {
+        return try {
             withContext(ioDispatcher) {
                 val resultFile = File("$recordsDirPath/rec_${System.currentTimeMillis()}")
                 resultFile.outputStream().buffered().use { stream ->
@@ -30,17 +29,23 @@ class RecordingFileDataSourceImpl @Inject constructor(
                     resultFile
                 }
             }
-        }.getOrNull()
+        } catch (e: IOException) {
+            Log.e(this::class.simpleName, "Failed to write recording file", e)
+            null
+        }
     }
 
     override suspend fun read(file: File): ByteArray? {
-        return runCatching {
+        return try {
             withContext(ioDispatcher) {
                 file.inputStream().buffered().use { stream ->
                     stream.readBytes()
                 }
             }
-        }.getOrNull()
+        } catch (e: IOException) {
+            Log.e(this::class.simpleName, "Failed to read recording file", e)
+            null
+        }
     }
 
     override suspend fun delete(file: File): Boolean {
@@ -49,14 +54,12 @@ class RecordingFileDataSourceImpl @Inject constructor(
             val maxTries = 3
             while (numTries < maxTries) {
                 try {
-                    if (file.exists() && file.delete()) {
-                        return@withContext true
-                    }
-                    numTries++
-                    delay(500L)
+                    if (file.exists() && file.delete()) return@withContext true
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to delete recording file ${file.path}", e)
+                    Log.e(this::class.simpleName, "Failed to delete recording file ${file.path}", e)
                 }
+                numTries++
+                delay(500L)
             }
             false
         }

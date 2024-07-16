@@ -64,7 +64,7 @@ internal object ImageShareUtils {
             File(context.cacheDir, "share").also {
                 it.deleteRecursively()
             }
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             Log.e(this::class.simpleName, "getClearShareFolder failed", e)
             null
         }

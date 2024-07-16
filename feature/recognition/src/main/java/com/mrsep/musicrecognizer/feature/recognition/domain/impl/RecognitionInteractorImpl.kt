@@ -227,12 +227,14 @@ internal class RecognitionInteractorImpl @Inject constructor(
     ): RecognitionTask {
         val (saveEnqueued, launchEnqueued) = fallbackAction
         return if (saveEnqueued) {
-            runCatching {
-                val fullRecord = recordProcess.await().getOrThrow()
-                enqueueRecognition(fullRecord, launchEnqueued)
-            }.getOrElse { cause ->
-                RecognitionTask.Error(cause)
-            }
+            recordProcess.await().fold(
+                onSuccess = { fullRecording ->
+                    enqueueRecognition(fullRecording, launchEnqueued)
+                },
+                onFailure = { cause ->
+                    RecognitionTask.Error(cause)
+                }
+            )
         } else {
             recordProcess.cancelAndJoin()
             RecognitionTask.Ignored

@@ -43,8 +43,9 @@ internal data class SearchParams(
 @Composable
 internal fun WebSearchBottomSheet(
     sheetState: SheetState,
-    onPerformWebSearchClick: (SearchParams) -> Unit,
     onDismissRequest: () -> Unit,
+    albumAvailable: Boolean,
+    onPerformWebSearchClick: (SearchParams) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ModalBottomSheet(
@@ -100,11 +101,13 @@ internal fun WebSearchBottomSheet(
                         onClick = { targetSelected = SearchTarget.Artist },
                         label = { Text(text = stringResource(StringsR.string.artist)) }
                     )
-                    FilterChip(
-                        selected = targetSelected == SearchTarget.Album,
-                        onClick = { targetSelected = SearchTarget.Album },
-                        label = { Text(text = stringResource(StringsR.string.album)) }
-                    )
+                    if (albumAvailable) {
+                        FilterChip(
+                            selected = targetSelected == SearchTarget.Album,
+                            onClick = { targetSelected = SearchTarget.Album },
+                            label = { Text(text = stringResource(StringsR.string.album)) }
+                        )
+                    }
                 }
             }
         }
@@ -114,9 +117,8 @@ internal fun WebSearchBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             TextButton(
                 onClick = {
                     onPerformWebSearchClick(SearchParams(providerSelected, targetSelected))

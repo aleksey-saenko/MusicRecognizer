@@ -114,11 +114,11 @@ internal fun TrackFilterBottomSheet(
         }
         Spacer(Modifier.height(8.dp))
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
             TextButton(onClick = filterState::resetFilter) {
                 Text(

@@ -188,6 +188,7 @@ internal fun TrackScreen(
                         WebSearchBottomSheet(
                             sheetState = searchSheetState,
                             onDismissRequest = { showSearchBottomSheet = false },
+                            albumAvailable = uiState.track.album != null,
                             onPerformWebSearchClick = { searchParams ->
                                 hideSearchSheet()
                                 performWebSearch(context, searchParams, uiState.track)

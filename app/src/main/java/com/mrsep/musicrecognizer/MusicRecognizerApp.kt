@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -46,6 +47,7 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
+            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.ERROR)
             .build()
 
     private fun getShortcuts() = listOf(

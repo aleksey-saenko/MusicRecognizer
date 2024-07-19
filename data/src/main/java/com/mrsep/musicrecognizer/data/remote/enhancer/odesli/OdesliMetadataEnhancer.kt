@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.data.remote.enhancer.odesli
 
 import android.content.Context
-import android.net.Uri
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.data.remote.enhancer.RemoteMetadataEnhancingResultDo
 import com.mrsep.musicrecognizer.data.remote.enhancer.TrackMetadataEnhancerDo
@@ -115,7 +114,7 @@ class OdesliMetadataEnhancer @Inject constructor(
             .host("api.song.link")
             .addPathSegment("v1-alpha.1")
             .addPathSegment("links")
-            .addQueryParameter("url", Uri.encode(queryUrl))
+            .addQueryParameter("url", queryUrl)
             .addQueryParameter("userCountry", locale.country)
             .addQueryParameter("songIfSingle", "true")
             .build()

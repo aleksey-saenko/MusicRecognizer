@@ -1,1 +1,1 @@
-App de reconhecimento de música
+App de identificação de música

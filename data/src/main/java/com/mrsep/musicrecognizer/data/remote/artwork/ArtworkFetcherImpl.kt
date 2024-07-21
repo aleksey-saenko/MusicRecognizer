@@ -29,10 +29,9 @@ class ArtworkFetcherImpl @Inject constructor(
         }
     }
 
+    // https://developers.deezer.com/api/track
     private suspend fun fetchDeezerSource(deezerTrackUrl: String): String? {
-        val trackIdPattern = Regex("\\d+$")
-        val deezerTrackId = trackIdPattern.find(deezerTrackUrl)?.value?.toIntOrNull()
-        deezerTrackId ?: return null
+        val deezerTrackId = verifyAndParseDeezerTrackId(deezerTrackUrl) ?: return null
         val requestUrl = "https://api.deezer.com/track/$deezerTrackId"
         val request = Request.Builder().url(requestUrl).get().build()
         return try {
@@ -48,5 +47,11 @@ class ArtworkFetcherImpl @Inject constructor(
             Log.e(this::class.simpleName, "Error during artwork fetching ($requestUrl)", e)
             null
         }
+    }
+
+    private fun verifyAndParseDeezerTrackId(deezerTrackUrl: String): String? {
+        val pattern = "^https://www\\.deezer\\.com/track/(\\d+)".toRegex()
+        val matchResult = pattern.find(deezerTrackUrl)
+        return matchResult?.groupValues?.getOrNull(1)
     }
 }

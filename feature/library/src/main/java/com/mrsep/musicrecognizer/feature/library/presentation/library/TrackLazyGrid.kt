@@ -120,7 +120,7 @@ internal fun TrackLazyGridItem(
                 .aspectRatio(1f)
         ) {
             AsyncImage(
-                model = track.artworkUrl,
+                model = track.artworkThumbUrl,
                 fallback = placeholder,
                 error = placeholder,
                 contentDescription = stringResource(StringsR.string.artwork),

@@ -7,6 +7,7 @@ import android.util.Patterns
 import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.remote.RemoteRecognitionResultDo
+import com.mrsep.musicrecognizer.data.remote.artwork.TrackArtworkDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import java.time.Duration
 import java.time.Instant
@@ -42,7 +43,7 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
         return RemoteRecognitionResultDo.NoMatches
     }
     val mediaItems = result.lyricsJson?.parseMediaItems()
-
+    val trackArtwork = result.toTrackArtwork()
     return RemoteRecognitionResultDo.Success(
         data = TrackEntity(
             id = createTrackId(result),
@@ -56,7 +57,8 @@ private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecogniti
             recognitionDate = Instant.now(),
             lyrics = result.parseLyrics(),
             links = TrackEntity.Links(
-                artwork = result.toArtworkLink(),
+                artworkThumbnail = trackArtwork?.thumbUrl,
+                artwork = trackArtwork?.url,
                 amazonMusic = null,
                 anghami = null,
                 appleMusic = result.parseAppleMusicLink(),
@@ -163,36 +165,96 @@ private fun String.replaceHttpWithHttps() =
 
 private fun String.takeUrlIfValid() = replaceHttpWithHttps().takeIf { isUrlValid(it) }
 
-private fun AuddResponseJson.Result.toArtworkLink(): String? {
-    return deezerJson?.album?.run { coverXl ?: coverBig }?.takeUrlIfValid()
-        ?: appleMusic?.artwork?.toArtworkLink(true)?.takeUrlIfValid()
-        ?: spotify?.album?.toArtworkLink(true)?.takeUrlIfValid()
-        ?: deezerJson?.artist?.run { pictureXl ?: pictureBig }?.takeUrlIfValid()
+private fun AuddResponseJson.Result.toTrackArtwork(): TrackArtworkDo? {
+    arrayOf(true, false).forEach { requireHiRes ->
+        val deezerAlbum = TrackArtworkDo(
+            url = deezerJson?.album?.toArtworkLink(requireHiRes),
+            thumbUrl = deezerJson?.album?.toArtworkThumbnailLink()
+        )
+        if (deezerAlbum.thumbUrl != null && deezerAlbum.url != null) return deezerAlbum
 
-        ?: appleMusic?.artwork?.toArtworkLink(false)?.takeUrlIfValid()
-        ?: spotify?.album?.toArtworkLink(false)?.takeUrlIfValid()
-        ?: deezerJson?.album?.run { coverMedium ?: coverSmall }?.takeUrlIfValid()
-        ?: deezerJson?.artist?.run { pictureMedium ?: pictureSmall }?.takeUrlIfValid()
-}
+        val appleMusic = TrackArtworkDo(
+            url = appleMusic?.artwork?.toArtworkLink(requireHiRes),
+            thumbUrl = appleMusic?.artwork?.toArtworkThumbnailLink()
+        )
+        if (appleMusic.thumbUrl != null && appleMusic.url != null) return appleMusic
 
-// assume that the first one in the list is the highest res
-private fun SpotifyJson.Album.toArtworkLink(requireHiRes: Boolean): String? {
-    return images?.firstOrNull()?.run {
-        if (width == null || height == null || url == null) return null
-        if (requireHiRes && isLowResArtwork(width, height)) return null
-        url
+        val spotify = TrackArtworkDo(
+            url = spotify?.album?.toArtworkLink(requireHiRes),
+            thumbUrl = spotify?.album?.toArtworkThumbnailLink()
+        )
+        if (spotify.thumbUrl != null && spotify.url != null) return spotify
+
+        val deezerArtist = TrackArtworkDo(
+            url = deezerJson?.artist?.toArtworkLink(requireHiRes),
+            thumbUrl = deezerJson?.artist?.toArtworkThumbnailLink()
+        )
+        if (deezerArtist.thumbUrl != null && deezerArtist.url != null) return deezerArtist
+
+        if (deezerAlbum.url != null) return deezerAlbum
+        if (appleMusic.url != null) return appleMusic
+        if (spotify.url != null) return spotify
+        if (deezerArtist.url != null) return deezerArtist
     }
+    return null
 }
+
+private fun DeezerJson.Album.toArtworkLink(requireHiRes: Boolean) =
+    (coverXl ?: coverBig.takeIf { !requireHiRes })?.takeUrlIfValid()
+
+private fun DeezerJson.Album.toArtworkThumbnailLink(): String? =
+    coverMedium?.takeUrlIfValid()
+
+private fun DeezerJson.Artist.toArtworkLink(requireHiRes: Boolean) =
+    (pictureXl ?: pictureBig.takeIf { !requireHiRes })?.takeUrlIfValid()
+
+private fun DeezerJson.Artist.toArtworkThumbnailLink(): String? =
+    pictureMedium?.takeUrlIfValid()
 
 private fun AppleMusicJson.Artwork.toArtworkLink(requireHiRes: Boolean): String? {
     if (width == null || height == null || url == null) return null
+    if (!isEnoughArtworkSize(width, height)) return null
     if (requireHiRes && isLowResArtwork(width, height)) return null
-    val isDefaultResAvailable = width >= 1000 && height >= 1000
-    val selectedRes = if (isDefaultResAvailable) "1000x1000" else "${width}x$height"
-    return url.replaceFirst("{w}x{h}", selectedRes, true)
+    val desiredSize = 1500
+    val isDesiredAvailable = width >= desiredSize && height >= desiredSize
+    val selectedRes = if (isDesiredAvailable) "${desiredSize}x$desiredSize" else "${width}x$height"
+    return url.replaceFirst("{w}x{h}", selectedRes, true).takeUrlIfValid()
 }
 
-private fun isLowResArtwork(width: Int, height: Int) = width < 700 || height < 700
+private fun AppleMusicJson.Artwork.toArtworkThumbnailLink(): String? {
+    if (width == null || height == null || url == null) return null
+    if (!isEnoughArtworkThumbnailSize(width, height)) return null
+    val desiredSize = 300
+    val isDesiredAvailable = width >= desiredSize && height >= desiredSize
+    val selectedRes = if (isDesiredAvailable) "${desiredSize}x$desiredSize" else "${width}x$height"
+    return url.replaceFirst("{w}x{h}", selectedRes, true).takeUrlIfValid()
+}
+
+private fun isEnoughArtworkSize(width: Int, height: Int) = width >= 500 && height >= 500
+private fun isEnoughArtworkThumbnailSize(width: Int, height: Int) = width >= 250 && height >= 250
+private fun isLowResArtwork(width: Int, height: Int) = width < 1000 || height < 1000
+
+// assume that the first one in the list is the highest res
+private fun SpotifyJson.Album.toArtworkLink(requireHiRes: Boolean): String? {
+    return images?.firstNotNullOfOrNull { image ->
+        image?.run {
+            if (width == null || height == null || url == null) return null
+            if (!isEnoughArtworkSize(width, height)) return null
+            if (requireHiRes && isLowResArtwork(width, height)) return null
+            url.takeUrlIfValid()
+        }
+    }
+}
+private fun SpotifyJson.Album.toArtworkThumbnailLink(): String? {
+    return images?.firstNotNullOfOrNull { image ->
+        image?.run {
+            if (width == null || height == null || url == null) return null
+            if (!isEnoughArtworkThumbnailSize(width, height)) return null
+            if (width >= 400 || height >= 400) return null
+            url.takeUrlIfValid()
+        }
+    }
+}
 
 private fun AuddResponseJson.Result.parseSpotifyLink() =
     spotify?.externalUrls?.spotify?.takeUrlIfValid()

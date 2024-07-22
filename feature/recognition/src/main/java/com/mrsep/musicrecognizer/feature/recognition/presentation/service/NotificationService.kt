@@ -447,9 +447,12 @@ class NotificationService : Service() {
 
                     is RecognitionStatus.Done -> {
                         if (status.result is RecognitionResult.Success) {
-                            status.result.track.artworkUrl?.let { artworkUrl ->
-                                downloadImageToDiskCache(artworkUrl)
-                            }
+                            listOfNotNull(
+                                status.result.track.artworkThumbUrl,
+                                status.result.track.artworkUrl
+                            ).map { imageUrl ->
+                                async { downloadImageToDiskCache(imageUrl) }
+                            }.awaitAll()
                         }
                         val isScreenUpdated = screenStatusHolder.updateStatusIfObserving(status)
                         if (isScreenUpdated) {

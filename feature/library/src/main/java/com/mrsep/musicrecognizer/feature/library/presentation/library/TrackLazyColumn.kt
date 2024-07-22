@@ -142,7 +142,7 @@ internal fun TrackLazyColumnItem(
                 .aspectRatio(1f, true)
         ) {
             AsyncImage(
-                model = track.artworkUrl,
+                model = track.artworkThumbUrl,
                 fallback = placeholder,
                 error = placeholder,
                 contentDescription = stringResource(StringsR.string.artwork),

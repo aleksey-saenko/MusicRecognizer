@@ -28,7 +28,8 @@ internal fun getFakeTrackList(
             album = "Album #${index + startIndex}",
             lyrics = "lyrics #${index + startIndex}",
             links = TrackEntity.Links(
-                artwork = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
+                artworkThumbnail = "https://e-cdns-images.dzcdn.net/images/cover/dce2b0c4e6498a136df041df7e85aba3/250x250-000000-80-0-0.jpg",
+                artwork = "https://e-cdns-images.dzcdn.net/images/cover/dce2b0c4e6498a136df041df7e85aba3/1000x1000-000000-80-0-0.jpg",
                 amazonMusic = "",
                 anghami = "",
                 appleMusic = "",

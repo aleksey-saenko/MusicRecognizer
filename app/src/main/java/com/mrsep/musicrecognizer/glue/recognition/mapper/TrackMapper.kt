@@ -25,6 +25,7 @@ class TrackMapper @Inject constructor(
             recognizedBy = providerMapper.map(input.recognizedBy),
             recognitionDate = input.recognitionDate,
             lyrics = input.lyrics,
+            artworkThumbUrl = input.links.artworkThumbnail,
             artworkUrl = input.links.artwork,
             trackLinks = with(input.links) {
                 listOfNotNull(
@@ -69,6 +70,7 @@ class TrackMapper @Inject constructor(
             links = run {
                 val linkMap = input.trackLinks.associate { link -> link.service to link.url }
                 TrackEntity.Links(
+                    artworkThumbnail = input.artworkThumbUrl,
                     artwork = input.artworkUrl,
                     amazonMusic = linkMap[MusicService.AmazonMusic],
                     anghami = linkMap[MusicService.Anghami],

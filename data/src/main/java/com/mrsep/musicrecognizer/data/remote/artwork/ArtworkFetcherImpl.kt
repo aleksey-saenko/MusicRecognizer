@@ -23,14 +23,14 @@ class ArtworkFetcherImpl @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     private val deezerJsonAdapter = moshi.adapter<DeezerJson>()
 
-    override suspend fun fetchUrl(track: TrackEntity): String? {
+    override suspend fun fetchUrl(track: TrackEntity): TrackArtworkDo? {
         return withContext(ioDispatcher) {
             track.links.deezer?.run { fetchDeezerSource(this) }
         }
     }
 
     // https://developers.deezer.com/api/track
-    private suspend fun fetchDeezerSource(deezerTrackUrl: String): String? {
+    private suspend fun fetchDeezerSource(deezerTrackUrl: String): TrackArtworkDo? {
         val deezerTrackId = verifyAndParseDeezerTrackId(deezerTrackUrl) ?: return null
         val requestUrl = "https://api.deezer.com/track/$deezerTrackId"
         val request = Request.Builder().url(requestUrl).get().build()
@@ -38,8 +38,19 @@ class ArtworkFetcherImpl @Inject constructor(
             okHttpClient.newCall(request).await().use { response ->
                 if (!response.isSuccessful) return null
                 val deezerJson = deezerJsonAdapter.fromJson(response.body!!.source())!!
-                deezerJson.album?.run { coverXl ?: coverBig ?: coverMedium }
-                    ?: deezerJson.artist?.run { pictureXl ?: pictureBig ?: pictureMedium }
+
+                val albumImageUrl = deezerJson.album?.run { coverXl ?: coverBig }
+                val albumImageThumbUrl = deezerJson.album?.coverMedium?.takeIf { albumImageUrl != null }
+                val albumArtwork = TrackArtworkDo(url = albumImageUrl, thumbUrl = albumImageThumbUrl)
+                if (albumArtwork.url != null && albumArtwork.thumbUrl != null) return@use albumArtwork
+
+                val artistImageUrl = deezerJson.artist?.run { pictureXl ?: pictureBig }
+                val artistImageThumb = deezerJson.artist?.pictureMedium?.takeIf { artistImageUrl != null }
+                val artistArtwork = TrackArtworkDo(url = artistImageUrl, thumbUrl = artistImageThumb)
+                if (artistArtwork.url != null && artistArtwork.thumbUrl != null) return@use artistArtwork
+                if (albumArtwork.url != null) return@use albumArtwork
+                if (artistArtwork.url != null) return@use artistArtwork
+                null
             }
         } catch (e: CancellationException) {
             throw e

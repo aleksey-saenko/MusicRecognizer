@@ -40,6 +40,8 @@ data class TrackEntity(
 ) {
 
     data class Links(
+        @ColumnInfo(name = "artwork_thumb")
+        val artworkThumbnail: String?,
         @ColumnInfo(name = "artwork")
         val artwork: String?,
         @ColumnInfo(name = "amazon_music")

@@ -89,7 +89,9 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
             recognizedBy = RecognitionProvider.Audd,
             recognitionDate = Instant.now(),
             lyrics = "lyrics stub",
-            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/10/PinkFloyd-album-atomheartmother.jpg",
+            artworkThumbUrl = "https://e-cdns-images.dzcdn.net/images/cover/dce2b0c4e6498a136df041df7e85aba3/400x400-000000-80-0-0.jpg",
+            artworkUrl = "https://e-cdns-images.dzcdn.net/images/cover/dce2b0c4e6498a136df041df7e85aba3/1500x1500-000000-80-0-0.jpg",
+//            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/10/PinkFloyd-album-atomheartmother.jpg",
 //            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/4/46/Obscured_by_Clouds_Pink_Floyd.jpg",
 //            artworkUrl = "https://upload.wikimedia.org/wikipedia/ru/1/1e/Meddle_album_cover.jpg",
             trackLinks = listOf(

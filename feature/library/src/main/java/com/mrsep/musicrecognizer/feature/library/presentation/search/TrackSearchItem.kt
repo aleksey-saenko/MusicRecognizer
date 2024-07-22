@@ -56,7 +56,7 @@ internal fun TrackSearchItem(
             alpha = 0.3f
         )
         AsyncImage(
-            model = track.artworkUrl,
+            model = track.artworkThumbUrl,
             fallback = placeholder,
             error = placeholder,
             contentDescription = stringResource(StringsR.string.artwork),

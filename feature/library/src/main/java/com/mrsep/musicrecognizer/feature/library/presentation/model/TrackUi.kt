@@ -11,7 +11,7 @@ internal data class TrackUi(
     val title: String,
     val artist: String,
     val album: String?,
-    val artworkUrl: String?,
+    val artworkThumbUrl: String?,
     val recognitionDate: String,
     val isViewed: Boolean,
 )
@@ -21,7 +21,7 @@ internal fun Track.toUi(dateTimeFormatter: AppDateTimeFormatter) = TrackUi(
     title = this.title,
     artist = this.artist,
     album = this.album,
-    artworkUrl = this.artworkUrl,
+    artworkThumbUrl = this.artworkThumbUrl,
     recognitionDate = dateTimeFormatter.formatRelativeToToday(
         this.recognitionDate.atZone(ZoneId.systemDefault())
     ),

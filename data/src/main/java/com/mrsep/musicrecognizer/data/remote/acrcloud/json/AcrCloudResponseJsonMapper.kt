@@ -47,6 +47,7 @@ private fun parseMusic(
         recognitionDate = Instant.now(),
         lyrics = null,
         links = TrackEntity.Links(
+            artworkThumbnail = null,
             artwork = null,
             amazonMusic = null,
             anghami = null,

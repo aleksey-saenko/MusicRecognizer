@@ -9,7 +9,7 @@ data class Track(
     val artist: String,
     val album: String?,
     val releaseDate: LocalDate?,
-    val artworkUrl: String?,
+    val artworkThumbUrl: String?,
     val recognitionDate: Instant,
     val isViewed: Boolean,
     val isFavorite: Boolean,

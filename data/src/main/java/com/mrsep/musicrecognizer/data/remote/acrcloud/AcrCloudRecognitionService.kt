@@ -16,7 +16,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -96,14 +95,13 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
                     }
                     if (remoteResult is RemoteRecognitionResultDo.Success) {
                         val track = remoteResult.data
-                        val (artworkUrl, lyrics) = listOf(
-                            async { artworkFetcher.fetchUrl(track) },
-                            async { lyricsFetcher.fetch(track) }
-                        ).awaitAll()
+                        val artworkDeferred = async { artworkFetcher.fetchUrl(track) }
+                        val lyricsDeferred = async { lyricsFetcher.fetch(track) }
                         val finalTrack = track.copy(
-                            lyrics = lyrics,
+                            lyrics = lyricsDeferred.await(),
                             links = track.links.copy(
-                                artwork = artworkUrl
+                                artworkThumbnail = artworkDeferred.await()?.thumbUrl,
+                                artwork = artworkDeferred.await()?.url
                             )
                         )
                         RemoteRecognitionResultDo.Success(finalTrack)

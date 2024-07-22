@@ -15,6 +15,7 @@ data class Track(
     val recognizedBy: RecognitionProvider,
     val recognitionDate: Instant,
     val lyrics: String?,
+    val artworkThumbUrl: String?,
     val artworkUrl: String?,
     val trackLinks: List<TrackLink>,
     val properties: Properties,

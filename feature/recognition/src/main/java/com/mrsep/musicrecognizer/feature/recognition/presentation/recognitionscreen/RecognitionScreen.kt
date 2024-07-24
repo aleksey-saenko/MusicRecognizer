@@ -76,6 +76,7 @@ internal fun RecognitionScreen(
                 .any { (permission, isGranted) ->
                     !isGranted && !activity.shouldShowRationale(permission)
                 }
+            if (autostart) onResetAutostart()
         }
     }
     if (showPermissionsRationaleDialog) {
@@ -84,7 +85,10 @@ internal fun RecognitionScreen(
                 showPermissionsRationaleDialog = false
                 requiredPermissionsState.launchMultiplePermissionRequest()
             },
-            onDismissClick = { showPermissionsRationaleDialog = false }
+            onDismissClick = {
+                showPermissionsRationaleDialog = false
+                if (autostart) onResetAutostart()
+            }
         )
     }
     if (showPermissionsBlockedDialog) {

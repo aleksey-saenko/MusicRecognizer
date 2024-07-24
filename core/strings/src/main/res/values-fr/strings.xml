@@ -89,6 +89,8 @@
     <string name="about">À propos</string>
     <string name="recognition">Reconnaissance</string>
     <string name="share">Partager</string>
+    <string name="link_to_share">Lien</string>
+    <string name="image_to_share">Image</string>
     <string name="web_browser_not_found_toast">Navigateur web non trouvé</string>
     <string name="cannot_share_toast">Impossible de trouver une application pour partager</string>
     <string name="reset">Réinitialiser</string>

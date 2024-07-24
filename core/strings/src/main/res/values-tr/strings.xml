@@ -92,6 +92,8 @@
     <string name="about">Hakkında</string>
     <string name="recognition">Tanıma</string>
     <string name="share">Paylaş</string>
+    <string name="link_to_share">Bağlantı</string>
+    <string name="image_to_share">Resim</string>
     <string name="web_browser_not_found_toast">Web tarayıcısı bulunamadı</string>
     <string name="cannot_share_toast">Paylaşmak için herhangi bir uygulama bulunamıyor</string>
     <string name="reset">Sıfırla</string>

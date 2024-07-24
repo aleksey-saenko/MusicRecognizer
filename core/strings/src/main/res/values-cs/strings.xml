@@ -82,6 +82,8 @@
     <string name="about">O aplikaci</string>
     <string name="recognition">Rozpoznání</string>
     <string name="share">Sdílet</string>
+    <string name="link_to_share">Odkaz</string>
+    <string name="image_to_share">Obrázek</string>
     <string name="web_browser_not_found_toast">Webový prohlížeč nenalezen</string>
     <string name="cannot_share_toast">Nepodařilo se najít žádnou aplikaci ke sdílení</string>
     <string name="reset">Resetovat</string>

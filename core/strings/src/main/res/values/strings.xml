@@ -124,6 +124,8 @@
     <string name="about">About</string>
     <string name="recognition">Recognition</string>
     <string name="share">Share</string>
+    <string name="link_to_share">Link</string>
+    <string name="image_to_share">Image</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any application to share</string>
     <string name="reset">Reset</string>

@@ -98,6 +98,8 @@
     <string name="about">Sobre</string>
     <string name="recognition">Identificação</string>
     <string name="share">Compartilhar</string>
+    <string name="link_to_share">Link</string>
+    <string name="image_to_share">Imagem</string>
     <string name="web_browser_not_found_toast">Navegador web não encontrado</string>
     <string name="cannot_share_toast">Não foi possível encontrar nenhum app para compartilhar</string>
     <string name="reset">Redefinir</string>

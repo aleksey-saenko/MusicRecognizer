@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,10 +35,12 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +61,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.util.shareImageWithText
+import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.ImageShareUtils.getImageFileForSharing
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -119,6 +124,30 @@ internal fun AlbumArtworkShield(
             }
     }
 
+    fun shareImage() {
+        if (sharingJob.value?.isActive == true) return
+        sharingJob.value = scope.launch {
+            val fileNameUnprocessed = album ?: "$title - $artist"
+            val imageUri = getImageFileForSharing(
+                imageUrl = artworkUrl,
+                fileName = fileNameUnprocessed,
+                fileNameFallback = context.getString(StringsR.string.artwork),
+                context = context
+            )
+            imageUri?.let {
+                context.shareImageWithText(
+                    subject = "",
+                    body = fileNameUnprocessed,
+                    imageUri = imageUri
+                )
+            }
+        }
+    }
+
+    fun shareLink() {
+        context.shareText(subject = "", body = artworkUrl)
+    }
+
     val tintColor = MaterialTheme.colorScheme.surface.copy(0.7f)
     Surface(modifier = modifier) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -165,33 +194,10 @@ internal fun AlbumArtworkShield(
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            if (sharingJob.value?.isActive == true) return@IconButton
-                            sharingJob.value = scope.launch {
-                                val fileNameUnprocessed = album ?: "$title - $artist"
-                                val imageUri = getImageFileForSharing(
-                                    imageUrl = artworkUrl,
-                                    fileName = fileNameUnprocessed,
-                                    fileNameFallback = context.getString(StringsR.string.artwork),
-                                    context = context
-                                )
-                                imageUri?.let {
-                                    context.shareImageWithText(
-                                        subject = "",
-                                        body = fileNameUnprocessed,
-                                        imageUri = imageUri
-                                    )
-                                }
-                            }
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_share_24),
-                            contentDescription = stringResource(StringsR.string.share),
-                        )
-                    }
-
+                    ArtworkShareDropdownMenu(
+                        onShareLink = ::shareLink,
+                        onShareImage = ::shareImage
+                    )
                 },
             )
             BottomAppBar(
@@ -312,4 +318,56 @@ private suspend fun BottomAppBarState.collapse(
         heightOffset = value
     }
     contentOffset = heightOffsetLimit
+}
+
+@Composable
+private fun ArtworkShareDropdownMenu(
+    onShareLink: () -> Unit,
+    onShareImage: () -> Unit,
+) {
+    var menuExpanded by rememberSaveable { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { menuExpanded = !menuExpanded }) {
+            Icon(
+                painter = painterResource(UiR.drawable.outline_share_24),
+                contentDescription = stringResource(StringsR.string.share),
+            )
+        }
+        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
+        MaterialTheme(
+            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        ) {
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(StringsR.string.link_to_share)) },
+                    onClick = {
+                        menuExpanded = false
+                        onShareLink()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.outline_link_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(StringsR.string.image_to_share)) },
+                    onClick = {
+                        menuExpanded = false
+                        onShareImage()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.outline_image_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

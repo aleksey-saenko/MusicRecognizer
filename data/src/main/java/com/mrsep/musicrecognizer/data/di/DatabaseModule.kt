@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.mrsep.musicrecognizer.data.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.data.database.migration.Migration5To6
+import com.mrsep.musicrecognizer.data.database.migration.Migration6To7
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +28,7 @@ internal class RoomModule {
         )
             .addMigrations(
                 Migration5To6,
+                Migration6To7,
             )
             .build()
     }

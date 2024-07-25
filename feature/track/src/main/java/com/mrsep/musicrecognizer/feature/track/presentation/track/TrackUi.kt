@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.track.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
@@ -21,6 +22,7 @@ internal data class TrackUi(
     val year: String?,
     val duration: String?,
     val recognizedAt: String?,
+    val recognizedBy: RecognitionProvider,
     val lyrics: String?,
     val artworkUrl: String?,
     val trackLinks: ImmutableList<TrackLink>,
@@ -44,6 +46,7 @@ internal fun Track.toUi(
         year = this.releaseDate?.year?.toString(),
         duration = this.duration?.format(),
         recognizedAt = this.recognizedAt?.format(),
+        recognizedBy = this.recognizedBy,
         lyrics = this.lyrics,
         artworkUrl = this.artworkUrl,
         isFavorite = this.isFavorite,

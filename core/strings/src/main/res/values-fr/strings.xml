@@ -171,9 +171,10 @@
     <string name="search_in">Rechercher dans</string>
     <string name="format_open_website_or_app">Ouvrir %s</string>
     <string name="track_info">Info sur le titre</string>
-    <string name="format_date_of_last_recognition">Date de la dernière reconnaissance :\n%s</string>
-    <string name="format_track_duration">Durée de la piste : %s</string>
-    <string name="format_recognized_at">Reconnu à : %s</string>
+    <string name="track_info_title_duration">Durée de la piste :</string>
+    <string name="track_info_title_recognized_at">Reconnu à :</string>
+    <string name="track_info_title_recognized_by">Reconnu par :</string>
+    <string name="track_info_title_date_of_last_recognition">Date de la dernière reconnaissance :</string>
     <string name="track_not_found_message">Quelque chose s\'est mal passé, le titre a peut-être été supprimé ou modifié incorrectement</string>
     <string name="track_not_found">Le titre n\'a pas été trouvé</string>
     <string name="loading">Chargement</string>

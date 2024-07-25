@@ -174,9 +174,10 @@
     <string name="search_in">Поиск в</string>
     <string name="format_open_website_or_app">Открыть %s</string>
     <string name="track_info">О треке</string>
-    <string name="format_date_of_last_recognition">Дата последнего распознавания:\n%s</string>
-    <string name="format_track_duration">Продолжительность: %s</string>
-    <string name="format_recognized_at">Момент распознавания: %s</string>
+    <string name="track_info_title_duration">Продолжительность:</string>
+    <string name="track_info_title_recognized_at">Момент распознавания:</string>
+    <string name="track_info_title_recognized_by">Распознано с помощью:</string>
+    <string name="track_info_title_date_of_last_recognition">Дата последнего распознавания:</string>
     <string name="track_not_found_message">Что-то пошло не так, возможно, трек был удален или неправильно изменен</string>
     <string name="track_not_found">Трек не найден</string>
     <string name="loading">Загрузка</string>

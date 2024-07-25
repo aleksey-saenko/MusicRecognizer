@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.track.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.toImmutableList
 
@@ -123,6 +124,7 @@ private fun Preview() {
                 isFavorite = false,
                 duration = "2:45",
                 recognizedAt = "2:22",
+                recognizedBy = RecognitionProvider.Audd,
                 lastRecognitionDate = "Now",
                 themeSeedColor = null,
                 lyrics = null

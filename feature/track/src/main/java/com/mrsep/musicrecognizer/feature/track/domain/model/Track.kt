@@ -12,6 +12,7 @@ data class Track(
     val releaseDate: LocalDate?,
     val duration: Duration?,
     val recognizedAt: Duration?,
+    val recognizedBy: RecognitionProvider,
     val lyrics: String?,
     val artworkUrl: String?,
     val themeSeedColor: Int?,

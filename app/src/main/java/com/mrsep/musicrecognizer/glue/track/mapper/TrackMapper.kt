@@ -1,8 +1,10 @@
 package com.mrsep.musicrecognizer.glue.track.mapper
 
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.feature.track.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.track.domain.model.Track
 import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import javax.inject.Inject
@@ -18,6 +20,10 @@ class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
             releaseDate = input.releaseDate,
             duration = input.duration,
             recognizedAt = input.recognizedAt,
+            recognizedBy = when (input.recognizedBy) {
+                RecognitionProviderDo.Audd -> RecognitionProvider.Audd
+                RecognitionProviderDo.AcrCloud -> RecognitionProvider.AcrCloud
+            },
             lyrics = input.lyrics,
             artworkUrl = input.links.artwork,
             trackLinks = with(input.links) {

@@ -154,9 +154,10 @@
     <string name="search_for">Vyhľadávanie</string>
     <string name="search_in">Vyhľadávanie v</string>
     <string name="track_info">Informácie o skladbe</string>
-    <string name="format_date_of_last_recognition">Dátum posledného rozpoznania:\n%s</string>
-    <string name="format_track_duration">Dĺžka skladby: %s</string>
-    <string name="format_recognized_at">Rozpoznané v: %s</string>
+    <string name="track_info_title_duration">Dĺžka skladby:</string>
+    <string name="track_info_title_recognized_at">Rozpoznané v:</string>
+    <string name="track_info_title_recognized_by">Rozpoznané pomocou:</string>
+    <string name="track_info_title_date_of_last_recognition">Dátum posledného rozpoznania:</string>
     <string name="track_not_found_message">Niečo sa pokazilo, stopa mohla byť odstránená alebo nesprávne upravená</string>
     <string name="track_not_found">Skladba sa nenašla</string>
     <string name="loading">Načítavam</string>

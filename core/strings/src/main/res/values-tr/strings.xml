@@ -178,9 +178,10 @@
     <string name="search_in">Şurada ara</string>
     <string name="format_open_website_or_app">%s\'i aç</string>
     <string name="track_info">Parça bilgisi</string>
-    <string name="format_date_of_last_recognition">Son tanıma tarihi:\n%s</string>
-    <string name="format_track_duration">Parça süresi: %s</string>
-    <string name="format_recognized_at">Tanındığı zaman: %s</string>
+    <string name="track_info_title_duration">Parça süresi:</string>
+    <string name="track_info_title_recognized_at">Tanındığı zaman:</string>
+    <string name="track_info_title_recognized_by">Tarafından tanındı:</string>
+    <string name="track_info_title_date_of_last_recognition">Son tanıma tarihi:</string>
     <string name="track_not_found_message">Bir şeyler yanlış gitti, parça kaldırılmış veya yanlış değiştirilmiş olabilir</string>
     <string name="track_not_found">Parça bulunamadı</string>
     <string name="loading">Yükleniyor</string>

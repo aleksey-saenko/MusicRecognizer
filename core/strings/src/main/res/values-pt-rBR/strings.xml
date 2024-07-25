@@ -186,9 +186,10 @@
     <string name="search_in">Pesquisar em</string>
     <string name="format_open_website_or_app">Abrir %s</string>
     <string name="track_info">Informações da faixa</string>
-    <string name="format_date_of_last_recognition">Data da última identificação:\n%s</string>
-    <string name="format_track_duration">Duração da faixa: %s</string>
-    <string name="format_recognized_at">Identificado na parte: %s</string>
+    <string name="track_info_title_duration">Duração da faixa:</string>
+    <string name="track_info_title_recognized_at">Identificado na parte:</string>
+    <string name="track_info_title_recognized_by">Identificado por:</string>
+    <string name="track_info_title_date_of_last_recognition">Data da última identificação:</string>
     <string name="track_not_found_message">Algo deu errado, a faixa pode ter sido removida ou modificada incorretamente</string>
     <string name="track_not_found">A faixa não foi encontrada</string>
     <string name="loading">Carregando</string>

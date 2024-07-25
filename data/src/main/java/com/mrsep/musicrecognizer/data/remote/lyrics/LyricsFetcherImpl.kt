@@ -54,7 +54,7 @@ class LyricsFetcherImpl @Inject constructor(
             okHttpClient.newCall(request).await().use { response ->
                 if (!response.isSuccessful) return null
                 val json = lyristJsonAdapter.fromJson(response.body!!.source())!!
-                json.lyrics?.takeIf { it.isNotBlank() }
+                json.lyrics?.trim()?.takeIf { it.isNotBlank() }
             }
         } catch (e: CancellationException) {
             throw e
@@ -77,7 +77,7 @@ class LyricsFetcherImpl @Inject constructor(
                         drop(lineBreak + 1)
                     } else {
                         this
-                    }.takeIf { it.isNotBlank() }
+                    }.trim().takeIf { it.isNotBlank() }
                 }
             }
         } catch (e: CancellationException) {

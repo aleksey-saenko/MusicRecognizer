@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 21
-        versionName = "1.5.3"
+        versionCode = 22
+        versionName = "1.5.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -90,7 +90,7 @@ dependencies {
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)
-    kapt(libs.hilt.ext.compiler)
+    ksp(libs.hilt.ext.compiler)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)

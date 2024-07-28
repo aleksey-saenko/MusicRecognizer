@@ -17,7 +17,7 @@ dependencies {
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)
-    kapt(libs.hilt.ext.compiler)
+    ksp(libs.hilt.ext.compiler)
 
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glanceAppWidget)

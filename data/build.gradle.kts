@@ -1,3 +1,5 @@
+import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
 plugins {
@@ -96,6 +98,19 @@ protobuf {
                 register("kotlin") {
                     option("lite")
                 }
+            }
+        }
+    }
+}
+
+// workaround for https://github.com/google/ksp/issues/1590
+// FIXME: remove when not needed anymore
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        afterEvaluate {
+            val capName = variant.name.capitalized()
+            tasks.getByName<KotlinCompile>("ksp${capName}Kotlin") {
+                setSource(tasks.getByName("generate${capName}Proto").outputs)
             }
         }
     }

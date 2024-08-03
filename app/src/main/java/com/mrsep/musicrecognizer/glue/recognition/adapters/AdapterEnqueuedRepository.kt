@@ -19,9 +19,9 @@ class AdapterEnqueuedRepository @Inject constructor(
         return enqueuedRecognitionRepositoryDo.create(audioRecording, title)
     }
 
-    override suspend fun getRecognition(recognitionId: Int): EnqueuedRecognition? {
-        return enqueuedRecognitionRepositoryDo.getRecognitionWithTrack(recognitionId)
-            ?.run(enqueuedMapper::map)
+    override fun getRecognitionFlow(recognitionId: Int): Flow<EnqueuedRecognition?> {
+        return enqueuedRecognitionRepositoryDo.getRecognitionWithTrackFlow(recognitionId)
+            .map { entity -> entity?.run(enqueuedMapper::map) }
     }
 
     override suspend fun getRecordingForRecognition(recognitionId: Int): File? {
@@ -37,8 +37,8 @@ class AdapterEnqueuedRepository @Inject constructor(
         enqueuedRecognitionRepositoryDo.updateTitle(recognitionId, newTitle)
     }
 
-    override suspend fun delete(vararg recognitionIds: Int) {
-        enqueuedRecognitionRepositoryDo.delete(*recognitionIds)
+    override suspend fun delete(recognitionIds: List<Int>) {
+        enqueuedRecognitionRepositoryDo.delete(recognitionIds)
     }
 
     override suspend fun deleteAll() {

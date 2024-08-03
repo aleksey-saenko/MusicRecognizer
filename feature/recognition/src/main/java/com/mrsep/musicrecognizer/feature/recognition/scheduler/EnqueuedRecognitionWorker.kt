@@ -18,6 +18,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.time.Instant
 
 @HiltWorker
@@ -40,7 +41,9 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         check(recognitionId != -1) { "$TAG requires enqueued recognition id as parameter" }
 
         return withContext(ioDispatcher) {
-            val enqueuedRecognition = enqueuedRecognitionRepository.getRecognition(recognitionId)
+            val enqueuedRecognition = enqueuedRecognitionRepository
+                .getRecognitionFlow(recognitionId)
+                .firstOrNull()
             if (enqueuedRecognition == null) {
                 val message = "$TAG finished with fatal error, " +
                         "enqueuedRecognition with id=$id was not found"
@@ -76,7 +79,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
 
             when (result) {
                 is RemoteRecognitionResult.Success -> {
-                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
                     trackRepository.setViewed(trackWithStoredProps.id, false)
                     val updatedTrack = trackWithStoredProps.copy(
                         properties = trackWithStoredProps.properties.copy(isViewed = false)

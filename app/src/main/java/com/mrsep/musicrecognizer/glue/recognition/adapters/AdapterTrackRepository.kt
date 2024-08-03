@@ -19,15 +19,16 @@ class AdapterTrackRepository @Inject constructor(
             .map { entity -> entity?.run(trackMapper::map) }
     }
 
-    override suspend fun upsertKeepProperties(vararg tracks: Track): List<Track> {
-        return trackRepositoryDo.upsertKeepProperties(
-            *tracks.map(trackMapper::reverseMap).toTypedArray()
-        ).map(trackMapper::map)
+    override suspend fun upsertKeepProperties(track: Track): Track {
+        val upsertedEntity = trackRepositoryDo.upsertKeepProperties(
+            listOf(trackMapper.reverseMap(track))
+        ).first()
+        return trackMapper.map(upsertedEntity)
     }
 
-    override suspend fun updateKeepProperties(vararg tracks: Track) {
+    override suspend fun updateKeepProperties(track: Track) {
         trackRepositoryDo.updateKeepProperties(
-            *tracks.map(trackMapper::reverseMap).toTypedArray()
+            listOf(trackMapper.reverseMap(track))
         )
     }
 

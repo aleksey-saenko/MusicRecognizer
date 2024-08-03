@@ -8,26 +8,26 @@ import kotlinx.coroutines.flow.Flow
 internal interface TrackDao {
 
     @Upsert
-    suspend fun upsert(vararg tracks: TrackEntity)
+    suspend fun upsert(tracks: List<TrackEntity>)
 
     @Update
-    suspend fun update(vararg tracks: TrackEntity)
+    suspend fun update(tracks: List<TrackEntity>)
 
     @Transaction
-    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
-        val trackList = copyKeepProperties(*tracks)
-        upsert(*trackList.toTypedArray())
+    suspend fun upsertKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
+        val trackList = copyKeepProperties(tracks)
+        upsert(trackList)
         return trackList
     }
 
     @Transaction
-    suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
-        val trackList = copyKeepProperties(*tracks)
-        update(*trackList.toTypedArray())
+    suspend fun updateKeepProperties(tracks: List<TrackEntity>) {
+        val trackList = copyKeepProperties(tracks)
+        update(trackList)
     }
 
     @Query("DELETE FROM track WHERE id in (:trackIds)")
-    suspend fun delete(vararg trackIds: String)
+    suspend fun delete(trackIds: List<String>)
 
     @Query("DELETE FROM track")
     suspend fun deleteAll()
@@ -83,11 +83,10 @@ internal interface TrackDao {
     @RawQuery(observedEntities = [TrackEntity::class])
     fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
 
-    private suspend fun copyKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    private suspend fun copyKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
         return tracks.map { newTrack ->
-            getTrack(newTrack.id)?.let { oldTrack ->
-                newTrack.copy(properties = oldTrack.properties)
-            } ?: newTrack
+            val oldTrack = getTrack(newTrack.id) ?: return@map newTrack
+            newTrack.copy(properties = oldTrack.properties)
         }
     }
 }

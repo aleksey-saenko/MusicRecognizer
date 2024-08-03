@@ -109,7 +109,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
                 themeSeedColor = null,
             )
         )
-        val trackWithStoredProps = trackRepository.upsertKeepProperties(fakeTrack)[0]
+        val trackWithStoredProps = trackRepository.upsertKeepProperties(fakeTrack)
         trackRepository.setViewed(trackWithStoredProps.id, false)
         val updatedTrack = trackWithStoredProps.copy(
             properties = trackWithStoredProps.properties.copy(isViewed = false)

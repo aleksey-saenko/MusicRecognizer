@@ -13,7 +13,7 @@ internal interface EnqueuedRecognitionDao {
     suspend fun insert(recognition: EnqueuedRecognitionEntity): Long
 
     @Update
-    suspend fun update(vararg recognitions: EnqueuedRecognitionEntity)
+    suspend fun update(recognition: EnqueuedRecognitionEntity)
 
     @Query("UPDATE enqueued_recognition SET title=(:newTitle) WHERE id=(:recognitionId)")
     suspend fun updateTitle(recognitionId: Int, newTitle: String)
@@ -22,17 +22,13 @@ internal interface EnqueuedRecognitionDao {
     suspend fun getRecordingFile(recognitionId: Int): File?
 
     @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:recognitionIds)")
-    suspend fun getRecordingFiles(vararg recognitionIds: Int): List<File>
+    suspend fun getRecordingFiles(recognitionIds: List<Int>): List<File>
 
     @Query("DELETE FROM enqueued_recognition WHERE id in (:recognitionIds)")
-    suspend fun delete(vararg recognitionIds: Int)
+    suspend fun delete(recognitionIds: List<Int>)
 
     @Query("DELETE FROM enqueued_recognition")
     suspend fun deleteAll()
-
-    @Transaction
-    @Query("SELECT * FROM enqueued_recognition WHERE id in (:recognitionIds)")
-    fun getRecognitionWithTrack(vararg recognitionIds: Int): List<EnqueuedRecognitionEntityWithTrack>
 
     @Transaction
     @Query("SELECT * FROM enqueued_recognition WHERE id=(:recognitionId) LIMIT 1")

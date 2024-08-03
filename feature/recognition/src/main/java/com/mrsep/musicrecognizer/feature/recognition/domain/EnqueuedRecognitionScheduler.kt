@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface EnqueuedRecognitionScheduler {
 
-    fun enqueue(vararg recognitionIds: Int, forceLaunch: Boolean)
+    fun enqueue(recognitionIds: List<Int>, forceLaunch: Boolean)
 
-    fun cancel(vararg recognitionIds: Int)
+    fun cancel(recognitionIds: List<Int>)
 
     fun cancelAll()
 

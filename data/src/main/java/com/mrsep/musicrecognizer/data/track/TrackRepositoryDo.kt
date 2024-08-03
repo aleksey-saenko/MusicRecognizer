@@ -5,13 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepositoryDo {
 
-    suspend fun upsert(vararg tracks: TrackEntity)
+    suspend fun upsert(tracks: List<TrackEntity>)
 
-    suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity>
+    suspend fun upsertKeepProperties(tracks: List<TrackEntity>): List<TrackEntity>
 
-    suspend fun updateKeepProperties(vararg tracks: TrackEntity)
+    suspend fun updateKeepProperties(tracks: List<TrackEntity>)
 
-    suspend fun update(vararg tracks: TrackEntity)
+    suspend fun update(tracks: List<TrackEntity>)
 
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
@@ -19,7 +19,7 @@ interface TrackRepositoryDo {
 
     suspend fun setViewed(trackId: String, isViewed: Boolean)
 
-    suspend fun delete(vararg trackIds: String)
+    suspend fun delete(trackIds: List<String>)
 
     suspend fun deleteAll()
 

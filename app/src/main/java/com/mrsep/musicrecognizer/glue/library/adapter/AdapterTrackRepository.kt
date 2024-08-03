@@ -42,7 +42,7 @@ class AdapterTrackRepository @Inject constructor(
             .map(searchResultMapper::map)
     }
 
-    override suspend fun delete(vararg trackIds: String) {
-        trackRepositoryDo.delete(*trackIds)
+    override suspend fun delete(trackIds: List<String>) {
+        trackRepositoryDo.delete(trackIds)
     }
 }

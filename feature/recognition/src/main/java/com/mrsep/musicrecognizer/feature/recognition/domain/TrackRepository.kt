@@ -7,9 +7,9 @@ interface TrackRepository {
 
     fun getTrackFlow(trackId: String): Flow<Track?>
 
-    suspend fun upsertKeepProperties(vararg tracks: Track): List<Track>
+    suspend fun upsertKeepProperties(track: Track): Track
 
-    suspend fun updateKeepProperties(vararg tracks: Track)
+    suspend fun updateKeepProperties(track: Track)
 
     suspend fun setViewed(trackId: String, isViewed: Boolean)
 }

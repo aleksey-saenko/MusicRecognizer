@@ -39,7 +39,7 @@ class DatabaseFiller @Inject constructor(
                     inclusive = false,
                     favorites = false
                 )
-                trackRepository.upsert(*trackList.toTypedArray())
+                trackRepository.upsert(trackList)
                 Log.d(TAG, "Database filling completed")
             }
         }
@@ -73,8 +73,8 @@ class DatabaseFiller @Inject constructor(
                                 isViewed = true
                             )
                         )
-                    }.toTypedArray()
-                trackRepository.upsert(*trackList)
+                    }
+                trackRepository.upsert(trackList)
                 Log.d(TAG, "Database filling completed")
             }
         }

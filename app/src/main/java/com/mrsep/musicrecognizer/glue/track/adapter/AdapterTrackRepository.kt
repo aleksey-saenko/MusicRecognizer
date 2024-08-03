@@ -24,7 +24,7 @@ class AdapterTrackRepository @Inject constructor(
     }
 
     override suspend fun delete(trackId: String) {
-        trackRepositoryDo.delete(trackId)
+        trackRepositoryDo.delete(listOf(trackId))
     }
 
     override suspend fun setThemeSeedColor(trackId: String, color: Int?) {

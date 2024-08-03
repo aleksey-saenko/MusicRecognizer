@@ -72,21 +72,29 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun enqueueRecognition(recognitionId: Int, forceLaunch: Boolean) {
         appScope.launch(ioDispatcher) {
-            recognitionScheduler.enqueue(recognitionId, forceLaunch = forceLaunch)
+            recognitionScheduler.enqueue(listOf(recognitionId), forceLaunch = forceLaunch)
         }
     }
 
-    fun cancelRecognition(vararg recognitionIds: Int) {
+    fun cancelRecognition(recognitionId: Int) {
+        cancelRecognitions(listOf(recognitionId))
+    }
+
+    fun cancelRecognitions(recognitionIds: List<Int>) {
         appScope.launch(ioDispatcher) {
-            recognitionScheduler.cancel(*recognitionIds)
+            recognitionScheduler.cancel(recognitionIds)
         }
     }
 
-    fun cancelAndDeleteRecognition(vararg recognitionIds: Int) {
+    fun cancelAndDeleteRecognition(recognitionId: Int) {
+        cancelAndDeleteRecognitions(listOf(recognitionId))
+    }
+
+    fun cancelAndDeleteRecognitions(recognitionIds: List<Int>) {
         appScope.launch(ioDispatcher) {
             playerController.stop()
-            recognitionScheduler.cancel(*recognitionIds)
-            enqueuedRecognitionRepository.delete(*recognitionIds)
+            recognitionScheduler.cancel(recognitionIds)
+            enqueuedRecognitionRepository.delete(recognitionIds)
         }
     }
 

@@ -13,13 +13,11 @@ interface EnqueuedRecognitionRepositoryDo {
 
     suspend fun updateTitle(recognitionId: Int, newTitle: String)
 
-    suspend fun delete(vararg recognitionIds: Int)
+    suspend fun delete(recognitionIds: List<Int>)
 
     suspend fun deleteAll()
 
     suspend fun getRecordingForRecognition(recognitionId: Int): File?
-
-    suspend fun getRecognitionWithTrack(recognitionId: Int): EnqueuedRecognitionEntityWithTrack?
 
     fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
 

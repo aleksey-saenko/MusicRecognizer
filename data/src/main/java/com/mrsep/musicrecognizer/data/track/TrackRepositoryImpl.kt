@@ -24,27 +24,27 @@ internal class TrackRepositoryImpl @Inject constructor(
     private val trackDao = database.trackDao()
     private val persistentCoroutineContext = appScope.coroutineContext + ioDispatcher
 
-    override suspend fun upsert(vararg tracks: TrackEntity) {
+    override suspend fun upsert(tracks: List<TrackEntity>) {
         withContext(persistentCoroutineContext) {
-            trackDao.upsert(*tracks)
+            trackDao.upsert(tracks)
         }
     }
 
-    override suspend fun update(vararg tracks: TrackEntity) {
+    override suspend fun update(tracks: List<TrackEntity>) {
         withContext(persistentCoroutineContext) {
-            trackDao.update(*tracks)
+            trackDao.update(tracks)
         }
     }
 
-    override suspend fun upsertKeepProperties(vararg tracks: TrackEntity): List<TrackEntity> {
+    override suspend fun upsertKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
         return withContext(persistentCoroutineContext) {
-            trackDao.upsertKeepProperties(*tracks)
+            trackDao.upsertKeepProperties(tracks)
         }
     }
 
-    override suspend fun updateKeepProperties(vararg tracks: TrackEntity) {
+    override suspend fun updateKeepProperties(tracks: List<TrackEntity>) {
         return withContext(persistentCoroutineContext) {
-            trackDao.updateKeepProperties(*tracks)
+            trackDao.updateKeepProperties(tracks)
         }
     }
 
@@ -66,9 +66,9 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(vararg trackIds: String) {
+    override suspend fun delete(trackIds: List<String>) {
         withContext(persistentCoroutineContext) {
-            trackDao.delete(*trackIds)
+            trackDao.delete(trackIds)
         }
     }
 

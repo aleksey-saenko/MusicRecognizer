@@ -82,7 +82,7 @@ internal fun QueueScreen(
                     },
                     onDeselectAll = multiSelectionState::deselectAll,
                     onCancelSelected = {
-                        viewModel.cancelRecognition(*multiSelectionState.getSelected().toIntArray())
+                        viewModel.cancelRecognitions(multiSelectionState.getSelected())
                     },
                     onDeleteSelected = { deleteDialogVisible = true },
                     useGridLayout = uiState.useGridLayout,
@@ -154,9 +154,7 @@ internal fun QueueScreen(
                 DeleteSelectedDialog(
                     onDeleteClick = {
                         deletionInProgress = true
-                        viewModel.cancelAndDeleteRecognition(
-                            *multiSelectionState.getSelected().toIntArray()
-                        )
+                        viewModel.cancelAndDeleteRecognitions(multiSelectionState.getSelected())
                     },
                     onDismissClick = { deleteDialogVisible = false },
                     inProgress = deletionInProgress

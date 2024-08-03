@@ -55,10 +55,10 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(vararg recognitionIds: Int) {
+    override suspend fun delete(recognitionIds: List<Int>) {
         withContext(persistentCoroutineContext) {
-            val files = dao.getRecordingFiles(*recognitionIds)
-            dao.delete(*recognitionIds)
+            val files = dao.getRecordingFiles(recognitionIds)
+            dao.delete(recognitionIds)
             files.forEach { file -> recordingFileDataSource.delete(file) }
         }
     }
@@ -67,12 +67,6 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         withContext(persistentCoroutineContext) {
             recordingFileDataSource.deleteAll()
             dao.deleteAll()
-        }
-    }
-
-    override suspend fun getRecognitionWithTrack(recognitionId: Int): EnqueuedRecognitionEntityWithTrack? {
-        return withContext(ioDispatcher) {
-            dao.getRecognitionWithTrack(recognitionId).firstOrNull()
         }
     }
 

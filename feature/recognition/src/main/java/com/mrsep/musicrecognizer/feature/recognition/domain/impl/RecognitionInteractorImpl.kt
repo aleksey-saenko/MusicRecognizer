@@ -149,7 +149,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
                 is RemoteRecognitionResult.Success -> {
                     recordProcess.cancelAndJoin()
-                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)[0]
+                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
                     trackRepository.setViewed(trackWithStoredProps.id, false)
                     val updatedTrack = trackWithStoredProps.copy(
                         properties = trackWithStoredProps.properties.copy(isViewed = false)
@@ -214,7 +214,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
         )
         recognitionId ?: return RecognitionTask.Error()
         if (launched) {
-            enqueuedRecognitionScheduler.enqueue(recognitionId, forceLaunch = false)
+            enqueuedRecognitionScheduler.enqueue(listOf(recognitionId), forceLaunch = false)
         }
         return RecognitionTask.Created(recognitionId, launched)
     }

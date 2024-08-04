@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.data.enqueued
 
 import androidx.room.*
+import com.mrsep.musicrecognizer.data.database.DatabaseUtils.dbChunkedMap
+import com.mrsep.musicrecognizer.data.database.DatabaseUtils.eachDbChunk
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntity
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
 import kotlinx.coroutines.flow.Flow
@@ -21,11 +23,21 @@ internal interface EnqueuedRecognitionDao {
     @Query("SELECT record_file FROM enqueued_recognition WHERE id=(:recognitionId)")
     suspend fun getRecordingFile(recognitionId: Int): File?
 
+    @Transaction
+    suspend fun getRecordingFiles(recognitionIds: List<Int>): List<File> {
+        return recognitionIds.dbChunkedMap(::getRecordingFilesInternal)
+    }
+
     @Query("SELECT record_file FROM enqueued_recognition WHERE id in (:recognitionIds)")
-    suspend fun getRecordingFiles(recognitionIds: List<Int>): List<File>
+    suspend fun getRecordingFilesInternal(recognitionIds: List<Int>): List<File>
+
+    @Transaction
+    suspend fun delete(recognitionIds: List<Int>) {
+        recognitionIds.eachDbChunk(::deleteInternal)
+    }
 
     @Query("DELETE FROM enqueued_recognition WHERE id in (:recognitionIds)")
-    suspend fun delete(recognitionIds: List<Int>)
+    suspend fun deleteInternal(recognitionIds: List<Int>)
 
     @Query("DELETE FROM enqueued_recognition")
     suspend fun deleteAll()

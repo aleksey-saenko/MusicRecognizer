@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.data.track
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.mrsep.musicrecognizer.data.database.DatabaseUtils.eachDbChunk
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,8 +27,13 @@ internal interface TrackDao {
         update(trackList)
     }
 
+    @Transaction
+    suspend fun delete(trackIds: List<String>) {
+        trackIds.eachDbChunk(::deleteInternal)
+    }
+
     @Query("DELETE FROM track WHERE id in (:trackIds)")
-    suspend fun delete(trackIds: List<String>)
+    suspend fun deleteInternal(trackIds: List<String>)
 
     @Query("DELETE FROM track")
     suspend fun deleteAll()

@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
-import java.net.URLEncoder
 import javax.inject.Inject
 
 class LyricsFetcherImpl @Inject constructor(
@@ -33,12 +32,10 @@ class LyricsFetcherImpl @Inject constructor(
 
     override suspend fun fetch(track: TrackEntity): String? {
         return withContext(ioDispatcher) {
-            val encodedTitle = URLEncoder.encode(track.title, "UTF-8")
-            val encodedArtist = URLEncoder.encode(track.artist, "UTF-8")
             channelFlow {
                 val tasks = listOf(
-                    async { fetchLyristSource(encodedTitle, encodedArtist) },
-                    async { fetchOvhSource(encodedTitle, encodedArtist) },
+                    async { fetchLyristSource(track.title, track.artist) },
+                    async { fetchOvhSource(track.title, track.artist) },
                 )
                 tasks.forEach { task -> launch { send(task.await()) } }
             }
@@ -47,8 +44,8 @@ class LyricsFetcherImpl @Inject constructor(
         }
     }
 
-    private suspend fun fetchLyristSource(encodedTitle: String, encodedArtist: String): String? {
-        val requestUrl = "https://lyrist.vercel.app/api/:$encodedArtist/:$encodedTitle"
+    private suspend fun fetchLyristSource(title: String, artist: String): String? {
+        val requestUrl = "https://lyrist.vercel.app/api/:$artist/:$title"
         val request = Request.Builder().url(requestUrl).get().build()
         return try {
             okHttpClient.newCall(request).await().use { response ->
@@ -64,8 +61,8 @@ class LyricsFetcherImpl @Inject constructor(
         }
     }
 
-    private suspend fun fetchOvhSource(encodedTitle: String, encodedArtist: String): String? {
-        val requestUrl = "https://api.lyrics.ovh/v1/$encodedArtist/$encodedTitle"
+    private suspend fun fetchOvhSource(title: String, artist: String): String? {
+        val requestUrl = "https://api.lyrics.ovh/v1/$artist/$title"
         val request = Request.Builder().url(requestUrl).get().build()
         return try {
             okHttpClient.newCall(request).await().use { response ->

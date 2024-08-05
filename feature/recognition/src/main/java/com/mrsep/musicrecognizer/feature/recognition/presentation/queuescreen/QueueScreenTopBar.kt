@@ -184,3 +184,22 @@ private fun QueueDropdownMenu(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun QueueScreenLoadingTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = stringResource(StringsR.string.queue).toUpperCase(Locale.current),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}

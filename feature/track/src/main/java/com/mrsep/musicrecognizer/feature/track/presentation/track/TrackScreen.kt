@@ -23,10 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
@@ -50,27 +48,33 @@ internal fun TrackScreen(
     onTrackDeleted: () -> Unit,
 ) {
     val screenUiState by viewModel.uiStateStream.collectAsStateWithLifecycle()
+    val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     when (val uiState = screenUiState) {
-        TrackUiState.Loading -> LoadingStub(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.surface)
-                .fillMaxSize()
-                .systemBarsPadding()
-        )
-
-        TrackUiState.TrackNotFound -> Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        TrackUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            EmptyStaticTopBar(onBackPressed = onBackPressed)
-            TrackNotFoundMessage(
-                modifier = Modifier.weight(weight = 1f)
+            TrackScreenLoadingTopBar(
+                onBackPressed = onBackPressed,
+                scrollBehavior = topBarBehaviour
             )
-            Spacer(Modifier.height(64.dp))
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
+
+        TrackUiState.TrackNotFound -> Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .fillMaxSize()
+                .navigationBarsPadding()
+        ) {
+            TrackScreenLoadingTopBar(
+                onBackPressed = onBackPressed,
+                scrollBehavior = topBarBehaviour
+            )
+            TrackNotFoundMessage(modifier = Modifier.fillMaxSize())
         }
 
         is TrackUiState.Success -> {
@@ -113,7 +117,6 @@ internal fun TrackScreen(
                 Box(modifier = Modifier.fillMaxSize()) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         val screenScrollState = rememberScrollState()
-                        val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxSize()

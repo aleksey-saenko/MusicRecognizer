@@ -33,12 +33,14 @@ internal fun QueueScreen(
     val screenUiState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
 
     when (val uiState = screenUiState) {
-        QueueScreenUiState.Loading -> LoadingStub(
+        QueueScreenUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            QueueScreenLoadingTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is QueueScreenUiState.Success -> {
             val context = LocalContext.current

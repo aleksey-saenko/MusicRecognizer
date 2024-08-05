@@ -33,6 +33,7 @@ internal fun TrackNotFoundMessage(
             contentDescription = null,
             modifier = Modifier.size(80.dp)
         )
+        Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(StringsR.string.track_not_found),
             style = MaterialTheme.typography.titleMedium,
@@ -48,6 +49,6 @@ internal fun TrackNotFoundMessage(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         )
-        Spacer(Modifier.height(56.dp))
+        Spacer(Modifier.height(64.dp))
     }
 }

@@ -193,3 +193,22 @@ private fun LibraryDropdownMenu(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun LibraryScreenLoadingTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = stringResource(StringsR.string.library).toUpperCase(Locale.current),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}

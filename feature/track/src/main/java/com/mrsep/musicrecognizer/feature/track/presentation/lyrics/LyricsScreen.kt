@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -59,7 +58,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrsep.musicrecognizer.core.ui.components.EmptyStaticTopBar
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
@@ -92,24 +90,30 @@ internal fun LyricsScreen(
     }
 
     when (val uiState = uiStateInFlow) {
-        LyricsUiState.Loading -> LoadingStub(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.surface)
-                .fillMaxSize()
-                .systemBarsPadding()
-        )
-
-        LyricsUiState.LyricsNotFound -> Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LyricsUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            EmptyStaticTopBar(onBackPressed = onBackPressed)
-            TrackNotFoundMessage(
-                modifier = Modifier.fillMaxSize()
+            LyricsScreenLoadingTopBar(
+                onBackPressed = onBackPressed,
+                scrollBehavior = topBarBehaviour
             )
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
+
+        LyricsUiState.LyricsNotFound -> Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .fillMaxSize()
+                .navigationBarsPadding()
+        ) {
+            LyricsScreenLoadingTopBar(
+                onBackPressed = onBackPressed,
+                scrollBehavior = topBarBehaviour
+            )
+            TrackNotFoundMessage(modifier = Modifier.fillMaxSize())
         }
 
         is LyricsUiState.Success -> {

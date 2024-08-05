@@ -79,3 +79,25 @@ internal fun LyricsScreenTopBar(
         scrollBehavior = scrollBehavior,
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun LyricsScreenLoadingTopBar(
+    onBackPressed: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    painter = painterResource(UiR.drawable.outline_arrow_back_24),
+                    contentDescription = stringResource(StringsR.string.back)
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}

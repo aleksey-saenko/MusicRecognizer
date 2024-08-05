@@ -43,12 +43,14 @@ internal fun PreferencesScreen(
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
-        is PreferencesUiState.Loading -> LoadingStub(
+        is PreferencesUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            PreferencesTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is PreferencesUiState.Success -> {
             Column(

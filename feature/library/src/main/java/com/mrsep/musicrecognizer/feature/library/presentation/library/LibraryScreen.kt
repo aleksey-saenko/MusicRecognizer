@@ -40,12 +40,14 @@ internal fun LibraryScreen(
     )
 
     when (val uiState = screenUiState) {
-        LibraryUiState.Loading -> LoadingStub(
+        LibraryUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            LibraryScreenLoadingTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is LibraryUiState.Success -> Column(
             modifier = Modifier

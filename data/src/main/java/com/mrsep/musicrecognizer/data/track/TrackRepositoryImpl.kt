@@ -95,17 +95,20 @@ internal class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override fun getTracksByFilterFlow(
+    override fun getPreviewsByFilterFlow(
         filter: UserPreferencesDo.TrackFilterDo
-    ): Flow<List<TrackEntity>> {
-        return trackDao.getTracksFlowByQuery(filter.toSQLiteQuery())
+    ): Flow<List<TrackPreview>> {
+        return trackDao.getPreviewsFlowByQuery(filter.toSQLiteQueryForPreviews())
             .flowOn(ioDispatcher)
     }
 
-    override fun getSearchResultFlow(query: String, searchScope: Set<TrackDataFieldDo>): Flow<SearchResultDo> {
+    override fun getSearchResultFlow(
+        query: String,
+        searchScope: Set<TrackDataFieldDo>
+    ): Flow<SearchResultDo> {
         val searchPattern = createSearchPatternForSQLite(query)
-        return trackDao.getTracksFlowByPattern(searchPattern, ESCAPE_SYMBOL, searchScope)
-            .map<List<TrackEntity>, SearchResultDo> { list ->
+        return trackDao.getPreviewsFlowByPattern(searchPattern, ESCAPE_SYMBOL, searchScope)
+            .map<List<TrackPreview>, SearchResultDo> { list ->
                 SearchResultDo.Success(
                     query = query,
                     searchScope = searchScope,
@@ -129,8 +132,8 @@ internal class TrackRepositoryImpl @Inject constructor(
     }
 }
 
-private fun UserPreferencesDo.TrackFilterDo.toSQLiteQuery(): SupportSQLiteQuery {
-    val builder = StringBuilder("SELECT * FROM track")
+private fun UserPreferencesDo.TrackFilterDo.toSQLiteQueryForPreviews(): SupportSQLiteQuery {
+    val builder = StringBuilder("SELECT id, title, artist, album, recognition_date, link_artwork_thumb, link_artwork, is_viewed FROM track")
     val params = mutableListOf<Any>()
     var whereUsed = false
     when (this.favoritesMode) {

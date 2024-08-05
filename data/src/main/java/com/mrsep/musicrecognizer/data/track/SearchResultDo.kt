@@ -12,6 +12,6 @@ sealed class SearchResultDo {
     data class Success(
         override val query: String,
         override val searchScope: Set<TrackDataFieldDo>,
-        val data: List<TrackEntity>
+        val data: List<TrackPreview>
     ) : SearchResultDo()
 }

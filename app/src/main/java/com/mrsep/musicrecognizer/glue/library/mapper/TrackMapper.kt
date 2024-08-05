@@ -1,23 +1,21 @@
 package com.mrsep.musicrecognizer.glue.library.mapper
 
 import com.mrsep.musicrecognizer.core.common.Mapper
-import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.data.track.TrackPreview
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import javax.inject.Inject
 
-class TrackMapper @Inject constructor() : Mapper<TrackEntity, Track> {
+class TrackMapper @Inject constructor() : Mapper<TrackPreview, Track> {
 
-    override fun map(input: TrackEntity): Track {
+    override fun map(input: TrackPreview): Track {
         return Track(
             id = input.id,
             title = input.title,
             artist = input.artist,
             album = input.album,
-            releaseDate = input.releaseDate,
-            artworkThumbUrl = input.links.artworkThumbnail ?: input.links.artwork,
+            artworkThumbUrl = input.artworkThumbnail ?: input.artwork,
             recognitionDate = input.recognitionDate,
-            isViewed = input.properties.isViewed,
-            isFavorite = input.properties.isFavorite,
+            isViewed = input.isViewed,
         )
     }
 }

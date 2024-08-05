@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.track.SearchResultDo
 import com.mrsep.musicrecognizer.data.track.TrackDataFieldDo
-import com.mrsep.musicrecognizer.data.track.TrackEntity
+import com.mrsep.musicrecognizer.data.track.TrackPreview
 import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
 import com.mrsep.musicrecognizer.feature.library.domain.model.Track
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
@@ -28,7 +28,7 @@ interface MapperModule {
 
     @Binds
     fun bindTrackMapper(implementation: TrackMapper):
-            Mapper<TrackEntity, Track>
+            Mapper<TrackPreview, Track>
 
     @Binds
     fun bindRemoteTrackResultMapper(implementation: SearchResultMapper):

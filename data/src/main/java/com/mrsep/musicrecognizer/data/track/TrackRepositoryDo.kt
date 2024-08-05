@@ -29,7 +29,7 @@ interface TrackRepositoryDo {
 
     fun getTrackFlow(trackId: String): Flow<TrackEntity?>
 
-    fun getTracksByFilterFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackEntity>>
+    fun getPreviewsByFilterFlow(filter: UserPreferencesDo.TrackFilterDo): Flow<List<TrackPreview>>
 
     fun getSearchResultFlow(query: String, searchScope: Set<TrackDataFieldDo>): Flow<SearchResultDo>
 }

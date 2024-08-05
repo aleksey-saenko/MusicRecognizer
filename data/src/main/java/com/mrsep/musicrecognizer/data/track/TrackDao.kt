@@ -61,7 +61,7 @@ internal interface TrackDao {
 
     @Query(
         """
-            SELECT * FROM track WHERE 
+            SELECT id, title, artist, album, recognition_date, link_artwork_thumb, link_artwork, is_viewed FROM track WHERE 
                 CASE 
                     WHEN 'Title' IN (:searchScope) 
                     THEN title LIKE (:pattern) ESCAPE (:escapeSymbol) 
@@ -80,14 +80,14 @@ internal interface TrackDao {
             ORDER BY recognition_date DESC
         """
     )
-    fun getTracksFlowByPattern(
+    fun getPreviewsFlowByPattern(
         pattern: String,
         escapeSymbol: String,
         searchScope: Set<TrackDataFieldDo>
-    ): Flow<List<TrackEntity>>
+    ): Flow<List<TrackPreview>>
 
     @RawQuery(observedEntities = [TrackEntity::class])
-    fun getTracksFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackEntity>>
+    fun getPreviewsFlowByQuery(query: SupportSQLiteQuery): Flow<List<TrackPreview>>
 
     private suspend fun copyKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
         return tracks.map { newTrack ->

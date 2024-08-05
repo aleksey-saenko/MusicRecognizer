@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation.library
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import com.mrsep.musicrecognizer.feature.library.domain.repository.PreferencesRepository
@@ -22,7 +23,8 @@ import javax.inject.Inject
 internal class LibraryViewModel @Inject constructor(
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val dateTimeFormatter: AppDateTimeFormatter
+    private val dateTimeFormatter: AppDateTimeFormatter,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val uiState = combine(
@@ -54,6 +56,7 @@ internal class LibraryViewModel @Inject constructor(
                 }
         }
     }.flatMapLatest { it }
+        .flowOn(defaultDispatcher)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

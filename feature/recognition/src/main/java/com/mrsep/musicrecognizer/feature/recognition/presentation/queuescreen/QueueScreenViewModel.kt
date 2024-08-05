@@ -3,8 +3,7 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
-import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
@@ -19,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,8 +29,7 @@ internal class QueueScreenViewModel @Inject constructor(
     private val recognitionScheduler: EnqueuedRecognitionScheduler,
     private val playerController: PlayerController,
     private val dateFormatter: AppDateTimeFormatter,
-    @ApplicationScope private val appScope: CoroutineScope,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val screenUiStateFlow = combine(
@@ -58,22 +55,20 @@ internal class QueueScreenViewModel @Inject constructor(
             useGridLayout = preferences.useGridForRecognitionQueue,
             showCreationDate = preferences.showCreationDateInQueue,
         )
-    }.flowOn(ioDispatcher).stateIn(
+    }.flowOn(defaultDispatcher).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = QueueScreenUiState.Loading
     )
 
     fun renameRecognition(recognitionId: Int, newTitle: String) {
-        appScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             enqueuedRecognitionRepository.updateTitle(recognitionId, newTitle)
         }
     }
 
     fun enqueueRecognition(recognitionId: Int, forceLaunch: Boolean) {
-        appScope.launch(ioDispatcher) {
-            recognitionScheduler.enqueue(listOf(recognitionId), forceLaunch = forceLaunch)
-        }
+        recognitionScheduler.enqueue(listOf(recognitionId), forceLaunch = forceLaunch)
     }
 
     fun cancelRecognition(recognitionId: Int) {
@@ -81,9 +76,7 @@ internal class QueueScreenViewModel @Inject constructor(
     }
 
     fun cancelRecognitions(recognitionIds: List<Int>) {
-        appScope.launch(ioDispatcher) {
-            recognitionScheduler.cancel(recognitionIds)
-        }
+        recognitionScheduler.cancel(recognitionIds)
     }
 
     fun cancelAndDeleteRecognition(recognitionId: Int) {
@@ -91,7 +84,7 @@ internal class QueueScreenViewModel @Inject constructor(
     }
 
     fun cancelAndDeleteRecognitions(recognitionIds: List<Int>) {
-        appScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             playerController.stop()
             recognitionScheduler.cancel(recognitionIds)
             enqueuedRecognitionRepository.delete(recognitionIds)

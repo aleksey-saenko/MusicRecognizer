@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.feature.library.presentation.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -27,7 +30,8 @@ import javax.inject.Inject
 internal class LibrarySearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val trackRepository: TrackRepository,
-    private val dateTimeFormatter: AppDateTimeFormatter
+    private val dateTimeFormatter: AppDateTimeFormatter,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val query = savedStateHandle.getStateFlow(KEY_QUERY, "")
@@ -60,6 +64,7 @@ internal class LibrarySearchViewModel @Inject constructor(
                     .map { result -> result.toUi(dateTimeFormatter) }
             }
         }
+        .flowOn(defaultDispatcher)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

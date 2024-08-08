@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import javax.inject.Inject
 
-class MusicServiceDoMapper @Inject constructor() :
+internal class MusicServiceDoMapper @Inject constructor() :
     BidirectionalMapper<MusicServiceProto?, MusicServiceDo?> {
 
     override fun map(input: MusicServiceProto?): MusicServiceDo? {

@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import javax.inject.Inject
 
-class FontSizeDoMapper @Inject constructor() : BidirectionalMapper<FontSizeProto, FontSizeDo> {
+internal class FontSizeDoMapper @Inject constructor() : BidirectionalMapper<FontSizeProto, FontSizeDo> {
 
     override fun map(input: FontSizeProto): FontSizeDo {
         return when (input) {

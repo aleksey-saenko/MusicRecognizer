@@ -8,7 +8,7 @@ import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import javax.inject.Inject
 
-class LyricsFontStyleDoMapper @Inject constructor(
+internal class LyricsFontStyleDoMapper @Inject constructor(
     private val fontSizeMapper: BidirectionalMapper<UserPreferencesProto.FontSizeProto, FontSizeDo>
 ) : BidirectionalMapper<LyricsFontStyleProto, UserPreferencesDo.LyricsFontStyleDo> {
 

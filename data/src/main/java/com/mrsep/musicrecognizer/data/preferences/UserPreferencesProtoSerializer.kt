@@ -16,7 +16,7 @@ import com.mrsep.musicrecognizer.userPreferencesProto
 import java.io.InputStream
 import java.io.OutputStream
 
-object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
+internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto> {
 
     override val defaultValue: UserPreferencesProto
         get() = userPreferencesProto {

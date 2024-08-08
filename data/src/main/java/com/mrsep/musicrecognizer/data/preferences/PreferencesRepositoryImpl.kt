@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 private const val TAG = "PreferencesRepositoryImpl"
 
-class PreferencesRepositoryImpl @Inject constructor(
+internal class PreferencesRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val dataStore: DataStore<UserPreferencesProto>,
     private val preferencesMapper: Mapper<UserPreferencesProto, UserPreferencesDo>,

@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.HapticFeedbackDo
 import javax.inject.Inject
 
-class HapticFeedbackDoMapper @Inject constructor() :
+internal class HapticFeedbackDoMapper @Inject constructor() :
     BidirectionalMapper<HapticFeedbackProto, HapticFeedbackDo> {
 
     override fun map(input: HapticFeedbackProto): HapticFeedbackDo {

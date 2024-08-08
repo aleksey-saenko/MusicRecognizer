@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import javax.inject.Inject
 
-class FallbackActionDoMapper @Inject constructor() :
+internal class FallbackActionDoMapper @Inject constructor() :
     BidirectionalMapper<FallbackActionProto, FallbackActionDo> {
 
     override fun map(input: FallbackActionProto): FallbackActionDo {

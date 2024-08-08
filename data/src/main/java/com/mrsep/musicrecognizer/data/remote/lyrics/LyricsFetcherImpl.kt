@@ -18,7 +18,7 @@ import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
 import javax.inject.Inject
 
-class LyricsFetcherImpl @Inject constructor(
+internal class LyricsFetcherImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     moshi: Moshi,

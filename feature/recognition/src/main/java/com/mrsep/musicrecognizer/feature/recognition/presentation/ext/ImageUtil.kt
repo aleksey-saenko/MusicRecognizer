@@ -17,7 +17,7 @@ import coil.transform.RoundedCornersTransformation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun Context.getCachedImageOrNull(
+internal suspend fun Context.getCachedImageOrNull(
     url: String,
     @Px widthPx: Int,
     @Px heightPx: Int,
@@ -42,7 +42,7 @@ suspend fun Context.getCachedImageOrNull(
     }
 }
 
-suspend fun Context.downloadImageToDiskCache(url: String) {
+internal suspend fun Context.downloadImageToDiskCache(url: String) {
     withContext(Dispatchers.IO) {
         val request = ImageRequest.Builder(this@downloadImageToDiskCache)
             .data(url)

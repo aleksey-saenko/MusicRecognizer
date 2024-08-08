@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import javax.inject.Inject
 
-class ThemeModeDoMapper @Inject constructor() :
+internal class ThemeModeDoMapper @Inject constructor() :
     BidirectionalMapper<ThemeModeProto, ThemeModeDo> {
 
     override fun map(input: ThemeModeProto): ThemeModeDo {

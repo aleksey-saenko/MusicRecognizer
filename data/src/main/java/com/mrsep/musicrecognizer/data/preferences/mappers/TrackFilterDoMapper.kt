@@ -9,7 +9,7 @@ import com.mrsep.musicrecognizer.data.preferences.SortByDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.TrackFilterDo
 import javax.inject.Inject
 
-class TrackFilterDoMapper @Inject constructor() :
+internal class TrackFilterDoMapper @Inject constructor() :
     BidirectionalMapper<TrackFilterProto, TrackFilterDo> {
 
     override fun map(input: TrackFilterProto): TrackFilterDo {

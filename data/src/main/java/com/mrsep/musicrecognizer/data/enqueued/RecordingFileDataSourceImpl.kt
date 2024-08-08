@@ -9,7 +9,7 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class RecordingFileDataSourceImpl @Inject constructor(
+internal class RecordingFileDataSourceImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : RecordingFileDataSource {

@@ -6,7 +6,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
 import javax.inject.Inject
 
-class AcrCloudConfigDoMapper @Inject constructor() :
+internal class AcrCloudConfigDoMapper @Inject constructor() :
     BidirectionalMapper<AcrCloudConfigProto, AcrCloudConfigDo> {
 
     override fun map(input: AcrCloudConfigProto): AcrCloudConfigDo {

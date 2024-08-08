@@ -16,7 +16,7 @@ import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import javax.inject.Inject
 
-class UserPreferencesDoMapper @Inject constructor(
+internal class UserPreferencesDoMapper @Inject constructor(
     private val fallbackPolicyMapper: BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo>,
     private val musicServiceMapper: BidirectionalMapper<MusicServiceProto?, MusicServiceDo?>,
     private val lyricsFontStyleMapper: BidirectionalMapper<LyricsFontStyleProto, LyricsFontStyleDo>,

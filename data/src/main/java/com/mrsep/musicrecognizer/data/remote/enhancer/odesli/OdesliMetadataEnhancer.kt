@@ -19,7 +19,7 @@ import ru.gildor.coroutines.okhttp.await
 import java.io.IOException
 import javax.inject.Inject
 
-class OdesliMetadataEnhancer @Inject constructor(
+internal class OdesliMetadataEnhancer @Inject constructor(
     moshi: Moshi,
     private val okHttpClient: OkHttpClient,
     @ApplicationContext private val appContext: Context,

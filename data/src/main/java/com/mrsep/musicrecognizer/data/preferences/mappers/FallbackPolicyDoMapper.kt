@@ -7,7 +7,7 @@ import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
 import javax.inject.Inject
 
-class FallbackPolicyDoMapper @Inject constructor(
+internal class FallbackPolicyDoMapper @Inject constructor(
     private val actionMapper: BidirectionalMapper<FallbackActionProto, FallbackActionDo>
 ) : BidirectionalMapper<FallbackPolicyProto, FallbackPolicyDo> {
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
-class ConnectivityManagerNetworkMonitor @Inject constructor(
+internal class ConnectivityManagerNetworkMonitor @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkMonitorDo {
     override val isOffline: Flow<Boolean> = callbackFlow {

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
+internal class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
 ) : TrackMetadataEnhancerScheduler {
 

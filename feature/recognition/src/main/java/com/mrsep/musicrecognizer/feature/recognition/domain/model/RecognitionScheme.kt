@@ -64,7 +64,7 @@ class RecognitionScheme(
 
         fun addSplitter(startOfExtraTry: Boolean = false) = apply {
             steps.lastOrNull()?.let { lastStep ->
-                steps.removeLast()
+                steps.removeAt(steps.lastIndex)
                 steps.add(Step(lastStep.timestamp, true))
                 if (startOfExtraTry) extraTryIndex = steps.lastIndex
             }

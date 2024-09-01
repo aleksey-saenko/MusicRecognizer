@@ -102,7 +102,7 @@ class SoundAmplitudeSourceImpl @Inject constructor(
             chunk.add(maxAmplitude)
             if (chunk.size == windowSize) {
                 emit(chunk.sum() / windowSize)
-                chunk.removeFirst()
+                chunk.removeAt(0)
             }
         }
     }

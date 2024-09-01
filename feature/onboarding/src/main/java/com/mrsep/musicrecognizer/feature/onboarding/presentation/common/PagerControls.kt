@@ -30,7 +30,7 @@ internal fun PagerControls(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         AnimatedContent(

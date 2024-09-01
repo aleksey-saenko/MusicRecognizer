@@ -7,7 +7,7 @@ internal fun Track.artistWithAlbumFormatted(): String {
         releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
     }
     return albumAndYear?.let { albAndYear ->
-        "$artist - $albAndYear"
+        "$artist\n$albAndYear"
     } ?: artist
 }
 

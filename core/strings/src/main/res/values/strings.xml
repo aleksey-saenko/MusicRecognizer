@@ -13,7 +13,7 @@
     <!-- Short versions, used for notifications and widgets -->
     <string name="tap_to_recognize_short">Tap to recognize</string>
     <string name="tap_to_try_again_short">Tap to try again</string>
-    <string name="identify_while_using_another_app_short">Identify while any app open</string>
+    <string name="identify_while_using_another_app_short">Identify music while any app open</string>
 
     <string name="preferences">Preferences</string>
     <string name="welcome">Welcome</string>

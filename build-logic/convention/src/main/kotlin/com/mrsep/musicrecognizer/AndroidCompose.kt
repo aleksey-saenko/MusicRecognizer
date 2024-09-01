@@ -47,7 +47,5 @@ internal fun Project.configureAndroidCompose(
 
         stabilityConfigurationFile =
             rootProject.layout.projectDirectory.file("compose_compiler_config.conf")
-
-        enableStrongSkippingMode = true
     }
 }

@@ -46,6 +46,7 @@ internal fun SwitchingMusicRecognizerTheme(
             } else {
                 dynamicColorScheme(
                     seedColor = seedColor,
+                    isAmoled = false,
                     isDark = useDarkTheme,
                     style = style,
                     contrastLevel = contrastLevel

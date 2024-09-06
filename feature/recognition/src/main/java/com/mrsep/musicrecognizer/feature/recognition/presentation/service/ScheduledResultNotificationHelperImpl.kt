@@ -14,9 +14,9 @@ import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getCachedImageOrNull
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.artistWithAlbumFormatted
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.getCachedImageOrNull
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.getSharedBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

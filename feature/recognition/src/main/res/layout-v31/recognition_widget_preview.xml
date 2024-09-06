@@ -16,7 +16,7 @@
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:padding="8dp"
-        android:text="@string/tap_to_recognize"
+        android:text="@string/tap_to_recognize_short"
         android:textColor="@color/on_surface"
         android:textSize="16sp" />
 
@@ -37,8 +37,8 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:contentDescription="@string/tap_to_recognize_short"
-            android:src="@drawable/outline_lines_48"
-            android:tint="@color/on_surface" />
+            android:src="@drawable/outline_lines_shift1_48"
+            android:tint="@color/on_primary" />
 
     </FrameLayout>
 

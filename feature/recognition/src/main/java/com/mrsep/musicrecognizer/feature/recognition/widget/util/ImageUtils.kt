@@ -1,7 +1,20 @@
 package com.mrsep.musicrecognizer.feature.recognition.widget.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Size
+import androidx.annotation.Px
+import coil.imageLoader
+import coil.request.CachePolicy
+import coil.request.ErrorResult
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.WidgetArtworkStyle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -33,5 +46,37 @@ internal object ImageUtils {
         val width = if (aspectRatio > 1) side else max(1, (side * aspectRatio).roundToInt())
         val height = if (aspectRatio > 1) max(1, (side / aspectRatio).roundToInt()) else side
         return Size(width, height)
+    }
+
+    // It's expected that the image has been previously loaded into the image disk cache
+    suspend fun Context.getWidgetArtworkOrNull(
+        url: String,
+        @Px widthPx: Int,
+        @Px heightPx: Int,
+        artworkStyle: WidgetArtworkStyle,
+    ): Bitmap? {
+        return withContext(Dispatchers.IO) {
+            val request = ImageRequest.Builder(this@getWidgetArtworkOrNull)
+                .data(url)
+                .size(widthPx, heightPx)
+                .networkCachePolicy(CachePolicy.DISABLED)
+                .allowHardware(true)
+                .transformations(
+                    when (artworkStyle) {
+                        WidgetArtworkStyle.CircleCrop -> {
+                            CircleCropTransformation()
+                        }
+                        is WidgetArtworkStyle.RoundedCorners -> {
+                            RoundedCornersTransformation(artworkStyle.artworkCornerRadiusPx.toFloat())
+                        }
+                    }
+                )
+                .build()
+            val bitmap = when (val result = imageLoader.execute(request)) {
+                is SuccessResult -> (result.drawable as? BitmapDrawable)?.bitmap
+                is ErrorResult -> null
+            }
+            bitmap
+        }
     }
 }

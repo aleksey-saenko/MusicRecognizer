@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="widget_button_scale_factor" format="float" type="dimen">1.15</item>
     <dimen name="widget_background_radius">16dp</dimen>
     <dimen name="widget_inner_radius">12dp</dimen>
 </resources>

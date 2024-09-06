@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.recognition.presentation.ext
+package com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext
 
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
 

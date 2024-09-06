@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_flipper_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateFirstView="true"
+    android:autoStart="true"
+    android:flipInterval="800"
+    android:inAnimation="@anim/widget_recognition_button_scale_in"
+    android:outAnimation="@anim/widget_recognition_button_scale_out" />

@@ -29,10 +29,10 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionSta
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.Track
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.artistWithAlbumFormatted
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.downloadImageToDiskCache
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getCachedImageOrNull
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getSharedBody
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.artistWithAlbumFormatted
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.downloadImageToDiskCache
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.getCachedImageOrNull
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.getSharedBody
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*

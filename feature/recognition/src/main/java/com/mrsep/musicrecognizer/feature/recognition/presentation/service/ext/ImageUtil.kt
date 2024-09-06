@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.recognition.presentation.ext
+package com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -13,7 +13,6 @@ import coil.request.CachePolicy
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import coil.transform.RoundedCornersTransformation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,18 +20,12 @@ internal suspend fun Context.getCachedImageOrNull(
     url: String,
     @Px widthPx: Int,
     @Px heightPx: Int,
-    @Px cornerRadiusPx: Int? = null,
 ): Bitmap? {
     return withContext(Dispatchers.IO) {
         val request = ImageRequest.Builder(this@getCachedImageOrNull)
             .data(url)
             .size(widthPx, heightPx)
             .networkCachePolicy(CachePolicy.DISABLED)
-            .apply {
-                cornerRadiusPx?.let {
-                    transformations(RoundedCornersTransformation(cornerRadiusPx.toFloat()))
-                }
-            }
             .build()
         val bitmap = when (val result = imageLoader.execute(request)) {
             is SuccessResult -> (result.drawable as? BitmapDrawable)?.bitmap

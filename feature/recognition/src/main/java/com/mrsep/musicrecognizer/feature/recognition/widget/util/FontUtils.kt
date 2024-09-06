@@ -10,14 +10,14 @@ internal object FontUtils {
     fun measureTextViewHeight(
         context: Context,
         fontSize: TextUnit,
-        lines: Int
+        lines: Int,
     ): Int {
         require(fontSize.isSp) { "Font size must be sp" }
-        val titleTextView = TextView(context).apply {
+        val textView = TextView(context).apply {
             this.minLines = lines
             this.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize.value)
         }
-        titleTextView.measure(0, 0)
-        return titleTextView.measuredHeight
+        textView.measure(0, 0)
+        return textView.measuredHeight
     }
 }

@@ -6,7 +6,7 @@ sdkTarget = "34"
 accompanist = "0.34.0"
 androidGradlePlugin = "8.6.0"
 androidTools = "31.6.0"
-androidxActivity = "1.9.1"
+androidxActivity = "1.9.2"
 androidxComposeBom = "2024.08.00"
 androidxCore = "1.13.1"
 androidxCoreSplashscreen = "1.0.1"
@@ -39,7 +39,7 @@ protobufPlugin = "0.9.4"
 room = "2.6.1"
 turbine = "1.1.0"
 uuidCreator = "6.0.0"
-zoomable = "1.6.1"
+zoomable = "1.6.2"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }

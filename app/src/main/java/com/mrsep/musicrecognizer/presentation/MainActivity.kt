@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.mrsep.musicrecognizer.MusicRecognizerApp
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
@@ -106,7 +105,7 @@ class MainActivity : ComponentActivity() {
 
     private fun handleRecognitionRequest(intent: Intent) {
         when (intent.action) {
-            MusicRecognizerApp.ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
+            ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
             ACTION_MAIN -> viewModel.requestRecognitionOnStartupIfPreferred()
         }
     }
@@ -131,6 +130,10 @@ class MainActivity : ComponentActivity() {
             }
             isServiceStartupHandled = true
         }
+    }
+
+    companion object {
+        const val ACTION_RECOGNIZE = "com.mrsep.musicrecognizer.intent.action.RECOGNIZE"
     }
 }
 

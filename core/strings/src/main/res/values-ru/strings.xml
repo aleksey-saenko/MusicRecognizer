@@ -220,6 +220,11 @@
     <string name="quick_tile_recognize">Распознать песню</string>
     <string name="quick_tile_cancel_recognition">Отменить распознавание</string>
 
+    <string name="app_shortcut_recognize_short">Распознать</string>
+    <string name="app_shortcut_recognize_long">Запустить распознавание в фоне</string>
+    <string name="app_shortcut_open_and_recognize_short">Открыть и распознать</string>
+    <string name="app_shortcut_open_and_recognize_long">Открыть приложение и запустить распознавание</string>
+
     <string name="help">Помощь</string>
 
     <string name="audd_help_message_start">"AudD - это платный сервис, который предоставляет возможность бесплатного пробного периода. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. "</string>

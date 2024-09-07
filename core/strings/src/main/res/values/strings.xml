@@ -258,6 +258,12 @@
     <string name="quick_tile_recognize">Recognize song</string>
     <string name="quick_tile_cancel_recognition">Cancel recognition</string>
 
+    <!-- App shortcuts. If there's enough space, the launcher displays _long version instead of _short. Short should be limited to 10 chars. Long should be limited to 25 chars.-->
+    <string name="app_shortcut_recognize_short">Recognize</string>
+    <string name="app_shortcut_recognize_long">Launch recognition in the background</string>
+    <string name="app_shortcut_open_and_recognize_short">Open &amp; Recognize</string>
+    <string name="app_shortcut_open_and_recognize_long">Open the app and launch recognition</string>
+
     <string name="help">Help</string>
 
     <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->

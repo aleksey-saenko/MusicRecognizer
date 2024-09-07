@@ -12,13 +12,13 @@ import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceActivity
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 import javax.inject.Provider
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @HiltAndroidApp
 class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Provider {
@@ -51,22 +51,36 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
             .build()
 
     private fun getShortcuts() = listOf(
-        recognizeShortcut(),
+        recognitionShortcut(),
+        backgroundRecognitionShortcut(),
     )
+        .also { check(it.size <= 4) { "The guideline recommends publishing only 4 distinct shortcuts" } }
+        .take(ShortcutManagerCompat.getMaxShortcutCountPerActivity(this))
 
-    private fun recognizeShortcut(): ShortcutInfoCompat {
-        return ShortcutInfoCompat.Builder(this, RECOGNIZE_SHORTCUT_ID)
-            .setShortLabel(getString(StringsR.string.quick_tile_recognize))
-            .setLongLabel(getString(StringsR.string.quick_tile_recognize))
-            .setIcon(IconCompat.createWithResource(this, UiR.drawable.ic_retro_microphone))
+    private fun recognitionShortcut(): ShortcutInfoCompat {
+        return ShortcutInfoCompat.Builder(this, OPEN_AND_RECOGNIZE_SHORTCUT_ID)
+            .setShortLabel(getString(StringsR.string.app_shortcut_open_and_recognize_short))
+            .setLongLabel(getString(StringsR.string.app_shortcut_open_and_recognize_long))
+            .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
             .setIntent(
-                Intent(ACTION_RECOGNIZE, Uri.EMPTY, this, MainActivity::class.java)
+                Intent(MainActivity.ACTION_RECOGNIZE, Uri.EMPTY, this, MainActivity::class.java)
+            )
+            .build()
+    }
+
+    private fun backgroundRecognitionShortcut(): ShortcutInfoCompat {
+        return ShortcutInfoCompat.Builder(this, RECOGNIZE_IN_BACKGROUND_SHORTCUT_ID)
+            .setShortLabel(getString(StringsR.string.app_shortcut_recognize_short))
+            .setLongLabel(getString(StringsR.string.app_shortcut_recognize_long))
+            .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
+            .setIntent(
+                Intent(NotificationService.LAUNCH_RECOGNITION_ACTION, Uri.EMPTY, this, NotificationServiceActivity::class.java)
             )
             .build()
     }
 
     companion object {
-        const val ACTION_RECOGNIZE = "com.mrsep.musicrecognizer.intent.action.RECOGNIZE"
-        private const val RECOGNIZE_SHORTCUT_ID = "RecognizeShortcutId"
+        private const val OPEN_AND_RECOGNIZE_SHORTCUT_ID = "RecognizeShortcutId"
+        private const val RECOGNIZE_IN_BACKGROUND_SHORTCUT_ID = "RecognizeInBackgroundShortcutId"
     }
 }

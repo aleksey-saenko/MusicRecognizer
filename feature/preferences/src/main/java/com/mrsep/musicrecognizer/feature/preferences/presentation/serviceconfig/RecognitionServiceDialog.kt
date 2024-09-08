@@ -45,7 +45,7 @@ internal fun AuddServiceDialog(
     currentProvider: RecognitionProvider,
     onProviderChanged: (RecognitionProvider) -> Unit,
     onSaveClick: () -> Unit,
-    onDismissClick: () -> Unit
+    onDismissClick: () -> Unit,
 ) {
     RecognitionServiceDialogBase(
         modifier = modifier,
@@ -65,7 +65,7 @@ internal fun AcrCloudServiceDialog(
     currentProvider: RecognitionProvider,
     onProviderChanged: (RecognitionProvider) -> Unit,
     onSaveClick: () -> Unit,
-    onDismissClick: () -> Unit
+    onDismissClick: () -> Unit,
 ) {
     RecognitionServiceDialogBase(
         modifier = modifier,
@@ -132,43 +132,41 @@ private fun RecognitionProviderDropdownMenu(
     label: String,
     options: ImmutableList<RecognitionProvider>,
     selectedOption: RecognitionProvider,
-    onSelectOption: (RecognitionProvider) -> Unit
+    onSelectOption: (RecognitionProvider) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)) {
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedOption.getTitle(),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = modifier
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            OutlinedTextField(
-                value = selectedOption.getTitle(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = label) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryEditable)
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption.getTitle()) },
-                        onClick = {
-                            expanded = false
-                            onSelectOption(selectionOption)
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                    )
-                }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.getTitle()) },
+                    onClick = {
+                        expanded = false
+                        onSelectOption(selectionOption)
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
             }
         }
     }
@@ -178,7 +176,7 @@ private fun RecognitionProviderDropdownMenu(
 internal fun AuthenticationRow(
     modifier: Modifier = Modifier,
     serviceName: String,
-    onHelpClick: () -> Unit
+    onHelpClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,

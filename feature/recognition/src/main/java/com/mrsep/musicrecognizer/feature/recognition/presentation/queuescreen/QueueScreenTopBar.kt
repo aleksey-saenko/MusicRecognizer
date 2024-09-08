@@ -73,8 +73,7 @@ internal fun QueueScreenTopBar(
             ) { mode ->
                 when (mode) {
                     TopBarMode.EmptyQueue,
-                    TopBarMode.Default -> {
-                    }
+                    TopBarMode.Default -> {}
 
                     TopBarMode.MultiSelection -> IconButton(onClick = onDeselectAll) {
                         Icon(
@@ -146,41 +145,37 @@ private fun QueueDropdownMenu(
                 contentDescription = stringResource(StringsR.string.show_more)
             )
         }
-        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-        MaterialTheme(
-            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
-                    onClick = { onChangeUseGridLayout(!useGridLayout) },
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_check_24),
-                            contentDescription = null,
-                            modifier = Modifier.graphicsLayer {
-                                alpha = if (useGridLayout) 1f else 0f
-                            }
-                        )
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.show_creation_date)) },
-                    onClick = { onChangeShowCreationDate(!showCreationDate) },
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_check_24),
-                            contentDescription = null,
-                            modifier = Modifier.graphicsLayer {
-                                alpha = if (showCreationDate) 1f else 0f
-                            }
-                        )
-                    }
-                )
-            }
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
+                onClick = { onChangeUseGridLayout(!useGridLayout) },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = if (useGridLayout) 1f else 0f
+                        }
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.show_creation_date)) },
+                onClick = { onChangeShowCreationDate(!showCreationDate) },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = if (showCreationDate) 1f else 0f
+                        }
+                    )
+                }
+            )
         }
     }
 }

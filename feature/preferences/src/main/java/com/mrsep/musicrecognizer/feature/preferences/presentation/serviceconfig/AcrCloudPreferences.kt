@@ -36,7 +36,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun AcrCloudPreferences(
     state: AcrCloudPreferencesState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var helpDialogVisible by rememberSaveable { mutableStateOf(false) }
     if (helpDialogVisible) {
@@ -88,50 +88,48 @@ private fun AcrCloudHostDropdownMenu(
     options: ImmutableList<AcrCloudRegion>,
     host: String,
     onHostChanged: (String) -> Unit,
-    error: String? = null
+    error: String? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)) {
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            onValueChange = onHostChanged,
+            readOnly = true,
+            value = host,
+            label = { Text(text = label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            singleLine = true,
+            supportingText = error?.let { { Text(error) } },
+            isError = (error != null),
+            shape = MaterialTheme.shapes.small,
+            keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
+                keyboardType = KeyboardType.Ascii,
+                imeAction = ImeAction.Done
+            ),
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = modifier
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            OutlinedTextField(
-                onValueChange = onHostChanged,
-                readOnly = true,
-                value = host,
-                label = { Text(text = label) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                singleLine = true,
-                supportingText = error?.let { { Text(error) } },
-                isError = (error != null),
-                shape = MaterialTheme.shapes.small,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Ascii,
-                    imeAction = ImeAction.Done
-                ),
-                modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryEditable)
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption.title) },
-                        onClick = {
-                            onHostChanged(selectionOption.host)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.title) },
+                    onClick = {
+                        onHostChanged(selectionOption.host)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }
@@ -139,7 +137,7 @@ private fun AcrCloudHostDropdownMenu(
 
 internal enum class AcrCloudRegion(
     val host: String,
-    val title: String
+    val title: String,
 ) {
     EUROPE(
         "identify-eu-west-1.acrcloud.com",
@@ -184,7 +182,9 @@ internal class AcrCloudPreferencesState(config: AcrCloudConfig) {
     val isEmptyAccessSecret
         get() = accessSecret.value.isBlank()
 
-    fun showErrors() { shouldShowErrors.value = true }
+    fun showErrors() {
+        shouldShowErrors.value = true
+    }
 
     companion object {
         val Saver: Saver<AcrCloudPreferencesState, *> = listSaver(

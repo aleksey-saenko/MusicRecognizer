@@ -31,7 +31,7 @@ internal fun TrackScreenTopBar(
     onDeleteClick: () -> Unit,
     onShowDetailsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -60,42 +60,38 @@ internal fun TrackScreenTopBar(
                             contentDescription = stringResource(StringsR.string.show_more)
                         )
                     }
-                    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-                    MaterialTheme(
-                        shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        shape = MaterialTheme.shapes.small,
                     ) {
-                        DropdownMenu(
-                            expanded = menuExpanded,
-                            onDismissRequest = { menuExpanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(StringsR.string.show_more)) },
-                                onClick = {
-                                    menuExpanded = false
-                                    onShowDetailsClick()
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(UiR.drawable.outline_info_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                            HorizontalDivider()
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(StringsR.string.delete)) },
-                                onClick = {
-                                    menuExpanded = false
-                                    onDeleteClick()
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(UiR.drawable.outline_delete_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(StringsR.string.show_more)) },
+                            onClick = {
+                                menuExpanded = false
+                                onShowDetailsClick()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.outline_info_24),
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(StringsR.string.delete)) },
+                            onClick = {
+                                menuExpanded = false
+                                onDeleteClick()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(UiR.drawable.outline_delete_24),
+                                    contentDescription = null
+                                )
+                            }
+                        )
                     }
                 }
             }

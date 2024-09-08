@@ -29,7 +29,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 internal fun SearchScopeDropdownMenu(
     onSearchScopeChanged: (Set<TrackDataField>) -> Unit,
     searchScope: ImmutableSet<TrackDataField>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Box(modifier = modifier) {
@@ -39,45 +39,41 @@ internal fun SearchScopeDropdownMenu(
                 contentDescription = stringResource(StringsR.string.search_in)
             )
         }
-        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-        MaterialTheme(
-            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.search_in)) },
+                enabled = false,
+                onClick = {},
+                colors = MenuDefaults.itemColors(
+                    disabledTextColor = MaterialTheme.colorScheme.tertiary
+                ),
+            )
+            HorizontalDivider(modifier = Modifier.alpha(0.5f))
+            TrackDataField.entries.forEach { field ->
+                val selected = searchScope.contains(field)
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.search_in)) },
-                    enabled = false,
-                    onClick = {},
-                    colors = MenuDefaults.itemColors(
-                        disabledTextColor = MaterialTheme.colorScheme.tertiary
-                    ),
-                )
-                HorizontalDivider(modifier = Modifier.alpha(0.5f))
-                TrackDataField.entries.forEach { field ->
-                    val selected = searchScope.contains(field)
-                    DropdownMenuItem(
-                        text = { Text(text = field.getTitle()) },
-                        onClick = {
-                            if (searchScope.size != 1 || !selected) {
-                                val newSearchScope =
-                                    if (selected) searchScope - field else searchScope + field
-                                onSearchScopeChanged(newSearchScope)
-                            }
-                        },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(UiR.drawable.outline_check_24),
-                                contentDescription = null,
-                                modifier = Modifier.graphicsLayer {
-                                    alpha = if (selected) 1f else 0f
-                                }
-                            )
+                    text = { Text(text = field.getTitle()) },
+                    onClick = {
+                        if (searchScope.size != 1 || !selected) {
+                            val newSearchScope =
+                                if (selected) searchScope - field else searchScope + field
+                            onSearchScopeChanged(newSearchScope)
                         }
-                    )
-                }
+                    },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(UiR.drawable.outline_check_24),
+                            contentDescription = null,
+                            modifier = Modifier.graphicsLayer {
+                                alpha = if (selected) 1f else 0f
+                            }
+                        )
+                    }
+                )
             }
         }
     }

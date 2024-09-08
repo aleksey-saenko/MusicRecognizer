@@ -266,7 +266,7 @@ private fun HideSystemBars() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun TopAppBarState.expand(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -280,7 +280,7 @@ private suspend fun TopAppBarState.expand(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun BottomAppBarState.expand(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -294,7 +294,7 @@ private suspend fun BottomAppBarState.expand(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun TopAppBarState.collapse(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -308,7 +308,7 @@ private suspend fun TopAppBarState.collapse(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun BottomAppBarState.collapse(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -333,41 +333,37 @@ private fun ArtworkShareDropdownMenu(
                 contentDescription = stringResource(StringsR.string.share),
             )
         }
-        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-        MaterialTheme(
-            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.link_to_share)) },
-                    onClick = {
-                        menuExpanded = false
-                        onShareLink()
-                    },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_link_24),
-                            contentDescription = null
-                        )
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.image_to_share)) },
-                    onClick = {
-                        menuExpanded = false
-                        onShareImage()
-                    },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_image_24),
-                            contentDescription = null
-                        )
-                    }
-                )
-            }
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.link_to_share)) },
+                onClick = {
+                    menuExpanded = false
+                    onShareLink()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_link_24),
+                        contentDescription = null
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.image_to_share)) },
+                onClick = {
+                    menuExpanded = false
+                    onShareImage()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_image_24),
+                        contentDescription = null
+                    )
+                }
+            )
         }
     }
 }

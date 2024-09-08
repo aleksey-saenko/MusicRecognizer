@@ -93,43 +93,41 @@ private fun FallbackActionsDropdownMenu(
     label: String,
     options: ImmutableList<FallbackAction>,
     selectedOption: FallbackAction,
-    onSelectOption: (FallbackAction) -> Unit
+    onSelectOption: (FallbackAction) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)) {
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedOption.getTitle(),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = modifier
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            OutlinedTextField(
-                value = selectedOption.getTitle(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = label) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryEditable)
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption.getTitle()) },
-                        onClick = {
-                            onSelectOption(selectionOption)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.getTitle()) },
+                    onClick = {
+                        onSelectOption(selectionOption)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }

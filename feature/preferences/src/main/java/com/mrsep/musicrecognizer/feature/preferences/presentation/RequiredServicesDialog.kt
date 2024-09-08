@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +18,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlin.random.Random
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun RequiredServicesDialog(
     modifier: Modifier = Modifier,
@@ -75,7 +73,7 @@ internal fun RequiredServicesDialog(
                                     }
                                 )
                             },
-                            modifier = Modifier.animateItemPlacement()
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -100,6 +98,7 @@ private fun MusicServiceCheckbox(
 ) {
     Surface(
         onClick = { onCheckedChange(!checked) },
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = MaterialTheme.shapes.large,
         modifier = modifier
     ) {

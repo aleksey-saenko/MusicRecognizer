@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.mrsep.musicrecognizer
 
 import com.android.build.api.dsl.CommonExtension

@@ -5,7 +5,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
@@ -31,7 +30,6 @@ import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
@@ -62,7 +60,7 @@ internal fun TrackLazyGrid(
                 },
                 onLongClick = { multiSelectionState.toggleSelection(track.id) },
                 showRecognitionDate = showRecognitionDate,
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -93,10 +91,10 @@ internal fun TrackLazyGridItem(
             .clip(shape)
             .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick,
+                interactionSource = null,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(4.dp)
 

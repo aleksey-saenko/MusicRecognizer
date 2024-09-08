@@ -19,7 +19,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import java.util.*
 import javax.inject.Singleton
 
 @Module

@@ -27,7 +27,6 @@ internal fun TrackFilterBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
         Text(

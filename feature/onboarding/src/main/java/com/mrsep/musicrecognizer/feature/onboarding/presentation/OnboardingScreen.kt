@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -23,7 +22,6 @@ private enum class OnboardingPage {
     Final
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun OnboardingScreen(
     onOnboardingClose: () -> Unit,
@@ -53,7 +51,6 @@ internal fun OnboardingScreen(
             .imePadding()
     ) {
         HorizontalPager(
-            beyondBoundsPageCount = 0,
             state = pagerState,
             modifier = Modifier
                 .weight(1f)

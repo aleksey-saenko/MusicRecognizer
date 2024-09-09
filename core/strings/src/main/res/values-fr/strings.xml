@@ -13,12 +13,8 @@
     <string name="preferences">Préférences</string>
     <string name="welcome">Bienvenue</string>
     <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui peut vous aider à identifier rapidement et précisément une piste musicale jouée à proximité de vous.</string>
-    <string name="onboarding_permission_message_start">"L\'application nécessite l\'autorisation d\'enregistrer l\'audio pour fonctionner correctement. En accordant cette autorisation, vous acceptez que vos données enregistrées soient utilisées par "</string>
-    <string name="onboarding_permission_message_link">le service distant</string>
-    <string name="onboarding_permission_message_end">" pour la reconnaissance musicale. L\'application n\'utilise pas ces données à d\'autres fins."</string>
-    <string name="onboarding_token_message_start">"L\'application utilise le service de reconnaissance musicale AudD, qui n\'est pas gratuit et nécessite un jeton API spécial. Inscrivez-vous "</string>
-    <string name="onboarding_token_message_link">ici</string>
-    <string name="onboarding_token_message_end">" pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore."</string>
+    <string name="onboarding_permission_message">L\'application nécessite l\'autorisation d\'enregistrer l\'audio pour fonctionner correctement. En accordant cette autorisation, vous acceptez que vos données enregistrées soient utilisées par <![CDATA[<a href="%1$s">le service distant</a>]]> pour la reconnaissance musicale. L\'application n\'utilise pas ces données à d\'autres fins.</string>
+    <string name="onboarding_token_message">L\'application utilise le service de reconnaissance musicale AudD, qui n\'est pas gratuit et nécessite un jeton API spécial. Inscrivez-vous <![CDATA[<a href="%1$s">ici</a>]]> pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore.</string>
     <string name="token_skip_message">Ignorer cette étape limitera vos reconnaissances quotidiennes, mais vous pourrez toujours spécifier votre jeton personnel ultérieurement dans les préférences.</string>
     <string name="hide">Masquer</string>
     <string name="show">Afficher</string>

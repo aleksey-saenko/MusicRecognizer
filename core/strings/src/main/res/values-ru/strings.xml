@@ -13,12 +13,8 @@
     <string name="preferences">Настройки</string>
     <string name="welcome">Добро пожаловать</string>
     <string name="onboarding_welcome_message">Audile - это приложение для распознавания музыки, которое поможет вам быстро и точно распознать музыкальный трек, играющий поблизости.</string>
-    <string name="onboarding_permission_message_start">"Приложению требуется разрешение на запись аудио для правильной работы. Предоставляя это разрешение, вы соглашаетесь на использование записанных данных "</string>
-    <string name="onboarding_permission_message_link">удаленным сервисом</string>
-    <string name="onboarding_permission_message_end">" для распознавания музыки. Приложение не использует эти данные для других целей."</string>
-    <string name="onboarding_token_message_start">"Приложение использует для распознавания платный сервис AudD, для использования которого, требуется специальный API-токен. Зарегистрируйтесь "</string>
-    <string name="onboarding_token_message_link">здесь</string>
-    <string name="onboarding_token_message_end">", чтобы получить пробный 14-дневный токен, если у вас его еще нет."</string>
+    <string name="onboarding_permission_message">Приложению требуется разрешение на запись аудио для правильной работы. Предоставляя это разрешение, вы соглашаетесь на использование записанных данных <![CDATA[<a href="%1$s">удаленным сервисом</a>]]> для распознавания музыки. Приложение не использует эти данные для других целей.</string>
+    <string name="onboarding_token_message">Приложение использует для распознавания платный сервис AudD, для использования которого, требуется специальный API-токен. Зарегистрируйтесь <![CDATA[<a href="%1$s">здесь</a>]]>, чтобы получить пробный 14-дневный токен, если у вас его еще нет.</string>
     <string name="token_skip_message">Пропуск этого шага ограничит допустимый лимит ежедневных распознаваний, но вы всегда сможете указать личный токен в настройках позже.</string>
     <string name="hide">Скрыть</string>
     <string name="show">Показать</string>
@@ -217,8 +213,11 @@
     <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="lyrics">Текст песни</string>
+
     <string name="quick_tile_recognize">Распознать песню</string>
     <string name="quick_tile_cancel_recognition">Отменить распознавание</string>
+
+    <string name="recognition_widget_description">Распознайте песню одним нажатием</string>
 
     <string name="app_shortcut_recognize_short">Распознать</string>
     <string name="app_shortcut_recognize_long">Запустить распознавание в фоне</string>
@@ -227,20 +226,14 @@
 
     <string name="help">Помощь</string>
 
-    <string name="audd_help_message_start">"AudD - это платный сервис, который предоставляет возможность бесплатного пробного периода на 14 дней. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. "</string>
-    <string name="audd_help_message_clickable">Зарегистрируйтесь</string>
-    <string name="audd_help_message_end">", если вы еще не имеете аккаунта."</string>
+    <string name="audd_help_message">AudD - это платный сервис, который предоставляет возможность бесплатного пробного 14-дневного периода. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. <![CDATA[<a href="%1$s">Зарегистрируйтесь</a>]]>, если у вас еще нет аккаунта.</string>
     <string name="audd_help_message_empty_token">Вы можете использовать сервис в тестовых целях без предоставления токена, но обратите внимание, что это существенно ограничит количество ежедневных распознаваний.</string>
 
-    <string name="acr_cloud_help_message_start">"ACRCloud - это платный сервис, который предоставляет возможность бесплатного пробного периода и ограниченное использование в целях разработки. Для использования сервиса, вам необходимо создать аккаунт и зарегистрировать проект. Если у вас возникли какие-либо трудности, пожалуйста, обратитесь к данному "</string>
-    <string name="acr_cloud_help_message_guide_clickable">руководству</string>
-    <string name="acr_cloud_help_message_end">.</string>
+    <string name="acr_cloud_help_message">ACRCloud - это платный сервис, который предоставляет возможность бесплатного пробного периода и ограниченное использование в целях разработки. Для использования сервиса, вам необходимо создать аккаунт и зарегистрировать проект. Если у вас возникли какие-либо трудности, пожалуйста, обратитесь к данному <![CDATA[<a href="%1$s">руководству</a>]]>.</string>
     <string name="acr_cloud_help_steps_title">Пожалуйста, обратите внимание:</string>
     <string name="acr_cloud_help_step1">Выберите ближайший к вам географический регион, чтобы минимизировать интернет задержку</string>
     <string name="acr_cloud_help_step2">Установите audio source как \"Recorded audio\"</string>
     <string name="acr_cloud_help_step3">Установите audio engine на ваш выбор. Опция \"Audio fingerprinting\" обеспечивает наибольшую аккуратность для обычного использования</string>
     <string name="acr_cloud_help_step4">Установите все флажки для 3rd party ID integration</string>
-
-    <string name="recognition_widget_description">Распознайте песню одним нажатием</string>
 
 </resources>

@@ -15,12 +15,8 @@
     <string name="preferences">Preferências</string>
     <string name="welcome">Bem-vindo</string>
     <string name="onboarding_welcome_message">Audile é um aplicativo para identificação de músicas, que pode te ajudar a rapidamente e com precisão identificar uma faixa tocando ao redor de você.</string>
-    <string name="onboarding_permission_message_start">"O app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, você concorda que seus dados gravados serão usados pelo "</string>
-    <string name="onboarding_permission_message_link">serviço remoto</string>
-    <string name="onboarding_permission_message_end">" para a identificação da música. O app não usa esses dados para qualquer outro propósito."</string>
-    <string name="onboarding_token_message_start">"O app usa o serviço de identificação de música AudD, que não é grátis e requer um token de API especial. Registre-se "</string>
-    <string name="onboarding_token_message_link">aqui</string>
-    <string name="onboarding_token_message_end">" para obter seu token de avaliação, se você ainda não tiver um."</string>
+    <string name="onboarding_permission_message">O app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, você concorda que seus dados gravados serão usados pelo <![CDATA[<a href="%1$s">serviço remoto</a>]]> para a identificação da música. O app não usa esses dados para qualquer outro propósito.</string>
+    <string name="onboarding_token_message">O app usa o serviço de identificação de música AudD, que não é grátis e requer um token de API especial. Registre-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter seu token de avaliação, se você ainda não tiver um.</string>
     <string name="token_skip_message">Pular este passo limitará suas identificações diárias, mas você sempre pode especificar seu token pessoal depois nas preferências.</string>
     <string name="hide">Esconder</string>
     <string name="show">Mostrar</string>
@@ -229,27 +225,22 @@
     <string name="album">Álbum</string>
     <string name="year">Ano</string>
     <string name="lyrics">Letras</string>
+
     <string name="quick_tile_recognize">Identificar música</string>
     <string name="quick_tile_cancel_recognition">Cancelar identificação</string>
 
+    <string name="recognition_widget_description">Identificar a música em um toque</string>
+
     <string name="help">Ajuda</string>
 
-    <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->
-    <string name="audd_help_message_start">"O AudD é um serviço pago que oferece a opção de um período de teste grátis. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. "</string>
-    <string name="audd_help_message_clickable">Registre-se</string>
-    <string name="audd_help_message_end">" se você ainda não tiver um."</string>
+    <string name="audd_help_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
     <string name="audd_help_message_empty_token">Você pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isso limitará o número de identificações diárias.</string>
 
-    <string name="acr_cloud_help_message_start">"ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e registrar um projeto. Se você ter alguma dificuldade, consulte "</string>
-    <string name="acr_cloud_help_message_guide_clickable">este guia</string>
-    <string name="acr_cloud_help_message_end">.</string>
+    <string name="acr_cloud_help_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e registrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_steps_title">Por favor preste atenção nestes passos:</string>
     <string name="acr_cloud_help_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
     <string name="acr_cloud_help_step2">Defina a fonte de áudio como \"Audio gravado\"</string>
     <string name="acr_cloud_help_step3">Defina o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
     <string name="acr_cloud_help_step4">Assinale todas as caixas para integração de ID de terceiros</string>
-    <!-- The end of experimental part -->
-
-    <string name="recognition_widget_description">Identificar a música em um toque</string>
 
 </resources>

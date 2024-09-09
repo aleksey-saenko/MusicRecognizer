@@ -11,13 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -83,24 +82,18 @@ internal fun PermissionsPage(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge
         )
-        val annotatedText = buildAnnotatedString {
-            append(stringResource(StringsR.string.onboarding_permission_message_start))
-            withLink(
-                LinkAnnotation.Url(
-                    url = stringResource(StringsR.string.audd_terms_url),
-                    styles = TextLinkStyles(
-                        style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                        hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
-                    )
-                )
-            ) {
-                append(stringResource(StringsR.string.onboarding_permission_message_link))
-            }
-            append(stringResource(StringsR.string.onboarding_permission_message_end))
-        }
         Spacer(Modifier.height(24.dp))
         Text(
-            text = annotatedText,
+            text = AnnotatedString.fromHtml(
+                htmlString = stringResource(
+                    StringsR.string.onboarding_permission_message,
+                    stringResource(StringsR.string.audd_terms_url)
+                ),
+                linkStyles = TextLinkStyles(
+                    style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                    hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
+                )
+            ),
             textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(max = 488.dp)
         )

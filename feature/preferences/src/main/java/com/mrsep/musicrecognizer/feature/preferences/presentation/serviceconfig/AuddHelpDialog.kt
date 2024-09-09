@@ -12,12 +12,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -38,22 +37,18 @@ internal fun AuddHelpDialog(
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                val annotatedText = buildAnnotatedString {
-                    append(stringResource(StringsR.string.audd_help_message_start))
-                    withLink(
-                        LinkAnnotation.Url(
-                            url = stringResource(StringsR.string.audd_sign_up_url),
-                            styles = TextLinkStyles(
-                                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                                hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
-                            )
+                Text(
+                    text = AnnotatedString.fromHtml(
+                        htmlString = stringResource(
+                            StringsR.string.audd_help_message,
+                            stringResource(StringsR.string.audd_sign_up_url)
+                        ),
+                        linkStyles = TextLinkStyles(
+                            style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                            hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
                         )
-                    ) {
-                        append(stringResource(StringsR.string.audd_help_message_clickable))
-                    }
-                    append(stringResource(StringsR.string.audd_help_message_end))
-                }
-                Text(text = annotatedText)
+                    ),
+                )
                 Spacer(Modifier.height(16.dp))
                 Text(text = stringResource(StringsR.string.audd_help_message_empty_token))
             }

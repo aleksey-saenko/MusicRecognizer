@@ -13,12 +13,8 @@
     <string name="preferences">Predvoľby</string>
     <string name="welcome">Vitajte</string>
     <string name="onboarding_welcome_message">Audile je aplikácia na rozpoznávanie hudby, ktorá vám môže pomôcť rýchlo a presne rozpoznať hudobnú skladbu prehrávanú vo vašom okolí.</string>
-    <string name="onboarding_permission_message_start">"Aby aplikácia fungovala správne, vyžaduje povolenie na nahrávanie zvuku. Udelením tohto povolenia súhlasíte s tým, že vaše zaznamenané údaje budú použité spoločnosťou "</string>
-    <string name="onboarding_permission_message_link">vzdialená služba</string>
-    <string name="onboarding_permission_message_end">" na rozpoznávanie hudby. Aplikácia tieto údaje nepoužíva na žiadne iné účely."</string>
-    <string name="onboarding_token_message_start">"Aplikácia využíva službu rozpoznávania hudby AudD, ktorá vyžaduje špeciálny token API. Prihláste sa "</string>
-    <string name="onboarding_token_message_link">tu</string>
-    <string name="onboarding_token_message_end">" získajte svoj token, ak ho ešte nemáte."</string>
+    <string name="onboarding_permission_message">Aby aplikácia fungovala správne, vyžaduje povolenie na nahrávanie zvuku. Udelením tohto povolenia súhlasíte s tým, že vaše zaznamenané údaje budú použité spoločnosťou <![CDATA[<a href="%1$s">vzdialená služba</a>]]> na rozpoznávanie hudby. Aplikácia tieto údaje nepoužíva na žiadne iné účely.</string>
+    <string name="onboarding_token_message">Aplikácia využíva službu rozpoznávania hudby AudD, ktorá vyžaduje špeciálny token API. Prihláste sa <![CDATA[<a href="%1$s">tu</a>]]> získajte svoj token, ak ho ešte nemáte.</string>
     <string name="token_skip_message">Preskočenie tohto kroku obmedzí vaše denné rozpoznávanie, avšak token môžete kedykoľvek zadať neskôr v nastaveniach.</string>
     <string name="hide">Skryť</string>
     <string name="show">Zobraziť</string>

@@ -18,12 +18,8 @@
     <string name="preferences">Preferences</string>
     <string name="welcome">Welcome</string>
     <string name="onboarding_welcome_message">Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
-    <string name="onboarding_permission_message_start">"The app requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by "</string>
-    <string name="onboarding_permission_message_link">remote service</string>
-    <string name="onboarding_permission_message_end">" for music recognition. The app does not use this data for any other purpose."</string>
-    <string name="onboarding_token_message_start">"The app uses AudD music recognition service, which is not free and requires a special API token. Sign up "</string>
-    <string name="onboarding_token_message_link">here</string>
-    <string name="onboarding_token_message_end">" to get your 14-day trial token, if you don\'t have one yet."</string>
+    <string name="onboarding_permission_message">The app requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by <![CDATA[<a href="%1$s">remote service</a>]]> for music recognition. The app does not use this data for any other purpose.</string>
+    <string name="onboarding_token_message">The app uses AudD music recognition service, which is not free and requires a special API token. Sign up <![CDATA[<a href="%1$s">here</a>]]> to get your 14-day trial token, if you don\'t have one yet.</string>
     <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify your personal token later in preferences.</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
@@ -257,8 +253,11 @@
     <string name="album">Album</string>
     <string name="year">Year</string>
     <string name="lyrics">Lyrics</string>
+
     <string name="quick_tile_recognize">Recognize song</string>
     <string name="quick_tile_cancel_recognition">Cancel recognition</string>
+
+    <string name="recognition_widget_description">Recognize the song in one tap</string>
 
     <!-- App shortcuts. If there's enough space, the launcher displays _long version instead of _short. Short should be limited to 10 chars. Long should be limited to 25 chars.-->
     <string name="app_shortcut_recognize_short">Recognize</string>
@@ -268,22 +267,14 @@
 
     <string name="help">Help</string>
 
-    <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->
-    <string name="audd_help_message_start">"AudD is a paid service that offers the option of a free trial period for 14 days. To use this service, you need to create an account and get your private API token. "</string>
-    <string name="audd_help_message_clickable">Sign up</string>
-    <string name="audd_help_message_end">" if you don't have one yet."</string>
+    <string name="audd_help_message">AudD is a paid service that offers the option of a free trial period for 14 days. To use this service, you need to create an account and get your private API token. <![CDATA[<a href="%1$s">Sign up</a>]]> if you don\'t have one yet.</string>
     <string name="audd_help_message_empty_token">You can try using the service for testing purposes without providing the token, but please note that this will limit your daily recognitions.</string>
 
-    <string name="acr_cloud_help_message_start">"ACRCloud is a paid service that offers the option of a free trial period and limited usage for development purposes. To use this service, you need to create an account and register a project. If you encounter any difficulties, please refer to "</string>
-    <string name="acr_cloud_help_message_guide_clickable">this guide</string>
-    <string name="acr_cloud_help_message_end">.</string>
+    <string name="acr_cloud_help_message">ACRCloud is a paid service that offers the option of a free trial period and limited usage for development purposes. To use this service, you need to create an account and register a project. If you encounter any difficulties, please refer to <![CDATA[<a href="%1$s">this guide</a>]]>.</string>
     <string name="acr_cloud_help_steps_title">Please pay attention to these steps:</string>
     <string name="acr_cloud_help_step1">Select the geographical region closest to you to minimize internet latency</string>
     <string name="acr_cloud_help_step2">Set the audio source as \"Recorded audio\"</string>
     <string name="acr_cloud_help_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use</string>
     <string name="acr_cloud_help_step4">Check all the boxes for 3rd party ID integration</string>
-    <!-- The end of experimental part -->
-
-    <string name="recognition_widget_description">Recognize the song in one tap</string>
 
 </resources>

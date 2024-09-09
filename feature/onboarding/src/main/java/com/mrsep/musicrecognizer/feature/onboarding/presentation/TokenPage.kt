@@ -60,24 +60,18 @@ internal fun TokenPage(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineLarge
                 )
-                val annotatedText = buildAnnotatedString {
-                    append(stringResource(StringsR.string.onboarding_token_message_start))
-                    withLink(
-                        LinkAnnotation.Url(
-                            url = stringResource(StringsR.string.audd_sign_up_url),
-                            styles = TextLinkStyles(
-                                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                                hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
-                            )
-                        )
-                    ) {
-                        append(stringResource(StringsR.string.onboarding_token_message_link))
-                    }
-                    append(stringResource(StringsR.string.onboarding_token_message_end))
-                }
                 Spacer(Modifier.height(24.dp))
                 Text(
-                    text = annotatedText,
+                    text = AnnotatedString.fromHtml(
+                        htmlString = stringResource(
+                            StringsR.string.onboarding_token_message,
+                            stringResource(StringsR.string.audd_sign_up_url)
+                        ),
+                        linkStyles = TextLinkStyles(
+                            style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                            hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
+                        )
+                    ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 488.dp)
                 )

@@ -15,12 +15,8 @@
     <string name="preferences">Tercihler</string>
     <string name="welcome">Hoş Geldiniz</string>
     <string name="onboarding_welcome_message">Audile, yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
-    <string name="onboarding_permission_message_start">"Uygulamanın düzgün çalışabilmesi için ses kaydetme izni gereklidir. Bu izni vererek, kaydedilen verilerinizin müzik tanıma için "</string>
-    <string name="onboarding_permission_message_link">uzak hizmet</string>
-    <string name="onboarding_permission_message_end">" tarafından kullanılmasını kabul etmiş olursunuz. Uygulama bu verileri başka hiçbir amaçla kullanmaz."</string>
-    <string name="onboarding_token_message_start">"Uygulama, ücretsiz olmayan ve özel bir API anahtarı gerektiren AudD müzik tanıma hizmetini kullanır. Henüz bir deneme anahtarınız yoksa "</string>
-    <string name="onboarding_token_message_link">buradan</string>
-    <string name="onboarding_token_message_end">" kaydolarak bir tane alabilirsiniz."</string>
+    <string name="onboarding_permission_message">Uygulamanın düzgün çalışabilmesi için ses kaydetme izni gereklidir. Bu izni vererek, kaydedilen verilerinizin müzik tanıma için <![CDATA[<a href="%1$s">uzak hizmet</a>]]> tarafından kullanılmasını kabul etmiş olursunuz. Uygulama bu verileri başka hiçbir amaçla kullanmaz.</string>
+    <string name="onboarding_token_message">Uygulama, ücretsiz olmayan ve özel bir API anahtarı gerektiren AudD müzik tanıma hizmetini kullanır. Henüz bir deneme anahtarınız yoksa <![CDATA[<a href="%1$s">buradan</a>]]> kaydolarak bir tane alabilirsiniz.</string>
     <string name="token_skip_message">Bu adımı atlamak günlük tanıma sayınızı sınırlayacaktır, ancak daha sonra tercihler bölümünden kişisel anahtarınızı her zaman belirtebilirsiniz.</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>
@@ -221,27 +217,22 @@
     <string name="album">Albüm</string>
     <string name="year">Yıl</string>
     <string name="lyrics">Sözler</string>
+
     <string name="quick_tile_recognize">Şarkıyı tanı</string>
     <string name="quick_tile_cancel_recognition">Tanımayı iptal et</string>
 
+    <string name="recognition_widget_description">Şarkıyı tek dokunuşla tanıyın</string>
+
     <string name="help">Yardım</string>
 
-    <!-- Deneysel kısım, bu metin gelecekte değiştirilebilir. Çeviri isteğe bağlıdır. -->
-    <string name="audd_help_message_start">"AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API anahtarınızı almanız gerekir. "</string>
-    <string name="audd_help_message_clickable">Kaydolun</string>
-    <string name="audd_help_message_end">" henüz bir hesabınız yoksa."</string>
+    <string name="audd_help_message">AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API anahtarınızı almanız gerekir. <![CDATA[<a href="%1$s">Kaydolun</a>]]> henüz bir hesabınız yoksa.</string>
     <string name="audd_help_message_empty_token">Anahtarı sağlamadan test amaçlı olarak hizmeti kullanmayı deneyebilirsiniz, ancak bunun günlük tanımalarınızı sınırlayacağını unutmayın.</string>
 
-    <string name="acr_cloud_help_message_start">"ACRCloud, ücretsiz deneme süresi ve geliştirme amaçlı sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen "</string>
-    <string name="acr_cloud_help_message_guide_clickable">bu kılavuza</string>
-    <string name="acr_cloud_help_message_end"> bakın.</string>
+    <string name="acr_cloud_help_message">ACRCloud, ücretsiz deneme süresi ve geliştirme amaçlı sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen <![CDATA[<a href="%1$s">bu kılavuza</a>]]> bakın.</string>
     <string name="acr_cloud_help_steps_title">Lütfen bu adımlara dikkat edin:</string>
     <string name="acr_cloud_help_step1">İnternet gecikmesini en aza indirmek için size en yakın coğrafi bölgeyi seçin</string>
     <string name="acr_cloud_help_step2">Ses kaynağını \"Kaydedilmiş ses\" olarak ayarlayın</string>
     <string name="acr_cloud_help_step3">Seçtiğiniz ses motorunu ayarlayın. \"Ses parmak izi\" seçeneği genel kullanım için en doğru olanıdır</string>
     <string name="acr_cloud_help_step4">3. taraf ID entegrasyonu için tüm kutuları işaretleyin</string>
-    <!-- Deneysel kısmın sonu -->
-
-    <string name="recognition_widget_description">Şarkıyı tek dokunuşla tanıyın</string>
 
 </resources>

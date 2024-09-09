@@ -2,14 +2,12 @@ package com.mrsep.musicrecognizer.feature.onboarding.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -21,12 +19,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
-import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.feature.onboarding.domain.model.ConfigValidationStatus
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
-
-private const val SIGN_UP_ANNOTATION_TAG = "SIGN_UP_TAG"
 
 @Composable
 internal fun TokenPage(
@@ -36,7 +31,6 @@ internal fun TokenPage(
     onTokenValidate: () -> Unit,
     onTokenApplied: () -> Unit
 ) {
-    val context = LocalContext.current
     when (uiState) {
         TokenPageUiState.Loading -> LoadingStub(
             modifier = modifier
@@ -68,36 +62,23 @@ internal fun TokenPage(
                 )
                 val annotatedText = buildAnnotatedString {
                     append(stringResource(StringsR.string.onboarding_token_message_start))
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                            textDecoration = TextDecoration.Underline
+                    withLink(
+                        LinkAnnotation.Url(
+                            url = stringResource(StringsR.string.audd_sign_up_url),
+                            styles = TextLinkStyles(
+                                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                                hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
+                            )
                         )
                     ) {
-                        pushStringAnnotation(
-                            tag = SIGN_UP_ANNOTATION_TAG,
-                            annotation = stringResource(StringsR.string.audd_sign_up_link)
-                        )
                         append(stringResource(StringsR.string.onboarding_token_message_link))
                     }
                     append(stringResource(StringsR.string.onboarding_token_message_end))
                 }
                 Spacer(Modifier.height(24.dp))
-                ClickableText(
+                Text(
                     text = annotatedText,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    onClick = { offset ->
-                        annotatedText.getStringAnnotations(
-                            tag = SIGN_UP_ANNOTATION_TAG,
-                            start = offset,
-                            end = offset
-                        ).firstOrNull()?.item?.let { link ->
-                            context.openUrlImplicitly(link)
-                        }
-                    },
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 488.dp)
                 )
                 Spacer(Modifier.height(12.dp))

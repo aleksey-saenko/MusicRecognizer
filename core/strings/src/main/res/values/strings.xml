@@ -21,11 +21,9 @@
     <string name="onboarding_permission_message_start">"The app requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by "</string>
     <string name="onboarding_permission_message_link">remote service</string>
     <string name="onboarding_permission_message_end">" for music recognition. The app does not use this data for any other purpose."</string>
-    <string name="audd_terms_link" translatable="false">https://audd.io/terms/</string>
     <string name="onboarding_token_message_start">"The app uses AudD music recognition service, which is not free and requires a special API token. Sign up "</string>
     <string name="onboarding_token_message_link">here</string>
-    <string name="onboarding_token_message_end">" to get your trial token, if you don\'t have one yet."</string>
-    <string name="audd_sign_up_link" translatable="false">https://dashboard.audd.io/</string>
+    <string name="onboarding_token_message_end">" to get your 14-day trial token, if you don\'t have one yet."</string>
     <string name="token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify your personal token later in preferences.</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
@@ -60,6 +58,10 @@
     <string name="yandex_music" translatable="false">Yandex Music</string>
     <string name="youtube" translatable="false">YouTube</string>
     <string name="youtubeMusic" translatable="false">YouTube Music</string>
+
+    <string name="audd_sign_up_url" translatable="false">https://dashboard.audd.io/</string>
+    <string name="audd_terms_url" translatable="false">https://audd.io/terms/</string>
+    <string name="acrcloud_project_guide_url" translatable="false">https://docs.acrcloud.com/tutorials/recognize-music/</string>
 
     <string name="format_service_auth">%s authentication:</string>
     <string name="format_more_services">", and %d more"</string>
@@ -267,7 +269,7 @@
     <string name="help">Help</string>
 
     <!-- Experimental part, this text can be changed in the feature. Translation is optional. -->
-    <string name="audd_help_message_start">"AudD is a paid service that offers the option of a free trial period. To use this service, you need to create an account and get your private API token. "</string>
+    <string name="audd_help_message_start">"AudD is a paid service that offers the option of a free trial period for 14 days. To use this service, you need to create an account and get your private API token. "</string>
     <string name="audd_help_message_clickable">Sign up</string>
     <string name="audd_help_message_end">" if you don't have one yet."</string>
     <string name="audd_help_message_empty_token">You can try using the service for testing purposes without providing the token, but please note that this will limit your daily recognitions.</string>

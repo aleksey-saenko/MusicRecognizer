@@ -4,34 +4,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-
-private const val AUDD_DASHBOARD_TAG = "DASHBOARD_TAG"
 
 @Composable
 internal fun AuddHelpDialog(
     modifier: Modifier = Modifier,
     onDismissClick: () -> Unit
 ) {
-    val context = LocalContext.current
     AlertDialog(
         modifier = modifier,
         title = {
@@ -46,33 +40,20 @@ internal fun AuddHelpDialog(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 val annotatedText = buildAnnotatedString {
                     append(stringResource(StringsR.string.audd_help_message_start))
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                            textDecoration = TextDecoration.Underline
+                    withLink(
+                        LinkAnnotation.Url(
+                            url = stringResource(StringsR.string.audd_sign_up_url),
+                            styles = TextLinkStyles(
+                                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                                hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
+                            )
                         )
                     ) {
-                        pushStringAnnotation(
-                            tag = AUDD_DASHBOARD_TAG,
-                            annotation = stringResource(StringsR.string.audd_sign_up_link)
-                        )
                         append(stringResource(StringsR.string.audd_help_message_clickable))
                     }
                     append(stringResource(StringsR.string.audd_help_message_end))
                 }
-                ClickableText(
-                    text = annotatedText,
-                    style = LocalTextStyle.current.copy(color = LocalContentColor.current),
-                    onClick = { offset ->
-                        annotatedText.getStringAnnotations(
-                            tag = AUDD_DASHBOARD_TAG,
-                            start = offset,
-                            end = offset
-                        ).firstOrNull()?.item?.let { link ->
-                            context.openUrlImplicitly(link)
-                        }
-                    }
-                )
+                Text(text = annotatedText)
                 Spacer(Modifier.height(16.dp))
                 Text(text = stringResource(StringsR.string.audd_help_message_empty_token))
             }

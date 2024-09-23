@@ -43,7 +43,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
-private const val USER_PREFERENCES_STORE = "USER_PREFERENCES_STORE"
+internal const val USER_PREFERENCES_STORE = "USER_PREFERENCES_STORE"
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -28,7 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.common.util.getAppVersion
+import com.mrsep.musicrecognizer.core.common.util.getAppVersionCode
+import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
@@ -49,7 +50,9 @@ internal fun AboutScreen(
 ) {
     val context = LocalContext.current
     val topBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val version = rememberSaveable { context.getAppVersion() }
+    val version = rememberSaveable {
+        context.getAppVersionName() ?: context.getAppVersionCode().toString()
+    }
 
     Column(
         verticalArrangement = Arrangement.Top,

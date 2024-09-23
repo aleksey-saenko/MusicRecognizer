@@ -182,6 +182,16 @@
     <string name="vibration_feedback_dialog_message">Configure vibration feedback for certain in-app actions:</string>
     <string name="vibrate_on_tap">Vibrate on tap</string>
     <string name="vibrate_on_result">Vibrate on result</string>
+
+    <string name="experimental_features">Experimental features</string>
+    <string name="work_in_progress">Work-in-progress</string>
+    <string name="backup_and_restore_title">Backup &amp; Restore</string>
+    <string name="backup_and_restore_subtitle">Backup your database and preferences</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="create_backup_subtitle">Export app data and preferences</string>
+    <string name="restore_from_backup_subtitle">Restore app data and preferences from backup</string>
+
     <string name="misc">Misc</string>
     <string name="recognize_on_startup">Recognize on startup</string>
     <string name="developer_options" translatable="false">Developer options</string>

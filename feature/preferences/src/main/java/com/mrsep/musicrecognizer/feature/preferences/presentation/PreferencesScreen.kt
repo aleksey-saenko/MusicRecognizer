@@ -36,7 +36,8 @@ internal fun PreferencesScreen(
     viewModel: PreferencesViewModel = hiltViewModel(),
     showDeveloperOptions: Boolean,
     onNavigateToAboutScreen: () -> Unit,
-    onNavigateToDeveloperScreen: () -> Unit
+    onNavigateToExperimentalFeaturesScreen: () -> Unit,
+    onNavigateToDeveloperScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
@@ -204,6 +205,11 @@ internal fun PreferencesScreen(
                                 )
                             }
                         }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.experimental_features),
+                            subtitle = stringResource(StringsR.string.work_in_progress),
+                            onItemClick = onNavigateToExperimentalFeaturesScreen
+                        )
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.about),
                             onItemClick = onNavigateToAboutScreen

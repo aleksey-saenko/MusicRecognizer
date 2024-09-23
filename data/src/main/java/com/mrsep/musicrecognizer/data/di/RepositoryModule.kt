@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.data.di
 
+import com.mrsep.musicrecognizer.data.backup.AppBackupManager
+import com.mrsep.musicrecognizer.data.backup.AppBackupManagerImpl
 import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionRepositoryDo
 import com.mrsep.musicrecognizer.data.enqueued.EnqueuedRecognitionRepositoryImpl
 import com.mrsep.musicrecognizer.data.enqueued.RecordingFileDataSource
@@ -34,4 +36,8 @@ internal interface RepositoryModule {
     @Binds
     @Singleton
     fun bindRecordingFileDataSource(impl: RecordingFileDataSourceImpl): RecordingFileDataSource
+
+    @Binds
+    @Singleton
+    fun bindBackupManager(impl: AppBackupManagerImpl): AppBackupManager
 }

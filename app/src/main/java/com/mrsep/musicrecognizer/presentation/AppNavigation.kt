@@ -42,6 +42,8 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScr
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.experimentalFeaturesScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.navigateToExperimentalFeaturesScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.navigateToQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.queueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
@@ -135,6 +137,7 @@ internal fun AppNavigation(
         )
         lyricsScreen(onBackPressed = outerNavController::navigateUp)
         aboutScreen(onBackPressed = outerNavController::navigateUp)
+        experimentalFeaturesScreen(onBackPressed = outerNavController::navigateUp)
         developerScreen(onBackPressed = outerNavController::navigateUp)
     }
 }
@@ -256,6 +259,9 @@ private fun BarNavHost(
             showDeveloperOptions = BuildConfig.DEV_OPTIONS,
             onNavigateToAboutScreen = { from ->
                 outerNavController.navigateToAboutScreen(from)
+            },
+            onNavigateToExperimentalFeaturesScreen = { from ->
+                outerNavController.navigateToExperimentalFeaturesScreen(from)
             },
             onNavigateToDeveloperScreen = { from ->
                 outerNavController.navigateToDeveloperScreen(from)

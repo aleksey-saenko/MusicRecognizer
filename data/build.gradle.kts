@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.moshi.adapters)
     ksp(libs.moshi.codegen)
 
+    implementation(libs.coil.compose)
     implementation(libs.uuid.creator)
 
     testImplementation(libs.junit4)

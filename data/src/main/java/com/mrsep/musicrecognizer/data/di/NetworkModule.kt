@@ -3,10 +3,11 @@ package com.mrsep.musicrecognizer.data.di
 import android.content.Context
 import android.os.Build
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
-import com.mrsep.musicrecognizer.core.common.util.getAppVersion
+import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
 import com.mrsep.musicrecognizer.data.BuildConfig
 import com.mrsep.musicrecognizer.data.ConnectivityManagerNetworkMonitor
 import com.mrsep.musicrecognizer.data.NetworkMonitorDo
+import com.mrsep.musicrecognizer.data.backup.InstantJsonAdapter
 import com.mrsep.musicrecognizer.data.remote.enhancer.odesli.OdesliApiProviderAdapter
 import com.mrsep.musicrecognizer.data.util.HttpFileLoggingInterceptor
 import com.squareup.moshi.Moshi
@@ -28,6 +29,7 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(InstantJsonAdapter())
         .add(OdesliApiProviderAdapter())
         .build()
 
@@ -68,7 +70,7 @@ internal interface NetworkMonitorModule {
 private class UserAgentInterceptor(appContext: Context) : Interceptor {
 
     private val userAgent =
-        "Audile/${appContext.getAppVersion()} (Android ${Build.VERSION.RELEASE})"
+        "Audile/${appContext.getAppVersionName()} (Android ${Build.VERSION.RELEASE})"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
-import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
@@ -17,8 +16,9 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.service.Schedu
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.mapLatest
 import java.time.Instant
 
 @HiltWorker
@@ -31,101 +31,98 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val scheduledResultNotificationHelper: ScheduledResultNotificationHelper,
     private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun doWork(): Result {
         Log.d(TAG, "$TAG started with attempt #$runAttemptCount")
         val forceLaunch = inputData.getBoolean(INPUT_KEY_FORCE_LAUNCH, true)
         val recognitionId = inputData.getInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, -1)
         check(recognitionId != -1) { "$TAG requires enqueued recognition id as parameter" }
 
-        return withContext(ioDispatcher) {
-            val enqueuedRecognition = enqueuedRecognitionRepository
-                .getRecognitionFlow(recognitionId)
-                .firstOrNull()
-            if (enqueuedRecognition == null) {
-                val message = "$TAG finished with fatal error, " +
-                        "enqueuedRecognition with id=$id was not found"
-                Log.w(TAG, message)
-                return@withContext Result.failure()
-            }
-            clearPreviousResult(enqueuedRecognition)
-            val userPreferences = preferencesRepository.userPreferencesFlow.first()
-
-            val serviceConfig = when (userPreferences.currentRecognitionProvider) {
-                RecognitionProvider.Audd -> userPreferences.auddConfig
-                RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
-            }
-            val recognitionService = recognitionServiceFactory.getService(serviceConfig)
-
-            val result = recognitionService.recognize(
-                enqueuedRecognition.recordFile
-            )
-
-            suspend fun handleRetryOnAttempt(): Result {
-                return if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
-                    val log = "$TAG canceled, forceLaunch=$forceLaunch, " +
-                            "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
-                    Log.w(TAG, log)
-                    enqueuedRecognitionRepository.update(
-                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
-                    )
-                    Result.failure()
-                } else {
-                    Result.retry()
+        return enqueuedRecognitionRepository
+            .getRecognitionFlow(recognitionId)
+            .distinctUntilChangedBy { recognition -> recognition?.id }
+            .mapLatest { enqueuedRecognition ->
+                // Null means that recognition was not found or was deleted in process
+                if (enqueuedRecognition == null) {
+                    return@mapLatest Result.failure()
                 }
-            }
+                clearPreviousResult(enqueuedRecognition)
+                val userPreferences = preferencesRepository.userPreferencesFlow.first()
 
-            when (result) {
-                is RemoteRecognitionResult.Success -> {
-                    val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
-                    trackRepository.setViewed(trackWithStoredProps.id, false)
-                    val updatedTrack = trackWithStoredProps.copy(
-                        properties = trackWithStoredProps.properties.copy(isViewed = false)
-                    )
-                    val updatedResult = result.copy(track = updatedTrack)
-                    val updatedEnqueued = enqueuedRecognition.copy(
-                        result = updatedResult,
-                        resultDate = Instant.now()
-                    )
-                    enqueuedRecognitionRepository.update(updatedEnqueued)
-                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
-                    scheduledResultNotificationHelper.notify(updatedEnqueued)
-                    Result.success()
+                val serviceConfig = when (userPreferences.currentRecognitionProvider) {
+                    RecognitionProvider.Audd -> userPreferences.auddConfig
+                    RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
                 }
+                val recognitionService = recognitionServiceFactory.getService(serviceConfig)
+                val result = recognitionService.recognize(enqueuedRecognition.recordFile)
 
-                is RemoteRecognitionResult.NoMatches -> {
-                    enqueuedRecognitionRepository.update(
-                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
-                    )
-                    Result.success()
-                }
-
-                RemoteRecognitionResult.Error.BadConnection -> handleRetryOnAttempt()
-
-                is RemoteRecognitionResult.Error.HttpError -> {
-                    if (result.code in 400..499) {
+                suspend fun handleRetryOnAttempt(): Result {
+                    return if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {
+                        val log = "$TAG canceled, forceLaunch=$forceLaunch, " +
+                                "attempt=$runAttemptCount, maxAttempts=$MAX_ATTEMPTS"
+                        Log.w(TAG, log)
                         enqueuedRecognitionRepository.update(
                             enqueuedRecognition.copy(result = result, resultDate = Instant.now())
                         )
                         Result.failure()
                     } else {
-                        handleRetryOnAttempt()
+                        Result.retry()
                     }
                 }
 
-                is RemoteRecognitionResult.Error.AuthError,
-                is RemoteRecognitionResult.Error.ApiUsageLimited,
-                is RemoteRecognitionResult.Error.BadRecording,
-                is RemoteRecognitionResult.Error.UnhandledError -> {
-                    enqueuedRecognitionRepository.update(
-                        enqueuedRecognition.copy(result = result, resultDate = Instant.now())
-                    )
-                    Result.failure()
+                when (result) {
+                    is RemoteRecognitionResult.Success -> {
+                        val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
+                        trackRepository.setViewed(trackWithStoredProps.id, false)
+                        val updatedTrack = trackWithStoredProps.copy(
+                            properties = trackWithStoredProps.properties.copy(isViewed = false)
+                        )
+                        val updatedResult = result.copy(track = updatedTrack)
+                        val updatedEnqueued = enqueuedRecognition.copy(
+                            result = updatedResult,
+                            resultDate = Instant.now()
+                        )
+                        enqueuedRecognitionRepository.update(updatedEnqueued)
+                        trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
+                        scheduledResultNotificationHelper.notify(updatedEnqueued)
+                        Result.success()
+                    }
+
+                    is RemoteRecognitionResult.NoMatches -> {
+                        enqueuedRecognitionRepository.update(
+                            enqueuedRecognition.copy(result = result, resultDate = Instant.now())
+                        )
+                        Result.success()
+                    }
+
+                    RemoteRecognitionResult.Error.BadConnection -> handleRetryOnAttempt()
+
+                    is RemoteRecognitionResult.Error.HttpError -> {
+                        if (result.code in 400..499) {
+                            enqueuedRecognitionRepository.update(
+                                enqueuedRecognition.copy(result = result, resultDate = Instant.now())
+                            )
+                            Result.failure()
+                        } else {
+                            handleRetryOnAttempt()
+                        }
+                    }
+
+                    is RemoteRecognitionResult.Error.AuthError,
+                    is RemoteRecognitionResult.Error.ApiUsageLimited,
+                    is RemoteRecognitionResult.Error.BadRecording,
+                    is RemoteRecognitionResult.Error.UnhandledError,
+                    -> {
+                        enqueuedRecognitionRepository.update(
+                            enqueuedRecognition.copy(result = result, resultDate = Instant.now())
+                        )
+                        Result.failure()
+                    }
                 }
             }
-        }
+            .first()
     }
 
     private suspend fun clearPreviousResult(enqueued: EnqueuedRecognition) {
@@ -145,7 +142,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         fun getOneTimeWorkRequest(
             recognitionId: Int,
             identifyTag: String,
-            forceLaunch: Boolean
+            forceLaunch: Boolean,
         ): OneTimeWorkRequest {
             val data = Data.Builder()
                 .putInt(INPUT_KEY_ENQUEUED_RECOGNITION_ID, recognitionId)

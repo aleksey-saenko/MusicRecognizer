@@ -50,7 +50,7 @@ internal fun RecognitionScreen(
     onResetAutostart: () -> Unit,
     onNavigateToTrackScreen: (trackId: String) -> Unit,
     onNavigateToQueueScreen: (recognitionId: Int?) -> Unit,
-    onNavigateToPreferencesScreen: () -> Unit
+    onNavigateToPreferencesScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
@@ -132,16 +132,16 @@ internal fun RecognitionScreen(
                     .padding(8.dp)
             )
         }
-        AnimatedVisibility(
-            visible = recognizeStatus.isNotDone(),
-            enter = enterTransitionButton,
-            exit = exitTransitionButton,
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                contentAlignment = Alignment.Center
+            AnimatedVisibility(
+                visible = recognizeStatus.isNotDone(),
+                enter = enterTransitionButton,
+                exit = exitTransitionButton,
             ) {
                 RecognitionButtonWithTitle(
                     title = getButtonTitle(recognizeStatus, autostart),
@@ -158,12 +158,14 @@ internal fun RecognitionScreen(
                     amplitudeFactor = ampFlow,
                     modifier = Modifier.padding(24.dp)
                 )
-                OfflineModePopup(
-                    visible = isOffline,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                )
+            }
+            AnimatedVisibility(
+                visible = isOffline && recognizeStatus.isNotDone(),
+                enter = enterTransitionBottomPopup,
+                exit = exitTransitionBottomPopup,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                OfflineModePopup(modifier = Modifier.padding(bottom = 16.dp))
             }
         }
 
@@ -341,6 +343,26 @@ private val exitTransitionButton = slideOutVertically(
         ),
         targetAlpha = 0.8f
     )
+)
+
+private val enterTransitionBottomPopup = fadeIn(
+    animationSpec = tween(
+        durationMillis = animationDurationButton / 2,
+        delayMillis = animationDurationButton
+    )
+) + scaleIn(
+    animationSpec = tween(
+        durationMillis = animationDurationButton / 2,
+        delayMillis = animationDurationButton
+    ),
+    initialScale = 0.2f
+)
+
+private val exitTransitionBottomPopup = fadeOut(
+    animationSpec = tween(durationMillis = animationDurationButton / 2)
+) + scaleOut(
+    animationSpec = tween(durationMillis = animationDurationButton / 2),
+    targetScale = 0.2f
 )
 
 private val transitionSpecShield:

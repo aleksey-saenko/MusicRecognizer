@@ -79,7 +79,7 @@ class RecognitionScheme(
             return RecognitionScheme(
                 steps = steps,
                 sendTotalAtEnd = sendTotalAtEnd,
-                extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.size
+                extraTryIndex = extraTryIndex.takeIf { it > 0 } ?: steps.lastIndex
             )
         }
     }

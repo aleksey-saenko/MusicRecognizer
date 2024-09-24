@@ -24,6 +24,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -86,16 +87,23 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 )
             }
 
+            // temp workaround until recognition service is reworked
+            val extraTimeNotifier = launch {
+                val extraTime = onlineScheme.run { steps[extraTryIndex].timestamp + 3.5.seconds }
+                delay(extraTime)
+                _status.update { RecognitionStatus.Recognizing(true) }
+            }
+
             // send each recording step to recordingChannel, return full (last) recording or failure
             val recordProcess = async {
                 recorderController.audioRecordingFlow(onlineScheme)
                     .withIndex()
                     .transformWhile { (index, result) ->
                         result.onSuccess { recording ->
-                            val isExtraTry = (index >= onlineScheme.extraTryIndex)
+//                            val isExtraTry = (index >= onlineScheme.extraTryIndex)
                             if (index <= onlineScheme.lastStepIndex) {
                                 recordingChannel.send(recording)
-                                _status.update { RecognitionStatus.Recognizing(isExtraTry) }
+//                                _status.update { RecognitionStatus.Recognizing(isExtraTry) }
                             }
                         }
                         if (result.isFailure || index == onlineScheme.lastStepIndex) {
@@ -114,6 +122,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     } ?: remoteResult.await()
                 }
             }
+            extraTimeNotifier.cancelAndJoin()
             val recognitionResult = when (result) {
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     // bad recording result can be sent by server or by recording job,

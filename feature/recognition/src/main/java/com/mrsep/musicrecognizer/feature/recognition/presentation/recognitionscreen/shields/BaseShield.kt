@@ -36,7 +36,7 @@ internal fun AnimatedVisibilityScope.BaseShield(
     onDismissClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface {
+    Surface(modifier = modifier) {
         Box {
             FilledTonalIconButton(
                 onClick = onDismissClick,
@@ -68,7 +68,7 @@ internal fun AnimatedVisibilityScope.BaseShield(
                 )
             }
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(24.dp)

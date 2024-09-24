@@ -132,16 +132,14 @@ internal fun RecognitionScreen(
                     .padding(8.dp)
             )
         }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.Center
-        ) {
+        Box {
             AnimatedVisibility(
                 visible = recognizeStatus.isNotDone(),
                 enter = enterTransitionButton,
                 exit = exitTransitionButton,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 RecognitionButtonWithTitle(
                     title = getButtonTitle(recognizeStatus, autostart),
@@ -296,9 +294,14 @@ internal fun RecognitionScreen(
 
         // optional vibration effect
         if (preferences.vibrateOnResult()) {
+            val vibrated = rememberSaveable { mutableStateOf(false) }
             LaunchedEffect(recognizeStatus) {
                 val status = recognizeStatus
-                if (status !is RecognitionStatus.Done) return@LaunchedEffect
+                if (status !is RecognitionStatus.Done) {
+                    vibrated.value = false
+                    return@LaunchedEffect
+                }
+                if (vibrated.value) return@LaunchedEffect
                 when (status.result) {
                     is RecognitionResult.ScheduledOffline,
                     is RecognitionResult.Success -> viewModel.vibrateResult(true)
@@ -306,6 +309,7 @@ internal fun RecognitionScreen(
                     is RecognitionResult.Error,
                     is RecognitionResult.NoMatches -> viewModel.vibrateResult(false)
                 }
+                vibrated.value = true
             }
         }
     }

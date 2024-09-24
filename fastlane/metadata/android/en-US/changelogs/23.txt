@@ -1,0 +1,2 @@
+* Add experimental support for backup and restore feature (backup file format may change in future updates)
+* Minor UI improvements

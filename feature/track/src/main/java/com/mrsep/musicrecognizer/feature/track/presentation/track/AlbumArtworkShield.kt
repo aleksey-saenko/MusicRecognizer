@@ -60,7 +60,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.mrsep.musicrecognizer.core.ui.findActivity
-import com.mrsep.musicrecognizer.core.ui.util.shareImageWithText
+import com.mrsep.musicrecognizer.core.ui.util.shareImage
 import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.ImageShareUtils.getImageFileForSharing
 import kotlinx.coroutines.Job
@@ -135,7 +135,7 @@ internal fun AlbumArtworkShield(
                 context = context
             )
             imageUri?.let {
-                context.shareImageWithText(
+                context.shareImage(
                     subject = "",
                     body = fileNameUnprocessed,
                     imageUri = imageUri

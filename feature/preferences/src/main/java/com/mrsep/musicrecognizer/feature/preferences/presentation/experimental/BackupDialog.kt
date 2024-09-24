@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.mrsep.musicrecognizer.core.ui.util.shareFile
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupEntry
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupResult
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -51,6 +52,7 @@ internal fun BackupDialog(
     onBackupClick: (Uri, Set<BackupEntry>) -> Unit,
     onDismissClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     var selectedBackupEntries by rememberSaveable(
         backupState,
         stateSaver = BackupEntriesSaver
@@ -65,12 +67,30 @@ internal fun BackupDialog(
             Text(text = stringResource(StringsR.string.backup))
         },
         confirmButton = {
-            if (backupState is BackupUiState.Ready) {
-                TextButton(
+            when (backupState) {
+                is BackupUiState.EstimatingEntries,
+                is BackupUiState.InProgress -> {}
+
+                is BackupUiState.Ready -> TextButton(
                     enabled = selectedBackupEntries.isNotEmpty(),
                     onClick = { onBackupClick(backupState.uri, selectedBackupEntries) }
                 ) {
                     Text(text = stringResource(StringsR.string.backup))
+                }
+
+                is BackupUiState.Result -> when (backupState.result) {
+                    BackupResult.Success -> TextButton(
+                        enabled = true,
+                        onClick = {
+                            val subject = context.getString(StringsR.string.app_name) + " backup"
+                            context.shareFile(subject, "", backupState.uri)
+                        }
+                    ) {
+                        Text(text = stringResource(StringsR.string.share))
+                    }
+
+                    BackupResult.FileNotFound,
+                    BackupResult.UnhandledError -> {}
                 }
             }
         },

@@ -25,7 +25,7 @@ fun Context.openWebSearchImplicitly(query: String) {
     )
 }
 
-fun Context.shareImageWithText(
+fun Context.shareImage(
     subject: String,
     body: String,
     imageUri: Uri,
@@ -37,6 +37,25 @@ fun Context.shareImageWithText(
         putExtra(Intent.EXTRA_TEXT, body)
         clipData = ClipData.newRawUri(body, imageUri)
         putExtra(Intent.EXTRA_STREAM, imageUri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    startActivityOrToast(
+        Intent.createChooser(shareIntent, null),
+        getString(StringsR.string.cannot_share_toast)
+    )
+}
+
+fun Context.shareFile(
+    subject: String,
+    body: String,
+    uri: Uri,
+    mimeType: String = "*/*",
+) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = mimeType
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+        putExtra(Intent.EXTRA_STREAM, uri)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
     startActivityOrToast(

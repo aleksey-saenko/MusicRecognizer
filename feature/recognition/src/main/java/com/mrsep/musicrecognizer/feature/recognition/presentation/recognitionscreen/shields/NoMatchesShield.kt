@@ -40,17 +40,17 @@ internal fun AnimatedVisibilityScope.NoMatchesShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.no_matches_found),
+            text = stringResource(StringsR.string.result_title_no_matches),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.no_matches_message),
+            text = stringResource(StringsR.string.result_message_no_matches),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -72,7 +72,7 @@ internal fun AnimatedVisibilityScope.NoMatchesShield(
                 onClick = onRetryClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(StringsR.string.retry))
+                Text(text = stringResource(StringsR.string.button_retry_recognition))
             }
         }
     }

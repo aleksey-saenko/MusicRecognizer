@@ -64,20 +64,20 @@ internal fun RowScope.StatusInfo(
 }
 
 internal fun Context.getWidgetTitleForStatus(status: RecognitionStatus) = when (status) {
-    RecognitionStatus.Ready -> getString(R.string.tap_to_recognize_short)
-    is RecognitionStatus.Recognizing -> getString(R.string.listening)
+    RecognitionStatus.Ready -> getString(R.string.widget_tap_to_recognize)
+    is RecognitionStatus.Recognizing -> getString(R.string.widget_listening)
     is RecognitionStatus.Done -> when (status.result) {
         is RecognitionResult.Success -> status.result.track.title
-        is RecognitionResult.NoMatches -> getString(R.string.no_matches_found)
-        is RecognitionResult.ScheduledOffline -> getString(R.string.recognition_scheduled)
+        is RecognitionResult.NoMatches -> getString(R.string.result_title_no_matches)
+        is RecognitionResult.ScheduledOffline -> getString(R.string.result_title_recognition_scheduled)
         is RecognitionResult.Error -> {
             when (status.result.remoteError) {
-                RemoteRecognitionResult.Error.ApiUsageLimited -> getString(R.string.service_usage_limited)
-                RemoteRecognitionResult.Error.AuthError -> getString(R.string.auth_error)
-                RemoteRecognitionResult.Error.BadConnection -> getString(R.string.bad_internet_connection)
-                is RemoteRecognitionResult.Error.BadRecording -> getString(R.string.recording_error)
-                is RemoteRecognitionResult.Error.HttpError -> getString(R.string.bad_network_response)
-                is RemoteRecognitionResult.Error.UnhandledError -> getString(R.string.internal_error)
+                RemoteRecognitionResult.Error.ApiUsageLimited -> getString(R.string.result_title_service_usage_limited)
+                RemoteRecognitionResult.Error.AuthError -> getString(R.string.result_title_auth_error)
+                RemoteRecognitionResult.Error.BadConnection -> getString(R.string.result_title_bad_connection)
+                is RemoteRecognitionResult.Error.BadRecording -> getString(R.string.result_title_recording_error)
+                is RemoteRecognitionResult.Error.HttpError -> getString(R.string.result_title_bad_network_response)
+                is RemoteRecognitionResult.Error.UnhandledError -> getString(R.string.result_title_internal_error)
             }
         }
     }
@@ -86,34 +86,34 @@ internal fun Context.getWidgetTitleForStatus(status: RecognitionStatus) = when (
 internal fun Context.getWidgetSubtitleForStatus(status: RecognitionStatus) = when (status) {
     RecognitionStatus.Ready -> null
     is RecognitionStatus.Recognizing -> if (status.extraTry) {
-        getString(R.string.trying_one_more_time)
+        getString(R.string.widget_listening_subtitle_extra_time)
     } else {
-        getString(R.string.please_wait)
+        getString(R.string.widget_listening_subtitle)
     }
 
     is RecognitionStatus.Done -> when (status.result) {
         is RecognitionResult.Success -> status.result.track.artist
-        is RecognitionResult.NoMatches -> getString(R.string.tap_to_try_again_short)
+        is RecognitionResult.NoMatches -> getString(R.string.widget_tap_to_try_again)
         is RecognitionResult.ScheduledOffline -> getSubtitle(status.result.recognitionTask)
         is RecognitionResult.Error -> {
             when (status.result.remoteError) {
                 RemoteRecognitionResult.Error.ApiUsageLimited -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.service_usage_limited_message)
+                    ?: getString(R.string.result_message_service_usage_limited)
 
                 RemoteRecognitionResult.Error.AuthError -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.auth_error_message)
+                    ?: getString(R.string.result_message_auth_error)
 
                 RemoteRecognitionResult.Error.BadConnection -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.bad_internet_connection)
+                    ?: getString(R.string.result_title_bad_connection)
 
                 is RemoteRecognitionResult.Error.BadRecording -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.notification_message_recording_error)
+                    ?: getString(R.string.result_message_recording_error)
 
                 is RemoteRecognitionResult.Error.HttpError -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.message_http_error)
+                    ?: getString(R.string.result_message_bad_network_response)
 
                 is RemoteRecognitionResult.Error.UnhandledError -> getSubtitle(status.result.recognitionTask)
-                    ?: getString(R.string.notification_message_unhandled_error)
+                    ?: getString(R.string.result_message_internal_error)
             }
         }
     }
@@ -122,9 +122,9 @@ internal fun Context.getWidgetSubtitleForStatus(status: RecognitionStatus) = whe
 private fun Context.getSubtitle(task: RecognitionTask): String? {
     return when (task) {
         is RecognitionTask.Created -> if (task.launched) {
-            getString(R.string.saved_recording_message)
+            getString(R.string.result_message_recognition_scheduled)
         } else {
-            getString(R.string.saved_recording_message)
+            getString(R.string.result_message_recognition_saved)
         }
 
         RecognitionTask.Ignored,

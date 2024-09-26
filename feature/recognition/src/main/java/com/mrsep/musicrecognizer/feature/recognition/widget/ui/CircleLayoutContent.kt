@@ -70,19 +70,19 @@ internal fun CircleLayoutContent(
                     when (uiState.status.result) {
                         is RecognitionResult.Error -> ResultIcon(
                             iconResId = UiR.drawable.rounded_priority_high_48,
-                            contentDescriptionResId = StringsR.string.unknown_error,
+                            contentDescriptionResId = StringsR.string.result_title_unknown_error,
                             size = layout.recognitionButtonMaxSize / buttonScaleFactor()
                         )
 
                         is RecognitionResult.NoMatches -> ResultIcon(
                             iconResId = UiR.drawable.rounded_question_mark_48,
-                            contentDescriptionResId = StringsR.string.no_matches_found,
+                            contentDescriptionResId = StringsR.string.result_title_no_matches,
                             size = layout.recognitionButtonMaxSize / buttonScaleFactor()
                         )
 
                         is RecognitionResult.ScheduledOffline -> ResultIcon(
                             iconResId = UiR.drawable.rounded_priority_high_48,
-                            contentDescriptionResId = StringsR.string.no_matches_found,
+                            contentDescriptionResId = StringsR.string.result_title_no_matches,
                             size = layout.recognitionButtonMaxSize / buttonScaleFactor()
                         )
 

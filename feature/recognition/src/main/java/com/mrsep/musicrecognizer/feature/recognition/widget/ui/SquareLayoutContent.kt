@@ -177,7 +177,7 @@ private fun TrackInfoWithButton(
                 isRecognizing = false,
                 contentSize = 48.dp,
                 filledStyle = true,
-                contentDescription = context.getString(StringsR.string.recognize)
+                contentDescription = context.getString(StringsR.string.action_recognize)
             )
         }
     }

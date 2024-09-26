@@ -39,12 +39,12 @@ internal fun AnimatedVisibilityScope.ScheduledOfflineShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.recognition_scheduled),
+            text = stringResource(StringsR.string.result_title_recognition_scheduled),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskNetworkMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )

@@ -39,7 +39,7 @@ internal fun RequiredServicesDialog(
     AlertDialog(
         modifier = modifier,
         title = {
-            Text(text = stringResource(StringsR.string.music_services_links))
+            Text(text = stringResource(StringsR.string.pref_title_music_services_links))
         },
         confirmButton = {
             TextButton(onClick = onDismissClick) {
@@ -54,7 +54,7 @@ internal fun RequiredServicesDialog(
         text = {
             Column {
                 Text(
-                    text = stringResource(StringsR.string.required_services_dialog),
+                    text = stringResource(StringsR.string.music_services_links_dialog),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {

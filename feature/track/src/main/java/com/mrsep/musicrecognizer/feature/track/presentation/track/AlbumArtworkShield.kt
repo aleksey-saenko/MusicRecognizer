@@ -189,7 +189,7 @@ internal fun AlbumArtworkShield(
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                            contentDescription = stringResource(StringsR.string.back),
+                            contentDescription = stringResource(StringsR.string.nav_back),
                         )
                     }
                 },
@@ -339,7 +339,7 @@ private fun ArtworkShareDropdownMenu(
             shape = MaterialTheme.shapes.small,
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.link_to_share)) },
+                text = { Text(text = stringResource(StringsR.string.artwork_share_menu_link)) },
                 onClick = {
                     menuExpanded = false
                     onShareLink()
@@ -352,7 +352,7 @@ private fun ArtworkShareDropdownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.image_to_share)) },
+                text = { Text(text = stringResource(StringsR.string.artwork_share_menu_image)) },
                 onClick = {
                     menuExpanded = false
                     onShareImage()

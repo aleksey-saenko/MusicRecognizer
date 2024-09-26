@@ -34,14 +34,14 @@ internal fun EmptyLibraryMessage(
             modifier = Modifier.size(80.dp),
         )
         Text(
-            text = stringResource(Strings.string.empty_library_message),
+            text = stringResource(Strings.string.empty_library_title),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = stringResource(Strings.string.empty_library_sub_message),
+            text = stringResource(Strings.string.empty_library_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,

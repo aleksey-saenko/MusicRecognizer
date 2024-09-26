@@ -90,7 +90,7 @@ private fun RecognitionServiceDialogBase(
     AlertDialog(
         modifier = modifier,
         title = {
-            Text(text = stringResource(StringsR.string.recognition_provider_preference_title))
+            Text(text = stringResource(StringsR.string.recognition_provider_dialog_title))
         },
         confirmButton = {
             TextButton(onClick = onSaveClick) {
@@ -108,11 +108,11 @@ private fun RecognitionServiceDialogBase(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = stringResource(StringsR.string.recognition_service_dialog_message)
+                    text = stringResource(StringsR.string.recognition_provider_dialog_message)
                 )
                 RecognitionProviderDropdownMenu(
                     options = RecognitionProvider.entries.toImmutableList(),
-                    label = stringResource(StringsR.string.recognition_provider_preference_title),
+                    label = stringResource(StringsR.string.recognition_provider_dialog_title),
                     selectedOption = currentProvider,
                     onSelectOption = onProviderChanged,
                     modifier = Modifier.padding(top = 14.dp)
@@ -183,7 +183,7 @@ internal fun AuthenticationRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(StringsR.string.format_service_auth, serviceName))
+        Text(text = stringResource(StringsR.string.recognition_provider_dialog_format_auth, serviceName))
         IconButton(onClick = onHelpClick) {
             Icon(
                 painter = painterResource(R.drawable.outline_help_24),

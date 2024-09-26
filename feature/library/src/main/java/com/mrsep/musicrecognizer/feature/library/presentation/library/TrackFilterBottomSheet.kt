@@ -36,7 +36,7 @@ internal fun TrackFilterBottomSheet(
         )
         Spacer(Modifier.height(16.dp))
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            FilterGroup(title = stringResource(StringsR.string.filter_favorite_status)) {
+            FilterGroup(title = stringResource(StringsR.string.filter_favorites)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
@@ -46,7 +46,7 @@ internal fun TrackFilterBottomSheet(
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.All,
                         onClick = { filterState.favoritesMode = FavoritesMode.All },
-                        label = { Text(text = stringResource(StringsR.string.all)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_all)) }
                     )
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.OnlyFavorites,

@@ -151,7 +151,7 @@ private fun QueueDropdownMenu(
             shape = MaterialTheme.shapes.small,
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
+                text = { Text(text = stringResource(StringsR.string.pref_title_use_grid_layout)) },
                 onClick = { onChangeUseGridLayout(!useGridLayout) },
                 trailingIcon = {
                     Icon(
@@ -164,7 +164,7 @@ private fun QueueDropdownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.show_creation_date)) },
+                text = { Text(text = stringResource(StringsR.string.pref_title_show_creation_date)) },
                 onClick = { onChangeShowCreationDate(!showCreationDate) },
                 trailingIcon = {
                     Icon(

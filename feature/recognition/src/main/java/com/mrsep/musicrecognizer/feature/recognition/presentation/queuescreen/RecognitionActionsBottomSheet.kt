@@ -88,7 +88,7 @@ internal fun RecognitionActionsBottomSheet(
             Spacer(Modifier.height(20.dp))
             Text(
                 text = stringResource(
-                    StringsR.string.format_created,
+                    StringsR.string.format_recognition_created,
                     recognition.creationDateLong
                 ),
                 style = MaterialTheme.typography.bodyMedium,
@@ -146,7 +146,7 @@ internal fun RecognitionActionsBottomSheet(
                         when (recognition.result) {
                             is RemoteRecognitionResultUi.Success -> {
                                 BottomSheetAction(
-                                    title = stringResource(R.string.show_track),
+                                    title = stringResource(R.string.recognition_action_show_track),
                                     iconResId = UiR.drawable.outline_audio_file_24,
                                     onClick = {
                                         onNavigateToTrackScreen(recognition.result.track.id)
@@ -159,12 +159,12 @@ internal fun RecognitionActionsBottomSheet(
                             null -> {
                                 Column {
                                     BottomSheetAction(
-                                        title = stringResource(StringsR.string.enqueue_recognition),
+                                        title = stringResource(StringsR.string.recognition_action_enqueue),
                                         iconResId = UiR.drawable.outline_schedule_send_24,
                                         onClick = { onEnqueueRecognition(false) }
                                     )
                                     BottomSheetAction(
-                                        title = stringResource(StringsR.string.force_recognition_launch),
+                                        title = stringResource(StringsR.string.recognition_action_force_launch),
                                         iconResId = UiR.drawable.outline_send_24,
                                         onClick = { onEnqueueRecognition(true) }
                                     )
@@ -176,7 +176,7 @@ internal fun RecognitionActionsBottomSheet(
                     ScheduledJobStatus.ENQUEUED,
                     ScheduledJobStatus.RUNNING -> {
                         BottomSheetAction(
-                            title = stringResource(R.string.cancel_recognition),
+                            title = stringResource(R.string.action_cancel_recognition),
                             iconResId = UiR.drawable.outline_cancel_schedule_send_24,
                             onClick = onCancelRecognition
                         )
@@ -184,7 +184,7 @@ internal fun RecognitionActionsBottomSheet(
                 }
             }
             BottomSheetAction(
-                title = stringResource(StringsR.string.rename),
+                title = stringResource(StringsR.string.recognition_action_rename),
                 iconResId = UiR.drawable.outline_edit_24,
                 onClick = onRenameEnqueued
             )

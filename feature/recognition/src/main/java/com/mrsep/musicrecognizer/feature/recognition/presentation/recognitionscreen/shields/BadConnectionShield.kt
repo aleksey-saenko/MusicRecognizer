@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -41,17 +40,17 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.bad_internet_connection),
+            text = stringResource(StringsR.string.result_title_bad_connection),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.please_check_network_status),
+            text = stringResource(StringsR.string.result_message_bad_connection),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskNetworkMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -73,24 +72,26 @@ internal fun AnimatedVisibilityScope.BadConnectionShield(
                 onClick = onRetryClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(StringsR.string.retry))
+                Text(text = stringResource(StringsR.string.button_retry_recognition))
             }
         }
     }
 }
 
 @Composable
-internal fun RecognitionTaskNetworkMessage(
+internal fun OptionalRecognitionTaskMessage(
     recognitionTask: RecognitionTask,
     modifier: Modifier = Modifier
 ) {
     if (recognitionTask is RecognitionTask.Created) {
-        RecognitionTaskMessageBase(
-            extraMessage = if (recognitionTask.launched) {
-                stringResource(R.string.auto_recognition_message_network)
-            } else {
-                stringResource(R.string.manual_recognition_message)
-            },
+        Text(
+            text = stringResource(
+                if (recognitionTask.launched)
+                    StringsR.string.result_message_recognition_scheduled
+                else
+                    StringsR.string.result_message_recognition_saved
+            ),
+            textAlign = TextAlign.Center,
             modifier = modifier
         )
     }

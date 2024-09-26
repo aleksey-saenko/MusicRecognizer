@@ -89,7 +89,7 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 2.dp)
             )
             Spacer(Modifier.height(16.dp))
-            PreferenceGroup(title = stringResource(StringsR.string.powered_by)) {
+            PreferenceGroup(title = stringResource(StringsR.string.pref_group_powered_by)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.audd),
                     subtitle = stringResource(StringsR.string.purpose_recognition_service),
@@ -108,7 +108,7 @@ internal fun AboutScreen(
             }
             HorizontalDivider(modifier = Modifier.alpha(0.2f))
             Spacer(Modifier.height(16.dp))
-            PreferenceGroup(title = stringResource(StringsR.string.misc)) {
+            PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.github_repository),
                     onItemClick = { context.openUrlImplicitly(GITHUB_REPO_URL) }
@@ -118,7 +118,7 @@ internal fun AboutScreen(
                     onItemClick = { context.openUrlImplicitly(PRIVACY_POLICY_URL) }
                 )
                 PreferenceClickableItem(
-                    title = stringResource(StringsR.string.license_gnu_gplv3),
+                    title = stringResource(StringsR.string.license_gnu_gpl_v3),
                     onItemClick = { context.openUrlImplicitly(LICENCE_URL) }
                 )
             }

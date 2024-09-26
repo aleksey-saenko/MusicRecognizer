@@ -55,7 +55,7 @@ internal fun FallbackPolicyDialog(
                 Text(text = stringResource(StringsR.string.fallback_policy_dialog_message))
                 FallbackActionsDropdownMenu(
                     options = allOptions,
-                    label = stringResource(StringsR.string.bad_internet_connection),
+                    label = stringResource(StringsR.string.fallback_trigger_bad_connection),
                     selectedOption = fallbackPolicy.badConnection,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(badConnection = option))
@@ -64,7 +64,7 @@ internal fun FallbackPolicyDialog(
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
-                    label = stringResource(StringsR.string.no_matches_found),
+                    label = stringResource(StringsR.string.fallback_trigger_no_matches_found),
                     selectedOption = fallbackPolicy.noMatches,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(noMatches = option))
@@ -73,7 +73,7 @@ internal fun FallbackPolicyDialog(
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
-                    label = stringResource(StringsR.string.other_failures),
+                    label = stringResource(StringsR.string.fallback_trigger_other_failures),
                     selectedOption = fallbackPolicy.anotherFailure,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(anotherFailure = option))
@@ -140,8 +140,8 @@ private val ignoreOrSaveOptions =
 @Composable
 private fun FallbackAction.getTitle(): String {
     return when (this) {
-        FallbackAction.Ignore -> stringResource(StringsR.string.ignore)
-        FallbackAction.Save -> stringResource(StringsR.string.save_the_recording)
-        FallbackAction.SaveAndLaunch -> stringResource(StringsR.string.save_the_recording_and_launch_retry)
+        FallbackAction.Ignore -> stringResource(StringsR.string.fallback_action_ignore)
+        FallbackAction.Save -> stringResource(StringsR.string.fallback_action_save_recording)
+        FallbackAction.SaveAndLaunch -> stringResource(StringsR.string.fallback_action_save_recording_and_retry)
     }
 }

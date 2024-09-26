@@ -132,7 +132,7 @@ internal class ScheduledResultNotificationHelperImpl @Inject constructor(
         if (track.lyrics == null) return this
         return addAction(
             android.R.drawable.ic_menu_more,
-            appContext.getString(StringsR.string.show_lyrics),
+            appContext.getString(StringsR.string.notification_button_show_lyrics),
             createPendingIntent(serviceRouter.getDeepLinkIntentToLyrics(track.id))
         )
     }

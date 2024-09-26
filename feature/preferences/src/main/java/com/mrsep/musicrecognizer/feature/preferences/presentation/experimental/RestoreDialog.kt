@@ -51,7 +51,7 @@ internal fun RestoreDialog(
     }
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.restore))
+            Text(text = stringResource(StringsR.string.restore_dialog_title))
         },
         confirmButton = {
             if (restoreState is RestoreUiState.BackupMetadata) {
@@ -70,7 +70,7 @@ internal fun RestoreDialog(
                         }
                     },
                 ) {
-                    Text(text = stringResource(StringsR.string.restore))
+                    Text(text = stringResource(StringsR.string.restore_dialog_button_restore))
                 }
             }
         },

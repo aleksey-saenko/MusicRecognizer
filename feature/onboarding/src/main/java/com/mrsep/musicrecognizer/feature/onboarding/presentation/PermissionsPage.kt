@@ -100,7 +100,7 @@ internal fun PermissionsPage(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Spacer(Modifier.height(12.dp))
             Text(
-                text = stringResource(StringsR.string.notificaiton_permission_rationale_message),
+                text = stringResource(StringsR.string.permission_rationale_post_notifications),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(max = 488.dp)
             )

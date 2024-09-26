@@ -54,7 +54,7 @@ internal fun TrackActionsBottomBar(
                 IconButton(onClick = onRetryRequested) {
                     Icon(
                         painter = painterResource(UiR.drawable.outline_replay_24),
-                        contentDescription = stringResource(StringsR.string.retry)
+                        contentDescription = stringResource(StringsR.string.button_retry_recognition)
                     )
                 }
             }
@@ -74,9 +74,9 @@ internal fun TrackActionsBottomBar(
                         }
                     ),
                     contentDescription = if (isFavorite) {
-                        stringResource(StringsR.string.unmark_as_favorite)
+                        stringResource(StringsR.string.unmark_track_as_favorite)
                     } else {
-                        stringResource(StringsR.string.mark_as_favorite)
+                        stringResource(StringsR.string.mark_track_as_favorite)
                     }
                 )
             }

@@ -65,8 +65,8 @@ internal fun NotificationServiceSwitch(
     //endregion
     PreferenceSwitchItem(
         modifier = modifier,
-        title = stringResource(StringsR.string.notification_service),
-        subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
+        title = stringResource(StringsR.string.pref_title_notification_service),
+        subtitle = stringResource(StringsR.string.pref_subtitle_notification_service),
         onClick = {
             if (serviceEnabled) {
                 setServiceEnabled(false)

@@ -177,14 +177,14 @@ class NotificationService : Service() {
     private fun continueInForeground() {
         val initialNotification = if (isRecognitionJobActive) {
             statusNotificationBuilder()
-                .setContentTitle(getString(StringsR.string.listening))
-                .setContentText(getString(StringsR.string.please_wait))
+                .setContentTitle(getString(StringsR.string.notification_listening))
+                .setContentText(getString(StringsR.string.notification_listening_subtitle))
                 .addCancelButton()
                 .build()
         } else {
             statusNotificationBuilder()
-                .setContentTitle(getString(StringsR.string.tap_to_recognize_short))
-                .setContentText(getString(StringsR.string.identify_while_using_another_app_short))
+                .setContentTitle(getString(StringsR.string.notification_tap_to_recognize))
+                .setContentText(getString(StringsR.string.notification_tap_to_recognize_subtitle))
                 .addRecognizeContentIntent()
                 .addOptionalDisableButton()
                 .build()
@@ -371,7 +371,7 @@ class NotificationService : Service() {
         val pendingIntent = createPendingIntent(deepLinkIntent)
         return addAction(
             android.R.drawable.ic_menu_more,
-            getString(StringsR.string.show_lyrics),
+            getString(StringsR.string.notification_button_show_lyrics),
             pendingIntent
         )
     }
@@ -485,8 +485,8 @@ class NotificationService : Service() {
 
     private fun notifyReady() {
         statusNotificationBuilder()
-            .setContentTitle(getString(StringsR.string.tap_to_recognize_short))
-            .setContentText(getString(StringsR.string.identify_while_using_another_app_short))
+            .setContentTitle(getString(StringsR.string.notification_tap_to_recognize))
+            .setContentText(getString(StringsR.string.notification_tap_to_recognize_subtitle))
             .addRecognizeContentIntent()
             .addOptionalDisableButton()
             .buildAndNotifyAsStatus()
@@ -494,12 +494,12 @@ class NotificationService : Service() {
 
     private fun notifyRecognizing(extraTry: Boolean) {
         statusNotificationBuilder()
-            .setContentTitle(getString(StringsR.string.listening))
+            .setContentTitle(getString(StringsR.string.notification_listening))
             .setContentText(
                 if (extraTry) {
-                    getString(StringsR.string.trying_one_more_time)
+                    getString(StringsR.string.notification_listening_subtitle_extra_time)
                 } else {
-                    getString(StringsR.string.please_wait)
+                    getString(StringsR.string.notification_listening_subtitle)
                 }
             )
             .addCancelButton()
@@ -513,62 +513,67 @@ class NotificationService : Service() {
             is RecognitionResult.Error -> when (result.remoteError) {
                 RemoteRecognitionResult.Error.BadConnection -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.bad_internet_connection))
-                        .setContentText(getString(StringsR.string.please_check_network_status))
+                        .setContentTitle(getString(StringsR.string.result_title_bad_connection))
+                        .setContentText(getString(StringsR.string.result_message_bad_connection))
                 }
 
                 is RemoteRecognitionResult.Error.BadRecording -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.recording_error))
-                        .setContentText(getString(StringsR.string.notification_message_recording_error))
+                        .setContentTitle(getString(StringsR.string.result_title_recording_error))
+                        .setContentText(getString(StringsR.string.result_message_recording_error))
                 }
 
                 is RemoteRecognitionResult.Error.HttpError -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.bad_network_response))
-                        .setContentText(getString(StringsR.string.message_http_error))
+                        .setContentTitle(getString(StringsR.string.result_title_bad_network_response))
+                        .setContentText(getString(StringsR.string.result_message_bad_network_response))
                 }
 
                 is RemoteRecognitionResult.Error.UnhandledError -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.internal_error))
-                        .setContentText(getString(StringsR.string.notification_message_unhandled_error))
+                        .setContentTitle(getString(StringsR.string.result_title_internal_error))
+                        .setContentText(getString(StringsR.string.result_message_internal_error))
                 }
 
                 is RemoteRecognitionResult.Error.AuthError -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.auth_error))
-                        .setContentText(getString(StringsR.string.auth_error_message))
+                        .setContentTitle(getString(StringsR.string.result_title_auth_error))
+                        .setContentText(getString(StringsR.string.result_message_auth_error))
                 }
 
                 is RemoteRecognitionResult.Error.ApiUsageLimited -> {
                     resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.service_usage_limited))
-                        .setContentText(getString(StringsR.string.service_usage_limited_message))
+                        .setContentTitle(getString(StringsR.string.result_title_service_usage_limited))
+                        .setContentText(getString(StringsR.string.result_message_service_usage_limited))
                 }
             }
 
             is RecognitionResult.ScheduledOffline -> {
                 resultNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.recognition_scheduled))
+                    .setContentTitle(
+                        when (result.recognitionTask) {
+                            is RecognitionTask.Created -> getString(StringsR.string.result_title_recognition_scheduled)
+                            is RecognitionTask.Error,
+                            RecognitionTask.Ignored -> getString(StringsR.string.result_title_internal_error)
+                        }
+                    )
                     .setContentText(
-                        if (result.recognitionTask is RecognitionTask.Created) {
-                            val extraMessage = if (result.recognitionTask.launched) {
-                                getString(StringsR.string.auto_recognition_message_network)
+                        when (result.recognitionTask) {
+                            is RecognitionTask.Created -> if (result.recognitionTask.launched) {
+                                getString(StringsR.string.result_message_recognition_scheduled)
                             } else {
-                                getString(StringsR.string.manual_recognition_message)
+                                getString(StringsR.string.result_message_recognition_saved)
                             }
-                            getString(StringsR.string.saved_recording_message) + ", $extraMessage"
-                        } else {
-                            getString(StringsR.string.recognition_scheduled)
+                            is RecognitionTask.Error,
+                            RecognitionTask.Ignored -> getString(StringsR.string.result_message_internal_error)
                         }
                     )
             }
 
             is RecognitionResult.NoMatches -> {
                 resultNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.no_matches_found))
-                    .setContentText(getString(StringsR.string.no_matches_message))
+                    .setContentTitle(getString(StringsR.string.result_title_no_matches))
+                    .setContentText(getString(StringsR.string.result_message_no_matches))
             }
 
             is RecognitionResult.Success -> {

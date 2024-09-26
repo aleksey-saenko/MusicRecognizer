@@ -39,7 +39,7 @@ internal fun HapticFeedbackDialog(
                         .verticalScroll(rememberScrollState())
                 ) {
                     DialogSwitch(
-                        title = stringResource(StringsR.string.vibrate_on_tap),
+                        title = stringResource(StringsR.string.vibration_feedback_dialog_vibrate_on_tap),
                         checked = hapticFeedback.vibrateOnTap,
                         onClick = {
                             val newOptions = hapticFeedback.copy(
@@ -49,7 +49,7 @@ internal fun HapticFeedbackDialog(
                         }
                     )
                     DialogSwitch(
-                        title = stringResource(StringsR.string.vibrate_on_result),
+                        title = stringResource(StringsR.string.vibration_feedback_dialog_vibrate_on_result),
                         checked = hapticFeedback.vibrateOnResult,
                         onClick = {
                             val newOptions = hapticFeedback.copy(

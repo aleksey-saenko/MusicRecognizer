@@ -25,7 +25,7 @@ internal fun DeleteSelectedDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.delete_recognitions))
+            Text(text = stringResource(StringsR.string.delete_recognitions_title))
         },
         confirmButton = {
             TextButton(onClick = onDeleteClick, enabled = !inProgress) {
@@ -49,7 +49,7 @@ internal fun DeleteSelectedDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
-                Text(text = stringResource(StringsR.string.delete_selected_recognitions_dialog))
+                Text(text = stringResource(StringsR.string.delete_recognitions_message))
             }
         },
         onDismissRequest = {

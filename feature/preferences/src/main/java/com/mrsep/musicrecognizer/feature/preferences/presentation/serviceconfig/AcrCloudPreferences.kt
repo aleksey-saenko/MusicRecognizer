@@ -54,7 +54,7 @@ internal fun AcrCloudPreferences(
             options = AcrCloudRegion.entries.toImmutableList(),
             host = state.host.value,
             onHostChanged = { newHost -> state.host.value = newHost },
-            error = stringResource(StringsR.string.must_not_be_empty)
+            error = stringResource(StringsR.string.text_field_must_not_be_empty)
                 .takeIf { showHostError },
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -63,7 +63,7 @@ internal fun AcrCloudPreferences(
             value = state.accessKey.value,
             onValueChange = { newAccessKey -> state.accessKey.value = newAccessKey },
             label = stringResource(StringsR.string.access_key),
-            error = stringResource(StringsR.string.must_not_be_empty)
+            error = stringResource(StringsR.string.text_field_must_not_be_empty)
                 .takeIf { showAccessKeyError },
             modifier = Modifier.fillMaxWidth()
         )
@@ -73,7 +73,7 @@ internal fun AcrCloudPreferences(
             value = state.accessSecret.value,
             onValueChange = { newAccessSecret -> state.accessSecret.value = newAccessSecret },
             label = stringResource(StringsR.string.access_secret),
-            error = stringResource(StringsR.string.must_not_be_empty)
+            error = stringResource(StringsR.string.text_field_must_not_be_empty)
                 .takeIf { showAccessSecretError },
             modifier = Modifier.fillMaxWidth()
         )

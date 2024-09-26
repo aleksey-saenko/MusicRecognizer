@@ -40,17 +40,17 @@ internal fun AnimatedVisibilityScope.AuthErrorShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.auth_error),
+            text = stringResource(StringsR.string.result_title_auth_error),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.auth_error_message),
+            text = stringResource(StringsR.string.result_message_auth_error),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )

@@ -50,7 +50,7 @@ internal fun RenameRecognitionDialog(
         },
         title = {
             Text(
-                text = stringResource(StringsR.string.rename),
+                text = stringResource(StringsR.string.recognition_action_rename),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -69,7 +69,7 @@ internal fun RenameRecognitionDialog(
                             IconButton(onClick = { newName = "" }) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.outline_close_24),
-                                    contentDescription = stringResource(StringsR.string.clear)
+                                    contentDescription = stringResource(StringsR.string.clear_text_field)
                                 )
                             }
                         }

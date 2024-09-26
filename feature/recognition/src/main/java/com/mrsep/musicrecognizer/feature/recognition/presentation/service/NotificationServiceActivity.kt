@@ -112,10 +112,10 @@ class NotificationServiceActivity : ComponentActivity() {
             .setTitle(StringsR.string.permissions)
             .setMessage(
                 buildString {
-                    append(getString(StringsR.string.recorder_permission_rationale_message))
+                    append(getString(StringsR.string.permission_rationale_record_audio))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         append(" ")
-                        append(getString(StringsR.string.notificaiton_permission_rationale_message))
+                        append(getString(StringsR.string.permission_rationale_post_notifications))
                     }
                 }
             )
@@ -143,10 +143,10 @@ class NotificationServiceActivity : ComponentActivity() {
             .setTitle(StringsR.string.permissions)
             .setMessage(
                 buildString {
-                    append(getString(StringsR.string.recorder_permission_rationale_message))
+                    append(getString(StringsR.string.permission_rationale_record_audio))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         append(" ")
-                        append(getString(StringsR.string.notificaiton_permission_rationale_message))
+                        append(getString(StringsR.string.permission_rationale_post_notifications))
                     }
                     append("\n")
                     append(getString(StringsR.string.permissions_denied_message))
@@ -154,7 +154,7 @@ class NotificationServiceActivity : ComponentActivity() {
             )
         if (appSettingsIntent.resolveActivity(packageManager) != null) {
             dialogBuilder
-                .setPositiveButton(getString(StringsR.string.open_settings)) { dialog, _ ->
+                .setPositiveButton(getString(StringsR.string.permissions_denied_open_settings)) { dialog, _ ->
                     startActivity(appSettingsIntent)
                     dialog.dismiss()
                 }

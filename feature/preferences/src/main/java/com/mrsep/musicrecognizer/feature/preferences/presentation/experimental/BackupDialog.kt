@@ -64,7 +64,7 @@ internal fun BackupDialog(
     val dismissOnClickOutside = backupState !is BackupUiState.InProgress
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.backup))
+            Text(text = stringResource(StringsR.string.backup_dialog_title))
         },
         confirmButton = {
             when (backupState) {
@@ -75,7 +75,7 @@ internal fun BackupDialog(
                     enabled = selectedBackupEntries.isNotEmpty(),
                     onClick = { onBackupClick(backupState.uri, selectedBackupEntries) }
                 ) {
-                    Text(text = stringResource(StringsR.string.backup))
+                    Text(text = stringResource(StringsR.string.backup_dialog_button_backup))
                 }
 
                 is BackupUiState.Result -> when (backupState.result) {

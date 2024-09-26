@@ -191,8 +191,8 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
-                            title = stringResource(StringsR.string.recording_error),
-                            message = stringResource(StringsR.string.message_record_error),
+                            title = stringResource(StringsR.string.result_title_recording_error),
+                            message = stringResource(StringsR.string.result_message_recording_error),
                             moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
@@ -204,8 +204,8 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
-                            title = stringResource(StringsR.string.bad_network_response),
-                            message = stringResource(StringsR.string.message_http_error),
+                            title = stringResource(StringsR.string.result_title_bad_network_response),
+                            message = stringResource(StringsR.string.result_message_bad_network_response),
                             moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
@@ -217,8 +217,8 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
-                            title = stringResource(StringsR.string.internal_error),
-                            message = stringResource(StringsR.string.message_unhandled_error),
+                            title = stringResource(StringsR.string.result_title_internal_error),
+                            message = stringResource(StringsR.string.result_message_internal_error),
                             moreInfo = thisStatus.result.remoteError.getErrorInfo(),
                             recognitionTask = thisStatus.result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
@@ -399,13 +399,13 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Bool
         RecognitionStatus.Ready -> if (skipReady) {
             " "
         } else {
-            stringResource(StringsR.string.tap_to_recognize)
+            stringResource(StringsR.string.main_screen_tap_to_recognize)
         }
 
         is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTry) {
-            stringResource(StringsR.string.trying_one_more_time)
+            stringResource(StringsR.string.main_screen_listening_extra_time)
         } else {
-            stringResource(StringsR.string.listening)
+            stringResource(StringsR.string.main_screen_listening)
         }
 
         is RecognitionStatus.Done -> " "

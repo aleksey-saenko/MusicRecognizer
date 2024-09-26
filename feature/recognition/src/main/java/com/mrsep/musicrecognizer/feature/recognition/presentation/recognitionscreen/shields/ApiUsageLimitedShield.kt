@@ -40,17 +40,17 @@ internal fun AnimatedVisibilityScope.ApiUsageLimitedShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.service_usage_limited),
+            text = stringResource(StringsR.string.result_title_service_usage_limited),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.service_usage_limited_message),
+            text = stringResource(StringsR.string.result_message_service_usage_limited),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )

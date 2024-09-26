@@ -65,7 +65,7 @@ internal fun ShareBottomSheet(
         )
         Spacer(Modifier.height(16.dp))
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            ShareGroup(title = stringResource(StringsR.string.metadata)) {
+            ShareGroup(title = stringResource(StringsR.string.track_metadata)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
@@ -107,7 +107,7 @@ internal fun ShareBottomSheet(
             }
             if (track.trackLinks.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
-                ShareGroup(title = stringResource(StringsR.string.music_services_links)) {
+                ShareGroup(title = stringResource(StringsR.string.share_music_services_links)) {
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier

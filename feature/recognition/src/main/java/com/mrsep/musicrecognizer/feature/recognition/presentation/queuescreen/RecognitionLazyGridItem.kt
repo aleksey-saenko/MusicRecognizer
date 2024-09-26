@@ -117,14 +117,14 @@ internal fun RecognitionLazyGridItem(
                 if (playing) {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_pause_48),
-                        contentDescription = stringResource(StringsR.string.stop_player),
+                        contentDescription = stringResource(StringsR.string.recording_stop_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )
                 } else {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_play_arrow_48),
-                        contentDescription = stringResource(StringsR.string.start_player),
+                        contentDescription = stringResource(StringsR.string.recording_start_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )

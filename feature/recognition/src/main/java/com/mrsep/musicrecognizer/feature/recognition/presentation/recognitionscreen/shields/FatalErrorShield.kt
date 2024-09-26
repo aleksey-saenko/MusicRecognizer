@@ -70,7 +70,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -155,7 +155,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                 onClick = onRetryClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(StringsR.string.retry))
+                Text(text = stringResource(StringsR.string.button_retry_recognition))
             }
         }
     }

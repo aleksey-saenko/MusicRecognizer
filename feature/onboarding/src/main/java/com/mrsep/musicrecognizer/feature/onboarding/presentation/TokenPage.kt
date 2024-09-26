@@ -77,7 +77,7 @@ internal fun TokenPage(
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    text = stringResource(StringsR.string.token_skip_message),
+                    text = stringResource(StringsR.string.onboarding_token_skip_message),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 488.dp)
                 )
@@ -142,7 +142,7 @@ internal fun TokenPage(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(text = stringResource(StringsR.string.validating))
+                            Text(text = stringResource(StringsR.string.onboarding_token_validating))
                             VinylRotating(modifier = Modifier.size(20.dp))
                         }
 
@@ -157,11 +157,11 @@ internal fun TokenPage(
 @Stable
 @Composable
 private fun ConfigValidationStatus.errorMessageOrNull() = when (this) {
-    ConfigValidationStatus.Error.Empty -> stringResource(StringsR.string.must_not_be_empty)
-    ConfigValidationStatus.Error.AuthError -> stringResource(StringsR.string.auth_error)
-    ConfigValidationStatus.Error.ApiUsageLimited -> stringResource(StringsR.string.service_usage_limited)
-    ConfigValidationStatus.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
-    ConfigValidationStatus.Error.UnknownError -> stringResource(StringsR.string.unknown_error)
+    ConfigValidationStatus.Error.Empty -> stringResource(StringsR.string.text_field_must_not_be_empty)
+    ConfigValidationStatus.Error.AuthError -> stringResource(StringsR.string.result_title_auth_error)
+    ConfigValidationStatus.Error.ApiUsageLimited -> stringResource(StringsR.string.result_title_service_usage_limited)
+    ConfigValidationStatus.Error.BadConnection -> stringResource(StringsR.string.result_title_bad_connection)
+    ConfigValidationStatus.Error.UnknownError -> stringResource(StringsR.string.result_title_unknown_error)
     ConfigValidationStatus.Unchecked,
     ConfigValidationStatus.Validating,
     ConfigValidationStatus.Success -> null

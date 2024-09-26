@@ -40,7 +40,7 @@ internal fun AuddHelpDialog(
                 Text(
                     text = AnnotatedString.fromHtml(
                         htmlString = stringResource(
-                            StringsR.string.audd_help_message,
+                            StringsR.string.audd_help_dialog_message,
                             stringResource(StringsR.string.audd_sign_up_url)
                         ),
                         linkStyles = TextLinkStyles(
@@ -50,7 +50,7 @@ internal fun AuddHelpDialog(
                     ),
                 )
                 Spacer(Modifier.height(16.dp))
-                Text(text = stringResource(StringsR.string.audd_help_message_empty_token))
+                Text(text = stringResource(StringsR.string.audd_help_dialog_message_empty_token))
             }
         },
         onDismissRequest = onDismissClick

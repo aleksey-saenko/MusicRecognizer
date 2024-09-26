@@ -44,7 +44,7 @@ internal fun PagerControls(
                 ) {
                     Icon(
                         painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                        contentDescription = stringResource(StringsR.string.back)
+                        contentDescription = stringResource(StringsR.string.nav_back)
                     )
                 }
             } else {
@@ -67,7 +67,7 @@ internal fun PagerControls(
                 ) {
                     Icon(
                         painter = painterResource(UiR.drawable.outline_arrow_forward_24),
-                        contentDescription = stringResource(StringsR.string.forward)
+                        contentDescription = stringResource(StringsR.string.nav_forward)
                     )
                 }
             } else {

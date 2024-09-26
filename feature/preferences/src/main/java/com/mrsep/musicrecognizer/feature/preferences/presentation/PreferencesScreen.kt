@@ -66,11 +66,11 @@ internal fun PreferencesScreen(
                         .nestedScroll(topBarBehaviour.nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    PreferenceGroup(title = stringResource(StringsR.string.recognition)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_recognition)) {
                         val currentProvider = uiState.preferences.currentRecognitionProvider
                         var showServiceDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.recognition_provider_preference_title),
+                            title = stringResource(StringsR.string.pref_title_recognition_provider),
                             subtitle = uiState.preferences.currentRecognitionProvider.getTitle(),
                             onItemClick = { showServiceDialog = true }
                         )
@@ -120,8 +120,8 @@ internal fun PreferencesScreen(
                         }
                         var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.fallback_policy),
-                            subtitle = stringResource(StringsR.string.fallback_policy_pref_subtitle)
+                            title = stringResource(StringsR.string.pref_title_fallback_policy),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_fallback_policy)
                         ) {
                             showPolicyDialog = true
                         }
@@ -133,7 +133,7 @@ internal fun PreferencesScreen(
                             )
                         }
                         PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.recognize_on_startup),
+                            title = stringResource(StringsR.string.pref_title_recognize_on_startup),
                             onClick = {
                                 viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup)
                             },
@@ -142,7 +142,7 @@ internal fun PreferencesScreen(
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.notifications)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_notifications)) {
                         NotificationServiceSwitch(
                             serviceEnabled = uiState.preferences.notificationServiceEnabled,
                             setServiceEnabled = viewModel::setNotificationServiceEnabled
@@ -150,10 +150,10 @@ internal fun PreferencesScreen(
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.appearance)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_appearance)) {
                         var showThemeDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.theme),
+                            title = stringResource(StringsR.string.pref_title_theme),
                             onItemClick = { showThemeDialog = true }
                         )
                         if (showThemeDialog) {
@@ -172,7 +172,7 @@ internal fun PreferencesScreen(
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         val requiredMusicServices = uiState.preferences.requiredMusicServices
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.music_services_links),
+                            title = stringResource(StringsR.string.pref_title_music_services_links),
                             subtitle = requiredMusicServices.getEnumerationForSubtitle(limit = 3),
                             onItemClick = { showServicesDialog = true }
                         )
@@ -187,14 +187,14 @@ internal fun PreferencesScreen(
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.misc)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
                         val vibratorAvailable = remember {
                             context.getDefaultVibrator().hasVibrator()
                         }
                         if (vibratorAvailable) {
                             var showHapticDialog by rememberSaveable { mutableStateOf(false) }
                             PreferenceClickableItem(
-                                title = stringResource(StringsR.string.vibration_feedback),
+                                title = stringResource(StringsR.string.pref_title_vibration_feedback),
                                 onItemClick = { showHapticDialog = true }
                             )
                             if (showHapticDialog) {
@@ -206,17 +206,17 @@ internal fun PreferencesScreen(
                             }
                         }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.experimental_features),
-                            subtitle = stringResource(StringsR.string.work_in_progress),
+                            title = stringResource(StringsR.string.pref_title_experimental_features),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_experimental_features),
                             onItemClick = onNavigateToExperimentalFeaturesScreen
                         )
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.about),
+                            title = stringResource(StringsR.string.pref_title_about_app),
                             onItemClick = onNavigateToAboutScreen
                         )
                         if (showDeveloperOptions) {
                             PreferenceClickableItem(
-                                title = stringResource(StringsR.string.developer_options),
+                                title = "Developer options",
                                 onItemClick = onNavigateToDeveloperScreen
                             )
                         }
@@ -230,13 +230,13 @@ internal fun PreferencesScreen(
 @Stable
 @Composable
 private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
-    0 -> stringResource(StringsR.string.none)
+    0 -> stringResource(StringsR.string.pref_subtitle_no_selected_services)
     in 1..limit -> {
         map { service -> stringResource(service.titleId()) }.joinToString(", ")
     }
 
     else -> {
         take(3).map { service -> stringResource(service.titleId()) }.joinToString(", ")
-            .plus(stringResource(StringsR.string.format_more_services, size - limit))
+            .plus(stringResource(StringsR.string.pref_subtitle_format_more_services, size - limit))
     }
 }

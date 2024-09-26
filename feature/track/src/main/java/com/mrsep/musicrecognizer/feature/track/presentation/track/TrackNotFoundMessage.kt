@@ -35,7 +35,7 @@ internal fun TrackNotFoundMessage(
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            text = stringResource(StringsR.string.track_not_found),
+            text = stringResource(StringsR.string.track_not_found_title),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)

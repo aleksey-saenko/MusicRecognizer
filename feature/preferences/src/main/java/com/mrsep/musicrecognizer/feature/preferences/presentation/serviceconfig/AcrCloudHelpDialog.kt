@@ -41,7 +41,7 @@ internal fun AcrCloudHelpDialog(
                 Text(
                     text = AnnotatedString.fromHtml(
                         htmlString = stringResource(
-                            StringsR.string.acr_cloud_help_message,
+                            StringsR.string.acr_cloud_help_dialog_message,
                             stringResource(StringsR.string.acrcloud_project_guide_url)
                         ),
                         linkStyles = TextLinkStyles(
@@ -52,15 +52,15 @@ internal fun AcrCloudHelpDialog(
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = stringResource(StringsR.string.acr_cloud_help_steps_title),
+                    text = stringResource(StringsR.string.acr_cloud_help_dialog_steps_title),
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(12.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_step1))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_step2))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_step3))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_step4))
+                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step1))
+                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step2))
+                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step3))
+                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step4))
                 }
             }
         },

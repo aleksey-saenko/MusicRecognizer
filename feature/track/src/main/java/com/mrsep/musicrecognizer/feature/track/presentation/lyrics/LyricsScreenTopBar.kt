@@ -34,7 +34,7 @@ internal fun LyricsScreenTopBar(
             IconButton(onClick = onBackPressed) {
                 Icon(
                     painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                    contentDescription = stringResource(StringsR.string.back)
+                    contentDescription = stringResource(StringsR.string.nav_back)
                 )
             }
         },
@@ -49,14 +49,14 @@ internal fun LyricsScreenTopBar(
                             IconButton(onClick = onStopAutoScrollClick) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.outline_pause_fill1_24),
-                                    contentDescription = stringResource(StringsR.string.stop_autoscroll)
+                                    contentDescription = stringResource(StringsR.string.lyrics_stop_autoscroll)
                                 )
                             }
                         } else {
                             IconButton(onClick = onLaunchAutoScrollClick) {
                                 Icon(
                                     painter = painterResource(UiR.drawable.outline_play_arrow_fill1_24),
-                                    contentDescription = stringResource(StringsR.string.start_autoscroll)
+                                    contentDescription = stringResource(StringsR.string.lyrics_start_autoscroll)
                                 )
                             }
                         }
@@ -94,7 +94,7 @@ internal fun LyricsScreenLoadingTopBar(
             IconButton(onClick = onBackPressed) {
                 Icon(
                     painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                    contentDescription = stringResource(StringsR.string.back)
+                    contentDescription = stringResource(StringsR.string.nav_back)
                 )
             }
         },

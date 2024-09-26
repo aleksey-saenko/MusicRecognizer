@@ -25,7 +25,7 @@ internal fun DeleteSelectedDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.delete_tracks))
+            Text(text = stringResource(StringsR.string.delete_tracks_title))
         },
         confirmButton = {
             TextButton(onClick = onDeleteClick, enabled = !inProgress) {
@@ -49,7 +49,7 @@ internal fun DeleteSelectedDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
-                Text(text = stringResource(StringsR.string.delete_selected_tracks_dialog))
+                Text(text = stringResource(StringsR.string.delete_tracks_message))
             }
         },
         onDismissRequest = {

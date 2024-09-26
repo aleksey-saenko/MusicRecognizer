@@ -90,7 +90,7 @@ internal fun LibraryScreenTopBar(
                         IconButton(onClick = onSearchClick) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_search_24),
-                                contentDescription = stringResource(StringsR.string.search_track)
+                                contentDescription = stringResource(StringsR.string.library_search)
                             )
                         }
                         IconButton(onClick = onFilterClick) {
@@ -160,7 +160,7 @@ private fun LibraryDropdownMenu(
             shape = MaterialTheme.shapes.small,
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
+                text = { Text(text = stringResource(StringsR.string.pref_title_use_grid_layout)) },
                 onClick = { onChangeUseGridLayout(!useGridLayout) },
                 trailingIcon = {
                     Icon(
@@ -173,7 +173,7 @@ private fun LibraryDropdownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text(text = stringResource(StringsR.string.show_recognition_date)) },
+                text = { Text(text = stringResource(StringsR.string.pref_title_show_recognition_date)) },
                 onClick = { onChangeShowRecognitionDate(!showRecognitionDate) },
                 trailingIcon = {
                     Icon(

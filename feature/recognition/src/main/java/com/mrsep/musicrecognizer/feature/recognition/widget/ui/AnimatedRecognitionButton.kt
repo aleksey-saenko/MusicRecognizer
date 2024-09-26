@@ -37,7 +37,7 @@ internal fun AnimatedRecognitionButton(
     val context = LocalContext.current
     val buttonScaleFactor = buttonScaleFactor()
     val contentDescription = context.getString(
-        if (isRecognizing) StringsR.string.recognize else StringsR.string.cancel_recognition
+        if (isRecognizing) StringsR.string.action_recognize else StringsR.string.action_cancel_recognition
     )
     Box(
         modifier = GlanceModifier

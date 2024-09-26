@@ -132,7 +132,7 @@ internal fun ExperimentalFeaturesScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(StringsR.string.experimental_features),
+                    text = stringResource(StringsR.string.pref_title_experimental_features),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -141,24 +141,24 @@ internal fun ExperimentalFeaturesScreen(
                 IconButton(onClick = onBackPressed) {
                     Icon(
                         painter = painterResource(R.drawable.outline_arrow_back_24),
-                        contentDescription = stringResource(StringsR.string.back)
+                        contentDescription = stringResource(StringsR.string.nav_back)
                     )
                 }
             },
         )
         PreferenceGroup(
-            title = stringResource(StringsR.string.backup_and_restore_title)
+            title = stringResource(StringsR.string.pref_title_backup_and_restore)
         ) {
             PreferenceClickableItem(
-                title = stringResource(StringsR.string.backup),
-                subtitle = stringResource(StringsR.string.create_backup_subtitle),
+                title = stringResource(StringsR.string.pref_title_backup),
+                subtitle = stringResource(StringsR.string.pref_subtitle_backup),
                 onItemClick = {
                     backupUriLauncher.launch(context.getBackupName())
                 }
             )
             PreferenceClickableItem(
-                title = stringResource(StringsR.string.restore),
-                subtitle = stringResource(StringsR.string.restore_from_backup_subtitle),
+                title = stringResource(StringsR.string.pref_title_restore),
+                subtitle = stringResource(StringsR.string.pref_subtitle_restore),
                 onItemClick = {
                     restoreUriLauncher.launch(arrayOf("*/*"))
                 }

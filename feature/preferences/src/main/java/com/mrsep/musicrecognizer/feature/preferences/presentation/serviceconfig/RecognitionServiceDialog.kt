@@ -157,6 +157,7 @@ private fun RecognitionProviderDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             shape = MaterialTheme.shapes.small,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(

@@ -233,7 +233,7 @@
     <string name="theme_use_artwork_colors">Цвета обложки</string>
     <string name="theme_use_pure_black">Черный фон</string>
     <string name="pref_title_music_services_links">Ссылки на музыкальные сервисы</string>
-    <string name="pref_subtitle_format_more_services">" и ещё %d"</string>
+    <string name="pref_subtitle_format_more_services">"%1$s и ещё %2$d"</string>
     <string name="pref_subtitle_no_selected_services">Не показывать ссылки</string>
     <string name="music_services_links_dialog">Выберите музыкальные сервисы, для которых вы бы хотели видеть веб-ссылки (если они доступны):</string>
     <string name="pref_group_misc">Разное</string>

@@ -227,7 +227,7 @@
     <string name="theme_use_artwork_colors">Kapak resminin renklerini kullan</string>
     <string name="theme_use_pure_black">Saf siyah kullan</string>
     <string name="pref_title_music_services_links">Müzik hizmeti bağlantıları</string>
-    <string name="pref_subtitle_format_more_services">", ve %d daha fazlası"</string>
+    <string name="pref_subtitle_format_more_services">"%1$s, ve %2$d daha fazlası"</string>
     <string name="pref_subtitle_no_selected_services">Hiçbiri</string>
     <string name="music_services_links_dialog">Web bağlantılarını görmek istediğiniz müzik hizmetlerini seçin (mevcut ise):</string>
     <string name="pref_title_vibration_feedback">Titreşim geri bildirimi</string>

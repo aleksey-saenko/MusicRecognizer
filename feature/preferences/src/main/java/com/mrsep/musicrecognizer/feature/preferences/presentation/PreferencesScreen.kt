@@ -236,7 +236,8 @@ private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = 
     }
 
     else -> {
-        take(3).map { service -> stringResource(service.titleId()) }.joinToString(", ")
-            .plus(stringResource(StringsR.string.pref_subtitle_format_more_services, size - limit))
+        val limited = take(limit)
+            .map { service -> stringResource(service.titleId()) }.joinToString(", ")
+        stringResource(StringsR.string.pref_subtitle_format_more_services, limited, size - limit)
     }
 }

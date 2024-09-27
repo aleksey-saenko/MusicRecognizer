@@ -227,7 +227,7 @@
     <string name="theme_use_artwork_colors">Usar cores da arte</string>
     <string name="theme_use_pure_black">Usar preto puro</string>
     <string name="pref_title_music_services_links">Links de serviços de música</string>
-    <string name="pref_subtitle_format_more_services">", e %d mais"</string>
+    <string name="pref_subtitle_format_more_services">"%1$s, e %2$d mais"</string>
     <string name="pref_subtitle_no_selected_services">Nenhum</string>
     <string name="music_services_links_dialog">Escolha os serviços de músicas de quais você quer ver links da web (quando disponível):</string>
     <string name="pref_group_misc">Outras</string>

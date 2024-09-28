@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.presentation
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_MAIN
 import android.graphics.Color
@@ -106,7 +108,10 @@ class MainActivity : ComponentActivity() {
     private fun handleRecognitionRequest(intent: Intent) {
         when (intent.action) {
             ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
-            ACTION_MAIN -> viewModel.requestRecognitionOnStartupIfPreferred()
+            ACTION_MAIN -> {
+                if (intent.getBooleanExtra(KEY_RESTART_ON_BACKUP_RESTORE, false)) return
+                viewModel.requestRecognitionOnStartupIfPreferred()
+            }
         }
     }
 
@@ -119,10 +124,7 @@ class MainActivity : ComponentActivity() {
                 .first()
             if (shouldTurnOnService) {
                 startService(
-                    Intent(
-                        this@MainActivity,
-                        NotificationService::class.java
-                    ).apply {
+                    Intent(this@MainActivity, NotificationService::class.java).apply {
                         action = NotificationService.HOLD_MODE_ON_ACTION
                         putExtra(NotificationService.KEY_RESTRICTED_START, false)
                     }
@@ -134,6 +136,18 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val ACTION_RECOGNIZE = "com.mrsep.musicrecognizer.intent.action.RECOGNIZE"
+        private const val KEY_RESTART_ON_BACKUP_RESTORE = "RESTART_ON_BACKUP_RESTORE"
+
+        fun Context.restartApplicationOnRestore() {
+            val componentName = ComponentName(this, MainActivity::class.java)
+            // Set the package explicitly, required for API 34 and later
+            // Ref: https://developer.android.com/about/versions/14/behavior-changes-14#safer-intents
+            val intent = Intent.makeRestartActivityTask(componentName)
+                .setPackage(packageName)
+                .putExtra(KEY_RESTART_ON_BACKUP_RESTORE, true)
+            startActivity(intent)
+            Runtime.getRuntime().exit(0)
+        }
     }
 }
 

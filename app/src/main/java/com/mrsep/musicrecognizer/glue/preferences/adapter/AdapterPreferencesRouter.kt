@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.presentation.MainActivity.Companion.restartApplicationOnRestore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -24,5 +25,9 @@ class AdapterPreferencesRouter @Inject constructor(
             Intent(appContext, NotificationService::class.java)
                 .setAction(NotificationService.HOLD_MODE_OFF_ACTION)
         )
+    }
+
+    override fun restartApplicationOnRestore() {
+        appContext.restartApplicationOnRestore()
     }
 }

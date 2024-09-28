@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation.experimental
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.widget.Toast
@@ -97,7 +96,7 @@ internal fun ExperimentalFeaturesScreen(
     restoreUiState?.let { restoreState ->
         RestoreDialog(
             restoreState = restoreState,
-            onAppRestartRequest = context::restartApplication,
+            onAppRestartRequest = viewModel::restartApplicationOnRestore,
             onRestoreClick = viewModel::restore,
             onDismissRequest = when (restoreState) {
                 is RestoreUiState.ValidatingBackup,
@@ -176,14 +175,3 @@ private fun Context.deleteUriFile(uri: Uri): Boolean = try {
 
 private fun Context.getBackupName(): String = getString(StringsR.string.app_name) + "_Backup" +
         "_${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(ZonedDateTime.now())}"
-
-private fun Context.restartApplication() {
-    val intent = packageManager.getLaunchIntentForPackage(packageName)
-    val componentName = intent!!.component
-    val mainIntent = Intent.makeRestartActivityTask(componentName)
-    // Required for API 34 and later
-    // Ref: https://developer.android.com/about/versions/14/behavior-changes-14#safer-intents
-    mainIntent.setPackage(packageName)
-    startActivity(mainIntent)
-    Runtime.getRuntime().exit(0)
-}

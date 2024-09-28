@@ -8,6 +8,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.AppBackupManager
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupEntry
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupMetadataResult
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupResult
+import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
 import com.mrsep.musicrecognizer.feature.preferences.domain.RestoreResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.SupervisorJob
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val appBackupManager: AppBackupManager,
+    private val preferencesRouter: PreferencesRouter,
 ) : ViewModel() {
 
     private val _backupUiState = MutableStateFlow<BackupUiState?>(null)
@@ -100,6 +102,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
             restoreMasterJob.children.forEach { it.cancelAndJoin() }
             _restoreUiState.update { null }
         }
+    }
+
+    fun restartApplicationOnRestore() {
+        preferencesRouter.restartApplicationOnRestore()
     }
 }
 

@@ -5,4 +5,6 @@ interface PreferencesRouter {
     fun startServiceHoldMode()
 
     fun stopServiceHoldMode()
+
+    fun restartApplicationOnRestore()
 }

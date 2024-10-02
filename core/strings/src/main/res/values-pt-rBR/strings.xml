@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="main_screen_tap_to_recognize">Toque para identificar</string>
     <string name="main_screen_listening">Escutando</string>
     <string name="main_screen_listening_extra_time">Tentando mais uma vez</string>
@@ -20,7 +19,6 @@
     <string name="quick_tile_cancel_recognition">Cancelar identificação</string>
     <string name="action_recognize">Identificar</string>
     <string name="action_cancel_recognition">Cancelar identificação</string>
-
     <!-- General use -->
     <string name="nav_back">Voltar</string>
     <string name="nav_forward">Para frente</string>
@@ -46,7 +44,6 @@
     <string name="help">Ajuda</string>
     <string name="show_more">Mostrar mais</string>
     <string name="show_less">Mostrar menos</string>
-
     <!-- Permissions -->
     <string name="permissions">Permissões</string>
     <string name="request_permission">Solicitar permissão</string>
@@ -55,7 +52,6 @@
     <string name="permissions_denied_message">Solicitações prévias de permissões foram negadas. Você pode mudar sua decisão pelas configurações.</string>
     <string name="permissions_denied_open_settings">Abrir configurações</string>
     <string name="permission_granted">Permissão concedida</string>
-
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Bem-vindo</string>
     <string name="onboarding_welcome_message">Audile é um aplicativo para identificação de músicas, que pode te ajudar a rapidamente e com precisão identificar uma faixa tocando ao redor de você.</string>
@@ -66,7 +62,6 @@
     <string name="onboarding_final_title">Estamos prontos para começar</string>
     <string name="onboarding_final_message">Configuração completada com sucesso</string>
     <string name="onboarding_final_get_started">Iniciar</string>
-
     <!-- Recognition screen -->
     <string name="recognition">Identificação</string>
     <string name="popup_offline_mode">Modo off-line</string>
@@ -89,7 +84,6 @@
     <string name="result_title_internal_error">Erro interno</string>
     <string name="result_message_internal_error">Um erro interno ocorreu</string>
     <string name="result_title_unknown_error">Erro desconhecido</string>
-
     <!-- Library screen -->
     <string name="library">Biblioteca</string>
     <string name="empty_library_title">Nenhuma faixa identificada</string>
@@ -117,7 +111,6 @@
     <string name="no_tracks_match_search">Nenhuma faixa encontrada com as condições de pesquisa</string>
     <string name="delete_tracks_title">Excluir faixas</string>
     <string name="delete_tracks_message">Tem certeza que deseja excluir as faixas selecionadas\? Este processo não pode ser desfeito.</string>
-
     <!-- Queue screen -->
     <string name="recognition_queue">Fila de identificações</string>
     <string name="queue">Fila</string>
@@ -143,7 +136,6 @@
     <string name="recording_stop_player">Parar reprodutor</string>
     <string name="delete_recognitions_title">Excluir identificações</string>
     <string name="delete_recognitions_message">Tem certeza que deseja excluir e cancelar as identificações selecionadas\? Este processo não pode ser desfeito.</string>
-
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Marcar como favorito</string>
     <string name="unmark_track_as_favorite">Desmarcar como favorito</string>
@@ -184,7 +176,6 @@
     <string name="align_to_start">Alinhar ao começo</string>
     <string name="bold_text">Texto negrito</string>
     <string name="high_contrast_text">Texto de alto-contraste</string>
-
     <!-- Preferences screen -->
     <string name="preferences">Preferências</string>
     <string name="pref_group_recognition">Identificação</string>
@@ -242,7 +233,6 @@
     <string name="about_purpose_track_links_service">Fornece links adicionais de faixa de plataformas específicas</string>
     <string name="about_pref_title_github_repo">Repositório do GitHub</string>
     <string name="about_pref_title_privacy_policy">Política de Privacidade</string>
-
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>
     <string name="notification_channel_name_control">Controlar notificações</string>
@@ -251,7 +241,6 @@
     <string name="notification_channel_desc_result">Permite receber resultados de identificações pelas notificações</string>
     <string name="notification_channel_name_scheduled_result">Resultados de identificações agendadas</string>
     <string name="notification_channel_desc_scheduled_result">Permite receber resultados de identificações agendadas pelas notificações</string>
-
     <!--It'd be nice to translate this.
     <string name="api_token" translatable="false">Token da API</string>
     <string name="host" translatable="false">Serviço</string>
@@ -259,4 +248,28 @@
     <string name="access_secret" translatable="false">Segredo de acesso</string>
     -->
 
+<string name="app_shortcut_recognize_short">Identificar</string>
+    <string name="app_shortcut_recognize_long">Identificar em segundo plano</string>
+    <string name="app_shortcut_open_and_recognize_short">Abrir e Identificar</string>
+    <string name="app_shortcut_open_and_recognize_long">Abrir o app e identificar</string>
+    <string name="recognition_provider_dialog_title">Provedor</string>
+    <string name="pref_title_experimental_features">Funções experimentais</string>
+    <string name="pref_subtitle_experimental_features">Sendo trabalhado</string>
+    <string name="pref_title_backup_and_restore">Backup &amp; Restauração</string>
+    <string name="pref_subtitle_backup_and_restore">Fazer backup de seu banco de dados e preferências</string>
+    <string name="pref_title_backup">Fazer backup</string>
+    <string name="pref_subtitle_backup">Exportar dados do app e preferências</string>
+    <string name="backup_dialog_title">Fazer backup</string>
+    <string name="backup_dialog_button_backup">Fazer backup</string>
+    <string name="pref_title_restore">Restaurar</string>
+    <string name="pref_subtitle_restore">Restaurar dados do app e preferências de um backup</string>
+    <string name="restore_dialog_title">Restaurar</string>
+    <string name="restore_dialog_button_restore">Restaurar</string>
+    <string name="about_pref_subtitle_github_repo">Código-fonte, problemas e outras informações</string>
+    <string name="about_pref_subtitle_privacy_policy">Aprenda mais como sobre o app lida com seus dados</string>
+    <string name="about_pref_title_license">Licença</string>
+    <string name="about_pref_subtitle_third_licenses">Licenças de bibliotecas de terceiros que o Audile usa</string>
+    <string name="result_title_recognition_saved">Identificação salva</string>
+    <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3</string>
+    <string name="about_pref_title_third_licenses">Licenças de terceiros</string>
 </resources>

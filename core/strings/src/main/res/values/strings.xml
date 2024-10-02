@@ -259,12 +259,17 @@
     <string name="restore_dialog_title">Restore</string>
     <string name="restore_dialog_button_restore">Restore</string>
     <string name="pref_title_about_app">About</string>
-    <string name="pref_group_powered_by">Powered by</string>
-    <string name="purpose_recognition_service">Provides song identification and primary metadata</string>
-    <string name="purpose_track_links_service">Provides additional platform-specific track links</string>
-    <string name="github_repository">GitHub repository</string>
-    <string name="privacy_policy">Privacy policy</string>
-    <string name="license_gnu_gpl_v3">License GNU GPLv3</string>
+    <string name="about_pref_group_powered_by">Powered by</string>
+    <string name="about_purpose_recognition_service">Provides song identification and primary metadata</string>
+    <string name="about_purpose_track_links_service">Provides additional platform-specific track links</string>
+    <string name="about_pref_title_github_repo">GitHub repository</string>
+    <string name="about_pref_subtitle_github_repo">Source code, issues and other information</string>
+    <string name="about_pref_title_privacy_policy">Privacy policy</string>
+    <string name="about_pref_subtitle_privacy_policy">Read how the app handles your data</string>
+    <string name="about_pref_title_license">License</string>
+    <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3</string>
+    <string name="about_pref_title_third_licenses">Third-party licences</string>
+    <string name="about_pref_subtitle_third_licenses">Licenses of the third-party libraries Audile uses</string>
 
     <string name="notification_button_disable_service">Stop service</string>
     <string name="notification_button_show_lyrics">Show lyrics</string>

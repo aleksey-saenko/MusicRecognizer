@@ -89,20 +89,20 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 2.dp)
             )
             Spacer(Modifier.height(16.dp))
-            PreferenceGroup(title = stringResource(StringsR.string.pref_group_powered_by)) {
+            PreferenceGroup(title = stringResource(StringsR.string.about_pref_group_powered_by)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.audd),
-                    subtitle = stringResource(StringsR.string.purpose_recognition_service),
+                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
                     onItemClick = { context.openUrlImplicitly(AUDD_URL) }
                 )
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.acr_cloud),
-                    subtitle = stringResource(StringsR.string.purpose_recognition_service),
+                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
                     onItemClick = { context.openUrlImplicitly(ACR_CLOUD_URL) }
                 )
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.odesli),
-                    subtitle = stringResource(StringsR.string.purpose_track_links_service),
+                    subtitle = stringResource(StringsR.string.about_purpose_track_links_service),
                     onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
                 )
             }
@@ -110,15 +110,25 @@ internal fun AboutScreen(
             Spacer(Modifier.height(16.dp))
             PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
                 PreferenceClickableItem(
-                    title = stringResource(StringsR.string.github_repository),
+                    title = stringResource(StringsR.string.about_pref_title_github_repo),
+                    subtitle = stringResource(StringsR.string.about_pref_subtitle_github_repo),
                     onItemClick = { context.openUrlImplicitly(GITHUB_REPO_URL) }
                 )
                 PreferenceClickableItem(
-                    title = stringResource(StringsR.string.privacy_policy),
+                    title = stringResource(StringsR.string.about_pref_title_privacy_policy),
+                    subtitle = stringResource(StringsR.string.about_pref_subtitle_privacy_policy),
                     onItemClick = { context.openUrlImplicitly(PRIVACY_POLICY_URL) }
                 )
+                if (false) {
+                    PreferenceClickableItem(
+                        title = stringResource(StringsR.string.about_pref_title_third_licenses),
+                        subtitle = stringResource(StringsR.string.about_pref_subtitle_third_licenses),
+                        onItemClick = { TODO() }
+                    )
+                }
                 PreferenceClickableItem(
-                    title = stringResource(StringsR.string.license_gnu_gpl_v3),
+                    title = stringResource(StringsR.string.about_pref_title_license),
+                    subtitle = stringResource(StringsR.string.about_pref_subtitle_license),
                     onItemClick = { context.openUrlImplicitly(LICENCE_URL) }
                 )
             }

@@ -237,12 +237,11 @@
     <string name="vibration_feedback_dialog_vibrate_on_result">Sonuçta titret</string>
     <string name="pref_group_misc">Çeşitli</string>
     <string name="pref_title_about_app">Hakkında</string>
-    <string name="pref_group_powered_by">Destekleyen</string>
-    <string name="purpose_recognition_service">Şarkı tanımlama ve birincil meta verileri sağlar</string>
-    <string name="purpose_track_links_service">Ek platform-özel parça bağlantıları sağlar</string>
-    <string name="github_repository">GitHub deposu</string>
-    <string name="privacy_policy">Gizlilik politikası</string>
-    <string name="license_gnu_gpl_v3">GNU GPLv3 Lisansı</string>
+    <string name="about_pref_group_powered_by">Destekleyen</string>
+    <string name="about_purpose_recognition_service">Şarkı tanımlama ve birincil meta verileri sağlar</string>
+    <string name="about_purpose_track_links_service">Ek platform-özel parça bağlantıları sağlar</string>
+    <string name="about_pref_title_github_repo">GitHub deposu</string>
+    <string name="about_pref_title_privacy_policy">Gizlilik politikası</string>
 
     <string name="notification_button_disable_service">Hizmeti durdur</string>
     <string name="notification_button_show_lyrics">Sözleri göster</string>

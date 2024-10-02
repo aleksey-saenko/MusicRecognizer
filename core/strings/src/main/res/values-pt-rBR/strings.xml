@@ -237,12 +237,11 @@
     <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrar no toque</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrar ao obter resultado</string>
     <string name="pref_title_about_app">Sobre</string>
-    <string name="pref_group_powered_by">Movido por</string>
-    <string name="purpose_recognition_service">Fornece identificação de faixas e metadados primários</string>
-    <string name="purpose_track_links_service">Fornece links adicionais de faixa de plataformas específicas</string>
-    <string name="github_repository">Repositório do GitHub</string>
-    <string name="privacy_policy">Política de Privacidade</string>
-    <string name="license_gnu_gpl_v3">Licença GNU GPLv3</string>
+    <string name="about_pref_group_powered_by">Movido por</string>
+    <string name="about_purpose_recognition_service">Fornece identificação de faixas e metadados primários</string>
+    <string name="about_purpose_track_links_service">Fornece links adicionais de faixa de plataformas específicas</string>
+    <string name="about_pref_title_github_repo">Repositório do GitHub</string>
+    <string name="about_pref_title_privacy_policy">Política de Privacidade</string>
 
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>

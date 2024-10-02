@@ -194,10 +194,9 @@
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrace při výsledku</string>
     <string name="pref_group_misc">Různé</string>
     <string name="pref_title_about_app">O aplikaci</string>
-    <string name="pref_group_powered_by">Poháněno</string>
-    <string name="github_repository">Repozitář GitHub</string>
-    <string name="privacy_policy">Zásady ochrany soukromí</string>
-    <string name="license_gnu_gpl_v3">Licence GNU GPLv3</string>
+    <string name="about_pref_group_powered_by">Poháněno</string>
+    <string name="about_pref_title_github_repo">Repozitář GitHub</string>
+    <string name="about_pref_title_privacy_policy">Zásady ochrany soukromí</string>
 
     <string name="notification_button_disable_service">Deaktivovat</string>
     <string name="notification_button_show_lyrics">Zobrazit texty</string>

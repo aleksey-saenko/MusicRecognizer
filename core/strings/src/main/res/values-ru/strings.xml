@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="main_screen_tap_to_recognize">Нажмите, чтобы распознать</string>
     <string name="main_screen_listening">Слушаем</string>
     <string name="main_screen_listening_extra_time">Пробуем еще раз</string>
@@ -19,11 +20,13 @@
     <string name="quick_tile_cancel_recognition">Отменить распознавание</string>
     <string name="action_recognize">Распознать</string>
     <string name="action_cancel_recognition">Отменить распознавание</string>
+
     <!-- App shortcuts. If there's enough space, the launcher displays _long version instead of _short. Short should be limited to 10 chars. Long should be limited to 25 chars.-->
     <string name="app_shortcut_recognize_short">Распознать</string>
     <string name="app_shortcut_recognize_long">Распознать в фоне</string>
     <string name="app_shortcut_open_and_recognize_short">Открыть и распознать</string>
     <string name="app_shortcut_open_and_recognize_long">Открыть приложение и распознать</string>
+
     <!-- General use -->
     <string name="nav_back">Назад</string>
     <string name="nav_forward">Вперед</string>
@@ -49,6 +52,7 @@
     <string name="help">Помощь</string>
     <string name="show_more">Подробнее</string>
     <string name="show_less">Скрыть</string>
+
     <!-- Permissions -->
     <string name="permissions">Разрешения</string>
     <string name="request_permission">Запросить разрешение</string>
@@ -57,6 +61,7 @@
     <string name="permissions_denied_message">Предыдущие запросы на получение разрешений были отклонены. Вы можете изменить свое решение через настройки.</string>
     <string name="permissions_denied_open_settings">Открыть настройки</string>
     <string name="permission_granted">Разрешение предоставлено</string>
+
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Добро пожаловать</string>
     <string name="onboarding_welcome_message">Audile - это приложение для распознавания музыки, которое поможет вам быстро и точно распознать музыкальный трек, играющий поблизости.</string>
@@ -67,6 +72,7 @@
     <string name="onboarding_final_title">Все готово!</string>
     <string name="onboarding_final_message">Настройка успешно завершена</string>
     <string name="onboarding_final_get_started">Начать</string>
+
     <!-- Recognition screen -->
     <string name="recognition">Распознавание</string>
     <string name="popup_offline_mode">Офлайн-режим</string>
@@ -90,6 +96,7 @@
     <string name="result_title_internal_error">Внутренняя ошибка</string>
     <string name="result_message_internal_error">Произошла внутренняя ошибка</string>
     <string name="result_title_unknown_error">Неизвестная ошибка</string>
+
     <!-- Library screen -->
     <string name="library">Библиотека</string>
     <string name="empty_library_title">Нет распознанных треков</string>
@@ -115,6 +122,7 @@
     <string name="no_tracks_match_search">Нет треков, соответствующих критериям поиска</string>
     <string name="delete_tracks_title">Удалить треки</string>
     <string name="delete_tracks_message">Вы уверены, что хотите удалить выбранные треки\? Это действие нельзя отменить.</string>
+
     <!-- Queue screen -->
     <string name="recognition_queue">Очередь распознавания</string>
     <string name="queue">Очередь</string>
@@ -140,6 +148,7 @@
     <string name="recording_start_player">Запустить проигрыватель</string>
     <string name="delete_recognitions_title">Удалить распознавания</string>
     <string name="delete_recognitions_message">Вы уверены, что хотите отменить и удалить выбранные запланированные распознавания\? Это действие нельзя отменить.</string>
+
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Отметить как избранное</string>
     <string name="unmark_track_as_favorite">Снять отметку избранного</string>
@@ -180,6 +189,7 @@
     <string name="align_to_start">Выровнять по левому краю</string>
     <string name="bold_text">Жирный текст</string>
     <string name="high_contrast_text">Текст с высоким контрастом</string>
+
     <!-- Preferences screen -->
     <string name="preferences">Настройки</string>
     <string name="pref_group_recognition">Распознавание</string>
@@ -245,12 +255,12 @@
     <string name="restore_dialog_title">Восстановление</string>
     <string name="restore_dialog_button_restore">Начать</string>
     <string name="pref_title_about_app">О приложении</string>
-    <string name="pref_group_powered_by">Работает с помощью</string>
-    <string name="purpose_recognition_service">Выполняет распознавание и предоставляет основную информацию о треке</string>
-    <string name="purpose_track_links_service">Предоставляет ссылки на трек для дополнительных музыкальных сервисов</string>
-    <string name="github_repository">GitHub репозиторий</string>
-    <string name="privacy_policy">Политика конфиденциальности</string>
-    <string name="license_gnu_gpl_v3">Лицензия GNU GPLv3</string>
+    <string name="about_pref_group_powered_by">Работает с помощью</string>
+    <string name="about_purpose_recognition_service">Выполняет распознавание и предоставляет основную информацию о треке</string>
+    <string name="about_purpose_track_links_service">Предоставляет ссылки на трек для дополнительных музыкальных сервисов</string>
+    <string name="about_pref_title_github_repo">GitHub репозиторий</string>
+    <string name="about_pref_title_privacy_policy">Политика конфиденциальности</string>
+
     <string name="notification_button_disable_service">Отключить</string>
     <string name="notification_button_show_lyrics">Текст песни</string>
     <string name="notification_channel_name_control">Управляющие уведомления</string>

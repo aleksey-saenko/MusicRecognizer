@@ -220,12 +220,11 @@
     <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrer lors d\'une pression</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="pref_title_about_app">À propos</string>
-    <string name="pref_group_powered_by">Propulsé par</string>
-    <string name="purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
-    <string name="purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
-    <string name="github_repository">Dépôt GitHub</string>
-    <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="license_gnu_gpl_v3">Licence GNU GPLv3</string>
+    <string name="about_pref_group_powered_by">Propulsé par</string>
+    <string name="about_purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
+    <string name="about_purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
+    <string name="about_pref_title_github_repo">Dépôt GitHub</string>
+    <string name="about_pref_title_privacy_policy">Politique de confidentialité</string>
 
     <string name="notification_button_disable_service">Désactiver</string>
     <string name="notification_button_show_lyrics">Afficher les paroles</string>

@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">Audile</string>
     <string name="format_file_provider_authority" translatable="false">%s.fileprovider</string>
-
     <string name="main_screen_tap_to_recognize">Tap to recognize</string>
     <string name="main_screen_listening">Listening</string>
     <string name="main_screen_listening_extra_time">Trying one more time</string>
@@ -22,13 +21,11 @@
     <string name="quick_tile_cancel_recognition">Cancel recognition</string>
     <string name="action_recognize">Recognize</string>
     <string name="action_cancel_recognition">Cancel recognition</string>
-
     <!-- App shortcuts. If there's enough space, the launcher displays _long version instead of _short. Short should be limited to 10 chars. Long should be limited to 25 chars.-->
     <string name="app_shortcut_recognize_short">Recognize</string>
     <string name="app_shortcut_recognize_long">Recognize in background</string>
     <string name="app_shortcut_open_and_recognize_short">Open &amp; Recognize</string>
     <string name="app_shortcut_open_and_recognize_long">Open app and recognize</string>
-
     <!-- General use -->
     <string name="nav_back">Back</string>
     <string name="nav_forward">Forward</string>
@@ -54,7 +51,6 @@
     <string name="help">Help</string>
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>
-
     <!-- Permissions -->
     <string name="permissions">Permissions</string>
     <string name="request_permission">Request permission</string>
@@ -63,7 +59,6 @@
     <string name="permissions_denied_message">Previous permissions requests have been denied. You can change your decision through the settings.</string>
     <string name="permissions_denied_open_settings">Open settings</string>
     <string name="permission_granted">Permission granted</string>
-
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Welcome</string>
     <string name="onboarding_welcome_message">Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
@@ -74,7 +69,6 @@
     <string name="onboarding_final_title">We are ready to go</string>
     <string name="onboarding_final_message">Setup completed successfully</string>
     <string name="onboarding_final_get_started">Get started</string>
-
     <!-- Recognition screen -->
     <string name="recognition">Recognition</string>
     <string name="popup_offline_mode">Offline mode</string>
@@ -98,7 +92,6 @@
     <string name="result_title_internal_error">Internal error</string>
     <string name="result_message_internal_error">An internal error occurred</string>
     <string name="result_title_unknown_error">Unknown error</string>
-
     <!-- Library screen -->
     <string name="library">Library</string>
     <string name="empty_library_title">No recognized songs</string>
@@ -126,7 +119,6 @@
     <string name="no_tracks_match_search">No tracks matching search criteria</string>
     <string name="delete_tracks_title">Delete tracks</string>
     <string name="delete_tracks_message">Are you sure you want to delete selected tracks\? This action cannot be undone.</string>
-
     <!-- Queue screen -->
     <string name="recognition_queue">Recognition queue</string>
     <string name="queue">Queue</string>
@@ -152,7 +144,6 @@
     <string name="recording_stop_player">Stop</string>
     <string name="delete_recognitions_title">Delete recognitions</string>
     <string name="delete_recognitions_message">Are you sure you want to cancel and delete selected scheduled recognitions\? This action cannot be undone.</string>
-
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Mark as favorite</string>
     <string name="unmark_track_as_favorite">Unmark as favorite</string>
@@ -193,7 +184,6 @@
     <string name="align_to_start">Align to start</string>
     <string name="bold_text">Bold text</string>
     <string name="high_contrast_text">High-contrast text</string>
-
     <!-- Preferences screen -->
     <string name="preferences">Preferences</string>
     <string name="pref_group_recognition">Recognition</string>
@@ -265,12 +255,11 @@
     <string name="about_pref_title_github_repo">GitHub repository</string>
     <string name="about_pref_subtitle_github_repo">Source code, issues and other information</string>
     <string name="about_pref_title_privacy_policy">Privacy policy</string>
-    <string name="about_pref_subtitle_privacy_policy">Read how the app handles your data</string>
+    <string name="about_pref_subtitle_privacy_policy">Learn more how the app handles your data</string>
     <string name="about_pref_title_license">License</string>
     <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3</string>
     <string name="about_pref_title_third_licenses">Third-party licences</string>
     <string name="about_pref_subtitle_third_licenses">Licenses of the third-party libraries Audile uses</string>
-
     <string name="notification_button_disable_service">Stop service</string>
     <string name="notification_button_show_lyrics">Show lyrics</string>
     <string name="notification_channel_name_control">Control notifications</string>
@@ -279,7 +268,6 @@
     <string name="notification_channel_desc_result">Allows to receive recognition results via notifications</string>
     <string name="notification_channel_name_scheduled_result">Scheduled recognition results</string>
     <string name="notification_channel_desc_scheduled_result">Allows to receive scheduled recognition results via notifications</string>
-
     <!-- Music streaming services -->
     <string name="amazon_music" translatable="false">Amazon Music</string>
     <string name="anghami" translatable="false">Anghami</string>
@@ -297,19 +285,16 @@
     <string name="yandex_music" translatable="false">Yandex Music</string>
     <string name="youtube" translatable="false">YouTube</string>
     <string name="youtubeMusic" translatable="false">YouTube Music</string>
-
     <!-- Other services -->
     <string name="audd" translatable="false">AudD</string>
     <string name="acr_cloud" translatable="false">ACRCloud</string>
     <string name="odesli" translatable="false">Odesli</string>
     <string name="wikipedia" translatable="false">Wikipedia</string>
-
     <!-- Untranslatable, as these terms are used only in English on recognition provider websites (dashboards, guides) -->
     <string name="api_token" translatable="false">API token</string>
     <string name="host" translatable="false">Host</string>
     <string name="access_key" translatable="false">Access key</string>
     <string name="access_secret" translatable="false">Access secret</string>
-
     <string name="audd_sign_up_url" translatable="false">https://dashboard.audd.io/</string>
     <string name="audd_terms_url" translatable="false">https://audd.io/terms/</string>
     <string name="acrcloud_project_guide_url" translatable="false">https://docs.acrcloud.com/tutorials/recognize-music/</string>

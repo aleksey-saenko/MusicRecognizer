@@ -308,4 +308,5 @@
     <string name="pref_title_audio_source"></string>
     <string name="deezer" translatable="false"></string>
     <string name="access_key" translatable="false"></string>
+    <string name="about_pref_subtitle_privacy_policy"></string>
 </resources>

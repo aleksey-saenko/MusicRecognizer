@@ -40,8 +40,29 @@ This application uses AudD service as a primary Music Recognition API. Please no
 
 There is also the option to use the app without a token, but please note that this will significantly restrict the number of daily recognitions that can be performed. Please keep in mind that this behavior is not guaranteed by the service and can be restricted at any time.
 
+## Translation
+
+[<img src="https://hosted.weblate.org/widget/audile/multi-auto.svg" alt="Translation progress">](https://hosted.weblate.org/engage/audile/)
+
+If you'd like to help translate the app into your native language, you can do so through [Weblate](https://hosted.weblate.org/engage/audile/). If your language isn't already available, add it with [tool -> start new translation](https://hosted.weblate.org/new-lang/audile/strings/).
+
+Feel free to correct any errors or suggest better translation options for the current translations.
+
 ## License
 
-Copyright (C) 2023 [Aleksey Saenko].
+```
+Copyright (C) 2023-2024 Aleksey Saenko
 
-The license is [GNU GPLv3](LICENSE.md).
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```

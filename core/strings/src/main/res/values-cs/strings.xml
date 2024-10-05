@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="main_screen_tap_to_recognize">Klepněte pro rozpoznání</string>
     <string name="main_screen_listening">Poslouchám</string>
     <string name="main_screen_listening_extra_time">Ještě jeden pokus</string>
@@ -16,11 +15,10 @@
     <string name="notification_listening">Poslouchám</string>
     <string name="notification_listening_subtitle">Prosím čekejte</string>
     <string name="notification_listening_subtitle_extra_time">Ještě jeden pokus</string>
-    <string name="quick_tile_recognize">Rozpoznat</string>
-    <string name="quick_tile_cancel_recognition">Zrušit rozpoznání</string>
+    <string name="quick_tile_recognize">Rozpoznat skladbu</string>
+    <string name="quick_tile_cancel_recognition">Zrušit rozpoznávání</string>
     <string name="action_recognize">Rozpoznat</string>
-    <string name="action_cancel_recognition">Zrušit rozpoznání</string>
-
+    <string name="action_cancel_recognition">Zrušit rozpoznávání</string>
     <!-- General use -->
     <string name="nav_back">Zpět</string>
     <string name="nav_forward">Dopředu</string>
@@ -42,16 +40,14 @@
     <string name="cannot_share_toast">Nepodařilo se najít žádnou aplikaci ke sdílení</string>
     <string name="show_more">Zobrazit více</string>
     <string name="show_less">Zobrazit méně</string>
-
     <!-- Permissions -->
     <string name="permissions">Oprávnění</string>
     <string name="request_permission">Požádat o oprávnění</string>
-    <string name="permission_rationale_record_audio">Pro provádění rozpoznání hudby potřebuje aplikace přístup k vašemu mikrofonu.</string>
+    <string name="permission_rationale_record_audio">Pro rozpoznávání hudby potřebuje aplikace přístup k vašemu mikrofonu.</string>
     <string name="permission_rationale_post_notifications">Pro ovládání rozpoznávání a získání výsledků, i když je aplikace minimalizována, je potřeba povolení k odesílání upozornění.</string>
     <string name="permissions_denied_message">Předchozí žádosti o povolení byly zamítnuty. Můžete své rozhodnutí změnit v nastavení.</string>
     <string name="permissions_denied_open_settings">Otevřít nastavení</string>
     <string name="permission_granted">Oprávnění uděleno</string>
-
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Vítejte</string>
     <string name="onboarding_welcome_message">Audile je aplikace pro rozpoznávání hudby, která vám rychle a spolehlivě pomůže rozpoznat skladbu, která hraje poblíž vás.</string>
@@ -62,7 +58,6 @@
     <string name="onboarding_final_title">Jdeme na to</string>
     <string name="onboarding_final_message">Prvotní nastavení úspěšně dokončeno</string>
     <string name="onboarding_final_get_started">Začít</string>
-
     <!-- Recognition screen -->
     <string name="recognition">Rozpoznání</string>
     <string name="popup_offline_mode">Režim offline</string>
@@ -81,7 +76,6 @@
     <string name="result_title_internal_error">Interní chyba</string>
     <string name="result_message_internal_error">Vyskytla se interní chyba</string>
     <string name="result_title_unknown_error">Neznámá chyba</string>
-
     <!-- Library screen -->
     <string name="library">Knihovna</string>
     <string name="empty_library_title">Žádné rozpoznané skladby</string>
@@ -107,12 +101,11 @@
     <string name="no_tracks_match_search">Žádné skladby odpovídající vašemu vyhledávání</string>
     <string name="delete_tracks_title">Odstranit skladby</string>
     <string name="delete_tracks_message">Opravdu chcete odstranit vybrané skladby\? Tato akce je nevratná.</string>
-
     <!-- Queue screen -->
     <string name="recognition_queue">Fronta na rozpoznání</string>
     <string name="queue">Fronta</string>
-    <string name="empty_recognition_queue_title">Žádná rozpoznávání ve frontě</string>
-    <string name="empty_recognition_queue_subtitle">V případě neúspěšného rozpoznání může aplikace zadat rozpoznání podle zvolené záložní politiky.</string>
+    <string name="empty_recognition_queue_title">Žádná rozpoznání ve frontě</string>
+    <string name="empty_recognition_queue_subtitle">V případě neúspěšného rozpoznání jej může aplikace uložit v do fronty v závislosti na nastavených záložních pravidlech</string>
     <string name="untitled_recognition">Nepojmenované rozpoznání</string>
     <string name="format_scheduled_recognition_of">Naplánované rozpoznávání %s</string>
     <string name="format_recognition_created">Vytvořeno: %s</string>
@@ -125,14 +118,13 @@
     <string name="recognition_action_show_track">Zobrazit skladbu</string>
     <string name="recognition_action_rename">Přejmenovat</string>
     <string name="delete_recognitions_title">Odstranit rozpoznání</string>
-    <string name="delete_recognitions_message">Opravdu chcete zrušit a odstranit vybraná naplánovaná rozpoznání\? Tento proces nelze vrátit zpět.</string>
+    <string name="delete_recognitions_message">Opravdu chcete zrušit a odstranit vybraná naplánovaná rozpoznání? Tato akce je nevratná.</string>
     <string name="recording_stop_player">Zastavit přehrávač</string>
     <string name="recording_start_player">Spustit přehrávač</string>
     <string name="select_all">Vybrat vše</string>
     <string name="disable_multi_selection_mode">Zakázat režim vícenásobné volby</string>
     <string name="cancel_selected">Zrušit vybrané</string>
     <string name="delete_selected">Odstranit vybrané</string>
-
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Označit jako oblíbené</string>
     <string name="unmark_track_as_favorite">Zrušit označení jako oblíbené</string>
@@ -141,8 +133,8 @@
     <string name="web_search">Vyhledávání na webu</string>
     <string name="web">Web</string>
     <string name="search">Vyhledávání</string>
-    <string name="search_for">Vyhledávání</string>
-    <string name="search_in">Vyhledávání v</string>
+    <string name="search_for">Hledat</string>
+    <string name="search_in">Hledat v</string>
     <string name="track_info">Informace o skladbě</string>
     <string name="track_info_title_duration">Délka skladby:</string>
     <string name="track_info_title_recognized_at">Rozpoznáno v:</string>
@@ -163,15 +155,14 @@
     <string name="align_to_start">Zarovnat na začátek</string>
     <string name="bold_text">Tučný text</string>
     <string name="high_contrast_text">Text s vysokým kontrastem</string>
-
     <!-- Preferences screen -->
     <string name="preferences">Nastavení</string>
-    <string name="pref_group_recognition">Rozpoznání</string>
+    <string name="pref_group_recognition">Rozpoznávání</string>
     <string name="pref_title_fallback_policy">Záloha při selhání rozpoznávání</string>
     <string name="pref_subtitle_fallback_policy">Nastavte záložních akci po neúspěšném rozpoznání</string>
     <string name="fallback_policy_dialog_title">Selhání rozpoznávání</string>
     <string name="fallback_policy_dialog_message">Nastavte výchozí záložní akci pro každý typ neúspěšného výsledku:</string>
-    <string name="fallback_action_save_recording_and_retry">Uložit nahrávku a zkusit znovu spustit rozpoznání</string>
+    <string name="fallback_action_save_recording_and_retry">Uložit nahrávku a zkusit znovu rozpoznat</string>
     <string name="fallback_action_save_recording">Uložit nahrávku</string>
     <string name="fallback_action_ignore">Ignorovat</string>
     <string name="fallback_trigger_bad_connection">Špatné připojení k internetu</string>
@@ -197,7 +188,6 @@
     <string name="about_pref_group_powered_by">Poháněno</string>
     <string name="about_pref_title_github_repo">Repozitář GitHub</string>
     <string name="about_pref_title_privacy_policy">Zásady ochrany soukromí</string>
-
     <string name="notification_button_disable_service">Deaktivovat</string>
     <string name="notification_button_show_lyrics">Zobrazit texty</string>
     <string name="notification_channel_name_control">Ovládání v oznámení</string>
@@ -206,5 +196,72 @@
     <string name="notification_channel_desc_result">Umožňuje získat výsledek rozpoznávání skrze oznámení</string>
     <string name="notification_channel_name_scheduled_result">Výsledky naplánovaných rozpoznání</string>
     <string name="notification_channel_desc_scheduled_result">Umožňuje získávat výsledky naplánovaných rozpoznání skrze oznámení</string>
-
+    <string name="app_shortcut_recognize_short">Rozpoznat</string>
+    <string name="app_shortcut_open_and_recognize_short">Otevřít a rozpoznat</string>
+    <string name="app_shortcut_open_and_recognize_long">Otevřít aplikaci a rozpoznat hudbu</string>
+    <string name="clear_text_field">Vymazat</string>
+    <string name="copy">Kopírovat</string>
+    <string name="result_title_recognition_saved">Rozpoznání uloženo</string>
+    <string name="result_message_auth_error">Zkontrolujte prosím své údaje pro vybranou službu a zkuste to znovu</string>
+    <string name="result_title_service_usage_limited">Využití služby omezeno</string>
+    <string name="result_message_service_usage_limited">Dosáhli jste limitu využití vaší služby. Zkontrolujte prosím svůj plán nebo to zkuste znovu</string>
+    <string name="library_menu_mark_all_tracks_as_viewed">Označit vše jako zobrazené</string>
+    <string name="recognition_action_force_launch">Vynutit spuštění</string>
+    <string name="format_open_website_or_app">Otevřít %s</string>
+    <string name="track_metadata">Metadata</string>
+    <string name="track">Stopa</string>
+    <string name="lyrics_start_autoscroll">Spustit automatické posouvání</string>
+    <string name="lyrics_stop_autoscroll">Zastavit automatické posouvání</string>
+    <string name="pref_title_recognize_on_startup">Rozpoznávat při spuštění</string>
+    <string name="recognition_provider_dialog_title">Poskytovatel</string>
+    <string name="audd_help_dialog_message_empty_token">Službu můžete zkusit používat pro testovací účely bez zadání tokenu, ale upozorňujeme, že tím omezíte počet denních rozpoznání.</string>
+    <string name="acr_cloud_help_dialog_steps_title">Věnujte prosím pozornost těmto krokům:</string>
+    <string name="acr_cloud_help_dialog_step1">Zvolte geografickou oblast nejblíže k vám pro snížení internetového zpoždění</string>
+    <string name="acr_cloud_help_dialog_step4">Zaškrtněte všechna pole v kategorii „3rd party ID integration“</string>
+    <string name="pref_title_theme">Motiv</string>
+    <string name="theme_dialog_message">Vyberte režim motivu:</string>
+    <string name="theme_mode">Režim</string>
+    <string name="theme_mode_follow_system">Podle systému</string>
+    <string name="theme_mode_light">Světlý</string>
+    <string name="theme_mode_dark">Tmavý</string>
+    <string name="theme_use_dynamic_colors">Použít dynamické barvy</string>
+    <string name="theme_use_artwork_colors">Použít barvy obalu alba</string>
+    <string name="theme_use_pure_black">Použít čistě černou</string>
+    <string name="pref_title_experimental_features">Experimentální funkce</string>
+    <string name="pref_subtitle_experimental_features">Ve vývoji</string>
+    <string name="pref_title_backup_and_restore">Záloha a obnovení</string>
+    <string name="pref_subtitle_backup_and_restore">Zálohujte svou databázi a předvolby</string>
+    <string name="pref_title_backup">Záloha</string>
+    <string name="pref_subtitle_backup">Exportovat data a předvolby aplikace</string>
+    <string name="backup_dialog_title">Záloha</string>
+    <string name="backup_dialog_button_backup">Zálohovat</string>
+    <string name="restore_dialog_title">Obnovení</string>
+    <string name="restore_dialog_button_restore">Obnovit</string>
+    <string name="pref_subtitle_format_more_services">%1$s a %2$d dalších</string>
+    <string name="about_purpose_recognition_service">Poskytuje rozpoznávání skladeb a primární metadata</string>
+    <string name="about_purpose_track_links_service">Poskytuje další odkazy na skladbu na platformách</string>
+    <string name="app_shortcut_recognize_long">Rozpoznávat na pozadí</string>
+    <string name="copied">Zkopírováno</string>
+    <string name="help">Nápověda</string>
+    <string name="result_title_auth_error">Chyba ověření</string>
+    <string name="title">Název</string>
+    <string name="year">Rok</string>
+    <string name="lyrics">Text</string>
+    <string name="artist">Umělec</string>
+    <string name="album">Album</string>
+    <string name="pref_title_recognition_provider">Poskytovatel rozpoznávání</string>
+    <string name="recognition_provider_dialog_message">Zvolte poskytovatele rozpoznávání:</string>
+    <string name="recognition_provider_dialog_format_auth">Autentifikace služby %s:</string>
+    <string name="audd_help_dialog_message">AudD je placená služba poskytující možnost bezplatné 14denní zkušební doby. Pro používání této služby si musíte vytvořit účet a získat svůj soukromý klíč API. Pokud účet ještě nemáte, &lt;a href=%1$s&gt;zaregistrujte se zde&lt;/a&gt;.</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloud je placená služba, která nabízí možnost bezplatného zkušebního období a omezeného použití pro vývojové účely. Chcete-li tuto službu používat, musíte si vytvořit účet a zaregistrovat projekt. Pokud se setkáte s jakýmikoli obtížemi, nahlédněte do &lt;a href=%1$s&gt;této příručky&lt;/a&gt;.</string>
+    <string name="acr_cloud_help_dialog_step3">Nastavte preferovaný zvukový engine. Pro obecné použití je nejpřesnější možnost „Audio fingerprinting“</string>
+    <string name="acr_cloud_help_dialog_step2">Nastavte zdroj zvuku na „Recorded audio“</string>
+    <string name="pref_subtitle_restore">Obnovit data a předvolby aplikace ze zálohy</string>
+    <string name="pref_title_restore">Obnovení</string>
+    <string name="about_pref_title_license">Licence</string>
+    <string name="about_pref_title_third_licenses">Licence třetích stran</string>
+    <string name="about_pref_subtitle_privacy_policy">Další informace o tom, jak aplikace zpracovává vaše data</string>
+    <string name="about_pref_subtitle_license">Aplikace Audile je licencována pod GNU GPLv3</string>
+    <string name="about_pref_subtitle_third_licenses">Licence knihoven třetích stran používaných aplikací Audile</string>
+    <string name="about_pref_subtitle_github_repo">Zdrojový kód, problémy a další informace</string>
 </resources>

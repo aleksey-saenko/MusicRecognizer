@@ -254,7 +254,7 @@
     <string name="app_shortcut_open_and_recognize_long">Abrir o app e identificar</string>
     <string name="recognition_provider_dialog_title">Provedor</string>
     <string name="pref_title_experimental_features">Funções experimentais</string>
-    <string name="pref_subtitle_experimental_features">Sendo trabalhado</string>
+    <string name="pref_subtitle_experimental_features">Trabalho-em-progresso</string>
     <string name="pref_title_backup_and_restore">Backup &amp; Restauração</string>
     <string name="pref_subtitle_backup_and_restore">Fazer backup de seu banco de dados e preferências</string>
     <string name="pref_title_backup">Fazer backup</string>

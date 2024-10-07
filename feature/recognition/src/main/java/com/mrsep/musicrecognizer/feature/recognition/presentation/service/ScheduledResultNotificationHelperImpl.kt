@@ -27,7 +27,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 internal class ScheduledResultNotificationHelperImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    private val serviceRouter: NotificationServiceRouter
+    private val serviceRouter: RecognitionControlServiceRouter
 ) : ScheduledResultNotificationHelper {
 
     private val notificationManager get() =

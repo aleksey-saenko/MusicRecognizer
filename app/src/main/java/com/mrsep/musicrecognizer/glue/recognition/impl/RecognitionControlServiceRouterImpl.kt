@@ -5,16 +5,16 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import androidx.core.net.toUri
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceRouter
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlServiceRouter
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class NotificationServiceRouterImpl @Inject constructor(
+class RecognitionControlServiceRouterImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
-) : NotificationServiceRouter {
+) : RecognitionControlServiceRouter {
 
     override fun getDeepLinkIntentToTrack(trackId: String): Intent {
         return getDeepLinkIntent(TrackScreen.createDeepLink(trackId).toUri())

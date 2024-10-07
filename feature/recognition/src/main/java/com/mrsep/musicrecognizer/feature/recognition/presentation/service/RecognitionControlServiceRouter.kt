@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.service
 
 import android.content.Intent
 
-interface NotificationServiceRouter {
+interface RecognitionControlServiceRouter {
 
     fun getDeepLinkIntentToTrack(trackId: String): Intent
 

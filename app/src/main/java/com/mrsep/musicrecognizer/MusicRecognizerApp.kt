@@ -11,8 +11,8 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceActivity
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
@@ -31,8 +31,8 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
 
     override fun onCreate() {
         super.onCreate()
-        NotificationService.createStatusNotificationChannel(this)
-        NotificationService.createResultNotificationChannel(this)
+        RecognitionControlService.createStatusNotificationChannel(this)
+        RecognitionControlService.createResultNotificationChannel(this)
         ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
     }
 
@@ -58,7 +58,7 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
         .take(ShortcutManagerCompat.getMaxShortcutCountPerActivity(this))
 
     private fun recognitionShortcut(): ShortcutInfoCompat {
-        return ShortcutInfoCompat.Builder(this, OPEN_AND_RECOGNIZE_SHORTCUT_ID)
+        return ShortcutInfoCompat.Builder(this, SHORTCUT_ID_OPEN_AND_RECOGNIZE)
             .setShortLabel(getString(StringsR.string.app_shortcut_open_and_recognize_short))
             .setLongLabel(getString(StringsR.string.app_shortcut_open_and_recognize_long))
             .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
@@ -69,18 +69,18 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
     }
 
     private fun backgroundRecognitionShortcut(): ShortcutInfoCompat {
-        return ShortcutInfoCompat.Builder(this, RECOGNIZE_IN_BACKGROUND_SHORTCUT_ID)
+        return ShortcutInfoCompat.Builder(this, SHORTCUT_ID_RECOGNIZE_IN_BACKGROUND)
             .setShortLabel(getString(StringsR.string.app_shortcut_recognize_short))
             .setLongLabel(getString(StringsR.string.app_shortcut_recognize_long))
             .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
             .setIntent(
-                Intent(NotificationService.LAUNCH_RECOGNITION_ACTION, Uri.EMPTY, this, NotificationServiceActivity::class.java)
+                Intent(RecognitionControlService.ACTION_LAUNCH_RECOGNITION, Uri.EMPTY, this, RecognitionControlActivity::class.java)
             )
             .build()
     }
 
     companion object {
-        private const val OPEN_AND_RECOGNIZE_SHORTCUT_ID = "RecognizeShortcutId"
-        private const val RECOGNIZE_IN_BACKGROUND_SHORTCUT_ID = "RecognizeInBackgroundShortcutId"
+        private const val SHORTCUT_ID_OPEN_AND_RECOGNIZE = "RecognizeShortcutId"
+        private const val SHORTCUT_ID_RECOGNIZE_IN_BACKGROUND = "RecognizeInBackgroundShortcutId"
     }
 }

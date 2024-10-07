@@ -20,7 +20,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
  * https://issuetracker.google.com/issues/299506164
  */
 
-class NotificationServiceActivity : ComponentActivity() {
+class RecognitionControlActivity : ComponentActivity() {
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -42,7 +42,7 @@ class NotificationServiceActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (intent.action) {
-            NotificationService.LAUNCH_RECOGNITION_ACTION -> {
+            RecognitionControlService.ACTION_LAUNCH_RECOGNITION -> {
                 val requiredPermissions = getRequiredPermissionsForRecognition()
                 if (checkPermissionsGranted(requiredPermissions)) {
                     onLaunchRecognition()
@@ -57,7 +57,7 @@ class NotificationServiceActivity : ComponentActivity() {
                 }
             }
 
-            NotificationService.CANCEL_RECOGNITION_ACTION -> {
+            RecognitionControlService.ACTION_CANCEL_RECOGNITION -> {
                 onCancelRecognition()
             }
 
@@ -69,17 +69,17 @@ class NotificationServiceActivity : ComponentActivity() {
 
     private fun onLaunchRecognition() {
         startForegroundService(
-            Intent(this, NotificationService::class.java)
-                .setAction(NotificationService.LAUNCH_RECOGNITION_ACTION)
-                .putExtra(NotificationService.KEY_FOREGROUND_REQUESTED, true)
+            Intent(this, RecognitionControlService::class.java)
+                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
+                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
         )
         finish()
     }
 
     private fun onCancelRecognition() {
         startService(
-            Intent(this, NotificationService::class.java)
-                .setAction(NotificationService.CANCEL_RECOGNITION_ACTION)
+            Intent(this, RecognitionControlService::class.java)
+                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
         )
         finish()
     }

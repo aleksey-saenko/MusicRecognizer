@@ -8,7 +8,7 @@ import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.*
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
@@ -83,16 +83,16 @@ internal class ScreenRecognitionControllerImpl @Inject constructor(
 
     override fun launchRecognition() {
         appContext.startService(
-            Intent(appContext, NotificationService::class.java)
-                .setAction(NotificationService.LAUNCH_RECOGNITION_ACTION)
-                .putExtra(NotificationService.KEY_FOREGROUND_REQUESTED, false)
+            Intent(appContext, RecognitionControlService::class.java)
+                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
+                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, false)
         )
     }
 
     override fun cancelRecognition() {
         appContext.startService(
-            Intent(appContext, NotificationService::class.java)
-                .setAction(NotificationService.CANCEL_RECOGNITION_ACTION)
+            Intent(appContext, RecognitionControlService::class.java)
+                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
         )
     }
 }

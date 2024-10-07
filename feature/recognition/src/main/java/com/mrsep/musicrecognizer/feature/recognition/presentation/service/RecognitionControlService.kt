@@ -43,7 +43,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @AndroidEntryPoint
-class NotificationService : Service() {
+class RecognitionControlService : Service() {
 
     @Inject
     lateinit var recognitionInteractor: RecognitionInteractor
@@ -57,7 +57,7 @@ class NotificationService : Service() {
     internal lateinit var widgetStatusHolder: MutableRecognitionStatusHolder
 
     @Inject
-    lateinit var serviceRouter: NotificationServiceRouter
+    lateinit var serviceRouter: RecognitionControlServiceRouter
 
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
@@ -99,10 +99,10 @@ class NotificationService : Service() {
         super.onCreate() // required by hilt injection
         // Check again because permissions can be restricted in any time,
         // which can lead sticky service to restart foreground with SecurityException
-        val startAllowed = checkNotificationServicePermissions()
+        val startAllowed = checkRecognitionControlServicePermissions()
         if (!startAllowed) {
             Log.e(
-                "NotificationService",
+                "RecognitionControlService",
                 "Service start is not allowed due to restricted permissions"
             )
             runBlocking {
@@ -115,7 +115,7 @@ class NotificationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         when (intent?.action) {
-            LAUNCH_RECOGNITION_ACTION -> {
+            ACTION_LAUNCH_RECOGNITION -> {
                 val foregroundRequested = intent.getBooleanExtra(
                     KEY_FOREGROUND_REQUESTED,
                     true
@@ -132,7 +132,7 @@ class NotificationService : Service() {
                 launchRecognition()
             }
 
-            CANCEL_RECOGNITION_ACTION -> {
+            ACTION_CANCEL_RECOGNITION -> {
                 if (isRecognitionJobActive) {
                     cancelRecognitionJob()
                 } else if (!isHoldModeActive) {
@@ -143,7 +143,7 @@ class NotificationService : Service() {
             // Start with null intent is considered as restart of sticky service with hold mode on
             // isMicrophoneRestricted is true when service is started on device boot without microphone access
             null,
-            HOLD_MODE_ON_ACTION -> {
+            ACTION_HOLD_MODE_ON -> {
                 isMicrophoneRestricted = intent?.getBooleanExtra(
                     KEY_RESTRICTED_START,
                     true
@@ -152,7 +152,7 @@ class NotificationService : Service() {
                 if (!isStartedForeground) continueInForeground()
             }
 
-            HOLD_MODE_OFF_ACTION -> {
+            ACTION_HOLD_MODE_OFF -> {
                 isHoldModeActive = false
                 if (!isRecognitionJobActive) {
                     stopSelf()
@@ -160,7 +160,7 @@ class NotificationService : Service() {
             }
 
             else -> {
-                throw IllegalStateException("NotificationService: Unknown start intent")
+                throw IllegalStateException("Unknown service start intent")
             }
         }
         return if (isHoldModeActive) START_STICKY else START_NOT_STICKY
@@ -191,7 +191,7 @@ class NotificationService : Service() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(
-                STATUS_NOTIFICATION_ID,
+                NOTIFICATION_ID_STATUS,
                 initialNotification,
                 if (isMicrophoneRestricted) {
                     FOREGROUND_SERVICE_TYPE_SPECIAL_USE
@@ -200,7 +200,7 @@ class NotificationService : Service() {
                 }
             )
         } else {
-            startForeground(STATUS_NOTIFICATION_ID, initialNotification)
+            startForeground(NOTIFICATION_ID_STATUS, initialNotification)
         }
         isStartedForeground = true
         if (!isActionReceiverRegistered) registerActionReceiver()
@@ -217,8 +217,8 @@ class NotificationService : Service() {
             this,
             actionReceiver,
             IntentFilter().apply {
-                addAction(CANCEL_RECOGNITION_LOCAL_ACTION)
-                addAction(DISABLE_SERVICE_LOCAL_ACTION)
+                addAction(LOCAL_ACTION_CANCEL_RECOGNITION)
+                addAction(LOCAL_ACTION_DISABLE_SERVICE)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
@@ -232,7 +232,7 @@ class NotificationService : Service() {
     }
 
     private fun createPendingIntent(intent: Intent): PendingIntent {
-        return TaskStackBuilder.create(this@NotificationService).run {
+        return TaskStackBuilder.create(this@RecognitionControlService).run {
             addNextIntentWithParentStack(intent)
             // FLAG_UPDATE_CURRENT to update trackId key on each result
             getPendingIntent(
@@ -243,7 +243,7 @@ class NotificationService : Service() {
     }
 
     private fun statusNotificationBuilder(): NotificationCompat.Builder {
-        return NotificationCompat.Builder(this, NOTIFICATION_STATUS_CHANNEL_ID)
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_STATUS)
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
@@ -255,7 +255,7 @@ class NotificationService : Service() {
     }
 
     private fun resultNotificationBuilder(): NotificationCompat.Builder {
-        return NotificationCompat.Builder(this, NOTIFICATION_RESULT_CHANNEL_ID)
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_RESULT)
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
@@ -269,13 +269,13 @@ class NotificationService : Service() {
     @SuppressLint("LaunchActivityFromNotification")
     private fun NotificationCompat.Builder.addRecognizeContentIntent(): NotificationCompat.Builder {
         val intent = Intent(
-            this@NotificationService,
-            NotificationService::class.java
+            this@RecognitionControlService,
+            RecognitionControlService::class.java
         ).apply {
-            action = LAUNCH_RECOGNITION_ACTION
+            action = ACTION_LAUNCH_RECOGNITION
         }
         val pendingIntent = PendingIntent.getService(
-            this@NotificationService,
+            this@RecognitionControlService,
             0,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -291,9 +291,9 @@ class NotificationService : Service() {
                 android.R.drawable.ic_menu_close_clear_cancel,
                 getString(StringsR.string.notification_button_disable_service),
                 PendingIntent.getBroadcast(
-                    this@NotificationService,
+                    this@RecognitionControlService,
                     0,
-                    Intent(DISABLE_SERVICE_LOCAL_ACTION).setPackage(packageName),
+                    Intent(LOCAL_ACTION_DISABLE_SERVICE).setPackage(packageName),
                     PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -307,9 +307,9 @@ class NotificationService : Service() {
             android.R.drawable.ic_menu_close_clear_cancel,
             getString(StringsR.string.cancel),
             PendingIntent.getBroadcast(
-                this@NotificationService,
+                this@RecognitionControlService,
                 0,
-                Intent(CANCEL_RECOGNITION_LOCAL_ACTION).setPackage(packageName),
+                Intent(LOCAL_ACTION_CANCEL_RECOGNITION).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -318,9 +318,9 @@ class NotificationService : Service() {
     private fun NotificationCompat.Builder.addDismissIntent(): NotificationCompat.Builder {
         return setDeleteIntent(
             PendingIntent.getBroadcast(
-                this@NotificationService,
+                this@RecognitionControlService,
                 0,
-                Intent(DISABLE_SERVICE_LOCAL_ACTION).setPackage(packageName),
+                Intent(LOCAL_ACTION_DISABLE_SERVICE).setPackage(packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
@@ -388,7 +388,7 @@ class NotificationService : Service() {
             android.R.drawable.ic_menu_share,
             getString(StringsR.string.share),
             PendingIntent.getActivity(
-                this@NotificationService,
+                this@RecognitionControlService,
                 0,
                 wrappedIntent,
                 PendingIntent.FLAG_IMMUTABLE
@@ -397,11 +397,11 @@ class NotificationService : Service() {
     }
 
     private fun NotificationCompat.Builder.buildAndNotifyAsStatus() {
-        notificationManager.notify(STATUS_NOTIFICATION_ID, this.build())
+        notificationManager.notify(NOTIFICATION_ID_STATUS, this.build())
     }
 
     private fun NotificationCompat.Builder.buildAndNotifyAsResult() {
-        notificationManager.notify(RESULT_NOTIFICATION_ID, this.build())
+        notificationManager.notify(NOTIFICATION_ID_RESULT, this.build())
     }
 
     private fun launchRecognition() {
@@ -433,7 +433,7 @@ class NotificationService : Service() {
 
                     is RecognitionStatus.Recognizing -> {
                         // Cancel last result notification if it exists
-                        notificationManager.cancel(RESULT_NOTIFICATION_ID)
+                        notificationManager.cancel(NOTIFICATION_ID_RESULT)
 
                         screenStatusHolder.updateStatus(status)
                         widgetStatusHolder.updateStatus(status)
@@ -622,7 +622,7 @@ class NotificationService : Service() {
         }
     }
 
-    private fun checkNotificationServicePermissions(): Boolean {
+    private fun checkRecognitionControlServicePermissions(): Boolean {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
                     PackageManager.PERMISSION_GRANTED)
@@ -640,11 +640,11 @@ class NotificationService : Service() {
     private inner class ActionBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                CANCEL_RECOGNITION_LOCAL_ACTION -> {
+                LOCAL_ACTION_CANCEL_RECOGNITION -> {
                     cancelRecognitionJob()
                 }
 
-                DISABLE_SERVICE_LOCAL_ACTION -> {
+                LOCAL_ACTION_DISABLE_SERVICE -> {
                     serviceScope.launch {
                         if (isHoldModeActive) {
                             preferencesRepository.setNotificationServiceEnabled(false)
@@ -662,17 +662,6 @@ class NotificationService : Service() {
     }
 
     companion object {
-        private const val NOTIFICATION_STATUS_CHANNEL_ID = "com.mrsep.musicrecognizer.status"
-        private const val NOTIFICATION_RESULT_CHANNEL_ID = "com.mrsep.musicrecognizer.result"
-        private const val STATUS_NOTIFICATION_ID = 1
-        private const val RESULT_NOTIFICATION_ID = 2
-
-        // Actions for local broadcasting
-        private const val CANCEL_RECOGNITION_LOCAL_ACTION =
-            "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
-        private const val DISABLE_SERVICE_LOCAL_ACTION =
-            "com.mrsep.musicrecognizer.service.action.local.disable_service"
-
         // See isMicrophoneRestricted
         const val KEY_RESTRICTED_START = "KEY_RESTRICTED_START"
 
@@ -680,16 +669,23 @@ class NotificationService : Service() {
         // and false if the launch occurs from main activity
         const val KEY_FOREGROUND_REQUESTED = "KEY_FOREGROUND_REQUESTED"
 
-        const val LAUNCH_RECOGNITION_ACTION =
-            "com.mrsep.musicrecognizer.service.action.launch_recognition"
-        const val CANCEL_RECOGNITION_ACTION =
-            "com.mrsep.musicrecognizer.service.action.cancel_recognition"
-        const val HOLD_MODE_ON_ACTION = "com.mrsep.musicrecognizer.service.action.hold_mode_on"
-        const val HOLD_MODE_OFF_ACTION = "com.mrsep.musicrecognizer.service.action.hold_mode_off"
+        const val ACTION_LAUNCH_RECOGNITION = "com.mrsep.musicrecognizer.service.action.launch_recognition"
+        const val ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.cancel_recognition"
+        const val ACTION_HOLD_MODE_ON = "com.mrsep.musicrecognizer.service.action.hold_mode_on"
+        const val ACTION_HOLD_MODE_OFF = "com.mrsep.musicrecognizer.service.action.hold_mode_off"
+
+        // Actions for local broadcasting
+        private const val LOCAL_ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
+        private const val LOCAL_ACTION_DISABLE_SERVICE = "com.mrsep.musicrecognizer.service.action.local.disable_service"
+
+        private const val NOTIFICATION_ID_STATUS = 1
+        private const val NOTIFICATION_ID_RESULT = 2
+        private const val NOTIFICATION_CHANNEL_ID_STATUS = "com.mrsep.musicrecognizer.status"
+        private const val NOTIFICATION_CHANNEL_ID_RESULT = "com.mrsep.musicrecognizer.result"
 
         fun cancelResultNotification(context: Context) {
             with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
-                cancel(RESULT_NOTIFICATION_ID)
+                cancel(NOTIFICATION_ID_RESULT)
             }
         }
 
@@ -697,7 +693,7 @@ class NotificationService : Service() {
             val name = context.getString(StringsR.string.notification_channel_name_control)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel =
-                NotificationChannel(NOTIFICATION_STATUS_CHANNEL_ID, name, importance).apply {
+                NotificationChannel(NOTIFICATION_CHANNEL_ID_STATUS, name, importance).apply {
                     description =
                         context.getString(StringsR.string.notification_channel_desc_control)
                     lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -714,7 +710,7 @@ class NotificationService : Service() {
             val name = context.getString(StringsR.string.notification_channel_name_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel =
-                NotificationChannel(NOTIFICATION_RESULT_CHANNEL_ID, name, importance).apply {
+                NotificationChannel(NOTIFICATION_CHANNEL_ID_RESULT, name, importance).apply {
                     description =
                         context.getString(StringsR.string.notification_channel_desc_result)
                     lockscreenVisibility = Notification.VISIBILITY_PUBLIC

@@ -26,7 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         if (!isServiceStartupHandled) {
-            startNotificationServiceOnDemand()
+            startControlServiceOnDemand()
         }
     }
 
@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // Start previously started service if it was force killed for some reason
-    private fun startNotificationServiceOnDemand() {
+    private fun startControlServiceOnDemand() {
         lifecycleScope.launch {
             val shouldTurnOnService = viewModel.uiState
                 .filterIsInstance<MainActivityUiState.Success>()
@@ -124,9 +124,9 @@ class MainActivity : ComponentActivity() {
                 .first()
             if (shouldTurnOnService) {
                 startService(
-                    Intent(this@MainActivity, NotificationService::class.java).apply {
-                        action = NotificationService.HOLD_MODE_ON_ACTION
-                        putExtra(NotificationService.KEY_RESTRICTED_START, false)
+                    Intent(this@MainActivity, RecognitionControlService::class.java).apply {
+                        action = RecognitionControlService.ACTION_HOLD_MODE_ON
+                        putExtra(RecognitionControlService.KEY_RESTRICTED_START, false)
                     }
                 )
             }

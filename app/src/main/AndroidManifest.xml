@@ -46,14 +46,14 @@
         </activity>
 
         <activity
-            android:name=".feature.recognition.presentation.service.NotificationServiceActivity"
+            android:name=".feature.recognition.presentation.service.RecognitionControlActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <service
-            android:name=".feature.recognition.presentation.service.NotificationService"
+            android:name=".feature.recognition.presentation.service.RecognitionControlService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="microphone|specialUse">

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -40,9 +40,9 @@ class ServiceStartupReceiver : BroadcastReceiver() {
                 val userPreferences = preferencesRepository.userPreferencesFlow.first()
                 if (userPreferences.notificationServiceEnabled) {
                     context.startForegroundService(
-                        Intent(context, NotificationService::class.java)
-                            .setAction(NotificationService.HOLD_MODE_ON_ACTION)
-                            .putExtra(NotificationService.KEY_RESTRICTED_START, true)
+                        Intent(context, RecognitionControlService::class.java)
+                            .setAction(RecognitionControlService.ACTION_HOLD_MODE_ON)
+                            .putExtra(RecognitionControlService.KEY_RESTRICTED_START, true)
                     )
                 }
             }

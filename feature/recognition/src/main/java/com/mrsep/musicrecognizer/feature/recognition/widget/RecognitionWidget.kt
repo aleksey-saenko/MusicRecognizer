@@ -20,8 +20,8 @@ import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceActivity
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.HorizontalLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout
@@ -87,13 +87,13 @@ class RecognitionWidget : GlanceAppWidget() {
         }.flowOn(Dispatchers.Default)
 
         val onLaunchRecognition = actionStartActivity(
-            intent = Intent(context, NotificationServiceActivity::class.java)
-                .setAction(NotificationService.LAUNCH_RECOGNITION_ACTION)
-                .putExtra(NotificationService.KEY_FOREGROUND_REQUESTED, true)
+            intent = Intent(context, RecognitionControlActivity::class.java)
+                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
+                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
         )
         val onCancelRecognition = actionStartActivity(
-            intent = Intent(context, NotificationServiceActivity::class.java)
-                .setAction(NotificationService.CANCEL_RECOGNITION_ACTION)
+            intent = Intent(context, RecognitionControlActivity::class.java)
+                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
         )
 
         provideContent {

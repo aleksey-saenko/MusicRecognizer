@@ -92,6 +92,12 @@ dependencies {
     implementation(libs.hilt.ext.work)
     ksp(libs.hilt.ext.compiler)
 
+    implementation(libs.acra.core)
+    implementation(libs.acra.mail)
+    implementation(libs.acra.dialog)
+    compileOnly(libs.auto.service.annotations)
+    ksp(libs.auto.service.ksp)
+
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)

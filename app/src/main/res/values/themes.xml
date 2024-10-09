@@ -17,4 +17,6 @@
         <item name="postSplashScreenTheme">@style/Theme.MusicRecognizer</item>
     </style>
 
+    <style name="Theme.MusicRecognizer.Dialog.Crash" parent="android:Theme.DeviceDefault.Light.Dialog.Alert"/>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -11,14 +12,22 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
+import org.acra.ACRA
+import org.acra.ACRAConstants
+import org.acra.ReportField
+import org.acra.config.dialog
+import org.acra.config.mailSender
+import org.acra.data.StringFormat
+import org.acra.ktx.initAcra
 import javax.inject.Inject
 import javax.inject.Provider
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @HiltAndroidApp
 class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Provider {
@@ -29,8 +38,15 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        if (ACRA.isACRASenderServiceProcess()) return
+        setupAcra()
+    }
+
     override fun onCreate() {
         super.onCreate()
+        if (ACRA.isACRASenderServiceProcess()) return
         RecognitionControlService.createStatusNotificationChannel(this)
         RecognitionControlService.createResultNotificationChannel(this)
         ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
@@ -77,6 +93,32 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
                 Intent(RecognitionControlService.ACTION_LAUNCH_RECOGNITION, Uri.EMPTY, this, RecognitionControlActivity::class.java)
             )
             .build()
+    }
+
+    // Send reports only upon user approval (https://f-droid.org/en/docs/Anti-Features/#Tracking)
+    private fun setupAcra() {
+        ACRA.DEV_LOGGING = false
+        initAcra {
+            buildConfigClass = BuildConfig::class.java
+            reportFormat = StringFormat.JSON
+            reportContent = ACRAConstants.DEFAULT_REPORT_FIELDS + ReportField.MEDIA_CODEC_LIST
+            stopServicesOnCrash = true
+            dialog {
+                title = getString(StringsR.string.crash_dialog_title)
+                resIcon = UiR.drawable.rounded_bug_report_fill1_24
+                text = getString(StringsR.string.crash_dialog_message)
+                commentPrompt = getString(StringsR.string.crash_dialog_comment_prompt)
+                positiveButtonText = getString(StringsR.string.crash_dialog_button_send)
+                negativeButtonText = getString(StringsR.string.crash_dialog_button_cancel)
+                resTheme = R.style.Theme_MusicRecognizer_Dialog_Crash
+            }
+            mailSender {
+                mailTo = "audile.crashes@gmail.com"
+                reportAsFile = true
+                reportFileName = "crash-report.json"
+                subject = "Crash report"
+            }
+        }
     }
 
     companion object {

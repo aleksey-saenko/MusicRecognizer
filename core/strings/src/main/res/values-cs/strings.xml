@@ -173,13 +173,13 @@
     <string name="pref_subtitle_notification_service">Ovládání rozpoznávání skrze oznámení</string>
     <string name="pref_group_appearance">Vzhled</string>
     <string name="pref_title_use_grid_layout">Použít mřížku</string>
-    <string name="pref_title_show_recognition_date">Zobrazit datum</string>
-    <string name="pref_title_show_creation_date">Zobrazit datum</string>
+    <string name="pref_title_show_recognition_date">Zobrazit datum rozpoznání</string>
+    <string name="pref_title_show_creation_date">Zobrazit datum vytvoření</string>
     <string name="pref_title_music_services_links">Odkazy na hudební služby</string>
     <string name="pref_subtitle_no_selected_services">Žádný</string>
     <string name="music_services_links_dialog">Vyberte hudební služby, pro které chcete zobrazit webové odkazy (pokud jsou k dispozici):</string>
     <string name="pref_title_vibration_feedback">Vibrační odezva</string>
-    <string name="vibration_feedback_dialog_title">Vibrační odezva</string>
+    <string name="vibration_feedback_dialog_title">Vibrace</string>
     <string name="vibration_feedback_dialog_message">Přizpůsobení vibrační odezvy pro určité akce v aplikaci:</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrace při klepnutí</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrace při výsledku</string>
@@ -264,4 +264,9 @@
     <string name="about_pref_subtitle_license">Aplikace Audile je licencována pod GNU GPLv3</string>
     <string name="about_pref_subtitle_third_licenses">Licence knihoven třetích stran používaných aplikací Audile</string>
     <string name="about_pref_subtitle_github_repo">Zdrojový kód, problémy a další informace</string>
+    <string name="crash_dialog_title">Aplikace Audile havarovala</string>
+    <string name="crash_dialog_message">Vyskytla se neočekávaná chyba, kvůli které musela být aplikace zastavena. Chcete poslat e-mail s hlášením o chybě a pomoci tak s jejím vyřešením?</string>
+    <string name="crash_dialog_comment_prompt">Zde můžete přidat další informace:</string>
+    <string name="crash_dialog_button_send">Poslat</string>
+    <string name="crash_dialog_button_cancel">Zrušit</string>
 </resources>

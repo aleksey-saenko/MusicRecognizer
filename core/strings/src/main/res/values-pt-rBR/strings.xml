@@ -272,4 +272,9 @@
     <string name="result_title_recognition_saved">Identificação salva</string>
     <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3</string>
     <string name="about_pref_title_third_licenses">Licenças de terceiros</string>
+    <string name="crash_dialog_title">O Audile crashou</string>
+    <string name="crash_dialog_message">Um erro inesperado ocorreu, fazendo com o que o app parasse. Você gostaria de enviar um relatório de erros via e-mail para ajudar nos a resolver o problema?</string>
+    <string name="crash_dialog_comment_prompt">Você pode adicionar informações extras aqui:</string>
+    <string name="crash_dialog_button_send">Enviar</string>
+    <string name="crash_dialog_button_cancel">Cancelar</string>
 </resources>

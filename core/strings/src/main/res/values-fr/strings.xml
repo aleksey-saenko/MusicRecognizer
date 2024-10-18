@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="main_screen_tap_to_recognize">Appuyez pour identifier</string>
     <string name="main_screen_listening">Écoute en cours</string>
     <string name="main_screen_listening_extra_time">Essayer une fois de plus</string>
@@ -10,7 +9,7 @@
     <string name="widget_listening">Écoute en cours</string>
     <string name="widget_listening_subtitle">Veuillez patienter</string>
     <string name="widget_listening_subtitle_extra_time">Essayer une fois de plus</string>
-    <string name="recognition_widget_description">Reconnaître la chanson en un seul tap</string>
+    <string name="recognition_widget_description">Reconnaître la chanson en un seul clic</string>
     <string name="notification_tap_to_recognize">Appuyez pour identifier</string>
     <string name="notification_tap_to_recognize_subtitle">Identifiez la musique dans d’autres applis</string>
     <string name="notification_listening">Écoute en cours</string>
@@ -20,7 +19,6 @@
     <string name="quick_tile_cancel_recognition">Annuler la reconnaissance</string>
     <string name="action_recognize">Identifier</string>
     <string name="action_cancel_recognition">Annuler la reconnaissance</string>
-
     <!-- General use -->
     <string name="nav_back">Retour</string>
     <string name="nav_forward">Suivant</string>
@@ -45,7 +43,6 @@
     <string name="cannot_share_toast">Impossible de trouver une application pour partager</string>
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
-
     <!-- Permissions -->
     <string name="permissions">Permissions</string>
     <string name="request_permission">Demander l\'autorisation</string>
@@ -54,18 +51,16 @@
     <string name="permissions_denied_message">Les demandes de permissions précédentes ont été refusées. Vous pouvez changer votre décision à travers les paramètres.</string>
     <string name="permissions_denied_open_settings">Ouvrir les paramètres</string>
     <string name="permission_granted">Autorisation accordée</string>
-
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Bienvenue</string>
     <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui peut vous aider à identifier rapidement et précisément une piste musicale jouée à proximité de vous.</string>
     <string name="onboarding_permission_message">L\'application nécessite l\'autorisation d\'enregistrer l\'audio pour fonctionner correctement. En accordant cette autorisation, vous acceptez que vos données enregistrées soient utilisées par <![CDATA[<a href="%1$s">le service distant</a>]]> pour la reconnaissance musicale. L\'application n\'utilise pas ces données à d\'autres fins.</string>
     <string name="onboarding_token_message">L\'application utilise le service de reconnaissance musicale AudD, qui n\'est pas gratuit et nécessite un jeton API spécial. Inscrivez-vous <![CDATA[<a href="%1$s">ici</a>]]> pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore.</string>
-    <string name="onboarding_token_skip_message">Ignorer cette étape limitera vos reconnaissances quotidiennes, mais vous pourrez toujours spécifier votre jeton personnel ultérieurement dans les préférences.</string>
+    <string name="onboarding_token_skip_message">Ignorer cette étape limitera votre nombre de reconnaissances quotidiennes, mais vous pourrez toujours spécifier ultérieurement votre jeton personnel dans les préférences.</string>
     <string name="onboarding_token_validating">Validation en cours</string>
     <string name="onboarding_final_title">Nous sommes prêts à démarrer</string>
     <string name="onboarding_final_message">Configuration terminée avec succès</string>
     <string name="onboarding_final_get_started">Commencer</string>
-
     <!-- Recognition screen -->
     <string name="recognition">Reconnaissance</string>
     <string name="popup_offline_mode">Mode hors ligne</string>
@@ -88,7 +83,6 @@
     <string name="result_title_internal_error">Erreur interne</string>
     <string name="result_message_internal_error">Une erreur interne s\'est produite</string>
     <string name="result_title_unknown_error">Erreur inconnue</string>
-
     <!-- Library screen -->
     <string name="library">Bibliothèque</string>
     <string name="empty_library_title">Aucune chanson reconnue</string>
@@ -113,7 +107,6 @@
     <string name="no_tracks_match_search">Aucune piste ne correspond à vos critères de recherche</string>
     <string name="delete_tracks_title">Supprimer les titres</string>
     <string name="delete_tracks_message">Êtes-vous sûr de vouloir supprimer les titres sélectionnés \? Cette opération est irréversible.</string>
-
     <!-- Queue screen -->
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
@@ -139,7 +132,6 @@
     <string name="recording_stop_player">Arrêter le lecteur</string>
     <string name="delete_recognitions_title">Supprimer les reconnaissances</string>
     <string name="delete_recognitions_message">Êtes-vous sûr de vouloir annuler et supprimer les reconnaissances planifiées sélectionnées \? Cette opération est irréversible.</string>
-
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Marquer comme favori</string>
     <string name="unmark_track_as_favorite">Désélectionner comme favori</string>
@@ -178,7 +170,6 @@
     <string name="align_to_start">Aligner au début</string>
     <string name="bold_text">Texte en gras</string>
     <string name="high_contrast_text">Texte à fort contraste</string>
-
     <!-- Preferences screen -->
     <string name="preferences">Préférences</string>
     <string name="pref_group_recognition">Reconnaissance</string>
@@ -225,7 +216,6 @@
     <string name="about_purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
     <string name="about_pref_title_github_repo">Dépôt GitHub</string>
     <string name="about_pref_title_privacy_policy">Politique de confidentialité</string>
-
     <string name="notification_button_disable_service">Désactiver</string>
     <string name="notification_button_show_lyrics">Afficher les paroles</string>
     <string name="notification_channel_name_control">Contrôler les notifications</string>
@@ -234,5 +224,16 @@
     <string name="notification_channel_desc_result">Permet de recevoir les résultats des reconnaissances via les notifications</string>
     <string name="notification_channel_name_scheduled_result">Résultats de reconnaissance planifiés</string>
     <string name="notification_channel_desc_scheduled_result">Permet de recevoir les résultats des reconnaissances planifiées via les notifications</string>
-
+    <string name="app_shortcut_recognize_short">Reconnaitre</string>
+    <string name="library_menu_mark_all_tracks_as_viewed">Tout marquer comme vu</string>
+    <string name="result_title_recognition_saved">Reconnaissance enregistrée</string>
+    <string name="pref_title_recognition_provider">Service de reconnaissance</string>
+    <string name="recognition_provider_dialog_message">Sélectionnez le service de reconnaissance :</string>
+    <string name="app_shortcut_recognize_long">Reconnaître en arrière-plan</string>
+    <string name="app_shortcut_open_and_recognize_short">Ouvrir et reconnaitre</string>
+    <string name="app_shortcut_open_and_recognize_long">Ouvrir l\'appli et reconnaitre</string>
+    <string name="help">Aide</string>
+    <string name="recognition_provider_dialog_title">Service</string>
+    <string name="recognition_provider_dialog_format_auth">%s authentification :</string>
+    <string name="acr_cloud_help_dialog_step1">Sélectionnez la région géographique la plus proche de vous pour réduire la latence du réseau</string>
 </resources>

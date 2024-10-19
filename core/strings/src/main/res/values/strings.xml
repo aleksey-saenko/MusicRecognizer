@@ -188,6 +188,16 @@
     <string name="preferences">Preferences</string>
     <string name="pref_group_recognition">Recognition</string>
     <string name="pref_title_recognize_on_startup">Recognize on startup</string>
+    <string name="pref_title_audio_source">Audio source</string>
+    <string name="pref_subtitle_audio_source">Set audio recording configuration</string>
+    <string name="audio_source_dialog_title">Audio source</string>
+    <string name="audio_source_dialog_default_mode_title">Default</string>
+    <string name="audio_source_dialog_default_mode_message">Select the default audio source to be used unless specified otherwise:</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Button long press</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Select the audio source to be used when the main screen button is long-pressed:</string>
+    <string name="audio_capture_mode_microphone">Microphone</string>
+    <string name="audio_capture_mode_device">Device audio</string>
+    <string name="audio_capture_mode_auto">Automatic</string>
     <string name="pref_title_fallback_policy">Recognition fallback policy</string>
     <string name="pref_subtitle_fallback_policy">Set fallback actions after unsuccessful recognitions</string>
     <string name="fallback_policy_dialog_title">Fallback policy</string>

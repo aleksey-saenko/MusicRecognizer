@@ -184,6 +184,16 @@
     <string name="preferences">Настройки</string>
     <string name="pref_group_recognition">Распознавание</string>
     <string name="pref_title_recognize_on_startup">Распознавать при запуске</string>
+    <string name="pref_title_audio_source">Источник аудио</string>
+    <string name="pref_subtitle_audio_source">Настройте параметры записи звука</string>
+    <string name="audio_source_dialog_title">Источник аудио</string>
+    <string name="audio_source_dialog_default_mode_title">По умолчанию</string>
+    <string name="audio_source_dialog_default_mode_message">Выберите источник аудио, который будет использоваться по умолчанию:</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Длительное нажатие</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Выберите источник аудио, который будет использоваться при длительном нажатии кнопки на главном экране:</string>
+    <string name="audio_capture_mode_microphone">Микрофон</string>
+    <string name="audio_capture_mode_device">Аудиовывод устройства</string>
+    <string name="audio_capture_mode_auto">Автоматически</string>
     <string name="pref_title_fallback_policy">Действия при неуспехе</string>
     <string name="pref_subtitle_fallback_policy">Установите действия в случае неуспешных распознаваний</string>
     <string name="fallback_policy_dialog_title">Действия при неуспехе</string>
@@ -199,7 +209,7 @@
     <string name="recognition_provider_dialog_message">Выберите провайдера:</string>
     <string name="recognition_provider_dialog_format_auth">Аутентификация %s:</string>
     <string name="audd_help_dialog_message">AudD - это платный сервис, который предоставляет возможность бесплатного пробного 14-дневного периода. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. <![CDATA[<a href="%1$s">Зарегистрируйтесь</a>]]>, если у вас еще нет аккаунта.</string>
-    <string name="audd_help_dialog_message_empty_token">Вы можете использовать сервис в тестовых целях без предоставления токена, но обратите внимание, что это существенно ограничит количество ежедневных распознаваний.</string>
+    <string name="audd_help_dialog_message_empty_token">Вы можете использовать сервис в тестовых целях без указания токена, но обратите внимание, что это существенно ограничит количество ежедневных распознаваний.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud - это платный сервис, который предоставляет возможность бесплатного пробного периода и ограниченное использование в целях разработки. Для использования сервиса, вам необходимо создать аккаунт и зарегистрировать проект. Если у вас возникли какие-либо трудности, пожалуйста, обратитесь к данному <![CDATA[<a href="%1$s">руководству</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Пожалуйста, обратите внимание:</string>
     <string name="acr_cloud_help_dialog_step1">Выберите ближайший к вам географический регион, чтобы минимизировать интернет задержку</string>

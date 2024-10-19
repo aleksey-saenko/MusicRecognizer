@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="crash_dialog_message">Ha ocurrido un error inesperado, causando que la aplicación pare. ¿Te gustaría enviar por correo electrónico el informe de fallos para ayudar a solucionar el problema?</string>
+</resources>

@@ -106,7 +106,7 @@
     <string name="no_tracks_match_filter">Aucune piste ne correspond à vos filtres sélectionnés</string>
     <string name="no_tracks_match_search">Aucune piste ne correspond à vos critères de recherche</string>
     <string name="delete_tracks_title">Supprimer les titres</string>
-    <string name="delete_tracks_message">Êtes-vous sûr·e de vouloir supprimer les titres sélectionnés ? Cette opération est irréversible.</string>
+    <string name="delete_tracks_message">Êtes-vous sûr·e de vouloir supprimer les titres sélectionnés ? Cette opération est irréversible.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
@@ -238,23 +238,23 @@
     <string name="acr_cloud_help_dialog_step1">Sélectionnez la région géographique la plus proche de vous pour réduire la latence du réseau</string>
     <string name="unviewed_track_label">+1</string>
     <string name="lyrics_start_autoscroll">Démarrer le défilement auto</string>
-    <string name="acr_cloud_help_dialog_step2">Définir la source audio comme « Audio enregistré »</string>
+    <string name="acr_cloud_help_dialog_step2">Définir la source audio comme « Audio enregistré »</string>
     <string name="pref_subtitle_backup_and_restore">Sauvegardez votre base de données et vos préférences</string>
     <string name="pref_title_backup">Sauvegarde</string>
     <string name="pref_subtitle_backup">Exportez les données et préférences de l\'appli</string>
     <string name="backup_dialog_title">Sauvegarde</string>
     <string name="backup_dialog_button_backup">Sauvegarder</string>
-    <string name="acr_cloud_help_dialog_steps_title">Veuillez prêter attention à ces étapes :</string>
+    <string name="acr_cloud_help_dialog_steps_title">Veuillez prêter attention à ces étapes :</string>
     <string name="acr_cloud_help_dialog_step4">Vérifiez toutes les boîtes pour l\'intégration d\'identifiant tiers</string>
     <string name="pref_title_experimental_features">Fonctionnalités expérimentales</string>
     <string name="pref_title_restore">Restauration</string>
     <string name="pref_title_backup_and_restore">Sauvegarde et restauration</string>
     <string name="lyrics_stop_autoscroll">Arrêter le défilement auto</string>
-    <string name="acr_cloud_help_dialog_step3">Réglez le moteur audio de votre choix. L\'option « empreinte audio » est la plus précise pour une utilisation générale</string>
+    <string name="acr_cloud_help_dialog_step3">Réglez le moteur audio de votre choix. L\'option « empreinte audio » est la plus précise pour une utilisation générale</string>
     <string name="pref_subtitle_restore">Restaurez les données et les préférences de l\'appli à partir d\'une sauvegarde</string>
     <string name="restore_dialog_title">Restauration</string>
     <string name="restore_dialog_button_restore">Restaurer</string>
-    <string name="crash_dialog_comment_prompt">Vous pouvez ajouter des informations supplémentaires ici :</string>
+    <string name="crash_dialog_comment_prompt">Vous pouvez ajouter des informations supplémentaires ici :</string>
     <string name="crash_dialog_button_cancel">Annuler</string>
     <string name="pref_subtitle_experimental_features">Travail en cours</string>
     <string name="about_pref_subtitle_license">Audile est sous licence GNU GPLv3</string>
@@ -264,7 +264,7 @@
     <string name="about_pref_subtitle_privacy_policy">En savoir plus sur comment l\'application gère vos données</string>
     <string name="about_pref_title_license">Licence</string>
     <string name="crash_dialog_title">Audile a planté</string>
-    <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
+    <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
     <string name="crash_dialog_button_send">Envoyer</string>
     <string name="audio_source_dialog_default_mode_title">Défaut</string>
     <string name="audio_source_dialog_default_mode_message">Sélectionnez la source audio par défaut à utiliser, sauf indication contraire :</string>

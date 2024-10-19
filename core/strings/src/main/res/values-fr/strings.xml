@@ -33,13 +33,13 @@
     <string name="delete">Supprimer</string>
     <string name="hide">Masquer</string>
     <string name="show">Afficher</string>
-    <string name="edit">Éditer</string>
+    <string name="edit">Modifier</string>
     <string name="clear_text_field">Effacer</string>
     <string name="text_field_must_not_be_empty">Ne doit pas être vide</string>
     <string name="copy">Copier</string>
     <string name="copied">Copié</string>
     <string name="share">Partager</string>
-    <string name="web_browser_not_found_toast">Navigateur web non trouvé</string>
+    <string name="web_browser_not_found_toast">Navigateur Web introuvable</string>
     <string name="cannot_share_toast">Impossible de trouver une application pour partager</string>
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
@@ -106,7 +106,7 @@
     <string name="no_tracks_match_filter">Aucune piste ne correspond à vos filtres sélectionnés</string>
     <string name="no_tracks_match_search">Aucune piste ne correspond à vos critères de recherche</string>
     <string name="delete_tracks_title">Supprimer les titres</string>
-    <string name="delete_tracks_message">Êtes-vous sûr de vouloir supprimer les titres sélectionnés \? Cette opération est irréversible.</string>
+    <string name="delete_tracks_message">Êtes-vous sûr·e de vouloir supprimer les titres sélectionnés ? Cette opération est irréversible.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
@@ -128,8 +128,8 @@
     <string name="select_all">Sélectionner tout</string>
     <string name="cancel_selected">Annuler la sélection</string>
     <string name="delete_selected">Supprimer la sélection</string>
-    <string name="recording_start_player">Démarrer le lecteur</string>
-    <string name="recording_stop_player">Arrêter le lecteur</string>
+    <string name="recording_start_player">Démarrer</string>
+    <string name="recording_stop_player">Arrêter</string>
     <string name="delete_recognitions_title">Supprimer les reconnaissances</string>
     <string name="delete_recognitions_message">Êtes-vous sûr de vouloir annuler et supprimer les reconnaissances planifiées sélectionnées \? Cette opération est irréversible.</string>
     <!-- Track & Lyrics screen -->
@@ -143,7 +143,7 @@
     <string name="search_for">Rechercher</string>
     <string name="search_in">Rechercher dans</string>
     <string name="format_open_website_or_app">Ouvrir %s</string>
-    <string name="track_info">Info sur le titre</string>
+    <string name="track_info">Infos sur le titre</string>
     <string name="track_info_title_duration">Durée de la piste :</string>
     <string name="track_info_title_recognized_at">Reconnu à :</string>
     <string name="track_info_title_recognized_by">Reconnu par :</string>
@@ -166,14 +166,14 @@
     <string name="font_size_small">Petit</string>
     <string name="font_size_normal">Normal</string>
     <string name="font_size_large">Grand</string>
-    <string name="font_size_huge">Enorme</string>
+    <string name="font_size_huge">Énorme</string>
     <string name="align_to_start">Aligner au début</string>
     <string name="bold_text">Texte en gras</string>
     <string name="high_contrast_text">Texte à fort contraste</string>
     <!-- Preferences screen -->
     <string name="preferences">Préférences</string>
     <string name="pref_group_recognition">Reconnaissance</string>
-    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage</string>
+    <string name="pref_title_recognize_on_startup">Reconnaitre au démarrage</string>
     <string name="pref_title_fallback_policy">Solution de secours de la reconnaissance</string>
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
@@ -229,7 +229,7 @@
     <string name="result_title_recognition_saved">Reconnaissance enregistrée</string>
     <string name="pref_title_recognition_provider">Service de reconnaissance</string>
     <string name="recognition_provider_dialog_message">Sélectionnez le service de reconnaissance :</string>
-    <string name="app_shortcut_recognize_long">Reconnaître en arrière-plan</string>
+    <string name="app_shortcut_recognize_long">Reconnaitre en arrière-plan</string>
     <string name="app_shortcut_open_and_recognize_short">Ouvrir et reconnaitre</string>
     <string name="app_shortcut_open_and_recognize_long">Ouvrir l\'appli et reconnaitre</string>
     <string name="help">Aide</string>

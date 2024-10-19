@@ -277,4 +277,14 @@
     <string name="crash_dialog_comment_prompt">Você pode adicionar informações extras aqui:</string>
     <string name="crash_dialog_button_send">Enviar</string>
     <string name="crash_dialog_button_cancel">Cancelar</string>
+    <string name="audio_source_dialog_title">Fonte de áudio</string>
+    <string name="audio_capture_mode_microphone">Microfone</string>
+    <string name="audio_capture_mode_device">Áudio do dispositivo</string>
+    <string name="audio_capture_mode_auto">Automático</string>
+    <string name="pref_title_audio_source">Fonte de áudio</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Pressionamento longo no botão</string>
+    <string name="pref_subtitle_audio_source">Definir configuração de gravação de áudio</string>
+    <string name="audio_source_dialog_default_mode_title">Padrão</string>
+    <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado longamente:</string>
 </resources>

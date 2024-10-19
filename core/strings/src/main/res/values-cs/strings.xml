@@ -269,4 +269,14 @@
     <string name="crash_dialog_comment_prompt">Zde můžete přidat další informace:</string>
     <string name="crash_dialog_button_send">Poslat</string>
     <string name="crash_dialog_button_cancel">Zrušit</string>
+    <string name="audio_source_dialog_default_mode_message">Zvolte výchozí zdroj zvuku, který má být použit, pokud nebude uvedeno jinak:</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Dlouhé podržení tlačítka</string>
+    <string name="pref_title_audio_source">Zdroj zvuku</string>
+    <string name="pref_subtitle_audio_source">Nastavení nahrávání zvuku</string>
+    <string name="audio_source_dialog_title">Zdroj zvuku</string>
+    <string name="audio_source_dialog_default_mode_title">Výchozí</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Zvolte zdroj zvuku, který má být použit při dlouhém stisku tlačítka na domovské obrazovce:</string>
+    <string name="audio_capture_mode_microphone">Mikrofon</string>
+    <string name="audio_capture_mode_device">Zvuk zařízení</string>
+    <string name="audio_capture_mode_auto">Automaticky</string>
 </resources>

@@ -4,11 +4,11 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -80,7 +80,7 @@ internal fun TrackScreen(
         is TrackUiState.Success -> {
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
-            var showArtworkShield by rememberSaveable { mutableStateOf(false) }
+            var artworkShieldUrl by rememberSaveable { mutableStateOf<String?>(null) }
             var showTrackExtrasDialog by rememberSaveable { mutableStateOf(false) }
             var showShareSheet by rememberSaveable { mutableStateOf(false) }
             var showSearchBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -114,109 +114,117 @@ internal fun TrackScreen(
                 useDarkTheme = shouldUseDarkTheme(uiState.themeMode),
                 usePureBlackForDarkTheme = uiState.usePureBlackForDarkTheme,
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        val screenScrollState = rememberScrollState()
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            TrackScreenTopBar(
-                                onBackPressed = onBackPressed,
-                                onShareClick = { showShareSheet = !showShareSheet },
-                                onDeleteClick = { viewModel.deleteTrack(uiState.track.id) },
-                                onShowDetailsClick = { showTrackExtrasDialog = true },
-                                scrollBehavior = topBarBehaviour
-                            )
-                            TrackSection(
-                                track = uiState.track,
-                                isLoadingLinks = uiState.isMetadataEnhancerRunning,
-                                isExpandedScreen = isExpandedScreen,
-                                onArtworkClick = { showArtworkShield = true },
-                                createSeedColor = uiState.artworkBasedThemeEnabled,
-                                onSeedColor = { seedColor ->
-                                    viewModel.setThemeSeedColor(
-                                        uiState.track.id,
-                                        seedColor.toArgb()
-                                    )
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
-//                                .nestedScroll(bottomBarBehaviour.nestedScrollConnection)
-                                    .nestedScroll(topBarBehaviour.nestedScrollConnection)
-                                    .verticalScroll(screenScrollState)
-
-                            )
-                            TrackActionsBottomBar(
-                                scrollBehavior = null,
-                                isFavorite = uiState.track.isFavorite,
-                                isLyricsAvailable = uiState.track.lyrics != null,
-                                isRetryAllowed = isRetryAllowed,
-                                onFavoriteClick = {
-                                    viewModel.setFavorite(uiState.track.id, !uiState.track.isFavorite)
-                                },
-                                onLyricsClick = {
-                                    onNavigateToLyricsScreen(uiState.track.id)
-                                },
-                                onSearchClick = {
-                                    showSearchBottomSheet = true
-                                },
-                                onRetryRequested = {
-                                    trackDismissed = true
-                                    viewModel.deleteTrack(uiState.track.id)
-                                    onRetryRequested()
-                                }
-                            )
-                        }
-                    }
-                    if (showShareSheet) {
-                        ShareBottomSheet(
-                            sheetState = shareSheetState,
-                            onDismissRequest = { showShareSheet = false },
-                            track = uiState.track,
-                            onCopyClick = { textToCopy ->
-                                hideShareSheet()
-                                context.copyTextToClipboard(textToCopy)
-                            },
-                            onShareClick = { textToShare ->
-                                hideShareSheet()
-                                context.shareText(
-                                    subject = "",
-                                    body = textToShare
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AnimatedContent(
+                        modifier = Modifier.fillMaxSize(),
+                        targetState = artworkShieldUrl,
+                        transitionSpec = {
+                            (fadeIn(animationSpec = tween(250)))
+                                .togetherWith(fadeOut(animationSpec = tween(250)))
+                        },
+                        label = "showArtworkShield"
+                    ) { shieldUrl ->
+                        if (shieldUrl == null) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                val screenScrollState = rememberScrollState()
+                                TrackScreenTopBar(
+                                    onBackPressed = onBackPressed,
+                                    onShareClick = { showShareSheet = !showShareSheet },
+                                    onDeleteClick = { viewModel.deleteTrack(uiState.track.id) },
+                                    onShowDetailsClick = { showTrackExtrasDialog = true },
+                                    scrollBehavior = topBarBehaviour
                                 )
+                                TrackSection(
+                                    track = uiState.track,
+                                    isLoadingLinks = uiState.isMetadataEnhancerRunning,
+                                    isExpandedScreen = isExpandedScreen,
+                                    onArtworkClick = {
+                                        artworkShieldUrl = uiState.track.artworkUrl
+                                    },
+                                    createSeedColor = uiState.artworkBasedThemeEnabled,
+                                    onSeedColor = { seedColor ->
+                                        viewModel.setThemeSeedColor(
+                                            uiState.track.id,
+                                            seedColor.toArgb()
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+//                                        .nestedScroll(bottomBarBehaviour.nestedScrollConnection)
+                                        .nestedScroll(topBarBehaviour.nestedScrollConnection)
+                                        .verticalScroll(screenScrollState)
+
+                                )
+                                TrackActionsBottomBar(
+                                    scrollBehavior = null,
+                                    isFavorite = uiState.track.isFavorite,
+                                    isLyricsAvailable = uiState.track.lyrics != null,
+                                    isRetryAllowed = isRetryAllowed,
+                                    onFavoriteClick = {
+                                        viewModel.setFavorite(
+                                            uiState.track.id,
+                                            !uiState.track.isFavorite
+                                        )
+                                    },
+                                    onLyricsClick = {
+                                        onNavigateToLyricsScreen(uiState.track.id)
+                                    },
+                                    onSearchClick = {
+                                        showSearchBottomSheet = true
+                                    },
+                                    onRetryRequested = {
+                                        trackDismissed = true
+                                        viewModel.deleteTrack(uiState.track.id)
+                                        onRetryRequested()
+                                    }
+                                )
+                                if (showShareSheet) {
+                                    ShareBottomSheet(
+                                        sheetState = shareSheetState,
+                                        onDismissRequest = { showShareSheet = false },
+                                        track = uiState.track,
+                                        onCopyClick = { textToCopy ->
+                                            hideShareSheet()
+                                            context.copyTextToClipboard(textToCopy)
+                                        },
+                                        onShareClick = { textToShare ->
+                                            hideShareSheet()
+                                            context.shareText(
+                                                subject = "",
+                                                body = textToShare
+                                            )
+                                        }
+                                    )
+                                }
+                                if (showSearchBottomSheet) {
+                                    WebSearchBottomSheet(
+                                        sheetState = searchSheetState,
+                                        onDismissRequest = { showSearchBottomSheet = false },
+                                        albumAvailable = uiState.track.album != null,
+                                        onPerformWebSearchClick = { searchParams ->
+                                            hideSearchSheet()
+                                            performWebSearch(context, searchParams, uiState.track)
+                                        },
+                                    )
+                                }
+                                if (showTrackExtrasDialog) {
+                                    TrackExtrasDialog(
+                                        track = uiState.track,
+                                        onDismissClick = { showTrackExtrasDialog = false }
+                                    )
+                                }
                             }
-                        )
-                    }
-                    if (showSearchBottomSheet) {
-                        WebSearchBottomSheet(
-                            sheetState = searchSheetState,
-                            onDismissRequest = { showSearchBottomSheet = false },
-                            albumAvailable = uiState.track.album != null,
-                            onPerformWebSearchClick = { searchParams ->
-                                hideSearchSheet()
-                                performWebSearch(context, searchParams, uiState.track)
-                            },
-                        )
-                    }
-                    if (showTrackExtrasDialog) {
-                        TrackExtrasDialog(
-                            track = uiState.track,
-                            onDismissClick = { showTrackExtrasDialog = false }
-                        )
-                    }
-                    uiState.track.artworkUrl?.let {
-                        AnimatedVisibility(
-                            visible = showArtworkShield,
-                            enter = fadeIn(spring(stiffness = Spring.StiffnessMedium)),
-                            exit = fadeOut(spring(stiffness = Spring.StiffnessMedium)),
-                        ) {
+                        } else {
                             AlbumArtworkShield(
-                                artworkUrl = uiState.track.artworkUrl,
+                                artworkUrl = shieldUrl,
                                 title = uiState.track.title,
                                 artist = uiState.track.artist,
                                 album = uiState.track.album,
                                 year = uiState.track.year,
-                                onBackPressed = { showArtworkShield = false },
+                                onBackPressed = { artworkShieldUrl = null },
                                 modifier = Modifier.fillMaxSize()
                             )
                         }

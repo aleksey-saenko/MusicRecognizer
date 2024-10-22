@@ -266,4 +266,5 @@
     <string name="crash_dialog_title">Audile a planté</string>
     <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
     <string name="crash_dialog_button_send">Envoyer</string>
+    <string name="audio_source_dialog_default_mode_title">Défaut</string>
 </resources>

@@ -23,6 +23,8 @@ android {
         }
         val devOptionsEnabled = properties["dev.options"]?.toString() ?: "false"
         buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
+
+        resourceConfigurations += listOf("en", "cs", "fr", "pt-rBR", "ru", "sk", "tr")
     }
 
     buildTypes {

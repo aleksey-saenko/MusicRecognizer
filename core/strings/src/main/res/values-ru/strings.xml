@@ -11,7 +11,7 @@
     <string name="widget_listening_subtitle_extra_time">Пробуем еще раз</string>
     <string name="recognition_widget_description">Распознайте песню одним нажатием</string>
     <string name="notification_tap_to_recognize">Распознать песню</string>
-    <string name="notification_tap_to_recognize_subtitle">Определить песню при любом открытом приложении</string>
+    <string name="notification_tap_to_recognize_subtitle">Нажмите для запуска распознавания в фоне</string>
     <string name="notification_listening">Слушаем</string>
     <string name="notification_listening_subtitle">Пожалуйста, подождите</string>
     <string name="notification_listening_subtitle_extra_time">Пробуем еще раз</string>
@@ -204,9 +204,9 @@
     <string name="fallback_trigger_bad_connection">Плохое соединение</string>
     <string name="fallback_trigger_no_matches_found">Совпадений не найдено</string>
     <string name="fallback_trigger_other_failures">Другие ошибки</string>
-    <string name="pref_title_recognition_provider">Провайдер распознавания</string>
-    <string name="recognition_provider_dialog_title">Провайдер</string>
-    <string name="recognition_provider_dialog_message">Выберите провайдера:</string>
+    <string name="pref_title_recognition_provider">Сервис распознавания</string>
+    <string name="recognition_provider_dialog_title">Сервис распознавания</string>
+    <string name="recognition_provider_dialog_message">Выберите текущий сервис:</string>
     <string name="recognition_provider_dialog_format_auth">Аутентификация %s:</string>
     <string name="audd_help_dialog_message">AudD - это платный сервис, который предоставляет возможность бесплатного пробного 14-дневного периода. Для использования сервиса, вам необходимо создать аккаунт и получить ваш личный API-токен. <![CDATA[<a href="%1$s">Зарегистрируйтесь</a>]]>, если у вас еще нет аккаунта.</string>
     <string name="audd_help_dialog_message_empty_token">Вы можете использовать сервис в тестовых целях без указания токена, но обратите внимание, что это существенно ограничит количество ежедневных распознаваний.</string>

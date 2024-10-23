@@ -204,7 +204,7 @@
     <string name="recognition_provider_dialog_title">Proveedor</string>
     <string name="recognition_provider_dialog_message">Seleccionar el proveedor de reconocimiento:</string>
     <string name="audd_help_dialog_message">AudD es un servicio de pago que ofrece la opción de un período de prueba gratuito durante 14 días. Para utilizar este servicio, debe crear una cuenta y obtener tu token de API privado. <![CDATA[<a href="%1$s">Regístrese</a>]]> si aún no tienes uno.</string>
-    <string name="acr_cloud_help_dialog_step2">Configura la fuente del audio como \"Audio grabado\"</string>
+    <string name="acr_cloud_help_dialog_step2">Configura la fuente del audio como udio grabado\\</string>
     <string name="theme_mode_follow_system">Sistema</string>
     <string name="theme_mode_light">Claro</string>
     <string name="theme_mode_dark">Oscuro</string>
@@ -228,7 +228,7 @@
     <string name="crash_dialog_title">Audile falló</string>
     <string name="crash_dialog_comment_prompt">Puedes añadir información adicional aquí:</string>
     <string name="crash_dialog_button_cancel">Cancelar</string>
-    <string name="acr_cloud_help_dialog_step3">Configura el motor de audio que prefieras. La opción \"Huella digital de audio\" es la más precisa para uso general</string>
+    <string name="acr_cloud_help_dialog_step3">Configura el motor de audio que prefieras. La opción uella digital de audio es la más precisa para uso general</string>
     <string name="theme_use_pure_black">Negro</string>
     <string name="music_services_links_dialog">Elija los servicios de música para los que desea ver enlaces web (si están disponibles):</string>
     <string name="about_purpose_track_links_service">Proporciona enlaces adicionales específicos de la plataforma</string>

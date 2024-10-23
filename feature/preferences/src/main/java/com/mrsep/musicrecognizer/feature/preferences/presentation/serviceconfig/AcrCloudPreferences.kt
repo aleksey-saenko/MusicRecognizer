@@ -113,7 +113,7 @@ private fun AcrCloudHostDropdownMenu(
                 imeAction = ImeAction.Done
             ),
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth()
         )
         ExposedDropdownMenu(

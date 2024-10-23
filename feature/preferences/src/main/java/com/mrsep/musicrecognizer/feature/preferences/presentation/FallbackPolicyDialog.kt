@@ -111,7 +111,7 @@ private fun FallbackActionsDropdownMenu(
             singleLine = true,
             shape = MaterialTheme.shapes.small,
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth()
         )
         ExposedDropdownMenu(

@@ -150,7 +150,7 @@ private fun RecognitionProviderDropdownMenu(
             singleLine = true,
             shape = MaterialTheme.shapes.small,
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth()
         )
         ExposedDropdownMenu(

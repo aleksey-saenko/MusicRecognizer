@@ -4,23 +4,44 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.projection.MediaProjectionConfig
+import android.media.projection.MediaProjectionManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.mrsep.musicrecognizer.core.ui.isDarkUiMode
+import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioCaptureMode
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-/*
- * This transparent activity is used to request required permissions for widgets and tiles
- * Also it helps TileService to start foreground recognition service from background
+/**
+ * This transparent activity is used to request required permissions and media projection token,
+ * when recognition is requested from widgets, quick tiles, shortcuts, and notifications.
+ * Also it helps TileService to start foreground recognition service from background, see
  * https://issuetracker.google.com/issues/299506164
  */
-
+@AndroidEntryPoint
 class RecognitionControlActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
+
+    private val mediaProjectionManager by lazy {
+        getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+    }
+
+    private lateinit var requestedAudioCaptureMode: AudioCaptureMode
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -29,7 +50,7 @@ class RecognitionControlActivity : ComponentActivity() {
             permission.takeIf { !isGranted }
         }
         when {
-            denied.isEmpty() -> onLaunchRecognition()
+            denied.isEmpty() -> onRecognitionPermissionsGranted()
 
             denied.any { permission -> !shouldShowRequestPermissionRationale(permission) } -> {
                 showPermissionsBlockedDialog()
@@ -39,39 +60,74 @@ class RecognitionControlActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private val requestMediaProjectionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != RESULT_OK) finish()
+        result.data?.let { mediaProjectionData ->
+            val mode = when (requestedAudioCaptureMode) {
+                AudioCaptureMode.Microphone -> AudioCaptureServiceMode.Microphone
+                AudioCaptureMode.Device -> AudioCaptureServiceMode.Device(mediaProjectionData)
+                AudioCaptureMode.Auto -> AudioCaptureServiceMode.Auto(mediaProjectionData)
+            }
+            onLaunchRecognition(mode)
+        } ?: finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (intent.action) {
-            RecognitionControlService.ACTION_LAUNCH_RECOGNITION -> {
-                val requiredPermissions = getRequiredPermissionsForRecognition()
-                if (checkPermissionsGranted(requiredPermissions)) {
-                    onLaunchRecognition()
-                } else {
-                    val shouldShowRationale = requiredPermissions
-                        .any { shouldShowRequestPermissionRationale(it) }
-                    if (shouldShowRationale) {
-                        showPermissionsRationaleDialog()
+        lifecycleScope.launch {
+            when (intent.action) {
+                RecognitionControlService.ACTION_LAUNCH_RECOGNITION -> {
+                    requestedAudioCaptureMode = preferencesRepository
+                        .userPreferencesFlow.first()
+                        .defaultAudioCaptureMode
+                    val requiredPermissions = getRequiredPermissionsForRecognition()
+                    if (checkPermissionsGranted(requiredPermissions)) {
+                        onRecognitionPermissionsGranted()
                     } else {
-                        requestPermissionLauncher.launch(requiredPermissions)
+                        val shouldShowRationale = requiredPermissions
+                            .any { shouldShowRequestPermissionRationale(it) }
+                        if (shouldShowRationale) {
+                            showPermissionsRationaleDialog()
+                        } else {
+                            requestPermissionLauncher.launch(requiredPermissions)
+                        }
                     }
                 }
-            }
 
-            RecognitionControlService.ACTION_CANCEL_RECOGNITION -> {
-                onCancelRecognition()
-            }
+                RecognitionControlService.ACTION_CANCEL_RECOGNITION -> {
+                    onCancelRecognition()
+                }
 
-            else -> {
+                else -> {
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun onRecognitionPermissionsGranted() {
+        when (requestedAudioCaptureMode) {
+            AudioCaptureMode.Microphone -> onLaunchRecognition(AudioCaptureServiceMode.Microphone)
+            AudioCaptureMode.Device,
+            AudioCaptureMode.Auto -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
+                requestMediaProjectionLauncher.launch(intent)
+            } else {
+                Log.w(this::class.java.simpleName, "AudioPlaybackCapture API is available on Android 10+")
                 finish()
             }
         }
     }
 
-    private fun onLaunchRecognition() {
+    private fun onLaunchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
         startForegroundService(
             Intent(this, RecognitionControlService::class.java)
                 .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
                 .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
+                .putExtra(RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE, audioCaptureServiceMode)
         )
         finish()
     }
@@ -173,5 +229,13 @@ class RecognitionControlActivity : ComponentActivity() {
             }
             .create()
             .show()
+    }
+}
+
+internal fun MediaProjectionManager.createScreenCaptureIntentForDisplay(): Intent {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        createScreenCaptureIntent()
+    } else {
+        createScreenCaptureIntent(MediaProjectionConfig.createConfigForDefaultDisplay())
     }
 }

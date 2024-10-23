@@ -2,6 +2,7 @@
 
 package com.mrsep.musicrecognizer.feature.recognition.domain.impl
 
+import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
 import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
 import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
@@ -17,6 +18,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.TrackLink
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -42,7 +44,7 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
 
     private var recognitionJob: Job? = null
 
-    override fun launchRecognition(scope: CoroutineScope) {
+    override fun launchRecognition(scope: CoroutineScope, recorderController: AudioRecorderController) {
         if (recognitionJob?.isCompleted == false) return
         recognitionJob = scope.launch {
             status.update { RecognitionStatus.Recognizing(false) }
@@ -58,15 +60,15 @@ internal class RecognitionInteractorFakeImpl @Inject constructor(
         }.setCancellationHandler()
     }
 
-    override fun launchOfflineRecognition(scope: CoroutineScope) {
-        launchRecognition(scope)
+    override fun launchOfflineRecognition(scope: CoroutineScope, recorderController: AudioRecorderController) {
+        launchRecognition(scope, recorderController)
     }
 
-    override fun cancelAndResetStatus() {
+    override suspend fun cancelAndJoin() {
         if (recognitionJob?.isCompleted == true) {
             status.update { RecognitionStatus.Ready }
         } else {
-            recognitionJob?.cancel()
+            recognitionJob?.cancelAndJoin()
         }
     }
 

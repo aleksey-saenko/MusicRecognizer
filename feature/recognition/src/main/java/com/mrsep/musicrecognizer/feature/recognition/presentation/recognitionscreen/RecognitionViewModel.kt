@@ -1,22 +1,35 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.common.di.MainDispatcher
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.*
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.AudioCaptureServiceMode
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -25,10 +38,9 @@ import javax.inject.Inject
 internal class RecognitionViewModel @Inject constructor(
     @MainScreenStatusHolder private val statusHolder: RecognitionStatusHolder,
     private val recognitionController: ScreenRecognitionController,
-    private val recorderController: AudioRecorderController,
     private val vibrationManager: VibrationManager,
     preferencesRepository: PreferencesRepository,
-    networkMonitor: NetworkMonitor
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     val recognitionState by statusHolder::status
@@ -45,14 +57,18 @@ internal class RecognitionViewModel @Inject constructor(
         initialValue = false
     )
 
-    val maxAmplitudeFlow = recognitionState.mapLatest { state ->
+    val soundLevelFlow = recognitionState.mapLatest { state ->
         state is RecognitionStatus.Recognizing
     }.distinctUntilChanged().flatMapLatest { isRecording ->
-        if (isRecording) recorderController.maxAmplitudeFlow else flowOf(0f)
+        if (isRecording) {
+            recognitionController.soundLevelFlow
+        } else {
+            flowOf(0f)
+        }
     }
 
-    fun launchRecognition() {
-        recognitionController.launchRecognition()
+    fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
+        recognitionController.launchRecognition(audioCaptureServiceMode)
     }
 
     fun cancelRecognition() {
@@ -73,19 +89,60 @@ internal class RecognitionViewModel @Inject constructor(
 }
 
 internal interface ScreenRecognitionController {
-    fun launchRecognition()
+    val soundLevelFlow: Flow<Float>
+    fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode)
     fun cancelRecognition()
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class ScreenRecognitionControllerImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) : ScreenRecognitionController {
 
-    override fun launchRecognition() {
+    private val serviceBinderFlow = callbackFlow {
+        val serviceConnection = object : ServiceConnection {
+
+            override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                trySend(service as RecognitionControlService.MainScreenBinder)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName) {
+                trySend(null)
+            }
+        }
+        appContext.bindService(
+            Intent(appContext, RecognitionControlService::class.java).apply {
+                action = RecognitionControlService.ACTION_BIND_MAIN_SCREEN
+            },
+            serviceConnection,
+            BIND_AUTO_CREATE
+        )
+        awaitClose {
+            appContext.unbindService(serviceConnection)
+        }
+    }
+        .conflate()
+        .buffer(0)
+        .shareIn(
+            scope = CoroutineScope(mainDispatcher + SupervisorJob()),
+            started = SharingStarted.WhileSubscribed(0),
+            replay = 1
+        )
+
+    override val soundLevelFlow: Flow<Float> = serviceBinderFlow
+        .filterNotNull()
+        .flatMapLatest { binder -> binder.soundLevel }
+
+    override fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
         appContext.startService(
             Intent(appContext, RecognitionControlService::class.java)
                 .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
                 .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, false)
+                .putExtra(
+                    RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE,
+                    audioCaptureServiceMode
+                )
         )
     }
 

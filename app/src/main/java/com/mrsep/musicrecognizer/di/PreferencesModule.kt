@@ -57,7 +57,6 @@ class PreferencesMapper @Inject constructor() :
             },
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
-            developerModeEnabled = input.developerModeEnabled,
             recognizeOnStartup = input.recognizeOnStartup
         )
     }

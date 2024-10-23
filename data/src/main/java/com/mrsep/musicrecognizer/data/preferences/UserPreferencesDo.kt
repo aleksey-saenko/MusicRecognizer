@@ -10,12 +10,14 @@ data class UserPreferencesDo(
     val currentRecognitionProvider: RecognitionProviderDo,
     val auddConfig: AuddConfigDo,
     val acrCloudConfig: AcrCloudConfigDo,
+    val defaultAudioCaptureMode: AudioCaptureModeDo,
+    val mainButtonLongPressAudioCaptureMode: AudioCaptureModeDo,
+    val fallbackPolicy: FallbackPolicyDo,
+    val recognizeOnStartup: Boolean,
     val requiredMusicServices: List<MusicServiceDo>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,
-    val developerModeEnabled: Boolean,
-    val fallbackPolicy: FallbackPolicyDo,
     val lyricsFontStyle: LyricsFontStyleDo,
     val trackFilter: TrackFilterDo,
     val hapticFeedback: HapticFeedbackDo,
@@ -25,7 +27,6 @@ data class UserPreferencesDo(
     val showCreationDateInQueue: Boolean,
     val themeMode: ThemeModeDo,
     val usePureBlackForDarkTheme: Boolean,
-    val recognizeOnStartup: Boolean,
 ) {
 
     data class FallbackPolicyDo(
@@ -62,3 +63,5 @@ enum class SortByDo { RecognitionDate, Title, Artist, ReleaseDate }
 enum class OrderByDo { Asc, Desc }
 
 enum class ThemeModeDo { FollowSystem, AlwaysLight, AlwaysDark }
+
+enum class AudioCaptureModeDo { Microphone, Device, Auto }

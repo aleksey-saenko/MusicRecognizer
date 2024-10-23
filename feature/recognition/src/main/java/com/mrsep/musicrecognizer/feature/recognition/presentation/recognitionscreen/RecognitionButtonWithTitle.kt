@@ -15,8 +15,9 @@ import androidx.compose.ui.unit.dp
 internal fun RecognitionButtonWithTitle(
     title: String,
     activated: Boolean,
-    amplitudeFactor: Float,
+    soundLevelState: State<Float>,
     onButtonClick: () -> Unit,
+    onButtonLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -58,9 +59,9 @@ internal fun RecognitionButtonWithTitle(
 
         RecognitionButton(
             onClick = onButtonClick,
-            onLongPress = onButtonClick,
+            onLongClick = onButtonLongClick,
             activated = activated,
-            amplitudeFactor = amplitudeFactor,
+            soundLevelState = soundLevelState,
         )
     }
 }
@@ -68,9 +69,9 @@ internal fun RecognitionButtonWithTitle(
 @Composable
 private fun RecognitionButton(
     activated: Boolean,
-    amplitudeFactor: Float,
+    soundLevelState: State<Float>,
     onClick: () -> Unit,
-    onLongPress: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -91,11 +92,11 @@ private fun RecognitionButton(
                 .size(176.dp),
             activated = activated,
             onClick = onClick,
-            onLongPress = onLongPress
+            onLongClick = onLongClick
         ) {
             WaveAnimated(
                 activated = activated,
-                amplitudeFactor = amplitudeFactor,
+                soundLevelState = soundLevelState,
                 properties = WaveAnimatedProperties(
                     baseColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f),
                     activatedColor = MaterialTheme.colorScheme.onPrimaryContainer

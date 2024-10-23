@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.data.audioplayer.PlayerStatusDo
 import com.mrsep.musicrecognizer.data.audiorecord.RecognitionSchemeDo
 import com.mrsep.musicrecognizer.data.enqueued.model.EnqueuedRecognitionEntityWithTrack
+import com.mrsep.musicrecognizer.data.preferences.AudioCaptureModeDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.remote.AcrCloudConfigDo
@@ -15,6 +16,7 @@ import com.mrsep.musicrecognizer.data.remote.enhancer.RemoteMetadataEnhancingRes
 import com.mrsep.musicrecognizer.data.track.TrackEntity
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.AuddConfig
+import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioCaptureMode
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.FallbackAction
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
@@ -77,4 +79,8 @@ interface MapperModule {
     @Binds
     fun bindAcrCloudConfigMapper(implementation: AcrCloudConfigMapper):
             BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>
+
+    @Binds
+    fun bindAudioCaptureModeMapper(implementation: AudioCaptureModeMapper):
+            BidirectionalMapper<AudioCaptureModeDo, AudioCaptureMode>
 }

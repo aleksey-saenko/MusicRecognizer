@@ -20,12 +20,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.job
 import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToLong
 
-@Singleton
-class AacEncoder @Inject constructor(
+internal class AacEncoder(
     private val audioSource: SoundSource,
 ) {
 

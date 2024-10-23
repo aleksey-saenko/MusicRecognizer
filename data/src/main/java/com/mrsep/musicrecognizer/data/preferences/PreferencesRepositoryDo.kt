@@ -10,16 +10,18 @@ interface PreferencesRepositoryDo {
 
     val userPreferencesFlow: Flow<UserPreferencesDo>
 
+    suspend fun setOnboardingCompleted(value: Boolean)
     suspend fun setCurrentRecognitionProvider(value: RecognitionProviderDo)
     suspend fun setAuddConfig(value: AuddConfigDo)
     suspend fun setAcrCloudConfig(value: AcrCloudConfigDo)
-    suspend fun setOnboardingCompleted(value: Boolean)
+    suspend fun setDefaultAudioCaptureMode(value: AudioCaptureModeDo)
+    suspend fun setMainButtonLongPressAudioCaptureMode(value: AudioCaptureModeDo)
+    suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo)
+    suspend fun setRecognizeOnStartup(value: Boolean)
     suspend fun setNotificationServiceEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setArtworkBasedThemeEnabled(value: Boolean)
     suspend fun setRequiredMusicServices(services: List<MusicServiceDo>)
-    suspend fun setDeveloperModeEnabled(value: Boolean)
-    suspend fun setFallbackPolicy(value: UserPreferencesDo.FallbackPolicyDo)
     suspend fun setLyricsFontStyle(value: UserPreferencesDo.LyricsFontStyleDo)
     suspend fun setTrackFilter(value: UserPreferencesDo.TrackFilterDo)
     suspend fun setHapticFeedback(value: UserPreferencesDo.HapticFeedbackDo)
@@ -29,5 +31,4 @@ interface PreferencesRepositoryDo {
     suspend fun setShowCreationDateInQueue(value: Boolean)
     suspend fun setThemeMode(value: ThemeModeDo)
     suspend fun setUsePureBlackForDarkTheme(value: Boolean)
-    suspend fun setRecognizeOnStartup(value: Boolean)
 }

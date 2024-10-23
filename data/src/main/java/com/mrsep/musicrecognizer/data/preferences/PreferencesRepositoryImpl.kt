@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.data.preferences
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.mrsep.musicrecognizer.AcrCloudConfigProto
+import com.mrsep.musicrecognizer.AudioCaptureModeProto
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
@@ -40,6 +41,7 @@ internal class PreferencesRepositoryImpl @Inject constructor(
     private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
     private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigProto, AcrCloudConfigDo>,
     private val recognitionProviderMapper: BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo>,
+    private val audioCaptureModeMapper: BidirectionalMapper<AudioCaptureModeProto, AudioCaptureModeDo>,
 ) : PreferencesRepositoryDo {
 
     override val userPreferencesFlow: Flow<UserPreferencesDo> = dataStore.data
@@ -47,26 +49,36 @@ internal class PreferencesRepositoryImpl @Inject constructor(
         .map(preferencesMapper::map)
         .flowOn(ioDispatcher)
 
+    override suspend fun setOnboardingCompleted(value: Boolean) {
+        safeWriter { onboardingCompleted = value }
+    }
+
     override suspend fun setCurrentRecognitionProvider(value: RecognitionProviderDo) {
-        safeWriter {
-            currentRecognitionProvider = recognitionProviderMapper.reverseMap(value)
-        }
+        safeWriter { currentRecognitionProvider = recognitionProviderMapper.reverseMap(value) }
     }
 
     override suspend fun setAuddConfig(value: AuddConfigDo) {
-        safeWriter {
-            apiToken = value.apiToken
-        }
+        safeWriter { apiToken = value.apiToken }
     }
 
     override suspend fun setAcrCloudConfig(value: AcrCloudConfigDo) {
-        safeWriter {
-            acrCloudConfig = acrCloudConfigMapper.reverseMap(value)
-        }
+        safeWriter { acrCloudConfig = acrCloudConfigMapper.reverseMap(value) }
     }
 
-    override suspend fun setOnboardingCompleted(value: Boolean) {
-        safeWriter { onboardingCompleted = value }
+    override suspend fun setDefaultAudioCaptureMode(value: AudioCaptureModeDo) {
+        safeWriter { defaultAudioCaptureMode = audioCaptureModeMapper.reverseMap(value) }
+    }
+
+    override suspend fun setMainButtonLongPressAudioCaptureMode(value: AudioCaptureModeDo) {
+        safeWriter { mainButtonLongPressAudioCaptureMode = audioCaptureModeMapper.reverseMap(value) }
+    }
+
+    override suspend fun setFallbackPolicy(value: FallbackPolicyDo) {
+        safeWriter { fallbackPolicy = fallbackPolicyMapper.reverseMap(value) }
+    }
+
+    override suspend fun setRecognizeOnStartup(value: Boolean) {
+        safeWriter { recognizeOnStartup = value }
     }
 
     override suspend fun setNotificationServiceEnabled(value: Boolean) {
@@ -91,14 +103,6 @@ internal class PreferencesRepositoryImpl @Inject constructor(
                 services.mapNotNull { serviceDo -> musicServiceMapper.reverseMap(serviceDo) }
             )
         }
-    }
-
-    override suspend fun setDeveloperModeEnabled(value: Boolean) {
-        safeWriter { developerModeEnabled = value }
-    }
-
-    override suspend fun setFallbackPolicy(value: FallbackPolicyDo) {
-        safeWriter { fallbackPolicy = fallbackPolicyMapper.reverseMap(value) }
     }
 
     override suspend fun setLyricsFontStyle(value: LyricsFontStyleDo) {
@@ -135,10 +139,6 @@ internal class PreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUsePureBlackForDarkTheme(value: Boolean) {
         safeWriter { usePureBlackForDarkTheme = value }
-    }
-
-    override suspend fun setRecognizeOnStartup(value: Boolean) {
-        safeWriter { recognizeOnStartup = value }
     }
 
     private fun Flow<UserPreferencesProto>.ioExceptionCatcherOnRead(): Flow<UserPreferencesProto> {

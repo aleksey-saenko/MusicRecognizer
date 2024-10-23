@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AudioRecorderController {
 
-    val maxAmplitudeFlow: Flow<Float>
+    val soundLevel: Flow<Float>
 
     suspend fun audioRecordingFlow(scheme: RecognitionScheme): Flow<Result<ByteArray>>
 }

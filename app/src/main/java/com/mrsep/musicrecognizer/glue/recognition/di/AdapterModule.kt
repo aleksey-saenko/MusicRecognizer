@@ -22,9 +22,6 @@ interface AdapterModule {
     fun bindTrackRepository(implementation: AdapterTrackRepository): TrackRepository
 
     @Binds
-    fun bindRecorderController(implementation: AdapterRecorderController): AudioRecorderController
-
-    @Binds
     fun bindPlayerController(implementation: AdapterPlayerController): PlayerController
 
     @Binds

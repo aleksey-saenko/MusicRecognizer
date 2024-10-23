@@ -7,16 +7,17 @@ data class UserPreferences(
     val currentRecognitionProvider: RecognitionProvider,
     val auddConfig: AuddConfig,
     val acrCloudConfig: AcrCloudConfig,
+    val defaultAudioCaptureMode: AudioCaptureMode,
+    val mainButtonLongPressAudioCaptureMode: AudioCaptureMode,
+    val fallbackPolicy: FallbackPolicy,
+    val recognizeOnStartup: Boolean,
     val requiredMusicServices: ImmutableList<MusicService>,
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,
-    val developerModeEnabled: Boolean,
-    val fallbackPolicy: FallbackPolicy,
     val hapticFeedback: HapticFeedback,
     val themeMode: ThemeMode,
     val usePureBlackForDarkTheme: Boolean,
-    val recognizeOnStartup: Boolean,
 ) {
 
     data class FallbackPolicy(
@@ -39,3 +40,5 @@ enum class FallbackAction(val save: Boolean, val launch: Boolean) {
 }
 
 enum class ThemeMode { FollowSystem, AlwaysLight, AlwaysDark }
+
+enum class AudioCaptureMode { Microphone, Device, Auto }

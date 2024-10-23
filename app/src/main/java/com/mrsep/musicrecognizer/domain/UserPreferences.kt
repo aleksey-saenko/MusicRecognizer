@@ -9,7 +9,6 @@ data class UserPreferences(
     val themeMode: ThemeMode,
     val dynamicColorsEnabled: Boolean,
     val usePureBlackForDarkTheme: Boolean,
-    val developerModeEnabled: Boolean,
     val recognizeOnStartup: Boolean,
 )
 

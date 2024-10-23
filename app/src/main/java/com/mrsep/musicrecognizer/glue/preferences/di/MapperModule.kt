@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.glue.preferences.di
 
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.AudioCaptureModeDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
@@ -12,6 +13,7 @@ import com.mrsep.musicrecognizer.data.remote.RecognitionProviderDo
 import com.mrsep.musicrecognizer.data.track.MusicServiceDo
 import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
+import com.mrsep.musicrecognizer.feature.preferences.domain.AudioCaptureMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupEntry
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupMetadataResult
 import com.mrsep.musicrecognizer.feature.preferences.domain.BackupResult
@@ -23,6 +25,7 @@ import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.glue.preferences.mapper.AcrCloudConfigMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.AuddConfigMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.AudioCaptureModeMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.BackupEntryDo
 import com.mrsep.musicrecognizer.glue.preferences.mapper.BackupEntryMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.BackupMetadataResultDo
@@ -33,7 +36,7 @@ import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackActionMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.FallbackPolicyMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.HapticFeedbackMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.MusicServiceMapper
-import com.mrsep.musicrecognizer.glue.preferences.mapper.PreferencesMapper
+import com.mrsep.musicrecognizer.glue.preferences.mapper.UserPreferencesMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RecognitionProviderMapper
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RestoreResultDo
 import com.mrsep.musicrecognizer.glue.preferences.mapper.RestoreResultMapper
@@ -49,7 +52,7 @@ import dagger.hilt.components.SingletonComponent
 interface MapperModule {
 
     @Binds
-    fun bindPreferencesMapper(implementation: PreferencesMapper):
+    fun bindPreferencesMapper(implementation: UserPreferencesMapper):
             Mapper<UserPreferencesDo, UserPreferences>
 
     @Binds
@@ -83,6 +86,10 @@ interface MapperModule {
     @Binds
     fun bindAcrCloudConfigMapper(implementation: AcrCloudConfigMapper):
             BidirectionalMapper<AcrCloudConfigDo, AcrCloudConfig>
+
+    @Binds
+    fun bindAudioCaptureModeMapper(implementation: AudioCaptureModeMapper):
+            BidirectionalMapper<AudioCaptureModeDo, AudioCaptureMode>
 
     @Binds
     fun bindBackupEntryMapper(implementation: BackupEntryMapper):

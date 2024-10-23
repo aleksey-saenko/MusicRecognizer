@@ -6,17 +6,24 @@ import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+import android.media.projection.MediaProjection
+import android.media.projection.MediaProjectionManager
+import android.os.Binder
 import android.os.Build
+import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.updateAll
-import com.mrsep.musicrecognizer.core.common.DispatchersProvider
 import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
@@ -36,13 +43,25 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.ge
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.transformWhile
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
+import kotlinx.parcelize.Parcelize
+
+private const val TAG = "RecognitionControlService"
 
 @AndroidEntryPoint
+@OptIn(ExperimentalCoroutinesApi::class)
 class RecognitionControlService : Service() {
 
     @Inject
@@ -65,12 +84,7 @@ class RecognitionControlService : Service() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
-    @Inject
-    lateinit var dispatchersProvider: DispatchersProvider
-
-    private val serviceScope by lazy {
-        CoroutineScope(dispatchersProvider.main + SupervisorJob())
-    }
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val actionReceiver by lazy { ActionBroadcastReceiver() }
     private var isActionReceiverRegistered = false
@@ -79,32 +93,43 @@ class RecognitionControlService : Service() {
         getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    private val mediaProjectionManager by lazy {
+        getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+    }
+
     private var recognitionJob: Job? = null
     private val isRecognitionJobActive get() = recognitionJob?.isActive == true
     private var recognitionCancelingJob: Job? = null
     private val isRecognitionCancelingJobActive get() = recognitionCancelingJob?.isActive == true
 
-    // Service started from background (e.g., on device boot) doesn't have microphone access
-    private var isMicrophoneRestricted = false
-
     private var isStartedForeground = false
 
-    // If true, the service must stay started foreground after recognition completion,
-    // even if recognition screen is resumed
+    /* Hold mode means keeping an ongoing control notification for starting new recognition,
+     in this mode the service runs in the foreground with type FOREGROUND_SERVICE_TYPE_SPECIAL_USE */
     private var isHoldModeActive = false
 
-    override fun onBind(intent: Intent) = null
+    private var mediaProjection: MediaProjection? = null
+    private val isMediaProjectionMode get() = mediaProjection != null
+    private val mediaProjectionCallback = object : MediaProjection.Callback() {
+        override fun onStop() = cancelRecognitionJob()
+    }
+
+    private val soundLevelCurrentFlow = MutableStateFlow(flowOf(0f))
+    private val soundLevelState = soundLevelCurrentFlow
+        .transformLatest { emitAll(it) }
+        .stateIn(
+            scope = serviceScope,
+            started = SharingStarted.WhileSubscribed(0),
+            initialValue = 0f
+        )
 
     override fun onCreate() {
-        super.onCreate() // required by hilt injection
-        // Check again because permissions can be restricted in any time,
-        // which can lead sticky service to restart foreground with SecurityException
+        super.onCreate() // Required by hilt injection
+        /* Check again because permissions can be restricted in any time,
+         which can lead sticky service to restart foreground with SecurityException */
         val startAllowed = checkRecognitionControlServicePermissions()
         if (!startAllowed) {
-            Log.e(
-                "RecognitionControlService",
-                "Service start is not allowed due to restricted permissions"
-            )
+            Log.e(TAG, "Service start is not allowed due to denied permissions")
             runBlocking {
                 preferencesRepository.setNotificationServiceEnabled(false)
                 stopSelf()
@@ -115,21 +140,43 @@ class RecognitionControlService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         when (intent?.action) {
-            ACTION_LAUNCH_RECOGNITION -> {
-                val foregroundRequested = intent.getBooleanExtra(
-                    KEY_FOREGROUND_REQUESTED,
-                    true
+            /* Any recognition launch must be performed either from a visible activity or widget,
+             or from a notification or another pending action that allows microphone access for the service */
+            ACTION_LAUNCH_RECOGNITION -> run {
+                if (isRecognitionJobActive) return@run
+                val audioCaptureServiceMode = IntentCompat.getParcelableExtra(
+                    intent,
+                    KEY_AUDIO_CAPTURE_SERVICE_MODE,
+                    AudioCaptureServiceMode::class.java
                 )
-                // Consider that all launch recognition requests are performed from widgets,
-                // notifications or another pending actions
-                // that grant microphone access for the service
-                if (foregroundRequested && (!isStartedForeground || isMicrophoneRestricted)) {
-                    isMicrophoneRestricted = false
-                    // This also restarts foreground with microphone type
-                    continueInForeground()
+                requireNotNull(audioCaptureServiceMode) {
+                    "Starting service without specifying audio capture mode is not allowed"
                 }
-                isMicrophoneRestricted = false
-                launchRecognition()
+                when (audioCaptureServiceMode) {
+                    AudioCaptureServiceMode.Microphone -> {
+                        if (intent.getBooleanExtra(KEY_FOREGROUND_REQUESTED, true)) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                continueInForeground(serviceTypesForRecognition(false))
+                            } else {
+                                continueInForeground()
+                            }
+                        }
+                    }
+
+                    is AudioCaptureServiceMode.Device,
+                    is AudioCaptureServiceMode.Auto -> {
+                        check(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            "AudioPlaybackCapture API is available on Android 10+"
+                        }
+                        // Starting media projection is only allowed while the service is running in foreground
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            continueInForeground(serviceTypesForRecognition(true))
+                        } else {
+                            continueInForeground()
+                        }
+                    }
+                }
+                launchRecognition(audioCaptureServiceMode)
             }
 
             ACTION_CANCEL_RECOGNITION -> {
@@ -141,29 +188,38 @@ class RecognitionControlService : Service() {
             }
 
             // Start with null intent is considered as restart of sticky service with hold mode on
-            // isMicrophoneRestricted is true when service is started on device boot without microphone access
             null,
             ACTION_HOLD_MODE_ON -> {
-                isMicrophoneRestricted = intent?.getBooleanExtra(
-                    KEY_RESTRICTED_START,
-                    true
-                ) ?: true
                 isHoldModeActive = true
-                if (!isStartedForeground) continueInForeground()
+                if (!isStartedForeground) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        continueInForeground(FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                    } else {
+                        continueInForeground()
+                    }
+                }
             }
 
             ACTION_HOLD_MODE_OFF -> {
                 isHoldModeActive = false
-                if (!isRecognitionJobActive) {
-                    stopSelf()
+                if (!isRecognitionJobActive) stopSelf()
+            }
+
+            else -> error("Unknown service start intent")
+        }
+        return if (isHoldModeActive) START_STICKY else START_NOT_STICKY
+    }
+
+    override fun onBind(intent: Intent): Binder {
+        return when (intent.action) {
+            ACTION_BIND_MAIN_SCREEN -> {
+                object : MainScreenBinder() {
+                    override val soundLevel = soundLevelState
                 }
             }
 
-            else -> {
-                throw IllegalStateException("Unknown service start intent")
-            }
+            else -> error("Unknown service bind intent")
         }
-        return if (isHoldModeActive) START_STICKY else START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -172,10 +228,8 @@ class RecognitionControlService : Service() {
         serviceScope.cancel()
     }
 
-    // Can be called even if the service is already in foreground state
-    // with FOREGROUND_SERVICE_TYPE_SPECIAL_USE to restart with FOREGROUND_SERVICE_TYPE_MICROPHONE
-    private fun continueInForeground() {
-        val initialNotification = if (isRecognitionJobActive) {
+    private fun getInitialForegroundNotification(): Notification {
+        return if (isRecognitionJobActive) {
             statusNotificationBuilder()
                 .setContentTitle(getString(StringsR.string.notification_listening))
                 .setContentText(getString(StringsR.string.notification_listening_subtitle))
@@ -189,20 +243,36 @@ class RecognitionControlService : Service() {
                 .addOptionalDisableButton()
                 .build()
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(
-                NOTIFICATION_ID_STATUS,
-                initialNotification,
-                if (isMicrophoneRestricted) {
-                    FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-                } else {
-                    FOREGROUND_SERVICE_TYPE_MICROPHONE
-                }
-            )
-        } else {
-            startForeground(NOTIFICATION_ID_STATUS, initialNotification)
-        }
+    }
+
+    private fun continueInForeground() {
+        val initialNotification = getInitialForegroundNotification()
+        startForeground(NOTIFICATION_ID_STATUS, initialNotification)
         isStartedForeground = true
+        onStartedInForeground()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun serviceTypesForRecognition(mediaProjection: Boolean) = if (mediaProjection) {
+        FOREGROUND_SERVICE_TYPE_MICROPHONE.or(FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION)
+    } else {
+        FOREGROUND_SERVICE_TYPE_MICROPHONE
+    }
+
+    // Can be called even if the service is already in foreground state to change service type
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun continueInForeground(foregroundServiceType: Int) {
+        val initialNotification = getInitialForegroundNotification()
+        startForeground(
+            NOTIFICATION_ID_STATUS,
+            initialNotification,
+            foregroundServiceType
+        )
+        isStartedForeground = true
+        onStartedInForeground()
+    }
+
+    private fun onStartedInForeground() {
         if (!isActionReceiverRegistered) registerActionReceiver()
     }
 
@@ -247,9 +317,9 @@ class RecognitionControlService : Service() {
             .setSmallIcon(UiR.drawable.ic_retro_microphone)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setOngoing(true) // can be dismissed since API 34
+            .setOngoing(true) // Can be dismissed since API 34, keep in mind
             .setCategory(Notification.CATEGORY_STATUS)
-            .setSilent(true) // to avoid alert sound in recording
+            .setSilent(true) // Avoids alert sound during recording
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .addDismissIntent()
     }
@@ -270,11 +340,13 @@ class RecognitionControlService : Service() {
     private fun NotificationCompat.Builder.addRecognizeContentIntent(): NotificationCompat.Builder {
         val intent = Intent(
             this@RecognitionControlService,
-            RecognitionControlService::class.java
+            RecognitionControlActivity::class.java
         ).apply {
+            addFlags(FLAG_ACTIVITY_NEW_TASK)
             action = ACTION_LAUNCH_RECOGNITION
+            putExtra(KEY_FOREGROUND_REQUESTED, true)
         }
-        val pendingIntent = PendingIntent.getService(
+        val pendingIntent = PendingIntent.getActivity(
             this@RecognitionControlService,
             0,
             intent,
@@ -283,8 +355,8 @@ class RecognitionControlService : Service() {
         return setContentIntent(pendingIntent)
     }
 
-    // Status notification is ongoing for API 33 and below
-    // Starting from API 34, users can disable the service by dismissing control notification
+    /* Status notification is ongoing for API 33 and below.
+     Starting from API 34, users can disable the service by dismissing control notification */
     private fun NotificationCompat.Builder.addOptionalDisableButton(): NotificationCompat.Builder {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             addAction(
@@ -329,10 +401,10 @@ class RecognitionControlService : Service() {
     private suspend fun NotificationCompat.Builder.addOptionalBigPicture(
         url: String?,
         contentTitle: String,
-        contentText: String
+        contentText: String,
     ): NotificationCompat.Builder {
         if (url == null) return this
-        // Images should be ≤ 450dp wide, 2:1 aspect ratio
+        // Notification image should be ≤ 450dp wide, 2:1 aspect ratio
         val imageWidthPx = dpToPx(450f).toInt()
         val imageHeightPx = imageWidthPx / 2
         val bitmap = getCachedImageOrNull(
@@ -356,7 +428,7 @@ class RecognitionControlService : Service() {
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
-        trackId: String
+        trackId: String,
     ): NotificationCompat.Builder {
         val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(trackId)
         val pendingIntent = createPendingIntent(deepLinkIntent)
@@ -364,7 +436,7 @@ class RecognitionControlService : Service() {
     }
 
     private fun NotificationCompat.Builder.addOptionalShowLyricsButton(
-        track: Track
+        track: Track,
     ): NotificationCompat.Builder {
         if (track.lyrics == null) return this
         val deepLinkIntent = serviceRouter.getDeepLinkIntentToLyrics(track.id)
@@ -377,7 +449,7 @@ class RecognitionControlService : Service() {
     }
 
     private fun NotificationCompat.Builder.addShareButton(
-        sharedText: String
+        sharedText: String,
     ): NotificationCompat.Builder {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
@@ -404,25 +476,61 @@ class RecognitionControlService : Service() {
         notificationManager.notify(NOTIFICATION_ID_RESULT, this.build())
     }
 
-    private fun launchRecognition() {
+    private fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
         if (isRecognitionJobActive) return
         if (isRecognitionCancelingJobActive) return
         if (recognitionInteractor.status.value != RecognitionStatus.Ready) return
 
         recognitionJob = serviceScope.launch {
+
+            val captureConfig = when (audioCaptureServiceMode) {
+                AudioCaptureServiceMode.Microphone -> AudioCaptureConfig.Microphone
+                is AudioCaptureServiceMode.Device -> {
+                    mediaProjectionManager.getMediaProjection(
+                        Activity.RESULT_OK,
+                        audioCaptureServiceMode.mediaProjectionData
+                    )?.run {
+                        mediaProjection = this
+                        registerCallback(mediaProjectionCallback, null)
+                        AudioCaptureConfig.Device(this)
+                    }
+                }
+
+                is AudioCaptureServiceMode.Auto -> {
+                    mediaProjectionManager.getMediaProjection(
+                        Activity.RESULT_OK,
+                        audioCaptureServiceMode.mediaProjectionData
+                    )?.run {
+                        mediaProjection = this
+                        registerCallback(mediaProjectionCallback, null)
+                        AudioCaptureConfig.Auto(this)
+                    }
+                }
+            }
+            if (captureConfig == null) return@launch
+            val recorderController = serviceRouter.getAudioController(captureConfig)
+
+            soundLevelCurrentFlow.update { recorderController.soundLevel }
+
             val foregroundStateSwitcher = launch {
                 screenStatusHolder.isStatusObserving.collect { isScreenObserving ->
                     if (isHoldModeActive || !isScreenObserving) {
-                        if (!isStartedForeground) continueInForeground()
-                    } else {
+                        if (!isStartedForeground) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                continueInForeground(serviceTypesForRecognition(isMediaProjectionMode))
+                            } else {
+                                continueInForeground()
+                            }
+                        }
+                    } else if (!isMediaProjectionMode) {
                         if (isStartedForeground) continueInBackground()
                     }
                 }
             }
             if (networkMonitor.isOffline.first()) {
-                recognitionInteractor.launchOfflineRecognition(serviceScope)
+                recognitionInteractor.launchOfflineRecognition(serviceScope, recorderController)
             } else {
-                recognitionInteractor.launchRecognition(serviceScope)
+                recognitionInteractor.launchRecognition(serviceScope, recorderController)
             }
             recognitionInteractor.status.transformWhile { status ->
                 emit(status)
@@ -473,23 +581,51 @@ class RecognitionControlService : Service() {
                     }
                 }
             }
-
             foregroundStateSwitcher.cancelAndJoin()
-            if (isHoldModeActive) {
-                notifyReady()
-            } else {
-                stopSelf()
+            manualStopMediaProjection()
+            soundLevelCurrentFlow.update { flowOf(0f) }
+        }.apply {
+            invokeOnCompletion { cause ->
+                if (cause != null) return@invokeOnCompletion
+                if (isHoldModeActive) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        continueInForeground(FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                    } else {
+                        continueInForeground()
+                    }
+                } else {
+                    stopSelf()
+                }
             }
         }
     }
 
-    private fun notifyReady() {
-        statusNotificationBuilder()
-            .setContentTitle(getString(StringsR.string.notification_tap_to_recognize))
-            .setContentText(getString(StringsR.string.notification_tap_to_recognize_subtitle))
-            .addRecognizeContentIntent()
-            .addOptionalDisableButton()
-            .buildAndNotifyAsStatus()
+    private fun manualStopMediaProjection() {
+        mediaProjection?.unregisterCallback(mediaProjectionCallback)
+        mediaProjection?.stop()
+        mediaProjection = null
+    }
+
+    private fun cancelRecognitionJob() {
+        recognitionCancelingJob = serviceScope.launch {
+            soundLevelCurrentFlow.update { flowOf(0f) }
+            recognitionJob?.cancelAndJoin()
+            recognitionInteractor.cancelAndJoin()
+            manualStopMediaProjection()
+            screenStatusHolder.updateStatus(RecognitionStatus.Ready)
+            widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+            requestWidgetsUpdate()
+            requestQuickTileUpdate()
+            if (isHoldModeActive) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    continueInForeground(FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                } else {
+                    continueInForeground()
+                }
+            } else {
+                stopSelf()
+            }
+        }
     }
 
     private fun notifyRecognizing(extraTry: Boolean) {
@@ -507,7 +643,7 @@ class RecognitionControlService : Service() {
     }
 
     private suspend fun createResultNotification(
-        result: RecognitionResult
+        result: RecognitionResult,
     ): NotificationCompat.Builder {
         return when (result) {
             is RecognitionResult.Error -> when (result.remoteError) {
@@ -554,7 +690,8 @@ class RecognitionControlService : Service() {
                         when (result.recognitionTask) {
                             is RecognitionTask.Created -> getString(StringsR.string.result_title_recognition_scheduled)
                             is RecognitionTask.Error,
-                            RecognitionTask.Ignored -> getString(StringsR.string.result_title_internal_error)
+                            RecognitionTask.Ignored,
+                                -> getString(StringsR.string.result_title_internal_error)
                         }
                     )
                     .setContentText(
@@ -564,8 +701,10 @@ class RecognitionControlService : Service() {
                             } else {
                                 getString(StringsR.string.result_message_recognition_saved)
                             }
+
                             is RecognitionTask.Error,
-                            RecognitionTask.Ignored -> getString(StringsR.string.result_message_internal_error)
+                            RecognitionTask.Ignored,
+                                -> getString(StringsR.string.result_message_internal_error)
                         }
                     )
             }
@@ -604,22 +743,6 @@ class RecognitionControlService : Service() {
 
     private fun requestQuickTileUpdate() {
         OneTimeRecognitionTileService.requestListeningState(this)
-    }
-
-    private fun cancelRecognitionJob() {
-        recognitionCancelingJob = serviceScope.launch {
-            recognitionJob?.cancelAndJoin()
-            recognitionInteractor.cancelAndResetStatus()
-            screenStatusHolder.updateStatus(RecognitionStatus.Ready)
-            widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
-            requestWidgetsUpdate()
-            requestQuickTileUpdate()
-            if (isHoldModeActive) {
-                notifyReady()
-            } else {
-                stopSelf()
-            }
-        }
     }
 
     private fun checkRecognitionControlServicePermissions(): Boolean {
@@ -661,22 +784,35 @@ class RecognitionControlService : Service() {
         }
     }
 
+    abstract class MainScreenBinder : Binder() {
+        // TODO Consider to use binders to distribute recognition status
+//        abstract val status: StateFlow<RecognitionStatus>
+        abstract val soundLevel: StateFlow<Float>
+    }
+
     companion object {
         // See isMicrophoneRestricted
         const val KEY_RESTRICTED_START = "KEY_RESTRICTED_START"
 
-        // True if the launch occurs from the background (widget, tile),
-        // and false if the launch occurs from main activity
+        // True when launched from background (widget, tile), and false when launched from main activity
         const val KEY_FOREGROUND_REQUESTED = "KEY_FOREGROUND_REQUESTED"
+        const val KEY_AUDIO_CAPTURE_SERVICE_MODE = "KEY_AUDIO_CAPTURE_SERVICE_MODE"
 
-        const val ACTION_LAUNCH_RECOGNITION = "com.mrsep.musicrecognizer.service.action.launch_recognition"
-        const val ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.cancel_recognition"
+        const val ACTION_LAUNCH_RECOGNITION =
+            "com.mrsep.musicrecognizer.service.action.launch_recognition"
+        const val ACTION_CANCEL_RECOGNITION =
+            "com.mrsep.musicrecognizer.service.action.cancel_recognition"
         const val ACTION_HOLD_MODE_ON = "com.mrsep.musicrecognizer.service.action.hold_mode_on"
         const val ACTION_HOLD_MODE_OFF = "com.mrsep.musicrecognizer.service.action.hold_mode_off"
 
+        const val ACTION_BIND_MAIN_SCREEN =
+            "com.mrsep.musicrecognizer.service.action.bind_main_screen"
+
         // Actions for local broadcasting
-        private const val LOCAL_ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
-        private const val LOCAL_ACTION_DISABLE_SERVICE = "com.mrsep.musicrecognizer.service.action.local.disable_service"
+        private const val LOCAL_ACTION_CANCEL_RECOGNITION =
+            "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
+        private const val LOCAL_ACTION_DISABLE_SERVICE =
+            "com.mrsep.musicrecognizer.service.action.local.disable_service"
 
         private const val NOTIFICATION_ID_STATUS = 1
         private const val NOTIFICATION_ID_RESULT = 2
@@ -724,4 +860,11 @@ class RecognitionControlService : Service() {
             }
         }
     }
+}
+
+@Parcelize
+internal sealed class AudioCaptureServiceMode : Parcelable {
+    data object Microphone : AudioCaptureServiceMode()
+    data class Device(val mediaProjectionData: Intent) : AudioCaptureServiceMode()
+    data class Auto(val mediaProjectionData: Intent) : AudioCaptureServiceMode()
 }

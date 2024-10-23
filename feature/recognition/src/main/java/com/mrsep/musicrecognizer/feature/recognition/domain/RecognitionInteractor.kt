@@ -8,11 +8,11 @@ interface RecognitionInteractor {
 
     val status: StateFlow<RecognitionStatus>
 
-    fun launchRecognition(scope: CoroutineScope)
+    fun launchRecognition(scope: CoroutineScope, recorderController: AudioRecorderController)
 
-    fun launchOfflineRecognition(scope: CoroutineScope)
+    fun launchOfflineRecognition(scope: CoroutineScope, recorderController: AudioRecorderController)
 
-    fun cancelAndResetStatus()
+    suspend fun cancelAndJoin()
 
     fun resetFinalStatus()
 }

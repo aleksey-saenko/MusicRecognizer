@@ -63,47 +63,6 @@ internal fun DeveloperScreen(
                     }
                 }
             )
-            val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
-            val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
-            val amplitude = viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
-            ButtonGroup(
-                title = "AudioRecorder (with encoder)",
-                subtitle = "soundLevel = ${amplitude.value}",
-                content = {
-                    AmplitudeVisualizerSmooth(
-                        currentValue = amplitude,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    )
-                },
-                buttons = {
-                    Button(
-                        onClick = {
-                            if (isRecording) {
-                                viewModel.stopAudioRecord()
-                            } else {
-                                viewModel.startAudioRecord()
-                            }
-                        },
-                        enabled = !isPlaying
-                    ) {
-                        Text(text = if (isRecording) "Stop REC" else "Start REC")
-                    }
-                    Button(
-                        onClick = {
-                            if (isPlaying) {
-                                viewModel.stopPlayer()
-                            } else {
-                                viewModel.startPlayer()
-                            }
-                        },
-                        enabled = !isRecording
-                    ) {
-                        Text(text = if (isPlaying) "Stop player" else "Start player")
-                    }
-                }
-            )
         }
     }
 }

@@ -6,6 +6,8 @@ data class UserPreferences(
     val auddConfig: AuddConfig,
     val acrCloudConfig: AcrCloudConfig,
     val fallbackPolicy: FallbackPolicy,
+    val defaultAudioCaptureMode: AudioCaptureMode,
+    val mainButtonLongPressAudioCaptureMode: AudioCaptureMode,
     val hapticFeedback: HapticFeedback,
     val useGridForRecognitionQueue: Boolean,
     val showCreationDateInQueue: Boolean,
@@ -30,4 +32,10 @@ enum class FallbackAction(val save: Boolean, val launch: Boolean) {
 
     operator fun component1() = save
     operator fun component2() = launch
+}
+
+enum class AudioCaptureMode {
+    Microphone,
+    Device,
+    Auto,
 }

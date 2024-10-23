@@ -1,8 +1,10 @@
 package com.mrsep.musicrecognizer.data.preferences
 
+import android.os.Build
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
+import com.mrsep.musicrecognizer.AudioCaptureModeProto
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
@@ -28,6 +30,18 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                 accessKey = BuildConfig.ACR_CLOUD_ACCESS_KEY
                 accessSecret = BuildConfig.ACR_CLOUD_ACCESS_SECRET
             }
+            defaultAudioCaptureMode = AudioCaptureModeProto.Microphone
+            mainButtonLongPressAudioCaptureMode = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                AudioCaptureModeProto.Microphone
+            } else {
+                AudioCaptureModeProto.Auto
+            }
+            fallbackPolicy = fallbackPolicyProto {
+                noMatches = UserPreferencesProto.FallbackActionProto.IGNORE
+                badConnection = UserPreferencesProto.FallbackActionProto.SAVE_AND_LAUNCH
+                anotherFailure = UserPreferencesProto.FallbackActionProto.SAVE
+            }
+            recognizeOnStartup = false
             requiredMusicServices.addAll(
                 // ordered by popularity
                 listOf(
@@ -56,12 +70,6 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
             useGridForRecognitionQueue = false
             showRecognitionDateInLibrary = false
             showCreationDateInQueue = false
-            developerModeEnabled = false // was true in first public builds, reset for using
-            fallbackPolicy = fallbackPolicyProto {
-                noMatches = UserPreferencesProto.FallbackActionProto.IGNORE
-                badConnection = UserPreferencesProto.FallbackActionProto.SAVE_AND_LAUNCH
-                anotherFailure = UserPreferencesProto.FallbackActionProto.SAVE
-            }
             lyricsFontStyle = lyricsFontStyleProto {
                 fontSize = UserPreferencesProto.FontSizeProto.NORMAL
                 isBold = false
@@ -82,7 +90,6 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
             themeMode = UserPreferencesProto.ThemeModeProto.FOLLOW_SYSTEM
             usePureBlackForDarkTheme = false
             hasDoneRequiredMusicServicesMigration = true
-            recognizeOnStartup = false
         }
 
     override suspend fun readFrom(input: InputStream): UserPreferencesProto {

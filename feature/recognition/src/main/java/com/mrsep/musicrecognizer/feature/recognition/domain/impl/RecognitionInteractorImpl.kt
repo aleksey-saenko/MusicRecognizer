@@ -44,7 +44,6 @@ import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 internal class RecognitionInteractorImpl @Inject constructor(
-    private val recorderController: AudioRecorderController,
     private val recognitionServiceFactory: RecognitionServiceFactory,
     private val preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
@@ -69,7 +68,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
     private var recognitionJob: Job? = null
 
-    override fun launchRecognition(scope: CoroutineScope) {
+    override fun launchRecognition(scope: CoroutineScope, recorderController: AudioRecorderController) {
         launchRecognitionIfPreviousCompleted(scope) {
             _status.update { RecognitionStatus.Recognizing(false) }
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
@@ -171,7 +170,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
         }
     }
 
-    override fun launchOfflineRecognition(scope: CoroutineScope) {
+    override fun launchOfflineRecognition(scope: CoroutineScope, recorderController: AudioRecorderController) {
         launchRecognitionIfPreviousCompleted(scope) {
             _status.update { RecognitionStatus.Recognizing(false) }
             val fullRecording = recorderController.audioRecordingFlow(offlineScheme).firstOrNull()
@@ -190,11 +189,11 @@ internal class RecognitionInteractorImpl @Inject constructor(
         }
     }
 
-    override fun cancelAndResetStatus() {
+    override suspend fun cancelAndJoin() {
         if (recognitionJob?.isCompleted == true) {
             _status.update { RecognitionStatus.Ready }
         } else {
-            recognitionJob?.cancel()
+            recognitionJob?.cancelAndJoin()
         }
     }
 

@@ -17,23 +17,23 @@ import kotlinx.coroutines.delay
 internal fun BasicRecognitionButton(
     activated: Boolean,
     onClick: () -> Unit,
-    onLongPress: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    longPressDelay: Long = 1_000,
+    longPressDelay: Long = 400,
     content: @Composable RowScope.() -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val interaction by interactionSource.interactions.collectAsState(initial = null)
     var buttonLongPressed by remember { mutableStateOf(false) }
     val updatedOnClick by rememberUpdatedState(onClick)
-    val updatedOnLongPress by rememberUpdatedState(onLongPress)
+    val updatedOnLongClick by rememberUpdatedState(onLongClick)
 
     LaunchedEffect(interaction, longPressDelay) {
         when (interaction) {
             is PressInteraction.Press -> {
                 delay(longPressDelay)
                 buttonLongPressed = true
-                updatedOnLongPress()
+                updatedOnLongClick()
             }
 
             is PressInteraction.Release -> {

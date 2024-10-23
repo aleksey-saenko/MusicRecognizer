@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
 import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
+import com.mrsep.musicrecognizer.feature.preferences.domain.AudioCaptureMode
 import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
@@ -47,6 +48,18 @@ internal class PreferencesViewModel @Inject constructor(
     fun setAcrCloudConfig(value: AcrCloudConfig) {
         viewModelScope.launch {
             preferencesRepository.setAcrCloudConfig(value)
+        }
+    }
+
+    fun setDefaultAudioCaptureMode(value: AudioCaptureMode) {
+        viewModelScope.launch {
+            preferencesRepository.setDefaultAudioCaptureMode(value)
+        }
+    }
+
+    fun setMainButtonLongPressAudioCaptureMode(value: AudioCaptureMode) {
+        viewModelScope.launch {
+            preferencesRepository.setMainButtonLongPressAudioCaptureMode(value)
         }
     }
 

@@ -3,6 +3,7 @@ syntax = "proto3";
 import "music_service_proto.proto";
 import "acr_cloud_config_proto.proto";
 import "recognition_provider_proto.proto";
+import "audio_capture_mode_proto.proto";
 
 option java_package = "com.mrsep.musicrecognizer";
 option java_multiple_files = true;
@@ -12,7 +13,7 @@ option java_multiple_files = true;
 
 message UserPreferencesProto {
 
-  reserved 32;
+  reserved 32, 13;
 
   bool onboarding_completed = 1;
   string api_token = 2;
@@ -31,7 +32,6 @@ message UserPreferencesProto {
 
   bool notification_service_enabled = 11;
   bool dynamic_colors_enabled = 12;
-  bool developer_mode_enabled = 13;
 
   enum FallbackActionProto {
     IGNORE = 0;
@@ -124,6 +124,9 @@ message UserPreferencesProto {
   bool show_recognition_date_in_library = 43;
   bool show_creation_date_in_queue = 44;
 
-  // NEXT AVAILABLE ID: 45
+  AudioCaptureModeProto default_audio_capture_mode = 45;
+  AudioCaptureModeProto main_button_long_press_audio_capture_mode = 46;
+
+  // NEXT AVAILABLE ID: 47
 
 }

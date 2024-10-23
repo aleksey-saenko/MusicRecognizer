@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.mrsep.musicrecognizer.AcrCloudConfigProto
+import com.mrsep.musicrecognizer.AudioCaptureModeProto
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
@@ -13,6 +14,7 @@ import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.data.preferences.AudioCaptureModeDo
 import com.mrsep.musicrecognizer.data.preferences.FallbackActionDo
 import com.mrsep.musicrecognizer.data.preferences.FontSizeDo
 import com.mrsep.musicrecognizer.data.preferences.RequiredMusicServicesMigration
@@ -20,6 +22,7 @@ import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesProtoSerializer
 import com.mrsep.musicrecognizer.data.preferences.mappers.AcrCloudConfigDoMapper
+import com.mrsep.musicrecognizer.data.preferences.mappers.AudioCaptureModeDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackActionDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FallbackPolicyDoMapper
 import com.mrsep.musicrecognizer.data.preferences.mappers.FontSizeDoMapper
@@ -118,4 +121,8 @@ internal interface PreferencesMappersModule {
     @Binds
     fun bindRecognitionProviderDoMapper(impl: RecognitionProviderDoMapper):
             BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo>
+
+    @Binds
+    fun bindAudioCaptureModeDoMapper(impl: AudioCaptureModeDoMapper):
+            BidirectionalMapper<AudioCaptureModeProto, AudioCaptureModeDo>
 }

@@ -1,12 +1,14 @@
 package com.mrsep.musicrecognizer.data.preferences.mappers
 
 import com.mrsep.musicrecognizer.AcrCloudConfigProto
+import com.mrsep.musicrecognizer.AudioCaptureModeProto
 import com.mrsep.musicrecognizer.MusicServiceProto
 import com.mrsep.musicrecognizer.RecognitionProviderProto
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.UserPreferencesProto.*
 import com.mrsep.musicrecognizer.core.common.BidirectionalMapper
 import com.mrsep.musicrecognizer.core.common.Mapper
+import com.mrsep.musicrecognizer.data.preferences.AudioCaptureModeDo
 import com.mrsep.musicrecognizer.data.preferences.ThemeModeDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo
 import com.mrsep.musicrecognizer.data.preferences.UserPreferencesDo.*
@@ -25,6 +27,7 @@ internal class UserPreferencesDoMapper @Inject constructor(
     private val themeModeMapper: BidirectionalMapper<ThemeModeProto, ThemeModeDo>,
     private val acrCloudConfigMapper: BidirectionalMapper<AcrCloudConfigProto, AcrCloudConfigDo>,
     private val recognitionProviderMapper: BidirectionalMapper<RecognitionProviderProto, RecognitionProviderDo>,
+    private val audioCaptureModeMapper: BidirectionalMapper<AudioCaptureModeProto, AudioCaptureModeDo>,
 ) : Mapper<UserPreferencesProto, UserPreferencesDo> {
 
     override fun map(input: UserPreferencesProto): UserPreferencesDo {
@@ -34,13 +37,15 @@ internal class UserPreferencesDoMapper @Inject constructor(
                 .map(input.currentRecognitionProvider),
             auddConfig = AuddConfigDo(input.apiToken),
             acrCloudConfig = acrCloudConfigMapper.map(input.acrCloudConfig),
+            fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
+            defaultAudioCaptureMode = audioCaptureModeMapper.map(input.defaultAudioCaptureMode),
+            mainButtonLongPressAudioCaptureMode = audioCaptureModeMapper.map(input.mainButtonLongPressAudioCaptureMode),
+            recognizeOnStartup = input.recognizeOnStartup,
             notificationServiceEnabled = input.notificationServiceEnabled,
             dynamicColorsEnabled = input.dynamicColorsEnabled,
             artworkBasedThemeEnabled = input.artworkBasedThemeEnabled,
-            developerModeEnabled = input.developerModeEnabled,
             requiredMusicServices = input.requiredMusicServicesList
                 .mapNotNull { serviceProto -> musicServiceMapper.map(serviceProto) },
-            fallbackPolicy = fallbackPolicyMapper.map(input.fallbackPolicy),
             lyricsFontStyle = lyricsFontStyleMapper.map(input.lyricsFontStyle),
             trackFilter = trackFilterMapper.map(input.trackFilter),
             hapticFeedback = hapticFeedbackMapper.map(input.hapticFeedback),
@@ -50,7 +55,6 @@ internal class UserPreferencesDoMapper @Inject constructor(
             showCreationDateInQueue = input.showCreationDateInQueue,
             themeMode = themeModeMapper.map(input.themeMode),
             usePureBlackForDarkTheme = input.usePureBlackForDarkTheme,
-            recognizeOnStartup = input.recognizeOnStartup,
         )
     }
 }

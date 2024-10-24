@@ -1,0 +1,9 @@
+* Add ability to capture device playback audio which allows to recognize music played in headphones, see preferences (Android 10+)
+* Update Portuguese (Brazil) translation (@lucasmz-dev)
+* Update Czech translation (@Fjuro)
+* Update French translation (@Oasis3, @Edanas)
+* Add app crash report handler
+* Update privacy policy to clarify crash handler usage
+* Minor bug fixes
+
+Audile is now available on Weblate translation platform!

@@ -44,7 +44,7 @@ There is also the option to use the app without a token, but please note that th
 
 [<img src="https://hosted.weblate.org/widget/audile/multi-auto.svg" alt="Translation progress">](https://hosted.weblate.org/engage/audile/)
 
-If you'd like to help translate the app into your native language, you can do so through [Weblate](https://hosted.weblate.org/engage/audile/). If your language isn't already available, add it with [tool -> start new translation](https://hosted.weblate.org/new-lang/audile/strings/).
+If you'd like to help translate the app into your native language, you can do so through [Weblate](https://hosted.weblate.org/engage/audile/). If your language isn't already available, start translating with [tool -> start new translation](https://hosted.weblate.org/new-lang/audile/strings/).
 
 Feel free to correct any errors or suggest better translation options for the current translations.
 

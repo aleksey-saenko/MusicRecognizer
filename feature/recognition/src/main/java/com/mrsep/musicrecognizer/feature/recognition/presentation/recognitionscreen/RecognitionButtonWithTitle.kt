@@ -31,15 +31,15 @@ internal fun RecognitionButtonWithTitle(
             transitionSpec = {
                 (slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                    animationSpec = tween(durationMillis = 350, delayMillis = 60)
+                    animationSpec = tween(durationMillis = 350)
                 ) + fadeIn(
-                    animationSpec = tween(durationMillis = 200, delayMillis = 60)
+                    animationSpec = tween(durationMillis = 300, easing = EaseOut)
                 )).togetherWith(
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                        animationSpec = tween(durationMillis = 350, delayMillis = 60)
+                        animationSpec = tween(durationMillis = 350)
                     ) + fadeOut(
-                        animationSpec = tween(durationMillis = 100, delayMillis = 60)
+                        animationSpec = tween(durationMillis = 150, easing = EaseIn)
                     )
                 )
             },

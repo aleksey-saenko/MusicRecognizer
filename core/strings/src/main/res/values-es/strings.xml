@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="crash_dialog_message">Ha ocurrido un error inesperado, causando que la aplicación pare. ¿Te gustaría enviar por correo electrónico el informe de fallos para ayudar a solucionar el problema?</string>
+    <string name="main_screen_tap_to_recognize">Toca para identificar</string>
+    <string name="main_screen_listening">Escuchando</string>
+    <string name="main_screen_listening_extra_time">Inténtalo una vez más</string>
+    <string name="widget_tap_to_recognize">Toca para identificar</string>
+    <string name="widget_tap_to_try_again">Toca para volver a intentarlo</string>
+    <string name="widget_listening">Escuchando</string>
+    <string name="widget_listening_subtitle">Espera por favor</string>
+    <string name="widget_listening_subtitle_extra_time">Intentándolo una vez más</string>
+    <string name="recognition_widget_description">Reconoce la canción con un solo toque</string>
+    <string name="notification_tap_to_recognize">Toca para identificar</string>
+    <string name="notification_tap_to_recognize_subtitle">Identificar la música mientras usas otras aplicaciones</string>
+    <string name="notification_listening">Escuchando</string>
+    <string name="notification_listening_subtitle">Espera por favor</string>
+    <string name="notification_listening_subtitle_extra_time">Inténtalo una vez más</string>
+    <string name="quick_tile_recognize">Identificar canción</string>
+    <string name="quick_tile_cancel_recognition">Cancelar la identificación</string>
+    <string name="action_recognize">Identificar</string>
+    <string name="action_cancel_recognition">Cancelar la identificación</string>
+    <string name="app_shortcut_recognize_short">Identificar</string>
+    <string name="app_shortcut_recognize_long">Identificar en segundo plano</string>
+    <string name="app_shortcut_open_and_recognize_short">Abrir e identificar</string>
 </resources>

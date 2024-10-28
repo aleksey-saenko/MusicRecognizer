@@ -166,7 +166,7 @@
     <string name="audd_help_dialog_message_empty_token">Du kannst versuchen den Dienst zum testen ohne den Schlüssel zu nutzen, aber bitte beachte, dass dies deine täglichen Erkennungen einschränken wird.</string>
     <string name="acr_cloud_help_dialog_steps_title">Bitte beachte die Folgenden Schritte:</string>
     <string name="acr_cloud_help_dialog_step1">Wähle eine geografische Region, welche dir am nächsten ist, um die Latenz des Internets zu minimieren</string>
-    <string name="acr_cloud_help_dialog_step2">Lege die Audioquelle als \"Recorded Audio\" fest</string>
+    <string name="acr_cloud_help_dialog_step2">Lege die Audioquelle als ecorded Audio fest</string>
     <string name="acr_cloud_help_dialog_step4">Prüfe alle Boxen nach Drittanbieter-ID integration</string>
     <string name="pref_group_notifications">Benachrichtigungen</string>
     <string name="pref_title_notification_service">Benachrichtigungsdienst</string>
@@ -250,7 +250,7 @@
     <string name="recognition_provider_dialog_title">Anbieter</string>
     <string name="audd_help_dialog_message">AudD ist ein kostenpflichtiger Dienst, welcher eine Möglichkeit zur Probezeit von 14 Tagen bietet. Um den Dienst zu nutzen, musst du ein Nutzerkonto erstellen und deinen privaten API-Schlüssel erhalten. <![CDATA[<a href="%1$s">Melde dich an</a>]]> falls du noch keinen hast.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud ist ein kostenpflichtiger Dienst, welcher eine Probezeit und limitiertes Nutzen zu Entwicklungszwecken bietet. Um diesen Dienst zu nutze, musst du ein Nutzerkonto erstellen und ein Projekt registrieren. Solltest du auf irgendwelche Probleme stoßen, schaue dir bitte <![CDATA[<a href="%1$s">diesen Leitfaden</a>]]> an.</string>
-    <string name="acr_cloud_help_dialog_step3">Wähle eine Audio-Engine. Die Option \"Audio fingerprinting\" ist die präziseste für die gewöhnliche Nutzung</string>
+    <string name="acr_cloud_help_dialog_step3">Wähle eine Audio-Engine. Die Option udio fingerprinting ist die präziseste für die gewöhnliche Nutzung</string>
     <string name="theme_mode_follow_system">System folgen</string>
     <string name="theme_use_dynamic_colors">Nutze dynamische Farben</string>
     <string name="theme_use_artwork_colors">Nutze Farben des Covers</string>

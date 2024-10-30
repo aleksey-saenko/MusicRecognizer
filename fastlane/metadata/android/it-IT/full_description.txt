@@ -1,0 +1,10 @@
+<b>Audile</b> è un'applicazione per il riconoscimento musicale, che può aiutare a riconoscere in modo rapido e preciso un brano musicale in riproduzione nelle vicinanze.
+L'applicazione utilizza i servizi AudD e ACRCloud per eseguire l'identificazione dei brani e il servizio Odesli per recuperare ulteriori collegamenti ai brani specifici della piattaforma.
+
+<b>Caratteristiche:</b>
+
+<b>Riconoscimento</b> - Audile consente di eseguire il riconoscimento dei brani con un solo clic. L'applicazione salverà la registrazione in caso di assenza di internet e il processo di riconoscimento verrà eseguito quando si tornerà online. È possibile personalizzare il comportamento predefinito in caso di riconoscimento non riuscito (assenza di Internet, nessuna corrispondenza, un altro fallimento) tramite le preferenze.
+<b>Utilizzo in background</b> - Utilizzate l'applicazione senza problemi dal cassetto delle notifiche, dal widget della schermata iniziale o dal riquadro delle impostazioni rapide. Gestite il processo di riconoscimento e ottenete le informazioni sulla traccia senza avviare l'applicazione.
+<b>Informazioni sul brano</b> - In caso di riconoscimento riuscito, vengono fornite informazioni sul brano, come il nome, l'artista, l'album e l'anno, l'artwork, i link a questo brano sui servizi musicali più diffusi e i testi.
+<b>Libreria</b> - Tutti i brani riconosciuti vengono memorizzati nella libreria dell'applicazione. È possibile filtrare l'elenco dei brani, creare una raccolta di preferiti, cercare i brani o eliminarli.
+<b>Preferenze</b> - L'applicazione dispone di una serie di opzioni per personalizzare il suo comportamento e il suo aspetto, che si trovano nella schermata delle impostazioni.

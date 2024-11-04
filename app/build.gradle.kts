@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 24
-        versionName = "1.7.0"
+        versionCode = 25
+        versionName = "1.7.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -24,7 +24,8 @@ android {
         val devOptionsEnabled = properties["dev.options"]?.toString() ?: "false"
         buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
 
-        resourceConfigurations += listOf("en", "cs", "fr", "pt-rBR", "ru", "sk", "tr")
+        // Excluded unfinished translations: "es"
+        resourceConfigurations += listOf("en", "cs", "de", "fr", "it", "pt-rBR", "ru", "sk", "tr")
     }
 
     buildTypes {

@@ -9,6 +9,7 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.util.Log
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
@@ -16,18 +17,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
+private const val TAG = "OneTimeRecognitionTileService"
+
 @AndroidEntryPoint
-internal class OneTimeRecognitionTileService : TileService() {
+class OneTimeRecognitionTileService : TileService() {
 
     @Inject
     @WidgetStatusHolder
-    lateinit var statusHolder: RecognitionStatusHolder
+    internal lateinit var statusHolder: RecognitionStatusHolder
 
     private val isReadyToRecognize
         get() = statusHolder.status.value !is RecognitionStatus.Recognizing
 
-    override fun onCreate() {
-        super.onCreate()
+    override fun onTileAdded() {
+        super.onTileAdded()
         requestListeningState(this)
     }
 
@@ -68,23 +71,31 @@ internal class OneTimeRecognitionTileService : TileService() {
     }
 
     private fun updateTile(isReadyToRecognize: Boolean) {
-        qsTile.label = getString(
+        val tile = qsTile ?: run {
+            Log.e(TAG, "qsTile is null, is update called in valid state?")
+            return
+        }
+        tile.label = getString(
             if (isReadyToRecognize) {
                 StringsR.string.quick_tile_recognize
             } else {
                 StringsR.string.quick_tile_cancel_recognition
             }
         )
-        qsTile.state = if (isReadyToRecognize) Tile.STATE_INACTIVE else Tile.STATE_ACTIVE
-        qsTile.updateTile()
+        tile.state = if (isReadyToRecognize) Tile.STATE_INACTIVE else Tile.STATE_ACTIVE
+        tile.updateTile()
     }
 
     companion object {
         fun requestListeningState(context: Context) {
-            requestListeningState(
-                context,
-                ComponentName(context, OneTimeRecognitionTileService::class.java)
-            )
+            try {
+                requestListeningState(
+                    context.applicationContext,
+                    ComponentName(context.applicationContext, OneTimeRecognitionTileService::class.java)
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to request qsTile listening state", e)
+            }
         }
     }
 }

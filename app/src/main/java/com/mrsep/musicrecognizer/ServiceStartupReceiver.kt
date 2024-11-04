@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.domain.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.OneTimeRecognitionTileService
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +46,7 @@ class ServiceStartupReceiver : BroadcastReceiver() {
                             .putExtra(RecognitionControlService.KEY_RESTRICTED_START, true)
                     )
                 }
+                OneTimeRecognitionTileService.requestListeningState(context)
             }
         }
     }

@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="main_screen_tap_to_recognize">Dotknij, aby rozpoznać</string>
+    <string name="main_screen_listening">Szukanie muzyki</string>
+</resources>

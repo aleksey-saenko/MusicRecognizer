@@ -2,17 +2,14 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import androidx.annotation.Px
-import coil.decode.DecodeResult
-import coil.decode.Decoder
-import coil.imageLoader
-import coil.request.CachePolicy
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import androidx.core.graphics.drawable.toBitmapOrNull
+import coil3.annotation.ExperimentalCoilApi
+import coil3.asDrawable
+import coil3.decode.BlackholeDecoder
+import coil3.imageLoader
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -27,14 +24,13 @@ internal suspend fun Context.getCachedImageOrNull(
             .size(widthPx, heightPx)
             .networkCachePolicy(CachePolicy.DISABLED)
             .build()
-        val bitmap = when (val result = imageLoader.execute(request)) {
-            is SuccessResult -> (result.drawable as? BitmapDrawable)?.bitmap
-            is ErrorResult -> null
-        }
-        bitmap
+        imageLoader.execute(request).image
+            ?.asDrawable(resources)
+            ?.toBitmapOrNull()
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 internal suspend fun Context.downloadImageToDiskCache(url: String) {
     withContext(Dispatchers.IO) {
         val request = ImageRequest.Builder(this@downloadImageToDiskCache)
@@ -43,10 +39,8 @@ internal suspend fun Context.downloadImageToDiskCache(url: String) {
             .diskCachePolicy(CachePolicy.ENABLED)
             // Disable reading from/writing to the memory cache
             .memoryCachePolicy(CachePolicy.DISABLED)
-            // Set a custom `Decoder.Factory` that skips the decoding step
-            .decoderFactory { _, _, _ ->
-                Decoder { DecodeResult(ColorDrawable(Color.BLACK), false) }
-            }
+            // Skips the decode step so we don't waste time/memory decoding the image into memory
+            .decoderFactory(BlackholeDecoder.Factory())
             .build()
         imageLoader.execute(request)
     }

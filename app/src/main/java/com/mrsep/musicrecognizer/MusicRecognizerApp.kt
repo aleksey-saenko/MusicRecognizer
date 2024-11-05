@@ -10,8 +10,12 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import coil.ImageLoader
-import coil.ImageLoaderFactory
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.crossfade
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
 import com.mrsep.musicrecognizer.presentation.MainActivity
@@ -30,7 +34,7 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @HiltAndroidApp
-class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Provider {
+class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configuration.Provider {
 
     @Inject
     lateinit var okHttpClient: Provider<OkHttpClient>
@@ -52,11 +56,18 @@ class MusicRecognizerApp : Application(), ImageLoaderFactory, Configuration.Prov
         ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
     }
 
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
-            .okHttpClient { okHttpClient.get() }
+    override fun newImageLoader(context: Context): ImageLoader {
+        return ImageLoader.Builder(context)
+            .components {
+                add(OkHttpNetworkFetcherFactory(callFactory = { okHttpClient.get() }))
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(cacheDir.resolve("image_cache"))
+                    .maxSizeBytes(512L * 1024 * 1024)
+                    .build()
+            }
             .crossfade(true)
-            .respectCacheHeaders(false)
             .build()
     }
 

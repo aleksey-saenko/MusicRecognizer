@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -16,10 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmapOrNull
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.asDrawable
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.size.Size
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.getDominantColor
 import kotlinx.coroutines.Dispatchers
@@ -56,15 +61,17 @@ internal fun AlbumArtwork(
         onSuccess = { state ->
             if (!state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
-                    state.result.drawable.toBitmapOrNull()?.getDominantColor()?.let { seedColor ->
-                        withContext(Dispatchers.Main) {
-                            onSeedColorCreated(seedColor)
-                        }
-                    }
+                    val seedColor = state.result.image
+                        .asDrawable(context.resources)
+                        .toBitmapOrNull()
+                        ?.getDominantColor()
+                        ?: return@launch
+                    withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
                 }
             }
         }
     )
+    val painterState by painter.state.collectAsStateWithLifecycle()
     Image(
         painter = painter,
         contentDescription = stringResource(StringsR.string.artwork),
@@ -79,7 +86,7 @@ internal fun AlbumArtwork(
                 shape = MaterialTheme.shapes.extraLarge
             )
             .clickable(
-                enabled = painter.state is AsyncImagePainter.State.Success,
+                enabled = painterState is AsyncImagePainter.State.Success,
                 onClick = onArtworkClick
             )
     )

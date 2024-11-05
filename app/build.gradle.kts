@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.kotlinx.collectionImmutable)
 
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)

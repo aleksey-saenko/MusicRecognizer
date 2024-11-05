@@ -7,8 +7,7 @@ import android.provider.DocumentsContract
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
-import coil.annotation.ExperimentalCoilApi
-import coil.imageLoader
+import coil3.imageLoader
 import com.mrsep.musicrecognizer.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
@@ -313,7 +312,6 @@ internal class AppBackupManagerImpl @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     private suspend fun deleteAppData() {
         // If we delete only rows, Room will inform all background workers about data deletion,
         // and they will cancel themselves. Bad contract?

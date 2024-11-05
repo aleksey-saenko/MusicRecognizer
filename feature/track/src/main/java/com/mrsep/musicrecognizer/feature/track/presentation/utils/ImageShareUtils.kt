@@ -2,13 +2,14 @@ package com.mrsep.musicrecognizer.feature.track.presentation.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.size.Size
+import androidx.core.graphics.drawable.toBitmapOrNull
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.size.Size
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -31,8 +32,10 @@ internal object ImageShareUtils {
                 .data(imageUrl)
                 .size(Size.ORIGINAL)
                 .build()
-            val result = imageLoader.execute(request)
-            val bitmap = (result.drawable as? BitmapDrawable)?.bitmap ?: return@withContext null
+            val bitmap = imageLoader.execute(request).image
+                ?.asDrawable(context.resources)
+                ?.toBitmapOrNull()
+                ?: return@withContext null
             val file = processBitmapForSharing(context, bitmap, fileName, fileNameFallback)
                 ?: return@withContext null
             FileProvider.getUriForFile(

@@ -2,16 +2,16 @@ package com.mrsep.musicrecognizer.feature.recognition.widget.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.util.Size
 import androidx.annotation.Px
-import coil.imageLoader
-import coil.request.CachePolicy
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import coil.transform.CircleCropTransformation
-import coil.transform.RoundedCornersTransformation
+import androidx.core.graphics.drawable.toBitmapOrNull
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
+import coil3.transform.RoundedCornersTransformation
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.WidgetArtworkStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -60,7 +60,6 @@ internal object ImageUtils {
                 .data(url)
                 .size(widthPx, heightPx)
                 .networkCachePolicy(CachePolicy.DISABLED)
-                .allowHardware(true)
                 .transformations(
                     when (artworkStyle) {
                         WidgetArtworkStyle.CircleCrop -> {
@@ -72,11 +71,9 @@ internal object ImageUtils {
                     }
                 )
                 .build()
-            val bitmap = when (val result = imageLoader.execute(request)) {
-                is SuccessResult -> (result.drawable as? BitmapDrawable)?.bitmap
-                is ErrorResult -> null
-            }
-            bitmap
+            imageLoader.execute(request).image
+                ?.asDrawable(resources)
+                ?.toBitmapOrNull()
         }
     }
 }

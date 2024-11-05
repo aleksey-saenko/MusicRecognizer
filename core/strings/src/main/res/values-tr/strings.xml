@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="main_screen_tap_to_recognize">Tanımak için dokunun</string>
     <string name="main_screen_listening">Dinleniyor</string>
     <string name="main_screen_listening_extra_time">Bir kez daha deneniyor</string>
@@ -20,7 +19,6 @@
     <string name="quick_tile_cancel_recognition">Tanımayı iptal et</string>
     <string name="action_recognize">Tanı</string>
     <string name="action_cancel_recognition">Tanımayı iptal et</string>
-
     <!-- General use -->
     <string name="nav_back">Geri</string>
     <string name="nav_forward">İleri</string>
@@ -46,7 +44,6 @@
     <string name="help">Yardım</string>
     <string name="show_more">Daha fazla göster</string>
     <string name="show_less">Daha az göster</string>
-
     <!-- Permissions -->
     <string name="permissions">İzinler</string>
     <string name="request_permission">İzin iste</string>
@@ -55,7 +52,6 @@
     <string name="permissions_denied_message">Önceki izin istekleri reddedildi. Kararınızı ayarlar üzerinden değiştirebilirsiniz.</string>
     <string name="permissions_denied_open_settings">Ayarları aç</string>
     <string name="permission_granted">İzin verildi</string>
-
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Hoş Geldiniz</string>
     <string name="onboarding_welcome_message">Audile, yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
@@ -66,7 +62,6 @@
     <string name="onboarding_final_title">Başlamaya hazırız</string>
     <string name="onboarding_final_message">Kurulum başarıyla tamamlandı</string>
     <string name="onboarding_final_get_started">Başlayın</string>
-
     <!-- Recognition screen -->
     <string name="recognition">Tanıma</string>
     <string name="popup_offline_mode">Çevrimdışı mod</string>
@@ -89,7 +84,6 @@
     <string name="result_title_internal_error">Dahili hata</string>
     <string name="result_message_internal_error">Dahili bir hata oluştu</string>
     <string name="result_title_unknown_error">Bilinmeyen hata</string>
-
     <!-- Library screen -->
     <string name="library">Kütüphane</string>
     <string name="empty_library_title">Tanınan şarkı yok</string>
@@ -117,7 +111,6 @@
     <string name="no_tracks_match_search">Arama kriterlerine uyan parça yok</string>
     <string name="delete_tracks_title">Parçaları sil</string>
     <string name="delete_tracks_message">Seçili parçaları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>
-
     <!-- Queue screen -->
     <string name="recognition_queue">Tanıma kuyruğu</string>
     <string name="queue">Kuyruk</string>
@@ -143,7 +136,6 @@
     <string name="recording_stop_player">Oynatıcıyı durdur</string>
     <string name="delete_recognitions_title">Tanımaları sil</string>
     <string name="delete_recognitions_message">Seçili planlanmış tanımaları iptal etmek ve silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>
-
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Favori olarak işaretle</string>
     <string name="unmark_track_as_favorite">Favori işaretini kaldır</string>
@@ -184,7 +176,6 @@
     <string name="align_to_start">Başa hizala</string>
     <string name="bold_text">Kalın metin</string>
     <string name="high_contrast_text">Yüksek kontrastlı metin</string>
-
     <!-- Preferences screen -->
     <string name="preferences">Tercihler</string>
     <string name="pref_group_recognition">Tanıma</string>
@@ -242,7 +233,6 @@
     <string name="about_purpose_track_links_service">Ek platform-özel parça bağlantıları sağlar</string>
     <string name="about_pref_title_github_repo">GitHub deposu</string>
     <string name="about_pref_title_privacy_policy">Gizlilik politikası</string>
-
     <string name="notification_button_disable_service">Hizmeti durdur</string>
     <string name="notification_button_show_lyrics">Sözleri göster</string>
     <string name="notification_channel_name_control">Kontrol bildirimleri</string>
@@ -251,5 +241,21 @@
     <string name="notification_channel_desc_result">Bildirimler aracılığıyla tanıma sonuçlarını almayı sağlar</string>
     <string name="notification_channel_name_scheduled_result">Planlanmış tanıma sonuçları</string>
     <string name="notification_channel_desc_scheduled_result">Planlanmış tanıma sonuçlarını bildirimler aracılığıyla almayı sağlar</string>
-
+    <string name="app_shortcut_recognize_short">Tanı</string>
+    <string name="app_shortcut_open_and_recognize_short">Aç ve Tanı</string>
+    <string name="app_shortcut_recognize_long">Arka planda tanı</string>
+    <string name="app_shortcut_open_and_recognize_long">Uygulamayı aç ve tanı</string>
+    <string name="pref_title_audio_source">Ses kaynağı</string>
+    <string name="audio_source_dialog_title">Ses kaynağı</string>
+    <string name="audio_source_dialog_default_mode_title">Varsayılan</string>
+    <string name="audio_capture_mode_microphone">Mikrofon</string>
+    <string name="audio_capture_mode_device">Cihaz sesi</string>
+    <string name="audio_capture_mode_auto">Otomatik</string>
+    <string name="recognition_provider_dialog_title">Sağlayıcı</string>
+    <string name="pref_title_experimental_features">Deneysel özellikler</string>
+    <string name="crash_dialog_title">Audile çöktü</string>
+    <string name="crash_dialog_button_send">Gönder</string>
+    <string name="crash_dialog_button_cancel">İptal et</string>
+    <string name="about_pref_title_license">Lisans</string>
+    <string name="about_pref_subtitle_github_repo">Kaynak kodu, sorunlar ve diğer bilgiler</string>
 </resources>

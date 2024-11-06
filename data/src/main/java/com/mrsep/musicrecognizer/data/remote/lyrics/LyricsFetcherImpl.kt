@@ -30,12 +30,17 @@ internal class LyricsFetcherImpl @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     private val lyristJsonAdapter = moshi.adapter<LyristResponseJson>()
 
+    @OptIn(ExperimentalStdlibApi::class)
+    private val lrcLibJsonAdapter = moshi.adapter<LrcLibResponseJson>()
+
     override suspend fun fetch(track: TrackEntity): String? {
         return withContext(ioDispatcher) {
             channelFlow {
                 val tasks = listOf(
                     async { fetchLyristSource(track.title, track.artist) },
-                    async { fetchOvhSource(track.title, track.artist) },
+                    // Disabled due to inconsistent line breaks in lyrics
+//                    async { fetchOvhSource(track.title, track.artist) },
+                    async { fetchLrcLibSource(track.title, track.artist) },
                 )
                 tasks.forEach { task -> launch { send(task.await()) } }
             }
@@ -76,6 +81,24 @@ internal class LyricsFetcherImpl @Inject constructor(
                         this
                     }.trim().takeIf { it.isNotBlank() }
                 }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
+            null
+        }
+    }
+
+    private suspend fun fetchLrcLibSource(title: String, artist: String): String? {
+        // Don't use optional album_name and duration parameters to expand search
+        val requestUrl = "https://lrclib.net/api/get?artist_name=$artist&track_name=$title"
+        val request = Request.Builder().url(requestUrl).get().build()
+        return try {
+            okHttpClient.newCall(request).await().use { response ->
+                if (!response.isSuccessful) return null
+                val json = lrcLibJsonAdapter.fromJson(response.body!!.source())!!
+                json.plainLyrics?.trim()?.takeIf { it.isNotBlank() }
             }
         } catch (e: CancellationException) {
             throw e

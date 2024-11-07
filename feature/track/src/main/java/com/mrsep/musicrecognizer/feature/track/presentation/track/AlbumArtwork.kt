@@ -16,15 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.asDrawable
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Size
+import coil3.toBitmap
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.getDominantColor
 import kotlinx.coroutines.Dispatchers
@@ -61,11 +60,7 @@ internal fun AlbumArtwork(
         onSuccess = { state ->
             if (!state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
-                    val seedColor = state.result.image
-                        .asDrawable(context.resources)
-                        .toBitmapOrNull()
-                        ?.getDominantColor()
-                        ?: return@launch
+                    val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
                     withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
                 }
             }

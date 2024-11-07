@@ -5,11 +5,10 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmapOrNull
-import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.size.Size
+import coil3.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -33,8 +32,7 @@ internal object ImageShareUtils {
                 .size(Size.ORIGINAL)
                 .build()
             val bitmap = imageLoader.execute(request).image
-                ?.asDrawable(context.resources)
-                ?.toBitmapOrNull()
+                ?.toBitmap()
                 ?: return@withContext null
             val file = processBitmapForSharing(context, bitmap, fileName, fileNameFallback)
                 ?: return@withContext null

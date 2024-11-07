@@ -3,13 +3,12 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.annotation.Px
-import androidx.core.graphics.drawable.toBitmapOrNull
 import coil3.annotation.ExperimentalCoilApi
-import coil3.asDrawable
 import coil3.decode.BlackholeDecoder
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -24,9 +23,7 @@ internal suspend fun Context.getCachedImageOrNull(
             .size(widthPx, heightPx)
             .networkCachePolicy(CachePolicy.DISABLED)
             .build()
-        imageLoader.execute(request).image
-            ?.asDrawable(resources)
-            ?.toBitmapOrNull()
+        imageLoader.execute(request).image?.toBitmap()
     }
 }
 

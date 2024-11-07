@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Size
 import androidx.annotation.Px
-import androidx.core.graphics.drawable.toBitmapOrNull
-import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.transformations
+import coil3.toBitmap
 import coil3.transform.CircleCropTransformation
 import coil3.transform.RoundedCornersTransformation
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.WidgetArtworkStyle
@@ -71,9 +70,7 @@ internal object ImageUtils {
                     }
                 )
                 .build()
-            imageLoader.execute(request).image
-                ?.asDrawable(resources)
-                ?.toBitmapOrNull()
+            imageLoader.execute(request).image?.toBitmap()
         }
     }
 }

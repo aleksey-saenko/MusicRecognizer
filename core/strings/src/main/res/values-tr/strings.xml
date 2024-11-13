@@ -258,4 +258,25 @@
     <string name="crash_dialog_button_cancel">İptal et</string>
     <string name="about_pref_title_license">Lisans</string>
     <string name="about_pref_subtitle_github_repo">Kaynak kodu, sorunlar ve diğer bilgiler</string>
+    <string name="pref_subtitle_audio_source">Ses kayıt ayarlarını belirle</string>
+    <string name="audio_source_dialog_default_mode_message">Aksi belirtilmediği sürece kullanılacak olan varsayılan ses kaynağını belirle:</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Düğmeye uzun basma</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Ana ekran düğmesine uzun basıldığında kullanılacak ses kaynağını seç:</string>
+    <string name="pref_subtitle_experimental_features">Çalışılıyor</string>
+    <string name="pref_title_backup_and_restore">Yedekleme &amp; Kurtarma</string>
+    <string name="pref_subtitle_backup_and_restore">Veri tabanınızı ve tercihlerinizi yedekleyin</string>
+    <string name="pref_title_backup">Yedekleme</string>
+    <string name="pref_subtitle_backup">Uygulama verisi ve tercihlerinizi dışarı aktarın</string>
+    <string name="backup_dialog_title">Yedekleme</string>
+    <string name="backup_dialog_button_backup">Yedekleme</string>
+    <string name="pref_subtitle_restore">Uygulama verisi ve tercihlerinizi yedekten kurtarın</string>
+    <string name="restore_dialog_title">Kurtarma</string>
+    <string name="restore_dialog_button_restore">Kurtarma</string>
+    <string name="crash_dialog_message">Beklenmek şekilde meydana gelen hata uygulamanın durmasına sebep oldu. Hata raporunu mail ile ileterek sorunun çözülmesine yardımcı olmak ister misiniz?</string>
+    <string name="crash_dialog_comment_prompt">Buradan ek bilgi ekleyebilirsiniz:</string>
+    <string name="result_title_recognition_saved">Tanıma kaydedildi</string>
+    <string name="pref_title_restore">Kurtarma</string>
+    <string name="about_pref_title_third_licenses">Üçüncü taraf lisansları</string>
+    <string name="about_pref_subtitle_third_licenses">Audile\'nin kullandığı üçüncü taraf lisansları</string>
+    <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
 </resources>

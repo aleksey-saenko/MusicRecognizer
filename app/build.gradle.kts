@@ -24,8 +24,8 @@ android {
         val devOptionsEnabled = properties["dev.options"]?.toString() ?: "false"
         buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
 
-        // Excluded unfinished translations: "es"
-        resourceConfigurations += listOf("en", "cs", "de", "fr", "it", "pt-rBR", "ru", "sk", "tr")
+        // Excluded unfinished translations: "fa", "gu", "pl"
+        resourceConfigurations += listOf("en", "cs", "de", "es", "fr", "it", "pt-rBR", "ru", "sk", "tr")
     }
 
     buildTypes {

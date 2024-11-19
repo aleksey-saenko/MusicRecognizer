@@ -267,10 +267,10 @@
     <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
     <string name="crash_dialog_button_send">Envoyer</string>
     <string name="audio_source_dialog_default_mode_title">Défaut</string>
-    <string name="audio_source_dialog_default_mode_message">Sélectionner la source audio à utiliser par défaut :</string>
+    <string name="audio_source_dialog_default_mode_message">Sélectionnez la source audio par défaut à utiliser, sauf indication contraire :</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Sélectionner la source audio à utiliser après un appui long sur le bouton de l\'écran principal :</string>
     <string name="audd_help_dialog_message_empty_token">Vous pouvez utiliser le service dans un but de test sans fournir de jeton, mais veuillez noter que cela limitera votre nombre de reconnaissances quotidiennes.</string>
-    <string name="acr_cloud_help_dialog_message">ACRCloud est un service payant qui offre une periode d\'essai gratuit et un usage limité pour des buts de développement. Pour utiliser ce service, vous avez besoin de créer un compte et d\'y enregistrer un projet. Si vous rencontrez la moindre difficulté, prière de vous référer à <![CDATA[<a href="%1$s">ce guide</a>]]>.</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloud est un service payant qui offre une période d\'essai gratuit et un usage limité pour des buts de développement. Pour utiliser ce service, vous avez besoin de créer un compte et d\'y enregistrer un projet. Si vous rencontrez la moindre difficulté, prière de vous référer à <![CDATA[<a href="%1$s">ce guide</a>]]>.</string>
     <string name="pref_subtitle_audio_source">Définir la configuration d\'enregistrement audio</string>
     <string name="pref_title_audio_source">Source audio</string>
     <string name="audio_source_dialog_title">Source audio</string>

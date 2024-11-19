@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_screen_tap_to_recognize">برای شناسایی ضربه بزنید.</string>
+    <string name="main_screen_listening">گوش دادن</string>
+    <string name="widget_tap_to_recognize">برای شناسایی ضربه بزنید</string>
+    <string name="main_screen_listening_extra_time">یک بار دیگر تلاش می‌کنم</string>
+</resources>

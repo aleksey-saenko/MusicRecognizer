@@ -7,25 +7,25 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
-object AboutScreenNavigation {
+object SoftwareScreenNavigation {
 
-    const val ROUTE = "about"
+    private const val ROUTE = "third_party_software"
 
-    fun NavGraphBuilder.aboutScreen(
+    fun NavGraphBuilder.softwareScreen(
         onBackPressed: () -> Unit,
-        onNavigateToSoftwareScreen: (from: NavBackStackEntry) -> Unit,
-        onNavigateToAppLicenseScreen: (from: NavBackStackEntry) -> Unit,
+        onNavigateToSoftwareDetailsScreen: (uniqueId: String, from: NavBackStackEntry) -> Unit,
     ) {
         composable(ROUTE) { backStackEntry ->
-            AboutScreen(
+            SoftwareScreen(
                 onBackPressed = onBackPressed,
-                onNavigateToSoftwareScreen = { onNavigateToSoftwareScreen(backStackEntry) },
-                onNavigateToAppLicenseScreen = { onNavigateToAppLicenseScreen(backStackEntry) },
+                onNavigateToSoftwareDetailsScreen = { uniqueId ->
+                    onNavigateToSoftwareDetailsScreen(uniqueId, backStackEntry)
+                },
             )
         }
     }
 
-    fun NavController.navigateToAboutScreen(
+    fun NavController.navigateToSoftwareScreen(
         from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {

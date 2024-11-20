@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.musicrecognizer.android.application)
     alias(libs.plugins.musicrecognizer.android.application.compose)
     alias(libs.plugins.musicrecognizer.android.hilt)
+    alias(libs.plugins.aboutLibraries)
 }
 
 android {
@@ -54,6 +55,13 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
+    }
+    aboutLibraries {
+        registerAndroidTasks = false
+        excludeFields = arrayOf("funding", "scm")
+        additionalLicenses = arrayOf("GPL-3.0-or-later")
+        gitHubApiToken = properties["github.token"] as? String
+        prettyPrint = true
     }
 }
 

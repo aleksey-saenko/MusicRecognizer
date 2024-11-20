@@ -267,7 +267,8 @@
     <string name="about_pref_title_privacy_policy">Privacy policy</string>
     <string name="about_pref_subtitle_privacy_policy">Learn more how the app handles your data</string>
     <string name="about_pref_title_license">License</string>
-    <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3</string>
+    <string name="about_pref_title_licenses">Licenses</string>
+    <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3 or later</string>
     <string name="about_pref_title_third_licenses">Third-party licences</string>
     <string name="about_pref_subtitle_third_licenses">Licenses of the third-party libraries Audile uses</string>
     <string name="notification_button_disable_service">Stop service</string>

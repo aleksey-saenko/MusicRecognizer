@@ -41,12 +41,13 @@ private const val ACR_CLOUD_URL = "https://www.acrcloud.com/"
 private const val ODESLI_URL = "https://odesli.co/"
 private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
 private const val PRIVACY_POLICY_URL = "https://github.com/aleksey-saenko/MusicRecognizer/blob/master/PRIVACY.md"
-private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutScreen(
     onBackPressed: () -> Unit,
+    onNavigateToSoftwareScreen: () -> Unit,
+    onNavigateToAppLicenseScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val topBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -119,17 +120,15 @@ internal fun AboutScreen(
                     subtitle = stringResource(StringsR.string.about_pref_subtitle_privacy_policy),
                     onItemClick = { context.openUrlImplicitly(PRIVACY_POLICY_URL) }
                 )
-                if (false) {
-                    PreferenceClickableItem(
-                        title = stringResource(StringsR.string.about_pref_title_third_licenses),
-                        subtitle = stringResource(StringsR.string.about_pref_subtitle_third_licenses),
-                        onItemClick = { TODO() }
-                    )
-                }
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.about_pref_title_third_licenses),
+                    subtitle = stringResource(StringsR.string.about_pref_subtitle_third_licenses),
+                    onItemClick = onNavigateToSoftwareScreen
+                )
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.about_pref_title_license),
                     subtitle = stringResource(StringsR.string.about_pref_subtitle_license),
-                    onItemClick = { context.openUrlImplicitly(LICENCE_URL) }
+                    onItemClick = onNavigateToAppLicenseScreen
                 )
             }
         }

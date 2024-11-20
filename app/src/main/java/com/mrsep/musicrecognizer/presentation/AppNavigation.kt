@@ -42,6 +42,12 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScr
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.navigateToAboutScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AppLicenseScreen.appLicenseScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AppLicenseScreen.navigateToAppLicenseScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.SoftwareDetailsScreen.softwareDetailsScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.SoftwareDetailsScreen.navigateToSoftwareDetailsScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.SoftwareScreenNavigation.softwareScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.about.SoftwareScreenNavigation.navigateToSoftwareScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.experimentalFeaturesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.navigateToExperimentalFeaturesScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.navigateToQueueScreen
@@ -136,7 +142,23 @@ internal fun AppNavigation(
             onRetryRequested = { setRecognitionRequested(true) }
         )
         lyricsScreen(onBackPressed = outerNavController::navigateUp)
-        aboutScreen(onBackPressed = outerNavController::navigateUp)
+        aboutScreen(
+            onBackPressed = outerNavController::navigateUp,
+            onNavigateToSoftwareScreen = { from ->
+                outerNavController.navigateToSoftwareScreen(from)
+            },
+            onNavigateToAppLicenseScreen = { from ->
+                outerNavController.navigateToAppLicenseScreen(from)
+            }
+        )
+        softwareScreen(
+            onBackPressed = outerNavController::navigateUp,
+            onNavigateToSoftwareDetailsScreen = { uniqueId, from ->
+                outerNavController.navigateToSoftwareDetailsScreen(uniqueId, from)
+            }
+        )
+        softwareDetailsScreen(onBackPressed = outerNavController::navigateUp)
+        appLicenseScreen(onBackPressed = outerNavController::navigateUp)
         experimentalFeaturesScreen(onBackPressed = outerNavController::navigateUp)
         developerScreen(onBackPressed = outerNavController::navigateUp)
     }

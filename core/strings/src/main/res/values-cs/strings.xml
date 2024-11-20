@@ -261,7 +261,7 @@
     <string name="about_pref_title_license">Licence</string>
     <string name="about_pref_title_third_licenses">Licence třetích stran</string>
     <string name="about_pref_subtitle_privacy_policy">Další informace o tom, jak aplikace zpracovává vaše data</string>
-    <string name="about_pref_subtitle_license">Aplikace Audile je licencována pod GNU GPLv3</string>
+    <string name="about_pref_subtitle_license">Aplikace Audile je licencována pod GNU GPLv3 nebo pozdější</string>
     <string name="about_pref_subtitle_third_licenses">Licence knihoven třetích stran používaných aplikací Audile</string>
     <string name="about_pref_subtitle_github_repo">Zdrojový kód, problémy a další informace</string>
     <string name="crash_dialog_title">Aplikace Audile havarovala</string>

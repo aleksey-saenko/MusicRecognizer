@@ -270,7 +270,7 @@
     <string name="about_pref_title_license">Licença</string>
     <string name="about_pref_subtitle_third_licenses">Licenças de bibliotecas de terceiros que o Audile usa</string>
     <string name="result_title_recognition_saved">Identificação salva</string>
-    <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3</string>
+    <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3 ou posterior</string>
     <string name="about_pref_title_third_licenses">Licenças de terceiros</string>
     <string name="crash_dialog_title">O Audile crashou</string>
     <string name="crash_dialog_message">Um erro inesperado ocorreu, fazendo com o que o app parasse. Você gostaria de enviar um relatório de erros via e-mail para ajudar nos a resolver o problema?</string>
@@ -287,4 +287,5 @@
     <string name="audio_source_dialog_default_mode_title">Padrão</string>
     <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado longamente:</string>
+    <string name="about_pref_title_licenses">Licenças</string>
 </resources>

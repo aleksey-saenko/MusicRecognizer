@@ -199,8 +199,8 @@
     <string name="audd_help_dialog_message">AudD è un servizio a pagamento che offre l\'opzione di un periodo di prova gratuito di 14 giorni. Per utilizzare questo servizio, è necessario creare un account e ottenere il token API privato. <![CDATA[<a href="%1$s">Iscriviti</a>]]> se non ne hai ancora uno.</string>
     <string name="acr_cloud_help_dialog_steps_title">Prestare attenzione a questi passaggi:</string>
     <string name="acr_cloud_help_dialog_step1">Selezionate la regione geografica più vicina a voi per ridurre al minimo la latenza di rete</string>
-    <string name="acr_cloud_help_dialog_step2">Imposta la sorgente audio come \"Riduzione audio\"</string>
-    <string name="acr_cloud_help_dialog_step3">Impostare il motore audio desiderato. L\'opzione \"Impronta audio\" è la più accurata per un uso generale</string>
+    <string name="acr_cloud_help_dialog_step2">Imposta la sorgente audio come iduzione audio\\</string>
+    <string name="acr_cloud_help_dialog_step3">Impostare il motore audio desiderato. L\'opzione mpronta audio è la più accurata per un uso generale</string>
     <string name="acr_cloud_help_dialog_step4">Seleziona tutte le caselle per l\'integrazione di ID di terze parti</string>
     <string name="pref_group_notifications">Notifiche</string>
     <string name="pref_title_use_grid_layout">Usa disposizione a griglia</string>

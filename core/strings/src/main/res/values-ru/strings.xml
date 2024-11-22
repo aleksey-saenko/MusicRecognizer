@@ -262,7 +262,7 @@
     <string name="about_pref_title_privacy_policy">Политика конфиденциальности</string>
     <string name="about_pref_subtitle_github_repo">Исходный код, замечания и другая информация</string>
     <string name="about_pref_title_license">Лицензия</string>
-    <string name="about_pref_subtitle_license">Audile выпускается под лицензией GNU GPLv3 or later</string>
+    <string name="about_pref_subtitle_license">Audile выпускается под лицензией GNU GPLv3 или более поздней версии</string>
     <string name="about_pref_title_third_licenses">Сторонние лицензии</string>
     <string name="about_pref_subtitle_third_licenses">Лицензии сторонних библиотек, используемых в Audile</string>
     <string name="about_pref_subtitle_privacy_policy">Узнайте больше о том, как приложение работает с вашими данными</string>

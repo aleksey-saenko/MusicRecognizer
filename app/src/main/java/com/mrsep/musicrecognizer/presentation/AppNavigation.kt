@@ -30,14 +30,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import androidx.navigation.navigation
 import com.mrsep.musicrecognizer.BuildConfig
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
+import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen.libraryScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.search.LibrarySearchScreen.librarySearchScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.search.LibrarySearchScreen.navigateToLibrarySearchScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen
 import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen.onboardingScreen
+import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.navigateToPreferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.AboutScreenNavigation.aboutScreen
@@ -50,6 +53,7 @@ import com.mrsep.musicrecognizer.feature.preferences.presentation.about.Software
 import com.mrsep.musicrecognizer.feature.preferences.presentation.about.SoftwareScreenNavigation.navigateToSoftwareScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.experimentalFeaturesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.experimental.ExperimentalFeaturesScreenNavigation.navigateToExperimentalFeaturesScreen
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.navigateToQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen.queueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
@@ -224,70 +228,90 @@ private fun BarNavHost(
 ) {
     NavHost(
         navController = innerNavController,
-        startDestination = RecognitionScreen.ROUTE,
+        startDestination = TopLevelDestination.Recognition.route,
         modifier = modifier,
         enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {
-        recognitionScreen(
-            autostart = recognitionRequested,
-            onResetAutostart = { setRecognitionRequested(false) },
-            onNavigateToTrackScreen = { trackId, from ->
-                outerNavController.navigateToTrackScreen(
-                    trackId = trackId,
-                    isRetryAvailable = true,
-                    from = from
-                )
-            },
-            onNavigateToQueueScreen = { _, from ->
-                innerNavController.navigateToQueueScreen(
-                    from = from,
-                    navOptions = navOptions {
-                        popUpTo(innerNavController.graph.findStartDestination().id) {
-                            saveState = true
+        navigation(
+            startDestination = RecognitionScreen.ROUTE,
+            route = TopLevelDestination.Recognition.route
+        ) {
+            recognitionScreen(
+                autostart = recognitionRequested,
+                onResetAutostart = { setRecognitionRequested(false) },
+                onNavigateToTrackScreen = { trackId, from ->
+                    outerNavController.navigateToTrackScreen(
+                        trackId = trackId,
+                        isRetryAvailable = true,
+                        from = from
+                    )
+                },
+                onNavigateToQueueScreen = { _, from ->
+                    innerNavController.navigateToQueueScreen(
+                        from = from,
+                        navOptions = navOptions {
+                            popUpTo(innerNavController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                )
-            },
-            onNavigateToPreferencesScreen = { from ->
-                innerNavController.navigateToPreferencesScreen(
-                    from = from,
-                    navOptions = navOptions {
-                        popUpTo(innerNavController.graph.findStartDestination().id) {
-                            saveState = true
+                    )
+                },
+                onNavigateToPreferencesScreen = { from ->
+                    innerNavController.navigateToPreferencesScreen(
+                        from = from,
+                        navOptions = navOptions {
+                            popUpTo(innerNavController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                )
-            }
-        )
-        libraryScreen(
-            onTrackClick = { trackId, from ->
-                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
-            },
-            onTrackSearchClick = { from ->
-                outerNavController.navigateToLibrarySearchScreen(from = from)
-            }
-        )
-        queueScreen(
-            onNavigateToTrackScreen = { trackId, from ->
-                outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
-            }
-        )
-        preferencesScreen(
-            showDeveloperOptions = BuildConfig.DEV_OPTIONS,
-            onNavigateToAboutScreen = { from ->
-                outerNavController.navigateToAboutScreen(from)
-            },
-            onNavigateToExperimentalFeaturesScreen = { from ->
-                outerNavController.navigateToExperimentalFeaturesScreen(from)
-            },
-            onNavigateToDeveloperScreen = { from ->
-                outerNavController.navigateToDeveloperScreen(from)
-            }
-        )
+                    )
+                }
+            )
+        }
+        navigation(
+            startDestination = LibraryScreen.ROUTE,
+            route = TopLevelDestination.Library.route
+        ) {
+            libraryScreen(
+                onTrackClick = { trackId, from ->
+                    outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
+                },
+                onTrackSearchClick = { from ->
+                    outerNavController.navigateToLibrarySearchScreen(from = from)
+                }
+            )
+        }
+        navigation(
+            startDestination = RecognitionQueueScreen.ROUTE,
+            route = TopLevelDestination.Queue.route
+        ) {
+            queueScreen(
+                onNavigateToTrackScreen = { trackId, from ->
+                    outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
+                }
+            )
+        }
+        navigation(
+            startDestination = PreferencesScreen.ROUTE,
+            route = TopLevelDestination.Preferences.route
+        ) {
+            preferencesScreen(
+                showDeveloperOptions = BuildConfig.DEV_OPTIONS,
+                onNavigateToAboutScreen = { from ->
+                    outerNavController.navigateToAboutScreen(from)
+                },
+                onNavigateToExperimentalFeaturesScreen = { from ->
+                    outerNavController.navigateToExperimentalFeaturesScreen(from)
+                },
+                onNavigateToDeveloperScreen = { from ->
+                    outerNavController.navigateToDeveloperScreen(from)
+                }
+            )
+        }
     }
 }

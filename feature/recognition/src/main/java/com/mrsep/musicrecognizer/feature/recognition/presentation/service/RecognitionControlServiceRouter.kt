@@ -11,6 +11,8 @@ interface RecognitionControlServiceRouter {
     fun getDeepLinkIntentToTrack(trackId: String): Intent
 
     fun getDeepLinkIntentToLyrics(trackId: String): Intent
+
+    fun getDeepLinkIntentToQueue(): Intent
 }
 
 sealed class AudioCaptureConfig {

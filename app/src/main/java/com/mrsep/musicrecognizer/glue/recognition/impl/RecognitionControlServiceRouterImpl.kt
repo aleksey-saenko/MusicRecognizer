@@ -13,6 +13,7 @@ import com.mrsep.musicrecognizer.data.audiorecord.AudioRecordingControllerDo
 import com.mrsep.musicrecognizer.data.audiorecord.soundsource.SoundSourceImpl
 import com.mrsep.musicrecognizer.feature.recognition.domain.AudioRecorderController
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.AudioCaptureConfig
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlServiceRouter
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
@@ -61,6 +62,10 @@ class RecognitionControlServiceRouterImpl @Inject constructor(
 
     override fun getDeepLinkIntentToLyrics(trackId: String): Intent {
         return getDeepLinkIntent(LyricsScreen.createDeepLink(trackId).toUri())
+    }
+
+    override fun getDeepLinkIntentToQueue(): Intent {
+        return getDeepLinkIntent(RecognitionQueueScreen.createDeepLink().toUri())
     }
 
     private fun getDeepLinkIntent(uri: Uri): Intent {

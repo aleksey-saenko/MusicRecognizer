@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+import android.graphics.Bitmap
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Binder
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.updateAll
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
@@ -84,6 +86,10 @@ class RecognitionControlService : Service() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
+    @Inject
+    @ApplicationScope
+    lateinit var appScope: CoroutineScope
+
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val actionReceiver by lazy { ActionBroadcastReceiver() }
@@ -130,10 +136,11 @@ class RecognitionControlService : Service() {
         val startAllowed = checkRecognitionControlServicePermissions()
         if (!startAllowed) {
             Log.e(TAG, "Service start is not allowed due to denied permissions")
-            runBlocking {
+            appScope.launch {
                 preferencesRepository.setNotificationServiceEnabled(false)
-                stopSelf()
             }
+            stopSelf()
+            return
         }
     }
 
@@ -189,8 +196,9 @@ class RecognitionControlService : Service() {
 
             // Start with null intent is considered as restart of sticky service with hold mode on
             null,
-            ACTION_HOLD_MODE_ON -> {
+            ACTION_HOLD_MODE_ON -> run {
                 isHoldModeActive = true
+                if (isRecognitionJobActive || isRecognitionCancelingJobActive) return@run
                 if (!isStartedForeground) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                         continueInForeground(FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
@@ -200,9 +208,10 @@ class RecognitionControlService : Service() {
                 }
             }
 
-            ACTION_HOLD_MODE_OFF -> {
+            ACTION_HOLD_MODE_OFF -> run {
                 isHoldModeActive = false
-                if (!isRecognitionJobActive) stopSelf()
+                if (isRecognitionJobActive || isRecognitionCancelingJobActive) return@run
+                stopSelf()
             }
 
             else -> error("Unknown service start intent")
@@ -233,6 +242,7 @@ class RecognitionControlService : Service() {
             statusNotificationBuilder()
                 .setContentTitle(getString(StringsR.string.notification_listening))
                 .setContentText(getString(StringsR.string.notification_listening_subtitle))
+                .setSmallIcon(UiR.drawable.ic_notification_listening)
                 .addCancelButton()
                 .build()
         } else {
@@ -314,7 +324,7 @@ class RecognitionControlService : Service() {
 
     private fun statusNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_STATUS)
-            .setSmallIcon(UiR.drawable.ic_retro_microphone)
+            .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
             .setOngoing(true) // Can be dismissed since API 34, keep in mind
@@ -326,7 +336,7 @@ class RecognitionControlService : Service() {
 
     private fun resultNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_RESULT)
-            .setSmallIcon(UiR.drawable.ic_retro_microphone)
+            .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
@@ -398,21 +408,27 @@ class RecognitionControlService : Service() {
         )
     }
 
-    private suspend fun NotificationCompat.Builder.addOptionalBigPicture(
-        url: String?,
+    private suspend fun NotificationCompat.Builder.setStyleForTrack(
+        artworkUrl: String?,
         contentTitle: String,
         contentText: String,
     ): NotificationCompat.Builder {
-        if (url == null) return this
-        // Notification image should be ≤ 450dp wide, 2:1 aspect ratio
-        val imageWidthPx = dpToPx(450f).toInt()
-        val imageHeightPx = imageWidthPx / 2
-        val bitmap = getCachedImageOrNull(
-            url = url,
-            widthPx = imageWidthPx,
-            heightPx = imageHeightPx,
-        ) ?: return this
-        return setStyle(
+        var bitmap: Bitmap? = null
+        if (artworkUrl != null) {
+            // Notification image should be ≤ 450dp wide, 2:1 aspect ratio
+            val imageWidthPx = dpToPx(450f).toInt()
+            val imageHeightPx = imageWidthPx / 2
+            bitmap = getCachedImageOrNull(
+                url = artworkUrl,
+                widthPx = imageWidthPx,
+                heightPx = imageHeightPx,
+            )
+        }
+        val style = if (bitmap == null) {
+            NotificationCompat.BigTextStyle()
+                .setBigContentTitle(contentTitle)
+                .bigText(contentText)
+        } else {
             NotificationCompat.BigPictureStyle()
                 .bigPicture(bitmap)
                 .setBigContentTitle(contentTitle)
@@ -424,7 +440,8 @@ class RecognitionControlService : Service() {
                         this
                     }
                 }
-        )
+        }
+        return setStyle(style)
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
@@ -433,6 +450,22 @@ class RecognitionControlService : Service() {
         val deepLinkIntent = serviceRouter.getDeepLinkIntentToTrack(trackId)
         val pendingIntent = createPendingIntent(deepLinkIntent)
         return setContentIntent(pendingIntent)
+    }
+
+    private fun NotificationCompat.Builder.addOptionalQueueScreenDeepLinkIntent(
+        recognitionTask: RecognitionTask?,
+    ): NotificationCompat.Builder {
+        return when (recognitionTask) {
+            is RecognitionTask.Created -> {
+                val deepLinkIntent = serviceRouter.getDeepLinkIntentToQueue()
+                val pendingIntent = createPendingIntent(deepLinkIntent)
+                setContentIntent(pendingIntent)
+            }
+
+            is RecognitionTask.Error,
+            RecognitionTask.Ignored,
+            null -> this
+        }
     }
 
     private fun NotificationCompat.Builder.addOptionalShowLyricsButton(
@@ -607,6 +640,7 @@ class RecognitionControlService : Service() {
     }
 
     private fun cancelRecognitionJob() {
+        if (isRecognitionCancelingJobActive) return
         recognitionCancelingJob = serviceScope.launch {
             soundLevelCurrentFlow.update { flowOf(0f) }
             recognitionJob?.cancelAndJoin()
@@ -638,96 +672,120 @@ class RecognitionControlService : Service() {
                     getString(StringsR.string.notification_listening_subtitle)
                 }
             )
+            .setSmallIcon(UiR.drawable.ic_notification_listening)
             .addCancelButton()
             .buildAndNotifyAsStatus()
     }
 
+    private fun RecognitionTask.getMessage(): String? = when (this) {
+        is RecognitionTask.Created -> if (launched)
+            getString(StringsR.string.result_message_recognition_scheduled)
+        else
+            getString(StringsR.string.result_message_recognition_saved)
+
+        is RecognitionTask.Error,
+        RecognitionTask.Ignored -> null
+    }
+
     private suspend fun createResultNotification(
         result: RecognitionResult,
-    ): NotificationCompat.Builder {
-        return when (result) {
-            is RecognitionResult.Error -> when (result.remoteError) {
+    ): NotificationCompat.Builder = when (result) {
+        is RecognitionResult.Error -> {
+            val (errorTitle, errorMessage) = when (result.remoteError) {
                 RemoteRecognitionResult.Error.BadConnection -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_bad_connection))
-                        .setContentText(getString(StringsR.string.result_message_bad_connection))
+                    getString(StringsR.string.result_title_bad_connection) to
+                            getString(StringsR.string.result_message_bad_connection)
                 }
-
                 is RemoteRecognitionResult.Error.BadRecording -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_recording_error))
-                        .setContentText(getString(StringsR.string.result_message_recording_error))
+                    getString(StringsR.string.result_title_recording_error) to
+                            getString(StringsR.string.result_message_recording_error)
                 }
-
+                RemoteRecognitionResult.Error.ApiUsageLimited -> {
+                    getString(StringsR.string.result_title_service_usage_limited) to
+                            getString(StringsR.string.result_message_service_usage_limited)
+                }
+                RemoteRecognitionResult.Error.AuthError -> {
+                    getString(StringsR.string.result_title_auth_error) to
+                            getString(StringsR.string.result_message_auth_error)
+                }
                 is RemoteRecognitionResult.Error.HttpError -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_bad_network_response))
-                        .setContentText(getString(StringsR.string.result_message_bad_network_response))
+                    getString(StringsR.string.result_title_bad_network_response) to
+                            getString(StringsR.string.result_message_bad_network_response)
                 }
-
                 is RemoteRecognitionResult.Error.UnhandledError -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_internal_error))
-                        .setContentText(getString(StringsR.string.result_message_internal_error))
-                }
-
-                is RemoteRecognitionResult.Error.AuthError -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_auth_error))
-                        .setContentText(getString(StringsR.string.result_message_auth_error))
-                }
-
-                is RemoteRecognitionResult.Error.ApiUsageLimited -> {
-                    resultNotificationBuilder()
-                        .setContentTitle(getString(StringsR.string.result_title_service_usage_limited))
-                        .setContentText(getString(StringsR.string.result_message_service_usage_limited))
+                    getString(StringsR.string.result_title_internal_error) to
+                            getString(StringsR.string.result_message_internal_error)
                 }
             }
+            val bigText = result.recognitionTask.getMessage()?.let { scheduledTaskMessage ->
+                "$errorMessage\n$scheduledTaskMessage"
+            } ?: errorMessage
+            resultNotificationBuilder()
+                .setContentTitle(errorTitle)
+                .setContentText(errorMessage)
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(errorTitle)
+                        .bigText(bigText)
+                )
+                .addOptionalQueueScreenDeepLinkIntent(result.recognitionTask)
+        }
 
-            is RecognitionResult.ScheduledOffline -> {
-                resultNotificationBuilder()
-                    .setContentTitle(
-                        when (result.recognitionTask) {
-                            is RecognitionTask.Created -> getString(StringsR.string.result_title_recognition_scheduled)
-                            is RecognitionTask.Error,
-                            RecognitionTask.Ignored,
-                                -> getString(StringsR.string.result_title_internal_error)
-                        }
-                    )
-                    .setContentText(
-                        when (result.recognitionTask) {
-                            is RecognitionTask.Created -> if (result.recognitionTask.launched) {
-                                getString(StringsR.string.result_message_recognition_scheduled)
-                            } else {
-                                getString(StringsR.string.result_message_recognition_saved)
-                            }
-
-                            is RecognitionTask.Error,
-                            RecognitionTask.Ignored,
-                                -> getString(StringsR.string.result_message_internal_error)
-                        }
-                    )
+        is RecognitionResult.ScheduledOffline -> {
+            val (title, message) = when (result.recognitionTask) {
+                is RecognitionTask.Created -> {
+                    getString(StringsR.string.result_title_recognition_scheduled) to
+                        if (result.recognitionTask.launched)
+                            getString(StringsR.string.result_message_recognition_scheduled)
+                        else
+                            getString(StringsR.string.result_message_recognition_saved)
+                }
+                is RecognitionTask.Error,
+                RecognitionTask.Ignored -> {
+                    getString(StringsR.string.result_title_internal_error) to
+                            getString(StringsR.string.result_message_internal_error)
+                }
             }
+            resultNotificationBuilder()
+                .setContentTitle(title)
+                .setContentText(message)
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(title)
+                        .bigText(message)
+                )
+                .addOptionalQueueScreenDeepLinkIntent(result.recognitionTask)
+        }
 
-            is RecognitionResult.NoMatches -> {
-                resultNotificationBuilder()
-                    .setContentTitle(getString(StringsR.string.result_title_no_matches))
-                    .setContentText(getString(StringsR.string.result_message_no_matches))
-            }
+        is RecognitionResult.NoMatches -> {
+            val title = getString(StringsR.string.result_title_no_matches)
+            val message = getString(StringsR.string.widget_tap_to_try_again)
+            val bigText = result.recognitionTask.getMessage()?.let { scheduledTaskMessage ->
+                "$message\n$scheduledTaskMessage"
+            } ?: message
+            resultNotificationBuilder()
+                .setContentTitle(title)
+                .setContentText(message)
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(title)
+                        .bigText(bigText)
+                )
+                .addRecognizeContentIntent()
+        }
 
-            is RecognitionResult.Success -> {
-                resultNotificationBuilder()
-                    .setContentTitle(result.track.title)
-                    .setContentText(result.track.artist)
-                    .addOptionalBigPicture(
-                        url = result.track.artworkUrl,
-                        contentTitle = result.track.title,
-                        contentText = result.track.artistWithAlbumFormatted()
-                    )
-                    .addTrackDeepLinkIntent(result.track.id)
-                    .addOptionalShowLyricsButton(result.track)
-                    .addShareButton(result.track.getSharedBody())
-            }
+        is RecognitionResult.Success -> {
+            resultNotificationBuilder()
+                .setContentTitle(result.track.title)
+                .setContentText(result.track.artist)
+                .setStyleForTrack(
+                    artworkUrl = result.track.artworkUrl,
+                    contentTitle = result.track.title,
+                    contentText = result.track.artistWithAlbumFormatted()
+                )
+                .addTrackDeepLinkIntent(result.track.id)
+                .addOptionalShowLyricsButton(result.track)
+                .addShareButton(result.track.getSharedBody())
         }
     }
 
@@ -798,21 +856,16 @@ class RecognitionControlService : Service() {
         const val KEY_FOREGROUND_REQUESTED = "KEY_FOREGROUND_REQUESTED"
         const val KEY_AUDIO_CAPTURE_SERVICE_MODE = "KEY_AUDIO_CAPTURE_SERVICE_MODE"
 
-        const val ACTION_LAUNCH_RECOGNITION =
-            "com.mrsep.musicrecognizer.service.action.launch_recognition"
-        const val ACTION_CANCEL_RECOGNITION =
-            "com.mrsep.musicrecognizer.service.action.cancel_recognition"
+        const val ACTION_LAUNCH_RECOGNITION = "com.mrsep.musicrecognizer.service.action.launch_recognition"
+        const val ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.cancel_recognition"
         const val ACTION_HOLD_MODE_ON = "com.mrsep.musicrecognizer.service.action.hold_mode_on"
         const val ACTION_HOLD_MODE_OFF = "com.mrsep.musicrecognizer.service.action.hold_mode_off"
 
-        const val ACTION_BIND_MAIN_SCREEN =
-            "com.mrsep.musicrecognizer.service.action.bind_main_screen"
+        const val ACTION_BIND_MAIN_SCREEN = "com.mrsep.musicrecognizer.service.action.bind_main_screen"
 
         // Actions for local broadcasting
-        private const val LOCAL_ACTION_CANCEL_RECOGNITION =
-            "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
-        private const val LOCAL_ACTION_DISABLE_SERVICE =
-            "com.mrsep.musicrecognizer.service.action.local.disable_service"
+        private const val LOCAL_ACTION_CANCEL_RECOGNITION = "com.mrsep.musicrecognizer.service.action.local.cancel_recognition"
+        private const val LOCAL_ACTION_DISABLE_SERVICE = "com.mrsep.musicrecognizer.service.action.local.disable_service"
 
         private const val NOTIFICATION_ID_STATUS = 1
         private const val NOTIFICATION_ID_RESULT = 2
@@ -828,15 +881,13 @@ class RecognitionControlService : Service() {
         fun createStatusNotificationChannel(context: Context) {
             val name = context.getString(StringsR.string.notification_channel_name_control)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel =
-                NotificationChannel(NOTIFICATION_CHANNEL_ID_STATUS, name, importance).apply {
-                    description =
-                        context.getString(StringsR.string.notification_channel_desc_control)
-                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                    setShowBadge(false)
-                    enableLights(false)
-                    enableVibration(false)
-                }
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID_STATUS, name, importance).apply {
+               description = context.getString(StringsR.string.notification_channel_desc_control)
+               lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+               setShowBadge(false)
+               enableLights(false)
+               enableVibration(false)
+           }
             with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
                 createNotificationChannel(channel)
             }
@@ -845,16 +896,14 @@ class RecognitionControlService : Service() {
         fun createResultNotificationChannel(context: Context) {
             val name = context.getString(StringsR.string.notification_channel_name_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel =
-                NotificationChannel(NOTIFICATION_CHANNEL_ID_RESULT, name, importance).apply {
-                    description =
-                        context.getString(StringsR.string.notification_channel_desc_result)
-                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                    setShowBadge(true)
-                    enableLights(true)
-                    enableVibration(true)
-                    vibrationPattern = longArrayOf(100, 100, 100, 100)
-                }
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID_RESULT, name, importance).apply {
+                description = context.getString(StringsR.string.notification_channel_desc_result)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                setShowBadge(true)
+                enableLights(true)
+                enableVibration(true)
+                vibrationPattern = longArrayOf(100, 100, 100, 100)
+            }
             with(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager) {
                 createNotificationChannel(channel)
             }

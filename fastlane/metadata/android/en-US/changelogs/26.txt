@@ -1,0 +1,4 @@
+* Add Spanish translation (@gallegonovato)
+* Update Portuguese (Brazil), Turkish, French, Czech translations
+* Add information about third-party libraries that the application uses
+* Minor fixes

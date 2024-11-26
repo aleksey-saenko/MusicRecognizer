@@ -13,6 +13,7 @@ import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecogn
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
 import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ScheduledResultNotificationHelper
+import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.downloadImageToDiskCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -71,9 +72,16 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                         Result.retry()
                     }
                 }
-
                 when (result) {
                     is RemoteRecognitionResult.Success -> {
+                        coroutineScope {
+                            listOfNotNull(
+                                result.track.artworkThumbUrl,
+                                result.track.artworkUrl,
+                            ).map { imageUrl ->
+                                async { appContext.downloadImageToDiskCache(imageUrl) }
+                            }.awaitAll()
+                        }
                         val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
                         trackRepository.setViewed(trackWithStoredProps.id, false)
                         val updatedTrack = trackWithStoredProps.copy(

@@ -22,8 +22,10 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.domain.ThemeMode
 import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
@@ -53,6 +55,9 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { keepSplashScreen }
         if (savedInstanceState == null) {
             handleRecognitionRequest(intent)
+        }
+        if (!isServiceStartupHandled) {
+            startControlServiceOnDemand()
         }
         enableEdgeToEdge()
         setContent {
@@ -98,13 +103,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!isServiceStartupHandled) {
-            startControlServiceOnDemand()
-        }
-    }
-
     private fun handleRecognitionRequest(intent: Intent) {
         when (intent.action) {
             ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
@@ -118,19 +116,21 @@ class MainActivity : ComponentActivity() {
     // Start previously started service if it was force killed for some reason
     private fun startControlServiceOnDemand() {
         lifecycleScope.launch {
-            val shouldTurnOnService = viewModel.uiState
-                .filterIsInstance<MainActivityUiState.Success>()
-                .map { it.userPreferences.notificationServiceEnabled }
-                .first()
-            if (shouldTurnOnService) {
-                startService(
-                    Intent(this@MainActivity, RecognitionControlService::class.java).apply {
-                        action = RecognitionControlService.ACTION_HOLD_MODE_ON
-                        putExtra(RecognitionControlService.KEY_RESTRICTED_START, false)
-                    }
-                )
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                val shouldTurnOnService = viewModel.uiState
+                    .filterIsInstance<MainActivityUiState.Success>()
+                    .map { it.userPreferences.notificationServiceEnabled }
+                    .first()
+                if (shouldTurnOnService) {
+                    startService(
+                        Intent(this@MainActivity, RecognitionControlService::class.java).apply {
+                            action = RecognitionControlService.ACTION_HOLD_MODE_ON
+                            putExtra(RecognitionControlService.KEY_RESTRICTED_START, false)
+                        }
+                    )
+                }
+                isServiceStartupHandled = true
             }
-            isServiceStartupHandled = true
         }
     }
 

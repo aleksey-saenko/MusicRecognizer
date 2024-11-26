@@ -60,6 +60,7 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscr
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen.recognitionScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.lyricsScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen.navigateToLyricsScreen
+import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
 
@@ -137,15 +138,20 @@ internal fun AppNavigation(
                 outerNavController.navigateToTrackScreen(trackId = trackId, from = from)
             }
         )
-        trackScreen(
-            isExpandedScreen = isExpandedScreen,
-            onBackPressed = outerNavController::navigateUp,
-            onNavigateToLyricsScreen = { trackId, from ->
-                outerNavController.navigateToLyricsScreen(trackId = trackId, from = from)
-            },
-            onRetryRequested = { setRecognitionRequested(true) }
-        )
-        lyricsScreen(onBackPressed = outerNavController::navigateUp)
+        navigation(
+            route = "nav_graph_track",
+            startDestination = TrackScreen.ROUTE,
+        ) {
+            trackScreen(
+                isExpandedScreen = isExpandedScreen,
+                onBackPressed = outerNavController::navigateUp,
+                onNavigateToLyricsScreen = { trackId, from ->
+                    outerNavController.navigateToLyricsScreen(trackId = trackId, from = from)
+                },
+                onRetryRequested = { setRecognitionRequested(true) }
+            )
+            lyricsScreen(onBackPressed = outerNavController::navigateUp)
+        }
         aboutScreen(
             onBackPressed = outerNavController::navigateUp,
             onNavigateToSoftwareScreen = { from ->

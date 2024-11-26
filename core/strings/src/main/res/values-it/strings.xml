@@ -265,9 +265,10 @@
     <string name="restore_dialog_button_restore">Ripristino</string>
     <string name="about_pref_title_privacy_policy">Politica sulla riservatezza</string>
     <string name="about_pref_title_license">Licenza</string>
-    <string name="about_pref_subtitle_license">Audile è rilasciato sotto licenza GNU GPLv3</string>
+    <string name="about_pref_subtitle_license">Audile è rilasciato sotto licenza GNU GPLv3 o successiva</string>
     <string name="about_pref_subtitle_third_licenses">Licenze delle librerie di terze parti utilizzate da Audile</string>
     <string name="about_pref_title_third_licenses">Licenze di terze parti</string>
     <string name="notification_button_show_lyrics">Mostra testi</string>
     <string name="crash_dialog_comment_prompt">Puoi inserire informazioni aggiuntive qui:</string>
+    <string name="about_pref_title_licenses">Licenze</string>
 </resources>

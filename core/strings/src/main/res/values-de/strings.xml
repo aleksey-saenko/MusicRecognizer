@@ -199,7 +199,7 @@
     <string name="about_pref_subtitle_github_repo">Quellcode, Probleme und andere Informationen</string>
     <string name="about_pref_title_privacy_policy">Datenschutzbestimmungen</string>
     <string name="about_pref_subtitle_privacy_policy">Lerne mehr darüber, wie die App mit deinen Daten umgeht</string>
-    <string name="about_pref_subtitle_license">Audile ist unter GNU GPLv3 lizensiert</string>
+    <string name="about_pref_subtitle_license">Audile ist lizenziert unter der GNU GPLv3 oder neuer</string>
     <string name="about_pref_title_third_licenses">Drittanbieter-Lizenzen</string>
     <string name="notification_button_disable_service">Dienst stoppen</string>
     <string name="notification_button_show_lyrics">Zeige Liedtext</string>
@@ -270,4 +270,5 @@
     <string name="about_pref_subtitle_third_licenses">Lizenzen von Drittanbieter-Bibliotheken, die Audile nutzt</string>
     <string name="crash_dialog_comment_prompt">Du kannst deine Informationen hier hinzufügen:</string>
     <string name="crash_dialog_button_send">Senden</string>
+    <string name="about_pref_title_licenses">Lizenzen</string>
 </resources>

@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="main_screen_tap_to_recognize">Nhấn để nhận diện</string>
+    <string name="main_screen_listening">Đang nghe</string>
+    <string name="main_screen_listening_extra_time">Thử thêm một lần nữa</string>
+    <string name="widget_tap_to_recognize">Nhấn để nhận diện</string>
+    <string name="widget_listening_subtitle">Vui lòng chờ</string>
+    <string name="widget_listening_subtitle_extra_time">Thử thêm một lần nữa</string>
+    <string name="recognition_widget_description">Nhận dạng bài hát bằng một chạm</string>
+    <string name="notification_tap_to_recognize_subtitle">Nhận diện khi bất kỳ ứng dụng nào đang mở</string>
+    <string name="notification_listening">Đang nghe</string>
+    <string name="app_shortcut_recognize_long">Nhận dạng trong nền</string>
+    <string name="widget_listening">Đang nghe</string>
+    <string name="widget_tap_to_try_again">Nhấn để thử lại</string>
+    <string name="notification_tap_to_recognize">Nhấn để nhận diện</string>
+    <string name="action_recognize">Nhận dạng</string>
+    <string name="notification_listening_subtitle_extra_time">Thử thêm một lần nữa</string>
+    <string name="notification_listening_subtitle">Vui lòng chờ</string>
+    <string name="quick_tile_recognize">Nhận dạng bài hát</string>
+    <string name="quick_tile_cancel_recognition">Hủy nhận dạng</string>
+    <string name="action_cancel_recognition">Hủy nhận dạng</string>
+    <string name="app_shortcut_recognize_short">Nhận dạng</string>
+</resources>

@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "generated": "2024-11-20T11:05:28.411Z"
+        "generated": "2024-12-09T19:59:46.61Z"
     },
     "libraries": [
         {
@@ -2122,7 +2122,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.52",
+            "artifactVersion": "2.53.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger",
             "website": "https://github.com/google/dagger",
@@ -2139,7 +2139,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.52",
+            "artifactVersion": "2.53.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger Lint Rules AAR Distribution",
             "website": "https://github.com/google/dagger",
@@ -2156,7 +2156,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.52",
+            "artifactVersion": "2.53.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Android",
             "website": "https://github.com/google/dagger",
@@ -2173,7 +2173,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.52",
+            "artifactVersion": "2.53.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Core",
             "website": "https://github.com/google/dagger",
@@ -2259,7 +2259,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.28.3",
+            "artifactVersion": "4.29.1",
             "description": "Lite version of Protocol Buffers library. This version is optimized for code size, but does\n    not guarantee API/ABI stability.",
             "name": "Protocol Buffers [Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2272,7 +2272,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.28.3",
+            "artifactVersion": "4.29.1",
             "description": "Kotlin lite Protocol Buffers library. Protocol Buffers are a way of encoding structured data in an\n    efficient yet extensible format.",
             "name": "Protocol Buffers [Kotlin-Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2317,7 +2317,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.3.0-rc01",
+            "artifactVersion": "11.3.0-rc02",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Compose Material 3 Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2332,7 +2332,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.3.0-rc01",
+            "artifactVersion": "11.3.0-rc02",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2437,7 +2437,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil",
             "website": "https://github.com/coil-kt/coil",
@@ -2452,7 +2452,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose",
             "website": "https://github.com/coil-kt/coil",
@@ -2467,7 +2467,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose-core",
             "website": "https://github.com/coil-kt/coil",
@@ -2482,7 +2482,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-core",
             "website": "https://github.com/coil-kt/coil",
@@ -2497,7 +2497,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-core",
             "website": "https://github.com/coil-kt/coil",
@@ -2512,7 +2512,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.3",
+            "artifactVersion": "3.0.4",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-okhttp",
             "website": "https://github.com/coil-kt/coil",
@@ -2658,7 +2658,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Android Extensions Runtime",
             "name": "Kotlin Android Extensions Runtime",
             "website": "https://kotlinlang.org/",
@@ -2674,7 +2674,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Runtime library for the Parcelize compiler plugin",
             "name": "Parcelize Runtime",
             "website": "https://kotlinlang.org/",
@@ -2690,7 +2690,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "website": "https://kotlinlang.org/",
@@ -2886,6 +2886,21 @@
             "description": "A set of annotations used for code inspection support and code documentation.",
             "name": "JetBrains Java Annotations",
             "website": "https://github.com/JetBrains/java-annotations",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jspecify:jspecify",
+            "developers": [
+                {
+                    "name": "Kevin Bourrillion"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "An artifact of well-named and well-specified annotations to power static analysis checks",
+            "name": "JSpecify annotations",
+            "website": "http://jspecify.org/",
             "licenses": [
                 "Apache-2.0"
             ]

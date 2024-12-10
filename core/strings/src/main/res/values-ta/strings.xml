@@ -13,11 +13,11 @@
     <string name="pref_title_backup">காப்புப்பிரதி</string>
     <string name="crash_dialog_comment_prompt">கூடுதல் தகவல்களை இங்கே சேர்க்கலாம்:</string>
     <string name="crash_dialog_button_send">அனுப்பு</string>
-    <string name="main_screen_tap_to_recognize">அடையாளம் காண தட்டவும்</string>
+    <string name="main_screen_tap_to_recognize">அடையாளம் காண தட்டு</string>
     <string name="main_screen_listening">கேட்பது</string>
     <string name="main_screen_listening_extra_time">இன்னும் ஒரு முறை முயற்சிக்கிறது</string>
-    <string name="widget_tap_to_recognize">அடையாளம் காண தட்டவும்</string>
-    <string name="widget_tap_to_try_again">மீண்டும் முயற்சிக்க தட்டவும்</string>
+    <string name="widget_tap_to_recognize">அடையாளம் காண தட்டு</string>
+    <string name="widget_tap_to_try_again">மீண்டும் முயற்சிக்க தட்டு</string>
     <string name="widget_listening">கேட்பது</string>
     <string name="widget_listening_subtitle">தயவுசெய்து காத்திருங்கள்</string>
     <string name="widget_listening_subtitle_extra_time">இன்னும் ஒரு முறை முயற்சிக்கிறது</string>

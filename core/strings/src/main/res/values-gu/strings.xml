@@ -48,4 +48,256 @@
     <string name="edit">સંપાદિત કરો</string>
     <string name="clear_text_field">સાફ કરો</string>
     <string name="request_permission">પરવાનગીની વિનંતી કરો</string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="permission_rationale_record_audio"></string>
+    <string name="permission_rationale_post_notifications"></string>
+    <string name="onboarding_welcome_message"></string>
+    <string name="onboarding_token_skip_message"></string>
+    <string name="result_title_no_matches"></string>
+    <string name="result_message_no_matches"></string>
+    <string name="result_message_recognition_saved"></string>
+    <string name="result_title_recognition_saved"></string>
+    <string name="result_message_recognition_scheduled"></string>
+    <string name="result_message_bad_network_response"></string>
+    <string name="format_amount_of_new_tracks"></string>
+    <string name="empty_library_title"></string>
+    <string name="filters"></string>
+    <string name="filter_only_favorites"></string>
+    <string name="filter_descending"></string>
+    <string name="filter_release_date"></string>
+    <string name="library_search_hint"></string>
+    <string name="delete_tracks_title"></string>
+    <string name="filter_order_By"></string>
+    <string name="recognition_status_running"></string>
+    <string name="delete_tracks_message"></string>
+    <string name="format_recognition_created"></string>
+    <string name="recognition_queue"></string>
+    <string name="queue"></string>
+    <string name="format_scheduled_recognition_of"></string>
+    <string name="recognition_status_track_found"></string>
+    <string name="recognition_action_force_launch"></string>
+    <string name="cancel_selected"></string>
+    <string name="select_all"></string>
+    <string name="recording_stop_player"></string>
+    <string name="delete_selected"></string>
+    <string name="delete_recognitions_title"></string>
+    <string name="recording_start_player"></string>
+    <string name="unmark_track_as_favorite"></string>
+    <string name="search_in"></string>
+    <string name="track_info_title_date_of_last_recognition"></string>
+    <string name="lyrics_start_autoscroll"></string>
+    <string name="font_size_huge"></string>
+    <string name="fallback_trigger_bad_connection"></string>
+    <string name="audd_help_dialog_message_empty_token"></string>
+    <string name="acr_cloud_help_dialog_step2"></string>
+    <string name="acr_cloud_help_dialog_message"></string>
+    <string name="pref_group_notifications"></string>
+    <string name="pref_title_notification_service"></string>
+    <string name="acr_cloud_help_dialog_step4"></string>
+    <string name="theme_dialog_message"></string>
+    <string name="theme_mode_dark"></string>
+    <string name="pref_title_show_recognition_date"></string>
+    <string name="pref_title_show_creation_date"></string>
+    <string name="theme_mode"></string>
+    <string name="theme_mode_light"></string>
+    <string name="theme_mode_follow_system"></string>
+    <string name="pref_title_use_grid_layout"></string>
+    <string name="theme_use_dynamic_colors"></string>
+    <string name="theme_use_artwork_colors"></string>
+    <string name="theme_use_pure_black"></string>
+    <string name="pref_title_music_services_links"></string>
+    <string name="pref_subtitle_format_more_services"></string>
+    <string name="music_services_links_dialog"></string>
+    <string name="vibration_feedback_dialog_vibrate_on_tap"></string>
+    <string name="pref_title_experimental_features"></string>
+    <string name="pref_title_backup_and_restore"></string>
+    <string name="about_pref_title_third_licenses"></string>
+    <string name="notification_button_disable_service"></string>
+    <string name="about_pref_subtitle_third_licenses"></string>
+    <string name="crash_dialog_button_cancel"></string>
+    <string name="crash_dialog_message"></string>
+    <string name="crash_dialog_button_send"></string>
+    <string name="crash_dialog_comment_prompt"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="deezer" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="acr_cloud_help_dialog_step3"></string>
+    <string name="onboarding_final_get_started"></string>
+    <string name="audio_capture_mode_auto"></string>
+    <string name="pref_title_fallback_policy"></string>
+    <string name="pref_subtitle_audio_source"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="album"></string>
+    <string name="year"></string>
+    <string name="onboarding_token_message"></string>
+    <string name="about_pref_subtitle_github_repo"></string>
+    <string name="recognition_action_rename"></string>
+    <string name="restore_dialog_title"></string>
+    <string name="pref_title_audio_source"></string>
+    <string name="audio_source_dialog_button_long_press_mode_title"></string>
+    <string name="delete_recognitions_message"></string>
+    <string name="track_metadata"></string>
+    <string name="lyrics_stop_autoscroll"></string>
+    <string name="fallback_trigger_other_failures"></string>
+    <string name="button_retry_recognition"></string>
+    <string name="about_pref_title_github_repo"></string>
+    <string name="audd_help_dialog_message"></string>
+    <string name="about_pref_subtitle_privacy_policy"></string>
+    <string name="pref_title_about_app"></string>
+    <string name="track_not_found_message"></string>
+    <string name="recognition_action_show_track"></string>
+    <string name="share_music_services_links"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="backup_dialog_title"></string>
+    <string name="pref_group_recognition"></string>
+    <string name="audio_source_dialog_default_mode_message"></string>
+    <string name="pref_subtitle_backup_and_restore"></string>
+    <string name="fallback_policy_dialog_message"></string>
+    <string name="about_pref_subtitle_license"></string>
+    <string name="yandex_music" translatable="false"></string>
+    <string name="audio_source_dialog_title"></string>
+    <string name="pref_title_vibration_feedback"></string>
+    <string name="title"></string>
+    <string name="track_not_found_title"></string>
+    <string name="font_size_large"></string>
+    <string name="filter_title"></string>
+    <string name="recognition_provider_dialog_message"></string>
+    <string name="notification_channel_name_control"></string>
+    <string name="pref_subtitle_restore"></string>
+    <string name="fallback_action_ignore"></string>
+    <string name="library"></string>
+    <string name="artwork_share_menu_link"></string>
+    <string name="artwork"></string>
+    <string name="font_size"></string>
+    <string name="result_title_internal_error"></string>
+    <string name="pref_title_recognition_provider"></string>
+    <string name="onboarding_token_validating"></string>
+    <string name="pref_subtitle_backup"></string>
+    <string name="search_for"></string>
+    <string name="format_open_website_or_app"></string>
+    <string name="audio_capture_mode_device"></string>
+    <string name="pref_title_restore"></string>
+    <string name="recognition_provider_dialog_format_auth"></string>
+    <string name="filter_all"></string>
+    <string name="show_lyrics"></string>
+    <string name="result_title_bad_network_response"></string>
+    <string name="result_message_auth_error"></string>
+    <string name="search"></string>
+    <string name="acr_cloud_help_dialog_step1"></string>
+    <string name="popup_offline_mode"></string>
+    <string name="about_purpose_track_links_service"></string>
+    <string name="library_search"></string>
+    <string name="bold_text"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="recognition_action_enqueue"></string>
+    <string name="filter_exclude_favorites"></string>
+    <string name="permissions_denied_open_settings"></string>
+    <string name="result_title_service_usage_limited"></string>
+    <string name="about_pref_title_license"></string>
+    <string name="font_size_normal"></string>
+    <string name="filter_ascending"></string>
+    <string name="pref_subtitle_no_selected_services"></string>
+    <string name="onboarding_final_message"></string>
+    <string name="permission_granted"></string>
+    <string name="show_track"></string>
+    <string name="library_menu_mark_all_tracks_as_viewed"></string>
+    <string name="font_size_small"></string>
+    <string name="pref_title_backup"></string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="crash_dialog_title"></string>
+    <string name="result_title_bad_connection"></string>
+    <string name="fallback_action_save_recording_and_retry"></string>
+    <string name="audio_source_dialog_default_mode_title"></string>
+    <string name="pref_subtitle_notification_service"></string>
+    <string name="permissions_denied_message"></string>
+    <string name="onboarding_permission_message"></string>
+    <string name="result_title_recognition_scheduled"></string>
+    <string name="onboarding_final_title"></string>
+    <string name="track"></string>
+    <string name="web_search"></string>
+    <string name="web"></string>
+    <string name="disable_multi_selection_mode"></string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
+    <string name="audio_capture_mode_microphone"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="recognition_status_idle"></string>
+    <string name="notification_button_show_lyrics"></string>
+    <string name="fallback_action_save_recording"></string>
+    <string name="text_style"></string>
+    <string name="untitled_recognition"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="preferences"></string>
+    <string name="backup_dialog_button_backup"></string>
+    <string name="recognition_status_enqueued"></string>
+    <string name="about_pref_title_privacy_policy"></string>
+    <string name="audius" translatable="false"></string>
+    <string name="result_message_internal_error"></string>
+    <string name="recognition_provider_dialog_title"></string>
+    <string name="onboarding_welcome"></string>
+    <string name="notification_channel_desc_scheduled_result"></string>
+    <string name="acr_cloud_help_dialog_steps_title"></string>
+    <string name="track_info_title_duration"></string>
+    <string name="filter_favorites"></string>
+    <string name="filter_sort_by"></string>
+    <string name="recognition"></string>
+    <string name="artwork_share_menu_image"></string>
+    <string name="result_title_recording_error"></string>
+    <string name="no_tracks_match_search"></string>
+    <string name="audio_source_dialog_button_long_press_mode_message"></string>
+    <string name="result_title_unknown_error"></string>
+    <string name="track_info"></string>
+    <string name="result_message_bad_connection"></string>
+    <string name="filter_artist"></string>
+    <string name="about_pref_group_powered_by"></string>
+    <string name="notification_channel_name_scheduled_result"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="vibration_feedback_dialog_message"></string>
+    <string name="empty_recognition_queue_subtitle"></string>
+    <string name="empty_library_subtitle"></string>
+    <string name="empty_recognition_queue_title"></string>
+    <string name="result_message_recording_error"></string>
+    <string name="artist"></string>
+    <string name="mark_track_as_favorite"></string>
+    <string name="pref_group_misc"></string>
+    <string name="unviewed_track_label"></string>
+    <string name="vibration_feedback_dialog_vibrate_on_result"></string>
+    <string name="lyrics"></string>
+    <string name="fallback_policy_dialog_title"></string>
+    <string name="high_contrast_text"></string>
+    <string name="track_info_title_recognized_at"></string>
+    <string name="about_purpose_recognition_service"></string>
+    <string name="filter_recognition_date"></string>
+    <string name="fallback_trigger_no_matches_found"></string>
+    <string name="track_info_title_recognized_by"></string>
+    <string name="vibration_feedback_dialog_title"></string>
+    <string name="format_recognition_status"></string>
+    <string name="restore_dialog_button_restore"></string>
+    <string name="pref_subtitle_fallback_policy"></string>
+    <string name="align_to_start"></string>
+    <string name="result_title_auth_error"></string>
+    <string name="pref_title_theme"></string>
+    <string name="no_tracks_match_filter"></string>
+    <string name="pref_group_appearance"></string>
+    <string name="pref_title_recognize_on_startup"></string>
+    <string name="result_message_service_usage_limited"></string>
+    <string name="pref_subtitle_experimental_features"></string>
+    <string name="notification_channel_name_result"></string>
+    <string name="notification_channel_desc_result"></string>
+    <string name="notification_channel_desc_control"></string>
+    <string name="about_pref_title_licenses"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
 </resources>

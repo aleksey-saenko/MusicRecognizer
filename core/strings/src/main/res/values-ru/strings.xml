@@ -114,7 +114,7 @@
     <string name="no_tracks_match_filter">Нет треков, соответствующих выбранным фильтрам</string>
     <string name="no_tracks_match_search">Нет треков, соответствующих критериям поиска</string>
     <string name="delete_tracks_title">Удалить треки</string>
-    <string name="delete_tracks_message">Вы уверены, что хотите удалить выбранные треки\? Это действие нельзя отменить.</string>
+    <string name="delete_tracks_message">Вы уверены, что хотите удалить выбранные треки? Это действие нельзя отменить.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">Очередь распознавания</string>
     <string name="queue">Очередь</string>
@@ -139,7 +139,7 @@
     <string name="recording_stop_player">Остановить проигрыватель</string>
     <string name="recording_start_player">Запустить проигрыватель</string>
     <string name="delete_recognitions_title">Удалить распознавания</string>
-    <string name="delete_recognitions_message">Вы уверены, что хотите отменить и удалить выбранные запланированные распознавания\? Это действие нельзя отменить.</string>
+    <string name="delete_recognitions_message">Вы уверены, что хотите отменить и удалить выбранные запланированные распознавания? Это действие нельзя отменить.</string>
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Отметить как избранное</string>
     <string name="unmark_track_as_favorite">Снять отметку избранного</string>
@@ -213,8 +213,8 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud - это платный сервис, который предоставляет возможность бесплатного пробного периода и ограниченное использование в целях разработки. Для использования сервиса, вам необходимо создать аккаунт и зарегистрировать проект. Если у вас возникли какие-либо трудности, пожалуйста, обратитесь к данному <![CDATA[<a href="%1$s">руководству</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Пожалуйста, обратите внимание:</string>
     <string name="acr_cloud_help_dialog_step1">Выберите ближайший к вам географический регион, чтобы минимизировать интернет задержку</string>
-    <string name="acr_cloud_help_dialog_step2">Установите audio source как \"Recorded audio\"</string>
-    <string name="acr_cloud_help_dialog_step3">Установите audio engine на ваш выбор. Опция \"Audio fingerprinting\" обеспечивает наибольшую аккуратность для обычного использования</string>
+    <string name="acr_cloud_help_dialog_step2">Установите audio source как ecorded audio\\</string>
+    <string name="acr_cloud_help_dialog_step3">Установите audio engine на ваш выбор. Опция udio fingerprinting обеспечивает наибольшую аккуратность для обычного использования</string>
     <string name="acr_cloud_help_dialog_step4">Установите все флажки для 3rd party ID integration</string>
     <string name="pref_group_notifications">Уведомления</string>
     <string name="pref_title_notification_service">Сервис уведомлений</string>
@@ -233,7 +233,7 @@
     <string name="theme_use_artwork_colors">Цвета обложки</string>
     <string name="theme_use_pure_black">Черный фон</string>
     <string name="pref_title_music_services_links">Ссылки на музыкальные сервисы</string>
-    <string name="pref_subtitle_format_more_services">"%1$s и ещё %2$d"</string>
+    <string name="pref_subtitle_format_more_services">%1$s и ещё %2$d</string>
     <string name="pref_subtitle_no_selected_services">Не показывать ссылки</string>
     <string name="music_services_links_dialog">Выберите музыкальные сервисы, для которых вы бы хотели видеть веб-ссылки (если они доступны):</string>
     <string name="pref_group_misc">Разное</string>
@@ -275,9 +275,39 @@
     <string name="notification_channel_name_scheduled_result">Результы запланированных распознаваний</string>
     <string name="notification_channel_desc_scheduled_result">Позволяет получать результаты запланированных распознаваний из уведомлений</string>
     <string name="crash_dialog_title">Произошел сбой Audile</string>
-    <string name="crash_dialog_message">Непредвиденная ошибка привела к остановке приложения. Хотите отправить письмо с подробным отчетом, чтобы помочь исправить эту ошибку\?</string>
+    <string name="crash_dialog_message">Непредвиденная ошибка привела к остановке приложения. Хотите отправить письмо с подробным отчетом, чтобы помочь исправить эту ошибку?</string>
     <string name="crash_dialog_comment_prompt">Здесь вы можете добавить дополнительную информацию:</string>
     <string name="crash_dialog_button_send">Отправить</string>
     <string name="crash_dialog_button_cancel">Отмена</string>
     <string name="about_pref_title_licenses">Лицензии</string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="audius" translatable="false"></string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
+    <string name="deezer" translatable="false"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="yandex_music" translatable="false"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="unviewed_track_label"></string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>

@@ -110,7 +110,7 @@
     <string name="no_tracks_match_filter">Nenhuma faixa encontrada com os filtros selecionados</string>
     <string name="no_tracks_match_search">Nenhuma faixa encontrada com as condições de pesquisa</string>
     <string name="delete_tracks_title">Excluir faixas</string>
-    <string name="delete_tracks_message">Tem certeza que deseja excluir as faixas selecionadas\? Este processo não pode ser desfeito.</string>
+    <string name="delete_tracks_message">Tem certeza que deseja excluir as faixas selecionadas? Este processo não pode ser desfeito.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">Fila de reconhecimento</string>
     <string name="queue">Fila</string>
@@ -198,8 +198,8 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e registrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Por favor preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
-    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Audio gravado\"</string>
-    <string name="acr_cloud_help_dialog_step3">Defina o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
+    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como udio gravado\\</string>
+    <string name="acr_cloud_help_dialog_step3">Defina o mecanismo de áudio de sua escolha. A opção mpressão digital do áudio é a mais precisa para uso geral</string>
     <string name="acr_cloud_help_dialog_step4">Assinale todas as caixas para integração de ID de terceiros</string>
     <string name="pref_group_notifications">Notificações</string>
     <string name="pref_title_notification_service">Serviço por notificação</string>
@@ -218,7 +218,7 @@
     <string name="theme_use_artwork_colors">Usar cores da arte</string>
     <string name="theme_use_pure_black">Usar preto puro</string>
     <string name="pref_title_music_services_links">Links de serviços de música</string>
-    <string name="pref_subtitle_format_more_services">"%1$s, e %2$d mais"</string>
+    <string name="pref_subtitle_format_more_services">%1$s, e %2$d mais</string>
     <string name="pref_subtitle_no_selected_services">Nenhum</string>
     <string name="music_services_links_dialog">Escolha os serviços de músicas de quais você quer ver links da web (quando disponível):</string>
     <string name="pref_group_misc">Outras</string>
@@ -288,4 +288,33 @@
     <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado longamente:</string>
     <string name="about_pref_title_licenses">Licenças</string>
+    <string name="deezer" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="yandex_music" translatable="false"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="audius" translatable="false"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
 </resources>

@@ -198,8 +198,8 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud, ücretsiz deneme süresi ve geliştirme amaçlı sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen <![CDATA[<a href="%1$s">bu kılavuza</a>]]> bakın.</string>
     <string name="acr_cloud_help_dialog_steps_title">Lütfen bu adımlara dikkat edin:</string>
     <string name="acr_cloud_help_dialog_step1">İnternet gecikmesini en aza indirmek için size en yakın coğrafi bölgeyi seçin</string>
-    <string name="acr_cloud_help_dialog_step2">Ses kaynağını \"Kaydedilmiş ses\" olarak ayarlayın</string>
-    <string name="acr_cloud_help_dialog_step3">Seçtiğiniz ses motorunu ayarlayın. \"Ses parmak izi\" seçeneği genel kullanım için en doğru olanıdır</string>
+    <string name="acr_cloud_help_dialog_step2">Ses kaynağını aydedilmiş ses olarak ayarlayın</string>
+    <string name="acr_cloud_help_dialog_step3">Seçtiğiniz ses motorunu ayarlayın. es parmak izi seçeneği genel kullanım için en doğru olanıdır</string>
     <string name="acr_cloud_help_dialog_step4">3. taraf ID entegrasyonu için tüm kutuları işaretleyin</string>
     <string name="pref_group_notifications">Bildirimler</string>
     <string name="pref_title_notification_service">Bildirim hizmeti</string>
@@ -218,7 +218,7 @@
     <string name="theme_use_artwork_colors">Kapak resminin renklerini kullan</string>
     <string name="theme_use_pure_black">Saf siyah kullan</string>
     <string name="pref_title_music_services_links">Müzik hizmeti bağlantıları</string>
-    <string name="pref_subtitle_format_more_services">"%1$s, ve %2$d daha fazlası"</string>
+    <string name="pref_subtitle_format_more_services">%1$s, ve %2$d daha fazlası</string>
     <string name="pref_subtitle_no_selected_services">Hiçbiri</string>
     <string name="music_services_links_dialog">Web bağlantılarını görmek istediğiniz müzik hizmetlerini seçin (mevcut ise):</string>
     <string name="pref_title_vibration_feedback">Titreşim geri bildirimi</string>
@@ -279,4 +279,35 @@
     <string name="about_pref_title_third_licenses">Üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_third_licenses">Audile\'nin kullandığı üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="about_pref_subtitle_license"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="audius" translatable="false"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="deezer" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="about_pref_title_licenses"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="yandex_music" translatable="false"></string>
 </resources>

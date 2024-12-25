@@ -100,7 +100,7 @@
     <string name="no_tracks_match_filter">Žádné skladby, které by odpovídaly vybraným filtrům</string>
     <string name="no_tracks_match_search">Žádné skladby odpovídající vašemu vyhledávání</string>
     <string name="delete_tracks_title">Odstranit skladby</string>
-    <string name="delete_tracks_message">Opravdu chcete odstranit vybrané skladby\? Tato akce je nevratná.</string>
+    <string name="delete_tracks_message">Opravdu chcete odstranit vybrané skladby? Tato akce je nevratná.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">Fronta na rozpoznání</string>
     <string name="queue">Fronta</string>
@@ -280,4 +280,33 @@
     <string name="audio_capture_mode_device">Zvuk zařízení</string>
     <string name="audio_capture_mode_auto">Automaticky</string>
     <string name="about_pref_title_licenses">Licence</string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="yandex_music" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="deezer" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="audius" translatable="false"></string>
 </resources>

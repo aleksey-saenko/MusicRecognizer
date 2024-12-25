@@ -87,7 +87,7 @@
     <string name="library">Bibliothèque</string>
     <string name="empty_library_title">Aucune chanson reconnue</string>
     <string name="empty_library_subtitle">Vos chansons récemment reconnues et favorites seront affichées ici</string>
-    <string name="format_amount_of_new_tracks">Nouvelles pistes : %s</string>
+    <string name="format_amount_of_new_tracks">Nouvelles pistes : %s</string>
     <string name="filters">Filtres</string>
     <string name="filter_favorites">Statut favori</string>
     <string name="filter_all">Tout</string>
@@ -114,8 +114,8 @@
     <string name="empty_recognition_queue_subtitle">Sur échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours</string>
     <string name="untitled_recognition">Reconnaissance sans titre</string>
     <string name="format_scheduled_recognition_of">Reconnaissance planifiée de %s</string>
-    <string name="format_recognition_created">Créé : %s</string>
-    <string name="format_recognition_status">Statut : %s</string>
+    <string name="format_recognition_created">Créé : %s</string>
+    <string name="format_recognition_status">Statut : %s</string>
     <string name="recognition_status_idle">Inactif</string>
     <string name="recognition_status_enqueued">En attente</string>
     <string name="recognition_status_running">En cours</string>
@@ -131,7 +131,7 @@
     <string name="recording_start_player">Démarrer</string>
     <string name="recording_stop_player">Arrêter</string>
     <string name="delete_recognitions_title">Supprimer les reconnaissances</string>
-    <string name="delete_recognitions_message">Êtes-vous sûr de vouloir annuler et supprimer les reconnaissances planifiées sélectionnées \? Cette opération est irréversible.</string>
+    <string name="delete_recognitions_message">Êtes-vous sûr de vouloir annuler et supprimer les reconnaissances planifiées sélectionnées ? Cette opération est irréversible.</string>
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Marquer comme favori</string>
     <string name="unmark_track_as_favorite">Désélectionner comme favori</string>
@@ -144,10 +144,10 @@
     <string name="search_in">Rechercher dans</string>
     <string name="format_open_website_or_app">Ouvrir %s</string>
     <string name="track_info">Infos sur le titre</string>
-    <string name="track_info_title_duration">Durée de la piste :</string>
-    <string name="track_info_title_recognized_at">Reconnu à :</string>
-    <string name="track_info_title_recognized_by">Reconnu par :</string>
-    <string name="track_info_title_date_of_last_recognition">Date de la dernière reconnaissance :</string>
+    <string name="track_info_title_duration">Durée de la piste :</string>
+    <string name="track_info_title_recognized_at">Reconnu à :</string>
+    <string name="track_info_title_recognized_by">Reconnu par :</string>
+    <string name="track_info_title_date_of_last_recognition">Date de la dernière reconnaissance :</string>
     <string name="artwork_share_menu_link">Lien</string>
     <string name="artwork_share_menu_image">Image</string>
     <string name="track_metadata">Métadonnées</string>
@@ -177,7 +177,7 @@
     <string name="pref_title_fallback_policy">Solution de secours de la reconnaissance</string>
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
-    <string name="fallback_policy_dialog_message">Définir l\'action de secours par défaut pour chaque type de résultat infructueux :</string>
+    <string name="fallback_policy_dialog_message">Définir l\'action de secours par défaut pour chaque type de résultat infructueux :</string>
     <string name="fallback_action_save_recording_and_retry">Sauvegarder l\'enregistrement et lancer la nouvelle tentative</string>
     <string name="fallback_action_save_recording">Sauvegarder l\'enregistrement</string>
     <string name="fallback_action_ignore">Ignorer</string>
@@ -192,7 +192,7 @@
     <string name="pref_title_show_recognition_date">Afficher la date</string>
     <string name="pref_title_show_creation_date">Afficher la date</string>
     <string name="pref_title_theme">Thème</string>
-    <string name="theme_dialog_message">Sélectionnez un mode thème :</string>
+    <string name="theme_dialog_message">Sélectionnez un mode thème :</string>
     <string name="theme_mode">Mode</string>
     <string name="theme_mode_follow_system">Suivre le système</string>
     <string name="theme_mode_light">Clair</string>
@@ -201,13 +201,13 @@
     <string name="theme_use_artwork_colors">Illustrations couleur</string>
     <string name="theme_use_pure_black">Noir pur</string>
     <string name="pref_title_music_services_links">Liens vers les services musicaux</string>
-    <string name="pref_subtitle_format_more_services">"%1$s, et %2$d de plus"</string>
+    <string name="pref_subtitle_format_more_services">%1$s, et %2$d de plus</string>
     <string name="pref_subtitle_no_selected_services">Aucun</string>
-    <string name="music_services_links_dialog">Choisissez les services musicaux pour lesquels vous souhaiteriez voir des liens web (si disponibles) :</string>
+    <string name="music_services_links_dialog">Choisissez les services musicaux pour lesquels vous souhaiteriez voir des liens web (si disponibles) :</string>
     <string name="pref_group_misc">Divers</string>
     <string name="pref_title_vibration_feedback">Retour par vibration</string>
     <string name="vibration_feedback_dialog_title">Retour par vibration</string>
-    <string name="vibration_feedback_dialog_message">Configurez le retour par vibration pour certaines actions dans l\'application :</string>
+    <string name="vibration_feedback_dialog_message">Configurez le retour par vibration pour certaines actions dans l\'application :</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrer lors d\'une pression</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="pref_title_about_app">À propos</string>
@@ -279,4 +279,34 @@
     <string name="audio_capture_mode_device">Audio de l\'appareil</string>
     <string name="audio_capture_mode_auto">Automatique</string>
     <string name="audd_help_dialog_message">AudD est un service payant qui offre un essai gratuit de 14 jours. Pour utiliser ce service, vous avez besoin de créer un compte et d\'obtenir votre jeton d\'API privé. <![CDATA[<a href="%1$s">Inscrivez-vous</a>]]> si vous n\'en avez pas encore.</string>
+    <string name="apple_music" translatable="false"></string>
+    <string name="musicbrainz" translatable="false"></string>
+    <string name="boomplay" translatable="false"></string>
+    <string name="deezer" translatable="false"></string>
+    <string name="tidal" translatable="false"></string>
+    <string name="soundcloud" translatable="false"></string>
+    <string name="spotify" translatable="false"></string>
+    <string name="anghami" translatable="false"></string>
+    <string name="yandex_music" translatable="false"></string>
+    <string name="api_token" translatable="false"></string>
+    <string name="youtube" translatable="false"></string>
+    <string name="odesli" translatable="false"></string>
+    <string name="audd" translatable="false"></string>
+    <string name="access_secret" translatable="false"></string>
+    <string name="wikipedia" translatable="false"></string>
+    <string name="host" translatable="false"></string>
+    <string name="youtubeMusic" translatable="false"></string>
+    <string name="access_key" translatable="false"></string>
+    <string name="acr_cloud" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="about_pref_title_licenses"></string>
+    <string name="audd_terms_url" translatable="false"></string>
+    <string name="audius" translatable="false"></string>
+    <string name="audd_sign_up_url" translatable="false"></string>
+    <string name="pandora" translatable="false"></string>
+    <string name="acrcloud_project_guide_url" translatable="false"></string>
+    <string name="amazon_music" translatable="false"></string>
+    <string name="format_file_provider_authority" translatable="false"></string>
+    <string name="napster" translatable="false"></string>
+    <string name="audiomack" translatable="false"></string>
 </resources>

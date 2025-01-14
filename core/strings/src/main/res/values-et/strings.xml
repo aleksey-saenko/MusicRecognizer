@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="main_screen_tap_to_recognize">Tuvastamiseks klõpsi</string>
+    <string name="main_screen_listening">Kuulame</string>
+    <string name="widget_tap_to_recognize">Tuvastamiseks klõpsi</string>
+    <string name="notification_tap_to_recognize">Tuvastamiseks klõpsi</string>
+    <string name="widget_tap_to_try_again">Uuesti proovimiseks klõpsi</string>
+    <string name="widget_listening">Kuulame</string>
+    <string name="widget_listening_subtitle_extra_time">Proovime veel ühe korra</string>
+    <string name="recognition_widget_description">Tuvasta laul või lugu ühe klõpsuga</string>
+    <string name="main_screen_listening_extra_time">Proovime veel ühe korra</string>
+    <string name="widget_listening_subtitle">Palun oota</string>
+</resources>

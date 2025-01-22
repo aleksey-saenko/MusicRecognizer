@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "generated": "2024-12-25T12:52:47.812Z"
+        "generated": "2025-01-22T21:10:13.816Z"
     },
     "libraries": [
         {
@@ -10,10 +10,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.10.0",
             "description": "Provides the base Activity subclass and the relevant hooks to build a composable structure on top.",
             "name": "Activity",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.9.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -28,10 +28,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.10.0",
             "description": "Compose integration with Activity",
             "name": "Activity Compose",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.9.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -46,10 +46,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.10.0",
             "description": "Kotlin extensions for 'activity' artifact",
             "name": "Activity Kotlin Extensions",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.9.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -611,7 +611,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2024.12.01",
+            "artifactVersion": "2025.01.00",
             "description": "A compatible set of Jetpack Compose libraries.",
             "name": "Jetpack Compose Libraries BOM",
             "website": "https://developer.android.com/jetpack",
@@ -755,10 +755,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.1.2",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
             "name": "DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -773,10 +773,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.1.2",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
             "name": "DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -791,10 +791,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.1.2",
             "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
             "name": "DataStore Core Okio",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -809,10 +809,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.1.2",
             "description": "Android Preferences DataStore",
             "name": "Preferences DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -827,10 +827,46 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.1.2",
             "description": "Android Preferences DataStore without the Android Dependencies",
             "name": "Preferences DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.datastore:datastore-preferences-external-protobuf",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.2",
+            "description": "Repackaged proto-lite dependency for use by datastore preferences",
+            "name": "Preferences External Protobuf",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "licenses": [
+                "BSD-3-Clause"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.datastore:datastore-preferences-proto",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.2",
+            "description": "Jarjar the generated proto for use by datastore-preferences.",
+            "name": "Preferences DataStore Proto",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -2137,7 +2173,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.54",
+            "artifactVersion": "2.55",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger",
             "website": "https://github.com/google/dagger",
@@ -2154,7 +2190,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.54",
+            "artifactVersion": "2.55",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger Lint Rules AAR Distribution",
             "website": "https://github.com/google/dagger",
@@ -2171,7 +2207,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.54",
+            "artifactVersion": "2.55",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Android",
             "website": "https://github.com/google/dagger",
@@ -2188,7 +2224,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.54",
+            "artifactVersion": "2.55",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Core",
             "website": "https://github.com/google/dagger",
@@ -2274,7 +2310,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.29.2",
+            "artifactVersion": "4.29.3",
             "description": "Lite version of Protocol Buffers library. This version is optimized for code size, but does\n    not guarantee API/ABI stability.",
             "name": "Protocol Buffers [Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2287,7 +2323,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.29.2",
+            "artifactVersion": "4.29.3",
             "description": "Kotlin lite Protocol Buffers library. Protocol Buffers are a way of encoding structured data in an\n    efficient yet extensible format.",
             "name": "Protocol Buffers [Kotlin-Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2332,7 +2368,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.3.0-rc02",
+            "artifactVersion": "11.4.0",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Compose Material 3 Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2347,7 +2383,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.3.0-rc02",
+            "artifactVersion": "11.4.0",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2362,7 +2398,7 @@
                     "name": "Square, Inc."
                 }
             ],
-            "artifactVersion": "1.15.1",
+            "artifactVersion": "1.15.2",
             "description": "A modern JSON API for Android and Java",
             "name": "moshi",
             "website": "https://github.com/square/moshi/",
@@ -2377,7 +2413,7 @@
                     "name": "Square, Inc."
                 }
             ],
-            "artifactVersion": "1.15.1",
+            "artifactVersion": "1.15.2",
             "description": "A modern JSON API for Android and Java",
             "name": "moshi-adapters",
             "website": "https://github.com/square/moshi/",
@@ -2605,13 +2641,13 @@
             }
         },
         {
-            "uniqueId": "net.engawapg.lib:zoomable",
+            "uniqueId": "net.engawapg.lib:zoomable-android",
             "developers": [
                 {
                     "name": "usuiat"
                 }
             ],
-            "artifactVersion": "1.6.2",
+            "artifactVersion": "2.0.0",
             "description": "An android library for Jetpack Compose that enables contents zoomable.",
             "name": "zoomable",
             "website": "https://github.com/usuiat/Zoomable",

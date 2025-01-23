@@ -51,7 +51,6 @@ class OneTimeRecognitionTileService : TileService() {
             addFlags(FLAG_ACTIVITY_NEW_TASK)
             if (isReadyToRecognize) {
                 action = RecognitionControlService.ACTION_LAUNCH_RECOGNITION
-                putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
             } else {
                 action = RecognitionControlService.ACTION_CANCEL_RECOGNITION
             }

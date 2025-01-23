@@ -16,7 +16,6 @@ class AdapterPreferencesRouter @Inject constructor(
         appContext.startService(
             Intent(appContext, RecognitionControlService::class.java)
                 .setAction(RecognitionControlService.ACTION_HOLD_MODE_ON)
-                .putExtra(RecognitionControlService.KEY_RESTRICTED_START, false)
         )
     }
 

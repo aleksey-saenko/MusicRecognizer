@@ -89,7 +89,6 @@ class RecognitionWidget : GlanceAppWidget() {
         val onLaunchRecognition = actionStartActivity(
             intent = Intent(context, RecognitionControlActivity::class.java)
                 .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
-                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
         )
         val onCancelRecognition = actionStartActivity(
             intent = Intent(context, RecognitionControlActivity::class.java)

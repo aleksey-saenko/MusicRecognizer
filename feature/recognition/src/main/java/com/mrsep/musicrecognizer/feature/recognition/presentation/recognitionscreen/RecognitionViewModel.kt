@@ -135,10 +135,9 @@ internal class ScreenRecognitionControllerImpl @Inject constructor(
         .flatMapLatest { binder -> binder.soundLevel }
 
     override fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
-        appContext.startService(
+        appContext.startForegroundService(
             Intent(appContext, RecognitionControlService::class.java)
                 .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
-                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, false)
                 .putExtra(
                     RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE,
                     audioCaptureServiceMode

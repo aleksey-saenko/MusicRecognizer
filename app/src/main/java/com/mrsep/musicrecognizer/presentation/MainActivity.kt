@@ -125,7 +125,6 @@ class MainActivity : ComponentActivity() {
                     startService(
                         Intent(this@MainActivity, RecognitionControlService::class.java).apply {
                             action = RecognitionControlService.ACTION_HOLD_MODE_ON
-                            putExtra(RecognitionControlService.KEY_RESTRICTED_START, false)
                         }
                     )
                 }

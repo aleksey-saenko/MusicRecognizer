@@ -43,7 +43,6 @@ class ServiceStartupReceiver : BroadcastReceiver() {
                     context.startForegroundService(
                         Intent(context, RecognitionControlService::class.java)
                             .setAction(RecognitionControlService.ACTION_HOLD_MODE_ON)
-                            .putExtra(RecognitionControlService.KEY_RESTRICTED_START, true)
                     )
                 }
                 OneTimeRecognitionTileService.requestListeningState(context)

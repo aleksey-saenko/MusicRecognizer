@@ -115,7 +115,6 @@ class RecognitionControlService : Service() {
     private var isHoldModeActive = false
 
     private var mediaProjection: MediaProjection? = null
-    private val isMediaProjectionMode get() = mediaProjection != null
     private val mediaProjectionCallback = object : MediaProjection.Callback() {
         override fun onStop() = cancelRecognitionJob()
     }
@@ -161,12 +160,10 @@ class RecognitionControlService : Service() {
                 }
                 when (audioCaptureServiceMode) {
                     AudioCaptureServiceMode.Microphone -> {
-                        if (intent.getBooleanExtra(KEY_FOREGROUND_REQUESTED, true)) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                continueInForeground(serviceTypesForRecognition(false))
-                            } else {
-                                continueInForeground()
-                            }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            continueInForeground(serviceTypesForRecognition(false))
+                        } else {
+                            continueInForeground()
                         }
                     }
 
@@ -286,12 +283,6 @@ class RecognitionControlService : Service() {
         if (!isActionReceiverRegistered) registerActionReceiver()
     }
 
-    private fun continueInBackground() {
-        unregisterActionReceiver()
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        isStartedForeground = false
-    }
-
     private fun registerActionReceiver() {
         ContextCompat.registerReceiver(
             this,
@@ -354,7 +345,6 @@ class RecognitionControlService : Service() {
         ).apply {
             addFlags(FLAG_ACTIVITY_NEW_TASK)
             action = ACTION_LAUNCH_RECOGNITION
-            putExtra(KEY_FOREGROUND_REQUESTED, true)
         }
         val pendingIntent = PendingIntent.getActivity(
             this@RecognitionControlService,
@@ -545,21 +535,6 @@ class RecognitionControlService : Service() {
 
             soundLevelCurrentFlow.update { recorderController.soundLevel }
 
-            val foregroundStateSwitcher = launch {
-                screenStatusHolder.isStatusObserving.collect { isScreenObserving ->
-                    if (isHoldModeActive || !isScreenObserving) {
-                        if (!isStartedForeground) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                continueInForeground(serviceTypesForRecognition(isMediaProjectionMode))
-                            } else {
-                                continueInForeground()
-                            }
-                        }
-                    } else if (!isMediaProjectionMode) {
-                        if (isStartedForeground) continueInBackground()
-                    }
-                }
-            }
             if (networkMonitor.isOffline.first()) {
                 recognitionInteractor.launchOfflineRecognition(serviceScope, recorderController)
             } else {
@@ -575,15 +550,11 @@ class RecognitionControlService : Service() {
                     is RecognitionStatus.Recognizing -> {
                         // Cancel last result notification if it exists
                         notificationManager.cancel(NOTIFICATION_ID_RESULT)
-
                         screenStatusHolder.updateStatus(status)
                         widgetStatusHolder.updateStatus(status)
                         requestWidgetsUpdate()
                         requestQuickTileUpdate()
-
-                        if (isStartedForeground) {
-                            notifyRecognizing(status.extraTry)
-                        }
+                        notifyRecognizing(status.extraTry)
                     }
 
                     is RecognitionStatus.Done -> {
@@ -614,7 +585,6 @@ class RecognitionControlService : Service() {
                     }
                 }
             }
-            foregroundStateSwitcher.cancelAndJoin()
             manualStopMediaProjection()
             soundLevelCurrentFlow.update { flowOf(0f) }
         }.apply {
@@ -849,11 +819,6 @@ class RecognitionControlService : Service() {
     }
 
     companion object {
-        // See isMicrophoneRestricted
-        const val KEY_RESTRICTED_START = "KEY_RESTRICTED_START"
-
-        // True when launched from background (widget, tile), and false when launched from main activity
-        const val KEY_FOREGROUND_REQUESTED = "KEY_FOREGROUND_REQUESTED"
         const val KEY_AUDIO_CAPTURE_SERVICE_MODE = "KEY_AUDIO_CAPTURE_SERVICE_MODE"
 
         const val ACTION_LAUNCH_RECOGNITION = "com.mrsep.musicrecognizer.service.action.launch_recognition"

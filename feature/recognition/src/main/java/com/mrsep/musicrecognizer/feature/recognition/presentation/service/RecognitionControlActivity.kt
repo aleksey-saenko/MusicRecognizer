@@ -126,7 +126,6 @@ class RecognitionControlActivity : ComponentActivity() {
         startForegroundService(
             Intent(this, RecognitionControlService::class.java)
                 .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
-                .putExtra(RecognitionControlService.KEY_FOREGROUND_REQUESTED, true)
                 .putExtra(RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE, audioCaptureServiceMode)
         )
         finish()

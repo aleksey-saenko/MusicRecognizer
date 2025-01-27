@@ -238,7 +238,7 @@
     <string name="acr_cloud_help_dialog_step1">Sélectionnez la région géographique la plus proche de vous pour réduire la latence du réseau</string>
     <string name="unviewed_track_label">+1</string>
     <string name="lyrics_start_autoscroll">Démarrer le défilement auto</string>
-    <string name="acr_cloud_help_dialog_step2">Définir la source audio comme « Audio enregistré »</string>
+    <string name="acr_cloud_help_dialog_step2">Définir la source audio comme « Audio enregistré »</string>
     <string name="pref_subtitle_backup_and_restore">Sauvegardez votre base de données et vos préférences</string>
     <string name="pref_title_backup">Sauvegarde</string>
     <string name="pref_subtitle_backup">Exportez les données et préférences de l\'appli</string>

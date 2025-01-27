@@ -255,7 +255,7 @@
     <string name="audd_help_dialog_message">AudD je placená služba poskytující možnost bezplatné 14denní zkušební doby. Pro používání této služby si musíte vytvořit účet a získat svůj soukromý klíč API. Pokud účet ještě nemáte, <![CDATA[<a href="%1$s">zaregistrujte se zde</a>]]>.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud je placená služba, která nabízí možnost bezplatného zkušebního období a omezeného použití pro vývojové účely. Chcete-li tuto službu používat, musíte si vytvořit účet a zaregistrovat projekt. Pokud se setkáte s jakýmikoli obtížemi, nahlédněte do <![CDATA[<a href="%1$s">této příručky</a>]]>.</string>
     <string name="acr_cloud_help_dialog_step3">Nastavte preferovaný zvukový engine. Pro obecné použití je nejpřesnější možnost „Audio fingerprinting“</string>
-    <string name="acr_cloud_help_dialog_step2">Nastavte zdroj zvuku na „Recorded audio“</string>
+    <string name="acr_cloud_help_dialog_step2">Nastavte zdroj zvuku na „Nahraný zvuk“</string>
     <string name="pref_subtitle_restore">Obnovit data a předvolby aplikace ze zálohy</string>
     <string name="pref_title_restore">Obnovení</string>
     <string name="about_pref_title_license">Licence</string>

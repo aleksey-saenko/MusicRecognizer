@@ -37,7 +37,12 @@ internal fun FontStyleBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             Spacer(Modifier.height(8.dp))
             Row(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(text = stringResource(StringsR.string.font_size))

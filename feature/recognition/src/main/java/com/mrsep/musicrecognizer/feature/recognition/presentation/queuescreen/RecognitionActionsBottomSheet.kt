@@ -57,72 +57,77 @@ internal fun RecognitionActionsBottomSheet(
         sheetState = sheetState,
         modifier = modifier,
     ) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            AnimatedContent(
-                targetState = recognition.getTitleMessage(),
-                label = "Title",
-                transitionSpec = {
-                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(220, delayMillis = 90)
-                            ))
-                        .togetherWith(
-                            fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(90)
-                            )
+        AnimatedContent(
+            targetState = recognition.getTitleMessage(),
+            label = "Title",
+            transitionSpec = {
+                (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(220, delayMillis = 90)
+                        ))
+                    .togetherWith(
+                        fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(90)
                         )
-                },
-                contentAlignment = Alignment.CenterStart
-            ) { titleMessage ->
-                Text(
-                    text = titleMessage,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            Spacer(Modifier.height(20.dp))
+                    )
+            },
+            contentAlignment = Alignment.CenterStart
+        ) { titleMessage ->
             Text(
-                text = stringResource(
-                    StringsR.string.format_recognition_created,
-                    recognition.creationDateLong
-                ),
-                style = MaterialTheme.typography.bodyMedium,
+                text = titleMessage,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
-            Spacer(Modifier.height(8.dp))
-            AnimatedContent(
-                targetState = recognition.getStatusMessage(false),
-                label = "Status",
-                transitionSpec = {
-                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(220, delayMillis = 90)
-                            ))
-                        .togetherWith(
-                            fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(90)
-                            )
+        }
+        Spacer(Modifier.height(20.dp))
+        Text(
+            text = stringResource(
+                StringsR.string.format_recognition_created,
+                recognition.creationDateLong
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        AnimatedContent(
+            targetState = recognition.getStatusMessage(false),
+            label = "Status",
+            transitionSpec = {
+                (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(220, delayMillis = 90)
+                        ))
+                    .togetherWith(
+                        fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(90)
                         )
-                },
-                contentAlignment = Alignment.CenterStart
-            ) { status ->
-                Text(
-                    text = status,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            Spacer(Modifier.height(12.dp))
+                    )
+            },
+            contentAlignment = Alignment.CenterStart
+        ) { status ->
+            Text(
+                text = status,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             AnimatedContent(
                 targetState = recognition.status,
                 label = "Actions",

@@ -60,7 +60,12 @@ internal fun WebSearchBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             SheetGroup(title = stringResource(StringsR.string.search_in)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),

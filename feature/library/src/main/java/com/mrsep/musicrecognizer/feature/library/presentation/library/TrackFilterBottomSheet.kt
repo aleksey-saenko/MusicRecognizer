@@ -35,7 +35,12 @@ internal fun TrackFilterBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             FilterGroup(title = stringResource(StringsR.string.filter_favorites)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),

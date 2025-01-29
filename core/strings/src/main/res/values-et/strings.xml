@@ -243,4 +243,32 @@
     <string name="notification_channel_desc_scheduled_result">Võimaldab saada ajastatud tuvastamise tulemusi teavitustega</string>
     <string name="notification_channel_name_control">Teavituste haldus</string>
     <string name="notification_channel_desc_control">Võimaldab hallata tuvastamise protsessi teavituste abil</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloud on tasuline teenus, kus on ka tasuta prooviperioodi võimalus ning piiratud kasutatavus arenduse jaoks. Teenuse kasutamiseks pead lisama kasutajakonto ja registreerima oma projekti. Kui sul tekib küsimusi või probleeme, siis <![CDATA[<a href="%1$s">lisateavet leiad siit juhendist</a>]]>.</string>
+    <string name="pref_title_fallback_policy">Varuvariandid tuvastamisel</string>
+    <string name="pref_subtitle_fallback_policy">Kui mõni tuvastamine ei peaks toimima, siis alljärgnevas saad seadistada, mida sel puhul teha</string>
+    <string name="fallback_policy_dialog_title">Varuvariandid</string>
+    <string name="fallback_policy_dialog_message">Vali näidatud olukordadeks toiming, mida peaks tegema, kui tuvastamine ei toimi:</string>
+    <string name="fallback_action_save_recording_and_retry">Talleta salvestus ja proovi uuesti</string>
+    <string name="fallback_action_save_recording">Talleta salvestus</string>
+    <string name="fallback_action_ignore">Eira olukorda</string>
+    <string name="fallback_trigger_bad_connection">Kehv internetiühendus</string>
+    <string name="fallback_trigger_no_matches_found">Tuvastamisel ei leidu vastet</string>
+    <string name="fallback_trigger_other_failures">Muud vead</string>
+    <string name="audd_help_dialog_message">AuD on tauline teenus, mis pakub ka 14-päevast katseperioodi. Teenuse kasutamiseks pead looma kasutajakonto ja saama API tunnusloa. Kui sa pole veel liitunud, siis saad <![CDATA[<a href="%1$s">seda teha siin</a>]]>.</string>
+    <string name="audd_help_dialog_message_empty_token">Teenust saad proovimise mõttes kasutada ka ilma tunnusloata, aga palun arvesta, et sel juhul toimib iga päev vaid mõni tuvastamine.</string>
+    <string name="acr_cloud_help_dialog_steps_title">Palun arvesta nende asjaoludega:</string>
+    <string name="acr_cloud_help_dialog_step1">Internetiühenduse väiksema latentsuse nimel palun vali endale lähim geograafiline piirkond</string>
+    <string name="acr_cloud_help_dialog_step2">Heliallikaks vali „Salvestatud heliklipp“</string>
+    <string name="acr_cloud_help_dialog_step3">Vali tuvastusmootor, mida soovid kasutada. Tüüpiliselt annab „Heli sõrmejälg“ üldise kasutuse puhul parima tulemuse</string>
+    <string name="acr_cloud_help_dialog_step4">Vali kõik kolmandate osapoolte lõimingute märkeruudud</string>
+    <string name="pref_subtitle_no_selected_services">Määramata</string>
+    <string name="music_services_links_dialog">Vali muusikateenused, mille veebilinke sa soovid näha (kui need on saadaval):</string>
+    <string name="pref_group_misc">Varia</string>
+    <string name="pref_title_vibration_feedback">Tagasiside värinana</string>
+    <string name="vibration_feedback_dialog_title">Värinaalarm</string>
+    <string name="vibration_feedback_dialog_message">Seadista värinapõhist tagasisidet mõnede rakendusesiseste tegevuste jaoks:</string>
+    <string name="vibration_feedback_dialog_vibrate_on_tap">Värista puudutamisel</string>
+    <string name="vibration_feedback_dialog_vibrate_on_result">Värista tulemuse laekumisel</string>
+    <string name="pref_title_experimental_features">Katselised funktsionaalsused</string>
+    <string name="pref_subtitle_experimental_features">Need on veel arendusjärgus</string>
 </resources>

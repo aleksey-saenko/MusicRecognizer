@@ -1,0 +1,10 @@
+<b>Audile</b> rakendus muusika tuvastamiseks ning ta aitab kiiresti ning täpselt teada saada, mis lugu on esitamisel sinu lähikonnas.
+Lugude tuvastamisel on kasutusel AudDi ja ACRCloudi teenused ja lugude platvormikohaste linkide leidmiseks Odesli teenus.
+
+<b>Funktsionaalsused:</b>
+
+<b>Tuvastamine</b> - Audile võimaldab sul alustada tuvastamist ühe klõpsuga; võrguühenduse puudumisel salvestis jääb ootele kuni ühendus taastub ning vaikimisi tehakse tuvastus siis automaatselt, aga käitumist selle ja muude veaolukordade puhul (võrguühenduse puudumine, vaste puudumine, muud vead) saad lisaks täpsemalt seadistada eelistustest.
+<b>Kasutus taustal</b> - kasuta rakendust sujuvalt nii süsteemi teavituste vaatest, avalehe vidinast kui kiirseadistuste paanist - nii saad hallata tuvastamist ja lugeda tuvastatud loo teavet ilma rakendust käivitamata.
+<b>Loo teave</b> - peale õnnestunud tuvastamist kuvame loo teabe (pealkiri, esitaja, album, aasta), kaanepildi, laulusõnad (kui on olemas) ning lingid populaarsete muusikateenuste saitidesse.
+<b>Meediakogu</b> - kõik tuvastatud lood salvestuvad rakenduse meediakogus ning sa saad neid seal sirvida, otsida, kustutada ja märkida lemmikuks.
+<b>Eelistused</b> - rakendusel on palju võimalusi kohendada tema toimimist vastavalt kasutaja soovidele.

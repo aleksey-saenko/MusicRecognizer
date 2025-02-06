@@ -180,7 +180,7 @@
     <string name="preferences">Tercihler</string>
     <string name="pref_group_recognition">Tanıma</string>
     <string name="pref_title_recognize_on_startup">Başlangıçta tanı</string>
-    <string name="pref_title_fallback_policy">Yedek politika</string>
+    <string name="pref_title_fallback_policy">Tanıma yedek politika</string>
     <string name="pref_subtitle_fallback_policy">Başarısız tanımalardan sonra yedek eylemleri ayarlayın</string>
     <string name="fallback_policy_dialog_title">Yedek politika</string>
     <string name="fallback_policy_dialog_message">Her başarısız sonuç türü için varsayılan yedek eylemi ayarlayın:</string>
@@ -279,4 +279,5 @@
     <string name="about_pref_title_third_licenses">Üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_third_licenses">Audile\'nin kullandığı üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
+    <string name="about_pref_title_licenses">Lisanslar</string>
 </resources>

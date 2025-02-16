@@ -52,8 +52,8 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
-        // Excluded unfinished translations: "et", "fa", "gl", "gu", "pl", "vi"
-        localeFilters += listOf("en", "cs", "de", "es", "fr", "it", "pt-rBR", "ru", "sk", "tr")
+        // Excluded unfinished translations: "fa", "gl", "gu", "pl", "vi"
+        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "pt-rBR", "ru", "sk", "tr")
     }
     aboutLibraries {
         registerAndroidTasks = false

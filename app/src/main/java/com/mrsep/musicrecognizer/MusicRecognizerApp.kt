@@ -16,8 +16,8 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient

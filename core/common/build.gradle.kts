@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.musicrecognizer.android.library)
-    alias(libs.plugins.musicrecognizer.android.hilt)
+    alias(libs.plugins.musicrecognizer.hilt)
 }
 
 android {

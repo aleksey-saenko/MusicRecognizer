@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.feature.recognition.domain.model
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.recognitionScheme
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.splitter
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionScheme.Companion.step
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionScheme.Companion.recognitionScheme
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionScheme.Companion.splitter
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionScheme.Companion.step
 import org.junit.Assert
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds

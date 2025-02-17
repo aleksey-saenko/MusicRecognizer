@@ -19,8 +19,8 @@ import androidx.glance.layout.ContentScale
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.buttonScaleFactor
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.circleWidgetBorderWidth

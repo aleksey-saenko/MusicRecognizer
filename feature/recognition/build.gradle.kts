@@ -13,6 +13,9 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+    implementation(projects.core.audio)
+
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
 

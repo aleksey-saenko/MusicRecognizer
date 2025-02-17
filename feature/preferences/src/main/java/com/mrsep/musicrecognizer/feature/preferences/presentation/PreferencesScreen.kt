@@ -17,18 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
-import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AcrCloudServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AuddServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.getTitle
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAcrCloudPreferencesState
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAuddPreferencesState
-import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -249,7 +248,7 @@ internal fun PreferencesScreen(
 
 @Stable
 @Composable
-private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
+private fun List<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
     0 -> stringResource(StringsR.string.pref_subtitle_no_selected_services)
     in 1..limit -> {
         map { service -> stringResource(service.titleId()) }.joinToString(", ")

@@ -25,12 +25,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.openWebSearchImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 import kotlinx.coroutines.launch
 import java.util.Locale

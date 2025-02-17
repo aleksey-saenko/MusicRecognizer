@@ -13,16 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
-import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FontStyleBottomSheet(
     sheetState: SheetState,
-    fontStyle: UserPreferences.LyricsFontStyle,
-    onFontStyleChanged: (UserPreferences.LyricsFontStyle) -> Unit,
+    fontStyle: LyricsFontStyle,
+    onFontStyleChanged: (LyricsFontStyle) -> Unit,
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

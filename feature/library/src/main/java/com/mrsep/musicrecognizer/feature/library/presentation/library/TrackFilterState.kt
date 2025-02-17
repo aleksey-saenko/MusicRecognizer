@@ -9,7 +9,10 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.mrsep.musicrecognizer.feature.library.domain.model.*
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
+import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
+import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
+import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 
 @Stable
 internal class TrackFilterState(

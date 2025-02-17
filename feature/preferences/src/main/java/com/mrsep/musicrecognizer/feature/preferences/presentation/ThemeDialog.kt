@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
-import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 

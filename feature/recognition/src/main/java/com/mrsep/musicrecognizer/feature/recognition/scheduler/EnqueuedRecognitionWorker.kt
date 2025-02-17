@@ -4,16 +4,16 @@ import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionServiceFactory
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognition
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ScheduledResultNotificationHelper
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.ext.downloadImageToDiskCache
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.feature.recognition.service.ScheduledResultNotificationHelper
+import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -82,7 +82,9 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                                 async { appContext.downloadImageToDiskCache(imageUrl) }
                             }.awaitAll()
                         }
-                        val trackWithStoredProps = trackRepository.upsertKeepProperties(result.track)
+                        val trackWithStoredProps = trackRepository
+                            .upsertKeepProperties(listOf(result.track))
+                            .first()
                         trackRepository.setViewed(trackWithStoredProps.id, false)
                         val updatedTrack = trackWithStoredProps.copy(
                             properties = trackWithStoredProps.properties.copy(isViewed = false)

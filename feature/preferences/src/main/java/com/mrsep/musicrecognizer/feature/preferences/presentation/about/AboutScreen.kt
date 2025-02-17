@@ -30,9 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionCode
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 

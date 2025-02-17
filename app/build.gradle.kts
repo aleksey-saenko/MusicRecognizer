@@ -5,7 +5,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.musicrecognizer.android.application)
     alias(libs.plugins.musicrecognizer.android.application.compose)
-    alias(libs.plugins.musicrecognizer.android.hilt)
+    alias(libs.plugins.musicrecognizer.hilt)
     alias(libs.plugins.aboutLibraries)
 }
 
@@ -69,7 +69,8 @@ hilt {
 }
 
 dependencies {
-    implementation(projects.data)
+    implementation(projects.core.domain)
+    implementation(projects.core.recognition)
     implementation(projects.core.ui)
     implementation(projects.core.strings)
     implementation(projects.core.common)
@@ -77,6 +78,7 @@ dependencies {
     implementation(projects.feature.track)
     implementation(projects.feature.recognition)
     implementation(projects.feature.preferences)
+    implementation(projects.feature.backup)
     implementation(projects.feature.onboarding)
     implementation(projects.feature.developerMode)
 

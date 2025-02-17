@@ -32,8 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -151,7 +150,7 @@ internal fun RecognitionActionsBottomSheet(
                         when (recognition.result) {
                             is RemoteRecognitionResultUi.Success -> {
                                 BottomSheetAction(
-                                    title = stringResource(R.string.recognition_action_show_track),
+                                    title = stringResource(StringsR.string.recognition_action_show_track),
                                     iconResId = UiR.drawable.outline_audio_file_24,
                                     onClick = {
                                         onNavigateToTrackScreen(recognition.result.track.id)
@@ -181,7 +180,7 @@ internal fun RecognitionActionsBottomSheet(
                     ScheduledJobStatus.ENQUEUED,
                     ScheduledJobStatus.RUNNING -> {
                         BottomSheetAction(
-                            title = stringResource(R.string.action_cancel_recognition),
+                            title = stringResource(StringsR.string.action_cancel_recognition),
                             iconResId = UiR.drawable.outline_cancel_schedule_send_24,
                             onClick = onCancelRecognition
                         )

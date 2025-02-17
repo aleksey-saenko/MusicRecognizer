@@ -17,9 +17,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidationResult
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.ConfigValidationStatus
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -39,9 +39,9 @@ internal fun TokenPage(
 
         is TokenPageUiState.Success -> {
             var isTokenApplied by rememberSaveable { mutableStateOf(false) }
-            LaunchedEffect(uiState.configValidationStatus) {
-                when (uiState.configValidationStatus) {
-                    ConfigValidationStatus.Success -> if (!isTokenApplied) {
+            LaunchedEffect(uiState.configValidationResult) {
+                when (uiState.configValidationResult) {
+                    ConfigValidationResult.Success -> if (!isTokenApplied) {
                         isTokenApplied = true
                         onTokenApplied()
                     }
@@ -83,7 +83,7 @@ internal fun TokenPage(
                 )
 
                 Spacer(Modifier.height(24.dp))
-                val errorMessage = uiState.configValidationStatus.errorMessageOrNull()
+                val errorMessage = uiState.configValidationResult?.errorMessageOrNull()
                 var passwordVisible by rememberSaveable { mutableStateOf(false) }
                 OutlinedTextField(
                     modifier = Modifier
@@ -91,7 +91,7 @@ internal fun TokenPage(
                         .fillMaxWidth(0.95f),
                     value = uiState.token,
                     onValueChange = onTokenChanged,
-                    readOnly = uiState.configValidationStatus is ConfigValidationStatus.Validating,
+                    readOnly = uiState.isValidating,
                     label = { Text(stringResource(StringsR.string.api_token)) },
                     trailingIcon = {
                         val iconPainter = painterResource(
@@ -130,23 +130,21 @@ internal fun TokenPage(
                 Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = onTokenValidate,
-                    enabled = uiState.configValidationStatus.isValidationAllowed,
+                    enabled = !uiState.isValidating,
                     modifier = Modifier.widthIn(min = 240.dp)
                 ) {
-                    when (uiState.configValidationStatus) {
-                        ConfigValidationStatus.Success -> Text(
-                            text = stringResource(StringsR.string.applied)
-                        )
-
-                        ConfigValidationStatus.Validating -> Row(
+                    if (uiState.isValidating) {
+                        Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(text = stringResource(StringsR.string.onboarding_token_validating))
                             VinylRotating(modifier = Modifier.size(20.dp))
                         }
-
-                        else -> Text(text = stringResource(StringsR.string.apply))
+                    } else if (uiState.configValidationResult is ConfigValidationResult.Success) {
+                        Text(text = stringResource(StringsR.string.applied))
+                    } else {
+                        Text(text = stringResource(StringsR.string.apply))
                     }
                 }
             }
@@ -156,13 +154,11 @@ internal fun TokenPage(
 
 @Stable
 @Composable
-private fun ConfigValidationStatus.errorMessageOrNull() = when (this) {
-    ConfigValidationStatus.Error.Empty -> stringResource(StringsR.string.text_field_must_not_be_empty)
-    ConfigValidationStatus.Error.AuthError -> stringResource(StringsR.string.result_title_auth_error)
-    ConfigValidationStatus.Error.ApiUsageLimited -> stringResource(StringsR.string.result_title_service_usage_limited)
-    ConfigValidationStatus.Error.BadConnection -> stringResource(StringsR.string.result_title_bad_connection)
-    ConfigValidationStatus.Error.UnknownError -> stringResource(StringsR.string.result_title_unknown_error)
-    ConfigValidationStatus.Unchecked,
-    ConfigValidationStatus.Validating,
-    ConfigValidationStatus.Success -> null
+private fun ConfigValidationResult.errorMessageOrNull() = when (this) {
+    ConfigValidationResult.Error.Empty -> stringResource(StringsR.string.text_field_must_not_be_empty)
+    ConfigValidationResult.Error.AuthError -> stringResource(StringsR.string.result_title_auth_error)
+    ConfigValidationResult.Error.ApiUsageLimited -> stringResource(StringsR.string.result_title_service_usage_limited)
+    ConfigValidationResult.Error.BadConnection -> stringResource(StringsR.string.result_title_bad_connection)
+    ConfigValidationResult.Error.UnknownError -> stringResource(StringsR.string.result_title_unknown_error)
+    ConfigValidationResult.Success -> null
 }

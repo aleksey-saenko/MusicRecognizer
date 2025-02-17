@@ -1,6 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.di
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.VibrationManager
+import com.mrsep.musicrecognizer.feature.recognition.platform.VibrationManager
 import com.mrsep.musicrecognizer.feature.recognition.platform.VibrationManagerImpl
 import dagger.Binds
 import dagger.Module

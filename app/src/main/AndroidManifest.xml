@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name=".feature.recognition.presentation.service.RecognitionControlActivity"
+            android:name=".feature.recognition.service.RecognitionControlActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:noHistory="true"
@@ -57,7 +57,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <service
-            android:name=".feature.recognition.presentation.service.RecognitionControlService"
+            android:name=".feature.recognition.service.RecognitionControlService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="microphone|mediaProjection|specialUse">
@@ -67,7 +67,7 @@
         </service>
 
         <service
-            android:name=".feature.recognition.presentation.service.OneTimeRecognitionTileService"
+            android:name=".feature.recognition.service.OneTimeRecognitionTileService"
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/ic_retro_microphone"

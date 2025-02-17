@@ -4,10 +4,10 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.onboarding.domain.ConfigValidator
-import com.mrsep.musicrecognizer.feature.onboarding.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.AuddConfig
-import com.mrsep.musicrecognizer.feature.onboarding.domain.model.ConfigValidationStatus
+import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidationResult
+import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,7 +32,8 @@ internal class OnboardingViewModel @Inject constructor(
             _uiState.update {
                 TokenPageUiState.Success(
                     token = initToken,
-                    configValidationStatus = ConfigValidationStatus.Unchecked
+                    isValidating = false,
+                    configValidationResult = null
                 )
             }
         }
@@ -44,7 +45,8 @@ internal class OnboardingViewModel @Inject constructor(
             _uiState.update {
                 TokenPageUiState.Success(
                     token = userToken,
-                    configValidationStatus = ConfigValidationStatus.Error.Empty
+                    isValidating = false,
+                    configValidationResult = ConfigValidationResult.Error.Empty
                 )
             }
             return
@@ -53,18 +55,20 @@ internal class OnboardingViewModel @Inject constructor(
             _uiState.update {
                 TokenPageUiState.Success(
                     token = userToken,
-                    configValidationStatus = ConfigValidationStatus.Validating
+                    isValidating = true,
+                    configValidationResult = null
                 )
             }
             val auddConfig = AuddConfig(userToken)
-            val validationStatus = configValidator.validate(auddConfig)
-            if (validationStatus is ConfigValidationStatus.Success) {
+            val validationResult = configValidator.validate(auddConfig)
+            if (validationResult is ConfigValidationResult.Success) {
                 preferencesRepository.setAuddConfig(auddConfig)
             }
             _uiState.update {
                 TokenPageUiState.Success(
                     token = userToken,
-                    configValidationStatus = validationStatus
+                    isValidating = false,
+                    configValidationResult = validationResult
                 )
             }
         }
@@ -74,7 +78,8 @@ internal class OnboardingViewModel @Inject constructor(
         _uiState.update {
             TokenPageUiState.Success(
                 token = value,
-                configValidationStatus = ConfigValidationStatus.Unchecked
+                isValidating = false,
+                configValidationResult = null
             )
         }
         savedStateHandle[KEY_USER_TOKEN] = value
@@ -94,6 +99,7 @@ internal sealed class TokenPageUiState {
 
     data class Success(
         val token: String,
-        val configValidationStatus: ConfigValidationStatus
+        val isValidating: Boolean,
+        val configValidationResult: ConfigValidationResult?,
     ) : TokenPageUiState()
 }

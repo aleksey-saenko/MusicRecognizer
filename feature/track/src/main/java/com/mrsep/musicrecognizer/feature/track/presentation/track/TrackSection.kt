@@ -18,10 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable

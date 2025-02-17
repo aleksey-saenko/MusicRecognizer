@@ -3,14 +3,14 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerController
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.PlayerController
-import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerStatusUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.toUi
@@ -105,7 +105,7 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun setUseGridLayout(value: Boolean) {
         viewModelScope.launch {
-            preferencesRepository.setUseGridForQueue(value)
+            preferencesRepository.setUseGridForRecognitionQueue(value)
         }
     }
 

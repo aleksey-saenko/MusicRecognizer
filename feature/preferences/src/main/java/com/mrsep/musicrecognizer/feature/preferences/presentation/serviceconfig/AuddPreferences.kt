@@ -12,9 +12,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
 import com.mrsep.musicrecognizer.core.strings.R
 import com.mrsep.musicrecognizer.core.ui.components.PasswordInputField
-import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
 
 @Composable
 internal fun AuddPreferences(

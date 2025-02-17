@@ -4,10 +4,10 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
-import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -36,11 +36,11 @@ internal class LyricsViewModel @Inject constructor(
                     artist = track.artist,
                     lyrics = lyrics,
                     fontStyle = preferences.lyricsFontStyle,
-                    themeSeedColor = track.themeSeedColor,
+                    themeSeedColor = track.properties.themeSeedColor,
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
                     themeMode = preferences.themeMode,
                     usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
-                    isTrackViewed = track.isViewed,
+                    isTrackViewed = track.properties.isViewed,
                     trackDurationMs = track.duration?.toMillis()?.toInt()
                 )
             }
@@ -52,7 +52,7 @@ internal class LyricsViewModel @Inject constructor(
             initialValue = LyricsUiState.Loading
         )
 
-    fun setLyricsFontStyle(newStyle: UserPreferences.LyricsFontStyle) {
+    fun setLyricsFontStyle(newStyle: LyricsFontStyle) {
         viewModelScope.launch {
             preferencesRepository.setLyricsFontStyle(newStyle)
         }
@@ -60,7 +60,7 @@ internal class LyricsViewModel @Inject constructor(
 
     fun setTrackAsViewed(trackId: String) {
         viewModelScope.launch {
-            trackRepository.setAsViewed(trackId)
+            trackRepository.setViewed(trackId, true)
         }
     }
 }
@@ -77,7 +77,7 @@ internal sealed class LyricsUiState {
         val title: String,
         val artist: String,
         val lyrics: String,
-        val fontStyle: UserPreferences.LyricsFontStyle,
+        val fontStyle: LyricsFontStyle,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,

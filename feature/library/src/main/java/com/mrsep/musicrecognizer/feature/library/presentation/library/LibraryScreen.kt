@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

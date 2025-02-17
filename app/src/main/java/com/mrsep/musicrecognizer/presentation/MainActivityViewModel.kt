@@ -2,9 +2,9 @@ package com.mrsep.musicrecognizer.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.domain.TrackRepository
-import com.mrsep.musicrecognizer.domain.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +35,14 @@ class MainActivityViewModel @Inject constructor(
         )
 
     val uiState = preferencesRepository.userPreferencesFlow
-        .map { preferences -> MainActivityUiState.Success(userPreferences = preferences) }
+        .map { preferences -> MainActivityUiState.Success(
+            onboardingCompleted = preferences.onboardingCompleted,
+            recognizeOnStartup = preferences.recognizeOnStartup,
+            notificationServiceEnabled = preferences.notificationServiceEnabled,
+            dynamicColorsEnabled = preferences.dynamicColorsEnabled,
+            themeMode = preferences.themeMode,
+            usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme
+        ) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -56,12 +63,11 @@ class MainActivityViewModel @Inject constructor(
 
     private fun requestRecognition(ignoreStartupPreference: Boolean) {
         viewModelScope.launch {
-            val userPreferences = uiState
+            val state = uiState
                 .filterIsInstance<MainActivityUiState.Success>()
                 .first()
-                .userPreferences
-            val shouldRequest = userPreferences.onboardingCompleted &&
-                    (ignoreStartupPreference || userPreferences.recognizeOnStartup)
+            val shouldRequest = state.onboardingCompleted &&
+                    (ignoreStartupPreference || state.recognizeOnStartup)
             if (shouldRequest) {
                 _recognitionRequested.update { true }
             }
@@ -74,5 +80,12 @@ sealed class MainActivityUiState {
 
     data object Loading : MainActivityUiState()
 
-    data class Success(val userPreferences: UserPreferences) : MainActivityUiState()
+    data class Success(
+        val onboardingCompleted: Boolean,
+        val recognizeOnStartup: Boolean,
+        val notificationServiceEnabled: Boolean,
+        val dynamicColorsEnabled: Boolean,
+        val themeMode: ThemeMode,
+        val usePureBlackForDarkTheme: Boolean,
+    ) : MainActivityUiState()
 }

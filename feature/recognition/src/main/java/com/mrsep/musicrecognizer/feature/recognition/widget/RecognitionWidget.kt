@@ -16,12 +16,12 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.material3.ColorProviders
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlActivity
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.HorizontalLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout
@@ -66,24 +66,23 @@ class RecognitionWidget : GlanceAppWidget() {
         /* Glance can't round image corners prior to API 31
          * so we must do it on-demand based on the required image size */
         fun widgetUiFlow(widgetLayout: RecognitionWidgetLayout) = statusFlow.mapLatest { status ->
-            WidgetUiState(
-                status = status,
-                artwork = if (widgetLayout.showArtwork &&
-                    status is RecognitionStatus.Done &&
-                    status.result is RecognitionResult.Success
-                ) {
-                    status.result.track.artworkUrl?.let { artworkUrl ->
-                        context.getWidgetArtworkOrNull(
-                            url = artworkUrl,
-                            widthPx = widgetLayout.artworkSizePx,
-                            heightPx = widgetLayout.artworkSizePx,
-                            artworkStyle = widgetLayout.artworkStyle
-                        )
+            val artwork = when (status) {
+                is RecognitionStatus.Done -> when (val result = status.result) {
+                    is RecognitionResult.Success -> result.track.artworkUrl
+                        ?.takeIf { widgetLayout.showArtwork }
+                        ?.let { artworkUrl ->
+                            context.getWidgetArtworkOrNull(
+                                url = artworkUrl,
+                                widthPx = widgetLayout.artworkSizePx,
+                                heightPx = widgetLayout.artworkSizePx,
+                                artworkStyle = widgetLayout.artworkStyle
+                            )
                     }
-                } else {
-                    null
+                    else -> null
                 }
-            )
+                else -> null
+            }
+            WidgetUiState(status = status, artwork = artwork)
         }.flowOn(Dispatchers.Default)
 
         val onLaunchRecognition = actionStartActivity(
@@ -108,9 +107,9 @@ class RecognitionWidget : GlanceAppWidget() {
 
                 is RecognitionStatus.Recognizing -> onCancelRecognition
 
-                is RecognitionStatus.Done -> when (state.result) {
+                is RecognitionStatus.Done -> when (val result = state.result) {
                     is RecognitionResult.Success -> actionStartActivity(
-                        intent = router.getDeepLinkIntentToTrack(state.result.track.id)
+                        intent = router.getDeepLinkIntentToTrack(result.track.id)
                     )
 
                     is RecognitionResult.NoMatches -> onLaunchRecognition

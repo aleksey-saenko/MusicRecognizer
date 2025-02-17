@@ -32,11 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.R
-import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun AuddServiceDialog(
@@ -187,7 +187,7 @@ internal fun AuthenticationRow(
         Text(text = stringResource(StringsR.string.recognition_provider_dialog_format_auth, serviceName))
         IconButton(onClick = onHelpClick) {
             Icon(
-                painter = painterResource(R.drawable.outline_help_24),
+                painter = painterResource(UiR.drawable.outline_help_24),
                 contentDescription = stringResource(StringsR.string.help),
             )
         }

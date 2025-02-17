@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
-import com.mrsep.musicrecognizer.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.OneTimeRecognitionTileService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.feature.recognition.service.OneTimeRecognitionTileService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first

@@ -28,9 +28,9 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.R
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.squareWidgetBorderWidth
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTextSize
@@ -62,7 +62,7 @@ internal fun SquareLayoutContent(
                 .padding(squareWidgetBorderWidth),
             contentAlignment = Alignment.Center,
         ) {
-            when (uiState.status) {
+            when (val status = uiState.status) {
                 RecognitionStatus.Ready,
                 is RecognitionStatus.Recognizing,
                 -> ButtonWithStatus(
@@ -73,7 +73,7 @@ internal fun SquareLayoutContent(
                 )
 
                 is RecognitionStatus.Done -> {
-                    when (uiState.status.result) {
+                    when (val result = status.result) {
                         is RecognitionResult.Error,
                         is RecognitionResult.NoMatches,
                         is RecognitionResult.ScheduledOffline,
@@ -120,8 +120,8 @@ internal fun SquareLayoutContent(
                             }
 
                             TrackInfoWithButton(
-                                title = uiState.status.result.track.title,
-                                artist = uiState.status.result.track.artist,
+                                title = result.track.title,
+                                artist = result.track.artist,
                                 onLaunchRecognition = onLaunchRecognition,
                             )
                         }

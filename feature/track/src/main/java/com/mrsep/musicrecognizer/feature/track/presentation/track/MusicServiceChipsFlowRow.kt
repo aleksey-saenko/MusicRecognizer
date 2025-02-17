@@ -30,12 +30,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.components.VinylRotating
 import com.mrsep.musicrecognizer.core.ui.modifiers.animatePlacement
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
-import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR

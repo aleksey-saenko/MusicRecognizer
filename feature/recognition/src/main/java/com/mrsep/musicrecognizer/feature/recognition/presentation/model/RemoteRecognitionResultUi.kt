@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.model
 
 import androidx.compose.runtime.Immutable
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 
 @Immutable
 internal sealed class RemoteRecognitionResultUi {

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
-import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate

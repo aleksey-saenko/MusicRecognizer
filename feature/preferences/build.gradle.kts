@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
     implementation(libs.aboutLibraries.core)

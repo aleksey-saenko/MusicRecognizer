@@ -1,0 +1,123 @@
+package com.mrsep.musicrecognizer.core.data.preferences
+
+import com.mrsep.musicrecognizer.core.datastore.AudioCaptureModeProto
+import com.mrsep.musicrecognizer.core.datastore.MusicServiceProto
+import com.mrsep.musicrecognizer.core.datastore.RecognitionProviderProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.FallbackActionProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.FavoritesModeProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.FontSizeProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.OrderByProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.SortByProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.ThemeModeProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.fallbackPolicyProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.hapticFeedbackProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.lyricsFontStyleProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.trackFilterProto
+import com.mrsep.musicrecognizer.core.datastore.acrCloudConfigProto
+import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackAction
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
+import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
+import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
+import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
+
+internal fun RecognitionProvider.toProto() = when (this) {
+    RecognitionProvider.Audd -> RecognitionProviderProto.Audd
+    RecognitionProvider.AcrCloud -> RecognitionProviderProto.AcrCloud
+}
+
+internal fun AcrCloudConfig.toProto() = acrCloudConfigProto {
+    host = this@toProto.host
+    accessKey = this@toProto.accessKey
+    accessSecret = this@toProto.accessSecret
+}
+
+internal fun AudioCaptureMode.toProto() = when (this) {
+    AudioCaptureMode.Microphone -> AudioCaptureModeProto.Microphone
+    AudioCaptureMode.Device -> AudioCaptureModeProto.Device
+    AudioCaptureMode.Auto -> AudioCaptureModeProto.Auto
+}
+
+internal fun FallbackAction.toProto() = when (this) {
+    FallbackAction.Ignore -> FallbackActionProto.IGNORE
+    FallbackAction.Save -> FallbackActionProto.SAVE
+    FallbackAction.SaveAndLaunch -> FallbackActionProto.SAVE_AND_LAUNCH
+}
+
+internal fun FallbackPolicy.toProto() = fallbackPolicyProto {
+    noMatches = this@toProto.noMatches.toProto()
+    badConnection = this@toProto.badConnection.toProto()
+    anotherFailure = this@toProto.anotherFailure.toProto()
+}
+
+internal fun MusicService.toProto() = when (this) {
+    MusicService.AmazonMusic -> MusicServiceProto.AmazonMusic
+    MusicService.Anghami -> MusicServiceProto.Anghami
+    MusicService.AppleMusic -> MusicServiceProto.AppleMusic
+    MusicService.Audiomack -> MusicServiceProto.Audiomack
+    MusicService.Audius -> MusicServiceProto.Audius
+    MusicService.Boomplay -> MusicServiceProto.Boomplay
+    MusicService.Deezer -> MusicServiceProto.Deezer
+    MusicService.MusicBrainz -> MusicServiceProto.MusicBrainz
+    MusicService.Napster -> MusicServiceProto.Napster
+    MusicService.Pandora -> MusicServiceProto.Pandora
+    MusicService.Soundcloud -> MusicServiceProto.Soundcloud
+    MusicService.Spotify -> MusicServiceProto.Spotify
+    MusicService.Tidal -> MusicServiceProto.Tidal
+    MusicService.YandexMusic -> MusicServiceProto.YandexMusic
+    MusicService.Youtube -> MusicServiceProto.Youtube
+    MusicService.YoutubeMusic -> MusicServiceProto.YoutubeMusic
+}
+
+internal fun LyricsFontStyle.toProto() = lyricsFontStyleProto {
+    fontSize = this@toProto.fontSize.toProto()
+    isBold = this@toProto.isBold
+    isHighContrast = this@toProto.isHighContrast
+    alignToStart = this@toProto.alignToStart
+}
+
+internal fun FontSize.toProto() = when (this) {
+    FontSize.Small -> FontSizeProto.SMALL
+    FontSize.Normal -> FontSizeProto.NORMAL
+    FontSize.Large -> FontSizeProto.LARGE
+    FontSize.Huge -> FontSizeProto.HUGE
+}
+
+internal fun ThemeMode.toProto() = when (this) {
+    ThemeMode.FollowSystem -> ThemeModeProto.FOLLOW_SYSTEM
+    ThemeMode.AlwaysLight -> ThemeModeProto.ALWAYS_LIGHT
+    ThemeMode.AlwaysDark -> ThemeModeProto.ALWAYS_DARK
+}
+
+internal fun TrackFilter.toProto() = trackFilterProto {
+    favoritesMode = when (this@toProto.favoritesMode) {
+        FavoritesMode.All -> FavoritesModeProto.ALL
+        FavoritesMode.OnlyFavorites -> FavoritesModeProto.ONLY_FAVORITES
+        FavoritesMode.ExcludeFavorites -> FavoritesModeProto.EXCLUDE_FAVORITES
+    }
+    sortBy = when (this@toProto.sortBy) {
+        SortBy.RecognitionDate -> SortByProto.RECOGNITION_DATE
+        SortBy.Title -> SortByProto.TITLE
+        SortBy.Artist -> SortByProto.ARTIST
+        SortBy.ReleaseDate -> SortByProto.RELEASE_DATE
+    }
+    orderBy = when (this@toProto.orderBy) {
+        OrderBy.Asc -> OrderByProto.ASC
+        OrderBy.Desc -> OrderByProto.DESC
+    }
+    startDate = this@toProto.dateRange.first
+    endDate = this@toProto.dateRange.last
+}
+
+internal fun HapticFeedback.toProto() = hapticFeedbackProto {
+    vibrateOnTap = this@toProto.vibrateOnTap
+    vibrateOnResult = this@toProto.vibrateOnResult
+}

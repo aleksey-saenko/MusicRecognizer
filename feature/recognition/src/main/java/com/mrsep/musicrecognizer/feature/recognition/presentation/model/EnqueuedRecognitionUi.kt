@@ -2,8 +2,8 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.model
 
 import androidx.compose.runtime.Immutable
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

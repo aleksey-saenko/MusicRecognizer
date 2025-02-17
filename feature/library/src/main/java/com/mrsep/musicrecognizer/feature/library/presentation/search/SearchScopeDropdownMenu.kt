@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import kotlinx.collections.immutable.ImmutableSet
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR

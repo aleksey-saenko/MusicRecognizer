@@ -64,9 +64,13 @@ gradlePlugin {
             id = "musicrecognizer.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
-        register("androidHilt") {
-            id = "musicrecognizer.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+        register("hilt") {
+            id = "musicrecognizer.hilt"
+            implementationClass = "HiltConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "musicrecognizer.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
         }
     }
 }

@@ -26,24 +26,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
+import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.recognition.BuildConfig
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.AudioCaptureMode
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ApiUsageLimitedShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.NoMatchesShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ScheduledOfflineShield
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.AudioCaptureServiceMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.createScreenCaptureIntentForDisplay
+import com.mrsep.musicrecognizer.feature.recognition.service.AudioCaptureServiceMode
+import com.mrsep.musicrecognizer.feature.recognition.service.createScreenCaptureIntentForDisplay
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -232,10 +232,10 @@ internal fun RecognitionScreen(
             label = "shieldTransition"
         ) { thisStatus ->
             when (thisStatus) {
-                is RecognitionStatus.Done -> when (thisStatus.result) {
-                    is RecognitionResult.Error -> when (thisStatus.result.remoteError) {
+                is RecognitionStatus.Done -> when (val result = thisStatus.result) {
+                    is RecognitionResult.Error -> when (val remoteError = result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> BadConnectionShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
@@ -247,8 +247,8 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
                             title = stringResource(StringsR.string.result_title_recording_error),
                             message = stringResource(StringsR.string.result_message_recording_error),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
@@ -260,8 +260,8 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
                             title = stringResource(StringsR.string.result_title_bad_network_response),
                             message = stringResource(StringsR.string.result_message_bad_network_response),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
@@ -273,8 +273,8 @@ internal fun RecognitionScreen(
                         is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
                             title = stringResource(StringsR.string.result_title_internal_error),
                             message = stringResource(StringsR.string.result_message_internal_error),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
@@ -284,7 +284,7 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.AuthError -> AuthErrorShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
@@ -297,7 +297,7 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.ApiUsageLimited -> ApiUsageLimitedShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
@@ -311,7 +311,7 @@ internal fun RecognitionScreen(
                     }
 
                     is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
-                        recognitionTask = thisStatus.result.recognitionTask,
+                        recognitionTask = result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
                         onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
@@ -320,7 +320,7 @@ internal fun RecognitionScreen(
                     )
 
                     is RecognitionResult.NoMatches -> NoMatchesShield(
-                        recognitionTask = thisStatus.result.recognitionTask,
+                        recognitionTask = result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
                         onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                         onNavigateToQueue = { recognitionId ->
@@ -330,11 +330,11 @@ internal fun RecognitionScreen(
                     )
 
                     is RecognitionResult.Success -> {
-                        LaunchedEffect(thisStatus.result) {
+                        LaunchedEffect(result) {
                             delay(animationDurationButton.toLong())
-                            onNavigateToTrackScreen(thisStatus.result.track.id)
+                            onNavigateToTrackScreen(result.track.id)
                         }
-                        DisposableEffect(thisStatus.result) {
+                        DisposableEffect(result) {
                             onDispose(viewModel::resetRecognitionResult)
                         }
                     }

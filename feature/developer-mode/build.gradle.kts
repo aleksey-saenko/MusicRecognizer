@@ -8,5 +8,4 @@ android {
 }
 
 dependencies {
-    implementation(projects.data)
 }

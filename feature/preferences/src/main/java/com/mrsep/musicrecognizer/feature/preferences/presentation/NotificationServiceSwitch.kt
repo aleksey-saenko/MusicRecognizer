@@ -16,7 +16,7 @@ import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlocke
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalPermissionsApi::class)

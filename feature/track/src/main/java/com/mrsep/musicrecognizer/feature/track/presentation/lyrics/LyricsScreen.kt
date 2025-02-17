@@ -58,11 +58,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.track.domain.model.FontSize
-import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
-import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackNotFoundMessage
 import com.mrsep.musicrecognizer.feature.track.presentation.track.shouldUseDarkTheme
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
@@ -338,7 +338,7 @@ private fun getFontSize(zoomValue: Float) = when (zoomValue) {
 }
 
 @Composable
-private fun UserPreferences.LyricsFontStyle.toTextStyle(themeMode: ThemeMode): TextStyle {
+private fun LyricsFontStyle.toTextStyle(themeMode: ThemeMode): TextStyle {
     return when (fontSize) {
         FontSize.Small -> MaterialTheme.typography.bodyMedium
         FontSize.Normal -> MaterialTheme.typography.bodyLarge

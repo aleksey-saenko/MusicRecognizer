@@ -85,11 +85,13 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektPlugin" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detektCompose" }
+hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-collectionImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionImmutable" }
@@ -137,3 +139,5 @@ musicrecognizer-android-library = { id = "musicrecognizer.android.library", vers
 musicrecognizer-android-library-compose = { id = "musicrecognizer.android.library.compose", version = "unspecified" }
 musicrecognizer-android-feature = { id = "musicrecognizer.android.feature", version = "unspecified" }
 musicrecognizer-android-hilt = { id = "musicrecognizer.android.hilt", version = "unspecified" }
+musicrecognizer-hilt = { id = "musicrecognizer.hilt", version = "unspecified" }
+musicrecognizer-jvm-library = { id = "musicrecognizer.jvm.library", version = "unspecified" }

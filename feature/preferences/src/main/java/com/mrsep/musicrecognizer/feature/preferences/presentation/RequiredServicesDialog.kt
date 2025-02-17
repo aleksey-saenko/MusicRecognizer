@@ -13,15 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import kotlinx.collections.immutable.ImmutableList
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import kotlin.random.Random
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun RequiredServicesDialog(
     modifier: Modifier = Modifier,
-    requiredServices: ImmutableList<MusicService>,
+    requiredServices: List<MusicService>,
     onRequiredServicesChanged: (List<MusicService>) -> Unit,
     onDismissClick: () -> Unit
 ) {

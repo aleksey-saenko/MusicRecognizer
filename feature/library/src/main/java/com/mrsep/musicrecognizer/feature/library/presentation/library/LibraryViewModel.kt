@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
-import com.mrsep.musicrecognizer.feature.library.domain.repository.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.library.domain.repository.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.feature.library.presentation.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +42,7 @@ internal class LibraryViewModel @Inject constructor(
                 )
             )
         } else {
-            trackRepository.getTracksByFilterFlow(preferences.trackFilter)
+            trackRepository.getPreviewsByFilterFlow(preferences.trackFilter)
                 .map { trackList ->
                     LibraryUiState.Success(
                         trackList = trackList

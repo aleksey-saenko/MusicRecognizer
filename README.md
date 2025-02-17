@@ -29,7 +29,7 @@ F-Droid releases cannot be upgraded to other releases as they are compiled and s
 ## Tech
 
 Audile is written in Kotlin and runs on Android 8.0 or higher.  
-App architecture inspired by clean arch practices. The application is modularized with a feature-based approach.  
+App architecture inspired by clean arch practices.  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
 The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
 Stack: Kotlin, Coroutines, Jetpack Compose, Glance, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.
@@ -51,7 +51,7 @@ Feel free to correct any errors or suggest better translation options for the cu
 ## License
 
 ```
-Copyright (C) 2023-2024 Aleksey Saenko
+Copyright (C) 2023-2025 Aleksey Saenko
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

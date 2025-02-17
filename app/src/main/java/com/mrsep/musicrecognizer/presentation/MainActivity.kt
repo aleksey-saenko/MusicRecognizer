@@ -26,13 +26,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -119,8 +118,7 @@ class MainActivity : ComponentActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 val shouldTurnOnService = viewModel.uiState
                     .filterIsInstance<MainActivityUiState.Success>()
-                    .map { it.userPreferences.notificationServiceEnabled }
-                    .first()
+                    .first().notificationServiceEnabled
                 if (shouldTurnOnService) {
                     startService(
                         Intent(this@MainActivity, RecognitionControlService::class.java).apply {
@@ -154,7 +152,7 @@ class MainActivity : ComponentActivity() {
 private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
-        is MainActivityUiState.Success -> uiState.userPreferences.dynamicColorsEnabled
+        is MainActivityUiState.Success -> uiState.dynamicColorsEnabled
     }
 }
 
@@ -162,7 +160,7 @@ private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
 private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean? {
     return when (uiState) {
         MainActivityUiState.Loading -> null
-        is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
+        is MainActivityUiState.Success -> uiState.onboardingCompleted
     }
 }
 
@@ -183,7 +181,7 @@ private fun shouldUseDarkTheme(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
     MainActivityUiState.Loading -> isSystemInDarkTheme()
-    is MainActivityUiState.Success -> when (uiState.userPreferences.themeMode) {
+    is MainActivityUiState.Success -> when (uiState.themeMode) {
         ThemeMode.FollowSystem -> isSystemInDarkTheme()
         ThemeMode.AlwaysLight -> false
         ThemeMode.AlwaysDark -> true
@@ -195,5 +193,5 @@ private fun shouldUsePureBlack(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
     MainActivityUiState.Loading -> false
-    is MainActivityUiState.Success -> uiState.userPreferences.usePureBlackForDarkTheme
+    is MainActivityUiState.Success -> uiState.usePureBlackForDarkTheme
 }

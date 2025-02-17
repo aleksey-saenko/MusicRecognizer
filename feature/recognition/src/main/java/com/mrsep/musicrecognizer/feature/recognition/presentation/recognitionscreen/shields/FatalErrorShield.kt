@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 

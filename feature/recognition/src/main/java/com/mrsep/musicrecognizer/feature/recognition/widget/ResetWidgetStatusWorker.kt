@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -30,9 +30,10 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
         if (statusSnapshot !is RecognitionStatus.Done) return@coroutineScope Result.success()
 
         select {
-            if (statusSnapshot.result is RecognitionResult.Success) {
+            val result = statusSnapshot.result
+            if (result is RecognitionResult.Success) {
                 launch {
-                    trackRepository.getTrackFlow(statusSnapshot.result.track.id)
+                    trackRepository.getTrackFlow(result.track.id)
                         .map { track -> track?.properties?.isViewed ?: true }
                         .first { isViewed -> isViewed }
                     RecognitionControlService.cancelResultNotification(appContext)

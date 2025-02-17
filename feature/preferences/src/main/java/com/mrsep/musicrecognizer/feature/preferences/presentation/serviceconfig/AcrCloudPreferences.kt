@@ -27,8 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
 import com.mrsep.musicrecognizer.core.ui.components.PasswordInputField
-import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR

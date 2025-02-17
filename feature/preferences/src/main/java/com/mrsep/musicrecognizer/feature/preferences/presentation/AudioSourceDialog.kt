@@ -26,7 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.preferences.domain.AudioCaptureMode
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR

@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun HapticFeedbackDialog(
-    hapticFeedback: UserPreferences.HapticFeedback,
-    onHapticFeedbackChanged: (UserPreferences.HapticFeedback) -> Unit,
+    hapticFeedback: HapticFeedback,
+    onHapticFeedbackChanged: (HapticFeedback) -> Unit,
     onDismissClick: () -> Unit,
 ) {
     AlertDialog(

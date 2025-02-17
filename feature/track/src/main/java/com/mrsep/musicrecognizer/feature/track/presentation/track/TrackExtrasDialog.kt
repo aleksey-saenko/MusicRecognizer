@@ -15,7 +15,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.track.domain.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable

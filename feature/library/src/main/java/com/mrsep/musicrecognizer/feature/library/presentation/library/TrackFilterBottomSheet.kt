@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.library.domain.model.FavoritesMode
-import com.mrsep.musicrecognizer.feature.library.domain.model.OrderBy
-import com.mrsep.musicrecognizer.feature.library.domain.model.SortBy
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
+import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
+import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

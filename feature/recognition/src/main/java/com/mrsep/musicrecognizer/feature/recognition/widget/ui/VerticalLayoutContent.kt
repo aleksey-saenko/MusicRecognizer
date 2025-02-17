@@ -12,8 +12,8 @@ import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.buttonHorizontalPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.dividerHorizontalPadding
@@ -42,17 +42,24 @@ internal fun VerticalLayoutContent(
                 .padding(widgetPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (uiState.status is RecognitionStatus.Done
-                && uiState.status.result is RecognitionResult.Success) {
-                TrackInfoVertical(
-                    track = uiState.status.result.track,
-                    artwork = uiState.artwork,
-                    layout = layout
-                )
-            } else {
-                StatusInfo(
-                    title = context.getWidgetTitleForStatus(uiState.status),
-                    subtitle = context.getWidgetSubtitleForStatus(uiState.status)
+            when (val status = uiState.status) {
+                is RecognitionStatus.Done -> when (val result = status.result) {
+                    is RecognitionResult.Success -> TrackInfoVertical(
+                        track = result.track,
+                        artwork = uiState.artwork,
+                        layout = layout
+                    )
+                    is RecognitionResult.Error,
+                    is RecognitionResult.NoMatches,
+                    is RecognitionResult.ScheduledOffline -> StatusInfo(
+                        title = context.getWidgetTitleForStatus(status),
+                        subtitle = context.getWidgetSubtitleForStatus(status)
+                    )
+                }
+                RecognitionStatus.Ready,
+                is RecognitionStatus.Recognizing -> StatusInfo(
+                    title = context.getWidgetTitleForStatus(status),
+                    subtitle = context.getWidgetSubtitleForStatus(status)
                 )
             }
             Spacer(GlanceModifier.width(dividerHorizontalPadding))

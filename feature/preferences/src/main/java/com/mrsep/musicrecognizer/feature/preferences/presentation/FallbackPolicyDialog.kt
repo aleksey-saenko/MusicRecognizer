@@ -25,16 +25,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackAction
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun FallbackPolicyDialog(
-    fallbackPolicy: UserPreferences.FallbackPolicy,
-    onFallbackPolicyChanged: (UserPreferences.FallbackPolicy) -> Unit,
+    fallbackPolicy: FallbackPolicy,
+    onFallbackPolicyChanged: (FallbackPolicy) -> Unit,
     onDismissClick: () -> Unit,
 ) {
     AlertDialog(

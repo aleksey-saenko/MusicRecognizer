@@ -8,8 +8,6 @@ import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataEnha
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
-import com.mrsep.musicrecognizer.feature.recognition.service.ScheduledResultNotificationHelper
-import com.mrsep.musicrecognizer.feature.recognition.service.ScheduledResultNotificationHelperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,11 +34,7 @@ internal interface RecognitionModule {
             EnqueuedRecognitionScheduler
 
     @Binds
+    @Singleton
     fun bindTrackMetadataEnhancerScheduler(impl: TrackMetadataEnhancerSchedulerImpl):
             TrackMetadataEnhancerScheduler
-
-    @Binds
-    @Singleton
-    fun bindScheduledResultNotificationHelper(impl: ScheduledResultNotificationHelperImpl):
-            ScheduledResultNotificationHelper
 }

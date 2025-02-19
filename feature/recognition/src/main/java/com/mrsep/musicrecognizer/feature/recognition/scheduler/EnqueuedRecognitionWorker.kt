@@ -12,7 +12,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecogniti
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.service.ScheduledResultNotificationHelper
+import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -30,7 +30,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
-    private val scheduledResultNotificationHelper: ScheduledResultNotificationHelper,
+    private val resultNotificationHelper: ResultNotificationHelper,
     private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -96,7 +96,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                         )
                         enqueuedRecognitionRepository.update(updatedEnqueued)
                         trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
-                        scheduledResultNotificationHelper.notify(updatedEnqueued)
+                        resultNotificationHelper.notifyResult(updatedEnqueued)
                         Result.success()
                     }
 

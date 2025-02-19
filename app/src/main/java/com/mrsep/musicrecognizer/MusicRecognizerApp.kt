@@ -1,10 +1,12 @@
 package com.mrsep.musicrecognizer
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -18,6 +20,7 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
@@ -42,6 +45,15 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var notifier: ResultNotificationHelper
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.ERROR)
+            .build()
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         if (ACRA.isACRASenderServiceProcess()) return
@@ -51,8 +63,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     override fun onCreate() {
         super.onCreate()
         if (ACRA.isACRASenderServiceProcess()) return
-        RecognitionControlService.createStatusNotificationChannel(this)
-        RecognitionControlService.createResultNotificationChannel(this)
+        createNotificationChannels()
         ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
     }
 
@@ -71,11 +82,14 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
             .build()
     }
 
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.ERROR)
-            .build()
+    private fun createNotificationChannels() {
+        val notificationChannels = listOf(
+            RecognitionControlService.getChannelForRecognitionStatuses(this),
+            ResultNotificationHelper.getChannelForRecognitionResults(this),
+            ResultNotificationHelper.getChannelForEnqueuedRecognitionResults(this),
+        )
+        getSystemService<NotificationManager>()?.createNotificationChannels(notificationChannels)
+    }
 
     private fun getShortcuts() = listOf(
         recognitionShortcut(),

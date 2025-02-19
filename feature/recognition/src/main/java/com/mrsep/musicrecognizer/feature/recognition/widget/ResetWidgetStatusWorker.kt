@@ -9,7 +9,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -23,6 +23,7 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     @WidgetStatusHolder private val statusHolder: RecognitionStatusHolder,
     private val trackRepository: TrackRepository,
+    private val notificationHelper: ResultNotificationHelper,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -36,7 +37,7 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
                     trackRepository.getTrackFlow(result.track.id)
                         .map { track -> track?.properties?.isViewed ?: true }
                         .first { isViewed -> isViewed }
-                    RecognitionControlService.cancelResultNotification(appContext)
+                    notificationHelper.cancelResultNotification()
                 }.onJoin { }
             }
             launch { delay(RESULT_RESET_DELAY_MILLIS) }.onJoin { }

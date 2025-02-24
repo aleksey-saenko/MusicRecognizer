@@ -3,8 +3,8 @@ sdkCompile = "35"
 sdkMin = "26"
 sdkTarget = "34"
 
-aboutLibraries = "11.5.0"
-accompanist = "0.37.0"
+aboutLibraries = "11.6.3"
+accompanist = "0.37.2"
 acra = "5.12.0"
 androidGradlePlugin = "8.8.1"
 androidTools = "31.8.1"
@@ -23,7 +23,7 @@ androidxWork = "2.10.0"
 auto-service = "1.1.1"
 auto-service-ksp = "1.2.0"
 coil = "3.1.0"
-detektPlugin = "1.23.7"
+detektPlugin = "1.23.8"
 detektCompose = "0.4.22"
 hilt = "2.55"
 hiltExt = "1.2.0"
@@ -43,7 +43,7 @@ protobufPlugin = "0.9.4"
 room = "2.6.1"
 turbine = "1.2.0"
 uuidCreator = "6.0.0"
-zoomable = "2.0.0"
+zoomable = "2.1.0"
 
 [libraries]
 aboutLibraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutLibraries" }
@@ -138,6 +138,5 @@ musicrecognizer-android-application-compose = { id = "musicrecognizer.android.ap
 musicrecognizer-android-library = { id = "musicrecognizer.android.library", version = "unspecified" }
 musicrecognizer-android-library-compose = { id = "musicrecognizer.android.library.compose", version = "unspecified" }
 musicrecognizer-android-feature = { id = "musicrecognizer.android.feature", version = "unspecified" }
-musicrecognizer-android-hilt = { id = "musicrecognizer.android.hilt", version = "unspecified" }
 musicrecognizer-hilt = { id = "musicrecognizer.hilt", version = "unspecified" }
 musicrecognizer-jvm-library = { id = "musicrecognizer.jvm.library", version = "unspecified" }

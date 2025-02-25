@@ -3,7 +3,6 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionsc
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
-import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.ViewModel
@@ -114,9 +113,7 @@ internal class ScreenRecognitionControllerImpl @Inject constructor(
             }
         }
         appContext.bindService(
-            Intent(appContext, RecognitionControlService::class.java).apply {
-                action = RecognitionControlService.ACTION_BIND_MAIN_SCREEN
-            },
+            RecognitionControlService.bindMainScreenIntent(appContext),
             serviceConnection,
             BIND_AUTO_CREATE
         )
@@ -137,20 +134,10 @@ internal class ScreenRecognitionControllerImpl @Inject constructor(
         .flatMapLatest { binder -> binder.soundLevel }
 
     override fun launchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
-        appContext.startForegroundService(
-            Intent(appContext, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
-                .putExtra(
-                    RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE,
-                    audioCaptureServiceMode
-                )
-        )
+        RecognitionControlService.startRecognition(appContext, audioCaptureServiceMode)
     }
 
     override fun cancelRecognition() {
-        appContext.startService(
-            Intent(appContext, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
-        )
+        RecognitionControlService.cancelRecognition(appContext)
     }
 }

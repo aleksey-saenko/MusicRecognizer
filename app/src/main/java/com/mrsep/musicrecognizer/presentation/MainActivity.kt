@@ -120,10 +120,9 @@ class MainActivity : ComponentActivity() {
                     .filterIsInstance<MainActivityUiState.Success>()
                     .first().notificationServiceEnabled
                 if (shouldTurnOnService) {
-                    startService(
-                        Intent(this@MainActivity, RecognitionControlService::class.java).apply {
-                            action = RecognitionControlService.ACTION_HOLD_MODE_ON
-                        }
+                    RecognitionControlService.startHoldMode(
+                        this@MainActivity.applicationContext,
+                        false
                     )
                 }
                 isServiceStartupHandled = true

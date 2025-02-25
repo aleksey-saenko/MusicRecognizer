@@ -58,17 +58,11 @@
 
         <service
             android:name=".feature.recognition.service.RecognitionControlService"
-            android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="microphone|mediaProjection|specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Used when the service keeps an ongoing control notification awaiting a new recognition request" />
-        </service>
+            android:foregroundServiceType="microphone|mediaProjection" />
 
         <service
             android:name=".feature.recognition.service.OneTimeRecognitionTileService"
-            android:enabled="true"
             android:exported="true"
             android:icon="@drawable/ic_retro_microphone"
             android:label="@string/quick_tile_recognize"
@@ -86,8 +80,11 @@
         </service>
 
         <receiver
-            android:name=".ServiceStartupReceiver"
-            android:enabled="true"
+            android:name=".feature.recognition.service.DisableRecognitionControlServiceReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".feature.recognition.service.ServiceStartupReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

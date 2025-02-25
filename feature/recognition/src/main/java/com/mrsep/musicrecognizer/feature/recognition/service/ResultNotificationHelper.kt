@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.service
 
 import android.Manifest.permission
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,7 +9,6 @@ import android.app.Service
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.graphics.Bitmap
 import android.os.Build
@@ -45,7 +43,7 @@ class ResultNotificationHelper @Inject constructor(
     }
 
     suspend fun notifyResult(result: RecognitionResult) {
-        if (isPostNotificationPermissionDenied()) return
+        if (appContext.isPostNotificationPermissionDenied()) return
         val notificationBuilder = when (result) {
             is RecognitionResult.Error -> {
                 val (errorTitle, errorMessage) = when (result.remoteError) {
@@ -134,7 +132,9 @@ class ResultNotificationHelper @Inject constructor(
                             .setBigContentTitle(title)
                             .bigText(bigText)
                     )
-                    .addRecognizeContentIntent()
+                    .setContentIntent(
+                        RecognitionControlActivity.startRecognitionWithPermissionRequestPendingIntent(appContext)
+                    )
             }
 
             is RecognitionResult.Success -> {
@@ -155,7 +155,7 @@ class ResultNotificationHelper @Inject constructor(
     }
 
     suspend fun notifyResult(enqueuedRecognition: EnqueuedRecognition) {
-        if (isPostNotificationPermissionDenied()) return
+        if (appContext.isPostNotificationPermissionDenied()) return
         val track = when (val result = enqueuedRecognition.result) {
             is RemoteRecognitionResult.Success -> result.track
             else -> return
@@ -192,33 +192,14 @@ class ResultNotificationHelper @Inject constructor(
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 
-    private fun createPendingIntent(intent: Intent): PendingIntent {
+    private fun createPendingIntentForDeeplink(intent: Intent): PendingIntent {
         return TaskStackBuilder.create(appContext).run {
             addNextIntentWithParentStack(intent)
-            // FLAG_UPDATE_CURRENT to update trackId key on each result
             getPendingIntent(
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
-    }
-
-    @SuppressLint("LaunchActivityFromNotification")
-    private fun NotificationCompat.Builder.addRecognizeContentIntent(): NotificationCompat.Builder {
-        val intent = Intent(
-            appContext,
-            RecognitionControlActivity::class.java
-        ).apply {
-            addFlags(FLAG_ACTIVITY_NEW_TASK)
-            action = RecognitionControlService.ACTION_LAUNCH_RECOGNITION
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            appContext,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        return setContentIntent(pendingIntent)
     }
 
     private suspend fun NotificationCompat.Builder.setExpandedStyleWithTrack(
@@ -261,7 +242,7 @@ class ResultNotificationHelper @Inject constructor(
         trackId: String,
     ): NotificationCompat.Builder {
         val deepLinkIntent = deeplinkRouter.getDeepLinkIntentToTrack(trackId)
-        val pendingIntent = createPendingIntent(deepLinkIntent)
+        val pendingIntent = createPendingIntentForDeeplink(deepLinkIntent)
         return setContentIntent(pendingIntent)
     }
 
@@ -271,7 +252,7 @@ class ResultNotificationHelper @Inject constructor(
         return when (recognitionTask) {
             is RecognitionTask.Created -> {
                 val deepLinkIntent = deeplinkRouter.getDeepLinkIntentToQueue()
-                val pendingIntent = createPendingIntent(deepLinkIntent)
+                val pendingIntent = createPendingIntentForDeeplink(deepLinkIntent)
                 setContentIntent(pendingIntent)
             }
 
@@ -286,7 +267,7 @@ class ResultNotificationHelper @Inject constructor(
     ): NotificationCompat.Builder {
         if (track.lyrics == null) return this
         val deepLinkIntent = deeplinkRouter.getDeepLinkIntentToLyrics(track.id)
-        val pendingIntent = createPendingIntent(deepLinkIntent)
+        val pendingIntent = createPendingIntentForDeeplink(deepLinkIntent)
         return addAction(
             android.R.drawable.ic_menu_more,
             appContext.getString(StringsR.string.notification_button_show_lyrics),
@@ -336,14 +317,6 @@ class ResultNotificationHelper @Inject constructor(
         RecognitionTask.Ignored -> null
     }
 
-    private fun isPostNotificationPermissionDenied(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            checkSelfPermission(appContext, permission.POST_NOTIFICATIONS) == PERMISSION_DENIED
-        } else {
-            false
-        }
-    }
-
     private fun Track.artistWithAlbumFormatted(): String {
         val albumAndYear = album?.let { alb ->
             releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
@@ -390,5 +363,13 @@ class ResultNotificationHelper @Inject constructor(
                 vibrationPattern = longArrayOf(100, 100, 100, 100)
             }
         }
+    }
+}
+
+internal fun Context.isPostNotificationPermissionDenied(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        checkSelfPermission(this, permission.POST_NOTIFICATIONS) == PERMISSION_DENIED
+    } else {
+        false
     }
 }

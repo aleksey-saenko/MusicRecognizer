@@ -19,8 +19,8 @@ import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
-import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
+import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
@@ -64,7 +64,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
         super.onCreate()
         if (ACRA.isACRASenderServiceProcess()) return
         createNotificationChannels()
-        ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
+        createShortcuts()
     }
 
     override fun newImageLoader(context: Context): ImageLoader {
@@ -83,12 +83,17 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     }
 
     private fun createNotificationChannels() {
-        val notificationChannels = listOf(
-            RecognitionControlService.getChannelForRecognitionStatuses(this),
-            ResultNotificationHelper.getChannelForRecognitionResults(this),
-            ResultNotificationHelper.getChannelForEnqueuedRecognitionResults(this),
+        getSystemService<NotificationManager>()?.createNotificationChannels(
+            listOf(
+                ServiceNotificationHelper.getChannelForRecognitionStatuses(this),
+                ResultNotificationHelper.getChannelForRecognitionResults(this),
+                ResultNotificationHelper.getChannelForEnqueuedRecognitionResults(this),
+            )
         )
-        getSystemService<NotificationManager>()?.createNotificationChannels(notificationChannels)
+    }
+
+    private fun createShortcuts() {
+        ShortcutManagerCompat.setDynamicShortcuts(this, getShortcuts())
     }
 
     private fun getShortcuts() = listOf(
@@ -115,7 +120,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
             .setLongLabel(getString(StringsR.string.app_shortcut_recognize_long))
             .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
             .setIntent(
-                Intent(RecognitionControlService.ACTION_LAUNCH_RECOGNITION, Uri.EMPTY, this, RecognitionControlActivity::class.java)
+                RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(this)
             )
             .build()
     }

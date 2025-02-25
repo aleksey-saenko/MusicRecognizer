@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.widget
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -86,13 +85,9 @@ class RecognitionWidget : GlanceAppWidget() {
         }.flowOn(Dispatchers.Default)
 
         val onLaunchRecognition = actionStartActivity(
-            intent = Intent(context, RecognitionControlActivity::class.java)
-                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
+            RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context)
         )
-        val onCancelRecognition = actionStartActivity(
-            intent = Intent(context, RecognitionControlActivity::class.java)
-                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
-        )
+        val onCancelRecognition = actionRunCallback<CancelRecognition>()
 
         provideContent {
             val widgetLayout = RecognitionWidgetLayout.fromLocalSize()
@@ -161,6 +156,17 @@ class RecognitionWidget : GlanceAppWidget() {
                 }
             }
         }
+    }
+}
+
+internal class CancelRecognition : ActionCallback {
+
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        RecognitionControlService.cancelRecognition(context)
     }
 }
 

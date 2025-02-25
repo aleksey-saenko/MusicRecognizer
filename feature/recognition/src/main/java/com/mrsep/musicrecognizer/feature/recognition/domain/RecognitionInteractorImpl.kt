@@ -68,6 +68,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     }
 
     private var recognitionJob: Job? = null
+    private val isRecognitionJobCompleted get() = recognitionJob?.isCompleted ?: true
 
     override fun launchRecognition(scope: CoroutineScope, recordingController: AudioRecordingController) {
         launchRecognitionIfPreviousCompleted(scope) {
@@ -193,7 +194,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     }
 
     override suspend fun cancelAndJoin() {
-        if (recognitionJob?.isCompleted == true) {
+        if (isRecognitionJobCompleted) {
             _status.update { RecognitionStatus.Ready }
         } else {
             recognitionJob?.cancelAndJoin()
@@ -210,7 +211,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
         scope: CoroutineScope,
         block: suspend CoroutineScope.() -> Unit
     ) {
-        if (recognitionJob == null || recognitionJob?.isCompleted == true) {
+        if (isRecognitionJobCompleted) {
             recognitionJob = scope.launch(block = block).setCancellationHandler()
         }
     }

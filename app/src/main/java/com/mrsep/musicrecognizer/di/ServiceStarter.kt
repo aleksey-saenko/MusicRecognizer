@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.di
 
 import android.content.Context
-import android.content.Intent
 import com.mrsep.musicrecognizer.feature.preferences.RecognitionServiceStarter
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -12,16 +11,10 @@ class ServiceStarter @Inject constructor(
 ) : RecognitionServiceStarter {
 
     override fun startServiceHoldMode() {
-        appContext.startService(
-            Intent(appContext, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_HOLD_MODE_ON)
-        )
+        RecognitionControlService.startHoldMode(appContext, false)
     }
 
     override fun stopServiceHoldMode() {
-        appContext.startService(
-            Intent(appContext, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_HOLD_MODE_OFF)
-        )
+        RecognitionControlService.stopHoldMode(appContext)
     }
 }

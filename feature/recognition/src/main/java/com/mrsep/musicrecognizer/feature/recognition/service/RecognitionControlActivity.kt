@@ -2,7 +2,10 @@ package com.mrsep.musicrecognizer.feature.recognition.service
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
@@ -79,7 +82,7 @@ class RecognitionControlActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             when (intent.action) {
-                RecognitionControlService.ACTION_LAUNCH_RECOGNITION -> {
+                ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST -> {
                     requestedAudioCaptureMode = preferencesRepository
                         .userPreferencesFlow.first()
                         .defaultAudioCaptureMode
@@ -97,13 +100,7 @@ class RecognitionControlActivity : ComponentActivity() {
                     }
                 }
 
-                RecognitionControlService.ACTION_CANCEL_RECOGNITION -> {
-                    onCancelRecognition()
-                }
-
-                else -> {
-                    finish()
-                }
+                else -> error("Unknown intent action")
             }
         }
     }
@@ -123,19 +120,7 @@ class RecognitionControlActivity : ComponentActivity() {
     }
 
     private fun onLaunchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
-        startForegroundService(
-            Intent(this, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_LAUNCH_RECOGNITION)
-                .putExtra(RecognitionControlService.KEY_AUDIO_CAPTURE_SERVICE_MODE, audioCaptureServiceMode)
-        )
-        finish()
-    }
-
-    private fun onCancelRecognition() {
-        startService(
-            Intent(this, RecognitionControlService::class.java)
-                .setAction(RecognitionControlService.ACTION_CANCEL_RECOGNITION)
-        )
+        RecognitionControlService.startRecognition(this.applicationContext, audioCaptureServiceMode)
         finish()
     }
 
@@ -193,7 +178,7 @@ class RecognitionControlActivity : ComponentActivity() {
         val appSettingsIntent = Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
             Uri.fromParts("package", packageName, null)
-        ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        ).setFlags(FLAG_ACTIVITY_NEW_TASK)
         val dialogBuilder = AlertDialog.Builder(this, getPermissionDialogTheme())
             .setTitle(StringsR.string.permissions)
             .setMessage(
@@ -229,12 +214,31 @@ class RecognitionControlActivity : ComponentActivity() {
             .create()
             .show()
     }
+
+    companion object {
+        private const val ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST = "com.mrsep.musicrecognizer.control_activity.action.launch_recognition_permissions"
+
+        fun startRecognitionWithPermissionRequestIntent(context: Context): Intent {
+            return Intent(context, RecognitionControlActivity::class.java)
+                .setAction(ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST)
+                .addFlags(FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        fun startRecognitionWithPermissionRequestPendingIntent(context: Context): PendingIntent {
+            return PendingIntent.getActivity(
+                context,
+                0,
+                startRecognitionWithPermissionRequestIntent(context),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+    }
 }
 
 internal fun MediaProjectionManager.createScreenCaptureIntentForDisplay(): Intent {
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        createScreenCaptureIntent()
-    } else {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         createScreenCaptureIntent(MediaProjectionConfig.createConfigForDefaultDisplay())
+    } else {
+        createScreenCaptureIntent()
     }
 }

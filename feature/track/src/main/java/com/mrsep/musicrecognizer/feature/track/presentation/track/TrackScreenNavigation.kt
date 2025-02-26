@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.content.Intent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
@@ -54,6 +55,7 @@ object TrackScreen {
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                    action = Intent.ACTION_VIEW
                 }
             ),
             popExitTransition = {

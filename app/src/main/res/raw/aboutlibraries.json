@@ -7,10 +7,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "description": "Provides the base Activity subclass and the relevant hooks to build a composable structure on top.",
             "name": "Activity",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.1",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -25,10 +25,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "description": "Compose integration with Activity",
             "name": "Activity Compose",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.1",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -43,10 +43,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "description": "Kotlin extensions for 'activity' artifact",
             "name": "Activity Kotlin Extensions",
-            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/activity#1.10.1",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -716,6 +716,24 @@
             ]
         },
         {
+            "uniqueId": "androidx.core:core-viewtree",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "Provides ViewTree extensions packaged for use by other core androidx libraries",
+            "name": "androidx.core:core-viewtree",
+            "website": "https://developer.android.com/jetpack/androidx/releases/core#1.0.0",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
             "uniqueId": "androidx.customview:customview",
             "developers": [
                 {
@@ -752,10 +770,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
             "name": "DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -770,10 +788,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
             "name": "DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -788,10 +806,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
             "name": "DataStore Core Okio",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -806,10 +824,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Android Preferences DataStore",
             "name": "Preferences DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -824,10 +842,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Android Preferences DataStore without the Android Dependencies",
             "name": "Preferences DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -842,10 +860,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Repackaged proto-lite dependency for use by datastore preferences",
             "name": "Preferences External Protobuf",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "BSD-3-Clause"
             ],
@@ -860,10 +878,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.2",
+            "artifactVersion": "1.1.3",
             "description": "Jarjar the generated proto for use by datastore-preferences.",
             "name": "Preferences DataStore Proto",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.2",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1448,10 +1466,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.7",
+            "artifactVersion": "2.8.8",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
-            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.7",
+            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.8",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1466,10 +1484,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.7",
+            "artifactVersion": "2.8.8",
             "description": "Android Navigation-Common-Ktx",
             "name": "Navigation Common Kotlin Extensions",
-            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.7",
+            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.8",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1484,10 +1502,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.7",
+            "artifactVersion": "2.8.8",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
-            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.7",
+            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.8",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1502,10 +1520,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.7",
+            "artifactVersion": "2.8.8",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
-            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.7",
+            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.8",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1520,10 +1538,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.7",
+            "artifactVersion": "2.8.8",
             "description": "Android Navigation-Runtime-Ktx",
             "name": "Navigation Runtime Kotlin Extensions",
-            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.7",
+            "website": "https://developer.android.com/jetpack/androidx/releases/navigation#2.8.8",
             "licenses": [
                 "Apache-2.0"
             ],

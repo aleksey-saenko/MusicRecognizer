@@ -55,9 +55,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) {
             handleRecognitionRequest(intent)
         }
-        if (!isServiceStartupHandled) {
-            startControlServiceOnDemand()
-        }
+        startControlServiceOnDemand()
         enableEdgeToEdge()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -112,10 +110,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Start previously started service if it was force killed for some reason
+    // Start previously started foreground service if the app was force killed for some reason
     private fun startControlServiceOnDemand() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                if (isServiceStartupHandled) return@repeatOnLifecycle
                 val shouldTurnOnService = viewModel.uiState
                     .filterIsInstance<MainActivityUiState.Success>()
                     .first().notificationServiceEnabled

@@ -29,6 +29,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -40,6 +41,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 /* Work in progress */
 internal class AppBackupManagerImpl @Inject constructor(
@@ -126,10 +128,11 @@ internal class AppBackupManagerImpl @Inject constructor(
         }
     }
 
-    private fun exportRecordings(zipOutputStream: ZipOutputStream) {
+    private suspend fun exportRecordings(zipOutputStream: ZipOutputStream) {
         val recordings = recordingFileDataSource.getFiles()
         with(zipOutputStream) {
             for (recording in recordings) {
+                coroutineContext.ensureActive()
                 putNextEntry(ZipEntry("$RECORDINGS_DIR_ZIP_ENTRY${recording.name}"))
                 recording.inputStream().buffered().use { input ->
                     input.copyTo(this)
@@ -235,6 +238,7 @@ internal class AppBackupManagerImpl @Inject constructor(
                 currentEntry = zipInputStream.nextEntry
                 var appDataDeleted = false
                 while (currentEntry != null) {
+                    ensureActive()
                     when (currentEntry.name) {
                         DATABASE_ZIP_ENTRY -> {
                             if (entries.contains(BackupEntry.Data)) {

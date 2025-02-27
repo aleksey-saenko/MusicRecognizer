@@ -28,15 +28,16 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result = coroutineScope {
         val statusSnapshot = statusHolder.status.value
-        if (statusSnapshot !is RecognitionStatus.Done) return@coroutineScope Result.success()
+        if (statusSnapshot !is RecognitionStatus.Done) {
+            RecognitionWidget().updateAll(appContext)
+            return@coroutineScope Result.success()
+        }
 
         select {
             val result = statusSnapshot.result
             if (result is RecognitionResult.Success) {
                 launch {
-                    trackRepository.getTrackFlow(result.track.id)
-                        .map { track -> track?.properties?.isViewed ?: true }
-                        .first { isViewed -> isViewed }
+                    suspendWhileTrackIsNotViewed(result.track.id)
                     notificationHelper.cancelResultNotification()
                 }.onJoin { }
             }
@@ -46,6 +47,12 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
         statusHolder.resetFinalStatus()
         RecognitionWidget().updateAll(appContext)
         Result.success()
+    }
+
+    private suspend fun suspendWhileTrackIsNotViewed(trackId: String) {
+        trackRepository.getTrackFlow(trackId)
+            .map { track -> track?.properties?.isViewed ?: true }
+            .first { isViewed -> isViewed }
     }
 
     companion object {

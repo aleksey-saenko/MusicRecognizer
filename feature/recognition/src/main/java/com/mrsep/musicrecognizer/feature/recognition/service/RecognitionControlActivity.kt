@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
 import android.net.Uri
@@ -18,6 +19,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
@@ -79,29 +81,32 @@ class RecognitionControlActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enforceTransparentEdgeToEdge()
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            when (intent.action) {
-                ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST -> {
-                    requestedAudioCaptureMode = preferencesRepository
-                        .userPreferencesFlow.first()
-                        .defaultAudioCaptureMode
-                    val requiredPermissions = getRequiredPermissionsForRecognition()
-                    if (checkPermissionsGranted(requiredPermissions)) {
-                        onRecognitionPermissionsGranted()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        when (intent.action) {
+            ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST -> lifecycleScope.launch {
+                requestedAudioCaptureMode = preferencesRepository
+                    .userPreferencesFlow.first()
+                    .defaultAudioCaptureMode
+                val requiredPermissions = getRequiredPermissionsForRecognition()
+                if (checkPermissionsGranted(requiredPermissions)) {
+                    onRecognitionPermissionsGranted()
+                } else {
+                    val shouldShowRationale = requiredPermissions
+                        .any { shouldShowRequestPermissionRationale(it) }
+                    if (shouldShowRationale) {
+                        showPermissionsRationaleDialog()
                     } else {
-                        val shouldShowRationale = requiredPermissions
-                            .any { shouldShowRequestPermissionRationale(it) }
-                        if (shouldShowRationale) {
-                            showPermissionsRationaleDialog()
-                        } else {
-                            requestPermissionLauncher.launch(requiredPermissions)
-                        }
+                        requestPermissionLauncher.launch(requiredPermissions)
                     }
                 }
-
-                else -> error("Unknown intent action")
             }
+
+            else -> error("Unknown intent action")
         }
     }
 
@@ -213,6 +218,17 @@ class RecognitionControlActivity : ComponentActivity() {
             }
             .create()
             .show()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun enforceTransparentEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+            window.isNavigationBarContrastEnforced = false
+        }
     }
 
     companion object {

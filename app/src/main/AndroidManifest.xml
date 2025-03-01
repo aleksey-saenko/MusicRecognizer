@@ -54,7 +54,7 @@
             android:exported="false"
             android:noHistory="true"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            android:theme="@style/Theme.MusicRecognizer.Translucent" />
 
         <service
             android:name=".feature.recognition.service.RecognitionControlService"

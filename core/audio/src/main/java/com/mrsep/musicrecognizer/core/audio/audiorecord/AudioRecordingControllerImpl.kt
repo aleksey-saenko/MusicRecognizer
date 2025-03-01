@@ -47,40 +47,39 @@ internal class AudioRecordingControllerImpl(
         .flowOn(defaultDispatcher)
 
     private fun audioRecordingBytesFlow(scheme: RecognitionScheme) = flow {
-        var currentRecStepIndex = 0
+        var currentStepIndex = 0
         var nextPacketIndexAfterSplitter = 0
         val packetsList = mutableListOf<ByteArray>()
 
         aacEncoder.aacPacketsFlow
             .transformWhile { aacPacketResult ->
-                var takeWhile = false
+                var continueRecording = false
                 aacPacketResult.onSuccess { aacPacket ->
                     this.emit(aacPacket)
-                    takeWhile = currentRecStepIndex <= scheme.steps.lastIndex
+                    continueRecording = currentStepIndex <= scheme.steps.lastIndex
                 }.onFailure { cause ->
                     this@flow.emit(Result.failure<ByteArray>(cause))
                 }
-                takeWhile
+                continueRecording
             }
             .collect { aacPacket ->
                 packetsList.add(aacPacket.data)
-                val currentRecStep = scheme.steps[currentRecStepIndex]
-                val currentThreshold = currentRecStep.timestamp.inWholeMicroseconds
+                val currentStep = scheme.steps[currentStepIndex]
+                val currentThreshold = currentStep.timestamp.inWholeMicroseconds
                 if (aacPacket.timestampUs >= currentThreshold) {
-                    val selectedPackets =
-                        packetsList.subList(nextPacketIndexAfterSplitter, packetsList.size)
-                    combineAndEmit(selectedPackets)
-                    if (currentRecStep.splitter) {
+                    val currentStepPackets = packetsList.subList(nextPacketIndexAfterSplitter, packetsList.size)
+                    combineAndEmit(currentStepPackets)
+                    if (currentStep.splitter) {
                         if (scheme.sendTotalAtEnd) {
                             nextPacketIndexAfterSplitter = packetsList.lastIndex + 1
                         } else {
                             packetsList.clear()
                         }
                     }
-                    if (currentRecStepIndex == scheme.steps.lastIndex && scheme.sendTotalAtEnd) {
+                    if (currentStepIndex == scheme.steps.lastIndex && scheme.sendTotalAtEnd) {
                         combineAndEmit(packetsList)
                     }
-                    currentRecStepIndex++
+                    currentStepIndex++
                 }
             }
     }

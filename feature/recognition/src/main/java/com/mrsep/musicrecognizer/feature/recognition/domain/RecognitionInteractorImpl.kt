@@ -83,12 +83,9 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
             val recordingChannel = Channel<ByteArray>(onlineScheme.stepCount)
             val remoteResult = async {
-                recognitionService.recognize(
-                    recordingFlow = recordingChannel.receiveAsFlow()
-                )
+                recognitionService.recognize(recordingChannel.receiveAsFlow())
             }
 
-            // temp workaround until recognition service is reworked
             val extraTimeNotifier = launch {
                 val extraTime = onlineScheme.run { steps[extraTryIndex].timestamp + 3.5.seconds }
                 delay(extraTime)
@@ -101,10 +98,9 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     .withIndex()
                     .transformWhile { (index, result) ->
                         result.onSuccess { recording ->
-//                            val isExtraTry = (index >= onlineScheme.extraTryIndex)
+                            if (recording.nonSilenceDuration < 0.5.seconds) return@onSuccess
                             if (index <= onlineScheme.lastStepIndex) {
                                 recordingChannel.send(recording.data)
-//                                _status.update { RecognitionStatus.Recognizing(isExtraTry) }
                             }
                         }
                         if (result.isFailure || index == onlineScheme.lastStepIndex) {

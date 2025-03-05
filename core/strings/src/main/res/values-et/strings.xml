@@ -147,7 +147,7 @@
     <string name="recognition_queue">Tuvastamise ootejärjekord</string>
     <string name="queue">Ootejärjekord</string>
     <string name="empty_recognition_queue_title">Ühtegi tuvastamist pole ootel</string>
-    <string name="empty_recognition_queue_subtitle">Nii vallasrežiimis kui vea puhul saad tuvastamist ootavad palad lisada ootejärjekorda vastavalt valitud varuvariandile</string>
+    <string name="empty_recognition_queue_subtitle">Nii vallasrežiimis, kui vea puhul, saad tuvastamist ootavad palad lisada ootejärjekorda vastavalt valitud varuvariandile</string>
     <string name="untitled_recognition">Ilma nimeta tuvastus</string>
     <string name="format_scheduled_recognition_of">%s ajastatud tuvastamine</string>
     <string name="format_recognition_created">Loodud: %s</string>

@@ -37,7 +37,8 @@ internal class LyricsFetcherImpl @Inject constructor(
         return withContext(ioDispatcher) {
             channelFlow {
                 val tasks = listOf(
-                    async { fetchLyristSource(track.title, track.artist) },
+                    // Disabled due to https://github.com/asrvd/lyrist/issues/9
+//                    async { fetchLyristSource(track.title, track.artist) },
                     // Disabled due to inconsistent line breaks in lyrics
 //                    async { fetchOvhSource(track.title, track.artist) },
                     async { fetchLrcLibSource(track.title, track.artist) },

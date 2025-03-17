@@ -1,8 +1,10 @@
 package com.mrsep.musicrecognizer.feature.backup
 
 import android.net.Uri
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import androidx.annotation.Keep
+import com.mrsep.musicrecognizer.feature.backup.data.InstantJsonSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.time.Instant
 
 internal interface AppBackupManager {
@@ -16,19 +18,19 @@ internal interface AppBackupManager {
     suspend fun restore(source: Uri, entries: Set<BackupEntry>): RestoreResult
 }
 
-//@Keep
-@JsonClass(generateAdapter = false)
+@Keep
 internal enum class BackupEntry { Data, Preferences }
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class BackupMetadata(
-    @Json(name = "backupSignature")
+    @SerialName("backupSignature")
     val backupSignature: String,
-    @Json(name = "appVersionCode")
+    @SerialName("appVersionCode")
     val appVersionCode: Int,
-    @Json(name = "creationDate")
+    @SerialName("creationDate")
+    @Serializable(with = InstantJsonSerializer::class)
     val creationDate: Instant,
-    @Json(name = "entries")
+    @SerialName("entries")
     val entries: Set<BackupEntry>,
 )
 

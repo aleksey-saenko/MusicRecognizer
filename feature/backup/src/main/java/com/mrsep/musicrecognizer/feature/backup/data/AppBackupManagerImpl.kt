@@ -22,8 +22,6 @@ import com.mrsep.musicrecognizer.feature.backup.BackupMetadata
 import com.mrsep.musicrecognizer.feature.backup.BackupMetadataResult
 import com.mrsep.musicrecognizer.feature.backup.BackupResult
 import com.mrsep.musicrecognizer.feature.backup.RestoreResult
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,6 +30,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -51,14 +50,10 @@ internal class AppBackupManagerImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @ApplicationScope private val appScope: CoroutineScope,
-    moshiBase: Moshi,
+    private val json: Json,
 ) : AppBackupManager {
 
-    private val moshi = moshiBase.newBuilder().add(InstantJsonAdapter()).build()
     private val restoreCoroutineContext = appScope.coroutineContext + ioDispatcher
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val metadataJsonAdapter = moshi.adapter<BackupMetadata>()
 
     override suspend fun estimateAppDataSize(): Map<BackupEntry, Long> {
         return withContext(ioDispatcher) {
@@ -349,7 +344,8 @@ internal class AppBackupManagerImpl @Inject constructor(
             creationDate = Instant.now(),
             entries = entries,
         )
-        val metadataJson = metadataJsonAdapter.toJson(metadata)
+        val prettyJson = Json(json) { prettyPrint = true }
+        val metadataJson = prettyJson.encodeToString(metadata)
         with(zipOutputStream) {
             putNextEntry(ZipEntry(METADATA_ZIP_ENTRY))
             write(metadataJson.encodeToByteArray())
@@ -360,8 +356,8 @@ internal class AppBackupManagerImpl @Inject constructor(
     private fun readMetadata(zipInputStream: ZipInputStream): BackupMetadata? {
         val metadataJson = zipInputStream.readBytes().decodeToString()
         return try {
-            metadataJsonAdapter.fromJson(metadataJson)
-                .takeIf { it?.backupSignature == BACKUP_VERIFICATION_UUID }
+            json.decodeFromString<BackupMetadata>(metadataJson)
+                .takeIf { it.backupSignature == BACKUP_VERIFICATION_UUID }
         } catch (e: Exception) {
             null
         }

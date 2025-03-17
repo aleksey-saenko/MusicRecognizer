@@ -32,9 +32,9 @@ junitExt = "1.2.1"
 kotlin = "2.1.10"
 kotlinxCoroutines = "1.10.1"
 kotlinxCollectionImmutable = "0.3.8"
+kotlinxSerializationJson = "1.8.0"
 ksp = "2.1.10-1.0.31"
 materialKolor = "2.0.2"
-moshi = "1.15.2"
 okhttpBom = "4.12.0"
 okhttpCoroutines = "1.0"
 palette = "1.0.0"
@@ -95,10 +95,8 @@ kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coro
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-collectionImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionImmutable" }
+kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
-moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
-moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
-moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
@@ -128,6 +126,7 @@ compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }

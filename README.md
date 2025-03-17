@@ -32,7 +32,7 @@ Audile is written in Kotlin and runs on Android 8.0 or higher.
 App architecture inspired by clean arch practices.  
 UI completely written in Jetpack Compose with MVVM pattern in Material3 design.  
 The app uses the AudioRecord/MediaCodec API for audio recording and encoding.  
-Stack: Kotlin, Coroutines, Jetpack Compose, Glance, Hilt, WorkManager, Room, OkHttp, Moshi, DataStore, Coil, Junit.
+Stack: Kotlin, Coroutines, Jetpack Compose, Glance, Hilt, WorkManager, Room, OkHttp, DataStore, Coil, Junit.
 
 ## API Key
 

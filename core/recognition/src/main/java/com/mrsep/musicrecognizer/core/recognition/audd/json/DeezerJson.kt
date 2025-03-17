@@ -1,53 +1,53 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class DeezerJson(
-    @Json(name = "title")
+    @SerialName("title")
     val title: String?,
-    @Json(name = "link")
+    @SerialName("link")
     val link: String?,
-    @Json(name = "duration")
+    @SerialName("duration")
     val durationSeconds: Int?,
-    @Json(name = "release_date")
+    @SerialName("release_date")
     val releaseDate: String?,
-    @Json(name = "artist")
+    @SerialName("artist")
     val artist: Artist?,
-    @Json(name = "album")
+    @SerialName("album")
     val album: Album?,
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Artist(
-        @Json(name = "name")
+        @SerialName("name")
         val name: String?,
-        @Json(name = "picture")
+        @SerialName("picture")
         val picture: String?,
-        @Json(name = "picture_small")
+        @SerialName("picture_small")
         val pictureSmall: String?,
-        @Json(name = "picture_medium")
+        @SerialName("picture_medium")
         val pictureMedium: String?,
-        @Json(name = "picture_big")
+        @SerialName("picture_big")
         val pictureBig: String?,
-        @Json(name = "picture_xl")
+        @SerialName("picture_xl")
         val pictureXl: String?,
     )
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Album(
-        @Json(name = "title")
+        @SerialName("title")
         val title: String?,
-        @Json(name = "cover")
+        @SerialName("cover")
         val cover: String?,
-        @Json(name = "cover_small")
+        @SerialName("cover_small")
         val coverSmall: String?,
-        @Json(name = "cover_medium")
+        @SerialName("cover_medium")
         val coverMedium: String?,
-        @Json(name = "cover_big")
+        @SerialName("cover_big")
         val coverBig: String?,
-        @Json(name = "cover_xl")
+        @SerialName("cover_xl")
         val coverXl: String?
     )
 }

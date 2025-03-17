@@ -1,12 +1,24 @@
 package com.mrsep.musicrecognizer.core.recognition.enhancer.odesli
 
-import com.squareup.moshi.FromJson
-import com.squareup.moshi.ToJson
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-internal class OdesliApiProviderAdapter {
+internal object OdesliApiProviderSerializer : KSerializer<OdesliApiProvider> {
 
-    @FromJson
-    fun fromJson(json: String) = when (json) {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "OdesliApiProviderSerializer",
+        PrimitiveKind.STRING
+    )
+
+    override fun serialize(encoder: Encoder, value: OdesliApiProvider) {
+        error("Not implemented (unused)")
+    }
+
+    override fun deserialize(decoder: Decoder) = when (decoder.decodeString()) {
         "spotify" -> OdesliApiProvider.Spotify
         "itunes" -> OdesliApiProvider.Itunes
         "deezer" -> OdesliApiProvider.Deezer
@@ -25,10 +37,4 @@ internal class OdesliApiProviderAdapter {
         "google" -> OdesliApiProvider.Google
         else -> OdesliApiProvider.Unknown
     }
-
-    @ToJson
-    fun toJson(
-        @Suppress("UNUSED_PARAMETER") provider: OdesliApiProvider
-    ): String =
-        throw IllegalStateException("Not implemented (unused)")
 }

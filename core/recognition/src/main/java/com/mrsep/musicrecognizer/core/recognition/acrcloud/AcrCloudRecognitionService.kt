@@ -9,8 +9,6 @@ import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.AcrCloudResponse
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.toRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -27,6 +25,7 @@ import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -48,11 +47,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     private val artworkFetcher: ArtworkFetcher,
     private val lyricsFetcher: LyricsFetcher,
     private val okHttpClient: OkHttpClient,
-    moshi: Moshi,
+    private val json: Json,
 ) : RemoteRecognitionService {
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val acrJsonAdapter = moshi.adapter<AcrCloudResponseJson>()
 
     override suspend fun recognize(recording: ByteArray): RemoteRecognitionResult {
         return withContext(ioDispatcher) {
@@ -85,8 +81,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             response.use {
                 if (response.isSuccessful) {
                     val remoteResult = try {
-                        val responseJson = acrJsonAdapter.fromJson(response.body!!.source())!!
-                        responseJson.toRecognitionResult()
+                        json.decodeFromString<AcrCloudResponseJson>(response.body!!.string())
+                            .toRecognitionResult()
                     } catch (e: Exception) {
                         RemoteRecognitionResult.Error.UnhandledError(
                             message = e.message ?: "",

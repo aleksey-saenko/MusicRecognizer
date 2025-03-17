@@ -3,8 +3,6 @@ package com.mrsep.musicrecognizer.core.recognition.audd.websocket
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.core.recognition.audd.json.toRecognitionResult
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
@@ -12,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 internal class AuddWebSocketSessionImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
-    private val moshi: Moshi
+    private val json: Json,
 ) : AuddWebSocketSession {
 
     private fun buildRequest(token: String): Request {
@@ -70,11 +69,9 @@ internal class AuddWebSocketSessionImpl @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun parseServerResponse(json: String): RemoteRecognitionResult {
+    private fun parseServerResponse(responseJson: String): RemoteRecognitionResult {
         return try {
-            val responseJson = moshi.adapter<AuddResponseJson>().fromJson(json)!!
-            responseJson.toRecognitionResult()
+            json.decodeFromString<AuddResponseJson>(responseJson).toRecognitionResult(json)
         } catch (e: Exception) {
             RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
         }

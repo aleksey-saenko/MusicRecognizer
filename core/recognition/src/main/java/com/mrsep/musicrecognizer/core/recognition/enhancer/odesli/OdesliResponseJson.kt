@@ -1,211 +1,212 @@
 package com.mrsep.musicrecognizer.core.recognition.enhancer.odesli
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class OdesliResponseJson(
-    @Json(name = "entityUniqueId")
+    @SerialName("entityUniqueId")
     val entityUniqueId: String?,
-    @Json(name = "userCountry")
+    @SerialName("userCountry")
     val userCountry: String?,
-    @Json(name = "pageUrl")
+    @SerialName("pageUrl")
     val pageUrl: String?,
-    @Json(name = "entitiesByUniqueId")
+    @SerialName("entitiesByUniqueId")
     val entitiesByUniqueId: Map<String, Entity>?,
-    @Json(name = "linksByPlatform")
+    @SerialName("linksByPlatform")
     val linksByPlatform: LinksByPlatform?,
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Entity(
-        @Json(name = "id")
+        @SerialName("id")
         val id: String?,
-        @Json(name = "type")
+        @SerialName("type")
         val type: String?,
-        @Json(name = "title")
+        @SerialName("title")
         val title: String?,
-        @Json(name = "artistName")
+        @SerialName("artistName")
         val artistName: String?,
-        @Json(name = "thumbnailUrl")
+        @SerialName("thumbnailUrl")
         val thumbnailUrl: String?,
-        @Json(name = "thumbnailWidth")
+        @SerialName("thumbnailWidth")
         val thumbnailWidth: Int?,
-        @Json(name = "thumbnailHeight")
+        @SerialName("thumbnailHeight")
         val thumbnailHeight: Int?,
-        @Json(name = "apiProvider")
+        @SerialName("apiProvider")
         val apiProvider: OdesliApiProvider?,
     )
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class LinksByPlatform(
-        @Json(name = "amazonMusic")
+        @SerialName("amazonMusic")
         val amazonMusic: AmazonMusic?,
-        @Json(name = "amazonStore")
+        @SerialName("amazonStore")
         val amazonStore: AmazonStore?,
-        @Json(name = "audiomack")
+        @SerialName("audiomack")
         val audiomack: Audiomack?,
-        @Json(name = "audius")
+        @SerialName("audius")
         val audius: Audius?,
-        @Json(name = "anghami")
+        @SerialName("anghami")
         val anghami: Anghami?,
-        @Json(name = "boomplay")
+        @SerialName("boomplay")
         val boomplay: Boomplay?,
-        @Json(name = "appleMusic")
+        @SerialName("appleMusic")
         val appleMusic: AppleMusic?,
-        @Json(name = "spotify")
+        @SerialName("spotify")
         val spotify: Spotify?,
-        @Json(name = "youtube")
+        @SerialName("youtube")
         val youtube: Youtube?,
-        @Json(name = "youtubeMusic")
+        @SerialName("youtubeMusic")
         val youtubeMusic: YoutubeMusic?,
-        @Json(name = "google")
+        @SerialName("google")
         val google: Google?,
-        @Json(name = "pandora")
+        @SerialName("pandora")
         val pandora: Pandora?,
-        @Json(name = "deezer")
+        @SerialName("deezer")
         val deezer: Deezer?,
 
-        @Json(name = "soundcloud")
+        @SerialName("soundcloud")
         val soundcloud: Soundcloud?,
-        @Json(name = "tidal")
+        @SerialName("tidal")
         val tidal: Tidal?,
-        @Json(name = "napster")
+        @SerialName("napster")
         val napster: Napster?,
-        @Json(name = "yandex")
+        @SerialName("yandex")
         val yandex: Yandex?,
-        @Json(name = "itunes")
+        @SerialName("itunes")
         val itunes: Itunes?,
-        @Json(name = "googleStore")
+        @SerialName("googleStore")
         val googleStore: GoogleStore?,
 
         ) {
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class AmazonMusic(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class AmazonStore(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Audiomack(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Audius(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Anghami(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Boomplay(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class AppleMusic(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Spotify(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Youtube(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class YoutubeMusic(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Google(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Pandora(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Deezer(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Soundcloud(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Tidal(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Napster(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Yandex(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Itunes(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class GoogleStore(
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
     }
 }
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class OdesliErrorResponseJson(
-    @Json(name = "statusCode")
+    @SerialName("statusCode")
     val code: Int?,
-    @Json(name = "code")
+    @SerialName("code")
     val message: String?,
 )
 
 // Ordered in artwork parsing priority
+@Serializable(with = OdesliApiProviderSerializer::class)
 internal enum class OdesliApiProvider {
     Spotify,
     Itunes,

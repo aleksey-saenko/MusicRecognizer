@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.musicrecognizer.android.feature)
     alias(libs.plugins.musicrecognizer.android.library.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -13,6 +14,6 @@ dependencies {
     implementation(projects.core.datastore)
     implementation(projects.core.network)
 
-    ksp(libs.moshi.codegen)
+    implementation(libs.kotlinx.serializationJson)
     implementation(libs.coil.compose)
 }

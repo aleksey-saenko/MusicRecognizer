@@ -1,51 +1,51 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class AuddResponseJson(
-    @Json(name = "status")
+    @SerialName("status")
     val status: String,
-    @Json(name = "result")
+    @SerialName("result")
     val result: Result?,
-    @Json(name = "error")
+    @SerialName("error")
     val error: Error?
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Result(
-        @Json(name = "artist")
+        @SerialName("artist")
         val artist: String?,
-        @Json(name = "title")
+        @SerialName("title")
         val title: String?,
-        @Json(name = "album")
+        @SerialName("album")
         val album: String?,
-        @Json(name = "release_date")
+        @SerialName("release_date")
         val releaseDate: String?,
-        @Json(name = "timecode")
+        @SerialName("timecode")
         val timecode: String?,
-        @Json(name = "song_link")
+        @SerialName("song_link")
         val auddSongLink: String?,
-        @Json(name = "deezer")
+        @SerialName("deezer")
         val deezerJson: DeezerJson?,
-        @Json(name = "lyrics")
+        @SerialName("lyrics")
         val lyricsJson: LyricsJson?,
-        @Json(name = "musicbrainz")
+        @SerialName("musicbrainz")
         val musicbrainz: List<MusicbrainzJson>?,
-        @Json(name = "napster")
+        @SerialName("napster")
         val napster: NapsterJson?,
-        @Json(name = "spotify")
+        @SerialName("spotify")
         val spotify: SpotifyJson?,
-        @Json(name = "apple_music")
+        @SerialName("apple_music")
         val appleMusic: AppleMusicJson?,
     )
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Error(
-        @Json(name = "error_code")
+        @SerialName("error_code")
         val errorCode: Int,
-        @Json(name = "error_message")
+        @SerialName("error_message")
         val errorMessage: String
     )
 }

@@ -1,40 +1,33 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
 import android.util.Log
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class LyricsJson(
-    @Json(name = "lyrics")
+    @SerialName("lyrics")
     val lyrics: String?,
-    @Json(name = "media")
-    val media: String?
+    @SerialName("media")
+    val mediaJson: String?
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class MediaItem(
-        @Json(name = "provider")
+        @SerialName("provider")
         val provider: String?,
-        @Json(name = "url")
+        @SerialName("url")
         val url: String?
     )
 
-    fun parseMediaItems(): List<MediaItem> {
-        if (media.isNullOrBlank()) return emptyList()
-        val adapterType = Types.newParameterizedType(
-            List::class.java,
-            MediaItem::class.java
-        )
-        val adapter = Moshi.Builder().build().adapter<List<MediaItem>>(adapterType)
-        val mediaItems = try {
-            adapter.fromJson(media)
+    fun parseMediaItems(json: Json): List<MediaItem>? {
+        if (mediaJson == null) return null
+        return try {
+            json.decodeFromString<List<MediaItem>>(mediaJson)
         } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Error during json parsing", e)
-            emptyList()
+            Log.e(this::class.simpleName, "Failed to parse json media items", e)
+            null
         }
-        return mediaItems ?: emptyList()
     }
 }

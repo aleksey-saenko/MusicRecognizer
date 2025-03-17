@@ -1,188 +1,186 @@
 package com.mrsep.musicrecognizer.core.recognition.acrcloud.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class AcrCloudResponseJson(
-    @Json(name = "cost_time")
+    @SerialName("cost_time")
     val costTime: Double?,
-    @Json(name = "result_type")
+    @SerialName("result_type")
     val resultType: Int?,
-    @Json(name = "metadata")
+    @SerialName("metadata")
     val metadata: Metadata?,
-    @Json(name = "status")
+    @SerialName("status")
     val status: Status
 ) {
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Metadata(
-        @Json(name = "music")
+        @SerialName("music")
         val music: List<Music>?,
-        @Json(name = "humming")
+        @SerialName("humming")
         val humming: List<Music>?,
-        @Json(name = "timestamp_utc")
+        @SerialName("timestamp_utc")
         val timestampUtc: String?
     ) {
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Music(
-            @Json(name = "title")
+            @SerialName("title")
             val title: String?,
-            @Json(name = "album")
+            @SerialName("album")
             val album: Album?,
-            @Json(name = "label")
+            @SerialName("label")
             val label: String?,
-            @Json(name = "external_metadata")
+            @SerialName("external_metadata")
             val externalMetadata: ExternalMetadata?,
-            @Json(name = "release_date")
+            @SerialName("release_date")
             val releaseDate: String?,
-            @Json(name = "artists")
+            @SerialName("artists")
             val artists: List<Artist>?,
-            @Json(name = "duration_ms")
+            @SerialName("duration_ms")
             val durationMs: Int?,
-            @Json(name = "external_ids")
+            @SerialName("external_ids")
             val externalIds: ExternalIds?,
-            @Json(name = "db_end_time_offset_ms")
+            @SerialName("db_end_time_offset_ms")
             val dbEndTimeOffsetMs: Int?,
-            @Json(name = "score")
+            @SerialName("score")
             val score: Double?,
-            @Json(name = "sample_end_time_offset_ms")
+            @SerialName("sample_end_time_offset_ms")
             val sampleEndTimeOffsetMs: Int?,
-            @Json(name = "play_offset_ms")
+            @SerialName("play_offset_ms")
             val playOffsetMs: Int?,
-            @Json(name = "result_from")
-            val resultFrom: Int?,
-            @Json(name = "db_begin_time_offset_ms")
+            @SerialName("db_begin_time_offset_ms")
             val dbBeginTimeOffsetMs: Int?,
-            @Json(name = "sample_begin_time_offset_ms")
+            @SerialName("sample_begin_time_offset_ms")
             val sampleBeginTimeOffsetMs: Int?,
-            @Json(name = "genres")
+            @SerialName("genres")
             val genres: List<Genre>?,
-            @Json(name = "acrid")
+            @SerialName("acrid")
             val acrid: String?
         ) {
 
-            @JsonClass(generateAdapter = true)
+            @Serializable
             data class Album(
-                @Json(name = "name")
+                @SerialName("name")
                 val name: String?
             )
 
-            @JsonClass(generateAdapter = true)
+            @Serializable
             data class ExternalMetadata(
-                @Json(name = "deezer")
+                @SerialName("deezer")
                 val deezer: Deezer?,
-                @Json(name = "spotify")
+                @SerialName("spotify")
                 val spotify: Spotify?,
-                @Json(name = "youtube")
+                @SerialName("youtube")
                 val youtube: Youtube?
             ) {
-                @JsonClass(generateAdapter = true)
+                @Serializable
                 data class Deezer(
-                    @Json(name = "album")
+                    @SerialName("album")
                     val album: Album?,
-                    @Json(name = "artists")
+                    @SerialName("artists")
                     val artists: List<Artist>?,
-                    @Json(name = "track")
+                    @SerialName("track")
                     val track: Track?
                 ) {
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Album(
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?,
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: Int?
                     )
 
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Artist(
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?,
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: Int?
                     )
 
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Track(
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: String?,
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?
                     )
                 }
 
-                @JsonClass(generateAdapter = true)
+                @Serializable
                 data class Spotify(
-                    @Json(name = "album")
+                    @SerialName("album")
                     val album: Album?,
-                    @Json(name = "artists")
+                    @SerialName("artists")
                     val artists: List<Artist>?,
-                    @Json(name = "track")
+                    @SerialName("track")
                     val track: Track?
                 ) {
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Album(
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?,
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: String?
                     )
 
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Artist(
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?,
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: String?
                     )
 
-                    @JsonClass(generateAdapter = true)
+                    @Serializable
                     data class Track(
-                        @Json(name = "id")
+                        @SerialName("id")
                         val id: String?,
-                        @Json(name = "name")
+                        @SerialName("name")
                         val name: String?
                     )
                 }
 
-                @JsonClass(generateAdapter = true)
+                @Serializable
                 data class Youtube(
-                    @Json(name = "vid")
+                    @SerialName("vid")
                     val vid: String?
                 )
             }
 
-            @JsonClass(generateAdapter = true)
+            @Serializable
             data class Artist(
-                @Json(name = "name")
+                @SerialName("name")
                 val name: String?
             )
 
-            @JsonClass(generateAdapter = true)
+            @Serializable
             data class ExternalIds(
-                @Json(name = "upc")
+                @SerialName("upc")
                 val upc: String?,
-                @Json(name = "isrc")
+                @SerialName("isrc")
                 val isrc: String?
             )
 
-            @JsonClass(generateAdapter = true)
+            @Serializable
             data class Genre(
-                @Json(name = "name")
+                @SerialName("name")
                 val name: String?,
-                @Json(name = "id")
+                @SerialName("id")
                 val id: Int?
             )
         }
     }
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Status(
-        @Json(name = "version")
+        @SerialName("version")
         val version: String,
-        @Json(name = "msg")
+        @SerialName("msg")
         val msg: String,
-        @Json(name = "code")
+        @SerialName("code")
         val code: Int
     )
 }

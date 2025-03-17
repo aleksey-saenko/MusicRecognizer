@@ -4,13 +4,13 @@ import android.content.Context
 import android.os.Build
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -21,8 +21,10 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder()
-        .build()
+    fun provideJson(): Json = Json {
+        explicitNulls = false
+        ignoreUnknownKeys = true
+    }
 
     @Provides
     @Singleton

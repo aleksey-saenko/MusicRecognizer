@@ -1,18 +1,18 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class NapsterJson(
-    @Json(name = "id")
+    @SerialName("id")
     val id: String?,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String?,
-    @Json(name = "artistName")
+    @SerialName("artistName")
     val artistName: String?,
-    @Json(name = "albumName")
+    @SerialName("albumName")
     val albumName: String?,
-    @Json(name = "playbackSeconds")
+    @SerialName("playbackSeconds")
     val durationSeconds: Int?
 )

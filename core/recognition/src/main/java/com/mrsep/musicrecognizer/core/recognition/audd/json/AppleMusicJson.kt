@@ -1,35 +1,35 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class AppleMusicJson(
-    @Json(name = "artwork")
+    @SerialName("artwork")
     val artwork: Artwork?,
-    @Json(name = "artistName")
+    @SerialName("artistName")
     val artistName: String?,
-    @Json(name = "url")
+    @SerialName("url")
     val url: String?,
-    @Json(name = "durationInMillis")
+    @SerialName("durationInMillis")
     val durationInMillis: Int?,
-    @Json(name = "releaseDate")
+    @SerialName("releaseDate")
     val releaseDate: String?,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String?,
-    @Json(name = "albumName")
+    @SerialName("albumName")
     val albumName: String?,
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Artwork(
-        @Json(name = "width")
+        @SerialName("width")
         val width: Int?,
-        @Json(name = "height")
+        @SerialName("height")
         val height: Int?,
-        @Json(name = "url")
+        @SerialName("url")
         val url: String?,
-        @Json(name = "bgColor")
+        @SerialName("bgColor")
         val backgroundColor: String?
     )
 }

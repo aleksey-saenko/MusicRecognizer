@@ -6,11 +6,10 @@ import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancer
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteMetadataEnhancingResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,19 +18,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 internal class OdesliMetadataEnhancer @Inject constructor(
-    moshiBase: Moshi,
     private val okHttpClient: OkHttpClient,
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val json: Json,
 ) : TrackMetadataEnhancer {
-
-    private val moshi = moshiBase.newBuilder().add(OdesliApiProviderAdapter()).build()
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val odesliJsonAdapter = moshi.adapter<OdesliResponseJson>()
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val odesliErrorJsonAdapter = moshi.adapter<OdesliErrorResponseJson>()
 
     private val locale get() = appContext.resources.configuration.locales[0]
 
@@ -51,16 +42,16 @@ internal class OdesliMetadataEnhancer @Inject constructor(
             response.use {
                 try {
                     if (response.isSuccessful) {
-                        val json = odesliJsonAdapter.fromJson(response.body!!.source())!!
-                        val trackLinks = json.toTrackLinks()
-                        val artworkUrl = track.artworkUrl ?: json.toArtworkUrl()
+                        val successDto = json.decodeFromString<OdesliResponseJson>(response.body!!.string())
+                        val trackLinks = successDto.toTrackLinks()
+                        val artworkUrl = track.artworkUrl ?: successDto.toArtworkUrl()
                         val newTrack = track.updateLinks(artworkUrl, trackLinks)
                         RemoteMetadataEnhancingResult.Success(newTrack)
                     } else {
-                        val json = odesliErrorJsonAdapter.fromJson(response.body!!.source())
+                        val errorDto = json.decodeFromString<OdesliErrorResponseJson>(response.body!!.string())
                         RemoteMetadataEnhancingResult.Error.HttpError(
-                            code = json?.code ?: response.code,
-                            message = json?.message ?: response.message
+                            code = errorDto.code ?: response.code,
+                            message = errorDto.message ?: response.message
                         )
                     }
                 } catch (e: Exception) {

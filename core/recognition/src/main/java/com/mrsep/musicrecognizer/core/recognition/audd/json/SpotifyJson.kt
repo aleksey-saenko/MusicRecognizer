@@ -1,51 +1,51 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class SpotifyJson(
-    @Json(name = "album")
+    @SerialName("album")
     val album: Album?,
-    @Json(name = "artists")
+    @SerialName("artists")
     val artists: List<Artist?>?,
-    @Json(name = "duration_ms")
+    @SerialName("duration_ms")
     val durationMillis: Int?,
-    @Json(name = "external_urls")
+    @SerialName("external_urls")
     val externalUrls: ExternalUrls?,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String?
 ) {
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Album(
-        @Json(name = "images")
+        @SerialName("images")
         val images: List<Image?>?,
-        @Json(name = "name")
+        @SerialName("name")
         val name: String?,
-        @Json(name = "release_date")
+        @SerialName("release_date")
         val releaseDate: String?
     ) {
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Image(
-            @Json(name = "height")
+            @SerialName("height")
             val height: Int?,
-            @Json(name = "width")
+            @SerialName("width")
             val width: Int?,
-            @Json(name = "url")
+            @SerialName("url")
             val url: String?
         )
     }
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Artist(
-        @Json(name = "name")
+        @SerialName("name")
         val name: String?
     )
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class ExternalUrls(
-        @Json(name = "spotify")
+        @SerialName("spotify")
         val spotify: String?
     )
 }

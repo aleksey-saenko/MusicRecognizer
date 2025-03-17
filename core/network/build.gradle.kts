@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.musicrecognizer.android.library)
     alias(libs.plugins.musicrecognizer.hilt)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -31,11 +31,9 @@ android {
 dependencies {
     implementation(projects.core.common)
 
+    api(libs.kotlinx.serializationJson)
     implementation(platform(libs.okhttp.bom))
     api(libs.okhttp.core)
     api(libs.okhttp.loggingInterceptor)
     api(libs.okhttp.coroutines)
-
-    api(libs.moshi.core)
-    api(libs.moshi.adapters)
 }

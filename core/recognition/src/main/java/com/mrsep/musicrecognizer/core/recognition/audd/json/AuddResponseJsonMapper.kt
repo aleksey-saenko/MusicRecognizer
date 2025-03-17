@@ -10,6 +10,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
+import kotlinx.serialization.json.Json
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -19,12 +20,12 @@ import java.util.UUID
 
 private const val TAG = "AuddResponseJsonMapper"
 
-internal fun AuddResponseJson.toRecognitionResult(): RemoteRecognitionResult {
+internal fun AuddResponseJson.toRecognitionResult(json: Json): RemoteRecognitionResult {
     return when (status) {
         "success" -> if (result == null) {
             RemoteRecognitionResult.NoMatches
         } else {
-            parseSuccessResult(result)
+            parseSuccessResult(result, json)
         }
 
         "error" -> if (error == null) {
@@ -37,13 +38,13 @@ internal fun AuddResponseJson.toRecognitionResult(): RemoteRecognitionResult {
     }
 }
 
-private fun parseSuccessResult(result: AuddResponseJson.Result): RemoteRecognitionResult {
+private fun parseSuccessResult(result: AuddResponseJson.Result, json: Json): RemoteRecognitionResult {
     val trackTitle = result.parseTrackTitle()
     val trackArtist = result.parseTrackArtist()
     if (trackTitle.isNullOrBlank() || trackArtist.isNullOrBlank()) {
         return RemoteRecognitionResult.NoMatches
     }
-    val mediaItems = result.lyricsJson?.parseMediaItems()
+    val mediaItems = result.lyricsJson?.parseMediaItems(json)
     val trackArtwork = result.toTrackArtwork()
     return RemoteRecognitionResult.Success(
         track = Track(

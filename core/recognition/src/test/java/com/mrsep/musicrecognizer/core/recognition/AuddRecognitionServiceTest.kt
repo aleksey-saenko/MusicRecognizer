@@ -5,7 +5,6 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.recognition.audd.AuddRecognitionService
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.SocketEvent
-import com.squareup.moshi.Moshi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okio.ByteString
 import org.junit.Assert
@@ -38,7 +38,10 @@ class AuddRecognitionServiceTest {
     private val scope = TestScope()
     private val testDispatcher = StandardTestDispatcher(scope.testScheduler)
 
-    private val moshi = Moshi.Builder().build()
+    private val json = Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
     private val config = AuddConfig(apiToken = "")
     private val okHttpClient = OkHttpClient()
 
@@ -68,7 +71,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TEST_QUEUE_DELAY + TEST_RESPONSE_DELAY
@@ -96,7 +99,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_QUEUE_DELAY + TEST_RESPONSE_DELAY
@@ -127,7 +130,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         val expected = RemoteRecognitionResult.Error.ApiUsageLimited
@@ -157,7 +160,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TIMEOUT_AFTER_RECORDING_FINISHED
@@ -192,7 +195,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         Assert.assertTrue(result is RemoteRecognitionResult.Error.BadConnection)
@@ -222,7 +225,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val result = service.recognize(normalAudioRecordingFlow)
         val expectedTime = TIMEOUT_RECORDING_SENDING
@@ -253,7 +256,7 @@ class AuddRecognitionServiceTest {
             webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
             okHttpClient = okHttpClient,
-            moshi = moshi,
+            json = json,
         )
         val delayBeforeFlowClose = 5500L
         val result = service.recognize(emptyAudioRecordingFlow(delayBeforeFlowClose))

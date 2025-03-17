@@ -1,23 +1,23 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class MusicbrainzJson(
-    @Json(name = "id")
+    @SerialName("id")
     val id: String?,
-    @Json(name = "title")
+    @SerialName("title")
     val title: String?,
-    @Json(name = "length")
+    @SerialName("length")
     val durationMillis: Int?,
-    @Json(name = "artist-credit")
+    @SerialName("artist-credit")
     val artistCredit: List<ArtistCredit?>?
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class ArtistCredit(
-        @Json(name = "name")
+        @SerialName("name")
         val name: String?
     )
 }

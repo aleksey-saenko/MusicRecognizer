@@ -5,11 +5,10 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.audd.json.DeezerJson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
@@ -18,11 +17,8 @@ import javax.inject.Inject
 internal class ArtworkFetcherImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    moshi: Moshi,
+    private val json: Json,
 ) : ArtworkFetcher {
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val deezerJsonAdapter = moshi.adapter<DeezerJson>()
 
     override suspend fun fetchUrl(track: Track): TrackArtwork? {
         return withContext(ioDispatcher) {
@@ -38,7 +34,7 @@ internal class ArtworkFetcherImpl @Inject constructor(
         return try {
             okHttpClient.newCall(request).await().use { response ->
                 if (!response.isSuccessful) return null
-                val deezerJson = deezerJsonAdapter.fromJson(response.body!!.source())!!
+                val deezerJson = json.decodeFromString<DeezerJson>(response.body!!.string())
 
                 val albumImageUrl = deezerJson.album?.run { coverXl ?: coverBig }
                 val albumImageThumbUrl = deezerJson.album?.coverMedium?.takeIf { albumImageUrl != null }

@@ -2407,36 +2407,6 @@
             ]
         },
         {
-            "uniqueId": "com.squareup.moshi:moshi",
-            "developers": [
-                {
-                    "name": "Square, Inc."
-                }
-            ],
-            "artifactVersion": "1.15.2",
-            "description": "A modern JSON API for Android and Java",
-            "name": "moshi",
-            "website": "https://github.com/square/moshi/",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "com.squareup.moshi:moshi-adapters",
-            "developers": [
-                {
-                    "name": "Square, Inc."
-                }
-            ],
-            "artifactVersion": "1.15.2",
-            "description": "A modern JSON API for Android and Java",
-            "name": "moshi-adapters",
-            "website": "https://github.com/square/moshi/",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "com.squareup.okhttp3:logging-interceptor",
             "developers": [
                 {

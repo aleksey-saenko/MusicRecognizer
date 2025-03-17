@@ -8,8 +8,6 @@ import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.core.recognition.audd.json.toRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.SocketEvent
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -34,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -52,11 +51,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
     private val webSocketSession: AuddWebSocketSession,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val okHttpClient: OkHttpClient,
-    moshi: Moshi,
+    private val json: Json,
 ) : RemoteRecognitionService {
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private val responseJsonAdapter = moshi.adapter<AuddResponseJson>()
 
     override suspend fun recognize(recording: ByteArray): RemoteRecognitionResult {
         return withContext(ioDispatcher) {
@@ -124,8 +120,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
         return response.use {
             if (response.isSuccessful) {
                 try {
-                    val responseJson = responseJsonAdapter.fromJson(response.body!!.source())!!
-                    responseJson.toRecognitionResult()
+                    json.decodeFromString<AuddResponseJson>(response.body!!.string())
+                        .toRecognitionResult(json)
                 } catch (e: Exception) {
                     RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
                 }

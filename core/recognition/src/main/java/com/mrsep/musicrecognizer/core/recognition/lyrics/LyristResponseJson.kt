@@ -1,16 +1,16 @@
 package com.mrsep.musicrecognizer.core.recognition.lyrics
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 internal data class LyristResponseJson(
-    @Json(name = "lyrics")
+    @SerialName("lyrics")
     val lyrics: String?,
-    @Json(name = "title")
+    @SerialName("title")
     val title: String?,
-    @Json(name = "artist")
+    @SerialName("artist")
     val artist: String?,
-    @Json(name = "image")
+    @SerialName("image")
     val artworkUrl: String?
 )

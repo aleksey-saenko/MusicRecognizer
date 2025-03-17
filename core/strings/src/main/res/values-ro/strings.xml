@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="preferences">Preferințe</string>
+    <string name="pref_title_about_app">Despre</string>
+    <string name="widget_listening_subtitle_extra_time">Mai încerc încă o dată</string>
+    <string name="pref_group_misc">Diverse</string>
+    <string name="lyrics">Versuri</string>
+    <string name="pref_title_theme">Temă</string>
+    <string name="pref_group_notifications">Notificări</string>
+    <string name="main_screen_listening">Se ascultă</string>
+    <string name="widget_listening">Se ascultă</string>
+</resources>

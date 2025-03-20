@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_screen_tap_to_recognize">Appuyez pour identifier</string>
+    <string name="main_screen_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="main_screen_listening">Écoute en cours</string>
     <string name="main_screen_listening_extra_time">Essayer une fois de plus</string>
     <!-- It's preferable to use more concise translations for the widget, notification and tile-->
-    <string name="widget_tap_to_recognize">Appuyez pour identifier</string>
+    <string name="widget_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="widget_tap_to_try_again">Tapez pour réessayer</string>
     <string name="widget_listening">Écoute en cours</string>
     <string name="widget_listening_subtitle">Veuillez patienter</string>
     <string name="widget_listening_subtitle_extra_time">Essayer une fois de plus</string>
     <string name="recognition_widget_description">Reconnaître la chanson en un seul clic</string>
-    <string name="notification_tap_to_recognize">Appuyez pour identifier</string>
+    <string name="notification_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="notification_tap_to_recognize_subtitle">Identifiez la musique dans d’autres applis</string>
     <string name="notification_listening">Écoute en cours</string>
     <string name="notification_listening_subtitle">Veuillez patienter</string>
@@ -197,7 +197,7 @@
     <string name="theme_mode_follow_system">Suivre le système</string>
     <string name="theme_mode_light">Clair</string>
     <string name="theme_mode_dark">Sombre</string>
-    <string name="theme_use_dynamic_colors">Dynamique couleur</string>
+    <string name="theme_use_dynamic_colors">Couleurs dynamiques</string>
     <string name="theme_use_artwork_colors">Illustrations couleur</string>
     <string name="theme_use_pure_black">Noir pur</string>
     <string name="pref_title_music_services_links">Liens vers les services musicaux</string>
@@ -208,7 +208,7 @@
     <string name="pref_title_vibration_feedback">Retour par vibration</string>
     <string name="vibration_feedback_dialog_title">Retour par vibration</string>
     <string name="vibration_feedback_dialog_message">Configurez le retour par vibration pour certaines actions dans l\'application :</string>
-    <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrer lors d\'une pression</string>
+    <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrer lors d\'un appui</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="pref_title_about_app">À propos</string>
     <string name="about_pref_group_powered_by">Propulsé par</string>
@@ -279,4 +279,5 @@
     <string name="audio_capture_mode_device">Audio de l\'appareil</string>
     <string name="audio_capture_mode_auto">Automatique</string>
     <string name="audd_help_dialog_message">AudD est un service payant qui offre un essai gratuit de 14 jours. Pour utiliser ce service, vous avez besoin de créer un compte et d\'obtenir votre jeton d\'API privé. <![CDATA[<a href="%1$s">Inscrivez-vous</a>]]> si vous n\'en avez pas encore.</string>
+    <string name="about_pref_title_licenses">Licences</string>
 </resources>

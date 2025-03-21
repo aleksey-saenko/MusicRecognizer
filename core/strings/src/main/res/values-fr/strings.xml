@@ -111,7 +111,7 @@
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
     <string name="empty_recognition_queue_title">Aucune reconnaissance en attente</string>
-    <string name="empty_recognition_queue_subtitle">Sur échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours</string>
+    <string name="empty_recognition_queue_subtitle">En cas d\'échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours définie dans les paramètres</string>
     <string name="untitled_recognition">Reconnaissance sans titre</string>
     <string name="format_scheduled_recognition_of">Reconnaissance planifiée de %s</string>
     <string name="format_recognition_created">Créé : %s</string>
@@ -260,14 +260,14 @@
     <string name="about_pref_subtitle_license">Audile est sous licence GNU GPLv3</string>
     <string name="about_pref_subtitle_github_repo">Code source, problèmes et autres informations</string>
     <string name="about_pref_title_third_licenses">Licences tierces</string>
-    <string name="about_pref_subtitle_third_licenses">Licences des bibliothèques tierces qu\'Audile utilise</string>
-    <string name="about_pref_subtitle_privacy_policy">En savoir plus sur comment l\'application gère vos données</string>
+    <string name="about_pref_subtitle_third_licenses">Licences des bibliothèques tierces utilisées par Audile</string>
+    <string name="about_pref_subtitle_privacy_policy">En savoir plus sur la manière dont l\'application gère vos données</string>
     <string name="about_pref_title_license">Licence</string>
     <string name="crash_dialog_title">Audile a planté</string>
     <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
     <string name="crash_dialog_button_send">Envoyer</string>
     <string name="audio_source_dialog_default_mode_title">Défaut</string>
-    <string name="audio_source_dialog_default_mode_message">Sélectionnez la source audio par défaut à utiliser, sauf indication contraire :</string>
+    <string name="audio_source_dialog_default_mode_message">Sélectionnez la source audio à utiliser par défaut, sauf indication contraire :</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Sélectionner la source audio à utiliser après un appui long sur le bouton de l\'écran principal :</string>
     <string name="audd_help_dialog_message_empty_token">Vous pouvez utiliser le service dans un but de test sans fournir de jeton, mais veuillez noter que cela limitera votre nombre de reconnaissances quotidiennes.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud est un service payant qui offre une période d\'essai gratuit et un usage limité pour des buts de développement. Pour utiliser ce service, vous avez besoin de créer un compte et d\'y enregistrer un projet. Si vous rencontrez la moindre difficulté, prière de vous référer à <![CDATA[<a href="%1$s">ce guide</a>]]>.</string>

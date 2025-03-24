@@ -2188,7 +2188,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.55",
+            "artifactVersion": "2.56",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger",
             "website": "https://github.com/google/dagger",
@@ -2205,7 +2205,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.55",
+            "artifactVersion": "2.56",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger Lint Rules AAR Distribution",
             "website": "https://github.com/google/dagger",
@@ -2222,7 +2222,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.55",
+            "artifactVersion": "2.56",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Android",
             "website": "https://github.com/google/dagger",
@@ -2239,7 +2239,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.55",
+            "artifactVersion": "2.56",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Core",
             "website": "https://github.com/google/dagger",
@@ -2632,7 +2632,7 @@
                     "name": "usuiat"
                 }
             ],
-            "artifactVersion": "2.3.0",
+            "artifactVersion": "2.4.0",
             "description": "An android library for Jetpack Compose that enables contents zoomable.",
             "name": "Engawapg Zoomable",
             "website": "https://github.com/usuiat/Zoomable",
@@ -2694,7 +2694,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Android Extensions Runtime",
             "name": "Kotlin Android Extensions Runtime",
             "website": "https://kotlinlang.org/",
@@ -2710,7 +2710,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Runtime library for the Parcelize compiler plugin",
             "name": "Parcelize Runtime",
             "website": "https://kotlinlang.org/",
@@ -2726,7 +2726,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "website": "https://kotlinlang.org/",

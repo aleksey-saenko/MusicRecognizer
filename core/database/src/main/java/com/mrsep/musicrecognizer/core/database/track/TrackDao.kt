@@ -58,10 +58,10 @@ interface TrackDao {
     @Query("SELECT COUNT(*) FROM track WHERE is_viewed = 0")
     fun getUnviewedCountFlow(): Flow<Int>
 
-    @Query("SELECT * FROM track WHERE id = :trackId LIMIT 1")
+    @Query("SELECT * FROM track WHERE id = :trackId")
     suspend fun getTrack(trackId: String): TrackEntity?
 
-    @Query("SELECT * FROM track WHERE id = :trackId LIMIT 1")
+    @Query("SELECT * FROM track WHERE id = :trackId")
     fun getTrackFlow(trackId: String): Flow<TrackEntity?>
 
     fun getPreviewsFlowByQuery(

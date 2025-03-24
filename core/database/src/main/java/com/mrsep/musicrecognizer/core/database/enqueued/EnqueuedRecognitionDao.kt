@@ -43,7 +43,7 @@ interface EnqueuedRecognitionDao {
     suspend fun deleteAll()
 
     @Transaction
-    @Query("SELECT * FROM enqueued_recognition WHERE id = :recognitionId LIMIT 1")
+    @Query("SELECT * FROM enqueued_recognition WHERE id = :recognitionId")
     fun getRecognitionWithTrackFlow(recognitionId: Int): Flow<EnqueuedRecognitionEntityWithTrack?>
 
     @Transaction

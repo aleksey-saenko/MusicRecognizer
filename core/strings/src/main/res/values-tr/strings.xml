@@ -280,4 +280,5 @@
     <string name="about_pref_subtitle_third_licenses">Audile\'nin kullandığı üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
     <string name="about_pref_title_licenses">Lisanslar</string>
+    <string name="about_pref_subtitle_license">Audile, GNU GPLv3 veya sonrası altında lisanslıdır</string>
 </resources>

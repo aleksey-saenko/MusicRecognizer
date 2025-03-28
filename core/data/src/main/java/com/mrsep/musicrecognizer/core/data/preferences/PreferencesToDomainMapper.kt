@@ -104,7 +104,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
         vibrateOnResult = hapticFeedback.vibrateOnResult
     ),
     useGridForLibrary = useGridForLibrary,
-    useGridForRecognitionQueue = useGridForLibrary,
+    useGridForRecognitionQueue = useGridForRecognitionQueue,
     showRecognitionDateInLibrary = showRecognitionDateInLibrary,
     showCreationDateInQueue = showCreationDateInQueue,
     themeMode = when (themeMode!!) {

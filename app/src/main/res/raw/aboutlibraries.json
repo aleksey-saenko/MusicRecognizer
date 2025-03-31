@@ -608,7 +608,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2025.03.00",
+            "artifactVersion": "2025.03.01",
             "description": "A compatible set of Jetpack Compose libraries.",
             "name": "Jetpack Compose Libraries BOM",
             "website": "https://developer.android.com/jetpack",
@@ -770,10 +770,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
             "name": "DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -788,10 +788,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
             "name": "DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -806,10 +806,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
             "name": "DataStore Core Okio",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -824,10 +824,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Android Preferences DataStore",
             "name": "Preferences DataStore",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -842,10 +842,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Android Preferences DataStore without the Android Dependencies",
             "name": "Preferences DataStore Core",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -860,10 +860,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Repackaged proto-lite dependency for use by datastore preferences",
             "name": "Preferences External Protobuf",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "BSD-3-Clause"
             ],
@@ -878,10 +878,10 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.4",
             "description": "Jarjar the generated proto for use by datastore-preferences.",
             "name": "Preferences DataStore Proto",
-            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.3",
+            "website": "https://developer.android.com/jetpack/androidx/releases/datastore#1.1.4",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -2188,7 +2188,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56",
+            "artifactVersion": "2.56.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger",
             "website": "https://github.com/google/dagger",
@@ -2205,7 +2205,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56",
+            "artifactVersion": "2.56.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger Lint Rules AAR Distribution",
             "website": "https://github.com/google/dagger",
@@ -2222,7 +2222,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56",
+            "artifactVersion": "2.56.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Android",
             "website": "https://github.com/google/dagger",
@@ -2239,7 +2239,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56",
+            "artifactVersion": "2.56.1",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Core",
             "website": "https://github.com/google/dagger",
@@ -2325,7 +2325,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.30.1",
+            "artifactVersion": "4.30.2",
             "description": "Lite version of Protocol Buffers library. This version is optimized for code size, but does\n    not guarantee API/ABI stability.",
             "name": "Protocol Buffers [Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2338,7 +2338,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "4.30.1",
+            "artifactVersion": "4.30.2",
             "description": "Kotlin lite Protocol Buffers library. Protocol Buffers are a way of encoding structured data in an\n    efficient yet extensible format.",
             "name": "Protocol Buffers [Kotlin-Lite]",
             "website": "https://developers.google.com/protocol-buffers/",
@@ -2353,7 +2353,7 @@
                     "name": "Jordon de Hoog"
                 }
             ],
-            "artifactVersion": "2.0.2",
+            "artifactVersion": "2.1.1",
             "description": "A Compose multiplatform library for generating dynamic Material3 color schemes from a seed color.",
             "name": "MaterialKolor",
             "website": "https://github.com/jordond/materialkolor",
@@ -2368,7 +2368,7 @@
                     "name": "Jordon de Hoog"
                 }
             ],
-            "artifactVersion": "2.0.2",
+            "artifactVersion": "2.1.1",
             "description": "A Compose multiplatform library for generating dynamic Material3 color schemes from a seed color.",
             "name": "MaterialKolor",
             "website": "https://github.com/jordond/materialkolor",

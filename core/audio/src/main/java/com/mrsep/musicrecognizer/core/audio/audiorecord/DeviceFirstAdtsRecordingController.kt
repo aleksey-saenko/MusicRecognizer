@@ -1,9 +1,10 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord
 
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AdtsRecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
-import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionScheme
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,19 +14,18 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 import kotlin.time.Duration.Companion.seconds
 
-internal class DualAudioRecordingControllerImpl(
+internal class DeviceFirstAdtsRecordingController(
     microphoneSoundSource: SoundSource,
     deviceSoundSource: SoundSource,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : AudioRecordingController {
 
-    private val microphoneController = AudioRecordingControllerImpl(microphoneSoundSource)
-    private val deviceController = AudioRecordingControllerImpl(deviceSoundSource)
+    private val microphoneController = AdtsRecordingController(microphoneSoundSource)
+    private val deviceController = AdtsRecordingController(deviceSoundSource)
 
     override val soundLevel: StateFlow<Float> = combine(
         microphoneSoundSource.soundLevel,
@@ -38,7 +38,7 @@ internal class DualAudioRecordingControllerImpl(
         initialValue = 0f
     )
 
-    override fun audioRecordingFlow(scheme: RecognitionScheme): Flow<Result<AudioRecording>> {
+    override fun audioRecordingFlow(scheme: RecordingScheme): Flow<Result<AudioRecording>> {
         return microphoneController.audioRecordingFlow(scheme)
             .zip(deviceController.audioRecordingFlow(scheme)) { microphoneResult, deviceResult ->
                 val micRecording = microphoneResult.getOrThrow()
@@ -51,6 +51,5 @@ internal class DualAudioRecordingControllerImpl(
                 }
             }
             .catch { emit(Result.failure(it)) }
-            .flowOn(defaultDispatcher)
     }
 }

@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
@@ -40,33 +39,20 @@ import kotlin.math.sqrt
 
 private const val TAG = "SoundSourceImpl"
 
-/*
- * Some important notes about AudioRecord, that are poorly documented:
- * 1). Audio data is placed in the buffer in chunks of size getMinBufferSize() / 2.
- * This doesn't depend on the set custom buffer size or anything else.
- * 2). If reading data from the buffer is slower than filling it up, the new recorded data is lost.
- * AudioRecord keeps recording, but audio frames which exceed the buffer-level are dropped.
- * The recording will be distorted with a sense of acceleration (loss of intermediate frames).
- * 3). The first of the received samples will most likely be zero
- * due to hardware AGC (Automatic Gain Control).
- * 4). The first audio chunk arrives in the buffer with some delay (100ms in my tests).
- * Most likely it is related to a resampler. If the requested sample rate differs
- * from hardware ADC (analog-to-digital converter), then a resampler filter delay may occur.
- */
 internal class SoundSourceImpl(
     private val appContext: Context,
     private val mediaProjection: MediaProjection? = null
 ) : SoundSource {
 
     override val params = SoundSourceConfigProvider.config
-    private val soundLevelChannel = Channel<ByteArray>(Channel.CONFLATED)
+    private val chunkEnergyChannel = Channel<Double>(Channel.CONFLATED)
 
-    override val pcmChunkFlow: SharedFlow<Result<ByteArray>> = flow<Result<ByteArray>> {
-        val params = checkNotNull(params) { "No available params for AudioRecord" }
-        val oneSecBuffer = params.audioFormat.sampleRate * params.bytesPerFrame
-        val realBuffer = (params.minBufferSize * 10).coerceAtLeast(oneSecBuffer)
+    override val pcmChunkFlow: SharedFlow<Result<ByteArray>> = flow {
+        val params = checkNotNull(params) { "No available configuration for audio recording" }
         var audioRecordRef: AudioRecord? = null
         try {
+            val oneSecBuffer = params.audioFormat.sampleRate * params.bytesPerFrame
+            val realBuffer = (params.minBufferSize * 10).coerceAtLeast(oneSecBuffer)
             val audioRecordBuilder = AudioRecord.Builder()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 audioRecordBuilder.setContext(appContext)
@@ -95,7 +81,6 @@ internal class SoundSourceImpl(
             check(audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 "AudioRecord cant start recording, is audio input captured by another app?"
             }
-
             while (true) {
                 val pcmChunk = when (params.audioFormat.encoding) {
                     AudioFormat.ENCODING_PCM_16BIT -> {
@@ -106,6 +91,7 @@ internal class SoundSourceImpl(
                                 this.size,
                                 AudioRecord.READ_BLOCKING
                             )
+                            chunkEnergyChannel.send(this.toShortArray().calculateChunkEnergy())
                         }
                     }
 
@@ -117,12 +103,12 @@ internal class SoundSourceImpl(
                                 this.size,
                                 AudioRecord.READ_BLOCKING
                             )
+                            chunkEnergyChannel.send(this.calculateChunkEnergy())
                         }.toByteArray()
                     }
 
                     else -> error("Unsupported encoding")
                 }
-                soundLevelChannel.trySend(pcmChunk)
                 emit(Result.success(pcmChunk))
                 yield()
             }
@@ -140,22 +126,14 @@ internal class SoundSourceImpl(
             replay = 0
         )
 
-
     override val soundLevel: StateFlow<Float> = if (params != null) {
-        val movingWindowSizeInChunks = MOVING_WINDOW_MILLISECONDS
-            .div((params.chunkSizeInSeconds * 1000))
-            .roundToInt()
-        when (params.audioFormat.encoding) {
-            AudioFormat.ENCODING_PCM_16BIT -> soundLevelChannel.receiveAsFlow()
-                .map { it.toShortArray() }
-                .transformShortsToRMS(movingWindowSizeInChunks)
-
-            AudioFormat.ENCODING_PCM_FLOAT -> soundLevelChannel.receiveAsFlow()
-                .map { it.toFloatArray() }
-                .transformFloatsToRMS(movingWindowSizeInChunks)
-
-            else -> flowOf(error("Unsupported encoding"))
-        }
+        chunkEnergyChannel.receiveAsFlow()
+            .transformEnergyToRMS(
+                movingWindowSizeChunks = MOVING_WINDOW_MILLISECONDS
+                    .div(params.chunkSizeInSeconds * 1000)
+                    .roundToInt(),
+                samplesPerChunk = params.chunkSize / params.bytesPerFrame
+            )
     } else {
         emptyFlow()
     }
@@ -169,45 +147,23 @@ internal class SoundSourceImpl(
             initialValue = 0f
         )
 
+    private fun ShortArray.calculateChunkEnergy() = sumOf { value -> (value / 32768.0).pow(2) }
+    private fun FloatArray.calculateChunkEnergy() = sumOf { value -> value.toDouble().pow(2) }
+
+    private fun Flow<Double>.transformEnergyToRMS(movingWindowSizeChunks: Int, samplesPerChunk: Int) = flow {
+        val window = ArrayDeque<Double>(movingWindowSizeChunks)
+        collect { energy: Double ->
+            if (window.size == movingWindowSizeChunks) window.removeAt(0)
+            window.add(energy)
+            val rms = sqrt(window.sum() / (window.size * samplesPerChunk))
+            emit(rms.toFloat())
+        }
+    }
 
     private fun transformToNormalizedDBFS(rmsValue: Float): Float {
         val dBFS = 20 * log10(rmsValue).coerceIn(SILENCE_THRESHOLD_DECIBELS, 0f)
         if (dBFS.isNaN()) return 0f
         return (dBFS.div(SILENCE_THRESHOLD_DECIBELS.absoluteValue) + 1).coerceIn(0f, 1f)
-    }
-
-    private fun Flow<ShortArray>.transformShortsToRMS(movingWindowSizeChunks: Int) = flow {
-        val window = ArrayDeque<FloatArray>(movingWindowSizeChunks)
-        collect { chunk: ShortArray ->
-            val squares = FloatArray(chunk.size) { i -> (chunk[i] / 32768f).pow(2) }
-            if (window.size == movingWindowSizeChunks) window.removeAt(0)
-            window.add(squares)
-            var squaresSum = 0f
-            var totalSize = 0
-            for (squaresArray in window) {
-                squaresSum += squaresArray.sum()
-                totalSize += squaresArray.size
-            }
-            val rms = sqrt(squaresSum / totalSize)
-            emit(rms)
-        }
-    }
-
-    private fun Flow<FloatArray>.transformFloatsToRMS(movingWindowSizeChunks: Int) = flow {
-        val window = ArrayDeque<FloatArray>(movingWindowSizeChunks)
-        collect { chunk: FloatArray ->
-            val squares = FloatArray(chunk.size) { i -> chunk[i].pow(2) }
-            if (window.size == movingWindowSizeChunks) window.removeAt(0)
-            window.add(squares)
-            var squaresSum = 0f
-            var totalSize = 0
-            for (squaresArray in window) {
-                squaresSum += squaresArray.sum()
-                totalSize += squaresArray.size
-            }
-            val rms = sqrt(squaresSum / totalSize)
-            emit(rms)
-        }
     }
 
     companion object {
@@ -229,13 +185,6 @@ private fun FloatArray.toByteArray(): ByteArray {
 private fun ByteArray.toShortArray(): ShortArray {
     val output = ShortArray(size.div(Short.SIZE_BYTES))
     val buffer = ByteBuffer.wrap(this).order(ByteOrder.nativeOrder()).asShortBuffer()
-    buffer.get(output)
-    return output
-}
-
-private fun ByteArray.toFloatArray(): FloatArray {
-    val output = FloatArray(size.div(Float.SIZE_BYTES))
-    val buffer = ByteBuffer.wrap(this).order(ByteOrder.nativeOrder()).asFloatBuffer()
     buffer.get(output)
     return output
 }

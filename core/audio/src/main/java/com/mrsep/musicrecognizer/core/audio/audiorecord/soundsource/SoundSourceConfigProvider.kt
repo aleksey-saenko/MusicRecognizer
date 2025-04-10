@@ -6,8 +6,17 @@ import android.media.AudioRecord
 internal object SoundSourceConfigProvider {
 
     val config by lazy {
-        val encodings = arrayOf(AudioFormat.ENCODING_PCM_16BIT, AudioFormat.ENCODING_PCM_FLOAT)
-        val sampleRates = arrayOf(48_000, 44_100, 96_000)
+        val encodings = arrayOf(
+            AudioFormat.ENCODING_PCM_16BIT,
+            // Most AAC encoders seem to support only 16-bit integer PCM input
+            // So use ENCODING_PCM_FLOAT as a last resort
+            AudioFormat.ENCODING_PCM_FLOAT,
+        )
+        val sampleRates = arrayOf(
+            48_000,
+            44_100,
+            96_000,
+        )
         val ch = AudioFormat.CHANNEL_IN_MONO
         for (enc in encodings) {
             for (rate in sampleRates) {

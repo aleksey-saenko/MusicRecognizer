@@ -100,7 +100,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                             if (recording.isFallback) {
                                 fallbackRecordingChannel.send(recording)
                                 fallbackRecordingChannel.close()
-                            } else if (recording.nonSilenceDuration < 0.5.seconds) {
+                            } else if (recording.nonSilenceDuration > 0.5.seconds) {
                                 recordingChannel.send(recording)
                             }
                         }.onFailure { cause ->

@@ -158,8 +158,9 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
 
             val remoteResultJob = recordingChannel.receiveAsFlow()
                 .onEmpty {
-                    val msg = "Recognition process failed due to empty audio recording stream"
-                    lastResult = RemoteRecognitionResult.Error.BadRecording(msg)
+                    lastResult = RemoteRecognitionResult.Error.BadRecording(
+                        "Empty audio recording stream"
+                    )
                 }
                 .transformWhile<ByteArray, Unit> { recording ->
                     lastResult = recognize(recording)
@@ -182,15 +183,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     }
 
     private fun RemoteRecognitionResult.isRetryRequired() = when (this) {
-        is RemoteRecognitionResult.Success,
-        RemoteRecognitionResult.NoMatches,
-        is RemoteRecognitionResult.Error.BadRecording,
-        is RemoteRecognitionResult.Error.AuthError,
-        is RemoteRecognitionResult.Error.ApiUsageLimited,
-        is RemoteRecognitionResult.Error.UnhandledError -> false
-
-        RemoteRecognitionResult.Error.BadConnection,
-        is RemoteRecognitionResult.Error.HttpError -> true
+        RemoteRecognitionResult.Error.BadConnection -> true
+        else -> false
     }
 
     private fun createSignature(timestamp: String, config: AcrCloudConfig): String {

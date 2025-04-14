@@ -7,20 +7,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import okhttp3.Request
 import okhttp3.WebSocket
-import okio.ByteString
+import java.io.IOException
 import java.lang.IllegalStateException
 
 internal abstract class WebSocketBaseFake(
     private val testScope: TestScope
 ) : WebSocket {
 
-    protected var canceled = false
-    protected var closed = false
-    protected var queueSize = 0L
+    private var canceled = false
+    private var closed = false
 
-    val outputChannel = Channel<SocketEvent>(capacity = 64)
+    override fun queueSize() = 0L
 
-    fun openSocketWithDelay(delayBeforeOpening: Long) {
+    val outputChannel = Channel<SocketEvent>(Channel.UNLIMITED)
+
+    fun openConnection(delayBeforeOpening: Long) {
+        check(!canceled && !closed)
         val webSocket = this
         testScope.launch {
             delay(delayBeforeOpening)
@@ -28,22 +30,36 @@ internal abstract class WebSocketBaseFake(
         }
     }
 
+    fun failureConnection(delayBeforeFailure: Long, recoverable: Boolean) {
+        check(!canceled && !closed)
+        testScope.launch {
+            delay(delayBeforeFailure)
+            outputChannel.trySend(
+                SocketEvent.ConnectionFailed(
+                    if (recoverable) {
+                        IOException("Web socket closed by server due to timeout")
+                    } else {
+                        RuntimeException("Protocol error")
+                    }
+                )
+            )
+        }
+    }
+
     fun simulateReconnect(delayBeforeClosing: Long, delayBeforeOpening: Long) {
+        check(!canceled && !closed)
         testScope.launch {
             delay(delayBeforeClosing)
             outputChannel.trySend(
                 SocketEvent.ConnectionFailed(
-                    RuntimeException("Web Socket closed by server due to timeout")
+                    IOException("Web socket closed by server due to timeout")
                 )
             )
-            openSocketWithDelay(delayBeforeOpening)
+            delay(delayBeforeOpening)
+            outputChannel.trySend(SocketEvent.ConnectionOpened(this@WebSocketBaseFake))
         }
     }
 
-    suspend fun clearQueue(bytes: ByteString, delayToClear: Long) {
-        delay(delayToClear)
-        queueSize -= bytes.size.toLong()
-    }
 
     override fun cancel() {
         outputChannel.close()
@@ -56,15 +72,13 @@ internal abstract class WebSocketBaseFake(
         return true
     }
 
-    override fun queueSize(): Long {
-        return queueSize
-    }
-
     override fun request(): Request {
+        check(!canceled && !closed)
         throw IllegalStateException("Not required in tests")
     }
 
     override fun send(text: String): Boolean {
-        throw IllegalStateException("Not required in tests")
+        check(!canceled && !closed)
+        return true
     }
 }

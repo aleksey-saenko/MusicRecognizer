@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -33,6 +34,7 @@ internal object NetworkModule {
         @ApplicationScope appScope: CoroutineScope
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .pingInterval(15, TimeUnit.SECONDS)
             .addInterceptor(UserAgentInterceptor(appContext))
             .run {
                 if ((BuildConfig.LOG_DEBUG_MODE)) {

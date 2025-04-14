@@ -24,22 +24,16 @@ internal class AuddWebSocketSessionImpl @Inject constructor(
     private val json: Json,
 ) : AuddWebSocketSession {
 
-    private fun buildRequest(token: String): Request {
-        return Request.Builder()
-            .url(WEB_SOCKET_URL.format(RETURN_PARAM, token))
-            .build()
-    }
-
-    override suspend fun startSession(apiToken: String): Flow<SocketEvent> = flow {
+    override suspend fun startReconnectingSession(apiToken: String): Flow<SocketEvent> = flow {
         var reconnectionDelay = 1000L
         while (true) {
-            emitAll(startSingleSession(apiToken))
+            emitAll(startNewSession(apiToken))
             delay(reconnectionDelay)
             if (reconnectionDelay < 4000L) reconnectionDelay *= 2
         }
     }
 
-    private suspend fun startSingleSession(token: String): Flow<SocketEvent> = callbackFlow {
+    private fun startNewSession(token: String): Flow<SocketEvent> = callbackFlow {
         val eventsListener = object : WebSocketListener() {
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 trySendBlocking(SocketEvent.ConnectionClosed(ShutdownReason(code, reason)))
@@ -67,6 +61,12 @@ internal class AuddWebSocketSessionImpl @Inject constructor(
         awaitClose {
             webSocket.cancel()
         }
+    }
+
+    private fun buildRequest(token: String): Request {
+        return Request.Builder()
+            .url(WEB_SOCKET_URL.format(RETURN_PARAM, token))
+            .build()
     }
 
     private fun parseServerResponse(responseJson: String): RemoteRecognitionResult {

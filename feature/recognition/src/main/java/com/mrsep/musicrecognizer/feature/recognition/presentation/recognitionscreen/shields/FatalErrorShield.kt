@@ -84,9 +84,9 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                 Surface(
                     tonalElevation = 1.dp,
                     shape = MaterialTheme.shapes.small,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Text(
                             text = moreInfo,
                             textAlign = TextAlign.Start,
@@ -96,7 +96,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                             modifier = Modifier
                                 .horizontalScroll(rememberScrollState())
                         )
-                        Row(modifier = Modifier.padding(top = 16.dp)) {
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
                             TextButton(
                                 onClick = { context.copyTextToClipboard(moreInfo) },
                             ) {

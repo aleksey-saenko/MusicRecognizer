@@ -27,11 +27,8 @@ internal class LyricsFetcherImpl @Inject constructor(
         return withContext(ioDispatcher) {
             channelFlow {
                 val tasks = listOf(
-                    // Disabled due to https://github.com/asrvd/lyrist/issues/9
-//                    async { fetchLyristSource(track.title, track.artist) },
-                    // Disabled due to inconsistent line breaks in lyrics
-//                    async { fetchOvhSource(track.title, track.artist) },
-                    async { fetchLrcLibSource(track.title, track.artist) },
+                    async { fetchFromLrcLib(track.title, track.artist) },
+                    async { fetchFromLyricHubGenius(track.title, track.artist) },
                 )
                 tasks.forEach { task -> launch { send(task.await()) } }
             }
@@ -40,60 +37,39 @@ internal class LyricsFetcherImpl @Inject constructor(
         }
     }
 
-    private suspend fun fetchLyristSource(title: String, artist: String): String? {
-        val requestUrl = "https://lyrist.vercel.app/api/:$artist/:$title"
-        val request = Request.Builder().url(requestUrl).get().build()
-        return try {
-            okHttpClient.newCall(request).await().use { response ->
-                if (!response.isSuccessful) return null
-                json.decodeFromString<LyristResponseJson>(response.body!!.string())
-                    .lyrics?.trim()?.takeIf { it.isNotBlank() }
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
-            null
-        }
-    }
-
-    private suspend fun fetchOvhSource(title: String, artist: String): String? {
-        val requestUrl = "https://api.lyrics.ovh/v1/$artist/$title"
-        val request = Request.Builder().url(requestUrl).get().build()
-        return try {
-            okHttpClient.newCall(request).await().use { response ->
-                if (!response.isSuccessful) return null
-                json.decodeFromString<LyricsOvhResponseJson>(response.body!!.string()).lyrics?.run {
-                    val lineBreak = indexOf("\n")
-                    if (startsWith("Paroles de la chanson") && lineBreak != -1) {
-                        drop(lineBreak + 1)
-                    } else {
-                        this
-                    }.trim().takeIf { it.isNotBlank() }
-                }
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
-            null
-        }
-    }
-
-    private suspend fun fetchLrcLibSource(title: String, artist: String): String? {
+    private suspend fun fetchFromLrcLib(title: String, artist: String): String? {
         // Don't use optional album_name and duration parameters to expand search
         val requestUrl = "https://lrclib.net/api/get?artist_name=$artist&track_name=$title"
         val request = Request.Builder().url(requestUrl).get().build()
+        return fetchByRequest<LrcLibResponseJson>(request) { plainLyrics }
+    }
+
+    private suspend fun fetchFromLyricHubGenius(title: String, artist: String): String? {
+        val requestUrl = "https://lyrichub.vercel.app/api/genius?query=$title+$artist"
+        val request = Request.Builder().url(requestUrl).get().build()
+        return fetchByRequest<LyricHubResponseJson>(request) { lyrics }
+    }
+
+    private suspend fun fetchFromLyricHubSpotify(title: String, artist: String): String? {
+        val requestUrl = "https://lyrichub.vercel.app/api/spotify?query=$title+$artist"
+        val request = Request.Builder().url(requestUrl).get().build()
+        return fetchByRequest<LyricHubResponseJson>(request) { lyrics }
+    }
+
+    private suspend inline fun <reified T> fetchByRequest(
+        request: Request,
+        providePlainLyrics: T.() -> String?,
+    ): String? {
         return try {
             okHttpClient.newCall(request).await().use { response ->
                 if (!response.isSuccessful) return null
-                json.decodeFromString<LrcLibResponseJson>(response.body!!.string())
-                    .plainLyrics?.trim()?.takeIf { it.isNotBlank() }
+                json.decodeFromString<T>(response.body!!.string())
+                    .providePlainLyrics()?.trim()?.takeIf { it.isNotBlank() }
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Lyrics fetching is failed ($requestUrl)", e)
+            Log.e(this::class.simpleName, "Lyrics fetching is failed (${request.url.host})", e)
             null
         }
     }

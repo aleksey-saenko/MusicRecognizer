@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class LyristResponseJson(
-    @SerialName("lyrics")
-    val lyrics: String?,
+internal data class LyricHubResponseJson(
     @SerialName("title")
     val title: String?,
     @SerialName("artist")
     val artist: String?,
-    @SerialName("image")
-    val artworkUrl: String?
+    @SerialName("cover")
+    val cover: String?,
+    @SerialName("lyrics")
+    val lyrics: String?,
 )

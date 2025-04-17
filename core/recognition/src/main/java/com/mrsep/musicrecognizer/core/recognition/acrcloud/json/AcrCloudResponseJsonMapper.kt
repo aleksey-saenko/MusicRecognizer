@@ -5,36 +5,67 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvid
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import java.time.Duration
+import com.mrsep.musicrecognizer.core.recognition.acrcloud.AcrCloudRecognitionService.Companion.RECORDING_DURATION_LIMIT
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.UUID
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
-internal fun AcrCloudResponseJson.toRecognitionResult(): RemoteRecognitionResult {
+internal fun AcrCloudResponseJson.toRecognitionResult(
+    recordingStartTimestamp: Instant,
+    recordingDuration: Duration,
+): RemoteRecognitionResult {
     return when (status.code) {
-        0 -> parseSuccessResult(this)
+        0 -> parseSuccessResult(recordingStartTimestamp, recordingDuration)
         1001 -> RemoteRecognitionResult.NoMatches
-        2000, 2004 -> RemoteRecognitionResult.Error.BadRecording(getErrorMessage(this))
+        2000, 2004 -> RemoteRecognitionResult.Error.BadRecording(getErrorMessage())
         3001, 3014 -> RemoteRecognitionResult.Error.AuthError
         3003, 3015 -> RemoteRecognitionResult.Error.ApiUsageLimited
-        else -> RemoteRecognitionResult.Error.UnhandledError(getErrorMessage((this)))
+        else -> RemoteRecognitionResult.Error.UnhandledError(getErrorMessage())
     }
 }
 
-private fun parseSuccessResult(json: AcrCloudResponseJson): RemoteRecognitionResult {
-    return json.metadata?.music?.firstOrNull()?.run(::parseMusic)
-        ?: json.metadata?.humming?.firstOrNull()?.run(::parseMusic)
+private fun AcrCloudResponseJson.parseSuccessResult(
+    recordingStartTimestamp: Instant,
+    recordingDuration: Duration,
+): RemoteRecognitionResult {
+    return metadata?.music?.firstWithMostConfidenceOrNull()
+        ?.let { music -> parseMusic(music, recordingStartTimestamp, recordingDuration) }
+        ?: metadata?.humming?.firstWithMostConfidenceOrNull()
+        ?.let { music -> parseMusic(music, recordingStartTimestamp, recordingDuration) }
         ?: RemoteRecognitionResult.NoMatches
 }
 
+private fun List<AcrCloudResponseJson.Metadata.Music>.firstWithMostConfidenceOrNull() =
+    maxWithOrNull(
+        // AcrCloud docs: Match confidence score. Range: 70 - 100
+        compareBy<AcrCloudResponseJson.Metadata.Music> { it.score ?: 70.0 }
+            // Take first match in recorded audio sample
+            .thenByDescending { it.sampleBeginTimeOffsetMs }
+    )
+
+
 private fun parseMusic(
-    music: AcrCloudResponseJson.Metadata.Music
+    music: AcrCloudResponseJson.Metadata.Music,
+    recordingStartTimestamp: Instant,
+    recordingDuration: Duration,
 ): RemoteRecognitionResult.Success? {
     val title = music.title
-    val artist = music.artists?.mapNotNull { it.name }?.joinToString(" & ")
+    val artist = music.artists
+        ?.mapNotNull { artist -> artist.name.takeIf { name -> !name.isNullOrBlank() } }
+        ?.joinToString(" & ")
     if (title == null || artist == null) return null
+
+    val trackDuration = music.durationMs?.toLong()?.milliseconds
+    val truncatedPart = (recordingDuration - RECORDING_DURATION_LIMIT).coerceAtLeast(0.seconds)
+    val recognitionDate = recordingStartTimestamp
+        .plusMillis(truncatedPart.inWholeMilliseconds)
+        .plusMillis(music.sampleBeginTimeOffsetMs.toLong())
+    val recognizedAt = music.dbBeginTimeOffsetMs.milliseconds
+        .coerceIn(Duration.ZERO, trackDuration)
 
     val track = Track(
         id = createTrackId(music),
@@ -42,17 +73,17 @@ private fun parseMusic(
         artist = artist,
         album = music.album?.name,
         releaseDate = music.releaseDate?.run(::parseReleaseDate),
-        duration = music.durationMs?.toLong()?.run(Duration::ofMillis),
-        recognizedAt = music.playOffsetMs?.toLong()?.run(Duration::ofMillis),
+        duration = trackDuration,
+        recognizedAt = recognizedAt,
         recognizedBy = RecognitionProvider.AcrCloud,
-        recognitionDate = Instant.now(),
+        recognitionDate = recognitionDate,
         lyrics = null,
         artworkThumbUrl = null,
         artworkUrl = null,
         trackLinks = buildMap {
-            parseDeezerUrl(music)?.run { put(MusicService.Deezer, this) }
-            parseSpotifyUrl(music)?.run { put(MusicService.Spotify, this) }
-            parseYoutubeUrl(music)?.run { put(MusicService.Youtube, this) }
+            parseDeezerUrl(music)?.let { link -> put(MusicService.Deezer, link) }
+            parseSpotifyUrl(music)?.let { link -> put(MusicService.Spotify, link) }
+            parseYoutubeUrl(music)?.let { link -> put(MusicService.Youtube, link) }
         },
         properties = Track.Properties(
             isFavorite = false,
@@ -64,12 +95,10 @@ private fun parseMusic(
 }
 
 private fun createTrackId(music: AcrCloudResponseJson.Metadata.Music): String {
-    return music.acrid?.let {
-        // Define some namespace for AcrCloud to distinguish result UUIDs in cases
-        // when tracks recognized by different providers have the same remote ID
-        val acrCloudIdNamespace = "b2f226c2-e0e8-45d1-884f-856a8c59f174"
-        UuidCreator.getNameBasedSha1(acrCloudIdNamespace, music.acrid).toString()
-    } ?: UUID.randomUUID().toString()
+    // Define some namespace for AcrCloud to distinguish result UUIDs in cases
+    // when tracks recognized by different providers have the same remote ID
+    val acrCloudIdNamespace = "b2f226c2-e0e8-45d1-884f-856a8c59f174"
+    return UuidCreator.getNameBasedSha1(acrCloudIdNamespace, music.acrid).toString()
 }
 
 private fun parseDeezerUrl(music: AcrCloudResponseJson.Metadata.Music): String? {
@@ -100,8 +129,8 @@ private fun parseReleaseDate(releaseDate: String): LocalDate? {
     }
 }
 
-private fun getErrorMessage(json: AcrCloudResponseJson): String {
-    return "ACRCloud error response: ${json.status.msg}"
+private fun AcrCloudResponseJson.getErrorMessage(): String {
+    return "ACRCloud error response: ${status.msg}"
 }
 
 /* https://docs.acrcloud.com/sdk-reference/error-codes

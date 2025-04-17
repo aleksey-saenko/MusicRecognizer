@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.core.recognition.audd.json
 
-import android.graphics.Color
 import android.text.Html
 import android.util.Log
 import android.util.Patterns
+import androidx.core.graphics.toColorInt
 import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
@@ -11,21 +11,29 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
 import kotlinx.serialization.json.Json
-import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.UUID
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "AuddResponseJsonMapper"
 
-internal fun AuddResponseJson.toRecognitionResult(json: Json): RemoteRecognitionResult {
+internal fun AuddResponseJson.toRecognitionResult(
+    json: Json,
+    recordingStartTimestamp: Instant,
+    recordingDuration: Duration,
+): RemoteRecognitionResult {
     return when (status) {
         "success" -> if (result == null) {
             RemoteRecognitionResult.NoMatches
         } else {
-            parseSuccessResult(result, json)
+            parseSuccessResult(result, recordingStartTimestamp, recordingDuration, json)
         }
 
         "error" -> if (error == null) {
@@ -38,7 +46,12 @@ internal fun AuddResponseJson.toRecognitionResult(json: Json): RemoteRecognition
     }
 }
 
-private fun parseSuccessResult(result: AuddResponseJson.Result, json: Json): RemoteRecognitionResult {
+private fun parseSuccessResult(
+    result: AuddResponseJson.Result,
+    recordingStartTimestamp: Instant,
+    recordingDuration: Duration,
+    json: Json,
+): RemoteRecognitionResult {
     val trackTitle = result.parseTrackTitle()
     val trackArtist = result.parseTrackArtist()
     if (trackTitle.isNullOrBlank() || trackArtist.isNullOrBlank()) {
@@ -46,6 +59,12 @@ private fun parseSuccessResult(result: AuddResponseJson.Result, json: Json): Rem
     }
     val mediaItems = result.lyricsJson?.parseMediaItems(json)
     val trackArtwork = result.toTrackArtwork()
+
+    val trackDuration = result.parseTrackDuration()
+    val recognizedAt = result.timecode?.run(::parseRecognizedAt)
+        ?.minus(recordingDuration)
+        ?.coerceIn(Duration.ZERO, trackDuration)
+
     return RemoteRecognitionResult.Success(
         track = Track(
             id = createTrackId(result),
@@ -53,10 +72,10 @@ private fun parseSuccessResult(result: AuddResponseJson.Result, json: Json): Rem
             artist = trackArtist,
             album = result.parseAlbum(),
             releaseDate = result.parseReleaseDate(),
-            duration = result.parseTrackDuration(),
-            recognizedAt = result.timecode?.run(::parseRecognizedAt),
+            duration = trackDuration,
+            recognizedAt = recognizedAt,
             recognizedBy = RecognitionProvider.Audd,
-            recognitionDate = Instant.now(),
+            recognitionDate = recordingStartTimestamp,
             lyrics = result.parseLyrics(),
             artworkUrl = trackArtwork?.url,
             artworkThumbUrl = trackArtwork?.thumbUrl,
@@ -114,20 +133,20 @@ private fun AuddResponseJson.Result.parseAlbum(): String? {
 }
 
 private fun AuddResponseJson.Result.parseTrackDuration(): Duration? {
-    return appleMusic?.durationInMillis?.toLong()?.run(Duration::ofMillis)
-        ?: spotify?.durationMillis?.toLong()?.run(Duration::ofMillis)
-        ?: deezerJson?.durationSeconds?.toLong()?.run(Duration::ofSeconds)
-        ?: napster?.durationSeconds?.toLong()?.run(Duration::ofSeconds)
-        ?: musicbrainz?.firstOrNull()?.durationMillis?.toLong()?.run(Duration::ofMillis)
+    return appleMusic?.durationInMillis?.toLong()?.milliseconds
+        ?: spotify?.durationMillis?.toLong()?.milliseconds
+        ?: deezerJson?.durationSeconds?.toLong()?.seconds
+        ?: napster?.durationSeconds?.toLong()?.seconds
+        ?: musicbrainz?.firstOrNull()?.durationMillis?.toLong()?.milliseconds
 }
 
 private fun parseRecognizedAt(input: String): Duration? {
     return try {
         val timeParts = input.split(":").map { it.toLong() }
         when (timeParts.size) {
-            1 -> Duration.ofSeconds(timeParts[0])
-            2 -> Duration.ofMinutes(timeParts[0]).plusSeconds(timeParts[1])
-            3 -> Duration.ofHours(timeParts[0]).plusMinutes(timeParts[1]).plusSeconds(timeParts[2])
+            1 -> timeParts[0].seconds
+            2 -> timeParts[0].minutes + timeParts[1].seconds
+            3 -> timeParts[0].hours + timeParts[1].minutes + timeParts[2].seconds
             else -> null
         }
     } catch (e: Exception) {
@@ -278,10 +297,11 @@ private fun AuddResponseJson.Result.parseLyrics() = this.lyricsJson?.lyrics?.run
     ).toString().trim().takeIf { it.isNotBlank() }
 }
 
+@Suppress("unused")
 private fun AuddResponseJson.Result.parseArtworkSeedColor(): Int? {
     return this.appleMusic?.artwork?.backgroundColor?.run {
         try {
-            Color.parseColor("#$this")
+            "#$this".toColorInt()
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "Failed to parse artwork color", e)
             null

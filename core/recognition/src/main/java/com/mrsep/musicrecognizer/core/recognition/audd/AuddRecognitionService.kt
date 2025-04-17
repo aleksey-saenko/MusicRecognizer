@@ -3,11 +3,12 @@ package com.mrsep.musicrecognizer.core.recognition.audd
 import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import com.mrsep.musicrecognizer.core.domain.recognition.RemoteRecognitionService
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.core.recognition.audd.json.toRecognitionResult
-import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSession
+import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.SocketEvent
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -37,99 +38,65 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.WebSocket
 import okio.ByteString.Companion.toByteString
 import ru.gildor.coroutines.okhttp.await
-import java.io.File
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.ProtocolException
 import java.net.SocketTimeoutException
-import java.net.URL
 import java.security.cert.CertificateException
+import java.time.Instant
 import javax.net.ssl.SSLHandshakeException
 import javax.net.ssl.SSLPeerUnverifiedException
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "AuddRecognitionService"
 
 internal class AuddRecognitionService @AssistedInject constructor(
     @Assisted private val config: AuddConfig,
-    private val webSocketSession: AuddWebSocketSession,
+    private val webSocketSession: WebSocketSession,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val okHttpClient: OkHttpClient,
     private val json: Json,
 ) : RemoteRecognitionService {
 
-    override suspend fun recognize(recording: ByteArray): RemoteRecognitionResult {
-        return withContext(ioDispatcher) {
-            baseHttpCall { addByteArrayAsMultipartBody(recording) }
-        }
+    override suspend fun recognize(recording: AudioRecording): RemoteRecognitionResult {
+        return recognize(recording.data, recording.startTimestamp, recording.duration)
     }
 
-    override suspend fun recognize(recording: File): RemoteRecognitionResult {
-        return withContext(ioDispatcher) {
-            baseHttpCall { addFileAsMultipartBody(recording) }
-        }
-    }
-
-    suspend fun recognize(url: URL): RemoteRecognitionResult {
-        return withContext(ioDispatcher) {
-            baseHttpCall { addUrlAsMultipartBody(url) }
-        }
-    }
-
-    private fun MultipartBody.Builder.addByteArrayAsMultipartBody(
-        byteArray: ByteArray,
-    ): MultipartBody.Builder {
-        return this.addFormDataPart(
-            "file",
-            "byteArray",
-            byteArray.toRequestBody(RECORDING_MEDIA_TYPE.toMediaTypeOrNull())
-        )
-    }
-
-    private fun MultipartBody.Builder.addFileAsMultipartBody(
-        file: File,
-    ): MultipartBody.Builder {
-        return this.addFormDataPart(
-            "file",
-            file.name,
-            file.asRequestBody(RECORDING_MEDIA_TYPE.toMediaTypeOrNull())
-        )
-    }
-
-    private fun MultipartBody.Builder.addUrlAsMultipartBody(
-        url: URL,
-    ): MultipartBody.Builder {
-        return this.addFormDataPart("url", url.toExternalForm())
-    }
-
-    private suspend inline fun baseHttpCall(
-        dataBodyPart: MultipartBody.Builder.() -> MultipartBody.Builder,
-    ): RemoteRecognitionResult {
+    private suspend fun recognize(
+        recording: ByteArray,
+        startTimestamp: Instant,
+        recordingDuration: Duration,
+    ): RemoteRecognitionResult = withContext(ioDispatcher) {
         val multipartBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("api_token", config.apiToken)
             .addFormDataPart("return", RETURN_PARAM)
-            .dataBodyPart()
+            .addFormDataPart(
+                "file",
+                "sample",
+                recording.toRequestBody(RECORDING_MEDIA_TYPE.toMediaTypeOrNull())
+            )
             .build()
         val request = Request.Builder()
-            .url(AUDD_REST_BASE_URL)
+            .url(REST_BASE_URL)
             .post(multipartBody)
             .build()
 
         val response = try {
             okHttpClient.newCall(request).await()
         } catch (e: IOException) {
-            return RemoteRecognitionResult.Error.BadConnection
+            return@withContext RemoteRecognitionResult.Error.BadConnection
         }
-        return response.use {
+        response.use {
             if (response.isSuccessful) {
                 try {
                     json.decodeFromString<AuddResponseJson>(response.body!!.string())
-                        .toRecognitionResult(json)
+                        .toRecognitionResult(json, startTimestamp, recordingDuration)
                 } catch (e: Exception) {
                     RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
                 }
@@ -143,20 +110,23 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun recognize(recordingFlow: Flow<ByteArray>) = withContext(ioDispatcher) {
-        val recordingChannel = Channel<ByteArray>(Channel.UNLIMITED)
+    override suspend fun recognizeFirst(recordingFlow: Flow<AudioRecording>) = withContext(ioDispatcher) {
+        val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
         var emptyRecordingStream = false
         val recordWithTimeout = launch {
             recordingFlow
                 .onEmpty { emptyRecordingStream = true }
                 .collect(recordingChannel::send)
             recordingChannel.close()
-            delay(if (emptyRecordingStream) 0L else TIMEOUT_AFTER_RECORDING_FINISHED)
+            if (!emptyRecordingStream) {
+                delay(TIMEOUT_AFTER_RECORDING_FINISHED)
+            }
         }
 
         val currentWebSocket = MutableStateFlow<Result<WebSocket>?>(null)
         var failedConnectionCount = 0
-        val wsResponseChannel = webSocketSession.startReconnectingSession(config.apiToken)
+        val wsUrl = WEB_SOCKET_TEMPLATE_URL.format(RETURN_PARAM, config.apiToken)
+        val wsResponseChannel = webSocketSession.startReconnectingSession(wsUrl)
             .transformWhile { socketEvent ->
                 when (socketEvent) {
                     // Web socket session will be restarted; but we don't expect these events
@@ -187,8 +157,10 @@ internal class AuddRecognitionService @AssistedInject constructor(
                         currentWebSocket.update { Result.success(socketEvent.webSocket) }
                     }
 
-                    is SocketEvent.ResponseReceived -> {
-                        emit(socketEvent.response)
+                    is SocketEvent.MessageReceived -> try {
+                        emit(json.decodeFromString<AuddResponseJson>(socketEvent.message))
+                    } catch (e: IllegalArgumentException) {
+                        currentWebSocket.update { Result.failure(e) }
                     }
                 }
                 currentWebSocket.value?.isFailure != true
@@ -199,7 +171,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
         // Initially bad connection
         // for case when after TIMEOUT_AFTER_RECORDING_FINISHED there is no any response yet
         var lastResult: RemoteRecognitionResult = RemoteRecognitionResult.Error.BadConnection
-        var unprocessedRecording: ByteArray? = null
+        var unprocessedRecording: AudioRecording? = null
         val remoteResult = async {
             currentWebSocket.mapLatest {  webSocketResult ->
                 // Wait while webSocket is opening
@@ -213,7 +185,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
                         while (wsResponseChannel.tryReceive().isSuccess) {
                             Log.w(TAG, "Unexpected response dropped")
                         }
-                        val isSent = webSocket.send(localRecording.toByteString())
+                        val isSent = webSocket.send(localRecording.data.toByteString())
                         if (!isSent) awaitCancellation() // web socket is closed
                         val responseResult = withTimeoutOrNull(TIMEOUT_RESPONSE) {
                             wsResponseChannel.receiveCatching()
@@ -222,7 +194,10 @@ internal class AuddRecognitionService @AssistedInject constructor(
                             // response timeout is reached
                             RemoteRecognitionResult.Error.BadConnection
                         } else {
-                            responseResult.getOrNull() // valid response
+                            responseResult.getOrNull()
+                                ?.toRecognitionResult(  // valid response
+                                    json, localRecording.startTimestamp, localRecording.duration
+                                )
                                 ?: awaitCancellation() // the channel is closed
                         }
                         unprocessedRecording = null
@@ -272,12 +247,13 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     companion object {
-        private const val AUDD_REST_BASE_URL = "https://api.audd.io/"
+        private const val REST_BASE_URL = "https://api.audd.io/"
+        private const val WEB_SOCKET_TEMPLATE_URL = "wss://api.audd.io/ws/?return=%s&api_token=%s"
         private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
         private const val RECORDING_MEDIA_TYPE = "audio/mpeg; charset=utf-8"
 
-        private const val TIMEOUT_AFTER_RECORDING_FINISHED = 10_000L
-        private const val TIMEOUT_RESPONSE = 15_000L
+        private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
+        private val TIMEOUT_RESPONSE = 15.seconds
         private const val WEB_SOCKET_RECONNECT_LIMIT = 1
     }
 }

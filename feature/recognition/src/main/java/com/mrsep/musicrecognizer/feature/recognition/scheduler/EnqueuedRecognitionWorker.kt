@@ -57,7 +57,18 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                     RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
                 }
                 val recognitionService = recognitionServiceFactory.getService(serviceConfig)
-                val result = recognitionService.recognize(enqueuedRecognition.recordFile)
+                val recording = enqueuedRecognitionRepository.getRecording(enqueuedRecognition.id)
+                if (recording == null) {
+                    val updatedEnqueued = enqueuedRecognition.copy(
+                        result = RemoteRecognitionResult.Error.BadRecording(
+                            "Failed to get audio recording"
+                        ),
+                        resultDate = Instant.now()
+                    )
+                    enqueuedRecognitionRepository.update(updatedEnqueued)
+                    return@mapLatest Result.failure()
+                }
+                val result = recognitionService.recognize(recording)
 
                 suspend fun handleRetryOnAttempt(): Result {
                     return if (forceLaunch || runAttemptCount >= MAX_ATTEMPTS) {

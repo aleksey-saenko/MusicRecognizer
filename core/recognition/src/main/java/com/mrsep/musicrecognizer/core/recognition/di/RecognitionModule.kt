@@ -7,8 +7,8 @@ import com.mrsep.musicrecognizer.core.recognition.ConfigValidatorImpl
 import com.mrsep.musicrecognizer.core.recognition.RecognitionServiceFactoryImpl
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcherImpl
-import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSession
-import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSessionImpl
+import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
+import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessionImpl
 import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliMetadataEnhancer
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcherImpl
@@ -46,5 +46,5 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindAuddWebSocketSession(impl: AuddWebSocketSessionImpl): AuddWebSocketSession
+    fun bindWebSocketSession(impl: WebSocketSessionImpl): WebSocketSession
 }

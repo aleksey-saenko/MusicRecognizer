@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
@@ -84,7 +83,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
             val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
             val fallbackRecordingChannel = Channel<AudioRecording>(Channel.CONFLATED)
             val remoteRecognitionResult = async {
-                recognitionService.recognize(recordingChannel.receiveAsFlow().map { it.data })
+                recognitionService.recognizeFirst(recordingChannel.receiveAsFlow())
             }
 
             val extraTimeNotifier = launch {
@@ -180,7 +179,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 ?: Result.failure(IllegalStateException("Empty audio recording flow"))
             val result = recordingResult.fold(
                 onSuccess = { recording ->
-                    val task = enqueueRecognition(recording.data, true)
+                    val task = enqueueRecognition(recording, true)
                     RecognitionResult.ScheduledOffline(task)
                 },
                 onFailure = { cause ->
@@ -218,7 +217,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     }
 
     private suspend fun enqueueRecognition(
-        audioRecording: ByteArray,
+        audioRecording: AudioRecording,
         launched: Boolean
     ): RecognitionTask {
         val recognitionId = enqueuedRecognitionRepository.createRecognition(
@@ -240,7 +239,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
         var recognitionTask: RecognitionTask = RecognitionTask.Ignored
         if (saveEnqueued) {
             fallbackRecordingChannel.receiveCatching().onSuccess { recording ->
-                recognitionTask = enqueueRecognition(recording.data, launchEnqueued)
+                recognitionTask = enqueueRecognition(recording, launchEnqueued)
             }.onFailure { cause ->
                 recognitionTask = RecognitionTask.Error(cause)
             }

@@ -14,9 +14,11 @@ interface EnqueuedRecognitionRepository {
 
     suspend fun deleteAll()
 
-    suspend fun createRecognition(audioRecording: ByteArray, title: String): Int?
+    suspend fun createRecognition(audioRecording: AudioRecording, title: String): Int?
 
-    suspend fun getRecordingForRecognition(recognitionId: Int): File?
+    suspend fun getRecordingFile(recognitionId: Int): File?
+
+    suspend fun getRecording(recognitionId: Int): AudioRecording?
 
     fun getRecognitionFlow(recognitionId: Int): Flow<EnqueuedRecognition?>
 

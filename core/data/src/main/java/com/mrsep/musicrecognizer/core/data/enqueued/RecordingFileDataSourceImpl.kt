@@ -1,14 +1,20 @@
 package com.mrsep.musicrecognizer.core.data.enqueued
 
 import android.content.Context
+import android.media.MediaExtractor
+import android.media.MediaFormat
 import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
+import java.time.Instant
 import java.util.zip.ZipInputStream
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 internal class RecordingFileDataSourceImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
@@ -29,8 +35,8 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
         return getFiles().fold(0L) { acc, file -> acc + file.length() }
     }
 
-    override suspend fun write(recording: ByteArray): File? {
-        val recordingName = getNewRecordingName()
+    override suspend fun write(recording: ByteArray, timestamp: Instant): File? {
+        val recordingName = getNewRecordingName(timestamp)
         return try {
             withContext(ioDispatcher) {
                 val resultFile = recordingsDir.resolve(recordingName)
@@ -60,17 +66,33 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun read(file: File): ByteArray? {
-        return try {
-            withContext(ioDispatcher) {
-                file.inputStream().buffered().use { stream ->
-                    stream.readBytes()
-                }
+    override suspend fun read(file: File): AudioRecording? {
+        return withContext(ioDispatcher) {
+            try {
+                val timestamp = Instant.ofEpochMilli(file.name.takeLastWhile(Char::isDigit).toLong())
+                val duration = parseRecordingDuration(file)
+                AudioRecording(
+                    data = file.readBytes(),
+                    duration = duration,
+                    nonSilenceDuration = duration,
+                    startTimestamp = timestamp,
+                    isFallback = false
+                )
+            } catch (e: Exception) {
+                Log.e(this::class.simpleName, "Failed to read recording file", e)
+                null
             }
-        } catch (e: IOException) {
-            Log.e(this::class.simpleName, "Failed to read recording file", e)
-            null
         }
+    }
+
+    @Throws(Exception::class)
+    private fun parseRecordingDuration(file: File): Duration {
+        val mediaExtractor = MediaExtractor().apply {
+            setDataSource(file.absolutePath)
+        }
+        val mediaFormat = mediaExtractor.getTrackFormat(0)
+        val durationUs = mediaFormat.getLong(MediaFormat.KEY_DURATION)
+        return ((durationUs + 500) / 1000).milliseconds
     }
 
     override suspend fun delete(file: File): Boolean {
@@ -100,5 +122,5 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun getNewRecordingName() = "rec_${System.currentTimeMillis()}"
+    private fun getNewRecordingName(timestamp: Instant) = "rec_${timestamp.toEpochMilli()}"
 }

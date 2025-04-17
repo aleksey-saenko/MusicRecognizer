@@ -1,9 +1,9 @@
 package com.mrsep.musicrecognizer.core.domain.track.model
 
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
-import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import kotlin.time.Duration
 
 data class Track(
     val id: String,

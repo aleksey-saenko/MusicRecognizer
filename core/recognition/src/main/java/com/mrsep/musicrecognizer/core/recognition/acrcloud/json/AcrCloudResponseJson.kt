@@ -3,6 +3,9 @@ package com.mrsep.musicrecognizer.core.recognition.acrcloud.json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// https://docs.acrcloud.com/reference/identification-api
+// https://docs.acrcloud.com/metadata/music
+
 @Serializable
 internal data class AcrCloudResponseJson(
     @SerialName("cost_time")
@@ -26,38 +29,38 @@ internal data class AcrCloudResponseJson(
 
         @Serializable
         data class Music(
+            @SerialName("acrid")
+            val acrid: String,
             @SerialName("title")
             val title: String?,
             @SerialName("album")
             val album: Album?,
             @SerialName("label")
             val label: String?,
-            @SerialName("external_metadata")
-            val externalMetadata: ExternalMetadata?,
             @SerialName("release_date")
             val releaseDate: String?,
             @SerialName("artists")
             val artists: List<Artist>?,
-            @SerialName("duration_ms")
-            val durationMs: Int?,
-            @SerialName("external_ids")
-            val externalIds: ExternalIds?,
-            @SerialName("db_end_time_offset_ms")
-            val dbEndTimeOffsetMs: Int?,
-            @SerialName("score")
-            val score: Double?,
-            @SerialName("sample_end_time_offset_ms")
-            val sampleEndTimeOffsetMs: Int?,
-            @SerialName("play_offset_ms")
-            val playOffsetMs: Int?,
-            @SerialName("db_begin_time_offset_ms")
-            val dbBeginTimeOffsetMs: Int?,
-            @SerialName("sample_begin_time_offset_ms")
-            val sampleBeginTimeOffsetMs: Int?,
             @SerialName("genres")
             val genres: List<Genre>?,
-            @SerialName("acrid")
-            val acrid: String?
+            @SerialName("duration_ms")
+            val durationMs: Int?,
+            @SerialName("external_metadata")
+            val externalMetadata: ExternalMetadata?,
+            @SerialName("external_ids")
+            val externalIds: ExternalIds?,
+            @SerialName("db_begin_time_offset_ms")
+            val dbBeginTimeOffsetMs: Int,
+            @SerialName("db_end_time_offset_ms")
+            val dbEndTimeOffsetMs: Int,
+            @SerialName("sample_begin_time_offset_ms")
+            val sampleBeginTimeOffsetMs: Int,
+            @SerialName("sample_end_time_offset_ms")
+            val sampleEndTimeOffsetMs: Int,
+            @SerialName("play_offset_ms")
+            val playOffsetMs: Int?,
+            @SerialName("score")
+            val score: Double?,
         ) {
 
             @Serializable

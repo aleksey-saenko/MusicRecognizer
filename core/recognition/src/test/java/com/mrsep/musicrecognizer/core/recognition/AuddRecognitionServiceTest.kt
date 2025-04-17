@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.core.recognition
 import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.AuddRecognitionService
-import com.mrsep.musicrecognizer.core.recognition.audd.websocket.AuddWebSocketSession
+import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.SocketEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -44,9 +44,10 @@ class AuddRecognitionServiceTest {
         val webSocket = object : WebSocketBaseFake(this) {
             override fun send(bytes: ByteString): Boolean {
                 launch {
-                    val result = RemoteRecognitionResult.Success(fakeTrack)
                     delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(SocketEvent.ResponseReceived(result))
+                    outputChannel.send(
+                        SocketEvent.MessageReceived(getJson("audd_response_success.json"))
+                    )
                 }
                 return true
             }
@@ -59,7 +60,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
         Assert.assertTrue(result is RemoteRecognitionResult.Success)
         Assert.assertEquals(expectedTime, testScheduler.currentTime)
@@ -71,10 +72,11 @@ class AuddRecognitionServiceTest {
             var firstResponse = true
             override fun send(bytes: ByteString): Boolean {
                 launch {
-                    val result = RemoteRecognitionResult.NoMatches
                     firstResponse = false
                     delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(SocketEvent.ResponseReceived(result))
+                    outputChannel.send(
+                        SocketEvent.MessageReceived(getJson("audd_response_no_matches.json"))
+                    )
                 }
                 return true
             }
@@ -87,7 +89,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TEST_RESPONSE_DELAY
         Assert.assertTrue(result is RemoteRecognitionResult.NoMatches)
         Assert.assertEquals(expectedTime, testScheduler.currentTime)
@@ -107,7 +109,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         Assert.assertTrue(result is RemoteRecognitionResult.Error.UnhandledError)
         Assert.assertEquals(failureTime, testScheduler.currentTime)
     }
@@ -127,7 +129,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         Assert.assertTrue(result is RemoteRecognitionResult.Error.BadConnection)
         Assert.assertEquals(secondFailureTime, testScheduler.currentTime)
     }
@@ -145,7 +147,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(emptyFlow())
+        val result = service.recognizeFirst(emptyFlow())
         Assert.assertTrue(result is RemoteRecognitionResult.Error.BadRecording)
         Assert.assertEquals(0, testScheduler.currentTime)
     }
@@ -157,9 +159,7 @@ class AuddRecognitionServiceTest {
                 launch {
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(
-                        SocketEvent.ResponseReceived(
-                            RemoteRecognitionResult.Error.AuthError
-                        )
+                        SocketEvent.MessageReceived(getJson("audd_response_auth_error.json"))
                     )
                 }
                 return true
@@ -173,7 +173,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expected = RemoteRecognitionResult.Error.AuthError
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
         Assert.assertEquals(expected, result)
@@ -192,7 +192,7 @@ class AuddRecognitionServiceTest {
                         delay(10_000)
                     }
                     outputChannel.send(
-                        SocketEvent.ResponseReceived(RemoteRecognitionResult.NoMatches)
+                        SocketEvent.MessageReceived(getJson("audd_response_no_matches.json"))
                     )
                 }
                 return true
@@ -206,7 +206,7 @@ class AuddRecognitionServiceTest {
             okHttpClient = okHttpClient,
             json = json,
         )
-        val result = service.recognize(normalAudioRecordingFlow)
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TIMEOUT_AFTER_RECORDING_FINISHED
         Assert.assertTrue(result is RemoteRecognitionResult.NoMatches)
         Assert.assertEquals(expectedTime, testScheduler.currentTime)
@@ -219,9 +219,7 @@ class AuddRecognitionServiceTest {
                 launch {
                     delay(TEST_RESPONSE_DELAY)
                     outputChannel.send(
-                        SocketEvent.ResponseReceived(
-                            RemoteRecognitionResult.Error.ApiUsageLimited
-                        )
+                        SocketEvent.MessageReceived(getJson("audd_response_auth_error.json"))
                     )
                 }
                 return true
@@ -236,15 +234,20 @@ class AuddRecognitionServiceTest {
             json = json,
         )
         val delayBeforeFlowClose = 5500L
-        val result = service.recognize(emptyAudioRecordingFlow(delayBeforeFlowClose))
+        val result = service.recognizeFirst(emptyAudioRecordingFlow(delayBeforeFlowClose))
         Assert.assertTrue(result is RemoteRecognitionResult.Error.BadRecording)
         Assert.assertEquals(delayBeforeFlowClose, testScheduler.currentTime)
     }
+
+    private fun getJson(name: String): String {
+        return this::class.java.classLoader!!
+            .getResourceAsStream(name).bufferedReader().readText()
+    }
 }
 
-private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : AuddWebSocketSession {
+private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : WebSocketSession {
 
-    override suspend fun startReconnectingSession(apiToken: String): Flow<SocketEvent> = flow {
+    override suspend fun startReconnectingSession(url: String): Flow<SocketEvent> = flow {
         emitAll(webSocket.outputChannel)
     }
 }

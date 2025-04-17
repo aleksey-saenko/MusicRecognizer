@@ -41,7 +41,7 @@ internal class LyricsViewModel @Inject constructor(
                     themeMode = preferences.themeMode,
                     usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
                     isTrackViewed = track.properties.isViewed,
-                    trackDurationMs = track.duration?.toMillis()?.toInt()
+                    trackDurationMs = track.duration?.inWholeMilliseconds?.toInt()
                 )
             }
         } ?: LyricsUiState.LyricsNotFound

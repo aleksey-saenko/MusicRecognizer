@@ -2,9 +2,9 @@ package com.mrsep.musicrecognizer.core.database.track
 
 import androidx.room.*
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
-import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import kotlin.time.Duration
 
 @Entity(
     tableName = "track",

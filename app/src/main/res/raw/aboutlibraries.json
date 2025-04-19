@@ -604,19 +604,6 @@
             }
         },
         {
-            "uniqueId": "androidx.compose:compose-bom",
-            "developers": [
-                
-            ],
-            "artifactVersion": "2025.04.00",
-            "description": "A compatible set of Jetpack Compose libraries.",
-            "name": "Jetpack Compose Libraries BOM",
-            "website": "https://developer.android.com/jetpack",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "androidx.concurrent:concurrent-futures",
             "developers": [
                 {
@@ -2203,7 +2190,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56.1",
+            "artifactVersion": "2.56.2",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger",
             "website": "https://github.com/google/dagger",
@@ -2220,7 +2207,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56.1",
+            "artifactVersion": "2.56.2",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Dagger Lint Rules AAR Distribution",
             "website": "https://github.com/google/dagger",
@@ -2237,7 +2224,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56.1",
+            "artifactVersion": "2.56.2",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Android",
             "website": "https://github.com/google/dagger",
@@ -2254,7 +2241,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.56.1",
+            "artifactVersion": "2.56.2",
             "description": "A fast dependency injector for Android and Java.",
             "name": "Hilt Core",
             "website": "https://github.com/google/dagger",
@@ -2392,13 +2379,28 @@
             ]
         },
         {
+            "uniqueId": "com.mikepenz:aboutlibraries-compose-core-android",
+            "developers": [
+                {
+                    "name": "Mike Penz"
+                }
+            ],
+            "artifactVersion": "12.0.0",
+            "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
+            "name": "AboutLibraries Compose UI Library",
+            "website": "https://github.com/mikepenz/AboutLibraries",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "com.mikepenz:aboutlibraries-compose-m3-android",
             "developers": [
                 {
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.6.3",
+            "artifactVersion": "12.0.0",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Compose Material 3 Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2413,7 +2415,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.6.3",
+            "artifactVersion": "12.0.0",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2647,7 +2649,7 @@
                     "name": "usuiat"
                 }
             ],
-            "artifactVersion": "2.5.0",
+            "artifactVersion": "2.6.0",
             "description": "An android library for Jetpack Compose that enables contents zoomable.",
             "name": "Engawapg Zoomable",
             "website": "https://github.com/usuiat/Zoomable",
@@ -2830,22 +2832,6 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-bom",
-            "developers": [
-                {
-                    "organisationUrl": "https://www.jetbrains.com",
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.10.2",
-            "description": "Coroutines support libraries for Kotlin",
-            "name": "kotlinx-coroutines-bom",
-            "website": "https://github.com/Kotlin/kotlinx.coroutines",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
             "developers": [
                 {
@@ -2873,22 +2859,6 @@
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-test",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "developers": [
-                {
-                    "organisationUrl": "https://www.jetbrains.com",
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.8.1",
-            "description": "Kotlin multiplatform serialization runtime library",
-            "name": "kotlinx-serialization-bom",
-            "website": "https://github.com/Kotlin/kotlinx.serialization",
             "licenses": [
                 "Apache-2.0"
             ]

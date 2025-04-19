@@ -56,11 +56,15 @@ android {
         localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "pt-rBR", "ru", "sk", "tr")
     }
     aboutLibraries {
-        registerAndroidTasks = false
-        excludeFields = arrayOf("funding", "scm")
-        additionalLicenses = arrayOf("GPL-3.0-or-later")
-        gitHubApiToken = properties["github.token"] as? String
-        prettyPrint = true
+        // ./gradlew app:exportLibraryDefinitions
+        android.registerAndroidTasks = false
+        license.additionalLicenses = setOf("GPL-3.0-or-later")
+        collect.gitHubApiToken = properties["github.token"] as? String
+        export.apply {
+            prettyPrint = true
+            excludeFields = setOf("funding", "scm")
+            outputPath = layout.projectDirectory.file("src/main/res/raw/aboutlibraries.json")
+        }
     }
 }
 

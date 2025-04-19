@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Parcelable
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -213,15 +214,26 @@ class RecognitionControlService : Service() {
             } else {
                 startForeground(NOTIFICATION_ID_STATUS, initialNotification)
             }
+            isStartedForeground = true
         } catch (e: SecurityException) {
-            Log.e(TAG, "Service start is not allowed due to denied permissions")
+            val msg = "Foreground service cannot start due to denied permissions"
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            Log.w(TAG, msg)
             serviceScope.launch {
                 preferencesRepository.setNotificationServiceEnabled(false)
                 stopSelf()
             }
             return
+        } catch (e: Exception) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) throw e
+            if (e is ForegroundServiceStartNotAllowedException) {
+                val msg = "Foreground service cannot start from the background"
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, msg, e)
+                stopSelf()
+                return
+            }
         }
-        isStartedForeground = true
     }
 
     private fun getInitialForegroundNotification(): Notification {

@@ -127,6 +127,8 @@ message UserPreferencesProto {
   AudioCaptureModeProto default_audio_capture_mode = 45;
   AudioCaptureModeProto main_button_long_press_audio_capture_mode = 46;
 
-  // NEXT AVAILABLE ID: 47
+  bool use_alt_device_sound_source = 47;
+
+  // NEXT AVAILABLE ID: 48
 
 }

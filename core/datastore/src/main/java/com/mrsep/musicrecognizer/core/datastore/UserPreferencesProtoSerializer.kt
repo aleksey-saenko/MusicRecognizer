@@ -30,6 +30,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                 } else {
                     AudioCaptureModeProto.Auto
                 }
+            useAltDeviceSoundSource = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
             fallbackPolicy = fallbackPolicyProto {
                 noMatches = UserPreferencesProto.FallbackActionProto.IGNORE
                 badConnection = UserPreferencesProto.FallbackActionProto.SAVE_AND_LAUNCH

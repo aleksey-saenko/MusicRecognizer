@@ -65,6 +65,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setUseAltDeviceSoundSource(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUseAltDeviceSoundSource(value)
+        }
+    }
+
     fun setNotificationServiceEnabled(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setNotificationServiceEnabled(value)

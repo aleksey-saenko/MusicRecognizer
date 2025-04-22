@@ -44,6 +44,7 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscr
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ScheduledOfflineShield
 import com.mrsep.musicrecognizer.feature.recognition.service.AudioCaptureServiceMode
 import com.mrsep.musicrecognizer.feature.recognition.service.createScreenCaptureIntentForDisplay
+import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -82,11 +83,7 @@ internal fun RecognitionScreen(
             return@rememberLauncherForActivityResult
         }
         result.data?.let { mediaProjectionData ->
-            val captureMode = when (lastRequestedAudioCaptureMode.value) {
-                AudioCaptureMode.Microphone -> AudioCaptureServiceMode.Microphone
-                AudioCaptureMode.Device -> AudioCaptureServiceMode.Device(mediaProjectionData)
-                AudioCaptureMode.Auto -> AudioCaptureServiceMode.Auto(mediaProjectionData)
-            }
+            val captureMode = lastRequestedAudioCaptureMode.value.toServiceMode(mediaProjectionData)
             viewModel.launchRecognition(captureMode)
         }
     }
@@ -102,14 +99,18 @@ internal fun RecognitionScreen(
         }
     ) { results ->
         if (results.all { (_, isGranted) -> isGranted }) {
-            when (lastRequestedAudioCaptureMode.value) {
+            when (val lastMode = lastRequestedAudioCaptureMode.value) {
                 AudioCaptureMode.Microphone -> {
-                    viewModel.launchRecognition(AudioCaptureServiceMode.Microphone)
+                    viewModel.launchRecognition(lastMode.toServiceMode(null))
                 }
                 AudioCaptureMode.Device,
                 AudioCaptureMode.Auto -> {
-                    val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
-                    mediaProjectionLauncher.launch(intent)
+                    if (preferences?.useAltDeviceSoundSource == true) {
+                        viewModel.launchRecognition(lastMode.toServiceMode(null))
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
+                        mediaProjectionLauncher.launch(intent)
+                    }
                 }
             }
         } else {
@@ -150,8 +151,12 @@ internal fun RecognitionScreen(
                 }
                 AudioCaptureMode.Device,
                 AudioCaptureMode.Auto -> {
-                    val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
-                    mediaProjectionLauncher.launch(intent)
+                    if (preferences?.useAltDeviceSoundSource == true) {
+                        viewModel.launchRecognition(captureMode.toServiceMode(null))
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
+                        mediaProjectionLauncher.launch(intent)
+                    }
                 }
             }
         } else if (requiredPermissionsState.shouldShowRationale) {

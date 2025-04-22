@@ -142,12 +142,19 @@ class RecognitionControlService : Service() {
                         startForegroundWithType(false)
                     }
 
-                    is AudioCaptureServiceMode.Device,
-                    is AudioCaptureServiceMode.Auto -> {
-                        check(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    is AudioCaptureServiceMode.Device -> {
+                        val mediaProjection = audioCaptureServiceMode.mediaProjectionData != null
+                        check(!mediaProjection || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             "AudioPlaybackCapture API is available on Android 10+"
                         }
-                        startForegroundWithType(true)
+                        startForegroundWithType(mediaProjection)
+                    }
+                    is AudioCaptureServiceMode.Auto -> {
+                        val mediaProjection = audioCaptureServiceMode.mediaProjectionData != null
+                        check(!mediaProjection || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            "AudioPlaybackCapture API is available on Android 10+"
+                        }
+                        startForegroundWithType(mediaProjection)
                     }
                 }
                 if (!isStartedForeground) return@run
@@ -258,7 +265,7 @@ class RecognitionControlService : Service() {
             isHoldModeActive = preferences.notificationServiceEnabled
             val captureConfig = when (audioCaptureServiceMode) {
                 AudioCaptureServiceMode.Microphone -> AudioCaptureConfig.Microphone
-                is AudioCaptureServiceMode.Device -> {
+                is AudioCaptureServiceMode.Device -> if (audioCaptureServiceMode.mediaProjectionData != null) {
                     mediaProjectionManager.getMediaProjection(
                         Activity.RESULT_OK,
                         audioCaptureServiceMode.mediaProjectionData
@@ -267,9 +274,11 @@ class RecognitionControlService : Service() {
                         registerCallback(mediaProjectionCallback, Handler(appContext.mainLooper))
                         AudioCaptureConfig.Device(this)
                     }
+                } else {
+                    AudioCaptureConfig.Device(null)
                 }
 
-                is AudioCaptureServiceMode.Auto -> {
+                is AudioCaptureServiceMode.Auto ->if (audioCaptureServiceMode.mediaProjectionData != null) {
                     mediaProjectionManager.getMediaProjection(
                         Activity.RESULT_OK,
                         audioCaptureServiceMode.mediaProjectionData
@@ -278,6 +287,8 @@ class RecognitionControlService : Service() {
                         registerCallback(mediaProjectionCallback, Handler(appContext.mainLooper))
                         AudioCaptureConfig.Auto(this)
                     }
+                } else {
+                    AudioCaptureConfig.Auto(null)
                 }
             }
             if (captureConfig == null) return@launch
@@ -496,6 +507,6 @@ class RecognitionControlService : Service() {
 @Parcelize
 sealed class AudioCaptureServiceMode : Parcelable {
     data object Microphone : AudioCaptureServiceMode()
-    data class Device(val mediaProjectionData: Intent) : AudioCaptureServiceMode()
-    data class Auto(val mediaProjectionData: Intent) : AudioCaptureServiceMode()
+    data class Device(val mediaProjectionData: Intent?) : AudioCaptureServiceMode()
+    data class Auto(val mediaProjectionData: Intent?) : AudioCaptureServiceMode()
 }

@@ -43,7 +43,7 @@ internal class DeviceFirstAdtsRecordingController(
             .zip(deviceController.audioRecordingFlow(scheme)) { microphoneResult, deviceResult ->
                 val micRecording = microphoneResult.getOrThrow()
                 val devRecording = deviceResult.getOrThrow()
-                val minSignificantDuration = minOf(0.5.seconds, micRecording.nonSilenceDuration)
+                val minSignificantDuration = minOf(2.seconds, micRecording.nonSilenceDuration)
                 if (devRecording.nonSilenceDuration > minSignificantDuration) {
                     deviceResult
                 } else {

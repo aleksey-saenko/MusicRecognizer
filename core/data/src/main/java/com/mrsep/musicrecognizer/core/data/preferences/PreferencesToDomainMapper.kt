@@ -36,6 +36,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     ),
     defaultAudioCaptureMode = defaultAudioCaptureMode.toDomain(),
     mainButtonLongPressAudioCaptureMode = mainButtonLongPressAudioCaptureMode.toDomain(),
+    useAltDeviceSoundSource = useAltDeviceSoundSource,
     fallbackPolicy = FallbackPolicy(
         noMatches = fallbackPolicy.noMatches.toDomain(),
         badConnection = fallbackPolicy.badConnection.toDomain(),

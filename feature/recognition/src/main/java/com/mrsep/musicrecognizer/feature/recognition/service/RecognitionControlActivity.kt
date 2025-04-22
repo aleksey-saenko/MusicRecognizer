@@ -47,6 +47,7 @@ class RecognitionControlActivity : ComponentActivity() {
     }
 
     private lateinit var requestedAudioCaptureMode: AudioCaptureMode
+    private var useAltDeviceSoundSource = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -71,11 +72,7 @@ class RecognitionControlActivity : ComponentActivity() {
     ) { result ->
         if (result.resultCode != RESULT_OK) finish()
         result.data?.let { mediaProjectionData ->
-            val mode = when (requestedAudioCaptureMode) {
-                AudioCaptureMode.Microphone -> AudioCaptureServiceMode.Microphone
-                AudioCaptureMode.Device -> AudioCaptureServiceMode.Device(mediaProjectionData)
-                AudioCaptureMode.Auto -> AudioCaptureServiceMode.Auto(mediaProjectionData)
-            }
+            val mode = requestedAudioCaptureMode.toServiceMode(mediaProjectionData)
             onLaunchRecognition(mode)
         } ?: finish()
     }
@@ -89,9 +86,9 @@ class RecognitionControlActivity : ComponentActivity() {
         super.onStart()
         when (intent.action) {
             ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST -> lifecycleScope.launch {
-                requestedAudioCaptureMode = preferencesRepository
-                    .userPreferencesFlow.first()
-                    .defaultAudioCaptureMode
+                val preferences = preferencesRepository.userPreferencesFlow.first()
+                requestedAudioCaptureMode = preferences.defaultAudioCaptureMode
+                useAltDeviceSoundSource = preferences.useAltDeviceSoundSource
                 val requiredPermissions = getRequiredPermissionsForRecognition()
                 if (checkPermissionsGranted(requiredPermissions)) {
                     onRecognitionPermissionsGranted()
@@ -112,9 +109,13 @@ class RecognitionControlActivity : ComponentActivity() {
 
     private fun onRecognitionPermissionsGranted() {
         when (requestedAudioCaptureMode) {
-            AudioCaptureMode.Microphone -> onLaunchRecognition(AudioCaptureServiceMode.Microphone)
+            AudioCaptureMode.Microphone -> {
+                onLaunchRecognition(requestedAudioCaptureMode.toServiceMode(null))
+            }
             AudioCaptureMode.Device,
-            AudioCaptureMode.Auto -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            AudioCaptureMode.Auto -> if (useAltDeviceSoundSource) {
+                onLaunchRecognition(requestedAudioCaptureMode.toServiceMode(null))
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
                 requestMediaProjectionLauncher.launch(intent)
             } else {
@@ -257,4 +258,10 @@ internal fun MediaProjectionManager.createScreenCaptureIntentForDisplay(): Inten
     } else {
         createScreenCaptureIntent()
     }
+}
+
+internal fun AudioCaptureMode.toServiceMode(mediaProjectionData: Intent?) = when (this) {
+    AudioCaptureMode.Microphone -> AudioCaptureServiceMode.Microphone
+    AudioCaptureMode.Device -> AudioCaptureServiceMode.Device(mediaProjectionData)
+    AudioCaptureMode.Auto -> AudioCaptureServiceMode.Auto(mediaProjectionData)
 }

@@ -64,6 +64,10 @@ internal class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { mainButtonLongPressAudioCaptureMode = value.toProto() }
     }
 
+    override suspend fun setUseAltDeviceSoundSource(value: Boolean) {
+        safeWriter { useAltDeviceSoundSource = value }
+    }
+
     override suspend fun setFallbackPolicy(value: FallbackPolicy) {
         safeWriter { fallbackPolicy = value.toProto() }
     }

@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -132,24 +131,23 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showPolicyDialog = false }
                             )
                         }
-                        // To capture device audio the app uses AudioPlaybackCapture API (Android 10+)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            var showAudioSourceDialog by rememberSaveable { mutableStateOf(false) }
-                            PreferenceClickableItem(
-                                title = stringResource(StringsR.string.pref_title_audio_source),
-                                subtitle = stringResource(StringsR.string.pref_subtitle_audio_source)
-                            ) {
-                                showAudioSourceDialog = true
-                            }
-                            if (showAudioSourceDialog) {
-                                AudioSourceDialog(
-                                    defaultAudioCaptureMode = uiState.preferences.defaultAudioCaptureMode,
-                                    mainButtonLongPressAudioCaptureMode = uiState.preferences.mainButtonLongPressAudioCaptureMode,
-                                    onChangeDefaultAudioCaptureMode = viewModel::setDefaultAudioCaptureMode,
-                                    onChangeMainButtonLongPressAudioCaptureMode = viewModel::setMainButtonLongPressAudioCaptureMode,
-                                    onDismissClick = { showAudioSourceDialog = false }
-                                )
-                            }
+                        var showAudioSourceDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.pref_title_audio_source),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_audio_source)
+                        ) {
+                            showAudioSourceDialog = true
+                        }
+                        if (showAudioSourceDialog) {
+                            AudioSourceDialog(
+                                defaultAudioCaptureMode = uiState.preferences.defaultAudioCaptureMode,
+                                mainButtonLongPressAudioCaptureMode = uiState.preferences.mainButtonLongPressAudioCaptureMode,
+                                useAltDeviceSoundSource = uiState.preferences.useAltDeviceSoundSource,
+                                onChangeDefaultAudioCaptureMode = viewModel::setDefaultAudioCaptureMode,
+                                onChangeMainButtonLongPressAudioCaptureMode = viewModel::setMainButtonLongPressAudioCaptureMode,
+                                onChangeUseAltDeviceSoundSource = viewModel::setUseAltDeviceSoundSource,
+                                onDismissClick = { showAudioSourceDialog = false }
+                            )
                         }
                         PreferenceSwitchItem(
                             title = stringResource(StringsR.string.pref_title_recognize_on_startup),

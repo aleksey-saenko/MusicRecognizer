@@ -27,14 +27,17 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.ui.util.shareFile
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecordingShareUtils.getRecordingFileForSharing
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -51,6 +54,7 @@ internal fun RecognitionActionsBottomSheet(
     onRenameEnqueued: () -> Unit,
     onDeleteEnqueued: () -> Unit,
 ) {
+    val context = LocalContext.current
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -191,6 +195,15 @@ internal fun RecognitionActionsBottomSheet(
                 title = stringResource(StringsR.string.recognition_action_rename),
                 iconResId = UiR.drawable.outline_edit_24,
                 onClick = onRenameEnqueued
+            )
+            BottomSheetAction(
+                title = stringResource(StringsR.string.share),
+                iconResId = UiR.drawable.outline_share_24,
+                onClick = {
+                    getRecordingFileForSharing(context, recognition.recordingFile)?.let { uri ->
+                        context.shareFile(subject = "", body = "", uri = uri, mimeType = "audio/aac")
+                    }
+                }
             )
             BottomSheetAction(
                 title = stringResource(StringsR.string.delete),

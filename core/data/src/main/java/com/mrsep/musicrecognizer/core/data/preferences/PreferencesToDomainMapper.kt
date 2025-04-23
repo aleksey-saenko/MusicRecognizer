@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.core.data.preferences
 
+import android.os.Build
 import com.mrsep.musicrecognizer.core.datastore.AudioCaptureModeProto
 import com.mrsep.musicrecognizer.core.datastore.MusicServiceProto
 import com.mrsep.musicrecognizer.core.datastore.RecognitionProviderProto
@@ -36,7 +37,9 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     ),
     defaultAudioCaptureMode = defaultAudioCaptureMode.toDomain(),
     mainButtonLongPressAudioCaptureMode = mainButtonLongPressAudioCaptureMode.toDomain(),
-    useAltDeviceSoundSource = useAltDeviceSoundSource,
+    useAltDeviceSoundSource = useAltDeviceSoundSource
+        .takeIf { hasUseAltDeviceSoundSource() }
+        ?: (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q),
     fallbackPolicy = FallbackPolicy(
         noMatches = fallbackPolicy.noMatches.toDomain(),
         badConnection = fallbackPolicy.badConnection.toDomain(),

@@ -113,7 +113,7 @@ internal fun AudioSourceDialog(
                         )
                     } else {
                         Text(
-                            text = "The app uses experimental support for recording device audio on Android 10 and below",
+                            text = "The app uses experimental support for recording device audio on Android 9 and below",
                             modifier = Modifier.weight(1f),
                         )
                         IconButton(

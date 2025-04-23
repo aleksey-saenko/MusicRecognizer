@@ -238,7 +238,7 @@ internal fun AltDeviceSourceHelpDialog(
                     Text(text = "• The sound quality is worse, and this method may not work on some devices.")
                     Text(
                         text = AnnotatedString.fromHtml(
-                            htmlString = "• If you encounter distorted audio, please <a href=\"$ISSUE_TRACKER\">report an issue</a>.",
+                            htmlString = "• If you encounter distorted audio recordings, please <a href=\"$ISSUE_TRACKER\">report an issue</a>.",
                             linkStyles = TextLinkStyles(
                                 style = SpanStyle(color = MaterialTheme.colorScheme.primary),
                                 hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),

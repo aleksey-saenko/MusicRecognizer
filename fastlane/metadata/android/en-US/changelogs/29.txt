@@ -1,0 +1,3 @@
+* Add alternative device audio source (allows recording audio without screen cast permission and its restrictions; see 'Audio source' settings)
+* Add European Portuguese translation (Thanks @SantosSi!)
+* Minor bug fixes and translation corrections

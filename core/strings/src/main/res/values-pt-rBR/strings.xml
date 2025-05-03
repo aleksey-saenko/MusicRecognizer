@@ -30,7 +30,7 @@
     <string name="close">Fechar</string>
     <string name="not_now">Não agora</string>
     <string name="save">Salvar</string>
-    <string name="delete">Excluir</string>
+    <string name="delete">Apagar</string>
     <string name="hide">Esconder</string>
     <string name="show">Mostrar</string>
     <string name="edit">Editar</string>
@@ -96,7 +96,7 @@
     <string name="filter_favorites">Status de favorito</string>
     <string name="filter_all">Todas</string>
     <string name="filter_only_favorites">Somente favoritas</string>
-    <string name="filter_exclude_favorites">Excluir favoritas</string>
+    <string name="filter_exclude_favorites">Ignorar favoritas</string>
     <string name="filter_sort_by">Classificar por</string>
     <string name="filter_recognition_date">Data de reconhecimento</string>
     <string name="filter_title">Título</string>
@@ -109,8 +109,8 @@
     <string name="library_search_hint">Pesquisar faixa…</string>
     <string name="no_tracks_match_filter">Nenhuma faixa encontrada com os filtros selecionados</string>
     <string name="no_tracks_match_search">Nenhuma faixa encontrada com as condições de pesquisa</string>
-    <string name="delete_tracks_title">Excluir faixas</string>
-    <string name="delete_tracks_message">Tem certeza que deseja excluir as faixas selecionadas\? Este processo não pode ser desfeito.</string>
+    <string name="delete_tracks_title">Apagar faixas</string>
+    <string name="delete_tracks_message">Tem certeza que deseja apagar as faixas selecionadas? Este processo não pode ser desfeito.</string>
     <!-- Queue screen -->
     <string name="recognition_queue">Fila de reconhecimento</string>
     <string name="queue">Fila</string>
@@ -131,11 +131,11 @@
     <string name="select_all">Selecionar tudo</string>
     <string name="disable_multi_selection_mode">Desativar modo de multi-seleção</string>
     <string name="cancel_selected">Cancelar selecionados</string>
-    <string name="delete_selected">Excluir selecionados</string>
+    <string name="delete_selected">Apagar selecionados</string>
     <string name="recording_start_player">Iniciar reprodutor</string>
     <string name="recording_stop_player">Parar reprodutor</string>
-    <string name="delete_recognitions_title">Excluir reconhecimentos</string>
-    <string name="delete_recognitions_message">Tem certeza que deseja excluir e cancelar os reconhecimentos selecionados? Este processo não pode ser desfeito.</string>
+    <string name="delete_recognitions_title">Apagar reconhecimentos</string>
+    <string name="delete_recognitions_message">Tem certeza que deseja apagar e cancelar os reconhecimentos selecionados? Este processo não pode ser desfeito.</string>
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Marcar como favorito</string>
     <string name="unmark_track_as_favorite">Desmarcar como favorito</string>

@@ -33,6 +33,8 @@ data class TrackEntity(
     val recognitionDate: Instant,
     @ColumnInfo(name = "lyrics")
     val lyrics: String?,
+    @ColumnInfo(name = "is_lyrics_synced")
+    val isLyricsSynced: Boolean,
     @Embedded(prefix = "link_")
     val links: Links,
     @Embedded

@@ -8,6 +8,7 @@ import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
+import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
 import kotlinx.serialization.json.Json
@@ -294,7 +295,7 @@ private fun AuddResponseJson.Result.parseLyrics() = this.lyricsJson?.lyrics?.run
     Html.fromHtml(
         this.replace("\n", "<br>"),
         Html.FROM_HTML_MODE_COMPACT
-    ).toString().trim().takeIf { it.isNotBlank() }
+    ).toString().trim().takeIf { it.isNotBlank() }?.run(::PlainLyrics)
 }
 
 @Suppress("unused")

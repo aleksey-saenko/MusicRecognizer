@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
         TrackEntity::class,
         EnqueuedRecognitionEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),

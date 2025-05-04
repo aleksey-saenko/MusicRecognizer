@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import android.annotation.SuppressLint
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import kotlinx.collections.immutable.ImmutableList
@@ -29,7 +30,7 @@ internal data class TrackUi(
     val duration: String?,
     val recognizedAt: String?,
     val recognizedBy: RecognitionProvider,
-    val lyrics: String?,
+    val lyrics: Lyrics?,
     val artworkUrl: String?,
     val trackLinks: ImmutableList<TrackLink>,
     val isFavorite: Boolean,

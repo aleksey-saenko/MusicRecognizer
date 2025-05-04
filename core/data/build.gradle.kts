@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.core.recognition)
     implementation(projects.core.database)
     implementation(projects.core.datastore)
     implementation(projects.core.network)

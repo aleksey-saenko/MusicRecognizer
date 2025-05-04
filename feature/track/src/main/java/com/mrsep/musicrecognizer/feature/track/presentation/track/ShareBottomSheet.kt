@@ -39,14 +39,20 @@ internal fun ShareBottomSheet(
         var selectedMusicServices by rememberSaveable(track.trackLinks) {
             mutableStateOf(setOf<MusicService>())
         }
-        var lyricsSelected by rememberSaveable(track.year) { mutableStateOf(false) }
+        var lyricsSelected by rememberSaveable(track.lyrics) { mutableStateOf(false) }
 
         fun buildStringToShare() = buildString {
             if (titleSelected) append(track.title)
             if (artistSelected) if (isNotBlank()) append(" - ${track.artist}") else append(track.artist)
-            if (albumSelected) if (isNotBlank()) append(" - ${track.album}") else append(track.album)
-            if (yearSelected) if (isNotBlank()) append(" (${track.year})") else append(track.year)
-            if (lyricsSelected) if (isNotEmpty()) append("\n\n${track.lyrics}") else append(track.lyrics)
+            if (albumSelected && track.album != null) {
+                if (isNotBlank()) append(" - ${track.album}") else append(track.album)
+            }
+            if (yearSelected && track.year != null) {
+                if (isNotBlank()) append(" (${track.year})") else append(track.year)
+            }
+            if (lyricsSelected && track.lyrics != null) {
+                if (isNotEmpty()) append("\n\n${track.lyrics.plain}") else append(track.lyrics.plain)
+            }
             track.trackLinks
                 .filter { selectedMusicServices.contains(it.service) }
                 .joinToString("\n") { it.url }

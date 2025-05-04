@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.core.recognition
 
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -21,7 +22,7 @@ internal val fakeTrack = Track(
     recognizedAt = null,
     recognizedBy = RecognitionProvider.Audd,
     recognitionDate = Instant.now(),
-    lyrics = "lyrics stub",
+    lyrics = PlainLyrics("lyrics stub"),
     artworkThumbUrl = null,
     artworkUrl = null,
     trackLinks = emptyMap(),

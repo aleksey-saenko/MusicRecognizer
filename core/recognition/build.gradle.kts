@@ -6,6 +6,9 @@ plugins {
 
 android {
     namespace = "com.mrsep.musicrecognizer.core.recognition"
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
@@ -17,7 +20,12 @@ dependencies {
     implementation(libs.uuid.creator)
 
     testImplementation(libs.junit4)
+    testImplementation(libs.kotest)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.turbine)
     testImplementation(libs.okhttp.mockWebServer)
+
+    androidTestImplementation(libs.kotest)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }

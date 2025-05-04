@@ -34,7 +34,7 @@ internal class LyricsViewModel @Inject constructor(
                     trackId = track.id,
                     title = track.title,
                     artist = track.artist,
-                    lyrics = lyrics,
+                    lyrics = lyrics.plain,
                     fontStyle = preferences.lyricsFontStyle,
                     themeSeedColor = track.properties.themeSeedColor,
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,

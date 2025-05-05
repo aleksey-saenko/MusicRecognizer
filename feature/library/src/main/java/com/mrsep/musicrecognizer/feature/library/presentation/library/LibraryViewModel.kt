@@ -69,9 +69,9 @@ internal class LibraryViewModel @Inject constructor(
         }
     }
 
-    fun deleteTracks(trackIds: List<String>) {
+    fun deleteTracks(trackIds: Set<String>) {
         viewModelScope.launch {
-            trackRepository.delete(trackIds)
+            trackRepository.delete(trackIds.toList())
         }
     }
 

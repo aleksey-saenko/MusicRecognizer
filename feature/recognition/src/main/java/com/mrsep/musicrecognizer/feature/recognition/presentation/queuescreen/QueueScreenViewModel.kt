@@ -72,22 +72,23 @@ internal class QueueScreenViewModel @Inject constructor(
     }
 
     fun cancelRecognition(recognitionId: Int) {
-        cancelRecognitions(listOf(recognitionId))
+        cancelRecognitions(setOf(recognitionId))
     }
 
-    fun cancelRecognitions(recognitionIds: List<Int>) {
-        recognitionScheduler.cancel(recognitionIds)
+    fun cancelRecognitions(recognitionIds: Set<Int>) {
+        recognitionScheduler.cancel(recognitionIds.toList())
     }
 
     fun cancelAndDeleteRecognition(recognitionId: Int) {
-        cancelAndDeleteRecognitions(listOf(recognitionId))
+        cancelAndDeleteRecognitions(setOf(recognitionId))
     }
 
-    fun cancelAndDeleteRecognitions(recognitionIds: List<Int>) {
+    fun cancelAndDeleteRecognitions(recognitionIds: Set<Int>) {
         viewModelScope.launch {
+            val listOfIds = recognitionIds.toList()
             playerController.stop()
-            recognitionScheduler.cancel(recognitionIds)
-            enqueuedRecognitionRepository.delete(recognitionIds)
+            recognitionScheduler.cancel(listOfIds)
+            enqueuedRecognitionRepository.delete(listOfIds)
         }
     }
 

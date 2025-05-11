@@ -134,8 +134,8 @@ internal sealed class RecognitionWidgetLayout {
             } else {
                 // Vertical layout
                 val buttonSize = 56.dp
-                val titleHeight = measureTextViewHeight(context, titleTextSize, 2)
-                val subtitleHeight = measureTextViewHeight(context, subtitleTextSize, 1)
+                val titleHeight = measureTextViewHeight(context, titleTextSize, 2, shouldIncludeFontPadding)
+                val subtitleHeight = measureTextViewHeight(context, subtitleTextSize, 1, shouldIncludeFontPadding)
                 val textBlockHeight =
                     context.pxToDp((titleHeight + subtitleHeight).toFloat()).dp + subtitleTopPadding
                 val imageMaxHeight = height - widgetPadding * 2 - contentPadding * 2 -
@@ -215,17 +215,21 @@ internal sealed class RecognitionWidgetLayout {
             return (imageDensity * cornerRadius.value).toInt()
         }
 
+        // From API 33, includeFontPadding becomes redundant for TextView
+        // https://medium.com/androiddevelopers/fixing-font-padding-in-compose-text-768cd232425b
+        val shouldIncludeFontPadding = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+
         val circleWidgetBorderWidth = 3.dp
         val squareWidgetBorderWidth = 0.dp
 
         // Vertical and horizontal layouts
         val widgetPadding = 8.dp
         val contentPadding = 8.dp
-        val artworkToTextPadding = 16.dp
+        val artworkToTextPadding = 12.dp
 
         val titleTextSize = 16.sp
         val subtitleTextSize = 14.sp
-        val subtitleTopPadding = 4.dp
+        val subtitleTopPadding = if (shouldIncludeFontPadding) 4.dp else 6.dp
 
         val dividerWidth = 1.dp
         val dividerHorizontalPadding = 8.dp

@@ -32,9 +32,12 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.feature.recognition.R
 import com.mrsep.musicrecognizer.feature.recognition.widget.WidgetUiState
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.shouldIncludeFontPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.squareWidgetBorderWidth
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTextSize
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTopPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.titleTextSize
+import com.mrsep.musicrecognizer.feature.recognition.widget.util.FontUtils.measureTextExtraPaddings
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -118,7 +121,6 @@ internal fun SquareLayoutContent(
                                     modifier = GlanceModifier.fillMaxSize(),
                                 )
                             }
-
                             TrackInfoWithButton(
                                 title = result.track.title,
                                 artist = result.track.artist,
@@ -141,6 +143,7 @@ private fun TrackInfoWithButton(
     val context = LocalContext.current
     Row(
         modifier = GlanceModifier.fillMaxWidth().padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = GlanceModifier.defaultWeight()
@@ -152,9 +155,10 @@ private fun TrackInfoWithButton(
                     fontSize = titleTextSize,
                     fontWeight = FontWeight.Medium
                 ),
-                maxLines = 1
+                maxLines = 1,
+                modifier = GlanceModifier.fillMaxWidth()
             )
-            Spacer(GlanceModifier.height(2.dp))
+            Spacer(GlanceModifier.height(subtitleTopPadding - 2.dp))
             Text(
                 text = artist,
                 style = TextStyle(
@@ -162,8 +166,14 @@ private fun TrackInfoWithButton(
                     fontSize = subtitleTextSize,
                     fontWeight = FontWeight.Normal
                 ),
-                maxLines = 1
+                maxLines = 1,
+                modifier = GlanceModifier.fillMaxWidth()
             )
+            if (shouldIncludeFontPadding) {
+                val paddingForCentering = measureTextExtraPaddings(context, titleTextSize).first -
+                        measureTextExtraPaddings(context, subtitleTextSize).second
+                Spacer(GlanceModifier.height(paddingForCentering))
+            }
         }
         Spacer(GlanceModifier.width(12.dp))
         Box(

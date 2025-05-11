@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Glance.AppWidget.Text" parent="" tools:override="true">
+        <item name="android:includeFontPadding">false</item>
+        <!-- Default Glance text style attributes-->
+        <item name="android:ellipsize">end</item>
+    </style>
+</resources>

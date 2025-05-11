@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.RowScope
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxHeight
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
@@ -21,15 +23,18 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.strings.R
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.contentPadding
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.shouldIncludeFontPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTextSize
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTopPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.titleTextSize
+import com.mrsep.musicrecognizer.feature.recognition.widget.util.FontUtils.measureTextExtraPaddings
 
 @Composable
 internal fun RowScope.StatusInfo(
     title: String,
     subtitle: String? = null,
 ) {
+    val context = LocalContext.current
     Column(
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.Start,
@@ -46,7 +51,8 @@ internal fun RowScope.StatusInfo(
                 fontSize = titleTextSize,
                 fontWeight = FontWeight.Medium
             ),
-            maxLines = 1
+            maxLines = 1,
+            modifier = GlanceModifier.fillMaxWidth()
         )
         subtitle?.let {
             Spacer(GlanceModifier.height(subtitleTopPadding))
@@ -57,8 +63,14 @@ internal fun RowScope.StatusInfo(
                     fontSize = subtitleTextSize,
                     fontWeight = FontWeight.Normal
                 ),
-                maxLines = 2
+                maxLines = 2,
+                modifier = GlanceModifier.fillMaxWidth()
             )
+        }
+        if (shouldIncludeFontPadding) {
+            val paddingForCentering = measureTextExtraPaddings(context, titleTextSize).first -
+                    measureTextExtraPaddings(context, subtitleTextSize).second
+            Spacer(GlanceModifier.height(paddingForCentering))
         }
     }
 }

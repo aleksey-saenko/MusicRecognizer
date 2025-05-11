@@ -7,6 +7,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -24,9 +25,11 @@ import androidx.glance.text.TextStyle
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.artworkToTextPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.contentPadding
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.shouldIncludeFontPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTextSize
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.subtitleTopPadding
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout.Companion.titleTextSize
+import com.mrsep.musicrecognizer.feature.recognition.widget.util.FontUtils.measureTextExtraPaddings
 
 // Assume that the bitmap is loaded with appropriate (pre-calculated) size
 @Composable
@@ -35,6 +38,7 @@ internal fun RowScope.TrackInfoHorizontal(
     artwork: Bitmap?,
     layout: RecognitionWidgetLayout.Horizontal,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = GlanceModifier
             .defaultWeight()
@@ -67,9 +71,9 @@ internal fun RowScope.TrackInfoHorizontal(
                     fontSize = titleTextSize,
                     fontWeight = FontWeight.Medium
                 ),
-                maxLines = if (layout.isNarrow) 1 else 2
+                maxLines = if (layout.isNarrow) 1 else 2,
+                modifier = GlanceModifier.fillMaxWidth()
             )
-
             if (!layout.isNarrow) {
                 Spacer(GlanceModifier.height(subtitleTopPadding))
                 Text(
@@ -79,8 +83,14 @@ internal fun RowScope.TrackInfoHorizontal(
                         fontSize = subtitleTextSize,
                         fontWeight = FontWeight.Normal
                     ),
-                    maxLines = 1
+                    maxLines = 1,
+                    modifier = GlanceModifier.fillMaxWidth()
                 )
+            }
+            if (shouldIncludeFontPadding) {
+                val paddingForCentering = measureTextExtraPaddings(context, titleTextSize).first -
+                        measureTextExtraPaddings(context, subtitleTextSize).second
+                Spacer(GlanceModifier.height(paddingForCentering))
             }
         }
     }
@@ -93,6 +103,7 @@ internal fun RowScope.TrackInfoVertical(
     artwork: Bitmap?,
     layout: RecognitionWidgetLayout.Vertical,
 ) {
+    val context = LocalContext.current
     Column(
         modifier = GlanceModifier
             .defaultWeight()
@@ -125,7 +136,8 @@ internal fun RowScope.TrackInfoVertical(
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 ),
-                maxLines = 2
+                maxLines = 2,
+                modifier = GlanceModifier.fillMaxWidth()
             )
             Spacer(GlanceModifier.height(subtitleTopPadding))
             Text(
@@ -136,8 +148,14 @@ internal fun RowScope.TrackInfoVertical(
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 ),
-                maxLines = 1
+                maxLines = 1,
+                modifier = GlanceModifier.fillMaxWidth()
             )
+            if (shouldIncludeFontPadding) {
+                val paddingForCentering = measureTextExtraPaddings(context, titleTextSize).first -
+                        measureTextExtraPaddings(context, subtitleTextSize).second
+                Spacer(GlanceModifier.height(paddingForCentering))
+            }
         }
     }
 }

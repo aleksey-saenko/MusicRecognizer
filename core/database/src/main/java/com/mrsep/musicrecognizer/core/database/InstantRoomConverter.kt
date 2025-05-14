@@ -7,11 +7,11 @@ internal class InstantRoomConverter {
 
     @TypeConverter
     fun instantToTimestamp(instant: Instant): Long {
-        return instant.epochSecond
+        return instant.toEpochMilli()
     }
 
     @TypeConverter
-    fun timestampToInstant(epochSecond: Long): Instant {
-        return Instant.ofEpochSecond(epochSecond)
+    fun timestampToInstant(epochMillis: Long): Instant {
+        return Instant.ofEpochMilli(epochMillis)
     }
 }

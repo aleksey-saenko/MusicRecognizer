@@ -7,13 +7,13 @@
     <string name="widget_tap_to_recognize">Toque para identificar</string>
     <string name="widget_tap_to_try_again">Toque para tentar novamente</string>
     <string name="widget_listening">Escutando</string>
-    <string name="widget_listening_subtitle">Por favor, espere</string>
+    <string name="widget_listening_subtitle">Por favor, aguarde</string>
     <string name="widget_listening_subtitle_extra_time">Tentando mais uma vez</string>
-    <string name="recognition_widget_description">Identificar a música em um toque</string>
+    <string name="recognition_widget_description">Identifique a música em um toque</string>
     <string name="notification_tap_to_recognize">Toque para identificar</string>
     <string name="notification_tap_to_recognize_subtitle">Reconhecer com qualquer app aberto</string>
     <string name="notification_listening">Escutando</string>
-    <string name="notification_listening_subtitle">Por favor, espere</string>
+    <string name="notification_listening_subtitle">Por favor, aguarde</string>
     <string name="notification_listening_subtitle_extra_time">Tentando mais uma vez</string>
     <string name="quick_tile_recognize">Identificar música</string>
     <string name="quick_tile_cancel_recognition">Cancelar reconhecimento</string>
@@ -21,7 +21,7 @@
     <string name="action_cancel_recognition">Cancelar reconhecimento</string>
     <!-- General use -->
     <string name="nav_back">Voltar</string>
-    <string name="nav_forward">Para frente</string>
+    <string name="nav_forward">Avançar</string>
     <string name="loading">Carregando</string>
     <string name="apply">Aplicar</string>
     <string name="applied">Aplicado</string>
@@ -31,7 +31,7 @@
     <string name="not_now">Não agora</string>
     <string name="save">Salvar</string>
     <string name="delete">Apagar</string>
-    <string name="hide">Esconder</string>
+    <string name="hide">Ocultar</string>
     <string name="show">Mostrar</string>
     <string name="edit">Editar</string>
     <string name="clear_text_field">Limpar</string>
@@ -49,18 +49,18 @@
     <string name="request_permission">Solicitar permissão</string>
     <string name="permission_rationale_record_audio">Para reconhecer músicas, o app precisa de acesso ao seu microfone.</string>
     <string name="permission_rationale_post_notifications">Para controlar o reconhecimento e conseguir um resultado mesmo quando o app é minimizado, é necessário a permissão para enviar notificações.</string>
-    <string name="permissions_denied_message">Solicitações prévias de permissões foram negadas. Você pode mudar sua decisão pelas configurações.</string>
+    <string name="permissions_denied_message">Solicitações anteriores de permissões foram negadas. Você pode mudar sua decisão pelas configurações.</string>
     <string name="permissions_denied_open_settings">Abrir configurações</string>
     <string name="permission_granted">Permissão concedida</string>
     <!-- Onboarding screen -->
-    <string name="onboarding_welcome">Bem-vindo</string>
+    <string name="onboarding_welcome">Boas vindas</string>
     <string name="onboarding_welcome_message">Audile é um aplicativo para reconhecimento de músicas, que pode te ajudar a rapidamente e com precisão identificar uma faixa tocando ao redor de você.</string>
     <string name="onboarding_permission_message">O app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, você concorda que seus dados gravados serão usados pelo <![CDATA[<a href="%1$s">serviço remoto</a>]]> para o reconhecimento de música. O app não usa esses dados para qualquer outro propósito.</string>
-    <string name="onboarding_token_message">O app usa o serviço de reconhecimento de música AudD, que não é grátis e requer um token de API especial. Registre-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter seu token de avaliação, se você ainda não tiver um.</string>
+    <string name="onboarding_token_message">O app usa o serviço de reconhecimento de música AudD, que não é grátis e requer um token de API especial. Registre-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter seu token de avaliação de 14 dias, se você ainda não tiver um.</string>
     <string name="onboarding_token_skip_message">Pular este passo limitará seus reconhecimentos diários, mas você sempre pode especificar seu token pessoal depois nas preferências.</string>
     <string name="onboarding_token_validating">Validando</string>
-    <string name="onboarding_final_title">Estamos prontos para começar</string>
-    <string name="onboarding_final_message">Configuração completada com sucesso</string>
+    <string name="onboarding_final_title">Está tudo certo</string>
+    <string name="onboarding_final_message">Configuração concluída com sucesso</string>
     <string name="onboarding_final_get_started">Iniciar</string>
     <!-- Recognition screen -->
     <string name="recognition">Reconhecimento</string>
@@ -69,18 +69,18 @@
     <string name="result_title_no_matches">Nenhuma correspondência encontrada</string>
     <string name="result_message_no_matches">Desculpe, o app não pôde encontrar essa faixa</string>
     <string name="result_title_bad_connection">Conexão à internet ruim</string>
-    <string name="result_message_bad_connection">Verifique o status da sua rede</string>
+    <string name="result_message_bad_connection">Por favor, verifique o estado da sua rede</string>
     <string name="result_title_recognition_scheduled">Reconhecimento agendado</string>
     <string name="result_message_recognition_saved">O clipe de áudio foi salvo, você pode iniciar o reconhecimento quando quiser manualmente</string>
     <string name="result_message_recognition_scheduled">O clipe de áudio foi salvo, ao voltar online, o app tentará identificar esta música</string>
     <string name="result_title_recording_error">Erro de gravação</string>
     <string name="result_message_recording_error">Um erro ocorreu durante a gravação de áudio</string>
     <string name="result_title_bad_network_response">Resposta de rede inválida</string>
-    <string name="result_message_bad_network_response">Um erro ocorreu durante a solicitação da internet</string>
+    <string name="result_message_bad_network_response">Um erro ocorreu durante solicitação da internet</string>
     <string name="result_title_auth_error">Erro de autenticação</string>
-    <string name="result_message_auth_error">Verifique suas credenciais para o serviço de reconhecimento configurado e tente novamente</string>
+    <string name="result_message_auth_error">Por favor, confira suas credenciais do serviço de reconhecimento configurado e tente novamente</string>
     <string name="result_title_service_usage_limited">Uso do serviço limitado</string>
-    <string name="result_message_service_usage_limited">Seu uso do serviço chegou à seu limite. Verifique seu plano ou tente novamente mais tarde</string>
+    <string name="result_message_service_usage_limited">Seu uso do serviço chegou à seu limite. Confira o seu plano ou tente novamente mais tarde</string>
     <string name="result_title_internal_error">Erro interno</string>
     <string name="result_message_internal_error">Um erro interno ocorreu</string>
     <string name="result_title_unknown_error">Erro desconhecido</string>
@@ -88,16 +88,16 @@
     <string name="library">Biblioteca</string>
     <string name="empty_library_title">Nenhuma faixa identificada</string>
     <string name="empty_library_subtitle">Suas faixas favoritas e recentemente reconhecidas aparecerão aqui</string>
-    <string name="library_menu_mark_all_tracks_as_viewed">Marcar todos como visualizados</string>
+    <string name="library_menu_mark_all_tracks_as_viewed">Marcar todas como visualizadas</string>
     <!--    This label must be no longer than 5 characters, otherwise leave it without translation or replace it with "+1"-->
-    <string name="unviewed_track_label">NOVO</string>
+    <string name="unviewed_track_label">NOVA</string>
     <string name="format_amount_of_new_tracks">Novas faixas: %s</string>
     <string name="filters">Filtros</string>
-    <string name="filter_favorites">Status de favorito</string>
-    <string name="filter_all">Todas</string>
-    <string name="filter_only_favorites">Somente favoritas</string>
-    <string name="filter_exclude_favorites">Ignorar favoritas</string>
-    <string name="filter_sort_by">Classificar por</string>
+    <string name="filter_favorites">Favoritos</string>
+    <string name="filter_all">Tudo</string>
+    <string name="filter_only_favorites">Somente favoritos</string>
+    <string name="filter_exclude_favorites">Ignorar favoritos</string>
+    <string name="filter_sort_by">Ordenar por</string>
     <string name="filter_recognition_date">Data de reconhecimento</string>
     <string name="filter_title">Título</string>
     <string name="filter_artist">Artista</string>
@@ -107,8 +107,8 @@
     <string name="filter_descending">Decrescente</string>
     <string name="library_search">Pesquisar faixa</string>
     <string name="library_search_hint">Pesquisar faixa…</string>
-    <string name="no_tracks_match_filter">Nenhuma faixa encontrada com os filtros selecionados</string>
-    <string name="no_tracks_match_search">Nenhuma faixa encontrada com as condições de pesquisa</string>
+    <string name="no_tracks_match_filter">Nenhuma faixa foi encontrada com os filtros selecionados</string>
+    <string name="no_tracks_match_search">Nenhuma faixa encontrada foi com as condições de pesquisa</string>
     <string name="delete_tracks_title">Apagar faixas</string>
     <string name="delete_tracks_message">Tem certeza que deseja apagar as faixas selecionadas? Este processo não pode ser desfeito.</string>
     <!-- Queue screen -->
@@ -117,12 +117,12 @@
     <string name="empty_recognition_queue_title">Nenhum reconhecimento em fila</string>
     <string name="empty_recognition_queue_subtitle">Quando off-line ou em uma falha, um reconhecimento pode ser adicionado à fila de acordo com sua política de retorno</string>
     <string name="untitled_recognition">Reconhecimento sem título</string>
-    <string name="format_scheduled_recognition_of">Agendada o reconhecimento de %s</string>
+    <string name="format_scheduled_recognition_of">Agendado o reconhecimento de %s</string>
     <string name="format_recognition_created">Criado: %s</string>
-    <string name="format_recognition_status">Status: %s</string>
-    <string name="recognition_status_idle">Em repouso</string>
+    <string name="format_recognition_status">Estado: %s</string>
+    <string name="recognition_status_idle">Ocioso</string>
     <string name="recognition_status_enqueued">Enfileirado</string>
-    <string name="recognition_status_running">Executando</string>
+    <string name="recognition_status_running">Em execução</string>
     <string name="recognition_status_track_found">Faixa encontrada</string>
     <string name="recognition_action_enqueue">Adicionar reconhecimento à fila</string>
     <string name="recognition_action_force_launch">Forçar início</string>
@@ -132,13 +132,13 @@
     <string name="disable_multi_selection_mode">Desativar modo de multi-seleção</string>
     <string name="cancel_selected">Cancelar selecionados</string>
     <string name="delete_selected">Apagar selecionados</string>
-    <string name="recording_start_player">Iniciar reprodutor</string>
-    <string name="recording_stop_player">Parar reprodutor</string>
+    <string name="recording_start_player">Reproduzir</string>
+    <string name="recording_stop_player">Parar</string>
     <string name="delete_recognitions_title">Apagar reconhecimentos</string>
     <string name="delete_recognitions_message">Tem certeza que deseja apagar e cancelar os reconhecimentos selecionados? Este processo não pode ser desfeito.</string>
     <!-- Track & Lyrics screen -->
     <string name="mark_track_as_favorite">Marcar como favorito</string>
-    <string name="unmark_track_as_favorite">Desmarcar como favorito</string>
+    <string name="unmark_track_as_favorite">Remover dos favoritos</string>
     <string name="show_track">Mostrar faixa</string>
     <string name="show_lyrics">Mostrar letras</string>
     <string name="web_search">Pesquisa web</string>
@@ -165,7 +165,7 @@
     <string name="artwork">Arte</string>
     <string name="artwork_share_menu_link">Link</string>
     <string name="artwork_share_menu_image">Imagem</string>
-    <string name="lyrics_start_autoscroll">Começar rolagem automática</string>
+    <string name="lyrics_start_autoscroll">Iniciar rolagem automática</string>
     <string name="lyrics_stop_autoscroll">Parar rolagem automática</string>
     <string name="text_style">Estilo do texto</string>
     <string name="font_size">Tamanho da fonte</string>
@@ -179,11 +179,11 @@
     <!-- Preferences screen -->
     <string name="preferences">Preferências</string>
     <string name="pref_group_recognition">Reconhecimento</string>
-    <string name="pref_title_recognize_on_startup">Reconhecer ao iniciar</string>
+    <string name="pref_title_recognize_on_startup">Reconhecer ao abrir o app</string>
     <string name="pref_title_fallback_policy">Política de retorno de reconhecimento</string>
     <string name="pref_subtitle_fallback_policy">Definir ações de retorno após identificações malsucedidas</string>
     <string name="fallback_policy_dialog_title">Política de retorno</string>
-    <string name="fallback_policy_dialog_message">Definir a ação padrão de retorno para cada tipo de resultado malsucedido:</string>
+    <string name="fallback_policy_dialog_message">Defina a ação padrão de retorno para cada tipo de resultado mal sucedido:</string>
     <string name="fallback_action_save_recording_and_retry">Salvar a gravação e iniciar novamente</string>
     <string name="fallback_action_save_recording">Salvar gravação</string>
     <string name="fallback_action_ignore">Ignorar</string>
@@ -193,12 +193,12 @@
     <string name="pref_title_recognition_provider">Provedor de reconhecimento</string>
     <string name="recognition_provider_dialog_message">Selecione o provedor de reconhecimento:</string>
     <string name="recognition_provider_dialog_format_auth">Autenticação %s:</string>
-    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
+    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis de 14 dias. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
     <string name="audd_help_dialog_message_empty_token">Você pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isso limitará o número de reconhecimentos diários.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e registrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Por favor preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
-    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Audio gravado\"</string>
+    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Áudio gravado\"</string>
     <string name="acr_cloud_help_dialog_step3">Defina o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
     <string name="acr_cloud_help_dialog_step4">Assinale todas as caixas para integração de ID de terceiros</string>
     <string name="pref_group_notifications">Notificações</string>
@@ -211,31 +211,31 @@
     <string name="pref_title_theme">Tema</string>
     <string name="theme_dialog_message">Selecione o tema:</string>
     <string name="theme_mode">Modo</string>
-    <string name="theme_mode_follow_system">Seguir o sistema</string>
+    <string name="theme_mode_follow_system">O mesmo do sistema</string>
     <string name="theme_mode_light">Claro</string>
     <string name="theme_mode_dark">Escuro</string>
     <string name="theme_use_dynamic_colors">Usar cores dinâmicas</string>
     <string name="theme_use_artwork_colors">Usar cores da arte</string>
-    <string name="theme_use_pure_black">Usar preto puro</string>
+    <string name="theme_use_pure_black">Usar preto profundo</string>
     <string name="pref_title_music_services_links">Links de serviços de música</string>
-    <string name="pref_subtitle_format_more_services">"%1$s, e %2$d mais"</string>
+    <string name="pref_subtitle_format_more_services">%1$s, e mais %2$d</string>
     <string name="pref_subtitle_no_selected_services">Nenhum</string>
     <string name="music_services_links_dialog">Escolha os serviços de músicas de quais você quer ver links da web (quando disponível):</string>
     <string name="pref_group_misc">Outras</string>
     <string name="pref_title_vibration_feedback">Retorno tátil</string>
-    <string name="vibration_feedback_dialog_title">Retorno tátil</string>
+    <string name="vibration_feedback_dialog_title">Vibração</string>
     <string name="vibration_feedback_dialog_message">Configure o retorno tátil para certas ações no app:</string>
-    <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrar no toque</string>
+    <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrar ao toque</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrar ao obter resultado</string>
     <string name="pref_title_about_app">Sobre</string>
-    <string name="about_pref_group_powered_by">Movido por</string>
+    <string name="about_pref_group_powered_by">Feito possível por</string>
     <string name="about_purpose_recognition_service">Fornece identificação de faixas e metadados primários</string>
     <string name="about_purpose_track_links_service">Fornece links adicionais de faixa de plataformas específicas</string>
     <string name="about_pref_title_github_repo">Repositório do GitHub</string>
     <string name="about_pref_title_privacy_policy">Política de Privacidade</string>
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>
-    <string name="notification_channel_name_control">Controlar notificações</string>
+    <string name="notification_channel_name_control">Notificações de controle</string>
     <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento pelas notificações</string>
     <string name="notification_channel_name_result">Resultados de reconhecimento</string>
     <string name="notification_channel_desc_result">Permite receber resultados de reconhecimentos pelas notificações</string>
@@ -254,15 +254,15 @@
     <string name="app_shortcut_open_and_recognize_long">Abrir o app e reconhecer</string>
     <string name="recognition_provider_dialog_title">Provedor</string>
     <string name="pref_title_experimental_features">Funções experimentais</string>
-    <string name="pref_subtitle_experimental_features">Trabalho-em-progresso</string>
-    <string name="pref_title_backup_and_restore">Backup &amp; Restauração</string>
-    <string name="pref_subtitle_backup_and_restore">Fazer backup de seu banco de dados e preferências</string>
+    <string name="pref_subtitle_experimental_features">Em desenvolvimento</string>
+    <string name="pref_title_backup_and_restore">Backup e restauração</string>
+    <string name="pref_subtitle_backup_and_restore">Faça backup do seu banco de dados e preferências</string>
     <string name="pref_title_backup">Fazer backup</string>
-    <string name="pref_subtitle_backup">Exportar dados do app e preferências</string>
+    <string name="pref_subtitle_backup">Exporte os dados e preferências do app</string>
     <string name="backup_dialog_title">Fazer backup</string>
     <string name="backup_dialog_button_backup">Fazer backup</string>
     <string name="pref_title_restore">Restaurar</string>
-    <string name="pref_subtitle_restore">Restaurar dados do app e preferências de um backup</string>
+    <string name="pref_subtitle_restore">Restaure os dados do app e preferências de um backup</string>
     <string name="restore_dialog_title">Restaurar</string>
     <string name="restore_dialog_button_restore">Restaurar</string>
     <string name="about_pref_subtitle_github_repo">Código-fonte, problemas e outras informações</string>
@@ -272,7 +272,7 @@
     <string name="result_title_recognition_saved">Reconhecimento salvo</string>
     <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3 ou posterior</string>
     <string name="about_pref_title_third_licenses">Licenças de terceiros</string>
-    <string name="crash_dialog_title">O Audile crashou</string>
+    <string name="crash_dialog_title">O Audile falhou</string>
     <string name="crash_dialog_message">Um erro inesperado ocorreu, fazendo com o que o app parasse. Você gostaria de enviar um relatório de erros via e-mail para ajudar nos a resolver o problema?</string>
     <string name="crash_dialog_comment_prompt">Você pode adicionar informações extras aqui:</string>
     <string name="crash_dialog_button_send">Enviar</string>
@@ -282,10 +282,10 @@
     <string name="audio_capture_mode_device">Áudio do dispositivo</string>
     <string name="audio_capture_mode_auto">Automático</string>
     <string name="pref_title_audio_source">Fonte de áudio</string>
-    <string name="audio_source_dialog_button_long_press_mode_title">Pressionamento longo no botão</string>
-    <string name="pref_subtitle_audio_source">Definir configuração de gravação de áudio</string>
+    <string name="audio_source_dialog_button_long_press_mode_title">Pressionar e segurar</string>
+    <string name="pref_subtitle_audio_source">Defina a configuração de gravação de áudio</string>
     <string name="audio_source_dialog_default_mode_title">Padrão</string>
     <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
-    <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado longamente:</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado e segurado:</string>
     <string name="about_pref_title_licenses">Licenças</string>
 </resources>

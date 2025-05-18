@@ -3,7 +3,7 @@ Este app usa os serviços AudD e ACRCloud para o reconhecimento de música, e o 
 
 <b>Recursos:</b>
 
-<b>Reconhecimento</b> - O Audile permite que você inicie o reconhecimento em um clique. O app salvará a gravação se não tiver internet, e o processo de reconhecimento será executado quando você se reconectar à internet. Você pode customizar o comportamento padrão para reconhecimentos malsucedidos (sem internet, nenhuma correspondência, outra falha) pelas preferências.
+<b>Reconhecimento</b> - O Audile permite que você inicie o reconhecimento em um clique. O app salvará a gravação se não tiver internet, e o processo de reconhecimento será executado quando você ter acesso à internet novamente. Você pode customizar o comportamento padrão para reconhecimentos mal sucedidos (sem internet, nenhuma correspondência, outra falha) pelas preferências.
 <b>Uso em Segundo Plano</b> - Use o aplicativo pelas notificações, por um widget na tela inicial, ou um botão nas configurações rápidas. Gerencie o processo de reconhecimento e obtenha informações da faixa sem abrir o app.
 <b>Sobre a faixa</b> - No caso de um reconhecimento sucedido, informação sobre a faixa é fornecida, como o nome, artista, álbum e ano, arte, links para serviços de música populares, e letras.
 <b>Biblioteca</b> - Todas as faixas identificadas são armazenadas na biblioteca do aplicativo. Você pode filtrar a lista de faixas, criar uma coleção de favoritos, pesquisar por faixas, ou apagar faixas.

@@ -222,7 +222,7 @@
     <string name="about_purpose_track_links_service">Täiendavad platvormikohased lugude lingid</string>
     <string name="about_pref_title_github_repo">Lähtekoodi hoidla GitHubis</string>
     <string name="about_pref_subtitle_github_repo">Lähtekood, veahaldus ja muu teave arenduse kohta</string>
-    <string name="about_pref_title_privacy_policy">Privaatsuspoliitika</string>
+    <string name="about_pref_title_privacy_policy">Andmekaitsepõhimõtted</string>
     <string name="about_pref_subtitle_privacy_policy">Lisateave sellest, kuidas see rakendus töötleb sinu andmeid</string>
     <string name="restore_dialog_title">Taastamine</string>
     <string name="restore_dialog_button_restore">Taasta</string>

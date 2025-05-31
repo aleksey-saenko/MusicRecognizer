@@ -20,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -146,10 +145,8 @@ internal fun TrackScreen(
                                     },
                                     createSeedColor = uiState.artworkBasedThemeEnabled,
                                     onSeedColorCreated = { seedColor ->
-                                        viewModel.setThemeSeedColor(
-                                            uiState.track.id,
-                                            seedColor.toArgb()
-                                        )
+                                        if (seedColor == uiState.track.themeSeedColor) return@TrackSection
+                                        viewModel.setThemeSeedColor(uiState.track.id, seedColor)
                                     },
                                     modifier = Modifier
                                         .weight(1f)

@@ -55,7 +55,7 @@ internal fun LyricsScreenTopBar(
     lyricsFontSize: FontSize,
     onChangeLyricsFontSize: (newSize: FontSize) -> Unit,
     createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
 ) {
     val defaultColors = TopAppBarDefaults.topAppBarColors()
     val containerColor by animateColorAsState(
@@ -210,7 +210,7 @@ private fun TrackInfoRow(
     artist: String,
     artworkUrl: String? = null,
     createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier,

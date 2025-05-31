@@ -17,7 +17,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -95,10 +94,8 @@ internal fun LyricsScreen(
                             onChangeLyricsStyle = viewModel::setLyricsStyle,
                             createSeedColor = uiState.artworkBasedThemeEnabled,
                             onSeedColorCreated = { seedColor ->
-                                viewModel.setThemeSeedColor(
-                                    uiState.trackId,
-                                    seedColor.toArgb()
-                                )
+                                if (seedColor == uiState.themeSeedColor) return@PlainLyricsContent
+                                viewModel.setThemeSeedColor(uiState.trackId, seedColor)
                             },
                         )
                         is SyncedLyrics -> SyncedLyricsContent(
@@ -116,10 +113,8 @@ internal fun LyricsScreen(
                             onChangeLyricsStyle = viewModel::setLyricsStyle,
                             createSeedColor = uiState.artworkBasedThemeEnabled,
                             onSeedColorCreated = { seedColor ->
-                                viewModel.setThemeSeedColor(
-                                    uiState.trackId,
-                                    seedColor.toArgb()
-                                )
+                                if (seedColor == uiState.themeSeedColor) return@SyncedLyricsContent
+                                viewModel.setThemeSeedColor(uiState.trackId, seedColor)
                             },
                         )
                     }

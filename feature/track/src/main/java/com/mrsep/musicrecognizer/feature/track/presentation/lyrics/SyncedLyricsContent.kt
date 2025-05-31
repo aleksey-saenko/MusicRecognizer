@@ -114,7 +114,7 @@ internal fun SyncedLyricsContent(
     onShowLyricsStyleSettings: () -> Unit,
     onChangeLyricsStyle: (newStyle: LyricsStyle) -> Unit,
     createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val view = LocalView.current

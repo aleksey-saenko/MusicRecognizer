@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
@@ -31,7 +30,7 @@ internal fun TrackSection(
     isExpandedScreen: Boolean,
     onArtworkClick: () -> Unit,
     createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (isExpandedScreen) {

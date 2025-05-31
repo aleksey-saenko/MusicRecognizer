@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -41,7 +40,7 @@ internal fun AlbumArtwork(
     shape: Shape,
     onLoadedArtworkClick: (() -> Unit)? = null,
     createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
 ) {
     val placeholder = forwardingPainter(
         painter = painterResource(UiR.drawable.outline_album_fill1_24),

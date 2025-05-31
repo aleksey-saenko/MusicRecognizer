@@ -46,7 +46,7 @@
     <!-- Permissions -->
     <string name="permissions">Permissions</string>
     <string name="request_permission">Demander l\'autorisation</string>
-    <string name="permission_rationale_record_audio">Pour effectuer la reconnaissance musicale, l\'application a besoin d\'accéder à votre microphone.</string>
+    <string name="permission_rationale_record_audio">L\'application a besoin d\'accéder à votre microphone pour effectuer la reconnaissance musicale.</string>
     <string name="permission_rationale_post_notifications">Pour contrôler la reconnaissance et obtenir le résultat même lorsque l\'application est minimisée, elle nécessite l\'autorisation d\'envoyer des notifications.</string>
     <string name="permissions_denied_message">Les demandes de permissions précédentes ont été refusées. Vous pouvez changer votre décision à travers les paramètres.</string>
     <string name="permissions_denied_open_settings">Ouvrir les paramètres</string>
@@ -178,7 +178,7 @@
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
     <string name="fallback_policy_dialog_message">Définir l\'action de secours par défaut pour chaque type de résultat infructueux :</string>
-    <string name="fallback_action_save_recording_and_retry">Sauvegarder l\'enregistrement et lancer la nouvelle tentative</string>
+    <string name="fallback_action_save_recording_and_retry">Sauvegarder l\'enregistrement et lancer une nouvelle tentative</string>
     <string name="fallback_action_save_recording">Sauvegarder l\'enregistrement</string>
     <string name="fallback_action_ignore">Ignorer</string>
     <string name="fallback_trigger_bad_connection">Mauvaise connexion internet</string>

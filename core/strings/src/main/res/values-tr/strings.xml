@@ -222,7 +222,7 @@
     <string name="pref_subtitle_no_selected_services">Hiçbiri</string>
     <string name="music_services_links_dialog">Web bağlantılarını görmek istediğiniz müzik hizmetlerini seçin (mevcut ise):</string>
     <string name="pref_title_vibration_feedback">Titreşim geri bildirimi</string>
-    <string name="vibration_feedback_dialog_title">Titreşim geri bildirimi</string>
+    <string name="vibration_feedback_dialog_title">Titreşim</string>
     <string name="vibration_feedback_dialog_message">Belirli uygulama içi eylemler için titreşim geri bildirimini yapılandırın:</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Dokunma ile titret</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Sonuçta titret</string>

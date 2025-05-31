@@ -39,7 +39,10 @@ internal fun TrackActionsBottomBar(
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 2.dp
+                        defaultElevation = 2.dp,
+                        pressedElevation = 3.dp,
+                        focusedElevation = 3.dp,
+                        hoveredElevation = 3.dp
                     ),
                 ) {
                     Icon(

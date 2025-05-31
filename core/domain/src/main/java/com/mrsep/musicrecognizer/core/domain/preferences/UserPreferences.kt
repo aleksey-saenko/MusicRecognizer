@@ -17,7 +17,7 @@ data class UserPreferences(
     val notificationServiceEnabled: Boolean,
     val dynamicColorsEnabled: Boolean,
     val artworkBasedThemeEnabled: Boolean,
-    val lyricsFontStyle: LyricsFontStyle,
+    val lyricsStyle: LyricsStyle,
     val trackFilter: TrackFilter,
     val hapticFeedback: HapticFeedback,
     val useGridForLibrary: Boolean,

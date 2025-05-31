@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
@@ -34,15 +35,17 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun AlbumArtwork(
+    modifier: Modifier = Modifier,
     url: String?,
-    onArtworkClick: () -> Unit,
+    elevation: Dp,
+    shape: Shape,
+    onLoadedArtworkClick: (() -> Unit)? = null,
     createSeedColor: Boolean,
     onSeedColorCreated: (Color) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val placeholder = forwardingPainter(
         painter = painterResource(UiR.drawable.outline_album_fill1_24),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
         alpha = 0.3f
     )
     val context = LocalContext.current
@@ -50,7 +53,9 @@ internal fun AlbumArtwork(
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context)
             .data(url)
-            .size(Size.ORIGINAL)
+            .apply {
+                if (createSeedColor) size(Size.ORIGINAL)
+            }
             .allowHardware(!createSeedColor)
             .crossfade(50)
             .build(),
@@ -58,7 +63,7 @@ internal fun AlbumArtwork(
         fallback = placeholder,
         contentScale = ContentScale.Crop,
         onSuccess = { state ->
-            if (!state.result.request.allowHardware) {
+            if (createSeedColor && !state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
                     val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
                     withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
@@ -73,16 +78,22 @@ internal fun AlbumArtwork(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .shadow(
-                elevation = 2.dp,
-                shape = MaterialTheme.shapes.extraLarge
+                elevation = elevation,
+                shape = shape
             )
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.extraLarge
+                shape = shape
             )
-            .clickable(
-                enabled = painterState is AsyncImagePainter.State.Success,
-                onClick = onArtworkClick
+            .then(
+                if (onLoadedArtworkClick != null) {
+                    Modifier.clickable(
+                        enabled = painterState is AsyncImagePainter.State.Success,
+                        onClick = onLoadedArtworkClick
+                    )
+                } else {
+                    Modifier
+                }
             )
     )
 }

@@ -14,15 +14,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
-import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun FontStyleBottomSheet(
+internal fun LyricsStyleBottomSheet(
     sheetState: SheetState,
-    fontStyle: LyricsFontStyle,
-    onFontStyleChanged: (LyricsFontStyle) -> Unit,
+    style: LyricsStyle,
+    onStyleChanged: (LyricsStyle) -> Unit,
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,14 +47,14 @@ internal fun FontStyleBottomSheet(
             Row(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(text = stringResource(StringsR.string.font_size))
                 Spacer(Modifier.weight(1f))
-                Text(text = fontStyle.fontSize.title())
+                Text(text = style.fontSize.title())
             }
             Spacer(Modifier.height(8.dp))
             Slider(
-                value = fontStyle.fontSize.ordinal.toFloat(),
+                value = style.fontSize.ordinal.toFloat(),
                 onValueChange = { sliderValue ->
                     val fontSize = FontSize.entries[sliderValue.toInt()]
-                    onFontStyleChanged(fontStyle.copy(fontSize = fontSize))
+                    onStyleChanged(style.copy(fontSize = fontSize))
                 },
                 valueRange = 0f..3f,
                 steps = 2,
@@ -64,26 +64,23 @@ internal fun FontStyleBottomSheet(
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 BottomBarSwitch(
                     title = stringResource(StringsR.string.align_to_start),
-                    checked = fontStyle.alignToStart,
+                    checked = style.alignToStart,
                     onClick = {
-                        val style = fontStyle.copy(alignToStart = !fontStyle.alignToStart)
-                        onFontStyleChanged(style)
+                        onStyleChanged(style.copy(alignToStart = !style.alignToStart))
                     }
                 )
                 BottomBarSwitch(
                     title = stringResource(StringsR.string.bold_text),
-                    checked = fontStyle.isBold,
+                    checked = style.isBold,
                     onClick = {
-                        val style = fontStyle.copy(isBold = !fontStyle.isBold)
-                        onFontStyleChanged(style)
+                        onStyleChanged(style.copy(isBold = !style.isBold))
                     }
                 )
                 BottomBarSwitch(
                     title = stringResource(StringsR.string.high_contrast_text),
-                    checked = fontStyle.isHighContrast,
+                    checked = style.isHighContrast,
                     onClick = {
-                        val style = fontStyle.copy(isHighContrast = !fontStyle.isHighContrast)
-                        onFontStyleChanged(style)
+                        onStyleChanged(style.copy(isHighContrast = !style.isHighContrast))
                     }
                 )
             }

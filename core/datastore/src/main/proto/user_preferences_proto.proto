@@ -54,14 +54,14 @@ message UserPreferencesProto {
     HUGE = 3;
   }
 
-  message LyricsFontStyleProto {
+  message LyricsStyleProto {
     FontSizeProto font_size = 18;
     bool is_bold = 19;
     bool is_high_contrast = 20;
     bool align_to_start = 42;
   }
 
-  LyricsFontStyleProto lyrics_font_style = 21;
+  LyricsStyleProto lyrics_style = 21;
 
   enum FavoritesModeProto {
     ALL = 0;

@@ -57,7 +57,7 @@ internal fun QueueScreen(
             }
             val multiSelectionState = rememberMultiSelectionState<Int>(uiState.recognitionList)
             BackHandler(
-                enabled = multiSelectionState.multiselectEnabled,
+                enabled = multiSelectionState.hasSelected,
                 onBack = multiSelectionState::deselectAll
             )
 
@@ -76,7 +76,7 @@ internal fun QueueScreen(
             ) {
                 QueueScreenTopBar(
                     isQueueEmpty = uiState.recognitionList.isEmpty(),
-                    isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+                    isMultiselectEnabled = multiSelectionState.hasSelected,
                     selectedCount = multiSelectionState.selectedCount,
                     totalCount = uiState.recognitionList.size,
                     onSelectAll = {

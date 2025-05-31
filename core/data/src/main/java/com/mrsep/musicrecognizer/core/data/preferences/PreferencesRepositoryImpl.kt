@@ -12,7 +12,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
-import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
@@ -98,8 +98,8 @@ internal class PreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setLyricsFontStyle(value: LyricsFontStyle) {
-        safeWriter { lyricsFontStyle = value.toProto() }
+    override suspend fun setLyricsStyle(value: LyricsStyle) {
+        safeWriter { lyricsStyle = value.toProto() }
     }
 
     override suspend fun setTrackFilter(value: TrackFilter) {

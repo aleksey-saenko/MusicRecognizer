@@ -14,7 +14,7 @@ class MultiSelectionState<T>(selectedIds: List<T>) {
 
     val selectedCount get() = selectedIds.size
 
-    val multiselectEnabled get() = selectedIds.isNotEmpty()
+    val hasSelected get() = selectedCount > 0
 
     fun select(ids: List<T>) {
         selectedIds.addAll(ids)

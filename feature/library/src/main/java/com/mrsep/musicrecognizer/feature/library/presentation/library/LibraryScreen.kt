@@ -35,7 +35,7 @@ internal fun LibraryScreen(
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     BackHandler(
-        enabled = multiSelectionState.multiselectEnabled,
+        enabled = multiSelectionState.hasSelected,
         onBack = multiSelectionState::deselectAll
     )
 
@@ -57,7 +57,7 @@ internal fun LibraryScreen(
             LibraryScreenTopBar(
                 isLibraryEmpty = uiState.isEmptyLibrary,
                 isFilterApplied = uiState.trackFilter.isDefault.not(),
-                isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+                isMultiselectEnabled = multiSelectionState.hasSelected,
                 selectedCount = multiSelectionState.selectedCount,
                 totalCount = uiState.trackList.size,
                 onSearchClick = onTrackSearchClick,

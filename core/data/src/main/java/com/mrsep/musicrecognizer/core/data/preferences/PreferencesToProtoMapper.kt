@@ -11,7 +11,7 @@ import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.SortByProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto.ThemeModeProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.fallbackPolicyProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.hapticFeedbackProto
-import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.lyricsFontStyleProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.lyricsStyleProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.trackFilterProto
 import com.mrsep.musicrecognizer.core.datastore.acrCloudConfigProto
 import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
@@ -21,7 +21,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
 import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
 import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
-import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
 import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
@@ -77,7 +77,7 @@ internal fun MusicService.toProto() = when (this) {
     MusicService.YoutubeMusic -> MusicServiceProto.YoutubeMusic
 }
 
-internal fun LyricsFontStyle.toProto() = lyricsFontStyleProto {
+internal fun LyricsStyle.toProto() = lyricsStyleProto {
     fontSize = this@toProto.fontSize.toProto()
     isBold = this@toProto.isBold
     isHighContrast = this@toProto.isHighContrast

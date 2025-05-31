@@ -145,7 +145,7 @@ internal fun TrackScreen(
                                         artworkShieldUrl = uiState.track.artworkUrl
                                     },
                                     createSeedColor = uiState.artworkBasedThemeEnabled,
-                                    onSeedColor = { seedColor ->
+                                    onSeedColorCreated = { seedColor ->
                                         viewModel.setThemeSeedColor(
                                             uiState.track.id,
                                             seedColor.toArgb()

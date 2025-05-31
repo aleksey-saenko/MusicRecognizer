@@ -52,7 +52,7 @@ internal fun TrackLazyGrid(
                 track = track,
                 selected = multiSelectionState.isSelected(track.id),
                 onClick = {
-                    if (multiSelectionState.multiselectEnabled) {
+                    if (multiSelectionState.hasSelected) {
                         multiSelectionState.toggleSelection(track.id)
                     } else {
                         onTrackClick(track.id)

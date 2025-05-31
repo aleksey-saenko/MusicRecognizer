@@ -63,7 +63,7 @@ internal fun RecognitionLazyGrid(
                 onStartPlayRecord = { onStartPlayRecord(recognition.id) },
                 onStopPlayRecord = onStopPlayRecord,
                 onClick = {
-                    if (multiSelectionState.multiselectEnabled) {
+                    if (multiSelectionState.hasSelected) {
                         multiSelectionState.toggleSelection(recognition.id)
                     } else {
                         showActionsSheet = !showActionsSheet

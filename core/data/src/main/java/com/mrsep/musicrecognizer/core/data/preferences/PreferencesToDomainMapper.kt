@@ -13,7 +13,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
 import com.mrsep.musicrecognizer.core.domain.preferences.FontSize
 import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
-import com.mrsep.musicrecognizer.core.domain.preferences.LyricsFontStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
 import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
@@ -70,17 +70,17 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     notificationServiceEnabled = notificationServiceEnabled,
     dynamicColorsEnabled = dynamicColorsEnabled,
     artworkBasedThemeEnabled = artworkBasedThemeEnabled,
-    lyricsFontStyle = LyricsFontStyle(
-        fontSize = when (lyricsFontStyle.fontSize!!) {
+    lyricsStyle = LyricsStyle(
+        fontSize = when (lyricsStyle.fontSize!!) {
             UserPreferencesProto.FontSizeProto.SMALL -> FontSize.Small
             UserPreferencesProto.FontSizeProto.NORMAL -> FontSize.Normal
             UserPreferencesProto.FontSizeProto.LARGE -> FontSize.Large
             UserPreferencesProto.FontSizeProto.HUGE -> FontSize.Huge
             UserPreferencesProto.FontSizeProto.UNRECOGNIZED -> error("Unexpected proto value")
         },
-        isBold = lyricsFontStyle.isBold,
-        isHighContrast = lyricsFontStyle.isHighContrast,
-        alignToStart = lyricsFontStyle.alignToStart
+        isBold = lyricsStyle.isBold,
+        isHighContrast = lyricsStyle.isHighContrast,
+        alignToStart = lyricsStyle.alignToStart
     ),
     trackFilter = TrackFilter(
         favoritesMode = when (trackFilter.favoritesMode!!) {

@@ -6,7 +6,7 @@ import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.fallbackPolicyProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.hapticFeedbackProto
-import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.lyricsFontStyleProto
+import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.lyricsStyleProto
 import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProtoKt.trackFilterProto
 import java.io.InputStream
 import java.io.OutputStream
@@ -65,9 +65,9 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
             useGridForRecognitionQueue = false
             showRecognitionDateInLibrary = false
             showCreationDateInQueue = false
-            lyricsFontStyle = lyricsFontStyleProto {
-                fontSize = UserPreferencesProto.FontSizeProto.NORMAL
-                isBold = false
+            lyricsStyle = lyricsStyleProto {
+                fontSize = UserPreferencesProto.FontSizeProto.LARGE
+                isBold = true
                 isHighContrast = false
                 alignToStart = false
             }

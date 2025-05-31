@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +31,18 @@ internal fun TrackSection(
     isExpandedScreen: Boolean,
     onArtworkClick: () -> Unit,
     createSeedColor: Boolean,
-    onSeedColor: (Color) -> Unit,
+    onSeedColorCreated: (Color) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (isExpandedScreen) {
         Row(modifier = modifier) {
             AlbumArtwork(
                 url = track.artworkUrl,
-                onArtworkClick = onArtworkClick,
+                elevation = 2.dp,
+                shape = MaterialTheme.shapes.extraLarge,
+                onLoadedArtworkClick = onArtworkClick,
                 createSeedColor = createSeedColor,
-                onSeedColorCreated = onSeedColor,
+                onSeedColorCreated = onSeedColorCreated,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
@@ -74,9 +77,11 @@ internal fun TrackSection(
         ) {
             AlbumArtwork(
                 url = track.artworkUrl,
-                onArtworkClick = onArtworkClick,
+                elevation = 2.dp,
+                shape = MaterialTheme.shapes.extraLarge,
+                onLoadedArtworkClick = onArtworkClick,
                 createSeedColor = createSeedColor,
-                onSeedColorCreated = onSeedColor,
+                onSeedColorCreated = onSeedColorCreated,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
@@ -132,7 +137,7 @@ private fun Preview() {
             isExpandedScreen = true,
             onArtworkClick = {},
             createSeedColor = false,
-            onSeedColor = {},
+            onSeedColorCreated = {},
             modifier = Modifier.verticalScroll(rememberScrollState())
         )
     }

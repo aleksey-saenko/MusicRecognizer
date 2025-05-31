@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackInfoColumn(
     title: String,

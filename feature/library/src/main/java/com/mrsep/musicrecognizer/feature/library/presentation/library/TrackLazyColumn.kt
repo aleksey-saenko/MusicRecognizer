@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -86,7 +85,6 @@ internal fun TrackLazyColumn(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyColumnItem(
     track: TrackUi,

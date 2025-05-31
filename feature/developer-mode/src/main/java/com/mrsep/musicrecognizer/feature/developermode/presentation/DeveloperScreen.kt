@@ -49,7 +49,6 @@ internal fun DeveloperScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ButtonGroup(
     modifier: Modifier = Modifier,

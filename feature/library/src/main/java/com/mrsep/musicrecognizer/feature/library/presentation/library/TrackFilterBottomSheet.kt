@@ -15,7 +15,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
 import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TrackFilterBottomSheet(
     modifier: Modifier = Modifier,

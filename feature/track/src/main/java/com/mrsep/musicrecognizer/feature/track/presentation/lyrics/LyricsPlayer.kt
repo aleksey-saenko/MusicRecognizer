@@ -15,7 +15,7 @@ import kotlin.time.TimeSource
 @Stable
 internal class LyricsPlayer private constructor(
     private val scope: CoroutineScope,
-    private val positionUpdateInterval: Duration = 100.milliseconds
+    private val positionUpdateInterval: Duration,
 ) {
     var isPlaying by mutableStateOf(false)
         private set
@@ -55,7 +55,7 @@ internal class LyricsPlayer private constructor(
 
         @Composable
         internal fun rememberLyricsPlayer(
-            positionUpdateInterval: Duration = 100.milliseconds,
+            positionUpdateInterval: Duration = 50.milliseconds,
         ): LyricsPlayer {
             val scope = rememberCoroutineScope()
             return remember(positionUpdateInterval) {

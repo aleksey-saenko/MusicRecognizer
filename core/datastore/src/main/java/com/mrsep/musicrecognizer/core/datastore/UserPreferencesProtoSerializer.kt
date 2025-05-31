@@ -60,7 +60,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
             )
             notificationServiceEnabled = false
             dynamicColorsEnabled = true
-            artworkBasedThemeEnabled = false
+            artworkBasedThemeEnabled = true
             useGridForLibrary = false
             useGridForRecognitionQueue = false
             showRecognitionDateInLibrary = false

@@ -49,6 +49,7 @@ internal fun RestoreDialog(
             restoreConfirmed = false
         }
     }
+    val dismissOnClickOutside = restoreState !is RestoreUiState.InProgress
     AlertDialog(
         title = {
             Text(text = stringResource(StringsR.string.restore_dialog_title))
@@ -83,8 +84,8 @@ internal fun RestoreDialog(
         },
         onDismissRequest = { onDismissRequest?.invoke() },
         properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
+            dismissOnBackPress = dismissOnClickOutside,
+            dismissOnClickOutside = false,
         ),
         text = {
             Column(Modifier.fillMaxWidth()) {

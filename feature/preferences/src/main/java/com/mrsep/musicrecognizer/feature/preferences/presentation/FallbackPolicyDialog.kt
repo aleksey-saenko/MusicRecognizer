@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.domain.preferences.FallbackAction
 import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import kotlinx.collections.immutable.ImmutableList
@@ -38,6 +39,7 @@ internal fun FallbackPolicyDialog(
     onDismissClick: () -> Unit,
 ) {
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         title = {
             Text(text = stringResource(StringsR.string.fallback_policy_dialog_title))
         },

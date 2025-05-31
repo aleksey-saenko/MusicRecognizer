@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import kotlin.random.Random
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -36,6 +37,7 @@ internal fun RequiredServicesDialog(
         }
     }
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         modifier = modifier,
         title = {
             Text(text = stringResource(StringsR.string.pref_title_music_services_links))

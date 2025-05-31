@@ -10,6 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
@@ -65,6 +66,7 @@ private fun PermissionBlockedDialog(
         Uri.fromParts("package", context.packageName, null)
     )
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         onDismissRequest = onDismissClick,
         confirmButton = {
             if (appSettingsIntent.resolveActivity(context.packageManager) != null) {
@@ -98,6 +100,7 @@ private fun PermissionRationaleDialog(
     onDismissClick: () -> Unit
 ) {
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         onDismissRequest = onDismissClick,
         confirmButton = {
             TextButton(onClick = {

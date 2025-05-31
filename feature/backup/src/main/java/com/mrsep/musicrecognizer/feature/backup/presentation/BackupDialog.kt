@@ -102,7 +102,7 @@ internal fun BackupDialog(
         onDismissRequest = onDismissClick,
         properties = DialogProperties(
             dismissOnBackPress = dismissOnClickOutside,
-            dismissOnClickOutside = dismissOnClickOutside,
+            dismissOnClickOutside = false,
         ),
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {

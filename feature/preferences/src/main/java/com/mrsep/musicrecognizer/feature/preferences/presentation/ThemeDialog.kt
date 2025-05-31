@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -41,6 +42,7 @@ internal fun ThemeDialog(
     onPureBlackEnabled: (Boolean) -> Unit,
 ) {
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         title = {
             Text(text = stringResource(StringsR.string.pref_title_theme))
         },

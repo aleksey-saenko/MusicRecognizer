@@ -9,6 +9,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
@@ -29,7 +30,12 @@ internal class ArtworkFetcherImpl @Inject constructor(
     // https://developers.deezer.com/api/track
     private suspend fun fetchDeezerSource(deezerTrackUrl: String): TrackArtwork? {
         val deezerTrackId = verifyAndParseDeezerTrackId(deezerTrackUrl) ?: return null
-        val requestUrl = "https://api.deezer.com/track/$deezerTrackId"
+        val requestUrl = HttpUrl.Builder()
+            .scheme("https")
+            .host("api.deezer.com")
+            .addPathSegment("track")
+            .addPathSegment(deezerTrackId)
+            .build()
         val request = Request.Builder().url(requestUrl).get().build()
         return try {
             okHttpClient.newCall(request).await().use { response ->

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
@@ -30,7 +31,7 @@ internal class LyricsFetcherImpl @Inject constructor(
         return withContext(ioDispatcher) {
             channelFlow {
                 val tasks = listOf(
-                    async { fetchFromLrcLib(track.title, track.artist) },
+                    async { fetchFromLrcLib(track) },
 //                    async { },
                 )
                 tasks.forEach { task -> launch { send(task.await()) } }
@@ -40,9 +41,20 @@ internal class LyricsFetcherImpl @Inject constructor(
         }
     }
 
-    private suspend fun fetchFromLrcLib(title: String, artist: String): Lyrics? {
-        // Don't use optional album_name and duration parameters to expand search
-        val requestUrl = "https://lrclib.net/api/get?artist_name=$artist&track_name=$title"
+    private suspend fun fetchFromLrcLib(track: Track): Lyrics? {
+        val requestUrl = HttpUrl.Builder()
+            .scheme("https")
+            .host("lrclib.net")
+            .addPathSegment("api")
+            .addPathSegment("get")
+            .addQueryParameter("artist_name", track.artist)
+            .addQueryParameter("track_name", track.title)
+            .apply {
+                track.duration?.inWholeSeconds?.let { duration ->
+                    addQueryParameter("duration", "$duration")
+                }
+            }
+            .build()
         val request = Request.Builder().url(requestUrl).get().build()
         val json = fetchByRequest<LrcLibResponseJson>(request) ?: return null
         return json.syncedLyrics?.takeValidContent()?.parseToSyncedLyrics()

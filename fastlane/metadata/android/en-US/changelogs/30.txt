@@ -1,0 +1,2 @@
+* Add support for synchronized lyrics for newly recognized songs (only when using ACRCloud as the recognition provider for now)
+* Minor bug fixes and translation corrections

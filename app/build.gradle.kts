@@ -14,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 29
-        versionName = "1.9.0"
+        versionCode = 30
+        versionName = "1.10.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -52,7 +52,7 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
-        // Excluded unfinished translations: "fa", "gu", "pl", "ro", "vi"
+        // Excluded unfinished translations: "fa", "gu", "nl", "pl", "ro", "vi"
         localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "pt", "pt-rBR", "ru", "sk", "tr")
     }
     aboutLibraries {

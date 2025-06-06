@@ -2,19 +2,19 @@
 <resources>
     <string name="main_screen_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="main_screen_listening">Écoute en cours</string>
-    <string name="main_screen_listening_extra_time">Essayer une fois de plus</string>
+    <string name="main_screen_listening_extra_time">Essayer une nouvelle fois</string>
     <!-- It's preferable to use more concise translations for the widget, notification and tile-->
     <string name="widget_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="widget_tap_to_try_again">Tapez pour réessayer</string>
     <string name="widget_listening">Écoute en cours</string>
     <string name="widget_listening_subtitle">Veuillez patienter</string>
-    <string name="widget_listening_subtitle_extra_time">Essayer une fois de plus</string>
+    <string name="widget_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
     <string name="recognition_widget_description">Reconnaître la chanson en un seul clic</string>
     <string name="notification_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="notification_tap_to_recognize_subtitle">Identifiez la musique dans d’autres applis</string>
     <string name="notification_listening">Écoute en cours</string>
     <string name="notification_listening_subtitle">Veuillez patienter</string>
-    <string name="notification_listening_subtitle_extra_time">Essayer une fois de plus</string>
+    <string name="notification_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
     <string name="quick_tile_recognize">Identifier</string>
     <string name="quick_tile_cancel_recognition">Annuler la reconnaissance</string>
     <string name="action_recognize">Identifier</string>
@@ -48,7 +48,7 @@
     <string name="request_permission">Demander l\'autorisation</string>
     <string name="permission_rationale_record_audio">L\'application a besoin d\'accéder à votre microphone pour effectuer la reconnaissance musicale.</string>
     <string name="permission_rationale_post_notifications">Pour contrôler la reconnaissance et obtenir le résultat même lorsque l\'application est minimisée, elle nécessite l\'autorisation d\'envoyer des notifications.</string>
-    <string name="permissions_denied_message">Les demandes de permissions précédentes ont été refusées. Vous pouvez changer votre décision à travers les paramètres.</string>
+    <string name="permissions_denied_message">Les précédentes demandes de permissions ont été refusées. Vous pouvez changer votre décision dans les paramètres.</string>
     <string name="permissions_denied_open_settings">Ouvrir les paramètres</string>
     <string name="permission_granted">Autorisation accordée</string>
     <!-- Onboarding screen -->
@@ -111,7 +111,7 @@
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
     <string name="empty_recognition_queue_title">Aucune reconnaissance en attente</string>
-    <string name="empty_recognition_queue_subtitle">En cas d\'échec ou hors ligne, une reconnaissance peut être mise en file d\'attente selon la politique de secours définie dans les paramètres</string>
+    <string name="empty_recognition_queue_subtitle">Hors ligne ou en cas d\'échec, une reconnaissance peut être mise en attente selon la politique de secours définie dans les paramètres</string>
     <string name="untitled_recognition">Reconnaissance sans titre</string>
     <string name="format_scheduled_recognition_of">Reconnaissance planifiée de %s</string>
     <string name="format_recognition_created">Créé : %s</string>
@@ -186,15 +186,15 @@
     <string name="fallback_trigger_other_failures">Autres échecs</string>
     <string name="pref_group_notifications">Notifications</string>
     <string name="pref_title_notification_service">Service de notification</string>
-    <string name="pref_subtitle_notification_service">Contrôlez la reconnaissance à partir des notifications</string>
+    <string name="pref_subtitle_notification_service">Gérez la reconnaissance à partir des notifications</string>
     <string name="pref_group_appearance">Apparence</string>
     <string name="pref_title_use_grid_layout">Utiliser la grille</string>
     <string name="pref_title_show_recognition_date">Afficher la date</string>
     <string name="pref_title_show_creation_date">Afficher la date</string>
     <string name="pref_title_theme">Thème</string>
-    <string name="theme_dialog_message">Sélectionnez un mode thème :</string>
+    <string name="theme_dialog_message">Sélectionnez un mode de thème :</string>
     <string name="theme_mode">Mode</string>
-    <string name="theme_mode_follow_system">Suivre le système</string>
+    <string name="theme_mode_follow_system">Système</string>
     <string name="theme_mode_light">Clair</string>
     <string name="theme_mode_dark">Sombre</string>
     <string name="theme_use_dynamic_colors">Couleurs dynamiques</string>
@@ -234,7 +234,7 @@
     <string name="app_shortcut_open_and_recognize_long">Ouvrir l\'appli et reconnaitre</string>
     <string name="help">Aide</string>
     <string name="recognition_provider_dialog_title">Service</string>
-    <string name="recognition_provider_dialog_format_auth">%s authentification :</string>
+    <string name="recognition_provider_dialog_format_auth">Authentification %s :</string>
     <string name="acr_cloud_help_dialog_step1">Sélectionnez la région géographique la plus proche de vous pour réduire la latence du réseau</string>
     <string name="unviewed_track_label">+1</string>
     <string name="lyrics_start_autoscroll">Démarrer le défilement auto</string>

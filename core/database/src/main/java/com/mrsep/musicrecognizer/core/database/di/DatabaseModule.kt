@@ -6,9 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mrsep.musicrecognizer.core.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.core.database.DatabaseBackupProvider
-import com.mrsep.musicrecognizer.core.database.migration.Migration5To6
-import com.mrsep.musicrecognizer.core.database.migration.Migration6To7
-import com.mrsep.musicrecognizer.core.database.migration.Migration7To8
+import com.mrsep.musicrecognizer.core.database.migration.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +49,8 @@ internal class RoomModule {
                 Migration5To6,
                 Migration6To7,
                 Migration7To8,
+                Migration8To9,
+                Migration7To9,
             )
             .build()
     }

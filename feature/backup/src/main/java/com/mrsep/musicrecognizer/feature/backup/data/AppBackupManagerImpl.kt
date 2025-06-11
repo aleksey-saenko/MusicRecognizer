@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.backup.data
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.util.Log
@@ -14,7 +13,6 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionCode
 import com.mrsep.musicrecognizer.core.data.enqueued.RecordingFileDataSource
 import com.mrsep.musicrecognizer.core.database.ApplicationDatabase
-import com.mrsep.musicrecognizer.core.database.di.DATABASE_NAME
 import com.mrsep.musicrecognizer.core.datastore.USER_PREFERENCES_STORE
 import com.mrsep.musicrecognizer.feature.backup.AppBackupManager
 import com.mrsep.musicrecognizer.feature.backup.BackupEntry
@@ -31,10 +29,9 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.File
 import java.io.FileNotFoundException
-import java.io.InputStream
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.time.Instant
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -108,7 +105,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private suspend fun exportDatabase(zipOutputStream: ZipOutputStream) {
-        val appDatabaseFile = appContext.getDatabasePath(DATABASE_NAME)
+        val appDatabaseFile = appContext.getDatabasePath(database.openHelper.databaseName)
         if (!appDatabaseFile.exists()) error("App database file is not found")
         if (!database.checkoutWithRetry()) {
             error("Database checkpoint was not performed, database is busy")
@@ -239,8 +236,7 @@ internal class AppBackupManagerImpl @Inject constructor(
                             if (entries.contains(BackupEntry.Data)) {
                                 deleteAppData()
                                 appDataDeleted = true
-//                                importDatabase(zipInputStream)
-                                scheduleDatabaseImport(backupUri = source)
+                                importDatabase(zipInputStream)
                             }
                         }
 
@@ -272,33 +268,22 @@ internal class AppBackupManagerImpl @Inject constructor(
             }
             RestoreResult.Success(appRestartRequired = true)
         } catch (e: CancellationException) {
-            cleanOnRestoreError(source)
+            cleanOnRestoreError()
             throw e
         } catch (e: Exception) {
             Log.e(this::class.simpleName, "Fatal error while restoring data from backup", e)
-            cleanOnRestoreError(source)
+            cleanOnRestoreError()
             RestoreResult.UnhandledError
         }
     }
 
     private fun importDatabase(zipInputStream: ZipInputStream) {
-        appContext.deleteDatabase(DATABASE_NAME)
-        val databaseFile = appContext.getDatabasePath(DATABASE_NAME)
-        databaseFile.createNewFile()
-        databaseFile.outputStream().buffered().use { outputStream ->
-            zipInputStream.copyTo(outputStream)
-        }
-    }
-
-    private fun scheduleDatabaseImport(backupUri: Uri) {
-        appContext.takePersistableUriPermission(backupUri)
-        appContext.getDatabaseRestoreUriFile().run {
-            if (exists()) delete()
-            createNewFile()
-            outputStream().buffered().use {
-                it.write(backupUri.toString().encodeToByteArray())
-            }
-        }
+        val databasePath = appContext.getDatabasePath(database.openHelper.databaseName).toPath()
+        database.close()
+        appContext.deleteDatabase(database.openHelper.databaseName)
+        Files.createDirectories(databasePath.parent)
+        Files.createFile(databasePath)
+        Files.copy(zipInputStream, databasePath, StandardCopyOption.REPLACE_EXISTING)
     }
 
     private suspend fun importRecording(recordingName: String, zipInputStream: ZipInputStream) {
@@ -329,10 +314,8 @@ internal class AppBackupManagerImpl @Inject constructor(
         }
     }
 
-    private suspend fun cleanOnRestoreError(backupUri: Uri) {
+    private suspend fun cleanOnRestoreError() {
         withContext(NonCancellable) {
-            appContext.releasePersistableUriPermission(backupUri)
-            appContext.getDatabaseRestoreUriFile().delete()
             deleteAppData()
         }
     }
@@ -369,27 +352,6 @@ internal class AppBackupManagerImpl @Inject constructor(
 
     companion object {
 
-        fun Context.getDatabaseRestoreUriFile(): File {
-            return dataDir.resolve("databases/DATABASE_RESTORE_URI")
-        }
-
-        fun Context.getDatabaseInputStream(uri: Uri): InputStream? {
-            return try {
-                val inputStream = contentResolver.openInputStream(uri) ?: return null
-                val zipInputStream = ZipInputStream(inputStream.buffered())
-                var currentEntry: ZipEntry? = zipInputStream.nextEntry
-                while (currentEntry != null) {
-                    if (currentEntry.name == DATABASE_ZIP_ENTRY) {
-                        return zipInputStream
-                    }
-                    currentEntry = zipInputStream.nextEntry
-                }
-                return null
-            } catch (e: Exception) {
-                null
-            }
-        }
-
         private const val PREFERENCES_ZIP_ENTRY = "preferences"
         private const val DATABASE_ZIP_ENTRY = "database"
         private const val METADATA_ZIP_ENTRY = "metadata"
@@ -398,15 +360,4 @@ internal class AppBackupManagerImpl @Inject constructor(
 
         private val recordingEntryNamePattern = Regex("^$RECORDINGS_DIR_ZIP_ENTRY(rec_\\d+)\$")
     }
-}
-
-internal fun Context.takePersistableUriPermission(uri: Uri) {
-    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-    contentResolver.takePersistableUriPermission(uri, flags)
-}
-
-// https://commonsware.com/blog/2020/06/13/count-your-saf-uri-permission-grants.html
-internal fun Context.releasePersistableUriPermission(uri: Uri) {
-    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-    contentResolver.releasePersistableUriPermission(uri, flags)
 }

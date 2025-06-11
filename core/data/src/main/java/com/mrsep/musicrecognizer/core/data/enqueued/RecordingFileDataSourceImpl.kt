@@ -10,6 +10,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.time.Instant
 import java.util.zip.ZipInputStream
 import javax.inject.Inject
@@ -40,10 +43,10 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
         return try {
             withContext(ioDispatcher) {
                 val resultFile = recordingsDir.resolve(recordingName)
-                resultFile.outputStream().buffered().use { stream ->
-                    stream.write(recording)
-                    resultFile
-                }
+                val resultPath = resultFile.toPath()
+                Files.deleteIfExists(resultPath)
+                Files.write(resultPath, recording, StandardOpenOption.CREATE)
+                resultFile
             }
         } catch (e: IOException) {
             Log.e(this::class.simpleName, "Failed to write recording ($recordingName)", e)
@@ -55,10 +58,8 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
         return try {
             withContext(ioDispatcher) {
                 val resultFile = recordingsDir.resolve(recordingName)
-                resultFile.outputStream().buffered().use { outputStream ->
-                    inputStream.copyTo(outputStream)
-                    resultFile
-                }
+                Files.copy(inputStream, resultFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                resultFile
             }
         } catch (e: IOException) {
             Log.e(this::class.simpleName, "Failed to import recording ($recordingName)", e)

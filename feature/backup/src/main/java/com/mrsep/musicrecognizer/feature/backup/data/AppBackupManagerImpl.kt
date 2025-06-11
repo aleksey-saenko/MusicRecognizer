@@ -38,8 +38,8 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
+import kotlin.io.path.exists
 
-/* Work in progress */
 internal class AppBackupManagerImpl @Inject constructor(
     private val database: ApplicationDatabase,
     private val recordingFileDataSource: RecordingFileDataSource,
@@ -105,17 +105,13 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private suspend fun exportDatabase(zipOutputStream: ZipOutputStream) {
-        val appDatabaseFile = appContext.getDatabasePath(database.openHelper.databaseName)
-        if (!appDatabaseFile.exists()) error("App database file is not found")
-        if (!database.checkoutWithRetry()) {
-            error("Database checkpoint was not performed, database is busy")
-        }
-        val zipEntry = ZipEntry(DATABASE_ZIP_ENTRY)
+        coroutineContext.ensureActive()
+        val appDatabasePath = appContext.getDatabasePath(database.openHelper.databaseName).toPath()
+        check(appDatabasePath.exists()) { "App database file is not found" }
+        check(database.checkoutWithRetry()) { "DB checkpoint was not performed, database is busy" }
         with(zipOutputStream) {
-            putNextEntry(zipEntry)
-            appDatabaseFile.inputStream().buffered().use { input ->
-                input.copyTo(this)
-            }
+            putNextEntry(ZipEntry(DATABASE_ZIP_ENTRY))
+            Files.copy(appDatabasePath, this)
             closeEntry()
         }
     }
@@ -126,15 +122,14 @@ internal class AppBackupManagerImpl @Inject constructor(
             for (recording in recordings) {
                 coroutineContext.ensureActive()
                 putNextEntry(ZipEntry("$RECORDINGS_DIR_ZIP_ENTRY${recording.name}"))
-                recording.inputStream().buffered().use { input ->
-                    input.copyTo(this)
-                }
+                Files.copy(recording.toPath(), this)
                 closeEntry()
             }
         }
     }
 
     private suspend fun exportUserPreferences(zipOutputStream: ZipOutputStream) {
+        coroutineContext.ensureActive()
         val preferences = userPreferencesDataStore.data.first()
         with(zipOutputStream) {
             putNextEntry(ZipEntry(PREFERENCES_ZIP_ENTRY))
@@ -227,25 +222,22 @@ internal class AppBackupManagerImpl @Inject constructor(
                     return@withContext RestoreResult.NewerVersionBackup
                 }
                 zipInputStream.closeEntry()
-                currentEntry = zipInputStream.nextEntry
+
                 var appDataDeleted = false
+                currentEntry = zipInputStream.nextEntry
                 while (currentEntry != null) {
                     ensureActive()
                     when (currentEntry.name) {
-                        DATABASE_ZIP_ENTRY -> {
-                            if (entries.contains(BackupEntry.Data)) {
-                                deleteAppData()
-                                appDataDeleted = true
-                                importDatabase(zipInputStream)
-                            }
+                        DATABASE_ZIP_ENTRY -> if (entries.contains(BackupEntry.Data)) {
+                            deleteAppData()
+                            appDataDeleted = true
+                            importDatabase(zipInputStream)
                         }
 
                         RECORDINGS_DIR_ZIP_ENTRY -> {} // just skip
 
-                        PREFERENCES_ZIP_ENTRY -> {
-                            if (entries.contains(BackupEntry.Preferences)) {
-                                importPreferences(zipInputStream)
-                            }
+                        PREFERENCES_ZIP_ENTRY -> if (entries.contains(BackupEntry.Preferences)) {
+                            importPreferences(zipInputStream)
                         }
 
                         else -> {
@@ -255,10 +247,8 @@ internal class AppBackupManagerImpl @Inject constructor(
                                     importRecording(recordingName, zipInputStream)
                                 }
                             } else {
-                                Log.w(
-                                    this::class.simpleName,
-                                    "Unknown backup entry \"${currentEntry.name}\""
-                                )
+                                val msg = "Unknown backup entry \"${currentEntry.name}\""
+                                Log.w(this::class.simpleName, msg)
                             }
                         }
                     }
@@ -282,7 +272,6 @@ internal class AppBackupManagerImpl @Inject constructor(
         database.close()
         appContext.deleteDatabase(database.openHelper.databaseName)
         Files.createDirectories(databasePath.parent)
-        Files.createFile(databasePath)
         Files.copy(zipInputStream, databasePath, StandardCopyOption.REPLACE_EXISTING)
     }
 
@@ -291,16 +280,10 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private fun importPreferences(zipInputStream: ZipInputStream) {
-        val preferencesFile = appContext.dataStoreFile(USER_PREFERENCES_STORE)
-        if (preferencesFile.exists()) {
-            preferencesFile.delete()
-        } else {
-            Files.createDirectories(preferencesFile.toPath().parent)
-        }
-        preferencesFile.createNewFile()
-        preferencesFile.outputStream().buffered().use { outputStream ->
-            zipInputStream.copyTo(outputStream)
-        }
+        val preferencesPath = appContext.dataStoreFile(USER_PREFERENCES_STORE).toPath()
+        Files.deleteIfExists(preferencesPath)
+        Files.createDirectories(preferencesPath.parent)
+        Files.copy(zipInputStream, preferencesPath, StandardCopyOption.REPLACE_EXISTING)
     }
 
     private suspend fun deleteAppData() {

@@ -1,7 +1,7 @@
 [versions]
-sdkCompile = "35"
+sdkCompile = "36"
 sdkMin = "26"
-sdkTarget = "35"
+sdkTarget = "36"
 
 aboutLibraries = "12.2.0"
 accompanist = "0.37.3"

@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
@@ -49,8 +48,6 @@ internal fun GlanceModifier.circleWidgetBackground(widgetSize: Dp, transparent: 
 @Composable
 internal fun GlanceModifier.roundedWidgetBackground(transparent: Boolean = false): GlanceModifier = then(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val systemBackgroundRadiusDefined = LocalContext.current.resources
-            .getResourceName(android.R.dimen.system_app_widget_background_radius) != null
         GlanceModifier
             .appWidgetBackground()
             .then(
@@ -60,13 +57,7 @@ internal fun GlanceModifier.roundedWidgetBackground(transparent: Boolean = false
                     GlanceModifier.background(GlanceTheme.colors.widgetBackground)
                 }
             )
-            .cornerRadius(
-                if (systemBackgroundRadiusDefined) {
-                    android.R.dimen.system_app_widget_background_radius
-                } else {
-                    R.dimen.widget_background_radius
-                }
-            )
+            .cornerRadius(R.dimen.widget_background_radius)
     } else {
         GlanceModifier
             .appWidgetBackground()

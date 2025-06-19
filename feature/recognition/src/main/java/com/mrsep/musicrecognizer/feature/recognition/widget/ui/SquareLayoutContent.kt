@@ -223,7 +223,7 @@ private fun ButtonWithStatus(
                 fontSize = titleTextSize,
                 fontWeight = FontWeight.Medium
             ),
-            maxLines = 1,
+            maxLines = 2,
             modifier = GlanceModifier.padding(horizontal = 8.dp)
         )
     }

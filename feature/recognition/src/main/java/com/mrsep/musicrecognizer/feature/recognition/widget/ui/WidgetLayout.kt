@@ -160,30 +160,12 @@ internal sealed class RecognitionWidgetLayout {
 
         @Composable
         fun widgetInnerRadius(): Dp = with(LocalContext.current) {
-            val systemInnerRadiusDefined = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                    resources.getResourceName(android.R.dimen.system_app_widget_inner_radius) != null
-            val innerRadiusPx = resources.getDimension(
-                if (systemInnerRadiusDefined) {
-                    android.R.dimen.system_app_widget_inner_radius
-                } else {
-                    R.dimen.widget_inner_radius
-                }
-            )
-            return pxToDp(innerRadiusPx).dp
+            pxToDp(resources.getDimension(R.dimen.widget_inner_radius)).dp
         }
 
         @Composable
         fun widgetOuterRadius(): Dp = with(LocalContext.current) {
-            val systemOuterRadiusDefined = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                    resources.getResourceName(android.R.dimen.system_app_widget_background_radius) != null
-            val outerRadiusPx = resources.getDimension(
-                if (systemOuterRadiusDefined) {
-                    android.R.dimen.system_app_widget_background_radius
-                } else {
-                    R.dimen.widget_background_radius
-                }
-            )
-            return pxToDp(outerRadiusPx).dp
+            pxToDp(resources.getDimension(R.dimen.widget_background_radius)).dp
         }
 
         @Composable

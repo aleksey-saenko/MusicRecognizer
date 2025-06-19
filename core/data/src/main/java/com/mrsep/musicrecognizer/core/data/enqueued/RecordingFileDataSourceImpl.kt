@@ -24,10 +24,8 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : RecordingFileDataSource {
 
-    private val recordingsDir = appContext.filesDir.resolve("enqueued_records/")
-
-    init {
-        recordingsDir.run { if (!exists()) mkdir() }
+    private val recordingsDir by lazy {
+        File(appContext.filesDir, RECORDS_DIR).apply { if (!exists()) mkdirs() }
     }
 
     override fun getFiles(): Array<File> {
@@ -124,4 +122,8 @@ internal class RecordingFileDataSourceImpl @Inject constructor(
     }
 
     private fun getNewRecordingName(timestamp: Instant) = "rec_${timestamp.toEpochMilli()}"
+
+    companion object {
+        private const val RECORDS_DIR = "enqueued_records"
+    }
 }

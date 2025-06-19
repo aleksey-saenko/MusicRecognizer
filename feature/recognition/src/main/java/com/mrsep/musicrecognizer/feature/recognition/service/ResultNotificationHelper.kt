@@ -214,6 +214,7 @@ class ResultNotificationHelper @Inject constructor(
             val imageHeightPx = imageWidthPx / 2
             bitmap = appContext.getCachedImageOrNull(
                 url = artworkUrl,
+                allowHardware = false,
                 widthPx = imageWidthPx,
                 heightPx = imageHeightPx,
             )

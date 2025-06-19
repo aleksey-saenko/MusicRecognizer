@@ -8,17 +8,20 @@ import coil3.decode.BlackholeDecoder
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import coil3.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal suspend fun Context.getCachedImageOrNull(
     url: String,
+    allowHardware: Boolean,
     @Px widthPx: Int,
     @Px heightPx: Int,
 ): Bitmap? {
     return withContext(Dispatchers.IO) {
         val request = ImageRequest.Builder(this@getCachedImageOrNull)
+            .allowHardware(allowHardware)
             .data(url)
             .size(widthPx, heightPx)
             .networkCachePolicy(CachePolicy.DISABLED)

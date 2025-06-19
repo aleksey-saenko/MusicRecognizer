@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.StrictMode
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -63,6 +65,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     override fun onCreate() {
         super.onCreate()
         if (ACRA.isACRASenderServiceProcess()) return
+        if (BuildConfig.DEBUG) enableStrictMode()
         createNotificationChannels()
         createShortcuts()
     }
@@ -149,6 +152,44 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
                 subject = "Crash report"
             }
         }
+    }
+
+    private fun enableStrictMode() {
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .penaltyDeath()
+                .build()
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .apply {
+                    detectLeakedSqlLiteObjects()
+                    detectActivityLeaks()
+                    detectLeakedClosableObjects()
+                    detectLeakedRegistrationObjects()
+                    detectFileUriExposure()
+                    detectCleartextNetwork()
+                    detectContentUriWithoutPermission()
+//                    detectUntaggedSockets()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        detectCredentialProtectedWhileLocked()
+                        detectImplicitDirectBoot()
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                        detectIncorrectContextUse()
+                        detectUnsafeIntentLaunch()
+                    }
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                        detectBlockedBackgroundActivityLaunch()
+                    }
+
+                }
+                .penaltyLog()
+                .penaltyDeath()
+                .build()
+        )
     }
 
     companion object {

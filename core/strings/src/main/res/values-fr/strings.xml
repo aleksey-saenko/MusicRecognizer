@@ -44,7 +44,7 @@
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
     <!-- Permissions -->
-    <string name="permissions">Permissions</string>
+    <string name="permissions">Autorisations</string>
     <string name="request_permission">Demander l\'autorisation</string>
     <string name="permission_rationale_record_audio">L\'application a besoin d\'accéder à votre microphone pour effectuer la reconnaissance musicale.</string>
     <string name="permission_rationale_post_notifications">Pour contrôler la reconnaissance et obtenir le résultat même lorsque l\'application est minimisée, elle nécessite l\'autorisation d\'envoyer des notifications.</string>
@@ -54,7 +54,7 @@
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Bienvenue</string>
     <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui peut vous aider à identifier rapidement et précisément une piste musicale jouée à proximité de vous.</string>
-    <string name="onboarding_permission_message">L\'application nécessite l\'autorisation d\'enregistrer l\'audio pour fonctionner correctement. En accordant cette autorisation, vous acceptez que vos données enregistrées soient utilisées par <![CDATA[<a href="%1$s">le service distant</a>]]> pour la reconnaissance musicale. L\'application n\'utilise pas ces données à d\'autres fins.</string>
+    <string name="onboarding_permission_message">L’application nécessite l’autorisation d’enregistrer l’audio pour fonctionner correctement. En accordant cette permission, vous acceptez que vos enregistrements soient utilisés par <![CDATA[<a href="%1$s">remote service</a>]]> pour la reconnaissance musicale. L’application n’utilise pas ces données à d’autres fins.</string>
     <string name="onboarding_token_message">L\'application utilise le service de reconnaissance musicale AudD, qui n\'est pas gratuit et nécessite un jeton API spécial. Inscrivez-vous <![CDATA[<a href="%1$s">ici</a>]]> pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore.</string>
     <string name="onboarding_token_skip_message">Ignorer cette étape limitera votre nombre de reconnaissances quotidiennes, mais vous pourrez toujours spécifier ultérieurement votre jeton personnel dans les préférences.</string>
     <string name="onboarding_token_validating">Validation en cours</string>
@@ -98,7 +98,7 @@
     <string name="filter_title">Titre</string>
     <string name="filter_artist">Artiste</string>
     <string name="filter_release_date">Date de sortie</string>
-    <string name="filter_order_By">Trier par</string>
+    <string name="filter_order_By">Classer par</string>
     <string name="filter_ascending">Ascendant</string>
     <string name="filter_descending">Descendant</string>
     <string name="library_search">Rechercher une piste</string>
@@ -198,7 +198,7 @@
     <string name="theme_mode_light">Clair</string>
     <string name="theme_mode_dark">Sombre</string>
     <string name="theme_use_dynamic_colors">Couleurs dynamiques</string>
-    <string name="theme_use_artwork_colors">Illustrations couleur</string>
+    <string name="theme_use_artwork_colors">Utiliser les couleurs de l’illustration</string>
     <string name="theme_use_pure_black">Noir pur</string>
     <string name="pref_title_music_services_links">Liens vers les services musicaux</string>
     <string name="pref_subtitle_format_more_services">"%1$s, et %2$d de plus"</string>
@@ -206,7 +206,7 @@
     <string name="music_services_links_dialog">Choisissez les services musicaux pour lesquels vous souhaiteriez voir des liens web (si disponibles) :</string>
     <string name="pref_group_misc">Divers</string>
     <string name="pref_title_vibration_feedback">Retour par vibration</string>
-    <string name="vibration_feedback_dialog_title">Retour par vibration</string>
+    <string name="vibration_feedback_dialog_title">Vibration</string>
     <string name="vibration_feedback_dialog_message">Configurez le retour par vibration pour certaines actions dans l\'application :</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Vibrer lors d\'un appui</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrer lors d\'un résultat</string>
@@ -257,7 +257,7 @@
     <string name="crash_dialog_comment_prompt">Vous pouvez ajouter des informations supplémentaires ici :</string>
     <string name="crash_dialog_button_cancel">Annuler</string>
     <string name="pref_subtitle_experimental_features">Travail en cours</string>
-    <string name="about_pref_subtitle_license">Audile est sous licence GNU GPLv3</string>
+    <string name="about_pref_subtitle_license">Audile est sous licence GNU GPLv3 ou ultérieure</string>
     <string name="about_pref_subtitle_github_repo">Code source, problèmes et autres informations</string>
     <string name="about_pref_title_third_licenses">Licences tierces</string>
     <string name="about_pref_subtitle_third_licenses">Licences des bibliothèques tierces utilisées par Audile</string>

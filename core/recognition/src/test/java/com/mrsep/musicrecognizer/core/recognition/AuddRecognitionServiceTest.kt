@@ -37,8 +37,10 @@ class AuddRecognitionServiceTest {
         explicitNulls = false
     }
     private val config = AuddConfig(apiToken = "")
-    private val okHttpClient = OkHttpClient()
-
+    private val okHttpClient = object : dagger.Lazy<OkHttpClient> {
+        private val instance = OkHttpClient()
+        override fun get(): OkHttpClient = instance
+    }
     @Test
     fun `first success = Success immediately`() = scope.runTest {
         val webSocket = object : WebSocketBaseFake(this) {

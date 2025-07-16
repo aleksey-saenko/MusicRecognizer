@@ -28,23 +28,23 @@ internal class HttpFileLoggingInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
-        val body = response.body ?: return response
         val responseTime = response.receivedResponseAtMillis
         val host = request.url.host
-        val newBody = if (body.contentType() == "application/json".toMediaType()) {
-            val json = body.string()
+        val contentType = response.body.contentType()
+        val responseBytes = try { response.body.bytes() } catch (_: Exception) { return response }
+
+        val newBody = if (contentType == "application/json".toMediaType()) {
+            val json = responseBytes.toString(Charsets.UTF_8)
             if (json.isNotBlank()) {
                 val responseFile = File("$rootDir/${responseTime}_${host}_json.txt")
                 val responseData = JSONObject(json).toString(4).encodeToByteArray()
                 writeLogFile(responseFile, responseData)
             }
-            json.toResponseBody(body.contentType())
+            responseBytes.toResponseBody(contentType)
         } else {
-            val responseData = body.bytes()
-            response.receivedResponseAtMillis
             val responseFile = File("$rootDir/${responseTime}_${host}_")
-            writeLogFile(responseFile, responseData)
-            responseData.toResponseBody(body.contentType())
+            writeLogFile(responseFile, responseBytes)
+            responseBytes.toResponseBody(contentType)
         }
 
         return response.newBuilder()

@@ -18,11 +18,11 @@ import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.gildor.coroutines.okhttp.await
+import okhttp3.coroutines.executeAsync
 import javax.inject.Inject
 
 internal class LyricsFetcherImpl @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val json: Json,
 ) : LyricsFetcher {
@@ -71,9 +71,9 @@ internal class LyricsFetcherImpl @Inject constructor(
 
     private suspend inline fun <reified T> fetchByRequest(request: Request): T? {
         return try {
-            okHttpClient.newCall(request).await().use { response ->
+            okHttpClient.get().newCall(request).executeAsync().use { response ->
                 if (!response.isSuccessful) return null
-                json.decodeFromString<T>(response.body!!.string())
+                json.decodeFromString<T>(response.body.string())
             }
         } catch (e: CancellationException) {
             throw e

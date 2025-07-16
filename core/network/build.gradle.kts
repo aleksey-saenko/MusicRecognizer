@@ -9,7 +9,6 @@ android {
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
 
         buildConfigField("boolean", "LOG_DEBUG_MODE", "false")
     }
@@ -34,6 +33,7 @@ dependencies {
     api(libs.kotlinx.serializationJson)
     implementation(platform(libs.okhttp.bom))
     api(libs.okhttp.core)
-    api(libs.okhttp.loggingInterceptor)
     api(libs.okhttp.coroutines)
+    api(libs.okhttp.loggingInterceptor)
+    api(libs.coil.network.okhttp)
 }

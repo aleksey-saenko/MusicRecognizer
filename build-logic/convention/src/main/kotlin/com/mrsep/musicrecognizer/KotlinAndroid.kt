@@ -49,5 +49,6 @@ private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
     }.apply {
         jvmTarget = JvmTarget.JVM_17
         allWarningsAsErrors = warningsAsErrors.toBoolean()
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }

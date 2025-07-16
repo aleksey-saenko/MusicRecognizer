@@ -23,6 +23,7 @@ dependencies {
     testImplementation(libs.kotest)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.turbine)
+    testImplementation(libs.okhttp.coreJvm)
     testImplementation(libs.okhttp.mockWebServer)
 
     androidTestImplementation(libs.kotest)

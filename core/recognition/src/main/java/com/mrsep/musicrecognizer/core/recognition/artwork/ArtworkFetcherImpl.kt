@@ -12,11 +12,11 @@ import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.gildor.coroutines.okhttp.await
+import okhttp3.coroutines.executeAsync
 import javax.inject.Inject
 
 internal class ArtworkFetcherImpl @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val json: Json,
 ) : ArtworkFetcher {
@@ -38,9 +38,9 @@ internal class ArtworkFetcherImpl @Inject constructor(
             .build()
         val request = Request.Builder().url(requestUrl).get().build()
         return try {
-            okHttpClient.newCall(request).await().use { response ->
+            okHttpClient.get().newCall(request).executeAsync().use { response ->
                 if (!response.isSuccessful) return null
-                val deezerJson = json.decodeFromString<DeezerJson>(response.body!!.string())
+                val deezerJson = json.decodeFromString<DeezerJson>(response.body.string())
 
                 val albumImageUrl = deezerJson.album?.run { coverXl ?: coverBig }
                 val albumImageThumbUrl = deezerJson.album?.coverMedium?.takeIf { albumImageUrl != null }

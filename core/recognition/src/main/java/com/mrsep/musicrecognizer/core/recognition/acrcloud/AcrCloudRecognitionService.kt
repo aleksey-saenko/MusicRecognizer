@@ -32,13 +32,12 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.gildor.coroutines.okhttp.await
+import okhttp3.coroutines.executeAsync
 import java.io.IOException
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -49,7 +48,7 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val artworkFetcher: ArtworkFetcher,
     private val lyricsFetcher: LyricsFetcher,
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
     private val json: Json,
 ) : RemoteRecognitionService {
 
@@ -89,14 +88,14 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             .post(multipartBody)
             .build()
         val response = try {
-            okHttpClient.newCall(request).await()
+            okHttpClient.get().newCall(request).executeAsync()
         } catch (e: IOException) {
             return@withContext RemoteRecognitionResult.Error.BadConnection
         }
         response.use {
             if (response.isSuccessful) {
                 val remoteResult = try {
-                    json.decodeFromString<AcrCloudResponseJson>(response.body!!.string())
+                    json.decodeFromString<AcrCloudResponseJson>(response.body.string())
                         .toRecognitionResult(recordingStartTimestamp, recordingDuration)
                 } catch (e: Exception) {
                     RemoteRecognitionResult.Error.UnhandledError(
@@ -179,7 +178,6 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     }
 
     @Suppress("SpellCheckingInspection")
-    @OptIn(ExperimentalEncodingApi::class)
     private fun encryptByHMACSHA1(data: ByteArray, key: ByteArray): String {
         return try {
             val signingKey = SecretKeySpec(key, "HmacSHA1")

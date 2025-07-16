@@ -13,12 +13,12 @@ import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.gildor.coroutines.okhttp.await
+import okhttp3.coroutines.executeAsync
 import java.io.IOException
 import javax.inject.Inject
 
 internal class OdesliMetadataEnhancer @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val json: Json,
@@ -35,20 +35,20 @@ internal class OdesliMetadataEnhancer @Inject constructor(
         return withContext(ioDispatcher) {
             val request = Request.Builder().url(getRequestUrl(queryUrl)).get().build()
             val response = try {
-                okHttpClient.newCall(request).await()
+                okHttpClient.get().newCall(request).executeAsync()
             } catch (e: IOException) {
                 return@withContext RemoteMetadataEnhancingResult.Error.BadConnection
             }
             response.use {
                 try {
                     if (response.isSuccessful) {
-                        val successDto = json.decodeFromString<OdesliResponseJson>(response.body!!.string())
+                        val successDto = json.decodeFromString<OdesliResponseJson>(response.body.string())
                         val trackLinks = successDto.toTrackLinks()
                         val artworkUrl = track.artworkUrl ?: successDto.toArtworkUrl()
                         val newTrack = track.updateLinks(artworkUrl, trackLinks)
                         RemoteMetadataEnhancingResult.Success(newTrack)
                     } else {
-                        val errorDto = json.decodeFromString<OdesliErrorResponseJson>(response.body!!.string())
+                        val errorDto = json.decodeFromString<OdesliErrorResponseJson>(response.body.string())
                         RemoteMetadataEnhancingResult.Error.HttpError(
                             code = errorDto.code ?: response.code,
                             message = errorDto.message ?: response.message

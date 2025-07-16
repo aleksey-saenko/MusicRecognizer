@@ -15,7 +15,7 @@ import okhttp3.WebSocketListener
 import javax.inject.Inject
 
 internal class WebSocketSessionImpl @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
 ) : WebSocketSession {
 
     override suspend fun startReconnectingSession(url: String): Flow<SocketEvent> = flow {
@@ -47,7 +47,7 @@ internal class WebSocketSessionImpl @Inject constructor(
                 trySendBlocking(SocketEvent.ConnectionOpened(webSocket))
             }
         }
-        val webSocket = okHttpClient.newWebSocket(
+        val webSocket = okHttpClient.get().newWebSocket(
             Request.Builder().url(url).build(),
             eventsListener
         )

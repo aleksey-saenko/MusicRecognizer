@@ -16,16 +16,11 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
-import coil3.disk.DiskCache
-import coil3.disk.directory
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.request.crossfade
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
-import okhttp3.OkHttpClient
 import org.acra.ACRA
 import org.acra.ACRAConstants
 import org.acra.ReportField
@@ -34,7 +29,6 @@ import org.acra.config.mailSender
 import org.acra.data.StringFormat
 import org.acra.ktx.initAcra
 import javax.inject.Inject
-import javax.inject.Provider
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -42,13 +36,10 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configuration.Provider {
 
     @Inject
-    lateinit var okHttpClient: Provider<OkHttpClient>
+    lateinit var imageLoader: dagger.Lazy<ImageLoader>
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-
-    @Inject
-    lateinit var notifier: ResultNotificationHelper
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
@@ -70,20 +61,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
         createShortcuts()
     }
 
-    override fun newImageLoader(context: Context): ImageLoader {
-        return ImageLoader.Builder(context)
-            .components {
-                add(OkHttpNetworkFetcherFactory(callFactory = { okHttpClient.get() }))
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(cacheDir.resolve("image_cache"))
-                    .maxSizeBytes(512L * 1024 * 1024)
-                    .build()
-            }
-            .crossfade(true)
-            .build()
-    }
+    override fun newImageLoader(context: Context): ImageLoader = imageLoader.get()
 
     private fun createNotificationChannels() {
         getSystemService<NotificationManager>()?.createNotificationChannels(
@@ -159,7 +137,6 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
             StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
-                .penaltyDeath()
                 .build()
         )
         StrictMode.setVmPolicy(
@@ -178,7 +155,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
                         detectImplicitDirectBoot()
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//                        detectIncorrectContextUse()
+                        detectIncorrectContextUse()
                         detectUnsafeIntentLaunch()
                     }
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.VANILLA_ICE_CREAM) {
@@ -187,7 +164,6 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
 
                 }
                 .penaltyLog()
-                .penaltyDeath()
                 .build()
         )
     }

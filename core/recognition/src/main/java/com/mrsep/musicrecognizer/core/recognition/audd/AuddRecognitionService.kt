@@ -40,8 +40,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.WebSocket
+import okhttp3.coroutines.executeAsync
 import okio.ByteString.Companion.toByteString
-import ru.gildor.coroutines.okhttp.await
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.ProtocolException
@@ -59,7 +59,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     @Assisted private val config: AuddConfig,
     private val webSocketSession: WebSocketSession,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val okHttpClient: OkHttpClient,
+    private val okHttpClient: dagger.Lazy<OkHttpClient>,
     private val json: Json,
 ) : RemoteRecognitionService {
 
@@ -88,14 +88,14 @@ internal class AuddRecognitionService @AssistedInject constructor(
             .build()
 
         val response = try {
-            okHttpClient.newCall(request).await()
+            okHttpClient.get().newCall(request).executeAsync()
         } catch (e: IOException) {
             return@withContext RemoteRecognitionResult.Error.BadConnection
         }
         response.use {
             if (response.isSuccessful) {
                 try {
-                    json.decodeFromString<AuddResponseJson>(response.body!!.string())
+                    json.decodeFromString<AuddResponseJson>(response.body.string())
                         .toRecognitionResult(json, startTimestamp, recordingDuration)
                 } catch (e: Exception) {
                     RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)

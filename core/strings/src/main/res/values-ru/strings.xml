@@ -269,9 +269,9 @@
     <string name="notification_button_disable_service">Отключить</string>
     <string name="notification_button_show_lyrics">Текст песни</string>
     <string name="notification_channel_name_control">Управляющие уведомления</string>
-    <string name="notification_channel_desc_control">Позволяет управлять процессом распознавания из уведомлений</string>
-    <string name="notification_channel_name_scheduled_result">Результы запланированных распознаваний</string>
-    <string name="notification_channel_desc_scheduled_result">Позволяет получать результаты запланированных распознаваний из уведомлений</string>
+    <string name="notification_channel_desc_control">Позволяет управлять процессом распознавания</string>
+    <string name="notification_channel_name_scheduled_result">Результаты запланированных распознаваний</string>
+    <string name="notification_channel_desc_scheduled_result">Показывает результаты распознаваний, запланированных в режиме офлайн или в других случаях</string>
     <string name="crash_dialog_title">Произошел сбой Audile</string>
     <string name="crash_dialog_message">Непредвиденная ошибка привела к остановке приложения. Хотите отправить письмо с подробным отчетом, чтобы помочь исправить эту ошибку\?</string>
     <string name="crash_dialog_comment_prompt">Здесь вы можете добавить дополнительную информацию:</string>
@@ -279,4 +279,10 @@
     <string name="crash_dialog_button_cancel">Отмена</string>
     <string name="about_pref_title_licenses">Лицензии</string>
     <string name="unviewed_track_label">НОВЫЙ</string>
+    <string name="pref_title_manage_notifications">Управление уведомлениями</string>
+    <string name="notification_channel_name_foreground_result">Результаты распознавания на переднем плане</string>
+    <string name="notification_channel_name_background_result">Результаты распознавания в фоновом режиме</string>
+    <string name="notification_channel_desc_foreground_result">Показывает результаты распознавания песен, когда вы находитесь на экране распознавания</string>
+    <string name="notification_channel_desc_background_result">Показывает результаты распознавания песен, когда приложение свернуто или вы не находитесь на экране распознавания</string>
+    <string name="audio_source_dialog_use_alt_device_source">Альтернативный источник аудио устройства</string>
 </resources>

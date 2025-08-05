@@ -191,9 +191,9 @@
     <string name="notification_button_disable_service">Deaktivovat</string>
     <string name="notification_button_show_lyrics">Zobrazit texty</string>
     <string name="notification_channel_name_control">Ovládání v oznámení</string>
-    <string name="notification_channel_desc_control">Umožňuje ovládat proces rozpoznávání skrze oznámení</string>
-    <string name="notification_channel_name_scheduled_result">Výsledky naplánovaných rozpoznání</string>
-    <string name="notification_channel_desc_scheduled_result">Umožňuje získávat výsledky naplánovaných rozpoznání skrze oznámení</string>
+    <string name="notification_channel_desc_control">Umožňuje ovládat proces rozpoznávání</string>
+    <string name="notification_channel_name_scheduled_result">Výsledky skladeb z naplánovaných rozpoznání</string>
+    <string name="notification_channel_desc_scheduled_result">Zobrazí výsledky skladeb z rozpoznávání, která byla naplánována offline nebo v jiných případech</string>
     <string name="app_shortcut_recognize_short">Rozpoznat</string>
     <string name="app_shortcut_open_and_recognize_short">Otevřít a rozpoznat</string>
     <string name="app_shortcut_open_and_recognize_long">Otevřít aplikaci a rozpoznat hudbu</string>
@@ -210,7 +210,7 @@
     <string name="track">Stopa</string>
     <string name="lyrics_start_autoscroll">Spustit automatické posouvání</string>
     <string name="lyrics_stop_autoscroll">Zastavit automatické posouvání</string>
-    <string name="pref_title_recognize_on_startup">Rozpoznávat při spuštění</string>
+    <string name="pref_title_recognize_on_startup">Rozpoznávat při spuštění aplikace</string>
     <string name="recognition_provider_dialog_title">Poskytovatel</string>
     <string name="audd_help_dialog_message_empty_token">Službu můžete zkusit používat pro testovací účely bez zadání tokenu, ale upozorňujeme, že tím omezíte počet denních rozpoznání.</string>
     <string name="acr_cloud_help_dialog_steps_title">Věnujte prosím pozornost těmto krokům:</string>
@@ -278,4 +278,10 @@
     <string name="audio_capture_mode_device">Zvuk zařízení</string>
     <string name="audio_capture_mode_auto">Automaticky</string>
     <string name="about_pref_title_licenses">Licence</string>
+    <string name="audio_source_dialog_use_alt_device_source">Použít alternativní zdroj zvuku ze zařízení</string>
+    <string name="pref_title_manage_notifications">Správa oznámení</string>
+    <string name="notification_channel_name_foreground_result">Výsledky skladeb nalezené na popředí</string>
+    <string name="notification_channel_desc_foreground_result">Zobrazí výsledky skladeb, když se nacházíte na obrazovce rozpoznávání</string>
+    <string name="notification_channel_name_background_result">Výsledky skladeb nalezené na pozadí</string>
+    <string name="notification_channel_desc_background_result">Zobrazí výsledky skladeb při minimalizované aplikaci nebo když se nenacházíte na obrazovce rozpoznávání</string>
 </resources>

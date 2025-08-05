@@ -205,8 +205,6 @@
     <string name="notification_button_show_lyrics">Zeige Liedtext</string>
     <string name="notification_channel_name_control">Kontrolliere Benachrichtigungen</string>
     <string name="notification_channel_desc_control">Erlaubt die Kontrolle des Erkennungsprozesses durch Benachrichtigungen</string>
-    <string name="notification_channel_name_result">Erkennungsergebnisse</string>
-    <string name="notification_channel_desc_result">Erlaubt den Erhalt von Erkennungsergebnissen durch Benachrichtigungen</string>
     <string name="notification_channel_name_scheduled_result">Ergebnisse geplanter Erkennungen</string>
     <string name="notification_channel_desc_scheduled_result">Erlaubt den Erhalt von Ergebnissen geplanter Erkennungen durch Benachrichtigungen</string>
     <string name="crash_dialog_title">Audile ist abgestürzt</string>

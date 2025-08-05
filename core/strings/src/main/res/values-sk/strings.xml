@@ -193,8 +193,6 @@
     <string name="notification_button_show_lyrics">Zobraziť text</string>
     <string name="notification_channel_name_control">Ovládanie upozornení</string>
     <string name="notification_channel_desc_control">Umožňuje ovládať proces rozpoznávania prostredníctvom upozornení</string>
-    <string name="notification_channel_name_result">Výsledky rozpoznávania</string>
-    <string name="notification_channel_desc_result">Umožňuje prijímať výsledky rozpoznávania prostredníctvom upozornení</string>
     <string name="notification_channel_name_scheduled_result">Výsledky plánovaného rozpoznávania</string>
     <string name="notification_channel_desc_scheduled_result">Umožňuje prijímať plánované výsledky rozpoznávania prostredníctvom upozornení</string>
     <string name="app_shortcut_recognize_short">Rozpoznať</string>

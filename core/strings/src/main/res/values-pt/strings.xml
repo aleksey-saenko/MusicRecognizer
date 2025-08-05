@@ -39,7 +39,6 @@
     <string name="about_purpose_track_links_service">Fornece ligações de faixa específicos de plataforma adicionais</string>
     <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3 ou posterior</string>
     <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento pelas notificações</string>
-    <string name="notification_channel_name_result">Resultados de reconhecimento</string>
     <string name="notification_channel_name_scheduled_result">Resultados de reconhecimentos agendados</string>
     <string name="recognition_widget_description">Identificar a música num toque</string>
     <string name="widget_listening_subtitle">Por favor, espere</string>
@@ -263,7 +262,6 @@
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>
     <string name="notification_channel_name_control">Controlar notificações</string>
-    <string name="notification_channel_desc_result">Permite receber resultados de reconhecimentos pelas notificações</string>
     <string name="notification_channel_desc_scheduled_result">Permite receber resultados de reconhecimentos agendados pelas notificações</string>
     <string name="crash_dialog_title">O Audile crashou</string>
     <string name="crash_dialog_message">Um erro inesperado ocorreu, fazendo com o que o app parasse. Gostaria de enviar um relatório de erros via e-mail para ajudar nos a resolver o problema?</string>

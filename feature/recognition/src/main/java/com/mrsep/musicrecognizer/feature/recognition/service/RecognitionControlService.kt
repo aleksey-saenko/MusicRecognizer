@@ -225,7 +225,7 @@ class RecognitionControlService : Service() {
         } catch (e: SecurityException) {
             val msg = "Foreground service cannot start due to denied permissions"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-            Log.w(TAG, msg)
+            Log.w(TAG, msg, e)
             serviceScope.launch {
                 preferencesRepository.setNotificationServiceEnabled(false)
                 stopSelf()
@@ -331,14 +331,15 @@ class RecognitionControlService : Service() {
                         val isScreenUpdated = screenStatusHolder.updateStatusIfObserving(status)
                         if (isScreenUpdated) {
                             widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+                            resultNotificationHelper.notifyForegroundResult(status.result)
                         } else {
-                            resultNotificationHelper.notifyResult(status.result)
                             screenStatusHolder.updateStatus(RecognitionStatus.Ready)
                             if (hasActiveWidgets()) {
                                 widgetStatusHolder.updateStatus(status)
                             } else {
                                 widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
                             }
+                            resultNotificationHelper.notifyBackgroundResult(status.result)
                         }
                         requestWidgetsUpdate()
                         requestQuickTileUpdate()

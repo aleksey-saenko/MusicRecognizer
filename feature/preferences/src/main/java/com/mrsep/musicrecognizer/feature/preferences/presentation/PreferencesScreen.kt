@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -163,6 +165,15 @@ internal fun PreferencesScreen(
                         NotificationServiceSwitch(
                             serviceEnabled = uiState.preferences.notificationServiceEnabled,
                             setServiceEnabled = viewModel::setNotificationServiceEnabled
+                        )
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.pref_title_manage_notifications),
+                            onItemClick = {
+                                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).run {
+                                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                    context.startActivity(this)
+                                }
+                            }
                         )
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))

@@ -187,7 +187,7 @@
     <!-- Preferences screen -->
     <string name="preferences">Preferences</string>
     <string name="pref_group_recognition">Recognition</string>
-    <string name="pref_title_recognize_on_startup">Recognize on startup</string>
+    <string name="pref_title_recognize_on_startup">Recognize on app start</string>
     <string name="pref_title_audio_source">Audio source</string>
     <string name="pref_subtitle_audio_source">Set audio recording configuration</string>
     <string name="audio_source_dialog_title">Audio source</string>
@@ -198,6 +198,7 @@
     <string name="audio_capture_mode_microphone">Microphone</string>
     <string name="audio_capture_mode_device">Device audio</string>
     <string name="audio_capture_mode_auto">Automatic</string>
+    <string name="audio_source_dialog_use_alt_device_source">Use alternative device audio source</string>
     <string name="pref_title_fallback_policy">Recognition fallback policy</string>
     <string name="pref_subtitle_fallback_policy">Set fallback actions after unsuccessful recognitions</string>
     <string name="fallback_policy_dialog_title">Fallback policy</string>
@@ -221,6 +222,7 @@
     <string name="acr_cloud_help_dialog_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use</string>
     <string name="acr_cloud_help_dialog_step4">Check all the boxes for 3rd party ID integration</string>
     <string name="pref_group_notifications">Notifications</string>
+    <string name="pref_title_manage_notifications">Manage notifications</string>
     <string name="pref_title_notification_service">Notification service</string>
     <string name="pref_subtitle_notification_service">Control recognition from notifications</string>
     <string name="pref_group_appearance">Appearance</string>
@@ -274,11 +276,13 @@
     <string name="notification_button_disable_service">Stop service</string>
     <string name="notification_button_show_lyrics">Show lyrics</string>
     <string name="notification_channel_name_control">Control notifications</string>
-    <string name="notification_channel_desc_control">Allows to control recognition process via notifications</string>
-    <string name="notification_channel_name_result">Recognition results</string>
-    <string name="notification_channel_desc_result">Allows to receive recognition results via notifications</string>
-    <string name="notification_channel_name_scheduled_result">Scheduled recognition results</string>
-    <string name="notification_channel_desc_scheduled_result">Allows to receive scheduled recognition results via notifications</string>
+    <string name="notification_channel_desc_control">Allows to control recognition process</string>
+    <string name="notification_channel_name_foreground_result">Song results found in the foreground</string>
+    <string name="notification_channel_desc_foreground_result">Shows song results when you’re on the recognition screen</string>
+    <string name="notification_channel_name_background_result">Song results found in the background</string>
+    <string name="notification_channel_desc_background_result">Shows song results when the app is minimized or you’re not on the recognition screen</string>
+    <string name="notification_channel_name_scheduled_result">Song results of scheduled recognitions</string>
+    <string name="notification_channel_desc_scheduled_result">Shows song results of recognitions that were scheduled offline or in other cases</string>
 
     <string name="crash_dialog_title">Audile has crashed</string>
     <string name="crash_dialog_message">An unexpected error has occurred, causing the app to stop. Would you like to email the bug report to help fix the issue\?</string>

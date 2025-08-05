@@ -220,8 +220,6 @@
     <string name="notification_button_show_lyrics">Afficher les paroles</string>
     <string name="notification_channel_name_control">Contrôler les notifications</string>
     <string name="notification_channel_desc_control">Permet de contrôler le processus de reconnaissance via les notifications</string>
-    <string name="notification_channel_name_result">Résultats de reconnaissance</string>
-    <string name="notification_channel_desc_result">Permet de recevoir les résultats des reconnaissances via les notifications</string>
     <string name="notification_channel_name_scheduled_result">Résultats de reconnaissance planifiés</string>
     <string name="notification_channel_desc_scheduled_result">Permet de recevoir les résultats des reconnaissances planifiées via les notifications</string>
     <string name="app_shortcut_recognize_short">Reconnaitre</string>

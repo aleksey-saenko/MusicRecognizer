@@ -57,7 +57,7 @@
     <string name="onboarding_token_message">Rakendus kasutab muusikatuvastusteenust AudD, mis pole tasuta ja eeldab kasutamiseks API tunnusluba. Liitudes <![CDATA[<a href="%1$s">siin</a>]]> saad 14-päevase ajutise tunnusloa (kui sul seda veel pole).</string>
     <string name="onboarding_token_skip_message">Kui jätad selle sammu vahele, siis igas päevas lubatud tuvastuste arv on ülipiiratud. Soovi korral saad seadistusest tunnusloa alati lisada.</string>
     <string name="onboarding_token_validating">Kontrollime õigsust</string>
-    <string name="onboarding_final_title">Valmis... saame alustada</string>
+    <string name="onboarding_final_title">Valmis… saame alustada</string>
     <string name="onboarding_final_message">Seadistamine õnnestus</string>
     <string name="onboarding_final_get_started">Alusta nüüd</string>
     <string name="recognition">Tuvastamine</string>
@@ -237,8 +237,6 @@
     <string name="about_pref_title_third_licenses">Kolmandate osapoolte litsentsid</string>
     <string name="notification_button_disable_service">Peata teenus</string>
     <string name="notification_button_show_lyrics">Vaata laulusõnu</string>
-    <string name="notification_channel_name_result">Tuvastamise tulemused</string>
-    <string name="notification_channel_desc_result">Võimaldab saada tuvastamise tulemusi teavitustega</string>
     <string name="notification_channel_name_scheduled_result">Ajastatud tuvastamise tulemused</string>
     <string name="notification_channel_desc_scheduled_result">Võimaldab saada ajastatud tuvastamise tulemusi teavitustega</string>
     <string name="notification_channel_name_control">Teavituste haldus</string>

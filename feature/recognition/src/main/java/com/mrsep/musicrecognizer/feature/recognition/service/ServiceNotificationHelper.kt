@@ -25,7 +25,7 @@ class ServiceNotificationHelper @Inject constructor(
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
             .setOngoing(true) // Can be dismissed by user since API 34
-            .setCategory(Notification.CATEGORY_STATUS)
+            .setCategory(Notification.CATEGORY_SERVICE)
             .setSilent(true) // Avoids alert sound during recording
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setDeleteIntent(DisableRecognitionControlServiceReceiver.pendingIntent(appContext))

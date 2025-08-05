@@ -266,8 +266,6 @@
     <string name="about_pref_title_privacy_policy">Política de privacidad</string>
     <string name="about_pref_subtitle_privacy_policy">Obtenga más información sobre cómo la aplicación maneja sus datos</string>
     <string name="notification_channel_desc_control">Permite controlar el proceso de reconocimiento mediante notificaciones</string>
-    <string name="notification_channel_name_result">Resultados del reconocimiento</string>
-    <string name="notification_channel_desc_result">Permitir recibir resultados del reconocimiento mediante notificaciones</string>
     <string name="notification_channel_name_scheduled_result">Resultados de reconocimiento programado</string>
     <string name="notification_channel_desc_scheduled_result">Permite recibir resultados de reconocimiento programados a través de notificaciones</string>
     <string name="about_pref_title_licenses">Licencias</string>

@@ -42,8 +42,17 @@ class ResultNotificationHelper @Inject constructor(
         notificationManager.cancel(NOTIFICATION_ID_RESULT)
     }
 
-    suspend fun notifyResult(result: RecognitionResult) {
+    suspend fun notifyForegroundResult(result: RecognitionResult) {
         if (appContext.isPostNotificationPermissionDenied()) return
+        notify(result, NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT)
+    }
+
+    suspend fun notifyBackgroundResult(result: RecognitionResult) {
+        if (appContext.isPostNotificationPermissionDenied()) return
+        notify(result, NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT)
+    }
+
+    private suspend fun notify(result: RecognitionResult, channelId: String) {
         val notificationBuilder = when (result) {
             is RecognitionResult.Error -> {
                 val (errorTitle, errorMessage) = when (result.remoteError) {
@@ -80,7 +89,7 @@ class ResultNotificationHelper @Inject constructor(
                 val bigText = result.recognitionTask.getMessage()?.let { scheduledTaskMessage ->
                     "$errorMessage\n$scheduledTaskMessage"
                 } ?: errorMessage
-                resultNotificationBuilder()
+                resultNotificationBuilder(channelId)
                     .setContentTitle(errorTitle)
                     .setContentText(errorMessage)
                     .setStyle(
@@ -107,7 +116,7 @@ class ResultNotificationHelper @Inject constructor(
                                 appContext.getString(StringsR.string.result_message_internal_error)
                     }
                 }
-                resultNotificationBuilder()
+                resultNotificationBuilder(channelId)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setStyle(
@@ -124,7 +133,7 @@ class ResultNotificationHelper @Inject constructor(
                 val bigText = result.recognitionTask.getMessage()?.let { scheduledTaskMessage ->
                     "$message\n$scheduledTaskMessage"
                 } ?: message
-                resultNotificationBuilder()
+                resultNotificationBuilder(channelId)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setStyle(
@@ -138,7 +147,7 @@ class ResultNotificationHelper @Inject constructor(
             }
 
             is RecognitionResult.Success -> {
-                resultNotificationBuilder()
+                resultNotificationBuilder(channelId)
                     .setContentTitle(result.track.title)
                     .setContentText(result.track.artist)
                     .setExpandedStyleWithTrack(
@@ -296,15 +305,14 @@ class ResultNotificationHelper @Inject constructor(
         )
     }
 
-    private fun resultNotificationBuilder(): NotificationCompat.Builder {
-        return NotificationCompat.Builder(appContext, NOTIFICATION_CHANNEL_ID_RESULT)
+    private fun resultNotificationBuilder(channelId: String): NotificationCompat.Builder {
+        return NotificationCompat.Builder(appContext, channelId)
             .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
             .setShowWhen(true)
             .setOngoing(false)
             .setAutoCancel(true)
-            .setCategory(Notification.CATEGORY_MESSAGE)
     }
 
 
@@ -332,14 +340,15 @@ class ResultNotificationHelper @Inject constructor(
     companion object {
         private const val NOTIFICATION_ID_RESULT = 2
 
-        private const val NOTIFICATION_CHANNEL_ID_RESULT = "com.mrsep.musicrecognizer.result"
+        private const val NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT = "com.mrsep.musicrecognizer.result"
+        private const val NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT = "com.mrsep.musicrecognizer.foreground_result"
         private const val NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT = "com.mrsep.musicrecognizer.enqueued_result"
 
-        fun getChannelForRecognitionResults(context: Context): NotificationChannel {
-            val name = context.getString(StringsR.string.notification_channel_name_result)
+        fun getChannelForBackgroundRecognitionResult(context: Context): NotificationChannel {
+            val name = context.getString(StringsR.string.notification_channel_name_background_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
-            return NotificationChannel(NOTIFICATION_CHANNEL_ID_RESULT, name, importance).apply {
-                description = context.getString(StringsR.string.notification_channel_desc_result)
+            return NotificationChannel(NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT, name, importance).apply {
+                description = context.getString(StringsR.string.notification_channel_desc_background_result)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 setShowBadge(true)
                 enableLights(true)
@@ -348,7 +357,19 @@ class ResultNotificationHelper @Inject constructor(
             }
         }
 
-        fun getChannelForEnqueuedRecognitionResults(context: Context): NotificationChannel {
+        fun getChannelForForegroundRecognitionResult(context: Context): NotificationChannel {
+            val name = context.getString(StringsR.string.notification_channel_name_foreground_result)
+            val importance = NotificationManager.IMPORTANCE_NONE
+            return NotificationChannel(NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT, name, importance).apply {
+                description = context.getString(StringsR.string.notification_channel_desc_foreground_result)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                setShowBadge(false)
+                enableLights(false)
+                enableVibration(false)
+            }
+        }
+
+        fun getChannelForScheduledRecognitionResult(context: Context): NotificationChannel {
             val name = context.getString(StringsR.string.notification_channel_name_scheduled_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
             return NotificationChannel(

@@ -109,7 +109,7 @@ internal fun AudioSourceDialog(
                         }
                         DialogSwitch(
                             modifier = Modifier.weight(1f),
-                            title = "Use alternative device sound source",
+                            title = stringResource(StringsR.string.audio_source_dialog_use_alt_device_source),
                             checked = useAltDeviceSoundSource,
                             onClick = { onChangeUseAltDeviceSoundSource(!useAltDeviceSoundSource) },
                         )

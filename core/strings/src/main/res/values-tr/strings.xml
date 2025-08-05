@@ -237,8 +237,6 @@
     <string name="notification_button_show_lyrics">Sözleri göster</string>
     <string name="notification_channel_name_control">Kontrol bildirimleri</string>
     <string name="notification_channel_desc_control">Bildirimler aracılığıyla tanıma sürecini kontrol etmeyi sağlar</string>
-    <string name="notification_channel_name_result">Tanıma sonuçları</string>
-    <string name="notification_channel_desc_result">Bildirimler aracılığıyla tanıma sonuçlarını almayı sağlar</string>
     <string name="notification_channel_name_scheduled_result">Planlanmış tanıma sonuçları</string>
     <string name="notification_channel_desc_scheduled_result">Planlanmış tanıma sonuçlarını bildirimler aracılığıyla almayı sağlar</string>
     <string name="app_shortcut_recognize_short">Tanı</string>

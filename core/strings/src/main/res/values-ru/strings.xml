@@ -270,8 +270,6 @@
     <string name="notification_button_show_lyrics">Текст песни</string>
     <string name="notification_channel_name_control">Управляющие уведомления</string>
     <string name="notification_channel_desc_control">Позволяет управлять процессом распознавания из уведомлений</string>
-    <string name="notification_channel_name_result">Результаты распознаваний</string>
-    <string name="notification_channel_desc_result">Позволяет получать результаты распознаваний из уведомлений</string>
     <string name="notification_channel_name_scheduled_result">Результы запланированных распознаваний</string>
     <string name="notification_channel_desc_scheduled_result">Позволяет получать результаты запланированных распознаваний из уведомлений</string>
     <string name="crash_dialog_title">Произошел сбой Audile</string>

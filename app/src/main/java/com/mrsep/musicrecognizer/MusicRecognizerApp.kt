@@ -67,8 +67,9 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
         getSystemService<NotificationManager>()?.createNotificationChannels(
             listOf(
                 ServiceNotificationHelper.getChannelForRecognitionStatuses(this),
-                ResultNotificationHelper.getChannelForRecognitionResults(this),
-                ResultNotificationHelper.getChannelForEnqueuedRecognitionResults(this),
+                ResultNotificationHelper.getChannelForBackgroundRecognitionResult(this),
+                ResultNotificationHelper.getChannelForForegroundRecognitionResult(this),
+                ResultNotificationHelper.getChannelForScheduledRecognitionResult(this),
             )
         )
     }

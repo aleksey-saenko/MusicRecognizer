@@ -192,8 +192,6 @@
     <string name="notification_button_show_lyrics">Zobrazit texty</string>
     <string name="notification_channel_name_control">Ovládání v oznámení</string>
     <string name="notification_channel_desc_control">Umožňuje ovládat proces rozpoznávání skrze oznámení</string>
-    <string name="notification_channel_name_result">Výsledky rozpoznávání</string>
-    <string name="notification_channel_desc_result">Umožňuje získat výsledek rozpoznávání skrze oznámení</string>
     <string name="notification_channel_name_scheduled_result">Výsledky naplánovaných rozpoznání</string>
     <string name="notification_channel_desc_scheduled_result">Umožňuje získávat výsledky naplánovaných rozpoznání skrze oznámení</string>
     <string name="app_shortcut_recognize_short">Rozpoznat</string>

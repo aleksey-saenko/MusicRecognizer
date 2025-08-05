@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_token_message">Die App nutzt AudD Musikerkennungs-Service, welcher nicht kostenfrei ist und einen speziellen API-Schlüssel braucht. Melde dich <![CDATA[<a href="%1$s">hier</a>]]> an, um deinen 14-tägigen Test-Schlüssel zu erhalten, sofern du noch keinen hast.</string>
+    <string name="onboarding_token_message">Die App nutzt den AudD Musikerkennungs-Service, welcher nicht kostenfrei ist und einen speziellen API-Schlüssel benötigt. Melde dich <![CDATA[<a href="%1$s">hier</a>]]> an, um deinen 14-tägigen Test-Schlüssel zu erhalten, sofern du noch keinen hast.</string>
     <string name="recognition">Erkennung</string>
     <string name="main_screen_listening_extra_time">Noch ein Versuch</string>
-    <string name="widget_tap_to_try_again">Tippe um erneut zu Versuchen</string>
+    <string name="widget_tap_to_try_again">Tippe, um erneut zu Versuchen</string>
     <string name="widget_listening_subtitle">Bitte warten</string>
     <string name="recognition_widget_description">Erkenne den Song mit einem Tipp</string>
     <string name="notification_tap_to_recognize">Tippe zum Erkennen</string>
@@ -37,14 +37,14 @@
     <string name="cannot_share_toast">Kann keine App zum teilen finden</string>
     <string name="help">Hilfe</string>
     <string name="show_more">Mehr anzeigen</string>
-    <string name="permission_rationale_post_notifications">Um die Erkennung zu steuern und Ergebnisse zu bekommen während die App geschlossen ist, braucht sie die Berechtigung Benachrichtigungen zu senden.</string>
+    <string name="permission_rationale_post_notifications">Um die Erkennung zu steuern und Ergebnisse zu bekommen während die App geschlossen ist, braucht sie die Berechtigung, Benachrichtigungen zu senden.</string>
     <string name="permissions_denied_message">Vorige Anfragen auf Berechtigungen wurden abgelehnt. Du kannst dies in den Einstellungen ändern.</string>
     <string name="permissions_denied_open_settings">Öffne Einstellungen</string>
     <string name="permission_granted">Berechtigung zugelassen</string>
     <string name="onboarding_welcome">Willkommen</string>
-    <string name="onboarding_welcome_message">Audile ist eine Musikerkennungs-App, welche dir helfen kann schnell und präzise Musik zu erkennen, die in deiner Nähe spielt.</string>
+    <string name="onboarding_welcome_message">Audile ist eine Musikerkennungs-App, welche dir helfen kann, schnell und präzise Musik zu erkennen, die in deiner Nähe spielt.</string>
     <string name="onboarding_token_skip_message">Das Überspringen dieses Schritts wird deine täglichen Erkennungen einschränken, aber du kannst deinen persönlichen Schlüssel jederzeit in den Einstellungen festlegen.</string>
-    <string name="onboarding_token_validating">Überprüft</string>
+    <string name="onboarding_token_validating">Überprüfen</string>
     <string name="onboarding_final_title">Wir sind bereit</string>
     <string name="onboarding_final_message">Einrichtung erfolgreich abgeschlossen</string>
     <string name="onboarding_final_get_started">Loslegen</string>
@@ -85,7 +85,7 @@
     <string name="filter_title">Titel</string>
     <string name="filter_artist">Künstler</string>
     <string name="filter_release_date">Erscheinungsdatum</string>
-    <string name="filter_order_By">Ordnen nach</string>
+    <string name="filter_order_By">Sortieren nach</string>
     <string name="filter_ascending">Aufsteigend</string>
     <string name="filter_descending">Absteigend</string>
     <string name="library_search">Suche Track</string>
@@ -215,10 +215,10 @@
     <string name="main_screen_tap_to_recognize">Tippe zum Erkennen</string>
     <string name="widget_tap_to_recognize">Tippe zum Erkennen</string>
     <string name="widget_listening_subtitle_extra_time">Noch ein Versuch</string>
-    <string name="notification_tap_to_recognize_subtitle">Identifiziere Musik während andere Apps offen sind</string>
+    <string name="notification_tap_to_recognize_subtitle">Identifiziere Musik während andere Apps geöffnet sind</string>
     <string name="notification_listening_subtitle_extra_time">Noch ein Versuch</string>
     <string name="action_recognize">Erkennen</string>
-    <string name="quick_tile_recognize">Erkennen</string>
+    <string name="quick_tile_recognize">Song erkennen</string>
     <string name="save">Speichern</string>
     <string name="delete">Löschen</string>
     <string name="show_less">Weniger anzeigen</string>

@@ -15,7 +15,7 @@
     <string name="notification_listening">Écoute en cours</string>
     <string name="notification_listening_subtitle">Veuillez patienter</string>
     <string name="notification_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
-    <string name="quick_tile_recognize">Identifier</string>
+    <string name="quick_tile_recognize">Identifier la chanson</string>
     <string name="quick_tile_cancel_recognition">Annuler la reconnaissance</string>
     <string name="action_recognize">Identifier</string>
     <string name="action_cancel_recognition">Annuler la reconnaissance</string>

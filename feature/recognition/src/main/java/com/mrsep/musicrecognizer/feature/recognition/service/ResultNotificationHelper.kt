@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.graphics.Bitmap
 import android.os.Build
+import android.os.Bundle
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.NotificationCompat
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
@@ -158,6 +159,7 @@ class ResultNotificationHelper @Inject constructor(
                     .addTrackDeepLinkIntent(result.track.id)
                     .addOptionalShowLyricsButton(result.track)
                     .addShareButton(result.track.getSharedBody())
+                    .addTrackInfoToExtras(result.track)
             }
         }
         notificationManager.notify(NOTIFICATION_ID_RESULT, notificationBuilder.build())
@@ -197,6 +199,7 @@ class ResultNotificationHelper @Inject constructor(
             .addTrackDeepLinkIntent(track.id)
             .addOptionalShowLyricsButton(track)
             .addShareButton(track.getSharedBody())
+            .addTrackInfoToExtras(track)
             .build()
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
@@ -305,6 +308,22 @@ class ResultNotificationHelper @Inject constructor(
         )
     }
 
+    private fun NotificationCompat.Builder.addTrackInfoToExtras(
+        track: Track
+    ): NotificationCompat.Builder {
+        return addExtras(
+            Bundle().apply {
+                putString(BUNDLE_KEY_TRACK_TITLE, track.title)
+                putString(BUNDLE_KEY_TRACK_ARTIST, track.artist)
+                track.album?.let { putString(BUNDLE_KEY_TRACK_ALBUM, it) }
+                track.releaseDate?.toString()?.let { putString(BUNDLE_KEY_TRACK_RELEASE_DATE, it) }
+                putString(BUNDLE_KEY_TRACK_SAMPLE_TIMESTAMP, track.recognitionDate.toString())
+                track.duration?.inWholeMilliseconds?.let { putLong(BUNDLE_KEY_TRACK_DURATION, it) }
+                track.recognizedAt?.inWholeMilliseconds?.let { putLong(BUNDLE_KEY_TRACK_PLAYBACK_OFFSET, it) }
+            }
+        )
+    }
+
     private fun resultNotificationBuilder(channelId: String): NotificationCompat.Builder {
         return NotificationCompat.Builder(appContext, channelId)
             .setSmallIcon(UiR.drawable.ic_notification_ready)
@@ -344,6 +363,14 @@ class ResultNotificationHelper @Inject constructor(
         private const val NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT = "com.mrsep.musicrecognizer.foreground_result"
         private const val NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT = "com.mrsep.musicrecognizer.enqueued_result"
 
+        private const val BUNDLE_KEY_TRACK_TITLE = "com.mrsep.musicrecognizer.track_metadata.title"
+        private const val BUNDLE_KEY_TRACK_ARTIST = "com.mrsep.musicrecognizer.track_metadata.artist"
+        private const val BUNDLE_KEY_TRACK_ALBUM = "com.mrsep.musicrecognizer.track_metadata.album"
+        private const val BUNDLE_KEY_TRACK_RELEASE_DATE = "com.mrsep.musicrecognizer.track_metadata.release_date"
+        private const val BUNDLE_KEY_TRACK_DURATION = "com.mrsep.musicrecognizer.track_metadata.duration"
+        private const val BUNDLE_KEY_TRACK_SAMPLE_TIMESTAMP = "com.mrsep.musicrecognizer.track_metadata.sample_timestamp"
+        private const val BUNDLE_KEY_TRACK_PLAYBACK_OFFSET = "com.mrsep.musicrecognizer.track_metadata.playback_offset"
+
         fun getChannelForBackgroundRecognitionResult(context: Context): NotificationChannel {
             val name = context.getString(StringsR.string.notification_channel_name_background_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
@@ -366,6 +393,7 @@ class ResultNotificationHelper @Inject constructor(
                 setShowBadge(false)
                 enableLights(false)
                 enableVibration(false)
+                vibrationPattern = longArrayOf(100, 100, 100, 100)
             }
         }
 

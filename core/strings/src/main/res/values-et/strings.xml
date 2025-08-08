@@ -183,7 +183,7 @@
     <string name="high_contrast_text">Suure kontrastsusega kiri</string>
     <string name="preferences">Eelistused</string>
     <string name="pref_group_recognition">Tuvastamine</string>
-    <string name="pref_title_recognize_on_startup">Tuvasta käivitamisel</string>
+    <string name="pref_title_recognize_on_startup">Tuvasta kohe rakenduse käivitamisel</string>
     <string name="pref_title_audio_source">Heliallikas</string>
     <string name="pref_subtitle_audio_source">Seadista heli salvestamist</string>
     <string name="audio_source_dialog_title">Heliallikas</string>
@@ -237,10 +237,10 @@
     <string name="about_pref_title_third_licenses">Kolmandate osapoolte litsentsid</string>
     <string name="notification_button_disable_service">Peata teenus</string>
     <string name="notification_button_show_lyrics">Vaata laulusõnu</string>
-    <string name="notification_channel_name_scheduled_result">Ajastatud tuvastamise tulemused</string>
-    <string name="notification_channel_desc_scheduled_result">Võimaldab saada ajastatud tuvastamise tulemusi teavitustega</string>
+    <string name="notification_channel_name_scheduled_result">Lugude andmed ajastatud tuvastamise tulemusel</string>
+    <string name="notification_channel_desc_scheduled_result">Näitab lugude andmeid, kus tuvastamine oli ajastatud võrguühenduse puudumise tõttu või muudel põhjustel</string>
     <string name="notification_channel_name_control">Teavituste haldus</string>
-    <string name="notification_channel_desc_control">Võimaldab hallata tuvastamise protsessi teavituste abil</string>
+    <string name="notification_channel_desc_control">Võimaldab hallata tuvastamise protsessi</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud on tasuline teenus, kus on ka tasuta prooviperioodi võimalus ning piiratud kasutatavus arenduse jaoks. Teenuse kasutamiseks pead lisama kasutajakonto ja registreerima oma projekti. Kui sul tekib küsimusi või probleeme, siis <![CDATA[<a href="%1$s">lisateavet leiad siit juhendist</a>]]>.</string>
     <string name="pref_title_fallback_policy">Varuvariandid tuvastamisel</string>
     <string name="pref_subtitle_fallback_policy">Kui mõni tuvastamine ei peaks toimima, siis alljärgnevas saad seadistada, mida sel puhul teha</string>
@@ -269,4 +269,10 @@
     <string name="vibration_feedback_dialog_vibrate_on_result">Värista tulemuse laekumisel</string>
     <string name="pref_title_experimental_features">Katselised funktsionaalsused</string>
     <string name="pref_subtitle_experimental_features">Need on veel arendusjärgus</string>
+    <string name="audio_source_dialog_use_alt_device_source">Kasuta seadme alternatiivset heliallikat</string>
+    <string name="pref_title_manage_notifications">Halda teavitusi</string>
+    <string name="notification_channel_name_foreground_result">Tuvastatud lood esiplaanil</string>
+    <string name="notification_channel_name_background_result">Tuvastatud lood tagaplaanil</string>
+    <string name="notification_channel_desc_foreground_result">Näitab tulemusi tuvastamisvaates</string>
+    <string name="notification_channel_desc_background_result">Näitab tulemusi, kui rakendus on minimeeritud või sa tuvastamisvaade pole muul põhjusel kuvatud</string>
 </resources>

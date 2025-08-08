@@ -192,9 +192,9 @@
     <string name="notification_button_disable_service">Deaktivovať</string>
     <string name="notification_button_show_lyrics">Zobraziť text</string>
     <string name="notification_channel_name_control">Ovládanie upozornení</string>
-    <string name="notification_channel_desc_control">Umožňuje ovládať proces rozpoznávania prostredníctvom upozornení</string>
-    <string name="notification_channel_name_scheduled_result">Výsledky plánovaného rozpoznávania</string>
-    <string name="notification_channel_desc_scheduled_result">Umožňuje prijímať plánované výsledky rozpoznávania prostredníctvom upozornení</string>
+    <string name="notification_channel_desc_control">Umožňuje riadiť proces rozpoznávania</string>
+    <string name="notification_channel_name_scheduled_result">Výsledky plánovaných uznaní piesní</string>
+    <string name="notification_channel_desc_scheduled_result">Zobrazuje výsledky rozpoznávania skladieb, ktoré boli naplánované offline alebo v iných prípadoch</string>
     <string name="app_shortcut_recognize_short">Rozpoznať</string>
     <string name="app_shortcut_recognize_long">Rozpoznať v pozadí</string>
     <string name="app_shortcut_open_and_recognize_short">Otvoriť a rozpoznať</string>
@@ -219,7 +219,7 @@
     <string name="lyrics">Texty piesní</string>
     <string name="lyrics_start_autoscroll">Spustiť automatické posúvanie</string>
     <string name="lyrics_stop_autoscroll">Zastaviť automatické posúvanie</string>
-    <string name="pref_title_recognize_on_startup">Rozpoznať pri spustení</string>
+    <string name="pref_title_recognize_on_startup">Rozpoznať pri spustení aplikácie</string>
     <string name="pref_title_audio_source">Zdroj zvuku</string>
     <string name="pref_subtitle_audio_source">Nastavenie konfigurácie nahrávania zvuku</string>
     <string name="audio_source_dialog_title">Zdroj zvuku</string>
@@ -278,4 +278,10 @@
     <string name="crash_dialog_comment_prompt">Tu môžete pridať ďalšie informácie:</string>
     <string name="crash_dialog_button_send">Odoslať</string>
     <string name="crash_dialog_button_cancel">Zrušiť</string>
+    <string name="audio_source_dialog_use_alt_device_source">Použite alternatívny zdroj zvuku zariadenia</string>
+    <string name="pref_title_manage_notifications">Spravovať upozornenia</string>
+    <string name="notification_channel_name_foreground_result">Výsledky vyhľadávania skladieb sa našli v popredí</string>
+    <string name="notification_channel_desc_foreground_result">Zobrazuje výsledky vyhľadávania skladieb, keď ste na obrazovke rozpoznávania</string>
+    <string name="notification_channel_name_background_result">Výsledky vyhľadávania skladieb nájdené v pozadí</string>
+    <string name="notification_channel_desc_background_result">Zobrazuje výsledky vyhľadávania skladieb, keď je aplikácia minimalizovaná alebo keď nie ste na obrazovke rozpoznávania</string>
 </resources>

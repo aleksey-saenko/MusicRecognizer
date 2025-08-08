@@ -236,9 +236,9 @@
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>
     <string name="notification_channel_name_control">Notificações de controle</string>
-    <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento pelas notificações</string>
-    <string name="notification_channel_name_scheduled_result">Resultados de reconhecimentos agendados</string>
-    <string name="notification_channel_desc_scheduled_result">Permite receber resultados de reconhecimentos agendados pelas notificações</string>
+    <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento</string>
+    <string name="notification_channel_name_scheduled_result">Resultados de músicas de reconhecimentos agendados</string>
+    <string name="notification_channel_desc_scheduled_result">Mostra resultados de músicas de reconhecimentos que foram agendados enquanto off-line ou em outros casos</string>
     <!--It'd be nice to translate this.
     <string name="api_token" translatable="false">Token da API</string>
     <string name="host" translatable="false">Serviço</string>
@@ -286,4 +286,10 @@
     <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado e segurado:</string>
     <string name="about_pref_title_licenses">Licenças</string>
+    <string name="audio_source_dialog_use_alt_device_source">Usar fonte alternativa de áudio do dispositivo</string>
+    <string name="pref_title_manage_notifications">Gerenciar notificações</string>
+    <string name="notification_channel_name_foreground_result">Resultados de músicas encontrados em primeiro plano</string>
+    <string name="notification_channel_desc_foreground_result">Mostra resultados de músicas quando você está na tela de reconhecimento</string>
+    <string name="notification_channel_name_background_result">Resultados de músicas encontrados em segundo plano</string>
+    <string name="notification_channel_desc_background_result">Mostra resultados de músicas quando o app está minimizado ou quando você não está na tela de reconhecimento</string>
 </resources>

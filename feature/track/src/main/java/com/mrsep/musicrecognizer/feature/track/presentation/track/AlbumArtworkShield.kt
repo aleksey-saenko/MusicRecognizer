@@ -85,7 +85,6 @@ internal fun AlbumArtworkShield(
     BackHandler(onBack = onBackPressed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val sharingJob = remember { mutableStateOf<Job?>(null) }
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomBarBehaviour = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val zoomState = rememberZoomState()
@@ -125,9 +124,10 @@ internal fun AlbumArtworkShield(
             }
     }
 
+    var sharingJob by remember { mutableStateOf<Job?>(null) }
     fun shareImage() {
-        if (sharingJob.value?.isActive == true) return
-        sharingJob.value = scope.launch {
+        if (sharingJob?.isActive == true) return
+        sharingJob = scope.launch {
             val fileNameUnprocessed = album ?: "$title - $artist"
             val imageUri = getImageFileForSharing(
                 imageUrl = artworkUrl,

@@ -11,7 +11,6 @@ import coil3.size.Size
 import coil3.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import java.io.File
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -24,68 +23,46 @@ internal object ImageShareUtils {
         imageUrl: String,
         fileName: String,
         fileNameFallback: String,
-    ): Uri? {
-        return withContext(Dispatchers.IO) {
-            val imageLoader = context.imageLoader
-            val request = ImageRequest.Builder(context)
-                .data(imageUrl)
-                .size(Size.ORIGINAL)
-                .build()
-            val bitmap = imageLoader.execute(request).image
-                ?.toBitmap()
-                ?: return@withContext null
-            val file = processBitmapForSharing(context, bitmap, fileName, fileNameFallback)
-                ?: return@withContext null
-            FileProvider.getUriForFile(
-                context,
-                context.getString(
-                    StringsR.string.format_file_provider_authority,
-                    context.packageName
-                ),
-                file
-            )
-        }
+    ): Uri? = withContext(Dispatchers.IO) {
+        val imageLoader = context.imageLoader
+        val request = ImageRequest.Builder(context)
+            .data(imageUrl)
+            .size(Size.ORIGINAL)
+            .build()
+        val bitmap = imageLoader.execute(request).image
+            ?.toBitmap()
+            ?: return@withContext null
+        val file = createImageFileToShare(context, bitmap, fileName, fileNameFallback)
+            ?: return@withContext null
+        FileProvider.getUriForFile(
+            context,
+            context.getString(
+                StringsR.string.format_file_provider_authority,
+                context.packageName
+            ),
+            file
+        )
     }
 
-    private fun processBitmapForSharing(
+    private fun createImageFileToShare(
         context: Context,
-        bmp: Bitmap,
+        bitmap: Bitmap,
         imageFileName: String,
         imageFileNameFallback: String,
-    ): File? {
-        val shareFolder = getClearShareFolder(context) ?: return null
-        shareFolder.mkdirs()
-        val bytes = compressBmpToJpg(bmp)
+    ): File? = try {
+        val shareFolder = File(context.cacheDir, "share").apply {
+            deleteRecursively()
+            mkdirs()
+        }
         val filename = trimAndCleanFileName(imageFileName) ?: imageFileNameFallback
-        return writeToFile(bytes, File(shareFolder, "$filename.jpg"))
-    }
-
-    private fun getClearShareFolder(context: Context): File? {
-        return try {
-            File(context.cacheDir, "share").also {
-                it.deleteRecursively()
-            }
-        } catch (e: Exception) {
-            Log.e(this::class.simpleName, "getClearShareFolder failed", e)
-            null
+        val fileToShare = shareFolder.resolve("$filename.jpg")
+        fileToShare.outputStream().buffered().use { outputStream ->
+            check(bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, outputStream))
         }
-    }
-
-    private fun compressBmpToJpg(bitmap: Bitmap): ByteArrayOutputStream {
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, bytes)
-        return bytes
-    }
-
-    private fun writeToFile(bytes: ByteArrayOutputStream, destinationFile: File): File {
-        val fo = destinationFile.outputStream()
-        return try {
-            fo.write(bytes.toByteArray())
-            destinationFile
-        } finally {
-            fo.flush()
-            fo.close()
-        }
+        fileToShare
+    } catch (e: Exception) {
+        Log.e(this::class.simpleName, "Failed to createImageFileToShare", e)
+        null
     }
 
     private fun trimAndCleanFileName(fileName: String): String? {

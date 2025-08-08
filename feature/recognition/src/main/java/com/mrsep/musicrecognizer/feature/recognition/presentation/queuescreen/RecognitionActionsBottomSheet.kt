@@ -25,6 +25,11 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +43,8 @@ import com.mrsep.musicrecognizer.core.ui.util.shareFile
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecordingShareUtils.getRecordingFileForSharing
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -55,6 +62,7 @@ internal fun RecognitionActionsBottomSheet(
     onDeleteEnqueued: () -> Unit,
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -196,12 +204,16 @@ internal fun RecognitionActionsBottomSheet(
                 iconResId = UiR.drawable.outline_edit_24,
                 onClick = onRenameEnqueued
             )
+            var sharingJob by remember { mutableStateOf<Job?>(null) }
             BottomSheetAction(
                 title = stringResource(StringsR.string.share),
                 iconResId = UiR.drawable.outline_share_24,
                 onClick = {
-                    getRecordingFileForSharing(context, recognition.recordingFile)?.let { uri ->
-                        context.shareFile(subject = "", body = "", uri = uri, mimeType = "audio/aac")
+                    if (sharingJob?.isActive == true) return@BottomSheetAction
+                    sharingJob = coroutineScope.launch {
+                        getRecordingFileForSharing(context, recognition.recordingFile)?.let { uri ->
+                            context.shareFile(subject = "", body = "", uri = uri)
+                        }
                     }
                 }
             )

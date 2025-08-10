@@ -236,9 +236,9 @@
     <string name="notification_button_disable_service">Hizmeti durdur</string>
     <string name="notification_button_show_lyrics">Sözleri göster</string>
     <string name="notification_channel_name_control">Kontrol bildirimleri</string>
-    <string name="notification_channel_desc_control">Bildirimler aracılığıyla tanıma sürecini kontrol etmeyi sağlar</string>
-    <string name="notification_channel_name_scheduled_result">Planlanmış tanıma sonuçları</string>
-    <string name="notification_channel_desc_scheduled_result">Planlanmış tanıma sonuçlarını bildirimler aracılığıyla almayı sağlar</string>
+    <string name="notification_channel_desc_control">Tanıma sürecini kontrol etmeyi sağlar</string>
+    <string name="notification_channel_name_scheduled_result">Planlanmış tanımaların şarkı sonuçları</string>
+    <string name="notification_channel_desc_scheduled_result">Çevrimdışı planlanmış ya da farklı durumda olan tanımaların şarkı sonuçlarını gösterir</string>
     <string name="app_shortcut_recognize_short">Tanı</string>
     <string name="app_shortcut_open_and_recognize_short">Aç ve Tanı</string>
     <string name="app_shortcut_recognize_long">Arka planda tanı</string>
@@ -279,4 +279,10 @@
     <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
     <string name="about_pref_title_licenses">Lisanslar</string>
     <string name="about_pref_subtitle_license">Audile, GNU GPLv3 veya sonrası altında lisanslıdır</string>
+    <string name="audio_source_dialog_use_alt_device_source">Alternatif cihaz ses kaynağı kullan</string>
+    <string name="pref_title_manage_notifications">Bildirimleri yönet</string>
+    <string name="notification_channel_name_foreground_result">Önplanda bulunan şarkı sonuçları</string>
+    <string name="notification_channel_desc_foreground_result">Tanıma ekranında iken şarkı sonuçlarını gösterir</string>
+    <string name="notification_channel_name_background_result">Arkaplanda bulunan şarkı sonuçları</string>
+    <string name="notification_channel_desc_background_result">Uygulama küçültüldüğünde ya da tanıma ekranında değil iken şarkı sonuçlarını gösterir</string>
 </resources>

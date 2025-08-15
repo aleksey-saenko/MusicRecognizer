@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -89,7 +88,6 @@ private fun RecognitionServiceDialogBase(
     serviceConfiguration: @Composable () -> Unit,
 ) {
     AlertDialog(
-        properties = DialogProperties(dismissOnClickOutside = false),
         modifier = modifier,
         title = {
             Text(text = stringResource(StringsR.string.recognition_provider_dialog_title))

@@ -85,7 +85,7 @@ internal fun RestoreDialog(
         onDismissRequest = { onDismissRequest?.invoke() },
         properties = DialogProperties(
             dismissOnBackPress = dismissOnClickOutside,
-            dismissOnClickOutside = false,
+            dismissOnClickOutside = dismissOnClickOutside,
         ),
         text = {
             Column(Modifier.fillMaxWidth()) {

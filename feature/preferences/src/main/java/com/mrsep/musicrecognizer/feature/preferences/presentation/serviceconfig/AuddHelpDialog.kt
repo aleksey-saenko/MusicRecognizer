@@ -18,7 +18,6 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
@@ -27,7 +26,6 @@ internal fun AuddHelpDialog(
     onDismissClick: () -> Unit
 ) {
     AlertDialog(
-        properties = DialogProperties(dismissOnClickOutside = false),
         modifier = modifier,
         title = {
             Text(text = stringResource(StringsR.string.audd))

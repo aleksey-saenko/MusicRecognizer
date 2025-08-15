@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -99,6 +100,8 @@ internal fun MusicServiceChip(
             modifier = Modifier
                 .sizeIn(minHeight = 32.dp)
                 .combinedClickable(
+                    interactionSource = null,
+                    indication = LocalIndication.current,
                     onClick = { context.openUrlImplicitly(link) },
                     onLongClick = { context.copyTextToClipboard(link) },
                     role = Role.Button

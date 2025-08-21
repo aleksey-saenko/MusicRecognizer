@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -96,7 +95,6 @@ internal fun LyricsScreenTopBar(
                         createSeedColor = createSeedColor,
                         onSeedColorCreated = onSeedColorCreated,
                         modifier = Modifier
-                            .fillMaxSize()
                             .clickable(
                                 interactionSource = null,
                                 indication = null,
@@ -224,6 +222,7 @@ private fun TrackInfoRow(
             createSeedColor = createSeedColor,
             onSeedColorCreated = onSeedColorCreated,
             modifier = Modifier
+                .weight(1f, false)
                 .padding(vertical = 12.dp)
                 .aspectRatio(1f, matchHeightConstraintsFirst = true)
         )

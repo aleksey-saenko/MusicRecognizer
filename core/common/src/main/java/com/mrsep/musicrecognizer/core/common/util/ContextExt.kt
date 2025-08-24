@@ -7,7 +7,10 @@ import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
 
-fun Context.getAppVersionName(): String? = getPackageInfo().versionName
+fun Context.getAppVersionName(removeDebug: Boolean = false): String? {
+    val base = getPackageInfo().versionName
+    return if (removeDebug) base?.substringBefore("-debug") else base
+}
 
 fun Context.getAppVersionCode(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
     getPackageInfo().longVersionCode.toInt()

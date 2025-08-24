@@ -5,20 +5,19 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.audd.json.DeezerJson
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.http.appendPathSegments
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.coroutines.executeAsync
 import javax.inject.Inject
 
 internal class ArtworkFetcherImpl @Inject constructor(
-    private val okHttpClient: dagger.Lazy<OkHttpClient>,
+    private val httpClientLazy: dagger.Lazy<HttpClient>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val json: Json,
 ) : ArtworkFetcher {
 
     override suspend fun fetchUrl(track: Track): TrackArtwork? {
@@ -30,37 +29,33 @@ internal class ArtworkFetcherImpl @Inject constructor(
     // https://developers.deezer.com/api/track
     private suspend fun fetchDeezerSource(deezerTrackUrl: String): TrackArtwork? {
         val deezerTrackId = verifyAndParseDeezerTrackId(deezerTrackUrl) ?: return null
-        val requestUrl = HttpUrl.Builder()
-            .scheme("https")
-            .host("api.deezer.com")
-            .addPathSegment("track")
-            .addPathSegment(deezerTrackId)
-            .build()
-        val request = Request.Builder().url(requestUrl).get().build()
-        return try {
-            okHttpClient.get().newCall(request).executeAsync().use { response ->
-                if (!response.isSuccessful) return null
-                val deezerJson = json.decodeFromString<DeezerJson>(response.body.string())
-
-                val albumImageUrl = deezerJson.album?.run { coverXl ?: coverBig }
-                val albumImageThumbUrl = deezerJson.album?.coverMedium?.takeIf { albumImageUrl != null }
-                val albumArtwork = TrackArtwork(url = albumImageUrl, thumbUrl = albumImageThumbUrl)
-                if (albumArtwork.url != null && albumArtwork.thumbUrl != null) return@use albumArtwork
-
-                val artistImageUrl = deezerJson.artist?.run { pictureXl ?: pictureBig }
-                val artistImageThumb = deezerJson.artist?.pictureMedium?.takeIf { artistImageUrl != null }
-                val artistArtwork = TrackArtwork(url = artistImageUrl, thumbUrl = artistImageThumb)
-                if (artistArtwork.url != null && artistArtwork.thumbUrl != null) return@use artistArtwork
-                if (albumArtwork.url != null) return@use albumArtwork
-                if (artistArtwork.url != null) return@use artistArtwork
-                null
+        val deezerResponse = try {
+            val httpClient = httpClientLazy.get()
+            val response = httpClient.get("https://api.deezer.com/track") {
+                url {
+                    appendPathSegments(deezerTrackId)
+                }
             }
+            if (!response.status.isSuccess()) return null
+            response.body<DeezerJson>()
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Error during artwork fetching ($requestUrl)", e)
-            null
+            Log.e(this::class.simpleName, "Error during artwork fetching", e)
+            return null
         }
+        val albumImageUrl = deezerResponse.album?.run { coverXl ?: coverBig }
+        val albumImageThumbUrl = deezerResponse.album?.coverMedium?.takeIf { albumImageUrl != null }
+        val albumArtwork = TrackArtwork(url = albumImageUrl, thumbUrl = albumImageThumbUrl)
+
+        val artistImageUrl = deezerResponse.artist?.run { pictureXl ?: pictureBig }
+        val artistImageThumb = deezerResponse.artist?.pictureMedium?.takeIf { artistImageUrl != null }
+        val artistArtwork = TrackArtwork(url = artistImageUrl, thumbUrl = artistImageThumb)
+
+        return albumArtwork.takeIf { it.url != null && it.thumbUrl != null }
+            ?: artistArtwork.takeIf { it.url != null && it.thumbUrl != null }
+            ?: albumArtwork.takeIf { it.url != null }
+            ?: artistArtwork.takeIf { it.url != null }
     }
 
     private fun verifyAndParseDeezerTrackId(deezerTrackUrl: String): String? {

@@ -1,0 +1,16 @@
+{
+  "status": "error",
+  "error": {
+    "error_code": 300,
+    "error_message": "Recognition failed: there's been a problem with creating an audio fingerprint. Keep in mind that you should send only audio files or links to audio files. We support some of the Instagram, Twitter (X), TikTok, and Facebook videos, and also parse html for OpenGraph and JSON-LD media and <audio>/<video> tags, but it's always recommended to send 2-12 seconds-long audio files. For audio streams, see https://docs.audd.io/streams/. For large audio files, see https://docs.audd.io/enterprise/"
+  },
+  "request_params": {
+    "url": "https://audd.tech/example1.mp3",
+    "return": "apple_music,spotify",
+    "api_token": "t***n"
+  },
+  "request_api_method": "recognize",
+  "request_http_method": "GET",
+  "see api documentation": "https://docs.audd.io",
+  "contact us": "api@audd.io"
+}

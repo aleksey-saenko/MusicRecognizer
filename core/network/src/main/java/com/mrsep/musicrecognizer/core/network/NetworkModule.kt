@@ -5,7 +5,7 @@ import android.os.Build
 import coil3.ImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
@@ -14,10 +14,24 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.UserAgent
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.client.plugins.websocket.pingInterval
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
+import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
-import okhttp3.*
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
 
@@ -34,34 +48,59 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    fun provideKtorClient(
         @ApplicationContext appContext: Context,
-        @ApplicationScope appScope: CoroutineScope
-    ) = OkHttpClient.Builder()
-        .pingInterval(15.seconds)
-        .addInterceptor(UserAgentInterceptor(appContext))
-        .run {
-            if ((BuildConfig.LOG_DEBUG_MODE)) {
-                val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
-                }
-                val httpFileLoggingInterceptor = HttpFileLoggingInterceptor(appContext, appScope)
-                this.addInterceptor(httpLoggingInterceptor)
-                    .addInterceptor(httpFileLoggingInterceptor)
-            } else {
-                this
+        @ApplicationScope appScope: CoroutineScope,
+        json: Json
+    ): HttpClient = HttpClient(OkHttp) {
+        engine {
+            config {
+                pingInterval(15.seconds)
             }
         }
-        .build()
+        install(ContentNegotiation) {
+            json(json)
+            // ACRCloud returns json as text/plain
+            register(ContentType.Text.Plain, KotlinxSerializationConverter(json))
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 20_000
+            connectTimeoutMillis = 10_000
+            socketTimeoutMillis = 10_000
+        }
+        install(WebSockets) {
+            // Use the engine configuration to set the ping interval for OkHttp (ktor docs)
+            pingInterval = 15.seconds
+            contentConverter = KotlinxWebsocketSerializationConverter(json)
+        }
+        install(UserAgent) {
+            agent = "Audile/${appContext.getAppVersionName(removeDebug = true)}" +
+                    " (Android ${Build.VERSION.RELEASE})"
+        }
+        if (BuildConfig.DEBUG) {
+            install(Logging) {
+                logger = object : Logger {
+                    val logcatLogger = Logger.ANDROID
+                    val fileLogger = HttpFileLogger(appContext, appScope)
+                    override fun log(message: String) {
+                        logcatLogger.log(message)
+                        fileLogger.log(message)
+                    }
+                }
+                level = LogLevel.ALL
+                sanitizeHeader { header -> header == HttpHeaders.Authorization }
+            }
+        }
+    }
 
     @Provides
     @Singleton
     fun provideImageLoader(
         @ApplicationContext appContext: Context,
-        okHttpClient: dagger.Lazy<OkHttpClient>,
+        httpClient: dagger.Lazy<HttpClient>,
     ) = ImageLoader.Builder(appContext)
         .components {
-            add(OkHttpNetworkFetcherFactory(callFactory = { okHttpClient.get() }))
+            add(KtorNetworkFetcherFactory(httpClient = { httpClient.get() }))
         }
         .diskCache {
             DiskCache.Builder()
@@ -71,18 +110,4 @@ internal object NetworkModule {
         }
         .crossfade(true)
         .build()
-}
-
-private class UserAgentInterceptor(appContext: Context) : Interceptor {
-
-    private val userAgent =
-        "Audile/${appContext.getAppVersionName()} (Android ${Build.VERSION.RELEASE})"
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(
-            chain.request().newBuilder()
-                .header("User-Agent", userAgent)
-                .build()
-        )
-    }
 }

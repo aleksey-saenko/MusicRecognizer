@@ -10,6 +10,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 internal val fakeTrack = Track(
@@ -37,6 +38,38 @@ internal fun emptyAudioRecordingFlow(delayBeforeClose: Long) = flow<AudioRecordi
     delay(delayBeforeClose)
 }
 
+internal fun singleAudioRecordingFlow(initialDelay: Duration) = flow {
+    delay(initialDelay)
+    emit(
+        AudioRecording(
+            data = ByteArray(100 * 1024),
+            duration = 3.seconds,
+            nonSilenceDuration = 3.seconds,
+            startTimestamp = Instant.now(),
+            isFallback = false
+        )
+    )
+}
+
+internal fun infinityAudioRecordingFlow(interval: Duration, initialDelay: Duration = interval) = flow {
+    var counter = 0L
+    delay(initialDelay)
+    while (true) {
+        emit(
+            AudioRecording(
+                data = ByteArray(100 * 1024),
+                duration = 3.seconds,
+                nonSilenceDuration = 3.seconds,
+                startTimestamp = Instant.now(),
+                isFallback = false
+            )
+        )
+        println("Emitted rec #$counter")
+        counter++
+        delay(interval)
+    }
+}
+
 internal const val normalAudioFlowDuration = 5000L
 internal const val normalAudioDelay1 = 0L
 internal const val normalAudioDelay2 = 1000L
@@ -47,7 +80,7 @@ internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay1)
     emit(
         AudioRecording(
-            data = ByteArray(100 * 1024),
+            data = ByteArray(100 * 1024) { 1 },
             duration = 3.seconds,
             nonSilenceDuration = 3.seconds,
             startTimestamp = Instant.now(),
@@ -58,7 +91,7 @@ internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay2)
     emit(
         AudioRecording(
-            data = ByteArray(200 * 1024),
+            data = ByteArray(200 * 1024) { 2 },
             duration = 4.seconds,
             nonSilenceDuration = 4.seconds,
             startTimestamp = Instant.now(),
@@ -69,7 +102,7 @@ internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay3)
     emit(
         AudioRecording(
-            data = ByteArray(300 * 1024),
+            data = ByteArray(300 * 1024) { 3 },
             duration = 5.seconds,
             nonSilenceDuration = 5.seconds,
             startTimestamp = Instant.now(),
@@ -80,7 +113,7 @@ internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay4)
     emit(
         AudioRecording(
-            data = ByteArray(400 * 1024),
+            data = ByteArray(400 * 1024) { 4 },
             duration = 6.seconds,
             nonSilenceDuration = 6.seconds,
             startTimestamp = Instant.now(),
@@ -91,7 +124,7 @@ internal val normalAudioRecordingFlow get() = flow {
     delay(normalAudioDelay5)
     emit(
         AudioRecording(
-            data = ByteArray(500 * 1024),
+            data = ByteArray(500 * 1024) { 5 },
             duration = 7.seconds,
             nonSilenceDuration = 7.seconds,
             startTimestamp = Instant.now(),

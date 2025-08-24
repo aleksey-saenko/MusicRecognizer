@@ -3,25 +3,35 @@ package com.mrsep.musicrecognizer.core.recognition
 import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.AuddRecognitionService
+import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
+import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketConnection
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
-import com.mrsep.musicrecognizer.core.recognition.audd.websocket.SocketEvent
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.request.HttpRequestBuilder
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
-import okio.ByteString
-import org.junit.Assert
 import org.junit.Test
+import kotlin.String
+import kotlin.math.max
+import kotlin.random.Random
+import kotlin.random.nextLong
+import kotlin.time.Duration.Companion.seconds
 
 private const val TIMEOUT_AFTER_RECORDING_FINISHED = 10_000L
+private const val TIMEOUT_WEB_SOCKET_RESPONSE = 15_000L
 
 private const val TEST_RESPONSE_DELAY = 600L
 private const val TEST_SOCKET_OPENING_DELAY = 2300L
@@ -37,219 +47,372 @@ class AuddRecognitionServiceTest {
         explicitNulls = false
     }
     private val config = AuddConfig(apiToken = "")
-    private val okHttpClient = object : dagger.Lazy<OkHttpClient> {
-        private val instance = OkHttpClient()
-        override fun get(): OkHttpClient = instance
-    }
+    private val httpClientLazy = dagger.Lazy { HttpClient(OkHttp) }
+
     @Test
-    fun `first success = Success immediately`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString): Boolean {
-                launch {
-                    delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(
-                        SocketEvent.MessageReceived(getJson("audd_response_success.json"))
-                    )
-                }
-                return true
+    fun `Success on first`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(TEST_SOCKET_OPENING_DELAY)
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.SUCCESS))
+                        }
+                    }
+                ))
             }
         }
-        webSocket.openConnection(TEST_SOCKET_OPENING_DELAY)
         val service = AuddRecognitionService(
             config = config,
-            webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
             json = json,
         )
         val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
-        Assert.assertTrue(result is RemoteRecognitionResult.Success)
-        Assert.assertEquals(expectedTime, testScheduler.currentTime)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Success>()
+        testScheduler.currentTime.shouldBe(expectedTime)
     }
 
     @Test
-    fun `no matches results only = return last NoMatches`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            var firstResponse = true
-            override fun send(bytes: ByteString): Boolean {
-                launch {
-                    firstResponse = false
-                    delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(
-                        SocketEvent.MessageReceived(getJson("audd_response_no_matches.json"))
-                    )
-                }
-                return true
+    fun `NoMatches on single recording = NoMatches`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(TEST_SOCKET_OPENING_DELAY)
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.NO_MATCHES))
+                        }
+                    }
+                ))
             }
         }
-        webSocket.openConnection(0)
         val service = AuddRecognitionService(
             config = config,
-            webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
+            json = json,
+        )
+        val result = service.recognizeFirst(singleAudioRecordingFlow(initialDelay = 0.seconds))
+        val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
+        result.shouldBeInstanceOf<RemoteRecognitionResult.NoMatches>()
+        testScheduler.currentTime.shouldBe(expectedTime)
+    }
+
+    @Test
+    fun `NoMatches on each = NoMatches on last`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(0)
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.NO_MATCHES))
+                        }
+                    }
+                ))
+            }
+        }
+        val service = AuddRecognitionService(
+            config = config,
+            ioDispatcher = testDispatcher,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
             json = json,
         )
         val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TEST_RESPONSE_DELAY
-        Assert.assertTrue(result is RemoteRecognitionResult.NoMatches)
-        Assert.assertEquals(expectedTime, testScheduler.currentTime)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.NoMatches>()
+        testScheduler.currentTime.shouldBe(expectedTime)
     }
 
     @Test
-    fun `unrecoverable connection failure = UnhandledError immediately`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString) = false
-        }
-        val failureTime = 500L
-        webSocket.failureConnection(failureTime, false)
-        val service = AuddRecognitionService(
-            config = config,
-            webSocketSession = wrapSocketToService(webSocket),
-            ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
-            json = json,
-        )
-        val result = service.recognizeFirst(normalAudioRecordingFlow)
-        Assert.assertTrue(result is RemoteRecognitionResult.Error.UnhandledError)
-        Assert.assertEquals(failureTime, testScheduler.currentTime)
-    }
-
-    @Test
-    fun `recoverable connection failure = BadConnection immediately`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString) = false
-        }
-        val secondFailureTime = 800L
-        webSocket.simulateReconnect(secondFailureTime - 300L, 0)
-        webSocket.failureConnection(secondFailureTime, true)
-        val service = AuddRecognitionService(
-            config = config,
-            webSocketSession = wrapSocketToService(webSocket),
-            ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
-            json = json,
-        )
-        val result = service.recognizeFirst(normalAudioRecordingFlow)
-        Assert.assertTrue(result is RemoteRecognitionResult.Error.BadConnection)
-        Assert.assertEquals(secondFailureTime, testScheduler.currentTime)
-    }
-
-    @Test
-    fun `empty recording flow = BadRecording immediately`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString) = false
-        }
-        webSocket.openConnection(1000L)
-        val service = AuddRecognitionService(
-            config = config,
-            webSocketSession = wrapSocketToService(webSocket),
-            ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
-            json = json,
-        )
-        val result = service.recognizeFirst(emptyFlow())
-        Assert.assertTrue(result is RemoteRecognitionResult.Error.BadRecording)
-        Assert.assertEquals(0, testScheduler.currentTime)
-    }
-
-    @Test
-    fun `wrong token = AuthError`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString): Boolean {
-                launch {
-                    delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(
-                        SocketEvent.MessageReceived(getJson("audd_response_auth_error.json"))
-                    )
-                }
-                return true
+    fun `unrecoverable connection failure = immediate UnhandledError`() = scope.runTest {
+        val firstConnectDelay = 500L
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(firstConnectDelay)
+                emit(Result.failure(RuntimeException("Protocol error")))
             }
         }
-        webSocket.openConnection(TEST_SOCKET_OPENING_DELAY)
         val service = AuddRecognitionService(
             config = config,
-            webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
             json = json,
         )
         val result = service.recognizeFirst(normalAudioRecordingFlow)
-        val expected = RemoteRecognitionResult.Error.AuthError
-        val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
-        Assert.assertEquals(expected, result)
-        Assert.assertEquals(expectedTime, testScheduler.currentTime)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Error.UnhandledError>()
+        testScheduler.currentTime.shouldBe(firstConnectDelay)
     }
 
     @Test
-    fun `total timeout is reached = last result`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            var firstMessage = true
-            override fun send(bytes: ByteString): Boolean {
-                launch {
-                    if (firstMessage) {
-                        delay(5_000)
-                    } else {
-                        delay(10_000)
+    fun `recoverable connection failure = BadConnection after retry`() = scope.runTest {
+        val delayBeforeFinalFailure = 5000L
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED).apply {
+                            close()
+                        }
+                        override suspend fun sendRecording(data: ByteArray) {
+                            throw ClosedSendChannelException(null)
+                        }
                     }
-                    outputChannel.send(
-                        SocketEvent.MessageReceived(getJson("audd_response_no_matches.json"))
-                    )
-                }
-                return true
+                ))
+                delay(delayBeforeFinalFailure)
+                emit(Result.failure(kotlinx.io.IOException("Web socket closed by server due to timeout")))
             }
         }
-        webSocket.openConnection(0)
         val service = AuddRecognitionService(
             config = config,
-            webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
+            json = json,
+        )
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Error.BadConnection>()
+        testScheduler.currentTime.shouldBe(delayBeforeFinalFailure)
+    }
+
+    @Test
+    fun `wrong token = immediate AuthError`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(TEST_SOCKET_OPENING_DELAY)
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.ERROR_AUTH))
+                        }
+                    }
+                ))
+            }
+        }
+        val service = AuddRecognitionService(
+            config = config,
+            ioDispatcher = testDispatcher,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
+            json = json,
+        )
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
+        val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Error.AuthError>()
+        testScheduler.currentTime.shouldBe(expectedTime)
+    }
+
+    @Test
+    fun `TIMEOUT_AFTER_RECORDING_FINISHED reached = last result`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            var firstMessage = true
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            if (firstMessage) {
+                                delay(5_000)
+                            } else {
+                                delay(10_000)
+                            }
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.NO_MATCHES))
+                        }
+                    }
+                ))
+            }
+        }
+        val service = AuddRecognitionService(
+            config = config,
+            ioDispatcher = testDispatcher,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
             json = json,
         )
         val result = service.recognizeFirst(normalAudioRecordingFlow)
         val expectedTime = normalAudioFlowDuration + TIMEOUT_AFTER_RECORDING_FINISHED
-        Assert.assertTrue(result is RemoteRecognitionResult.NoMatches)
-        Assert.assertEquals(expectedTime, testScheduler.currentTime)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.NoMatches>()
+        testScheduler.currentTime.shouldBe(expectedTime)
     }
 
     @Test
     fun `empty audio recording flow = BadRecording`() = scope.runTest {
-        val webSocket = object : WebSocketBaseFake(this) {
-            override fun send(bytes: ByteString): Boolean {
-                launch {
-                    delay(TEST_RESPONSE_DELAY)
-                    outputChannel.send(
-                        SocketEvent.MessageReceived(getJson("audd_response_auth_error.json"))
-                    )
-                }
-                return true
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(Long.MAX_VALUE)
             }
         }
-        webSocket.openConnection(TEST_SOCKET_OPENING_DELAY)
         val service = AuddRecognitionService(
             config = config,
-            webSocketSession = wrapSocketToService(webSocket),
             ioDispatcher = testDispatcher,
-            okHttpClient = okHttpClient,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
             json = json,
         )
         val delayBeforeFlowClose = 5500L
         val result = service.recognizeFirst(emptyAudioRecordingFlow(delayBeforeFlowClose))
-        Assert.assertTrue(result is RemoteRecognitionResult.Error.BadRecording)
-        Assert.assertEquals(delayBeforeFlowClose, testScheduler.currentTime)
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Error.BadRecording>()
+        testScheduler.currentTime.shouldBe(delayBeforeFlowClose)
     }
 
-    private fun getJson(name: String): String {
-        return this::class.java.classLoader!!
-            .getResourceAsStream(name).bufferedReader().readText()
+    @Test
+    fun `no response within TIMEOUT_WEB_SOCKET_RESPONSE = BadConnection`() = scope.runTest {
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                delay(TEST_SOCKET_OPENING_DELAY)
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        var recordingReceived = false
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            recordingReceived.shouldBeFalse()
+                            recordingReceived = true
+                        }
+                    }
+                ))
+            }
+        }
+        val service = AuddRecognitionService(
+            config = config,
+            ioDispatcher = testDispatcher,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
+            json = json,
+        )
+        val result = service.recognizeFirst(infinityAudioRecordingFlow(interval = 3.seconds, initialDelay = 0.seconds))
+        val expectedTime = TEST_SOCKET_OPENING_DELAY + TIMEOUT_WEB_SOCKET_RESPONSE
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Error.BadConnection>()
+        testScheduler.currentTime.shouldBe(expectedTime)
+    }
+
+    @Test
+    fun `NoMatches on first rec, BadConnection on second = Success on second after reconnect`() = scope.runTest {
+        val reconnectionDelay = Random.nextLong(normalAudioDelay3 + 100L..normalAudioFlowDuration)
+        val webSocketSession = object : WebSocketSession {
+            override fun startReconnectingSession(
+                maxReconnectAttempts: Int,
+                block: HttpRequestBuilder.() -> Unit,
+            ): Flow<Result<WebSocketConnection>> = flow {
+                var recordingCount = 0
+                val reconnectTrigger = CompletableDeferred<Unit>()
+                var unprocessedRecording: ByteArray? = null
+
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            recordingCount++
+                            when (recordingCount) {
+                                1 -> {
+                                    delay(TEST_RESPONSE_DELAY)
+                                    responseChannel.send(json.decodeFrom(AuddResponse.NO_MATCHES))
+                                }
+                                2 -> {
+                                    delay(TEST_RESPONSE_DELAY)
+                                    responseChannel.close()
+                                    unprocessedRecording = data
+                                    reconnectTrigger.complete(Unit)
+                                }
+                                else -> throw ClosedSendChannelException(null)
+                            }
+                        }
+                    }
+                ))
+
+                reconnectTrigger.await()
+                delay(reconnectionDelay)
+
+                emit(Result.success(
+                    object: WebSocketConnection {
+                        override val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
+                        override suspend fun sendRecording(data: ByteArray) {
+                            unprocessedRecording.shouldBe(data)
+                            recordingCount.shouldBe(2)
+                            delay(TEST_RESPONSE_DELAY)
+                            responseChannel.send(json.decodeFrom(AuddResponse.SUCCESS))
+                        }
+                    }
+                ))
+            }
+        }
+        val service = AuddRecognitionService(
+            config = config,
+            ioDispatcher = testDispatcher,
+            httpClientLazy = httpClientLazy,
+            webSocketSession = webSocketSession,
+            json = json,
+        )
+        val result = service.recognizeFirst(normalAudioRecordingFlow)
+        val firstResultTime = normalAudioDelay1 + TEST_RESPONSE_DELAY
+        val failureTime = max(firstResultTime, normalAudioDelay2) + TEST_RESPONSE_DELAY
+        val expectedTime = failureTime + reconnectionDelay + TEST_RESPONSE_DELAY
+        result.shouldBeInstanceOf<RemoteRecognitionResult.Success>()
+        testScheduler.currentTime.shouldBe(expectedTime)
     }
 }
 
-private fun wrapSocketToService(webSocket: WebSocketBaseFake) = object : WebSocketSession {
+private enum class AuddResponse {
+    SUCCESS,
+    NO_MATCHES,
+    ERROR_AUTH,
+    ERROR_RECORDING;
 
-    override suspend fun startReconnectingSession(url: String): Flow<SocketEvent> = flow {
-        emitAll(webSocket.outputChannel)
+    fun asJsonString(): String {
+        val name = when (this) {
+            SUCCESS -> "audd_response_success.json"
+            NO_MATCHES -> "audd_response_no_matches.json"
+            ERROR_AUTH -> "audd_response_auth_error.json"
+            ERROR_RECORDING -> "audd_response_recording_error.json"
+        }
+        val stream = javaClass.classLoader!!.getResourceAsStream(name)
+            ?: error("Test resource not found: $name. Put it under src/test/resources/")
+        return stream.bufferedReader().use { it.readText() }
     }
+}
+
+private fun Json.decodeFrom(response: AuddResponse): AuddResponseJson {
+    return decodeFromString(response.asJsonString())
 }

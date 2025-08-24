@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.network)
 
+    implementation(platform(libs.okhttp.bom))
     implementation(libs.kotlinx.serializationJson)
     implementation(libs.uuid.creator)
 
@@ -23,8 +24,9 @@ dependencies {
     testImplementation(libs.kotest)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.turbine)
-    testImplementation(libs.okhttp.coreJvm)
     testImplementation(libs.okhttp.mockWebServer)
+    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.slf4j.simple)
 
     androidTestImplementation(libs.kotest)
     androidTestImplementation(libs.androidx.test.ext.junit)

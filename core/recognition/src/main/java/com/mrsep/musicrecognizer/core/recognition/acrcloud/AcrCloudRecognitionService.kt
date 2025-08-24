@@ -13,6 +13,13 @@ import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
@@ -26,14 +33,7 @@ import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.coroutines.executeAsync
-import java.io.IOException
+import kotlinx.io.IOException
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -46,10 +46,9 @@ private const val TAG = "AcrCloudRecognitionService"
 internal class AcrCloudRecognitionService @AssistedInject constructor(
     @Assisted private val config: AcrCloudConfig,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val httpClientLazy: dagger.Lazy<HttpClient>,
     private val artworkFetcher: ArtworkFetcher,
     private val lyricsFetcher: LyricsFetcher,
-    private val okHttpClient: dagger.Lazy<OkHttpClient>,
-    private val json: Json,
 ) : RemoteRecognitionService {
 
     override suspend fun recognize(recording: AudioRecording): RemoteRecognitionResult {
@@ -66,62 +65,59 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             Log.w(TAG, "It is discouraged to send recordings longer than $RECORDING_DURATION_LIMIT;" +
                         " the beginning will be truncated on the server side.")
         }
+        val httpClient = httpClientLazy.get()
         val timestamp = Instant.now().epochSecond.toString()
         val signature = createSignature(timestamp, config)
-        val multipartBody = MultipartBody.Builder()
-            .addFormDataPart(
-                "sample",
-                "sample",
-                recording.toRequestBody(RECORDING_MEDIA_TYPE.toMediaTypeOrNull())
-            )
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("access_key", config.accessKey)
-            .addFormDataPart("sample_bytes", "${recording.size}")
-            .addFormDataPart("timestamp", timestamp)
-            .addFormDataPart("signature", signature)
-            .addFormDataPart("data_type", DATA_TYPE)
-            .addFormDataPart("signature_version", SIGNATURE_VERSION)
-            .build()
 
-        val request = Request.Builder()
-            .url("https://${config.host}$ENDPOINT")
-            .post(multipartBody)
-            .build()
         val response = try {
-            okHttpClient.get().newCall(request).executeAsync()
-        } catch (e: IOException) {
+            httpClient.submitFormWithBinaryData(
+                url = "https://${config.host}$ENDPOINT",
+                formData = formData {
+                    append("timestamp", timestamp)
+                    append("access_key", config.accessKey)
+                    append("signature_version", SIGNATURE_VERSION)
+                    append("signature", signature)
+                    append("data_type", DATA_TYPE)
+                    append("sample_bytes", "${recording.size}")
+                    append(
+                        key = "sample",
+                        value = recording,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentDisposition, "filename=sample")
+                            append(HttpHeaders.ContentType, RECORDING_MEDIA_TYPE)
+                        }
+                    )
+                }
+            )
+        } catch (_: IOException) {
             return@withContext RemoteRecognitionResult.Error.BadConnection
         }
-        response.use {
-            if (response.isSuccessful) {
-                val remoteResult = try {
-                    json.decodeFromString<AcrCloudResponseJson>(response.body.string())
-                        .toRecognitionResult(recordingStartTimestamp, recordingDuration)
-                } catch (e: Exception) {
-                    RemoteRecognitionResult.Error.UnhandledError(
-                        message = e.message ?: "",
-                        cause = e
-                    )
-                }
-                if (remoteResult is RemoteRecognitionResult.Success) {
-                    val track = remoteResult.track
-                    val artworkDeferred = async { artworkFetcher.fetchUrl(track) }
-                    val lyricsDeferred = async { lyricsFetcher.fetch(track) }
-                    val finalTrack = track.copy(
-                        lyrics = lyricsDeferred.await(),
-                        artworkThumbUrl = artworkDeferred.await()?.thumbUrl,
-                        artworkUrl = artworkDeferred.await()?.url,
-                    )
-                    RemoteRecognitionResult.Success(finalTrack)
-                } else {
-                    remoteResult
-                }
-            } else {
-                RemoteRecognitionResult.Error.HttpError(
-                    code = response.code,
-                    message = response.message
-                )
+
+        if (response.status.isSuccess()) {
+            val remoteResult = try {
+                response.body<AcrCloudResponseJson>()
+                    .toRecognitionResult(recordingStartTimestamp, recordingDuration)
+            } catch (e: Exception) {
+                RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
             }
+            if (remoteResult is RemoteRecognitionResult.Success) {
+                val track = remoteResult.track
+                val artworkDeferred = async { artworkFetcher.fetchUrl(track) }
+                val lyricsDeferred = async { lyricsFetcher.fetch(track) }
+                val finalTrack = track.copy(
+                    lyrics = lyricsDeferred.await(),
+                    artworkThumbUrl = artworkDeferred.await()?.thumbUrl,
+                    artworkUrl = artworkDeferred.await()?.url,
+                )
+                RemoteRecognitionResult.Success(finalTrack)
+            } else {
+                remoteResult
+            }
+        } else {
+            RemoteRecognitionResult.Error.HttpError(
+                code = response.status.value,
+                message = response.status.description
+            )
         }
     }
 
@@ -202,11 +198,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         private const val DATA_TYPE = "audio"
         private const val SIGNATURE_VERSION = "1"
 
-        private const val RECORDING_MEDIA_TYPE = "audio/mpeg; charset=utf-8"
         val RECORDING_DURATION_LIMIT = 12.seconds
-
-        // binary (acr cloud docs)
-//        private const val RECORDING_MEDIA_TYPE = "application/octet-stream"
+        private const val RECORDING_MEDIA_TYPE = "audio/mpeg"
         private const val RETRY_ON_ERROR_LIMIT = 1
         private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
     }

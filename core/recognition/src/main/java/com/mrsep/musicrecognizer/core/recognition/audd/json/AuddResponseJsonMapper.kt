@@ -2,7 +2,6 @@ package com.mrsep.musicrecognizer.core.recognition.audd.json
 
 import android.text.Html
 import android.util.Log
-import android.util.Patterns
 import androidx.core.graphics.toColorInt
 import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
@@ -12,6 +11,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -103,7 +103,7 @@ private fun createTrackId(result: AuddResponseJson.Result): String {
         // Define some namespace for Audd to distinguish result UUIDs in cases
         // when tracks recognized by different providers have the same remote ID
         val auddIdNamespace = "bbfa96d0-dae8-4273-912a-0d9e2e1931c2"
-        return UuidCreator.getNameBasedSha1(auddIdNamespace, result.auddSongLink).toString()
+        UuidCreator.getNameBasedSha1(auddIdNamespace, result.auddSongLink).toString()
     } ?: UUID.randomUUID().toString()
 }
 
@@ -172,10 +172,8 @@ private fun AuddResponseJson.Result.parseReleaseDate(): LocalDate? {
         ?: spotify?.album?.releaseDate?.toLocalDate()
 }
 
-private fun isUrlValid(potentialUrl: String) = Patterns.WEB_URL.matcher(potentialUrl).matches()
-private fun String.replaceHttpWithHttps() =
-    replaceFirst("http://", "https://", true)
-
+private fun isUrlValid(potentialUrl: String) = potentialUrl.toHttpUrlOrNull() != null
+private fun String.replaceHttpWithHttps() = replaceFirst("http://", "https://", true)
 private fun String.takeUrlIfValid() = replaceHttpWithHttps().takeIf { isUrlValid(it) }
 
 private fun AuddResponseJson.Result.toTrackArtwork(): TrackArtwork? {

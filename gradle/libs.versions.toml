@@ -24,22 +24,24 @@ auto-service-ksp = "1.2.0"
 coil = "3.3.0"
 detektPlugin = "1.23.8"
 detektCompose = "0.4.27"
-hilt = "2.57"
+hilt = "2.57.1"
 hiltExt = "1.2.0"
 junit4 = "4.13.2"
 junitExt = "1.3.0"
-kotest = "6.0.0.M15"
+kotest = "6.0.0"
 kotlin = "2.2.10"
 kotlinxCoroutines = "1.10.2"
 kotlinxCollectionImmutable = "0.4.0"
 kotlinxSerializationJson = "1.9.0"
 ksp = "2.2.10-2.0.2"
+ktor = "3.2.3"
 materialKolor = "2.1.1"
 okhttpBom = "5.1.0"
 palette = "1.0.0"
-protobuf = "4.31.1"
+protobuf = "4.32.0"
 protobufPlugin = "0.9.5"
 room = "2.7.2"
+slf4j = "2.0.17"
 turbine = "1.2.1"
 uuidCreator = "6.1.1"
 zoomable = "2.8.1"
@@ -81,7 +83,7 @@ androidx-workKtx = { group = "androidx.work", name = "work-runtime-ktx", version
 auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "auto-service"}
 auto-service-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "auto-service-ksp"}
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
-coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektPlugin" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detektCompose" }
 hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
@@ -96,17 +98,21 @@ kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-c
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-collectionImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionImmutable" }
 kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
-okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
-okhttp-coreJvm = { group = "com.squareup.okhttp3", name = "okhttp-jvm", version.ref = "okhttpBom" }
-okhttp-coroutines = { group = "com.squareup.okhttp3", name = "okhttp-coroutines" }
-okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 uuid-creator = { module = "com.github.f4b6a3:uuid-creator", version.ref = "uuidCreator" }
 zoomable = { module = "net.engawapg.lib:zoomable-android", version.ref = "zoomable" }

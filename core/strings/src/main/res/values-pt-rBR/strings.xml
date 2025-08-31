@@ -195,7 +195,7 @@
     <string name="recognition_provider_dialog_format_auth">Autenticação %s:</string>
     <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis de 14 dias. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
     <string name="audd_help_dialog_message_empty_token">Você pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isso limitará o número de reconhecimentos diários.</string>
-    <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e registrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e cadastrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Por favor preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
     <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Áudio gravado\"</string>

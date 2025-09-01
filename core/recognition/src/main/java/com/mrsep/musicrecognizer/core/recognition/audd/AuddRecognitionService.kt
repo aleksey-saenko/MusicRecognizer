@@ -190,7 +190,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
         private const val REST_BASE_URL = "https://api.audd.io/"
         private const val WEB_SOCKET_BASE_URL = "wss://api.audd.io/ws/"
         private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
-        private const val RECORDING_MEDIA_TYPE = "audio/mpeg"
+        private const val RECORDING_MEDIA_TYPE = "audio/mp4"
 
         private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
         private val WEB_SOCKET_RESPONSE_TIMEOUT = 15.seconds

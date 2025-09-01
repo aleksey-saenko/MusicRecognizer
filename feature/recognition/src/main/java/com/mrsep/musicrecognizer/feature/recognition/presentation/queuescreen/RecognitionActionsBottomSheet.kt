@@ -212,7 +212,7 @@ internal fun RecognitionActionsBottomSheet(
                     if (sharingJob?.isActive == true) return@BottomSheetAction
                     sharingJob = coroutineScope.launch {
                         getRecordingFileForSharing(context, recognition.recordingFile)?.let { uri ->
-                            context.shareFile(subject = "", body = "", uri = uri)
+                            context.shareFile(subject = "", body = "", uri = uri, mimeType = "audio/mp4")
                         }
                     }
                 }

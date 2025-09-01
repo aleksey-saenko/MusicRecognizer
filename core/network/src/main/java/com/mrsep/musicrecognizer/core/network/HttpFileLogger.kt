@@ -3,13 +3,13 @@ package com.mrsep.musicrecognizer.core.network
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.File
 import java.io.IOException
 import java.time.Instant
@@ -63,7 +63,7 @@ internal class HttpFileLogger(
             }
             else -> error("Unknown message")
         }
-        return type to url.toHttpUrl().host
+        return type to runCatching { Url(url).host }.getOrDefault("unknown")
     }
 
     private fun String.sanitizeForFilename() = replace(Regex("""[^A-Za-z0-9._-]"""), "_")

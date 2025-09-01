@@ -199,7 +199,7 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         private const val SIGNATURE_VERSION = "1"
 
         val RECORDING_DURATION_LIMIT = 12.seconds
-        private const val RECORDING_MEDIA_TYPE = "audio/mpeg"
+        private const val RECORDING_MEDIA_TYPE = "audio/mp4"
         private const val RETRY_ON_ERROR_LIMIT = 1
         private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
     }

@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.presentation
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_MAIN
 import android.graphics.Color
@@ -20,16 +22,16 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.mrsep.musicrecognizer.MusicRecognizerApp
+import androidx.lifecycle.repeatOnLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -53,6 +55,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) {
             handleRecognitionRequest(intent)
         }
+        startControlServiceOnDemand()
         enableEdgeToEdge()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -97,39 +100,48 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!isServiceStartupHandled) {
-            startNotificationServiceOnDemand()
-        }
-    }
-
     private fun handleRecognitionRequest(intent: Intent) {
         when (intent.action) {
-            MusicRecognizerApp.ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
-            ACTION_MAIN -> viewModel.requestRecognitionOnStartupIfPreferred()
+            ACTION_RECOGNIZE -> viewModel.setRecognitionRequested(true)
+            ACTION_MAIN -> {
+                if (intent.getBooleanExtra(KEY_RESTART_ON_BACKUP_RESTORE, false)) return
+                viewModel.requestRecognitionOnStartupIfPreferred()
+            }
         }
     }
 
-    // Start previously started service if it was force killed for some reason
-    private fun startNotificationServiceOnDemand() {
+    // Start previously started foreground service if the app was force killed for some reason
+    private fun startControlServiceOnDemand() {
         lifecycleScope.launch {
-            val shouldTurnOnService = viewModel.uiState
-                .filterIsInstance<MainActivityUiState.Success>()
-                .map { it.userPreferences.notificationServiceEnabled }
-                .first()
-            if (shouldTurnOnService) {
-                startService(
-                    Intent(
-                        this@MainActivity,
-                        NotificationService::class.java
-                    ).apply {
-                        action = NotificationService.HOLD_MODE_ON_ACTION
-                        putExtra(NotificationService.KEY_RESTRICTED_START, false)
-                    }
-                )
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                if (isServiceStartupHandled) return@repeatOnLifecycle
+                val shouldTurnOnService = viewModel.uiState
+                    .filterIsInstance<MainActivityUiState.Success>()
+                    .first().notificationServiceEnabled
+                if (shouldTurnOnService) {
+                    RecognitionControlService.startHoldMode(
+                        this@MainActivity.applicationContext,
+                        false
+                    )
+                }
+                isServiceStartupHandled = true
             }
-            isServiceStartupHandled = true
+        }
+    }
+
+    companion object {
+        const val ACTION_RECOGNIZE = "com.mrsep.musicrecognizer.intent.action.RECOGNIZE"
+        private const val KEY_RESTART_ON_BACKUP_RESTORE = "RESTART_ON_BACKUP_RESTORE"
+
+        fun Context.restartApplicationOnRestore() {
+            val componentName = ComponentName(this, MainActivity::class.java)
+            // Set the package explicitly, required for API 34 and later
+            // Ref: https://developer.android.com/about/versions/14/behavior-changes-14#safer-intents
+            val intent = Intent.makeRestartActivityTask(componentName)
+                .setPackage(packageName)
+                .putExtra(KEY_RESTART_ON_BACKUP_RESTORE, true)
+            startActivity(intent)
+            Runtime.getRuntime().exit(0)
         }
     }
 }
@@ -138,7 +150,7 @@ class MainActivity : ComponentActivity() {
 private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
-        is MainActivityUiState.Success -> uiState.userPreferences.dynamicColorsEnabled
+        is MainActivityUiState.Success -> uiState.dynamicColorsEnabled
     }
 }
 
@@ -146,7 +158,7 @@ private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
 private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean? {
     return when (uiState) {
         MainActivityUiState.Loading -> null
-        is MainActivityUiState.Success -> uiState.userPreferences.onboardingCompleted
+        is MainActivityUiState.Success -> uiState.onboardingCompleted
     }
 }
 
@@ -167,7 +179,7 @@ private fun shouldUseDarkTheme(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
     MainActivityUiState.Loading -> isSystemInDarkTheme()
-    is MainActivityUiState.Success -> when (uiState.userPreferences.themeMode) {
+    is MainActivityUiState.Success -> when (uiState.themeMode) {
         ThemeMode.FollowSystem -> isSystemInDarkTheme()
         ThemeMode.AlwaysLight -> false
         ThemeMode.AlwaysDark -> true
@@ -179,5 +191,5 @@ private fun shouldUsePureBlack(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
     MainActivityUiState.Loading -> false
-    is MainActivityUiState.Success -> uiState.userPreferences.usePureBlackForDarkTheme
+    is MainActivityUiState.Success -> uiState.usePureBlackForDarkTheme
 }

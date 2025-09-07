@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <scale
-        android:fromXScale="1.15"
+        android:fromXScale="@dimen/widget_button_scale_factor"
         android:toXScale="1.0"
-        android:fromYScale="1.15"
+        android:fromYScale="@dimen/widget_button_scale_factor"
         android:toYScale="1.0"
         android:pivotX="50%"
         android:pivotY="50%"

@@ -1,0 +1,2 @@
+* Updated Portuguese (Brazil) translation (@lucasmz-dev)
+* Minor bug fixes and UI corrections

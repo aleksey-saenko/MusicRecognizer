@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -40,17 +40,17 @@ internal fun AnimatedVisibilityScope.AuthErrorShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.auth_error),
+            text = stringResource(StringsR.string.result_title_auth_error),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = stringResource(StringsR.string.auth_error_message),
+            text = stringResource(StringsR.string.result_message_auth_error),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )

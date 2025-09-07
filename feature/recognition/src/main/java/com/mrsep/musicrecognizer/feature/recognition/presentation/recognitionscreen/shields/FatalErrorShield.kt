@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -70,7 +70,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskManualMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -84,9 +84,9 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                 Surface(
                     tonalElevation = 1.dp,
                     shape = MaterialTheme.shapes.small,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Text(
                             text = moreInfo,
                             textAlign = TextAlign.Start,
@@ -96,7 +96,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                             modifier = Modifier
                                 .horizontalScroll(rememberScrollState())
                         )
-                        Row(modifier = Modifier.padding(top = 16.dp)) {
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
                             TextButton(
                                 onClick = { context.copyTextToClipboard(moreInfo) },
                             ) {
@@ -155,7 +155,7 @@ internal fun AnimatedVisibilityScope.FatalErrorShield(
                 onClick = onRetryClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(StringsR.string.retry))
+                Text(text = stringResource(StringsR.string.button_retry_recognition))
             }
         }
     }

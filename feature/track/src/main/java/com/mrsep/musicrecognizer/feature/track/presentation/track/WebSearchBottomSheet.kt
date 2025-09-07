@@ -2,14 +2,11 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,18 +36,18 @@ internal data class SearchParams(
     val target: SearchTarget
 )
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun WebSearchBottomSheet(
     sheetState: SheetState,
-    onPerformWebSearchClick: (SearchParams) -> Unit,
     onDismissRequest: () -> Unit,
+    albumAvailable: Boolean,
+    onPerformWebSearchClick: (SearchParams) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
         var providerSelected by rememberSaveable { mutableStateOf(SearchProvider.WebDefault) }
@@ -62,7 +59,12 @@ internal fun WebSearchBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             SheetGroup(title = stringResource(StringsR.string.search_in)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -100,11 +102,13 @@ internal fun WebSearchBottomSheet(
                         onClick = { targetSelected = SearchTarget.Artist },
                         label = { Text(text = stringResource(StringsR.string.artist)) }
                     )
-                    FilterChip(
-                        selected = targetSelected == SearchTarget.Album,
-                        onClick = { targetSelected = SearchTarget.Album },
-                        label = { Text(text = stringResource(StringsR.string.album)) }
-                    )
+                    if (albumAvailable) {
+                        FilterChip(
+                            selected = targetSelected == SearchTarget.Album,
+                            onClick = { targetSelected = SearchTarget.Album },
+                            label = { Text(text = stringResource(StringsR.string.album)) }
+                        )
+                    }
                 }
             }
         }
@@ -114,9 +118,8 @@ internal fun WebSearchBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             TextButton(
                 onClick = {
                     onPerformWebSearchClick(SearchParams(providerSelected, targetSelected))

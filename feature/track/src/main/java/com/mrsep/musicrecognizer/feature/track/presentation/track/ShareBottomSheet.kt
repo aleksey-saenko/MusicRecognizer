@@ -14,10 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ShareBottomSheet(
     track: TrackUi,
@@ -30,7 +30,6 @@ internal fun ShareBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
         var titleSelected by rememberSaveable(track.title) { mutableStateOf(true) }
@@ -40,14 +39,20 @@ internal fun ShareBottomSheet(
         var selectedMusicServices by rememberSaveable(track.trackLinks) {
             mutableStateOf(setOf<MusicService>())
         }
-        var lyricsSelected by rememberSaveable(track.year) { mutableStateOf(false) }
+        var lyricsSelected by rememberSaveable(track.lyrics) { mutableStateOf(false) }
 
         fun buildStringToShare() = buildString {
             if (titleSelected) append(track.title)
             if (artistSelected) if (isNotBlank()) append(" - ${track.artist}") else append(track.artist)
-            if (albumSelected) if (isNotBlank()) append(" - ${track.album}") else append(track.album)
-            if (yearSelected) if (isNotBlank()) append(" (${track.year})") else append(track.year)
-            if (lyricsSelected) if (isNotEmpty()) append("\n\n${track.lyrics}") else append(track.lyrics)
+            if (albumSelected && track.album != null) {
+                if (isNotBlank()) append(" - ${track.album}") else append(track.album)
+            }
+            if (yearSelected && track.year != null) {
+                if (isNotBlank()) append(" (${track.year})") else append(track.year)
+            }
+            if (lyricsSelected && track.lyrics != null) {
+                if (isNotEmpty()) append("\n\n${track.lyrics.plain}") else append(track.lyrics.plain)
+            }
             track.trackLinks
                 .filter { selectedMusicServices.contains(it.service) }
                 .joinToString("\n") { it.url }
@@ -55,6 +60,7 @@ internal fun ShareBottomSheet(
                     if (isNotEmpty()) append("\n\n$serviceUrls") else append(serviceUrls)
                 }
         }
+
         val shareAllowed = titleSelected || artistSelected || albumSelected ||
                 yearSelected || selectedMusicServices.isNotEmpty() || lyricsSelected
 
@@ -64,8 +70,13 @@ internal fun ShareBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            ShareGroup(title = stringResource(StringsR.string.metadata)) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
+            ShareGroup(title = stringResource(StringsR.string.track_metadata)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
@@ -105,27 +116,29 @@ internal fun ShareBottomSheet(
                     }
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            ShareGroup(title = stringResource(StringsR.string.music_services_links)) {
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    track.trackLinks.forEach { (_, serviceType) ->
-                        val selected = selectedMusicServices.contains(serviceType)
-                        FilterChip(
-                            selected = selected,
-                            onClick = {
-                                selectedMusicServices = if (selected) {
-                                    selectedMusicServices - serviceType
-                                } else {
-                                    selectedMusicServices + serviceType
-                                }
-                            },
-                            label = { Text(text = stringResource(serviceType.titleId())) }
-                        )
+            if (track.trackLinks.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                ShareGroup(title = stringResource(StringsR.string.share_music_services_links)) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        track.trackLinks.forEach { (_, serviceType) ->
+                            val selected = selectedMusicServices.contains(serviceType)
+                            FilterChip(
+                                selected = selected,
+                                onClick = {
+                                    selectedMusicServices = if (selected) {
+                                        selectedMusicServices - serviceType
+                                    } else {
+                                        selectedMusicServices + serviceType
+                                    }
+                                },
+                                label = { Text(text = stringResource(serviceType.titleId())) }
+                            )
+                        }
                     }
                 }
             }
@@ -136,9 +149,8 @@ internal fun ShareBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             TextButton(
                 onClick = { onCopyClick(buildStringToShare()) },
                 enabled = shareAllowed
@@ -166,7 +178,7 @@ internal fun ShareBottomSheet(
 private fun ShareGroup(
     modifier: Modifier = Modifier,
     title: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Column(modifier = modifier) {
         Spacer(Modifier.height(4.dp))

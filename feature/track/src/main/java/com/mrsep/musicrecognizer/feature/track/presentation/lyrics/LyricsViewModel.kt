@@ -4,16 +4,19 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
-import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
+import kotlin.time.Duration
 
 @HiltViewModel
 internal class LyricsViewModel @Inject constructor(
@@ -34,14 +37,17 @@ internal class LyricsViewModel @Inject constructor(
                     trackId = track.id,
                     title = track.title,
                     artist = track.artist,
+                    artworkUrl = track.artworkUrl,
                     lyrics = lyrics,
-                    fontStyle = preferences.lyricsFontStyle,
-                    themeSeedColor = track.themeSeedColor,
+                    trackDuration = track.duration,
+                    recognizedAt = track.recognizedAt,
+                    recognitionDate = track.recognitionDate,
+                    lyricsStyle = preferences.lyricsStyle,
+                    themeSeedColor = track.properties.themeSeedColor,
                     artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
                     themeMode = preferences.themeMode,
                     usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
-                    isTrackViewed = track.isViewed,
-                    trackDurationMs = track.duration?.toMillis()?.toInt()
+                    isTrackViewed = track.properties.isViewed,
                 )
             }
         } ?: LyricsUiState.LyricsNotFound
@@ -52,15 +58,21 @@ internal class LyricsViewModel @Inject constructor(
             initialValue = LyricsUiState.Loading
         )
 
-    fun setLyricsFontStyle(newStyle: UserPreferences.LyricsFontStyle) {
+    fun setLyricsStyle(newStyle: LyricsStyle) {
         viewModelScope.launch {
-            preferencesRepository.setLyricsFontStyle(newStyle)
+            preferencesRepository.setLyricsStyle(newStyle)
         }
     }
 
     fun setTrackAsViewed(trackId: String) {
         viewModelScope.launch {
-            trackRepository.setAsViewed(trackId)
+            trackRepository.setViewed(trackId, true)
+        }
+    }
+
+    fun setThemeSeedColor(trackId: String, color: Int?) {
+        viewModelScope.launch {
+            trackRepository.setThemeSeedColor(trackId, color)
         }
     }
 }
@@ -76,13 +88,16 @@ internal sealed class LyricsUiState {
         val trackId: String,
         val title: String,
         val artist: String,
-        val lyrics: String,
-        val fontStyle: UserPreferences.LyricsFontStyle,
+        val artworkUrl: String?,
+        val lyrics: Lyrics,
+        val trackDuration: Duration?,
+        val recognizedAt: Duration?,
+        val recognitionDate: Instant,
+        val lyricsStyle: LyricsStyle,
         val themeSeedColor: Int?,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
         val usePureBlackForDarkTheme: Boolean,
         val isTrackViewed: Boolean,
-        val trackDurationMs: Int?,
     ) : LyricsUiState()
 }

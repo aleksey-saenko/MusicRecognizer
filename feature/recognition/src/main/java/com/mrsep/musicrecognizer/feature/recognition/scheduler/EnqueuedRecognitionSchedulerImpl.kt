@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -21,7 +21,7 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
     // Use uniqueWorkName as an extra tag to associate workInfo with recognitionId
     // in the getStatusFlowAll method.
     // WorkInfo only contains the worker UUID (which cannot be converted in both directions) and tags.
-    override fun enqueue(vararg recognitionIds: Int, forceLaunch: Boolean) {
+    override fun enqueue(recognitionIds: List<Int>, forceLaunch: Boolean) {
         recognitionIds.forEach { id ->
             val uniqueWorkName = getUniqueWorkerName(id)
             workManager.enqueueUniqueWork(
@@ -36,7 +36,7 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
         }
     }
 
-    override fun cancel(vararg recognitionIds: Int) {
+    override fun cancel(recognitionIds: List<Int>) {
         recognitionIds.forEach { id ->
             workManager.cancelUniqueWork(getUniqueWorkerName(id))
         }

@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,7 +22,7 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerSt
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecognitionLazyGrid(
     modifier: Modifier = Modifier,
@@ -64,7 +63,7 @@ internal fun RecognitionLazyGrid(
                 onStartPlayRecord = { onStartPlayRecord(recognition.id) },
                 onStopPlayRecord = onStopPlayRecord,
                 onClick = {
-                    if (multiSelectionState.multiselectEnabled) {
+                    if (multiSelectionState.hasSelected) {
                         multiSelectionState.toggleSelection(recognition.id)
                     } else {
                         showActionsSheet = !showActionsSheet
@@ -72,7 +71,7 @@ internal fun RecognitionLazyGrid(
                 },
                 onLongClick = { multiSelectionState.toggleSelection(recognition.id) },
                 showCreationDate = showCreationDate,
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(),
                 contentPadding = PaddingValues(4.dp)
             )
             val actionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

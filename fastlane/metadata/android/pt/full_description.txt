@@ -1,0 +1,10 @@
+<b>Audile</b> é uma aplicação de reconhecimento de música, que pode te ajudar a rapidamente e precisamente identificar uma faixa de música tocando ao redor de si.
+Este app usa os serviços AudD e ACRCloud para o reconhecimento de música, e o serviço Odesli para obter ligações adicionais para faixas em plataformas específicas.
+
+<b>Recursos:</b>
+
+<b>Reconhecimento</b> - O Audile permite que inicie o reconhecimento num clique. O app gravará a gravação se não tiver internet e o processo de reconhecimento será executado quando se reconectar à internet. Pode customizar o comportamento padrão para reconhecimentos malsucedidos (sem internet, nenhuma correspondência, outra falha) pelas preferências.
+<b>Uso em Segundo Plano</b> - Use a aplicação pelas notificações, por um widget na ecrã inicial, ou um botão nas configurações rápidas. Gira o processo de reconhecimento e obtenha informações da faixa sem abrir o app.
+<b>Sobre a faixa</b> - No correspondo de um reconhecimento sucedido, informação sobre a faixa é fornecida, como o nome, artista, álbum e ano, arte, ligações para serviços de música populares e letras.
+<b>Biblioteca</b> - Todas as faixas identificadas são armazenadas na biblioteca da aplicação. Pode filtrar a lista de faixas, criar uma coleção de favoritos, pesquisar por faixas, ou apagar faixas.
+<b>Preferências</b> - O app tem um número de opções para customizar o seu funcionamento e aparência, que encontram-se no ecrã de configurações.

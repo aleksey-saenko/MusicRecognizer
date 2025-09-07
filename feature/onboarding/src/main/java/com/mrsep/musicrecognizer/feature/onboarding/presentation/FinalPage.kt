@@ -26,13 +26,13 @@ internal fun FinalPage(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(StringsR.string.final_onboarding_page_title),
+            text = stringResource(StringsR.string.onboarding_final_title),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge
         )
         Spacer(Modifier.height(24.dp))
         Text(
-            text = stringResource(StringsR.string.final_onboarding_page_message),
+            text = stringResource(StringsR.string.onboarding_final_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.widthIn(max = 488.dp)
@@ -42,7 +42,7 @@ internal fun FinalPage(
             modifier = Modifier.widthIn(min = 240.dp),
             onClick = onOnboardingCompleted
         ) {
-            Text(text = stringResource(StringsR.string.get_started))
+            Text(text = stringResource(StringsR.string.onboarding_final_get_started))
         }
     }
 }

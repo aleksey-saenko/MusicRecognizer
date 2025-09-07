@@ -3,14 +3,17 @@ package com.mrsep.musicrecognizer.feature.preferences.presentation
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.preferences.domain.AcrCloudConfig
-import com.mrsep.musicrecognizer.feature.preferences.domain.AuddConfig
-import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.preferences.domain.PreferencesRouter
-import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
+import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
+import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
+import com.mrsep.musicrecognizer.feature.preferences.RecognitionServiceStarter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -21,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class PreferencesViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val preferencesRouter: PreferencesRouter,
+    private val recognitionServiceStarter: RecognitionServiceStarter,
 ) : ViewModel() {
 
     val uiFlow = preferencesRepository.userPreferencesFlow
@@ -50,13 +53,31 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setDefaultAudioCaptureMode(value: AudioCaptureMode) {
+        viewModelScope.launch {
+            preferencesRepository.setDefaultAudioCaptureMode(value)
+        }
+    }
+
+    fun setMainButtonLongPressAudioCaptureMode(value: AudioCaptureMode) {
+        viewModelScope.launch {
+            preferencesRepository.setMainButtonLongPressAudioCaptureMode(value)
+        }
+    }
+
+    fun setUseAltDeviceSoundSource(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUseAltDeviceSoundSource(value)
+        }
+    }
+
     fun setNotificationServiceEnabled(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setNotificationServiceEnabled(value)
             if (value) {
-                preferencesRouter.startServiceHoldMode()
+                recognitionServiceStarter.startServiceHoldMode()
             } else {
-                preferencesRouter.stopServiceHoldMode()
+                recognitionServiceStarter.stopServiceHoldMode()
             }
         }
     }
@@ -79,13 +100,13 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
-    fun setFallbackPolicy(fallbackPolicy: UserPreferences.FallbackPolicy) {
+    fun setFallbackPolicy(fallbackPolicy: FallbackPolicy) {
         viewModelScope.launch {
             preferencesRepository.setFallbackPolicy(fallbackPolicy)
         }
     }
 
-    fun setHapticFeedback(hapticFeedback: UserPreferences.HapticFeedback) {
+    fun setHapticFeedback(hapticFeedback: HapticFeedback) {
         viewModelScope.launch {
             preferencesRepository.setHapticFeedback(hapticFeedback)
         }

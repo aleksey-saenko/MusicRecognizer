@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.musicrecognizer.android.feature)
     alias(libs.plugins.musicrecognizer.android.library.compose)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -12,12 +13,15 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+    implementation(projects.core.audio)
+
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)
-    kapt(libs.hilt.ext.compiler)
+    ksp(libs.hilt.ext.compiler)
 
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glanceAppWidget)

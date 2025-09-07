@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.content.Intent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
@@ -20,11 +21,11 @@ object TrackScreen {
     private const val ROOT_ROUTE = "track"
     private const val ROOT_DEEP_LINK = "app://mrsep.musicrecognizer.com"
     private const val ARG_TRACK_ID = "trackId"
-    private const val ARG_RETRY = "retry"
+    private const val ARG_ALLOW_RETRY = "allowRetry"
 
     private const val KEY_LAST_ACTION = "KEY_LAST_ACTION"
 
-    const val ROUTE = "$ROOT_ROUTE/{$ARG_TRACK_ID}/{$ARG_RETRY}"
+    const val ROUTE = "$ROOT_ROUTE/{$ARG_TRACK_ID}?$ARG_ALLOW_RETRY={$ARG_ALLOW_RETRY}"
 
     data class Args(val trackId: String) {
         constructor(savedStateHandle: SavedStateHandle) : this(
@@ -36,7 +37,7 @@ object TrackScreen {
         trackId: String,
         isRetryAvailable: Boolean
     ): String {
-        return "$ROOT_ROUTE/$trackId/$isRetryAvailable"
+        return "$ROOT_ROUTE/$trackId?$ARG_ALLOW_RETRY=$isRetryAvailable"
     }
 
     fun NavGraphBuilder.trackScreen(
@@ -49,11 +50,12 @@ object TrackScreen {
             route = ROUTE,
             arguments = listOf(
                 navArgument(ARG_TRACK_ID) { type = NavType.StringType },
-                navArgument(ARG_RETRY) { type = NavType.BoolType },
+                navArgument(ARG_ALLOW_RETRY) { type = NavType.BoolType; defaultValue = false },
             ),
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                    action = Intent.ACTION_VIEW
                 }
             ),
             popExitTransition = {
@@ -76,7 +78,7 @@ object TrackScreen {
         ) { backStackEntry ->
             TrackScreen(
                 isExpandedScreen = isExpandedScreen,
-                isRetryAllowed = backStackEntry.arguments?.getBoolean(ARG_RETRY) ?: false,
+                isRetryAllowed = backStackEntry.arguments?.getBoolean(ARG_ALLOW_RETRY) ?: false,
                 onBackPressed = onBackPressed,
                 onNavigateToLyricsScreen = { trackId ->
                     onNavigateToLyricsScreen(trackId, backStackEntry)

@@ -1,0 +1,4 @@
+* Fix app crash when updating quick setting tile on certain devices
+* Add German translation (@TickStop)
+* Add Italian translation (@ThomasDC84)
+* Update French translation (@Oasis3)

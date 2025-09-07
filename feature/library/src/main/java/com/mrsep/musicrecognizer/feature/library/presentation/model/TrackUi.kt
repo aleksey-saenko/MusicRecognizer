@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.model
 
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.library.domain.model.Track
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackPreview
 import java.time.ZoneId
 import javax.annotation.concurrent.Immutable
 
@@ -11,19 +11,19 @@ internal data class TrackUi(
     val title: String,
     val artist: String,
     val album: String?,
-    val artworkUrl: String?,
+    val artworkThumbUrl: String?,
     val recognitionDate: String,
     val isViewed: Boolean,
 )
 
-internal fun Track.toUi(dateTimeFormatter: AppDateTimeFormatter) = TrackUi(
-    id = this.id,
-    title = this.title,
-    artist = this.artist,
-    album = this.album,
-    artworkUrl = this.artworkUrl,
+internal fun TrackPreview.toUi(dateTimeFormatter: AppDateTimeFormatter) = TrackUi(
+    id = id,
+    title = title,
+    artist = artist,
+    album = album,
+    artworkThumbUrl = artworkThumbUrl,
     recognitionDate = dateTimeFormatter.formatRelativeToToday(
-        this.recognitionDate.atZone(ZoneId.systemDefault())
+        recognitionDate.atZone(ZoneId.systemDefault())
     ),
-    isViewed = this.isViewed,
+    isViewed = isViewed,
 )

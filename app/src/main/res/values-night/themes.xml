@@ -10,4 +10,6 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <style name="Theme.MusicRecognizer.Dialog.Crash" parent="android:Theme.DeviceDefault.Dialog.Alert"/>
+
 </resources>

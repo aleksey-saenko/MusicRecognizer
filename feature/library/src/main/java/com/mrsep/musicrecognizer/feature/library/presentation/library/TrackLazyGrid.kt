@@ -1,11 +1,9 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
@@ -23,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.components.MultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
@@ -31,7 +29,6 @@ import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyGrid(
     trackList: ImmutableList<TrackUi>,
@@ -54,7 +51,7 @@ internal fun TrackLazyGrid(
                 track = track,
                 selected = multiSelectionState.isSelected(track.id),
                 onClick = {
-                    if (multiSelectionState.multiselectEnabled) {
+                    if (multiSelectionState.hasSelected) {
                         multiSelectionState.toggleSelection(track.id)
                     } else {
                         onTrackClick(track.id)
@@ -62,13 +59,12 @@ internal fun TrackLazyGrid(
                 },
                 onLongClick = { multiSelectionState.toggleSelection(track.id) },
                 showRecognitionDate = showRecognitionDate,
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem()
             )
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyGridItem(
     track: TrackUi,
@@ -93,10 +89,10 @@ internal fun TrackLazyGridItem(
             .clip(shape)
             .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick,
+                interactionSource = null,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(4.dp)
 
@@ -120,7 +116,7 @@ internal fun TrackLazyGridItem(
                 .aspectRatio(1f)
         ) {
             AsyncImage(
-                model = track.artworkUrl,
+                model = track.artworkThumbUrl,
                 fallback = placeholder,
                 error = placeholder,
                 contentDescription = stringResource(StringsR.string.artwork),

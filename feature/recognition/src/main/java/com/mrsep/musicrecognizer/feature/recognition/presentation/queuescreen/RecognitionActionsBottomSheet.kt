@@ -11,10 +11,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -27,17 +25,26 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.ui.util.shareFile
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
+import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecordingShareUtils.getRecordingFileForSharing
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -54,78 +61,84 @@ internal fun RecognitionActionsBottomSheet(
     onRenameEnqueued: () -> Unit,
     onDeleteEnqueued: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier,
     ) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            AnimatedContent(
-                targetState = recognition.getTitleMessage(),
-                label = "Title",
-                transitionSpec = {
-                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(220, delayMillis = 90)
-                            ))
-                        .togetherWith(
-                            fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(90)
-                            )
+        AnimatedContent(
+            targetState = recognition.getTitleMessage(),
+            label = "Title",
+            transitionSpec = {
+                (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(220, delayMillis = 90)
+                        ))
+                    .togetherWith(
+                        fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(90)
                         )
-                },
-                contentAlignment = Alignment.CenterStart
-            ) { titleMessage ->
-                Text(
-                    text = titleMessage,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            Spacer(Modifier.height(20.dp))
+                    )
+            },
+            contentAlignment = Alignment.CenterStart
+        ) { titleMessage ->
             Text(
-                text = stringResource(
-                    StringsR.string.format_created,
-                    recognition.creationDateLong
-                ),
-                style = MaterialTheme.typography.bodyMedium,
+                text = titleMessage,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
-            Spacer(Modifier.height(8.dp))
-            AnimatedContent(
-                targetState = recognition.getStatusMessage(false),
-                label = "Status",
-                transitionSpec = {
-                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(220, delayMillis = 90)
-                            ))
-                        .togetherWith(
-                            fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(90)
-                            )
+        }
+        Spacer(Modifier.height(20.dp))
+        Text(
+            text = stringResource(
+                StringsR.string.format_recognition_created,
+                recognition.creationDateLong
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        AnimatedContent(
+            targetState = recognition.getStatusMessage(false),
+            label = "Status",
+            transitionSpec = {
+                (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(220, delayMillis = 90)
+                        ))
+                    .togetherWith(
+                        fadeOut(animationSpec = tween(90)) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(90)
                         )
-                },
-                contentAlignment = Alignment.CenterStart
-            ) { status ->
-                Text(
-                    text = status,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            Spacer(Modifier.height(12.dp))
+                    )
+            },
+            contentAlignment = Alignment.CenterStart
+        ) { status ->
+            Text(
+                text = status,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
             AnimatedContent(
                 targetState = recognition.status,
                 label = "Actions",
@@ -149,7 +162,7 @@ internal fun RecognitionActionsBottomSheet(
                         when (recognition.result) {
                             is RemoteRecognitionResultUi.Success -> {
                                 BottomSheetAction(
-                                    title = stringResource(R.string.show_track),
+                                    title = stringResource(StringsR.string.recognition_action_show_track),
                                     iconResId = UiR.drawable.outline_audio_file_24,
                                     onClick = {
                                         onNavigateToTrackScreen(recognition.result.track.id)
@@ -162,12 +175,12 @@ internal fun RecognitionActionsBottomSheet(
                             null -> {
                                 Column {
                                     BottomSheetAction(
-                                        title = stringResource(StringsR.string.enqueue_recognition),
+                                        title = stringResource(StringsR.string.recognition_action_enqueue),
                                         iconResId = UiR.drawable.outline_schedule_send_24,
                                         onClick = { onEnqueueRecognition(false) }
                                     )
                                     BottomSheetAction(
-                                        title = stringResource(StringsR.string.force_recognition_launch),
+                                        title = stringResource(StringsR.string.recognition_action_force_launch),
                                         iconResId = UiR.drawable.outline_send_24,
                                         onClick = { onEnqueueRecognition(true) }
                                     )
@@ -179,7 +192,7 @@ internal fun RecognitionActionsBottomSheet(
                     ScheduledJobStatus.ENQUEUED,
                     ScheduledJobStatus.RUNNING -> {
                         BottomSheetAction(
-                            title = stringResource(R.string.cancel_recognition),
+                            title = stringResource(StringsR.string.action_cancel_recognition),
                             iconResId = UiR.drawable.outline_cancel_schedule_send_24,
                             onClick = onCancelRecognition
                         )
@@ -187,9 +200,22 @@ internal fun RecognitionActionsBottomSheet(
                 }
             }
             BottomSheetAction(
-                title = stringResource(StringsR.string.rename),
+                title = stringResource(StringsR.string.recognition_action_rename),
                 iconResId = UiR.drawable.outline_edit_24,
                 onClick = onRenameEnqueued
+            )
+            var sharingJob by remember { mutableStateOf<Job?>(null) }
+            BottomSheetAction(
+                title = stringResource(StringsR.string.share),
+                iconResId = UiR.drawable.outline_share_24,
+                onClick = {
+                    if (sharingJob?.isActive == true) return@BottomSheetAction
+                    sharingJob = coroutineScope.launch {
+                        getRecordingFileForSharing(context, recognition.recordingFile)?.let { uri ->
+                            context.shareFile(subject = "", body = "", uri = uri)
+                        }
+                    }
+                }
             )
             BottomSheetAction(
                 title = stringResource(StringsR.string.delete),

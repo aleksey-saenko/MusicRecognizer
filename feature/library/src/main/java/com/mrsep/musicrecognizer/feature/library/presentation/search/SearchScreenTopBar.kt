@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import kotlinx.collections.immutable.ImmutableSet
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -70,7 +70,7 @@ internal fun SearchScreenTopBar(
                         singleLine = true,
                         visualTransformation = VisualTransformation.None,
                         interactionSource = interactionSource,
-                        placeholder = { Text(stringResource(StringsR.string.search_track_hint)) },
+                        placeholder = { Text(stringResource(StringsR.string.library_search_hint)) },
                         shape = SearchBarDefaults.inputFieldShape,
                         colors = SearchBarDefaults.inputFieldColors(),
                         contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),
@@ -83,7 +83,7 @@ internal fun SearchScreenTopBar(
             IconButton(onClick = onBackPressed) {
                 Icon(
                     painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                    contentDescription = stringResource(StringsR.string.back)
+                    contentDescription = stringResource(StringsR.string.nav_back)
                 )
             }
         },
@@ -97,7 +97,7 @@ internal fun SearchScreenTopBar(
                     IconButton(onClick = resetSearchQuery) {
                         Icon(
                             painter = painterResource(UiR.drawable.outline_close_24),
-                            contentDescription = stringResource(StringsR.string.clear_search_query)
+                            contentDescription = stringResource(StringsR.string.clear_text_field)
                         )
                     }
                 }

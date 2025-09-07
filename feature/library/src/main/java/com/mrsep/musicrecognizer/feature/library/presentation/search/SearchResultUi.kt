@@ -2,8 +2,8 @@ package com.mrsep.musicrecognizer.feature.library.presentation.search
 
 import androidx.compose.runtime.Immutable
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.library.domain.model.SearchResult
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
+import com.mrsep.musicrecognizer.core.domain.track.model.SearchResult
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.feature.library.presentation.model.toUi
 import kotlinx.collections.immutable.ImmutableList
@@ -34,13 +34,13 @@ internal fun SearchResult.toUi(
     dateTimeFormatter: AppDateTimeFormatter
 ): SearchResultUi = when (this) {
     is SearchResult.Pending -> SearchResultUi.Pending(
-        query = this.query,
-        searchScope = this.searchScope.toImmutableSet(),
+        query = query,
+        searchScope = searchScope.toImmutableSet(),
     )
     is SearchResult.Success -> SearchResultUi.Success(
-        query = this.query,
-        searchScope = this.searchScope.toImmutableSet(),
-        data = this.data
+        query = query,
+        searchScope = searchScope.toImmutableSet(),
+        data = data
             .map { track -> track.toUi(dateTimeFormatter) }
             .toImmutableList()
     )

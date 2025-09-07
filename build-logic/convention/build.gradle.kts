@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
@@ -20,19 +19,12 @@ kotlin {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-}
-
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
-    compileOnly(libs.kapt.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
 }
 
@@ -65,9 +57,13 @@ gradlePlugin {
             id = "musicrecognizer.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
-        register("androidHilt") {
-            id = "musicrecognizer.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+        register("hilt") {
+            id = "musicrecognizer.hilt"
+            implementationClass = "HiltConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "musicrecognizer.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
         }
     }
 }

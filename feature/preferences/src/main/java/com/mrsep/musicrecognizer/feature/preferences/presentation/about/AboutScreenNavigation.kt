@@ -9,11 +9,19 @@ import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
 object AboutScreenNavigation {
 
-    private const val ROUTE = "about"
+    const val ROUTE = "about"
 
-    fun NavGraphBuilder.aboutScreen(onBackPressed: () -> Unit) {
-        composable(ROUTE) {
-            AboutScreen(onBackPressed = onBackPressed)
+    fun NavGraphBuilder.aboutScreen(
+        onBackPressed: () -> Unit,
+        onNavigateToSoftwareScreen: (from: NavBackStackEntry) -> Unit,
+        onNavigateToAppLicenseScreen: (from: NavBackStackEntry) -> Unit,
+    ) {
+        composable(ROUTE) { backStackEntry ->
+            AboutScreen(
+                onBackPressed = onBackPressed,
+                onNavigateToSoftwareScreen = { onNavigateToSoftwareScreen(backStackEntry) },
+                onNavigateToAppLicenseScreen = { onNavigateToAppLicenseScreen(backStackEntry) },
+            )
         }
     }
 

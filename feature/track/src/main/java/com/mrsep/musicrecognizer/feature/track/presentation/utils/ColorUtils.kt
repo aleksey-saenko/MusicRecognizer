@@ -15,9 +15,11 @@ import androidx.palette.graphics.Palette
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 
-internal fun Bitmap.getDominantColor(): Color? {
-    val palette = Palette.Builder(this).maximumColorCount(24).generate()
-    return palette.dominantSwatch?.rgb?.let { androidColor -> Color(androidColor) }
+internal fun Bitmap.getDominantColor(): Int? {
+    return Palette.Builder(this)
+        .maximumColorCount(24)
+        .generate()
+        .dominantSwatch?.rgb
 }
 
 @Composable
@@ -46,6 +48,7 @@ internal fun SwitchingMusicRecognizerTheme(
             } else {
                 dynamicColorScheme(
                     seedColor = seedColor,
+                    isAmoled = false,
                     isDark = useDarkTheme,
                     style = style,
                     contrastLevel = contrastLevel

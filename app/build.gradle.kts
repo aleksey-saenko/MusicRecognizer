@@ -5,7 +5,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.musicrecognizer.android.application)
     alias(libs.plugins.musicrecognizer.android.application.compose)
-    alias(libs.plugins.musicrecognizer.android.hilt)
+    alias(libs.plugins.musicrecognizer.hilt)
+    alias(libs.plugins.aboutLibraries)
 }
 
 android {
@@ -13,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 20
-        versionName = "1.5.2"
+        versionCode = 32
+        versionName = "1.11.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,6 +52,19 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
+        // Excluded unfinished translations: "fa", "gu", "nl", "pl", "ro", "vi", iw
+        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "pt", "pt-rBR", "ru", "sk", "tr")
+    }
+    aboutLibraries {
+        // ./gradlew app:exportLibraryDefinitions
+        android.registerAndroidTasks = false
+        license.additionalLicenses = setOf("GPL-3.0-or-later")
+        collect.gitHubApiToken = properties["github.token"] as? String
+        export.apply {
+            prettyPrint = true
+            excludeFields = setOf("funding", "scm")
+            outputPath = layout.projectDirectory.file("src/main/res/raw/aboutlibraries.json")
+        }
     }
 }
 
@@ -59,7 +73,8 @@ hilt {
 }
 
 dependencies {
-    implementation(projects.data)
+    implementation(projects.core.domain)
+    implementation(projects.core.recognition)
     implementation(projects.core.ui)
     implementation(projects.core.strings)
     implementation(projects.core.common)
@@ -67,6 +82,7 @@ dependencies {
     implementation(projects.feature.track)
     implementation(projects.feature.recognition)
     implementation(projects.feature.preferences)
+    implementation(projects.feature.backup)
     implementation(projects.feature.onboarding)
     implementation(projects.feature.developerMode)
 
@@ -90,7 +106,13 @@ dependencies {
 
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)
-    kapt(libs.hilt.ext.compiler)
+    ksp(libs.hilt.ext.compiler)
+
+    implementation(libs.acra.core)
+    implementation(libs.acra.mail)
+    implementation(libs.acra.dialog)
+    compileOnly(libs.auto.service.annotations)
+    ksp(libs.auto.service.ksp)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)

@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
-import com.mrsep.musicrecognizer.feature.recognition.domain.VibrationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

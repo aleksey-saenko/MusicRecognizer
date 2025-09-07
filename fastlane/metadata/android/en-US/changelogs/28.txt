@@ -1,0 +1,6 @@
+* Add Estonian translation (Thanks to Priit Jõerüüt)
+* Prevent sending audio recordings with complete silence to recognition service
+* Fix incorrect state indication of quick settings tile on Android 15
+* Fix screen flickering when starting recognition from widget
+* Bump target SDK to Android 15
+* Minor fixes

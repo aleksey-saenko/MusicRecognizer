@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.model
 
 import androidx.compose.runtime.Immutable
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.PlayerStatus
+import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerStatus
 
 @Immutable
 internal sealed class PlayerStatusUi {

@@ -2,10 +2,6 @@ package com.mrsep.musicrecognizer.presentation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen
-import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen
-import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
-import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.RecognitionScreen
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -16,25 +12,25 @@ enum class TopLevelDestination(
     @DrawableRes val unselectedIconResId: Int
 ) {
     Recognition(
-        route = RecognitionScreen.ROUTE,
+        route = "nav_graph_recognition",
         titleResId = StringsR.string.recognition,
         selectedIconResId = UiR.drawable.ic_lines_24,
         unselectedIconResId = UiR.drawable.ic_lines_24
     ),
     Library(
-        route = LibraryScreen.ROUTE,
+        route = "nav_graph_library",
         titleResId = StringsR.string.library,
         selectedIconResId = UiR.drawable.outline_library_music_fill1_24,
         unselectedIconResId = UiR.drawable.outline_library_music_24
     ),
     Queue(
-        route = RecognitionQueueScreen.ROUTE,
+        route = "nav_graph_queue",
         titleResId = StringsR.string.queue,
         selectedIconResId = UiR.drawable.outline_overview_fill1_24,
         unselectedIconResId = UiR.drawable.outline_overview_24
     ),
     Preferences(
-        route = PreferencesScreen.ROUTE,
+        route = "nav_graph_preferences",
         titleResId = StringsR.string.preferences,
         selectedIconResId = UiR.drawable.outline_settings_fill1_24,
         unselectedIconResId = UiR.drawable.outline_settings_24

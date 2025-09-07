@@ -1,10 +1,10 @@
 package com.mrsep.musicrecognizer.feature.recognition.di
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractor
-import com.mrsep.musicrecognizer.feature.recognition.domain.TrackMetadataEnhancerScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionInteractorImpl
-import com.mrsep.musicrecognizer.feature.recognition.platform.TrackMetadataEnhancerSchedulerImpl
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractorImpl
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataEnhancerSchedulerImpl
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
@@ -21,21 +21,20 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindRecognitionInteractor(implementation: RecognitionInteractorImpl):
-//    fun bindRecognitionInteractor(implementation: RecognitionInteractorFakeImpl):
-            RecognitionInteractor
+    fun bindRecognitionInteractor(impl: RecognitionInteractorImpl): RecognitionInteractor
 
     @Binds
     @Singleton
-    fun bindScreenRecognitionController(implementation: ScreenRecognitionControllerImpl):
+    fun bindScreenRecognitionController(impl: ScreenRecognitionControllerImpl):
             ScreenRecognitionController
 
     @Binds
     @Singleton
-    fun bindRecognitionScheduler(implementation: EnqueuedRecognitionSchedulerImpl):
+    fun bindRecognitionScheduler(impl: EnqueuedRecognitionSchedulerImpl):
             EnqueuedRecognitionScheduler
 
     @Binds
-    fun bindTrackMetadataEnhancerScheduler(implementation: TrackMetadataEnhancerSchedulerImpl):
+    @Singleton
+    fun bindTrackMetadataEnhancerScheduler(impl: TrackMetadataEnhancerSchedulerImpl):
             TrackMetadataEnhancerScheduler
 }

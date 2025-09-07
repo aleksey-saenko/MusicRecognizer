@@ -1,0 +1,2 @@
+* Fix incorrect recognition creation and result dates shown in the queue screen
+* French translation corrections

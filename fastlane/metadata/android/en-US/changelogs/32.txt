@@ -1,0 +1,4 @@
+* Add track info to notification extras to simplify integration with scrobbling apps (e.g. Pano Scrobbler)
+* Add notification channel for recognition results obtained in foreground
+* Bump target SDK to 36 (Android 16)
+* Update translations

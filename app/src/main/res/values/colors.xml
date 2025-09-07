@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="compose_background_dark">#FF191C1E</color>
-    <color name="compose_background_light">#FFFBFCFE</color>
+    <color name="material_grey_100">#FFF5F5F5</color>
 </resources>

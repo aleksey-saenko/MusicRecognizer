@@ -1,0 +1,5 @@
+* Add compact layouts for home screen widget
+* Improve library screen performance when loading a large number of tracks
+* Add an app shortcut to launch recognition without opening the app
+* Correct colors of app shortcuts and widgets
+* Minor bug fixes

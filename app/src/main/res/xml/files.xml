@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <cache-path name="image_cache" path="./image_cache" />
-    <files-path name="enq_records" path="./enqueued_records" />
+    <cache-path name="share" path="./share" />
 </paths>

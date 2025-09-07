@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import kotlinx.collections.immutable.ImmutableList
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import kotlin.random.Random
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun RequiredServicesDialog(
     modifier: Modifier = Modifier,
-    requiredServices: ImmutableList<MusicService>,
+    requiredServices: List<MusicService>,
     onRequiredServicesChanged: (List<MusicService>) -> Unit,
     onDismissClick: () -> Unit
 ) {
@@ -41,7 +38,7 @@ internal fun RequiredServicesDialog(
     AlertDialog(
         modifier = modifier,
         title = {
-            Text(text = stringResource(StringsR.string.music_services_links))
+            Text(text = stringResource(StringsR.string.pref_title_music_services_links))
         },
         confirmButton = {
             TextButton(onClick = onDismissClick) {
@@ -56,7 +53,7 @@ internal fun RequiredServicesDialog(
         text = {
             Column {
                 Text(
-                    text = stringResource(StringsR.string.required_services_dialog),
+                    text = stringResource(StringsR.string.music_services_links_dialog),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -75,7 +72,7 @@ internal fun RequiredServicesDialog(
                                     }
                                 )
                             },
-                            modifier = Modifier.animateItemPlacement()
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -100,6 +97,7 @@ private fun MusicServiceCheckbox(
 ) {
     Surface(
         onClick = { onCheckedChange(!checked) },
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = MaterialTheme.shapes.large,
         modifier = modifier
     ) {

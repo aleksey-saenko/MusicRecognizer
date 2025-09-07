@@ -36,7 +36,7 @@ internal fun LibraryScreenTopBar(
     onChangeUseGridLayout: (Boolean) -> Unit,
     onChangeShowRecognitionDate: (Boolean) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val topBarMode = when {
         isLibraryEmpty -> TopBarMode.EmptyLibrary
@@ -68,8 +68,7 @@ internal fun LibraryScreenTopBar(
             ) { mode ->
                 when (mode) {
                     TopBarMode.EmptyLibrary,
-                    TopBarMode.Default -> {
-                    }
+                    TopBarMode.Default -> {}
 
                     TopBarMode.MultiSelection -> IconButton(onClick = onDeselectAll) {
                         Icon(
@@ -91,7 +90,7 @@ internal fun LibraryScreenTopBar(
                         IconButton(onClick = onSearchClick) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_search_24),
-                                contentDescription = stringResource(StringsR.string.search_track)
+                                contentDescription = stringResource(StringsR.string.library_search)
                             )
                         }
                         IconButton(onClick = onFilterClick) {
@@ -155,41 +154,56 @@ private fun LibraryDropdownMenu(
                 contentDescription = stringResource(StringsR.string.show_more)
             )
         }
-        // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-        MaterialTheme(
-            shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+            shape = MaterialTheme.shapes.small,
         ) {
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.use_grid_layout)) },
-                    onClick = { onChangeUseGridLayout(!useGridLayout) },
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_check_24),
-                            contentDescription = null,
-                            modifier = Modifier.graphicsLayer {
-                                alpha = if (useGridLayout) 1f else 0f
-                            }
-                        )
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(StringsR.string.show_recognition_date)) },
-                    onClick = { onChangeShowRecognitionDate(!showRecognitionDate) },
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_check_24),
-                            contentDescription = null,
-                            modifier = Modifier.graphicsLayer {
-                                alpha = if (showRecognitionDate) 1f else 0f
-                            }
-                        )
-                    }
-                )
-            }
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.pref_title_use_grid_layout)) },
+                onClick = { onChangeUseGridLayout(!useGridLayout) },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = if (useGridLayout) 1f else 0f
+                        }
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.pref_title_show_recognition_date)) },
+                onClick = { onChangeShowRecognitionDate(!showRecognitionDate) },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = if (showRecognitionDate) 1f else 0f
+                        }
+                    )
+                }
+            )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun LibraryScreenLoadingTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = stringResource(StringsR.string.library).toUpperCase(Locale.current),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        scrollBehavior = scrollBehavior,
+    )
 }

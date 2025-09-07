@@ -1,11 +1,9 @@
 package com.mrsep.musicrecognizer.feature.library.presentation.library
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,7 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mrsep.musicrecognizer.core.ui.components.MultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
@@ -48,7 +45,6 @@ import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyColumn(
     trackList: ImmutableList<TrackUi>,
@@ -66,12 +62,12 @@ internal fun TrackLazyColumn(
             items = trackList,
             key = { _, track -> track.id }
         ) { index, track ->
-            Column(modifier = Modifier.animateItemPlacement()) {
+            Column(modifier = Modifier.animateItem()) {
                 TrackLazyColumnItem(
                     track = track,
                     selected = multiSelectionState.isSelected(track.id),
                     onClick = {
-                        if (multiSelectionState.multiselectEnabled) {
+                        if (multiSelectionState.hasSelected) {
                             multiSelectionState.toggleSelection(track.id)
                         } else {
                             onTrackClick(track.id)
@@ -89,7 +85,6 @@ internal fun TrackLazyColumn(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TrackLazyColumnItem(
     track: TrackUi,
@@ -115,10 +110,10 @@ internal fun TrackLazyColumnItem(
             .fillMaxWidth()
             .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick,
+                interactionSource = null,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(contentPadding)
     ) {
@@ -142,7 +137,7 @@ internal fun TrackLazyColumnItem(
                 .aspectRatio(1f, true)
         ) {
             AsyncImage(
-                model = track.artworkUrl,
+                model = track.artworkThumbUrl,
                 fallback = placeholder,
                 error = placeholder,
                 contentDescription = stringResource(StringsR.string.artwork),

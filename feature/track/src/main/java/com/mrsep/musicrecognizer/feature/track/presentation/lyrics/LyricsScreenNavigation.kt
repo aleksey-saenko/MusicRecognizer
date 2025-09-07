@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -36,6 +37,7 @@ object LyricsScreen {
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                    action = Intent.ACTION_VIEW
                 }
             )
         ) { _ ->

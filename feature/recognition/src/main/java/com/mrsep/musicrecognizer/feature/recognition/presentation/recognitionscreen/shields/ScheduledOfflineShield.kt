@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionTask
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -39,12 +39,12 @@ internal fun AnimatedVisibilityScope.ScheduledOfflineShield(
             contentDescription = null
         )
         Text(
-            text = stringResource(StringsR.string.recognition_scheduled),
+            text = stringResource(StringsR.string.result_title_recognition_scheduled),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(top = 16.dp)
         )
-        RecognitionTaskNetworkMessage(
+        OptionalRecognitionTaskMessage(
             recognitionTask = recognitionTask,
             modifier = Modifier.padding(top = 16.dp)
         )

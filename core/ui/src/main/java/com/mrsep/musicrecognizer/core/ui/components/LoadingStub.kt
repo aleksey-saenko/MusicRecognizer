@@ -9,17 +9,13 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-private const val AppearanceDelay = 1500
+private const val AppearanceDelay = 1000
 
 @Composable
 fun LoadingStub(
@@ -40,19 +36,10 @@ fun LoadingStub(
             exit = fadeOut(tween(delayMillis = AppearanceDelay)) +
                     scaleOut(tween(delayMillis = AppearanceDelay)),
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                VinylRotating(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(contentSize)
-                )
-                Text(
-                    text = stringResource(StringsR.string.loading),
-                    modifier = Modifier.alpha(0.9f),
-                )
-            }
+            VinylRotating(
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(contentSize)
+            )
         }
     }
 }

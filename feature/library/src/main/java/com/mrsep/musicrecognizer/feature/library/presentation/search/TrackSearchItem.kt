@@ -24,9 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
+import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackDataField
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import kotlinx.collections.immutable.ImmutableSet
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -56,7 +56,7 @@ internal fun TrackSearchItem(
             alpha = 0.3f
         )
         AsyncImage(
-            model = track.artworkUrl,
+            model = track.artworkThumbUrl,
             fallback = placeholder,
             error = placeholder,
             contentDescription = stringResource(StringsR.string.artwork),

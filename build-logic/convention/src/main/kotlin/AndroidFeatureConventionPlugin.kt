@@ -11,7 +11,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply {
                 apply("musicrecognizer.android.library")
-                apply("musicrecognizer.android.hilt")
+                apply("musicrecognizer.hilt")
             }
             extensions.configure<LibraryExtension> {
                 defaultConfig {

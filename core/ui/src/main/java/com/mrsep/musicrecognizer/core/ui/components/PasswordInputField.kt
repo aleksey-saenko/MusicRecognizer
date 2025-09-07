@@ -62,7 +62,7 @@ fun PasswordInputField(
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
-            autoCorrect = false,
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),

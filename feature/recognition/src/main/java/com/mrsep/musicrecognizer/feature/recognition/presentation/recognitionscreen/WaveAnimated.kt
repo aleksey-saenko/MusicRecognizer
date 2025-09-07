@@ -41,7 +41,7 @@ internal data class WaveAnimatedProperties(
 @Composable
 internal fun WaveAnimated(
     activated: Boolean,
-    amplitudeFactor: Float,
+    soundLevelState: State<Float>,
     modifier: Modifier = Modifier,
     properties: WaveAnimatedProperties = WaveAnimatedProperties()
 ) {
@@ -64,10 +64,10 @@ internal fun WaveAnimated(
             label = "currentColor"
         )
         val smoothAmplFactor by animateFloatAsState(
-            targetValue = when (amplitudeFactor) {
-                0f -> 0.25f
-                in 0.1f..0.3f -> 0.5f
-                in 0.3f..0.5f -> 0.75f
+            targetValue = when (soundLevelState.value) {
+                in 0f..0.2f -> 0.25f
+                in 0.2f..0.4f -> 0.5f
+                in 0.4f..0.6f -> 0.75f
                 else -> 1f
             },
             animationSpec = tween(easing = EaseInQuart, durationMillis = 500),

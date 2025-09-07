@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +23,7 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerSt
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecognitionLazyColumn(
     modifier: Modifier = Modifier,
@@ -54,7 +53,7 @@ internal fun RecognitionLazyColumn(
             var showRenameDialog by rememberSaveable(recognition.title) {
                 mutableStateOf(false)
             }
-            Column(modifier = Modifier.animateItemPlacement()) {
+            Column(modifier = Modifier.animateItem()) {
                 RecognitionLazyColumnItem(
                     recognition = recognition,
                     isPlaying = recognition.isPlaying(playerStatus),
@@ -62,7 +61,7 @@ internal fun RecognitionLazyColumn(
                     onStartPlayRecord = { onStartPlayRecord(recognition.id) },
                     onStopPlayRecord = onStopPlayRecord,
                     onClick = {
-                        if (multiSelectionState.multiselectEnabled) {
+                        if (multiSelectionState.hasSelected) {
                             multiSelectionState.toggleSelection(recognition.id)
                         } else {
                             showActionsSheet = !showActionsSheet

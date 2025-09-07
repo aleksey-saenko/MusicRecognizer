@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -96,7 +95,7 @@ internal fun LibrarySearchScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResultLazyColumn(
     query: String,
@@ -144,7 +143,7 @@ private fun SearchResultLazyColumn(
                             items = result.data,
                             key = { _, track -> track.id }
                         ) { index, track ->
-                            Column(modifier = Modifier.animateItemPlacement()) {
+                            Column(modifier = Modifier.animateItem()) {
                                 TrackSearchItem(
                                     track = track,
                                     query = result.query,

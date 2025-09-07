@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 
+import android.content.Intent
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -21,6 +22,7 @@ object RecognitionQueueScreen {
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern = "$ROOT_DEEP_LINK/$ROUTE"
+                    action = Intent.ACTION_VIEW
                 }
             )
         ) { backStackEntry ->

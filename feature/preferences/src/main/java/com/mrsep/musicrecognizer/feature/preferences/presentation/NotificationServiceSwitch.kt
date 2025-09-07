@@ -16,7 +16,7 @@ import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlocke
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -65,8 +65,8 @@ internal fun NotificationServiceSwitch(
     //endregion
     PreferenceSwitchItem(
         modifier = modifier,
-        title = stringResource(StringsR.string.notification_service),
-        subtitle = stringResource(StringsR.string.notification_service_pref_subtitle),
+        title = stringResource(StringsR.string.pref_title_notification_service),
+        subtitle = stringResource(StringsR.string.pref_subtitle_notification_service),
         onClick = {
             if (serviceEnabled) {
                 setServiceEnabled(false)

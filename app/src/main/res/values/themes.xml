@@ -17,4 +17,17 @@
         <item name="postSplashScreenTheme">@style/Theme.MusicRecognizer</item>
     </style>
 
+    <style name="Theme.MusicRecognizer.Dialog.Crash" parent="android:Theme.DeviceDefault.Light.Dialog.Alert"/>
+
+    <style name="Theme.MusicRecognizer.Translucent" parent="Theme.MusicRecognizer">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
 </resources>

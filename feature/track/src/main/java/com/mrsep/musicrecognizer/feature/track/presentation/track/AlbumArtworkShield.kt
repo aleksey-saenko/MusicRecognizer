@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,9 +35,12 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,11 +56,15 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.LifecycleStartEffect
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.size.Size
 import com.mrsep.musicrecognizer.core.ui.findActivity
+import com.mrsep.musicrecognizer.core.ui.util.shareImage
 import com.mrsep.musicrecognizer.core.ui.util.shareText
+import com.mrsep.musicrecognizer.feature.track.presentation.utils.ImageShareUtils.getImageFileForSharing
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -66,6 +75,8 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 @Composable
 internal fun AlbumArtworkShield(
     artworkUrl: String,
+    title: String,
+    artist: String,
     album: String?,
     year: String?,
     onBackPressed: () -> Unit,
@@ -73,6 +84,7 @@ internal fun AlbumArtworkShield(
 ) {
     BackHandler(onBack = onBackPressed)
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomBarBehaviour = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val zoomState = rememberZoomState()
@@ -110,6 +122,31 @@ internal fun AlbumArtworkShield(
                     launch { bottomBarBehaviour.state.collapse() }
                 }
             }
+    }
+
+    var sharingJob by remember { mutableStateOf<Job?>(null) }
+    fun shareImage() {
+        if (sharingJob?.isActive == true) return
+        sharingJob = scope.launch {
+            val fileNameUnprocessed = album ?: "$title - $artist"
+            val imageUri = getImageFileForSharing(
+                imageUrl = artworkUrl,
+                fileName = fileNameUnprocessed,
+                fileNameFallback = context.getString(StringsR.string.artwork),
+                context = context
+            )
+            imageUri?.let {
+                context.shareImage(
+                    subject = "",
+                    body = fileNameUnprocessed,
+                    imageUri = imageUri
+                )
+            }
+        }
+    }
+
+    fun shareLink() {
+        context.shareText(subject = "", body = artworkUrl)
     }
 
     val tintColor = MaterialTheme.colorScheme.surface.copy(0.7f)
@@ -153,20 +190,15 @@ internal fun AlbumArtworkShield(
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                            contentDescription = stringResource(StringsR.string.back),
+                            contentDescription = stringResource(StringsR.string.nav_back),
                         )
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = { context.shareText(subject = "", body = artworkUrl) }
-                    ) {
-                        Icon(
-                            painter = painterResource(UiR.drawable.outline_share_24),
-                            contentDescription = stringResource(StringsR.string.share),
-                        )
-                    }
-
+                    ArtworkShareDropdownMenu(
+                        onShareLink = ::shareLink,
+                        onShareImage = ::shareImage
+                    )
                 },
             )
             BottomAppBar(
@@ -235,7 +267,7 @@ private fun HideSystemBars() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun TopAppBarState.expand(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -249,7 +281,7 @@ private suspend fun TopAppBarState.expand(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun BottomAppBarState.expand(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -263,7 +295,7 @@ private suspend fun BottomAppBarState.expand(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun TopAppBarState.collapse(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -277,7 +309,7 @@ private suspend fun TopAppBarState.collapse(
 
 @OptIn(ExperimentalMaterial3Api::class)
 private suspend fun BottomAppBarState.collapse(
-    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
+    animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium),
 ) {
     animate(
         initialValue = heightOffset,
@@ -287,4 +319,52 @@ private suspend fun BottomAppBarState.collapse(
         heightOffset = value
     }
     contentOffset = heightOffsetLimit
+}
+
+@Composable
+private fun ArtworkShareDropdownMenu(
+    onShareLink: () -> Unit,
+    onShareImage: () -> Unit,
+) {
+    var menuExpanded by rememberSaveable { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { menuExpanded = !menuExpanded }) {
+            Icon(
+                painter = painterResource(UiR.drawable.outline_share_24),
+                contentDescription = stringResource(StringsR.string.share),
+            )
+        }
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+            shape = MaterialTheme.shapes.small,
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.artwork_share_menu_link)) },
+                onClick = {
+                    menuExpanded = false
+                    onShareLink()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_link_24),
+                        contentDescription = null
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(StringsR.string.artwork_share_menu_image)) },
+                onClick = {
+                    menuExpanded = false
+                    onShareImage()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(UiR.drawable.outline_image_24),
+                        contentDescription = null
+                    )
+                }
+            )
+        }
+    }
 }

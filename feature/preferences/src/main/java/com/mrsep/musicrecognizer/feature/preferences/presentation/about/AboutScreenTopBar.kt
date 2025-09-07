@@ -22,7 +22,7 @@ internal fun AboutScreenTopBar(
         modifier = modifier,
         title = {
             Text(
-                text = stringResource(StringsR.string.about).toUpperCase(Locale.current),
+                text = stringResource(StringsR.string.pref_title_about_app).toUpperCase(Locale.current),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -31,7 +31,7 @@ internal fun AboutScreenTopBar(
             IconButton(onClick = onBackPressed) {
                 Icon(
                     painter = painterResource(UiR.drawable.outline_arrow_back_24),
-                    contentDescription = stringResource(StringsR.string.back)
+                    contentDescription = stringResource(StringsR.string.nav_back)
                 )
             }
         },

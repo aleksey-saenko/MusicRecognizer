@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.widget
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,15 +15,18 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.material3.ColorProviders
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.presentation.ext.getCachedImageOrNull
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationService
-import com.mrsep.musicrecognizer.feature.recognition.presentation.service.NotificationServiceActivity
-import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetContent
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.HorizontalLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.SquareLayoutContent
+import com.mrsep.musicrecognizer.feature.recognition.widget.ui.VerticalLayoutContent
+import com.mrsep.musicrecognizer.feature.recognition.widget.util.ImageUtils.getWidgetArtworkOrNull
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,25 +65,29 @@ class RecognitionWidget : GlanceAppWidget() {
         /* Glance can't round image corners prior to API 31
          * so we must do it on-demand based on the required image size */
         fun widgetUiFlow(widgetLayout: RecognitionWidgetLayout) = statusFlow.mapLatest { status ->
-            WidgetUiState(
-                status = status,
-                artwork = if (widgetLayout.showArtwork &&
-                    status is RecognitionStatus.Done &&
-                    status.result is RecognitionResult.Success
-                ) {
-                    status.result.track.artworkUrl?.let { artworkUrl ->
-                        context.getCachedImageOrNull(
-                            url = artworkUrl,
-                            widthPx = widgetLayout.artworkSizePx,
-                            heightPx = widgetLayout.artworkSizePx,
-                            cornerRadiusPx = widgetLayout.artworkCornerRadiusPx,
-                        )
+            val artwork = when (status) {
+                is RecognitionStatus.Done -> when (val result = status.result) {
+                    is RecognitionResult.Success -> result.track.artworkUrl
+                        ?.takeIf { widgetLayout.showArtwork }
+                        ?.let { artworkUrl ->
+                            context.getWidgetArtworkOrNull(
+                                url = artworkUrl,
+                                widthPx = widgetLayout.artworkSizePx,
+                                heightPx = widgetLayout.artworkSizePx,
+                                artworkStyle = widgetLayout.artworkStyle
+                            )
                     }
-                } else {
-                    null
+                    else -> null
                 }
-            )
+                else -> null
+            }
+            WidgetUiState(status = status, artwork = artwork)
         }.flowOn(Dispatchers.Default)
+
+        val onLaunchRecognition = actionStartActivity(
+            RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context)
+        )
+        val onCancelRecognition = actionRunCallback<CancelRecognition>()
 
         provideContent {
             val widgetLayout = RecognitionWidgetLayout.fromLocalSize()
@@ -91,51 +97,77 @@ class RecognitionWidget : GlanceAppWidget() {
                     artwork = null
                 )
             )
+            val onWidgetClick = when (val state = widgetUiState.status) {
+                RecognitionStatus.Ready -> onLaunchRecognition
+
+                is RecognitionStatus.Recognizing -> onCancelRecognition
+
+                is RecognitionStatus.Done -> when (val result = state.result) {
+                    is RecognitionResult.Success -> actionStartActivity(
+                        intent = router.getDeepLinkIntentToTrack(result.track.id)
+                    )
+
+                    is RecognitionResult.NoMatches -> onLaunchRecognition
+
+                    is RecognitionResult.ScheduledOffline,
+                    is RecognitionResult.Error,
+                    -> actionRunCallback<ResetWidgetFinalState>()
+                }
+            }
             GlanceTheme(
-                // enable dynamic colors if available
+                // Enable dynamic colors if available
                 colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     GlanceTheme.colors
                 } else {
                     ColorProviders(light = lightColorScheme, dark = darkColorScheme)
                 }
             ) {
-                RecognitionWidgetContent(
-                    layout = widgetLayout,
-                    uiState = widgetUiState,
-                    onLaunchRecognition = launchRecognitionAction(context),
-                    onCancelRecognition = cancelRecognitionAction(context),
-                    onWidgetClick = when (val state = widgetUiState.status) {
-                        RecognitionStatus.Ready -> launchRecognitionAction(context)
+                when (widgetLayout) {
+                    is RecognitionWidgetLayout.Circle -> CircleLayoutContent(
+                        layout = widgetLayout,
+                        uiState = widgetUiState,
+                        onLaunchRecognition = onLaunchRecognition,
+                        onCancelRecognition = onCancelRecognition,
+                        onWidgetClick = onWidgetClick
+                    )
+                    is RecognitionWidgetLayout.Square -> SquareLayoutContent(
+                        layout = widgetLayout,
+                        uiState = widgetUiState,
+                        onLaunchRecognition = onLaunchRecognition,
+                        onCancelRecognition = onCancelRecognition,
+                        onWidgetClick = onWidgetClick
+                    )
 
-                        is RecognitionStatus.Recognizing -> cancelRecognitionAction(context)
+                    is RecognitionWidgetLayout.Horizontal -> HorizontalLayoutContent(
+                        layout = widgetLayout,
+                        uiState = widgetUiState,
+                        onLaunchRecognition = onLaunchRecognition,
+                        onCancelRecognition = onCancelRecognition,
+                        onWidgetClick = onWidgetClick
+                    )
 
-                        is RecognitionStatus.Done -> when (state.result) {
-                            is RecognitionResult.Success -> actionStartActivity(
-                                intent = router.getDeepLinkIntentToTrack(state.result.track.id)
-                            )
-
-                            is RecognitionResult.NoMatches -> launchRecognitionAction(context)
-
-                            is RecognitionResult.ScheduledOffline,
-                            is RecognitionResult.Error -> actionRunCallback<ResetWidgetFinalState>()
-                        }
-                    }
-
-                )
+                    is RecognitionWidgetLayout.Vertical -> VerticalLayoutContent(
+                        layout = widgetLayout,
+                        uiState = widgetUiState,
+                        onLaunchRecognition = onLaunchRecognition,
+                        onCancelRecognition = onCancelRecognition,
+                        onWidgetClick = onWidgetClick
+                    )
+                }
             }
         }
     }
+}
 
-    private fun launchRecognitionAction(context: Context) = actionStartActivity(
-        intent = Intent(context, NotificationServiceActivity::class.java)
-            .setAction(NotificationService.LAUNCH_RECOGNITION_ACTION)
-            .putExtra(NotificationService.KEY_FOREGROUND_REQUESTED, true)
-    )
+internal class CancelRecognition : ActionCallback {
 
-    private fun cancelRecognitionAction(context: Context) = actionStartActivity(
-        intent = Intent(context, NotificationServiceActivity::class.java)
-            .setAction(NotificationService.CANCEL_RECOGNITION_ACTION)
-    )
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        RecognitionControlService.cancelRecognition(context)
+    }
 }
 
 internal class ResetWidgetFinalState : ActionCallback {
@@ -143,7 +175,7 @@ internal class ResetWidgetFinalState : ActionCallback {
     override suspend fun onAction(
         context: Context,
         glanceId: GlanceId,
-        parameters: ActionParameters
+        parameters: ActionParameters,
     ) {
         val hiltEntryPoint = EntryPointAccessors.fromApplication(
             context,

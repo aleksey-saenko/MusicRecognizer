@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,18 +18,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
-import com.mrsep.musicrecognizer.feature.preferences.domain.MusicService
-import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceClickableItem
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceGroup
-import com.mrsep.musicrecognizer.feature.preferences.presentation.common.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
+import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AcrCloudServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AuddServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.getTitle
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAcrCloudPreferencesState
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAuddPreferencesState
-import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,19 +37,22 @@ internal fun PreferencesScreen(
     viewModel: PreferencesViewModel = hiltViewModel(),
     showDeveloperOptions: Boolean,
     onNavigateToAboutScreen: () -> Unit,
-    onNavigateToDeveloperScreen: () -> Unit
+    onNavigateToExperimentalFeaturesScreen: () -> Unit,
+    onNavigateToDeveloperScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val uiStateInFlow by viewModel.uiFlow.collectAsStateWithLifecycle()
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     when (val uiState = uiStateInFlow) {
-        is PreferencesUiState.Loading -> LoadingStub(
+        is PreferencesUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            PreferencesTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is PreferencesUiState.Success -> {
             Column(
@@ -63,11 +67,11 @@ internal fun PreferencesScreen(
                         .nestedScroll(topBarBehaviour.nestedScrollConnection)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    PreferenceGroup(title = stringResource(StringsR.string.recognition)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_recognition)) {
                         val currentProvider = uiState.preferences.currentRecognitionProvider
                         var showServiceDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.recognition_provider_preference_title),
+                            title = stringResource(StringsR.string.pref_title_recognition_provider),
                             subtitle = uiState.preferences.currentRecognitionProvider.getTitle(),
                             onItemClick = { showServiceDialog = true }
                         )
@@ -117,8 +121,8 @@ internal fun PreferencesScreen(
                         }
                         var showPolicyDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.fallback_policy),
-                            subtitle = stringResource(StringsR.string.fallback_policy_pref_subtitle)
+                            title = stringResource(StringsR.string.pref_title_fallback_policy),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_fallback_policy)
                         ) {
                             showPolicyDialog = true
                         }
@@ -129,8 +133,26 @@ internal fun PreferencesScreen(
                                 onDismissClick = { showPolicyDialog = false }
                             )
                         }
+                        var showAudioSourceDialog by rememberSaveable { mutableStateOf(false) }
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.pref_title_audio_source),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_audio_source)
+                        ) {
+                            showAudioSourceDialog = true
+                        }
+                        if (showAudioSourceDialog) {
+                            AudioSourceDialog(
+                                defaultAudioCaptureMode = uiState.preferences.defaultAudioCaptureMode,
+                                mainButtonLongPressAudioCaptureMode = uiState.preferences.mainButtonLongPressAudioCaptureMode,
+                                useAltDeviceSoundSource = uiState.preferences.useAltDeviceSoundSource,
+                                onChangeDefaultAudioCaptureMode = viewModel::setDefaultAudioCaptureMode,
+                                onChangeMainButtonLongPressAudioCaptureMode = viewModel::setMainButtonLongPressAudioCaptureMode,
+                                onChangeUseAltDeviceSoundSource = viewModel::setUseAltDeviceSoundSource,
+                                onDismissClick = { showAudioSourceDialog = false }
+                            )
+                        }
                         PreferenceSwitchItem(
-                            title = stringResource(StringsR.string.recognize_on_startup),
+                            title = stringResource(StringsR.string.pref_title_recognize_on_startup),
                             onClick = {
                                 viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup)
                             },
@@ -139,18 +161,27 @@ internal fun PreferencesScreen(
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.notifications)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_notifications)) {
                         NotificationServiceSwitch(
                             serviceEnabled = uiState.preferences.notificationServiceEnabled,
                             setServiceEnabled = viewModel::setNotificationServiceEnabled
                         )
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.pref_title_manage_notifications),
+                            onItemClick = {
+                                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).run {
+                                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                    context.startActivity(this)
+                                }
+                            }
+                        )
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.appearance)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_appearance)) {
                         var showThemeDialog by rememberSaveable { mutableStateOf(false) }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.theme),
+                            title = stringResource(StringsR.string.pref_title_theme),
                             onItemClick = { showThemeDialog = true }
                         )
                         if (showThemeDialog) {
@@ -169,7 +200,7 @@ internal fun PreferencesScreen(
                         var showServicesDialog by rememberSaveable { mutableStateOf(false) }
                         val requiredMusicServices = uiState.preferences.requiredMusicServices
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.music_services_links),
+                            title = stringResource(StringsR.string.pref_title_music_services_links),
                             subtitle = requiredMusicServices.getEnumerationForSubtitle(limit = 3),
                             onItemClick = { showServicesDialog = true }
                         )
@@ -184,14 +215,14 @@ internal fun PreferencesScreen(
                     }
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
-                    PreferenceGroup(title = stringResource(StringsR.string.misc)) {
+                    PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
                         val vibratorAvailable = remember {
                             context.getDefaultVibrator().hasVibrator()
                         }
                         if (vibratorAvailable) {
                             var showHapticDialog by rememberSaveable { mutableStateOf(false) }
                             PreferenceClickableItem(
-                                title = stringResource(StringsR.string.vibration_feedback),
+                                title = stringResource(StringsR.string.pref_title_vibration_feedback),
                                 onItemClick = { showHapticDialog = true }
                             )
                             if (showHapticDialog) {
@@ -203,12 +234,17 @@ internal fun PreferencesScreen(
                             }
                         }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.about),
+                            title = stringResource(StringsR.string.pref_title_experimental_features),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_experimental_features),
+                            onItemClick = onNavigateToExperimentalFeaturesScreen
+                        )
+                        PreferenceClickableItem(
+                            title = stringResource(StringsR.string.pref_title_about_app),
                             onItemClick = onNavigateToAboutScreen
                         )
                         if (showDeveloperOptions) {
                             PreferenceClickableItem(
-                                title = stringResource(StringsR.string.developer_options),
+                                title = "Developer options",
                                 onItemClick = onNavigateToDeveloperScreen
                             )
                         }
@@ -221,14 +257,15 @@ internal fun PreferencesScreen(
 
 @Stable
 @Composable
-private fun ImmutableList<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
-    0 -> stringResource(StringsR.string.none)
+private fun List<MusicService>.getEnumerationForSubtitle(limit: Int) = when (size) {
+    0 -> stringResource(StringsR.string.pref_subtitle_no_selected_services)
     in 1..limit -> {
         map { service -> stringResource(service.titleId()) }.joinToString(", ")
     }
 
     else -> {
-        take(3).map { service -> stringResource(service.titleId()) }.joinToString(", ")
-            .plus(stringResource(StringsR.string.format_more_services, size - limit))
+        val limited = take(limit)
+            .map { service -> stringResource(service.titleId()) }.joinToString(", ")
+        stringResource(StringsR.string.pref_subtitle_format_more_services, limited, size - limit)
     }
 }

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">@android:color/system_primary_light</color>
+    <color name="on_primary">@android:color/system_on_primary_light</color>
     <color name="primary_container">@android:color/system_primary_container_light</color>
     <color name="surface_container_high">@android:color/system_surface_container_high_light</color>
     <color name="surface_container_highest">@android:color/system_surface_container_highest_light</color>
     <color name="surface">@android:color/system_surface_light</color>
     <color name="on_surface">@android:color/system_on_surface_light</color>
+    <color name="outline">@android:color/system_outline_light</color>
+    <color name="outline_variant">@android:color/system_outline_variant_light</color>
 </resources>

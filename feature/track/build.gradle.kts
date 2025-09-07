@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+
     implementation(libs.androidx.palette)
     implementation(libs.coil.compose)
     implementation(libs.materialKolor)

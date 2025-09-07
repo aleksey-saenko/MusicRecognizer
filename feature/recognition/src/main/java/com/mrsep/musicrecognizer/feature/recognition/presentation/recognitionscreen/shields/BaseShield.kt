@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -31,14 +30,13 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscr
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun AnimatedVisibilityScope.BaseShield(
     modifier: Modifier = Modifier,
     onDismissClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface {
+    Surface(modifier = modifier) {
         Box {
             FilledTonalIconButton(
                 onClick = onDismissClick,
@@ -70,7 +68,7 @@ internal fun AnimatedVisibilityScope.BaseShield(
                 )
             }
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(24.dp)

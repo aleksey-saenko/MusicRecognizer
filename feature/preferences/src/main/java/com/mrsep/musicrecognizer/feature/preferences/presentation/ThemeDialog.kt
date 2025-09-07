@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
-import com.mrsep.musicrecognizer.feature.preferences.domain.ThemeMode
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
@@ -42,7 +42,7 @@ internal fun ThemeDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(StringsR.string.theme))
+            Text(text = stringResource(StringsR.string.pref_title_theme))
         },
         confirmButton = {
             TextButton(onClick = onDismissClick) {
@@ -63,7 +63,7 @@ internal fun ThemeDialog(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = stringResource(StringsR.string.theme_mode_short),
+                                text = stringResource(StringsR.string.theme_mode),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.bodyLarge,
@@ -82,7 +82,7 @@ internal fun ThemeDialog(
                         ) {
                             Icon(
                                 painter = painterResource(UiR.drawable.outline_auto_mode_24),
-                                contentDescription = stringResource(StringsR.string.theme_follow_system_short)
+                                contentDescription = stringResource(StringsR.string.theme_mode_follow_system)
                             )
                         }
                         FilledIconToggleButton(
@@ -97,7 +97,7 @@ internal fun ThemeDialog(
                                         UiR.drawable.outline_light_mode_24
                                     }
                                 ),
-                                contentDescription = stringResource(StringsR.string.theme_light_short)
+                                contentDescription = stringResource(StringsR.string.theme_mode_light)
                             )
                         }
                         FilledIconToggleButton(
@@ -112,7 +112,7 @@ internal fun ThemeDialog(
                                         UiR.drawable.outline_dark_mode_24
                                     }
                                 ),
-                                contentDescription = stringResource(StringsR.string.theme_dark_short)
+                                contentDescription = stringResource(StringsR.string.theme_mode_dark)
                             )
                         }
                     }
@@ -147,7 +147,7 @@ internal fun ThemeDialog(
 @Stable
 @Composable
 private fun ThemeMode.title() = when (this) {
-    ThemeMode.FollowSystem -> stringResource(StringsR.string.theme_follow_system_short)
-    ThemeMode.AlwaysLight -> stringResource(StringsR.string.theme_light_short)
-    ThemeMode.AlwaysDark -> stringResource(StringsR.string.theme_dark_short)
+    ThemeMode.FollowSystem -> stringResource(StringsR.string.theme_mode_follow_system)
+    ThemeMode.AlwaysLight -> stringResource(StringsR.string.theme_mode_light)
+    ThemeMode.AlwaysDark -> stringResource(StringsR.string.theme_mode_dark)
 }

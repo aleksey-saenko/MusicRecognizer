@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.feature.recognition.di
 
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.MutableRecognitionStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.domain.impl.RecognitionStatusHolderImpl
+import com.mrsep.musicrecognizer.feature.recognition.MutableRecognitionStatusHolder
+import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
+import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,23 +18,23 @@ internal interface RecognitionStatusHolderModule {
     @MainScreenStatusHolder
     @Binds
     @Singleton
-    fun bindScreenMutableHolder(implementation: RecognitionStatusHolderImpl):
+    fun bindScreenMutableHolder(impl: RecognitionStatusHolderImpl):
             MutableRecognitionStatusHolder
 
     @MainScreenStatusHolder
     @Binds
-    fun bindScreenHolder(@MainScreenStatusHolder implementation: MutableRecognitionStatusHolder):
+    fun bindScreenHolder(@MainScreenStatusHolder impl: MutableRecognitionStatusHolder):
             RecognitionStatusHolder
 
     @WidgetStatusHolder
     @Binds
     @Singleton
-    fun bindWidgetMutableHolder(implementation: RecognitionStatusHolderImpl):
+    fun bindWidgetMutableHolder(impl: RecognitionStatusHolderImpl):
             MutableRecognitionStatusHolder
 
     @WidgetStatusHolder
     @Binds
-    fun bindWidgetHolder(@WidgetStatusHolder implementation: MutableRecognitionStatusHolder):
+    fun bindWidgetHolder(@WidgetStatusHolder impl: MutableRecognitionStatusHolder):
             RecognitionStatusHolder
 }
 

@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.android.build.api.dsl.ApplicationExtension
 import com.mrsep.musicrecognizer.configureAndroidCompose
 import org.gradle.api.Plugin

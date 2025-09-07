@@ -33,12 +33,14 @@ internal fun QueueScreen(
     val screenUiState by viewModel.screenUiStateFlow.collectAsStateWithLifecycle()
 
     when (val uiState = screenUiState) {
-        QueueScreenUiState.Loading -> LoadingStub(
+        QueueScreenUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            QueueScreenLoadingTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is QueueScreenUiState.Success -> {
             val context = LocalContext.current
@@ -55,7 +57,7 @@ internal fun QueueScreen(
             }
             val multiSelectionState = rememberMultiSelectionState<Int>(uiState.recognitionList)
             BackHandler(
-                enabled = multiSelectionState.multiselectEnabled,
+                enabled = multiSelectionState.hasSelected,
                 onBack = multiSelectionState::deselectAll
             )
 
@@ -74,7 +76,7 @@ internal fun QueueScreen(
             ) {
                 QueueScreenTopBar(
                     isQueueEmpty = uiState.recognitionList.isEmpty(),
-                    isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+                    isMultiselectEnabled = multiSelectionState.hasSelected,
                     selectedCount = multiSelectionState.selectedCount,
                     totalCount = uiState.recognitionList.size,
                     onSelectAll = {
@@ -82,7 +84,7 @@ internal fun QueueScreen(
                     },
                     onDeselectAll = multiSelectionState::deselectAll,
                     onCancelSelected = {
-                        viewModel.cancelRecognition(*multiSelectionState.getSelected().toIntArray())
+                        viewModel.cancelRecognitions(multiSelectionState.getSelected())
                     },
                     onDeleteSelected = { deleteDialogVisible = true },
                     useGridLayout = uiState.useGridLayout,
@@ -154,9 +156,7 @@ internal fun QueueScreen(
                 DeleteSelectedDialog(
                     onDeleteClick = {
                         deletionInProgress = true
-                        viewModel.cancelAndDeleteRecognition(
-                            *multiSelectionState.getSelected().toIntArray()
-                        )
+                        viewModel.cancelAndDeleteRecognitions(multiSelectionState.getSelected())
                     },
                     onDismissClick = { deleteDialogVisible = false },
                     inProgress = deletionInProgress

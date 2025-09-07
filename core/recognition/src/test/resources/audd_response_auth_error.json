@@ -1,0 +1,16 @@
+{
+  "status": "error",
+  "error": {
+    "error_code": 900,
+    "error_message": "Recognition failed: authorization failed: the provided api_token is incorrect, invalid, or inactive. Please check the status of your account on dashboard.audd.io: it needs to have either a trial or an active subscription."
+  },
+  "request_params": {
+    "url": "https://audd.tech/example1.mp3",
+    "return": "apple_music,spotify",
+    "api_token": "t***n"
+  },
+  "request_api_method": "recognize",
+  "request_http_method": "GET",
+  "see api documentation": "https://docs.audd.io",
+  "contact us": "api@audd.io"
+}

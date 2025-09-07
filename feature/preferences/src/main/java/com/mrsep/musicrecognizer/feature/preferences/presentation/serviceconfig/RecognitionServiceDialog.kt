@@ -17,6 +17,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,11 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.core.ui.R
-import com.mrsep.musicrecognizer.feature.preferences.domain.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 @Composable
 internal fun AuddServiceDialog(
@@ -44,7 +45,7 @@ internal fun AuddServiceDialog(
     currentProvider: RecognitionProvider,
     onProviderChanged: (RecognitionProvider) -> Unit,
     onSaveClick: () -> Unit,
-    onDismissClick: () -> Unit
+    onDismissClick: () -> Unit,
 ) {
     RecognitionServiceDialogBase(
         modifier = modifier,
@@ -64,7 +65,7 @@ internal fun AcrCloudServiceDialog(
     currentProvider: RecognitionProvider,
     onProviderChanged: (RecognitionProvider) -> Unit,
     onSaveClick: () -> Unit,
-    onDismissClick: () -> Unit
+    onDismissClick: () -> Unit,
 ) {
     RecognitionServiceDialogBase(
         modifier = modifier,
@@ -89,7 +90,7 @@ private fun RecognitionServiceDialogBase(
     AlertDialog(
         modifier = modifier,
         title = {
-            Text(text = stringResource(StringsR.string.recognition_provider_preference_title))
+            Text(text = stringResource(StringsR.string.recognition_provider_dialog_title))
         },
         confirmButton = {
             TextButton(onClick = onSaveClick) {
@@ -107,11 +108,11 @@ private fun RecognitionServiceDialogBase(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = stringResource(StringsR.string.recognition_service_dialog_message)
+                    text = stringResource(StringsR.string.recognition_provider_dialog_message)
                 )
                 RecognitionProviderDropdownMenu(
                     options = RecognitionProvider.entries.toImmutableList(),
-                    label = stringResource(StringsR.string.recognition_provider_preference_title),
+                    label = stringResource(StringsR.string.recognition_provider_dialog_title),
                     selectedOption = currentProvider,
                     onSelectOption = onProviderChanged,
                     modifier = Modifier.padding(top = 14.dp)
@@ -131,43 +132,42 @@ private fun RecognitionProviderDropdownMenu(
     label: String,
     options: ImmutableList<RecognitionProvider>,
     selectedOption: RecognitionProvider,
-    onSelectOption: (RecognitionProvider) -> Unit
+    onSelectOption: (RecognitionProvider) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)) {
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedOption.getTitle(),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = modifier
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.small,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
-            OutlinedTextField(
-                value = selectedOption.getTitle(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = label) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption.getTitle()) },
-                        onClick = {
-                            expanded = false
-                            onSelectOption(selectionOption)
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                    )
-                }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.getTitle()) },
+                    onClick = {
+                        expanded = false
+                        onSelectOption(selectionOption)
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
             }
         }
     }
@@ -177,17 +177,17 @@ private fun RecognitionProviderDropdownMenu(
 internal fun AuthenticationRow(
     modifier: Modifier = Modifier,
     serviceName: String,
-    onHelpClick: () -> Unit
+    onHelpClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(StringsR.string.format_service_auth, serviceName))
+        Text(text = stringResource(StringsR.string.recognition_provider_dialog_format_auth, serviceName))
         IconButton(onClick = onHelpClick) {
             Icon(
-                painter = painterResource(R.drawable.outline_help_24),
+                painter = painterResource(UiR.drawable.outline_help_24),
                 contentDescription = stringResource(StringsR.string.help),
             )
         }

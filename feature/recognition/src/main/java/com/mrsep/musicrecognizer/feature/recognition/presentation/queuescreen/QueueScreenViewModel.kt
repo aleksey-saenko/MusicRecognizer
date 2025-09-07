@@ -3,15 +3,14 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
-import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerController
+import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.EnqueuedRecognitionScheduler
-import com.mrsep.musicrecognizer.feature.recognition.domain.PlayerController
-import com.mrsep.musicrecognizer.feature.recognition.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.PlayerStatusUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.toUi
@@ -19,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,8 +29,7 @@ internal class QueueScreenViewModel @Inject constructor(
     private val recognitionScheduler: EnqueuedRecognitionScheduler,
     private val playerController: PlayerController,
     private val dateFormatter: AppDateTimeFormatter,
-    @ApplicationScope private val appScope: CoroutineScope,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val screenUiStateFlow = combine(
@@ -58,41 +55,46 @@ internal class QueueScreenViewModel @Inject constructor(
             useGridLayout = preferences.useGridForRecognitionQueue,
             showCreationDate = preferences.showCreationDateInQueue,
         )
-    }.flowOn(ioDispatcher).stateIn(
+    }.flowOn(defaultDispatcher).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = QueueScreenUiState.Loading
     )
 
     fun renameRecognition(recognitionId: Int, newTitle: String) {
-        appScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             enqueuedRecognitionRepository.updateTitle(recognitionId, newTitle)
         }
     }
 
     fun enqueueRecognition(recognitionId: Int, forceLaunch: Boolean) {
-        appScope.launch(ioDispatcher) {
-            recognitionScheduler.enqueue(recognitionId, forceLaunch = forceLaunch)
-        }
+        recognitionScheduler.enqueue(listOf(recognitionId), forceLaunch = forceLaunch)
     }
 
-    fun cancelRecognition(vararg recognitionIds: Int) {
-        appScope.launch(ioDispatcher) {
-            recognitionScheduler.cancel(*recognitionIds)
-        }
+    fun cancelRecognition(recognitionId: Int) {
+        cancelRecognitions(setOf(recognitionId))
     }
 
-    fun cancelAndDeleteRecognition(vararg recognitionIds: Int) {
-        appScope.launch(ioDispatcher) {
+    fun cancelRecognitions(recognitionIds: Set<Int>) {
+        recognitionScheduler.cancel(recognitionIds.toList())
+    }
+
+    fun cancelAndDeleteRecognition(recognitionId: Int) {
+        cancelAndDeleteRecognitions(setOf(recognitionId))
+    }
+
+    fun cancelAndDeleteRecognitions(recognitionIds: Set<Int>) {
+        viewModelScope.launch {
+            val listOfIds = recognitionIds.toList()
             playerController.stop()
-            recognitionScheduler.cancel(*recognitionIds)
-            enqueuedRecognitionRepository.delete(*recognitionIds)
+            recognitionScheduler.cancel(listOfIds)
+            enqueuedRecognitionRepository.delete(listOfIds)
         }
     }
 
     fun startAudioPlayer(recognitionId: Int) {
         viewModelScope.launch {
-            enqueuedRecognitionRepository.getRecordingForRecognition(recognitionId)?.let { recording ->
+            enqueuedRecognitionRepository.getRecordingFile(recognitionId)?.let { recording ->
                 playerController.start(recognitionId, recording)
             }
         }
@@ -104,7 +106,7 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun setUseGridLayout(value: Boolean) {
         viewModelScope.launch {
-            preferencesRepository.setUseGridForQueue(value)
+            preferencesRepository.setUseGridForRecognitionQueue(value)
         }
     }
 

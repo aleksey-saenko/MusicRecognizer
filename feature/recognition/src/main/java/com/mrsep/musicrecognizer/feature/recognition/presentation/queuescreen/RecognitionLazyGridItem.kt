@@ -8,12 +8,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,7 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +42,6 @@ import com.mrsep.musicrecognizer.feature.recognition.presentation.model.Enqueued
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun RecognitionLazyGridItem(
     recognition: EnqueuedRecognitionUi,
@@ -74,10 +70,10 @@ internal fun RecognitionLazyGridItem(
             .clip(shape)
             .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick,
+                interactionSource = null,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(contentPadding)
     ) {
@@ -119,14 +115,14 @@ internal fun RecognitionLazyGridItem(
                 if (playing) {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_pause_48),
-                        contentDescription = stringResource(StringsR.string.stop_player),
+                        contentDescription = stringResource(StringsR.string.recording_stop_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )
                 } else {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_play_arrow_48),
-                        contentDescription = stringResource(StringsR.string.start_player),
+                        contentDescription = stringResource(StringsR.string.recording_start_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )

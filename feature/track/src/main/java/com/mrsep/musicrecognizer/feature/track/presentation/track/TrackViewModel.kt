@@ -3,14 +3,12 @@ package com.mrsep.musicrecognizer.feature.track.presentation.track
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrsep.musicrecognizer.feature.track.domain.PreferencesRepository
-import com.mrsep.musicrecognizer.feature.track.domain.TrackMetadataEnhancerScheduler
-import com.mrsep.musicrecognizer.feature.track.domain.TrackRepository
-import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.ThemeMode
-import com.mrsep.musicrecognizer.feature.track.domain.model.Track
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
-import com.mrsep.musicrecognizer.feature.track.domain.model.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -52,7 +50,7 @@ internal class TrackViewModel @Inject constructor(
     fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
-            trackRepository.delete(trackId)
+            trackRepository.delete(listOf(trackId))
             _trackExistingState.update { false }
         }
     }
@@ -71,7 +69,7 @@ internal class TrackViewModel @Inject constructor(
 
     fun setTrackAsViewed(trackId: String) {
         viewModelScope.launch {
-            trackRepository.setAsViewed(trackId)
+            trackRepository.setViewed(trackId, true)
         }
     }
 }
@@ -100,16 +98,11 @@ private fun Track.toUiState(
     val trackUi = this.toUi(preferences.requiredMusicServices)
     return TrackUiState.Success(
         track = this.toUi(preferences.requiredMusicServices),
-        isTrackViewed = this.isViewed,
+        isTrackViewed = this.properties.isViewed,
         isMetadataEnhancerRunning = isMetadataEnhancerRunning &&
-                trackUi.trackLinks.hasMissingLink(preferences.requiredMusicServices),
+                trackUi.trackLinks.size < preferences.requiredMusicServices.size,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         themeMode = preferences.themeMode,
         usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
     )
-}
-
-private fun List<TrackLink>.hasMissingLink(requiredServices: List<MusicService>): Boolean {
-    val availableServicesSet = map { link -> link.service }.toSet()
-    return requiredServices.any { service -> !availableServicesSet.contains(service) }
 }

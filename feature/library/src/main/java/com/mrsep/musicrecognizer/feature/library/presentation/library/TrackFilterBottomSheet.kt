@@ -10,12 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.library.domain.model.FavoritesMode
-import com.mrsep.musicrecognizer.feature.library.domain.model.OrderBy
-import com.mrsep.musicrecognizer.feature.library.domain.model.SortBy
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
+import com.mrsep.musicrecognizer.core.domain.preferences.OrderBy
+import com.mrsep.musicrecognizer.core.domain.preferences.SortBy
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TrackFilterBottomSheet(
     modifier: Modifier = Modifier,
@@ -27,7 +27,6 @@ internal fun TrackFilterBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        windowInsets = WindowInsets.navigationBars,
         modifier = modifier
     ) {
         Text(
@@ -36,8 +35,13 @@ internal fun TrackFilterBottomSheet(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(16.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            FilterGroup(title = stringResource(StringsR.string.filter_favorite_status)) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .weight(1f, false)
+        ) {
+            FilterGroup(title = stringResource(StringsR.string.filter_favorites)) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
@@ -47,7 +51,7 @@ internal fun TrackFilterBottomSheet(
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.All,
                         onClick = { filterState.favoritesMode = FavoritesMode.All },
-                        label = { Text(text = stringResource(StringsR.string.all)) }
+                        label = { Text(text = stringResource(StringsR.string.filter_all)) }
                     )
                     FilterChip(
                         selected = filterState.favoritesMode == FavoritesMode.OnlyFavorites,
@@ -114,11 +118,11 @@ internal fun TrackFilterBottomSheet(
         }
         Spacer(Modifier.height(8.dp))
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
             TextButton(onClick = filterState::resetFilter) {
                 Text(

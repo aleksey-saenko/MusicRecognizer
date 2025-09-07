@@ -20,10 +20,10 @@ fun RecognitionPermissionsRationaleDialog(
     PermissionRationaleDialog(
         title = stringResource(StringsR.string.permissions),
         text = buildString {
-            append(stringResource(StringsR.string.recorder_permission_rationale_message))
+            append(stringResource(StringsR.string.permission_rationale_record_audio))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 append(" ")
-                append(stringResource(StringsR.string.notificaiton_permission_rationale_message))
+                append(stringResource(StringsR.string.permission_rationale_post_notifications))
             }
         },
         onConfirmClick = onConfirmClick,
@@ -39,10 +39,10 @@ fun RecognitionPermissionsBlockedDialog(
     PermissionBlockedDialog(
         title = stringResource(StringsR.string.permissions),
         text = buildString {
-            append(stringResource(StringsR.string.recorder_permission_rationale_message))
+            append(stringResource(StringsR.string.permission_rationale_record_audio))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 append(" ")
-                append(stringResource(StringsR.string.notificaiton_permission_rationale_message))
+                append(stringResource(StringsR.string.permission_rationale_post_notifications))
             }
             append("\n")
             append(stringResource(StringsR.string.permissions_denied_message))
@@ -72,7 +72,7 @@ private fun PermissionBlockedDialog(
                     onConfirmClick()
                     context.startActivity(appSettingsIntent)
                 }) {
-                    Text(text = stringResource(StringsR.string.open_settings))
+                    Text(text = stringResource(StringsR.string.permissions_denied_open_settings))
                 }
             }
         },

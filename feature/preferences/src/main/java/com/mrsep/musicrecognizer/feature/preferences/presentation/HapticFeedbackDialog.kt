@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
 import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun HapticFeedbackDialog(
-    hapticFeedback: UserPreferences.HapticFeedback,
-    onHapticFeedbackChanged: (UserPreferences.HapticFeedback) -> Unit,
+    hapticFeedback: HapticFeedback,
+    onHapticFeedbackChanged: (HapticFeedback) -> Unit,
     onDismissClick: () -> Unit,
 ) {
     AlertDialog(
@@ -39,7 +39,7 @@ internal fun HapticFeedbackDialog(
                         .verticalScroll(rememberScrollState())
                 ) {
                     DialogSwitch(
-                        title = stringResource(StringsR.string.vibrate_on_tap),
+                        title = stringResource(StringsR.string.vibration_feedback_dialog_vibrate_on_tap),
                         checked = hapticFeedback.vibrateOnTap,
                         onClick = {
                             val newOptions = hapticFeedback.copy(
@@ -49,7 +49,7 @@ internal fun HapticFeedbackDialog(
                         }
                     )
                     DialogSwitch(
-                        title = stringResource(StringsR.string.vibrate_on_result),
+                        title = stringResource(StringsR.string.vibration_feedback_dialog_vibrate_on_result),
                         checked = hapticFeedback.vibrateOnResult,
                         onClick = {
                             val newOptions = hapticFeedback.copy(

@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
-import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
@@ -13,15 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
-import com.mrsep.musicrecognizer.feature.track.domain.model.MusicService
-import com.mrsep.musicrecognizer.feature.track.domain.model.TrackLink
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -30,19 +29,19 @@ internal fun TrackSection(
     isLoadingLinks: Boolean,
     isExpandedScreen: Boolean,
     onArtworkClick: () -> Unit,
-    onArtworkCached: (Uri) -> Unit,
     createSeedColor: Boolean,
-    onSeedColor: (Color) -> Unit,
+    onSeedColorCreated: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (isExpandedScreen) {
         Row(modifier = modifier) {
             AlbumArtwork(
                 url = track.artworkUrl,
-                onArtworkClick = onArtworkClick,
-                onArtworkCached = onArtworkCached,
+                elevation = 2.dp,
+                shape = MaterialTheme.shapes.extraLarge,
+                onLoadedArtworkClick = onArtworkClick,
                 createSeedColor = createSeedColor,
-                onSeedColorCreated = onSeedColor,
+                onSeedColorCreated = onSeedColorCreated,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
@@ -77,10 +76,11 @@ internal fun TrackSection(
         ) {
             AlbumArtwork(
                 url = track.artworkUrl,
-                onArtworkClick = onArtworkClick,
-                onArtworkCached = onArtworkCached,
+                elevation = 2.dp,
+                shape = MaterialTheme.shapes.extraLarge,
+                onLoadedArtworkClick = onArtworkClick,
                 createSeedColor = createSeedColor,
-                onSeedColorCreated = onSeedColor,
+                onSeedColorCreated = onSeedColorCreated,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .sizeIn(maxWidth = 600.dp)
@@ -127,6 +127,7 @@ private fun Preview() {
                 isFavorite = false,
                 duration = "2:45",
                 recognizedAt = "2:22",
+                recognizedBy = RecognitionProvider.Audd,
                 lastRecognitionDate = "Now",
                 themeSeedColor = null,
                 lyrics = null
@@ -134,9 +135,8 @@ private fun Preview() {
             isLoadingLinks = false,
             isExpandedScreen = true,
             onArtworkClick = {},
-            onArtworkCached = {},
             createSeedColor = false,
-            onSeedColor = {},
+            onSeedColorCreated = {},
             modifier = Modifier.verticalScroll(rememberScrollState())
         )
     }

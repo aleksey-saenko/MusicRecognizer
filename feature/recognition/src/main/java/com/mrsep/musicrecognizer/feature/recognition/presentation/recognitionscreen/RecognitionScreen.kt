@@ -1,8 +1,13 @@
 package com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen
 
 import android.Manifest
+import android.app.Activity
+import android.app.Activity.MEDIA_PROJECTION_SERVICE
+import android.media.projection.MediaProjectionManager
 import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -21,21 +26,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
+import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRationaleDialog
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.recognition.BuildConfig
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RecognitionStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.UserPreferences
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ApiUsageLimitedShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.BadConnectionShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.FatalErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.NoMatchesShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ScheduledOfflineShield
+import com.mrsep.musicrecognizer.feature.recognition.service.AudioCaptureServiceMode
+import com.mrsep.musicrecognizer.feature.recognition.service.createScreenCaptureIntentForDisplay
+import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
@@ -50,13 +59,34 @@ internal fun RecognitionScreen(
     onResetAutostart: () -> Unit,
     onNavigateToTrackScreen: (trackId: String) -> Unit,
     onNavigateToQueueScreen: (recognitionId: Int?) -> Unit,
-    onNavigateToPreferencesScreen: () -> Unit
+    onNavigateToPreferencesScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val recognizeStatus by viewModel.recognitionState.collectAsStateWithLifecycle()
-    val preferences by viewModel.preferences.collectAsStateWithLifecycle()
-    val ampFlow by viewModel.maxAmplitudeFlow.collectAsStateWithLifecycle(initialValue = 0f)
+    val soundLevelState = viewModel.soundLevelFlow.collectAsStateWithLifecycle(initialValue = 0f)
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
+    val preferences by viewModel.preferences.collectAsStateWithLifecycle()
+    val defaultCaptureMode = preferences?.defaultAudioCaptureMode
+    val longClickCaptureMode = preferences?.mainButtonLongPressAudioCaptureMode
+
+    val mediaProjectionManager = remember {
+        context.getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+    }
+    val lastRequestedAudioCaptureMode = rememberSaveable {
+        mutableStateOf(AudioCaptureMode.Microphone)
+    }
+    val mediaProjectionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != Activity.RESULT_OK || result.data == null) {
+            if (autostart) onResetAutostart()
+            return@rememberLauncherForActivityResult
+        }
+        result.data?.let { mediaProjectionData ->
+            val captureMode = lastRequestedAudioCaptureMode.value.toServiceMode(mediaProjectionData)
+            viewModel.launchRecognition(captureMode)
+        }
+    }
 
     //region <permission handling block>
     var showPermissionsRationaleDialog by rememberSaveable { mutableStateOf(false) }
@@ -69,13 +99,27 @@ internal fun RecognitionScreen(
         }
     ) { results ->
         if (results.all { (_, isGranted) -> isGranted }) {
-            viewModel.launchRecognition()
+            when (val lastMode = lastRequestedAudioCaptureMode.value) {
+                AudioCaptureMode.Microphone -> {
+                    viewModel.launchRecognition(lastMode.toServiceMode(null))
+                }
+                AudioCaptureMode.Device,
+                AudioCaptureMode.Auto -> {
+                    if (preferences?.useAltDeviceSoundSource == true) {
+                        viewModel.launchRecognition(lastMode.toServiceMode(null))
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
+                        mediaProjectionLauncher.launch(intent)
+                    }
+                }
+            }
         } else {
             val activity = context.findActivity()
             showPermissionsBlockedDialog = results
                 .any { (permission, isGranted) ->
                     !isGranted && !activity.shouldShowRationale(permission)
                 }
+            if (autostart) onResetAutostart()
         }
     }
     if (showPermissionsRationaleDialog) {
@@ -84,7 +128,10 @@ internal fun RecognitionScreen(
                 showPermissionsRationaleDialog = false
                 requiredPermissionsState.launchMultiplePermissionRequest()
             },
-            onDismissClick = { showPermissionsRationaleDialog = false }
+            onDismissClick = {
+                showPermissionsRationaleDialog = false
+                if (autostart) onResetAutostart()
+            }
         )
     }
     if (showPermissionsBlockedDialog) {
@@ -95,9 +142,23 @@ internal fun RecognitionScreen(
     }
     //endregion
 
-    fun launchRecognition() {
+    fun checkPermissionsAndLaunchRecognition(captureMode: AudioCaptureMode) {
+        lastRequestedAudioCaptureMode.value = captureMode
         if (requiredPermissionsState.allPermissionsGranted) {
-            viewModel.launchRecognition()
+            when (captureMode) {
+                AudioCaptureMode.Microphone -> {
+                    viewModel.launchRecognition(AudioCaptureServiceMode.Microphone)
+                }
+                AudioCaptureMode.Device,
+                AudioCaptureMode.Auto -> {
+                    if (preferences?.useAltDeviceSoundSource == true) {
+                        viewModel.launchRecognition(captureMode.toServiceMode(null))
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val intent = mediaProjectionManager.createScreenCaptureIntentForDisplay()
+                        mediaProjectionLauncher.launch(intent)
+                    }
+                }
+            }
         } else if (requiredPermissionsState.shouldShowRationale) {
             showPermissionsRationaleDialog = true
         } else {
@@ -105,10 +166,10 @@ internal fun RecognitionScreen(
         }
     }
 
-    LaunchedEffect(autostart, recognizeStatus) {
-        if (!autostart) return@LaunchedEffect
+    LaunchedEffect(autostart, recognizeStatus, defaultCaptureMode) {
+        if (!autostart || defaultCaptureMode == null) return@LaunchedEffect
         when (recognizeStatus) {
-            RecognitionStatus.Ready -> launchRecognition()
+            RecognitionStatus.Ready -> checkPermissionsAndLaunchRecognition(defaultCaptureMode)
             is RecognitionStatus.Recognizing,
             is RecognitionStatus.Done -> onResetAutostart()
         }
@@ -128,38 +189,40 @@ internal fun RecognitionScreen(
                     .padding(8.dp)
             )
         }
-        AnimatedVisibility(
-            visible = recognizeStatus.isNotDone(),
-            enter = enterTransitionButton,
-            exit = exitTransitionButton,
-        ) {
-            Box(
+        Box {
+            AnimatedVisibility(
+                visible = recognizeStatus.isNotDone(),
+                enter = enterTransitionButton,
+                exit = exitTransitionButton,
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
-                contentAlignment = Alignment.Center
             ) {
+                fun onClick(captureMode: AudioCaptureMode) {
+                    if (recognizeStatus.isDone()) return
+                    if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
+                    if (recognizeStatus is RecognitionStatus.Recognizing) {
+                        viewModel.cancelRecognition()
+                    } else {
+                        checkPermissionsAndLaunchRecognition(captureMode)
+                    }
+                }
                 RecognitionButtonWithTitle(
                     title = getButtonTitle(recognizeStatus, autostart),
-                    onButtonClick = {
-                        if (recognizeStatus.isDone()) return@RecognitionButtonWithTitle
-                        if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
-                        if (recognizeStatus is RecognitionStatus.Recognizing) {
-                            viewModel.cancelRecognition()
-                        } else {
-                            launchRecognition()
-                        }
-                    },
+                    onButtonClick = { defaultCaptureMode?.run(::onClick) },
+                    onButtonLongClick = { longClickCaptureMode?.run(::onClick) },
                     activated = recognizeStatus is RecognitionStatus.Recognizing,
-                    amplitudeFactor = ampFlow,
+                    soundLevelState = soundLevelState,
                     modifier = Modifier.padding(24.dp)
                 )
-                OfflineModePopup(
-                    visible = isOffline,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                )
+            }
+            AnimatedVisibility(
+                visible = isOffline && recognizeStatus.isNotDone(),
+                enter = enterTransitionBottomPopup,
+                exit = exitTransitionBottomPopup,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                OfflineModePopup(modifier = Modifier.padding(bottom = 16.dp))
             }
         }
 
@@ -174,12 +237,12 @@ internal fun RecognitionScreen(
             label = "shieldTransition"
         ) { thisStatus ->
             when (thisStatus) {
-                is RecognitionStatus.Done -> when (thisStatus.result) {
-                    is RecognitionResult.Error -> when (thisStatus.result.remoteError) {
+                is RecognitionStatus.Done -> when (val result = thisStatus.result) {
+                    is RecognitionResult.Error -> when (val remoteError = result.remoteError) {
                         RemoteRecognitionResult.Error.BadConnection -> BadConnectionShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = ::launchRecognition,
+                            onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -187,12 +250,12 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.BadRecording -> FatalErrorShield(
-                            title = stringResource(StringsR.string.recording_error),
-                            message = stringResource(StringsR.string.message_record_error),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            title = stringResource(StringsR.string.result_title_recording_error),
+                            message = stringResource(StringsR.string.result_message_recording_error),
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = ::launchRecognition,
+                            onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -200,12 +263,12 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.HttpError -> FatalErrorShield(
-                            title = stringResource(StringsR.string.bad_network_response),
-                            message = stringResource(StringsR.string.message_http_error),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            title = stringResource(StringsR.string.result_title_bad_network_response),
+                            message = stringResource(StringsR.string.result_message_bad_network_response),
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = ::launchRecognition,
+                            onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -213,12 +276,12 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.UnhandledError -> FatalErrorShield(
-                            title = stringResource(StringsR.string.internal_error),
-                            message = stringResource(StringsR.string.message_unhandled_error),
-                            moreInfo = thisStatus.result.remoteError.getErrorInfo(),
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            title = stringResource(StringsR.string.result_title_internal_error),
+                            message = stringResource(StringsR.string.result_message_internal_error),
+                            moreInfo = remoteError.getErrorInfo(),
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
-                            onRetryClick = ::launchRecognition,
+                            onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
                                 onNavigateToQueueScreen(recognitionId)
@@ -226,7 +289,7 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.AuthError -> AuthErrorShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
@@ -239,7 +302,7 @@ internal fun RecognitionScreen(
                         )
 
                         is RemoteRecognitionResult.Error.ApiUsageLimited -> ApiUsageLimitedShield(
-                            recognitionTask = thisStatus.result.recognitionTask,
+                            recognitionTask = result.recognitionTask,
                             onDismissClick = viewModel::resetRecognitionResult,
                             onNavigateToQueue = { recognitionId ->
                                 viewModel.resetRecognitionResult()
@@ -253,7 +316,7 @@ internal fun RecognitionScreen(
                     }
 
                     is RecognitionResult.ScheduledOffline -> ScheduledOfflineShield(
-                        recognitionTask = thisStatus.result.recognitionTask,
+                        recognitionTask = result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
                         onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
@@ -262,9 +325,9 @@ internal fun RecognitionScreen(
                     )
 
                     is RecognitionResult.NoMatches -> NoMatchesShield(
-                        recognitionTask = thisStatus.result.recognitionTask,
+                        recognitionTask = result.recognitionTask,
                         onDismissClick = viewModel::resetRecognitionResult,
-                        onRetryClick = ::launchRecognition,
+                        onRetryClick = { checkPermissionsAndLaunchRecognition(lastRequestedAudioCaptureMode.value) },
                         onNavigateToQueue = { recognitionId ->
                             viewModel.resetRecognitionResult()
                             onNavigateToQueueScreen(recognitionId)
@@ -272,27 +335,31 @@ internal fun RecognitionScreen(
                     )
 
                     is RecognitionResult.Success -> {
-                        LaunchedEffect(thisStatus.result) {
+                        LaunchedEffect(result) {
                             delay(animationDurationButton.toLong())
-                            onNavigateToTrackScreen(thisStatus.result.track.id)
+                            onNavigateToTrackScreen(result.track.id)
                         }
-                        DisposableEffect(thisStatus.result) {
+                        DisposableEffect(result) {
                             onDispose(viewModel::resetRecognitionResult)
                         }
                     }
                 }
 
                 RecognitionStatus.Ready,
-                is RecognitionStatus.Recognizing -> {
-                }
+                is RecognitionStatus.Recognizing -> { }
             }
         }
 
         // optional vibration effect
         if (preferences.vibrateOnResult()) {
+            val vibrated = rememberSaveable { mutableStateOf(false) }
             LaunchedEffect(recognizeStatus) {
                 val status = recognizeStatus
-                if (status !is RecognitionStatus.Done) return@LaunchedEffect
+                if (status !is RecognitionStatus.Done) {
+                    vibrated.value = false
+                    return@LaunchedEffect
+                }
+                if (vibrated.value) return@LaunchedEffect
                 when (status.result) {
                     is RecognitionResult.ScheduledOffline,
                     is RecognitionResult.Success -> viewModel.vibrateResult(true)
@@ -300,6 +367,7 @@ internal fun RecognitionScreen(
                     is RecognitionResult.Error,
                     is RecognitionResult.NoMatches -> viewModel.vibrateResult(false)
                 }
+                vibrated.value = true
             }
         }
     }
@@ -339,6 +407,26 @@ private val exitTransitionButton = slideOutVertically(
     )
 )
 
+private val enterTransitionBottomPopup = fadeIn(
+    animationSpec = tween(
+        durationMillis = animationDurationButton / 2,
+        delayMillis = animationDurationButton
+    )
+) + scaleIn(
+    animationSpec = tween(
+        durationMillis = animationDurationButton / 2,
+        delayMillis = animationDurationButton
+    ),
+    initialScale = 0.2f
+)
+
+private val exitTransitionBottomPopup = fadeOut(
+    animationSpec = tween(durationMillis = animationDurationButton / 2)
+) + scaleOut(
+    animationSpec = tween(durationMillis = animationDurationButton / 2),
+    targetScale = 0.2f
+)
+
 private val transitionSpecShield:
     AnimatedContentTransitionScope<RecognitionStatus>.() -> ContentTransform = {
         fadeIn(
@@ -369,13 +457,13 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Bool
         RecognitionStatus.Ready -> if (skipReady) {
             " "
         } else {
-            stringResource(StringsR.string.tap_to_recognize)
+            stringResource(StringsR.string.main_screen_tap_to_recognize)
         }
 
         is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTry) {
-            stringResource(StringsR.string.trying_one_more_time)
+            stringResource(StringsR.string.main_screen_listening_extra_time)
         } else {
-            stringResource(StringsR.string.listening)
+            stringResource(StringsR.string.main_screen_listening)
         }
 
         is RecognitionStatus.Done -> " "

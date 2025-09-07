@@ -34,14 +34,14 @@ internal fun EmptyQueueMessage(
             modifier = Modifier.size(80.dp)
         )
         Text(
-            text = stringResource(StringsR.string.empty_recognition_queue_message),
+            text = stringResource(StringsR.string.empty_recognition_queue_title),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = stringResource(StringsR.string.empty_recognition_queue_sub_message),
+            text = stringResource(StringsR.string.empty_recognition_queue_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,

@@ -8,12 +8,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -44,13 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.EnqueuedRecognitionUi
 import com.mrsep.musicrecognizer.feature.recognition.presentation.model.RemoteRecognitionResultUi
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun RecognitionLazyColumnItem(
     recognition: EnqueuedRecognitionUi,
@@ -78,10 +74,10 @@ internal fun RecognitionLazyColumnItem(
             .fillMaxWidth()
             .drawBehind { drawRect(color = containerColor) }
             .combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick,
+                interactionSource = null,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(contentPadding)
     ) {
@@ -124,14 +120,14 @@ internal fun RecognitionLazyColumnItem(
                 if (playing) {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_pause_48),
-                        contentDescription = stringResource(StringsR.string.stop_player),
+                        contentDescription = stringResource(StringsR.string.recording_stop_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )
                 } else {
                     Icon(
                         painter = painterResource(UiR.drawable.rounded_play_arrow_48),
-                        contentDescription = stringResource(StringsR.string.start_player),
+                        contentDescription = stringResource(StringsR.string.recording_start_player),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(80.dp)
                     )
@@ -189,26 +185,26 @@ internal fun EnqueuedRecognitionUi.getStatusMessage(concise: Boolean): String {
     val statusDescription = when (status) {
         ScheduledJobStatus.INACTIVE -> {
             when (result) {
-                RemoteRecognitionResultUi.Error.BadConnection -> stringResource(StringsR.string.bad_internet_connection)
-                is RemoteRecognitionResultUi.Error.BadRecording -> stringResource(StringsR.string.recording_error)
-                is RemoteRecognitionResultUi.Error.HttpError -> stringResource(StringsR.string.bad_network_response)
-                is RemoteRecognitionResultUi.Error.UnhandledError -> stringResource(StringsR.string.internal_error)
-                is RemoteRecognitionResultUi.Error.AuthError -> stringResource(StringsR.string.auth_error)
-                is RemoteRecognitionResultUi.Error.ApiUsageLimited -> stringResource(StringsR.string.service_usage_limited)
-                RemoteRecognitionResultUi.NoMatches -> stringResource(StringsR.string.no_matches_found)
-                is RemoteRecognitionResultUi.Success -> stringResource(StringsR.string.track_found)
-                null -> stringResource(StringsR.string.idle)
+                RemoteRecognitionResultUi.Error.BadConnection -> stringResource(StringsR.string.result_title_bad_connection)
+                is RemoteRecognitionResultUi.Error.BadRecording -> stringResource(StringsR.string.result_title_recording_error)
+                is RemoteRecognitionResultUi.Error.HttpError -> stringResource(StringsR.string.result_title_bad_network_response)
+                is RemoteRecognitionResultUi.Error.UnhandledError -> stringResource(StringsR.string.result_title_internal_error)
+                is RemoteRecognitionResultUi.Error.AuthError -> stringResource(StringsR.string.result_title_auth_error)
+                is RemoteRecognitionResultUi.Error.ApiUsageLimited -> stringResource(StringsR.string.result_title_service_usage_limited)
+                RemoteRecognitionResultUi.NoMatches -> stringResource(StringsR.string.result_title_no_matches)
+                is RemoteRecognitionResultUi.Success -> stringResource(StringsR.string.recognition_status_track_found)
+                null -> stringResource(StringsR.string.recognition_status_idle)
             }
         }
 
-        ScheduledJobStatus.ENQUEUED -> stringResource(StringsR.string.enqueued)
-        ScheduledJobStatus.RUNNING -> stringResource(StringsR.string.running)
+        ScheduledJobStatus.ENQUEUED -> stringResource(StringsR.string.recognition_status_enqueued)
+        ScheduledJobStatus.RUNNING -> stringResource(StringsR.string.recognition_status_running)
     }
     return if (concise) {
         statusDescription
     } else {
         stringResource(
-            StringsR.string.format_status,
+            StringsR.string.format_recognition_status,
             statusDescription
         )
     }

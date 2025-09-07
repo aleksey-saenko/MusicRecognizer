@@ -7,14 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
-import com.mrsep.musicrecognizer.core.common.util.getAppVersion
+import com.mrsep.musicrecognizer.core.common.util.getAppVersionName
 
 @Composable
 internal fun DebugBuildLabel(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val appVersion = "Version ${context.getAppVersion()}"
+    val appVersion = "Version ${context.getAppVersionName()}"
     Text(
         text = "$appVersion\nDevelopment build",
         modifier = modifier.alpha(0.8f),

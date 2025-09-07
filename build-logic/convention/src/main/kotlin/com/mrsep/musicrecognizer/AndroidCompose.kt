@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.mrsep.musicrecognizer
 
 import com.android.build.api.dsl.CommonExtension
@@ -7,7 +5,6 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.assign
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 
 internal fun Project.configureAndroidCompose(
@@ -45,9 +42,8 @@ internal fun Project.configureAndroidCompose(
             .relativeToRootProject("compose-reports")
             .let(reportsDestination::set)
 
-        stabilityConfigurationFile =
-            rootProject.layout.projectDirectory.file("compose_compiler_config.conf")
-
-        enableStrongSkippingMode = true
+        stabilityConfigurationFiles.addAll(
+            rootProject.layout.projectDirectory.file("compose_compiler_config.conf"),
+        )
     }
 }

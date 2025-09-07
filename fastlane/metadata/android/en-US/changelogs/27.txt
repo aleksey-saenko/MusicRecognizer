@@ -1,0 +1,2 @@
+* Fix app crash when switching to background (Android 14+)
+* Update translations

@@ -1,29 +1,29 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmapOrNull
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.size.Size
+import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.size.Size
+import coil3.toBitmap
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.getDominantColor
 import kotlinx.coroutines.Dispatchers
@@ -32,28 +32,29 @@ import kotlinx.coroutines.withContext
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun AlbumArtwork(
-    url: String?,
-    onArtworkClick: () -> Unit,
-    onArtworkCached: (Uri) -> Unit,
-    createSeedColor: Boolean,
-    onSeedColorCreated: (Color) -> Unit,
     modifier: Modifier = Modifier,
+    url: String?,
+    elevation: Dp,
+    shape: Shape,
+    onLoadedArtworkClick: (() -> Unit)? = null,
+    createSeedColor: Boolean,
+    onSeedColorCreated: (Int) -> Unit,
 ) {
     val placeholder = forwardingPainter(
         painter = painterResource(UiR.drawable.outline_album_fill1_24),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
         alpha = 0.3f
     )
     val context = LocalContext.current
-    val imageLoader = LocalContext.current.imageLoader
     val scope = rememberCoroutineScope()
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context)
             .data(url)
-            .size(Size.ORIGINAL)
+            .apply {
+                if (createSeedColor) size(Size.ORIGINAL)
+            }
             .allowHardware(!createSeedColor)
             .crossfade(50)
             .build(),
@@ -61,48 +62,37 @@ internal fun AlbumArtwork(
         fallback = placeholder,
         contentScale = ContentScale.Crop,
         onSuccess = { state ->
-            if (!state.result.request.allowHardware) {
+            if (createSeedColor && !state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
-                    state.result.drawable.toBitmapOrNull()?.getDominantColor()?.let { seedColor ->
-                        withContext(Dispatchers.Main) {
-                            onSeedColorCreated(seedColor)
-                        }
-                    }
-                }
-            }
-            scope.launch(Dispatchers.IO) {
-                state.result.diskCacheKey?.let { diskCacheKey ->
-                    imageLoader.diskCache?.openSnapshot(diskCacheKey)?.let { snapshot ->
-                        val cacheUri = FileProvider.getUriForFile(
-                            context,
-                            "${context.packageName}.fileprovider",
-                            snapshot.data.toFile()
-                        )
-                        snapshot.close()
-                        withContext(Dispatchers.Main) {
-                            onArtworkCached(cacheUri)
-                        }
-                    }
+                    val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
+                    withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
                 }
             }
         }
     )
+    val painterState by painter.state.collectAsStateWithLifecycle()
     Image(
         painter = painter,
         contentDescription = stringResource(StringsR.string.artwork),
         contentScale = ContentScale.Crop,
         modifier = modifier
             .shadow(
-                elevation = 2.dp,
-                shape = MaterialTheme.shapes.extraLarge
+                elevation = elevation,
+                shape = shape
             )
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.extraLarge
+                shape = shape
             )
-            .clickable(
-                enabled = painter.state is AsyncImagePainter.State.Success,
-                onClick = onArtworkClick
+            .then(
+                if (onLoadedArtworkClick != null) {
+                    Modifier.clickable(
+                        enabled = painterState is AsyncImagePainter.State.Success,
+                        onClick = onLoadedArtworkClick
+                    )
+                } else {
+                    Modifier
+                }
             )
     )
 }

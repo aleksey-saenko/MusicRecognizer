@@ -7,12 +7,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +19,7 @@ internal fun DeveloperScreen(
     viewModel: DeveloperViewModel = hiltViewModel()
 ) {
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
-    val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
+    val isProcessing = false
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
@@ -46,69 +44,11 @@ internal fun DeveloperScreen(
                 .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ButtonGroup(
-                title = "Database",
-                buttons = {
-                    Button(onClick = viewModel::clearDb) {
-                        Text(text = "Clear")
-                    }
-                    Button(onClick = viewModel::prepopulateDbFakes) {
-                        Text(text = "Load fake")
-                    }
-                    Button(onClick = viewModel::prepopulateDbAssets) {
-                        Text(text = "Load real")
-                    }
-                    Button(onClick = viewModel::prepopulateRecognitionDb) {
-                        Text(text = "Load enqueued")
-                    }
-                }
-            )
-            val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
-            val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
-            val amplitude = viewModel.amplitudeFlow.collectAsStateWithLifecycle(0f)
-            ButtonGroup(
-                title = "AudioRecorder (with encoder)",
-                subtitle = "soundLevel = ${amplitude.value}",
-                content = {
-                    AmplitudeVisualizerSmooth(
-                        currentValue = amplitude,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    )
-                },
-                buttons = {
-                    Button(
-                        onClick = {
-                            if (isRecording) {
-                                viewModel.stopAudioRecord()
-                            } else {
-                                viewModel.startAudioRecord()
-                            }
-                        },
-                        enabled = !isPlaying
-                    ) {
-                        Text(text = if (isRecording) "Stop REC" else "Start REC")
-                    }
-                    Button(
-                        onClick = {
-                            if (isPlaying) {
-                                viewModel.stopPlayer()
-                            } else {
-                                viewModel.startPlayer()
-                            }
-                        },
-                        enabled = !isRecording
-                    ) {
-                        Text(text = if (isPlaying) "Stop player" else "Start player")
-                    }
-                }
-            )
+
         }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ButtonGroup(
     modifier: Modifier = Modifier,

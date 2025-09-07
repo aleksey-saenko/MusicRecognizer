@@ -24,7 +24,7 @@ internal fun WelcomePage(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(StringsR.string.welcome),
+            text = stringResource(StringsR.string.onboarding_welcome),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge
         )

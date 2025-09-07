@@ -2,8 +2,9 @@ package com.mrsep.musicrecognizer.feature.recognition.presentation.model
 
 import androidx.compose.runtime.Immutable
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.EnqueuedRecognitionWithStatus
-import com.mrsep.musicrecognizer.feature.recognition.domain.model.ScheduledJobStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognitionWithStatus
+import com.mrsep.musicrecognizer.core.domain.recognition.model.ScheduledJobStatus
+import java.io.File
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -14,6 +15,7 @@ internal data class EnqueuedRecognitionUi(
     val title: String,
     val creationDateShort: String,
     val creationDateLong: String,
+    val recordingFile: File,
     val status: ScheduledJobStatus,
     val result: RemoteRecognitionResultUi?,
     val resultDateLong: String?
@@ -30,6 +32,7 @@ internal fun EnqueuedRecognitionWithStatus.toUi(
         creationDateLong = creationZonedTime.format(
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         ),
+        recordingFile = enqueued.recordFile,
         status = status,
         result = enqueued.result?.toUi(),
         resultDateLong = enqueued.resultDate?.atZone(ZoneId.systemDefault())?.format(

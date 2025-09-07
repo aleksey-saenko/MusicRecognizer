@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_screen_tap_to_recognize">برای شناسایی ضربه بزنید.</string>
+    <string name="main_screen_listening">گوش دادن</string>
+    <string name="widget_tap_to_recognize">برای شناسایی ضربه بزنید</string>
+    <string name="main_screen_listening_extra_time">یک بار دیگر تلاش می‌کنم</string>
+    <string name="widget_tap_to_try_again">برای تلاش مجدد ضربه بزنید</string>
+    <string name="widget_listening">گوش دادن</string>
+    <string name="widget_listening_subtitle_extra_time">در حال تلاش مجدد</string>
+    <string name="recognition_widget_description">شناسایی آهنگ در یک ضربه</string>
+    <string name="widget_listening_subtitle">شکیبا باشید</string>
+    <string name="notification_tap_to_recognize">برای شناسایی ضربه بزنید</string>
+</resources>

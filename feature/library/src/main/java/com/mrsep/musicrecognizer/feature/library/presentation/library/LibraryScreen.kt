@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
-import com.mrsep.musicrecognizer.feature.library.domain.model.TrackFilter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,17 +35,19 @@ internal fun LibraryScreen(
     val topBarBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     BackHandler(
-        enabled = multiSelectionState.multiselectEnabled,
+        enabled = multiSelectionState.hasSelected,
         onBack = multiSelectionState::deselectAll
     )
 
     when (val uiState = screenUiState) {
-        LibraryUiState.Loading -> LoadingStub(
+        LibraryUiState.Loading -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
-                .statusBarsPadding()
-        )
+        ) {
+            LibraryScreenLoadingTopBar(scrollBehavior = topBarBehaviour)
+            LoadingStub(modifier = Modifier.fillMaxSize())
+        }
 
         is LibraryUiState.Success -> Column(
             modifier = Modifier
@@ -55,7 +57,7 @@ internal fun LibraryScreen(
             LibraryScreenTopBar(
                 isLibraryEmpty = uiState.isEmptyLibrary,
                 isFilterApplied = uiState.trackFilter.isDefault.not(),
-                isMultiselectEnabled = multiSelectionState.multiselectEnabled,
+                isMultiselectEnabled = multiSelectionState.hasSelected,
                 selectedCount = multiSelectionState.selectedCount,
                 totalCount = uiState.trackList.size,
                 onSearchClick = onTrackSearchClick,

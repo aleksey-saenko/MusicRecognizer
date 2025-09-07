@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,16 +25,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mrsep.musicrecognizer.feature.preferences.domain.FallbackAction
-import com.mrsep.musicrecognizer.feature.preferences.domain.UserPreferences
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackAction
+import com.mrsep.musicrecognizer.core.domain.preferences.FallbackPolicy
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
 internal fun FallbackPolicyDialog(
-    fallbackPolicy: UserPreferences.FallbackPolicy,
-    onFallbackPolicyChanged: (UserPreferences.FallbackPolicy) -> Unit,
+    fallbackPolicy: FallbackPolicy,
+    onFallbackPolicyChanged: (FallbackPolicy) -> Unit,
     onDismissClick: () -> Unit,
 ) {
     AlertDialog(
@@ -54,7 +55,7 @@ internal fun FallbackPolicyDialog(
                 Text(text = stringResource(StringsR.string.fallback_policy_dialog_message))
                 FallbackActionsDropdownMenu(
                     options = allOptions,
-                    label = stringResource(StringsR.string.bad_internet_connection),
+                    label = stringResource(StringsR.string.fallback_trigger_bad_connection),
                     selectedOption = fallbackPolicy.badConnection,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(badConnection = option))
@@ -63,7 +64,7 @@ internal fun FallbackPolicyDialog(
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
-                    label = stringResource(StringsR.string.no_matches_found),
+                    label = stringResource(StringsR.string.fallback_trigger_no_matches_found),
                     selectedOption = fallbackPolicy.noMatches,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(noMatches = option))
@@ -72,7 +73,7 @@ internal fun FallbackPolicyDialog(
                 )
                 FallbackActionsDropdownMenu(
                     options = ignoreOrSaveOptions,
-                    label = stringResource(StringsR.string.other_failures),
+                    label = stringResource(StringsR.string.fallback_trigger_other_failures),
                     selectedOption = fallbackPolicy.anotherFailure,
                     onSelectOption = { option ->
                         onFallbackPolicyChanged(fallbackPolicy.copy(anotherFailure = option))
@@ -92,43 +93,42 @@ private fun FallbackActionsDropdownMenu(
     label: String,
     options: ImmutableList<FallbackAction>,
     selectedOption: FallbackAction,
-    onSelectOption: (FallbackAction) -> Unit
+    onSelectOption: (FallbackAction) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // workaround to change hardcoded shape of menu https://issuetracker.google.com/issues/283654243
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.small)) {
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedOption.getTitle(),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = modifier
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.small,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
-            OutlinedTextField(
-                value = selectedOption.getTitle(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = label) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption.getTitle()) },
-                        onClick = {
-                            onSelectOption(selectionOption)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.getTitle()) },
+                    onClick = {
+                        onSelectOption(selectionOption)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }
@@ -141,8 +141,8 @@ private val ignoreOrSaveOptions =
 @Composable
 private fun FallbackAction.getTitle(): String {
     return when (this) {
-        FallbackAction.Ignore -> stringResource(StringsR.string.ignore)
-        FallbackAction.Save -> stringResource(StringsR.string.save_the_recording)
-        FallbackAction.SaveAndLaunch -> stringResource(StringsR.string.save_the_recording_and_launch_retry)
+        FallbackAction.Ignore -> stringResource(StringsR.string.fallback_action_ignore)
+        FallbackAction.Save -> stringResource(StringsR.string.fallback_action_save_recording)
+        FallbackAction.SaveAndLaunch -> stringResource(StringsR.string.fallback_action_save_recording_and_retry)
     }
 }

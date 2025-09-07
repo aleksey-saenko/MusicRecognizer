@@ -2,18 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature android:name="android.hardware.microphone" android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MusicRecognizerApp"
+        android:appCategory="audio"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -22,7 +26,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicRecognizer.Splash"
-        tools:targetApi="34">
+        tools:targetApi="36">
 
         <activity
             android:name=".presentation.MainActivity"
@@ -46,25 +50,20 @@
         </activity>
 
         <activity
-            android:name=".feature.recognition.presentation.service.NotificationServiceActivity"
+            android:name=".feature.recognition.service.RecognitionControlActivity"
             android:excludeFromRecents="true"
             android:exported="false"
+            android:noHistory="true"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            android:theme="@style/Theme.MusicRecognizer.Translucent" />
 
         <service
-            android:name=".feature.recognition.presentation.service.NotificationService"
-            android:enabled="true"
+            android:name=".feature.recognition.service.RecognitionControlService"
             android:exported="false"
-            android:foregroundServiceType="microphone|specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Service start type on microphone restriction (on device reboot)" />
-        </service>
+            android:foregroundServiceType="microphone|mediaProjection" />
 
         <service
-            android:name=".feature.recognition.presentation.service.OneTimeRecognitionTileService"
-            android:enabled="true"
+            android:name=".feature.recognition.service.OneTimeRecognitionTileService"
             android:exported="true"
             android:icon="@drawable/ic_retro_microphone"
             android:label="@string/quick_tile_recognize"
@@ -82,13 +81,16 @@
         </service>
 
         <receiver
-            android:name=".ServiceStartupReceiver"
-            android:enabled="true"
+            android:name=".feature.recognition.service.DisableRecognitionControlServiceReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".feature.recognition.service.ServiceStartupReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
@@ -97,6 +99,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
 
             <meta-data
@@ -125,14 +128,5 @@
         </provider>
 
     </application>
-
-    <!-- App intends to open links to music services -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" />
-        </intent>
-    </queries>
 
 </manifest>

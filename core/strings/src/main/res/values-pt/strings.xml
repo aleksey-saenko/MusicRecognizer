@@ -38,7 +38,7 @@
     <string name="about_pref_title_github_repo">Repositório do GitHub</string>
     <string name="about_purpose_track_links_service">Fornece ligações de faixa específicos de plataforma adicionais</string>
     <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3 ou posterior</string>
-    <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento pelas notificações</string>
+    <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento</string>
     <string name="notification_channel_name_scheduled_result">Resultados de reconhecimentos agendados</string>
     <string name="recognition_widget_description">Identificar a música num toque</string>
     <string name="widget_listening_subtitle">Por favor, espere</string>
@@ -190,7 +190,7 @@
     <string name="high_contrast_text">Texto de alto-contraste</string>
     <string name="preferences">Preferências</string>
     <string name="pref_group_recognition">Reconhecimento</string>
-    <string name="pref_title_recognize_on_startup">Reconhecer ao iniciar</string>
+    <string name="pref_title_recognize_on_startup">Reconhecer ao iniciar a app</string>
     <string name="pref_title_audio_source">Fonte de áudio</string>
     <string name="pref_subtitle_audio_source">Definir configuração de gravação de áudio</string>
     <string name="audio_source_dialog_title">Fonte de áudio</string>
@@ -269,4 +269,10 @@
     <string name="crash_dialog_button_send">Enviar</string>
     <string name="crash_dialog_button_cancel">Cancelar</string>
     <string name="vibration_feedback_dialog_title">Vibração</string>
+    <string name="pref_title_manage_notifications">Gerir notificações</string>
+    <string name="notification_channel_name_foreground_result">Resultados de músicas encontradas em primeiro plano</string>
+    <string name="notification_channel_desc_foreground_result">Mostra resultados de músicas quando está no ecrã de reconhecimento</string>
+    <string name="notification_channel_name_background_result">Resultados de músicas encontradas em segundo plano</string>
+    <string name="notification_channel_desc_background_result">Mostra resultados de músicas quando a app está minimizada ou quando não está no ecrã de reconhecimento</string>
+    <string name="audio_source_dialog_use_alt_device_source">Usar fonte alternativa de áudio do dispositivo</string>
 </resources>

@@ -52,8 +52,8 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
-        // Excluded unfinished translations: "fa", "gu", "nl", "pl", "ro", "vi", iw
-        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "pt", "pt-rBR", "ru", "sk", "tr")
+        // Excluded unfinished translations: "fa", "gu", "pl", "ro", "vi", iw
+        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "nl", "pt", "pt-rBR", "ru", "sk", "tr", "zh-rCN")
     }
     aboutLibraries {
         // ./gradlew app:exportLibraryDefinitions

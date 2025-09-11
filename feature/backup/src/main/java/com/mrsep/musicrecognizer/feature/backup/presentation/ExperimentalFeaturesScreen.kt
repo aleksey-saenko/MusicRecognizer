@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
@@ -169,7 +169,7 @@ internal fun ExperimentalFeaturesScreen(
 private fun Context.deleteUriFile(uri: Uri): Boolean = try {
     DocumentsContract.deleteDocument(contentResolver, uri)
     true
-} catch (e: FileNotFoundException) {
+} catch (_: FileNotFoundException) {
     false
 }
 

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
@@ -268,7 +268,7 @@ private fun Context.openWikiSearch(query: String) {
     }
     try {
         startActivity(wikiSendIntent)
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         val lang = Locale.getDefault().language
         val encodedQuery = Uri.encode(query)
         val url = "https://$lang.wikipedia.org/wiki/Special:Search?search=$encodedQuery"

@@ -4799,22 +4799,6 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlin:kotlin-android-extensions-runtime",
-            "developers": [
-                {
-                    "organisationUrl": "https://www.jetbrains.com",
-                    "name": "Kotlin Team"
-                }
-            ],
-            "artifactVersion": "2.2.10",
-            "description": "Kotlin Android Extensions Runtime",
-            "name": "Kotlin Android Extensions Runtime",
-            "website": "https://kotlinlang.org/",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlin:kotlin-parcelize-runtime",
             "developers": [
                 {
@@ -4822,7 +4806,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.2.10",
+            "artifactVersion": "2.2.20",
             "description": "Runtime library for the Parcelize compiler plugin",
             "name": "Parcelize Runtime",
             "website": "https://kotlinlang.org/",
@@ -4838,7 +4822,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.2.10",
+            "artifactVersion": "2.2.20",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "website": "https://kotlinlang.org/",
@@ -4854,7 +4838,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.2.10",
+            "artifactVersion": "2.2.20",
             "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
             "name": "Kotlin Stdlib Common",
             "website": "https://kotlinlang.org/",

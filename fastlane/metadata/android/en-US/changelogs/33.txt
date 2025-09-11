@@ -1,0 +1,4 @@
+* Add Chinese (Simplified Han script) translation (Thanks @Cytrogen!)
+* Add Dutch translation (Thanks ojppe and Joost!)
+* Other translation updates
+* Minor fixes

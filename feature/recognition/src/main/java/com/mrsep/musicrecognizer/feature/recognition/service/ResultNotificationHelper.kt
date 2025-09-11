@@ -214,6 +214,22 @@ class ResultNotificationHelper @Inject constructor(
         }
     }
 
+    private suspend fun NotificationCompat.Builder.setLargeIconWithTrack(
+        artworkUrl: String?
+    ): NotificationCompat.Builder {
+        var largeIcon: Bitmap? = null
+        if (artworkUrl != null) {
+            val imageSizePx = appContext.dpToPx(64f).toInt()
+            largeIcon = appContext.getCachedImageOrNull(
+                url = artworkUrl,
+                allowHardware = false,
+                widthPx = imageSizePx,
+                heightPx = imageSizePx,
+            )
+        }
+        return if (largeIcon != null) setLargeIcon(largeIcon) else this
+    }
+
     private suspend fun NotificationCompat.Builder.setExpandedStyleWithTrack(
         artworkUrl: String?,
         contentTitle: String,
@@ -332,6 +348,8 @@ class ResultNotificationHelper @Inject constructor(
             .setShowWhen(true)
             .setOngoing(false)
             .setAutoCancel(true)
+            .setGroup(channelId)
+            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
     }
 
 

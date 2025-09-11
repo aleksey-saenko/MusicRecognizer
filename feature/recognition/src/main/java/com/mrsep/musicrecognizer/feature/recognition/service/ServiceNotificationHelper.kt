@@ -24,6 +24,7 @@ class ServiceNotificationHelper @Inject constructor(
             .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
+            .setGroup(NOTIFICATION_CHANNEL_ID_STATUS)
             .setOngoing(true) // Can be dismissed by user since API 34
             .setCategory(Notification.CATEGORY_SERVICE)
             .setSilent(true) // Avoids alert sound during recording

@@ -1,5 +1,8 @@
 package com.mrsep.musicrecognizer.presentation
 
+import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,12 +17,14 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.core.util.Consumer
 import androidx.lifecycle.withResumed
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -81,6 +86,18 @@ internal fun AppNavigation(
     val innerNavController = rememberNavController()
     val optionalOuterEntry by outerNavController.currentBackStackEntryAsState()
     val optionalInnerEntry by innerNavController.currentBackStackEntryAsState()
+    // Handle deep links manually due to activity launch mode
+    // https://developer.android.com/guide/navigation/design/deep-link#handle
+    val activity = LocalActivity.current as ComponentActivity
+    DisposableEffect(Unit) {
+        val deeplinkListener = Consumer<Intent> { intent ->
+            outerNavController.handleDeepLink(intent)
+        }
+        activity.addOnNewIntentListener(deeplinkListener)
+        onDispose {
+            activity.removeOnNewIntentListener(deeplinkListener)
+        }
+    }
     // Conditional navigation for onboarding and recognition request
     LaunchedEffect(
         optionalOuterEntry,

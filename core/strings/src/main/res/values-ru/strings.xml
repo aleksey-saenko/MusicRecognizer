@@ -103,7 +103,7 @@
     <string name="filter_exclude_favorites">Исключить избранные</string>
     <string name="filter_sort_by">Сортировать по</string>
     <string name="filter_recognition_date">Дате распознавания</string>
-    <string name="filter_title">Заголовку</string>
+    <string name="filter_title">Названию</string>
     <string name="filter_artist">Исполнителю</string>
     <string name="filter_release_date">Дате релиза</string>
     <string name="filter_order_By">Упорядочить по</string>
@@ -160,7 +160,7 @@
     <string name="artwork_share_menu_image">Изображение</string>
     <string name="track_metadata">Метаданные</string>
     <string name="track">Трек</string>
-    <string name="title">Заголовок</string>
+    <string name="title">Название</string>
     <string name="artist">Исполнитель</string>
     <string name="album">Альбом</string>
     <string name="artwork">Обложка</string>

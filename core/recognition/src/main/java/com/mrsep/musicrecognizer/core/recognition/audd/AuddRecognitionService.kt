@@ -29,7 +29,6 @@ import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
-import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -147,7 +146,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     }
                     try {
                         wsConnection.sendRecording(recordingToSend.data)
-                    } catch (_: ClosedSendChannelException) {
+                    } catch (_: Exception) {
+                        Log.d(TAG, "WebSocket connection closed for sending")
                         awaitCancellation()
                     }
                     lastResult = try {

@@ -1,0 +1,7 @@
+Version 1.12.1:
+* Hotfix: App crash during recognition with unstable network connection
+Version 1.12.0:
+* Add Chinese (Simplified Han script) translation (Thanks @Cytrogen!)
+* Add Dutch translation (Thanks ojppe and Joost!)
+* Other translation updates
+* Minor fixes

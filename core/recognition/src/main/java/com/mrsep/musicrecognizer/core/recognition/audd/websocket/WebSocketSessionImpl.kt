@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.io.IOException
@@ -61,10 +62,9 @@ internal class WebSocketSessionImpl @Inject constructor(
             delay(expDelay + jitter)
             true
         } else {
-            emit(Result.failure(cause))
             false
         }
-    }
+    }.catch { cause -> emit(Result.failure(cause)) }
 
     companion object {
         private const val BASE_RETRY_DELAY = 1000L

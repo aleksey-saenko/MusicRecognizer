@@ -47,7 +47,7 @@
     <string name="app_shortcut_recognize_short">Tuvasta</string>
     <string name="cannot_share_toast">Ei leia ühtegi rakendust, millega saaks jagada</string>
     <string name="web_browser_not_found_toast">Veebibrauserit ei leidu</string>
-    <string name="request_permission">Õigused on vajalikud</string>
+    <string name="request_permission">Küsi vajalikke õigusi</string>
     <string name="permission_rationale_record_audio">Et muusika tuvastamine toimiks, vajab rakendus õigust mikrofoni kasutamiseks.</string>
     <string name="permission_rationale_post_notifications">Et tuvastamine oleks hallatav ning toimiks ka siis, kui rakendus töötab taustal on vajalik õigus saata teavitusi.</string>
     <string name="permissions_denied_message">Eelmine kord oled sa oled keeldunud õiguste jagamisest. Seda otsust saad muuta rakenduse seadistustest.</string>
@@ -128,7 +128,7 @@
     <string name="delete_recognitions_title">Kustuta tuvastamised</string>
     <string name="onboarding_welcome">Tere tulemast</string>
     <string name="recognition_action_rename">Muuda nime</string>
-    <string name="onboarding_permission_message">Selleks, et rakendus toimiks korrektselt, vajab ta õigust helis salvestamiseks. Selle õiguse andmisega sa nõustud samuti, et salvestatud andmed on kasutusel <![CDATA[<a href="%1$s">veebiteenuses</a>]]> muusika tuvastamiseks. See rakendus ei kasuta salvestatud andmeid ühelgi muul eesmärgil.</string>
+    <string name="onboarding_permission_message">Selleks, et rakendus toimiks korrektselt, vajab ta õigust heli salvestamiseks. Selle õiguse andmisega sa nõustud samuti, et salvestatud andmed on kasutusel <![CDATA[<a href="%1$s">veebiteenuses</a>]]> muusika tuvastamiseks. See rakendus ei kasuta salvestatud andmeid ühelgi muul eesmärgil.</string>
     <string name="result_message_bad_network_response">Võrgupäringule vastamisel tekkis viga</string>
     <string name="result_title_internal_error">Sisemine viga</string>
     <string name="recording_start_player">Esita</string>

@@ -35,17 +35,13 @@ fun AppNavigationRail(
                             unviewedTracksCount = unviewedTracksCount
                         )
 
-                        else -> if (selected) {
-                            Icon(
-                                painter = painterResource(destinationEntry.selectedIconResId),
-                                contentDescription = null
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(destinationEntry.unselectedIconResId),
-                                contentDescription = null
-                            )
-                        }
+                        else -> Icon(
+                            painter = painterResource(
+                                if (selected) destinationEntry.selectedIconResId
+                                else destinationEntry.unselectedIconResId
+                            ),
+                            contentDescription = stringResource(destinationEntry.titleResId)
+                        )
                     }
                 },
                 label = {

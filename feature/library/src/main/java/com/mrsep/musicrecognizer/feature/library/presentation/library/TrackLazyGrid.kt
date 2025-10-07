@@ -66,7 +66,7 @@ internal fun TrackLazyGrid(
 }
 
 @Composable
-internal fun TrackLazyGridItem(
+private fun TrackLazyGridItem(
     track: TrackUi,
     selected: Boolean,
     onClick: () -> Unit,

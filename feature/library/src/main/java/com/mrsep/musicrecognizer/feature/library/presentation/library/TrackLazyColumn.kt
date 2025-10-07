@@ -86,7 +86,7 @@ internal fun TrackLazyColumn(
 }
 
 @Composable
-internal fun TrackLazyColumnItem(
+private fun TrackLazyColumnItem(
     track: TrackUi,
     selected: Boolean,
     onClick: () -> Unit,

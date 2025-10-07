@@ -55,17 +55,13 @@ fun AppNavigationBar(
                             unviewedTracksCount = unviewedTracksCount
                         )
 
-                        else -> if (selected) {
-                            Icon(
-                                painter = painterResource(destinationEntry.selectedIconResId),
-                                contentDescription = null
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(destinationEntry.unselectedIconResId),
-                                contentDescription = null
-                            )
-                        }
+                        else -> Icon(
+                            painter = painterResource(
+                                if (selected) destinationEntry.selectedIconResId
+                                else destinationEntry.unselectedIconResId
+                            ),
+                            contentDescription = stringResource(destinationEntry.titleResId)
+                        )
                     }
                 },
                 label = {
@@ -136,16 +132,12 @@ fun LibraryNavigationIcon(
             }
         }
     ) {
-        if (selected) {
-            Icon(
-                painter = painterResource(TopLevelDestination.Library.selectedIconResId),
-                contentDescription = null
-            )
-        } else {
-            Icon(
-                painter = painterResource(TopLevelDestination.Library.unselectedIconResId),
-                contentDescription = null
-            )
-        }
+        Icon(
+            painter = painterResource(
+                if (selected) TopLevelDestination.Library.selectedIconResId
+                else TopLevelDestination.Library.unselectedIconResId
+            ),
+            contentDescription = stringResource(TopLevelDestination.Library.titleResId)
+        )
     }
 }

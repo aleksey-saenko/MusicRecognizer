@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -69,7 +70,9 @@ internal fun LyricsScreenTopBar(
         targetState = selectedCount != 0,
         label = "selectionTransition"
     )
+    val topBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
     TopAppBar(
+        expandedHeight = topBarHeight,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             scrolledContainerColor = Color.Transparent,
@@ -95,6 +98,8 @@ internal fun LyricsScreenTopBar(
                         createSeedColor = createSeedColor,
                         onSeedColorCreated = onSeedColorCreated,
                         modifier = Modifier
+                            .height(topBarHeight)
+                            .fillMaxWidth()
                             .clickable(
                                 interactionSource = null,
                                 indication = null,
@@ -213,7 +218,7 @@ private fun TrackInfoRow(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.Start
     ) {
         if (artworkUrl != null) AlbumArtwork(
             url = artworkUrl,
@@ -222,12 +227,11 @@ private fun TrackInfoRow(
             createSeedColor = createSeedColor,
             onSeedColorCreated = onSeedColorCreated,
             modifier = Modifier
-                .weight(1f, false)
                 .padding(vertical = 12.dp)
                 .aspectRatio(1f, matchHeightConstraintsFirst = true)
         )
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(

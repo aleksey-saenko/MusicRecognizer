@@ -2,7 +2,7 @@
 <resources>
     <string name="main_screen_listening_extra_time">Provo di nuovo</string>
     <string name="widget_tap_to_recognize">Identifica</string>
-    <string name="widget_tap_to_try_again">Riprova</string>
+    <string name="widget_tap_to_try_again">Tocca per riprovare</string>
     <string name="widget_listening">Ascolto</string>
     <string name="widget_listening_subtitle">Attendi</string>
     <string name="widget_listening_subtitle_extra_time">Provo ancora</string>
@@ -140,7 +140,7 @@
     <string name="notification_listening">Ascolto</string>
     <string name="quick_tile_recognize">Riconosci canzone</string>
     <string name="quick_tile_cancel_recognition">Annulla riconoscimento</string>
-    <string name="cancel">Cancella</string>
+    <string name="cancel">Annulla</string>
     <string name="apply">Applica</string>
     <string name="applied">Impostato</string>
     <string name="reset">Ripristina</string>
@@ -236,9 +236,9 @@
     <string name="about_pref_subtitle_privacy_policy">Per saperne di più su come l\'applicazione gestisce i vostri dati</string>
     <string name="notification_button_disable_service">Ferma servizio</string>
     <string name="notification_channel_name_control">Controllo delle notifiche</string>
-    <string name="notification_channel_desc_control">Consente di controllare il processo di riconoscimento tramite notifiche</string>
-    <string name="notification_channel_name_scheduled_result">Risultati del riconoscimento programmato</string>
-    <string name="notification_channel_desc_scheduled_result">Consente di ricevere i risultati dei riconoscimenti programmati tramite notifiche</string>
+    <string name="notification_channel_desc_control">Consente di controllare il processo di riconoscimento</string>
+    <string name="notification_channel_name_scheduled_result">Risultati delle canzoni del riconoscimento programmato</string>
+    <string name="notification_channel_desc_scheduled_result">Mostra i risultati delle canzoni riconosciute che erano state programmate offline o in altri casi</string>
     <string name="crash_dialog_title">Audile si è bloccato</string>
     <string name="crash_dialog_button_send">Invia</string>
     <string name="crash_dialog_button_cancel">Cancella</string>
@@ -269,4 +269,10 @@
     <string name="notification_button_show_lyrics">Mostra testi</string>
     <string name="crash_dialog_comment_prompt">Puoi inserire informazioni aggiuntive qui:</string>
     <string name="about_pref_title_licenses">Licenze</string>
+    <string name="audio_source_dialog_use_alt_device_source">Usa dispositivo audio sorgente alternativo</string>
+    <string name="pref_title_manage_notifications">Gestisci notifiche</string>
+    <string name="notification_channel_name_foreground_result">Risultati della ricerca dei brani trovati in primo piano</string>
+    <string name="notification_channel_desc_foreground_result">Mostra i risultati delle canzoni quando sei nella schermata di riconoscimento</string>
+    <string name="notification_channel_name_background_result">Risultati della ricerca di brani musicali trovati in secondo piano</string>
+    <string name="notification_channel_desc_background_result">Mostra i risultati delle canzoni quando l\'app è ridotta a icona o non sei nella schermata di riconoscimento</string>
 </resources>

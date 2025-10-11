@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.core.recognition.acrcloud
 import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.RemoteRecognitionService
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.AcrCloudResponseJson
@@ -15,16 +15,19 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.InputProvider
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
+import io.ktor.utils.io.streams.asInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEmpty
@@ -34,11 +37,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
+import kotlinx.io.buffered
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.io.encoding.Base64
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "AcrCloudRecognitionService"
@@ -51,25 +54,18 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     private val lyricsFetcher: LyricsFetcher,
 ) : RemoteRecognitionService {
 
-    override suspend fun recognize(recording: AudioRecording): RemoteRecognitionResult {
-        return recognize(recording.data, recording.startTimestamp, recording.duration)
-    }
-
-    private suspend fun recognize(
-        recording: ByteArray,
-        recordingStartTimestamp: Instant,
-        recordingDuration: Duration,
-    ): RemoteRecognitionResult = withContext(ioDispatcher) {
-        if (recordingDuration > RECORDING_DURATION_LIMIT) {
-            // It's strange, but tests show that recordings are truncated from the beginning, not the end
-            Log.w(TAG, "It is discouraged to send recordings longer than $RECORDING_DURATION_LIMIT;" +
-                        " the beginning will be truncated on the server side.")
+    override suspend fun recognize(sample: AudioSample) = withContext(ioDispatcher) {
+        if (sample.duration > SAMPLE_DURATION_LIMIT) {
+            // It's strange, but tests show that samples are truncated from the beginning, not the end
+            Log.w(TAG, "It is discouraged to send samples longer than $SAMPLE_DURATION_LIMIT;" +
+                    " the beginning will be truncated on the server side.")
         }
         val httpClient = httpClientLazy.get()
         val timestamp = Instant.now().epochSecond.toString()
         val signature = createSignature(timestamp, config)
 
         val response = try {
+            val sampleSize = sample.file.length()
             httpClient.submitFormWithBinaryData(
                 url = "https://${config.host}$ENDPOINT",
                 formData = formData {
@@ -78,13 +74,15 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
                     append("signature_version", SIGNATURE_VERSION)
                     append("signature", signature)
                     append("data_type", DATA_TYPE)
-                    append("sample_bytes", "${recording.size}")
+                    append("sample_bytes", sampleSize)
                     append(
                         key = "sample",
-                        value = recording,
+                        value = InputProvider(sampleSize) {
+                            sample.file.inputStream().asInput().buffered()
+                        },
                         headers = Headers.build {
                             append(HttpHeaders.ContentDisposition, "filename=sample")
-                            append(HttpHeaders.ContentType, RECORDING_MEDIA_TYPE)
+                            append(HttpHeaders.ContentType, sample.mimeType)
                         }
                     )
                 }
@@ -95,9 +93,9 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
 
         if (response.status.isSuccess()) {
             val remoteResult = try {
-                response.body<AcrCloudResponseJson>()
-                    .toRecognitionResult(recordingStartTimestamp, recordingDuration)
+                response.body<AcrCloudResponseJson>().toRecognitionResult(sample.timestamp, sample.duration)
             } catch (e: Exception) {
+                ensureActive()
                 RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
             }
             if (remoteResult is RemoteRecognitionResult.Success) {
@@ -121,42 +119,37 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         }
     }
 
-    override suspend fun recognizeFirst(
-        recordingFlow: Flow<AudioRecording>,
-    ): RemoteRecognitionResult = withContext(ioDispatcher) {
+    override suspend fun recognizeUntilFirstMatch(samples: Flow<AudioSample>) = withContext(ioDispatcher) {
         var retryCounter = 0
-        // initially bad connection
-        // for case when after TIMEOUT_AFTER_RECORDING_FINISHED there is no any response yet
-        var lastResult: RemoteRecognitionResult =
-            RemoteRecognitionResult.Error.BadConnection
+        // Initially bad connection
+        // for case when after TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED there is no any response yet
+        var lastResult: RemoteRecognitionResult = RemoteRecognitionResult.Error.BadConnection
 
-        val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
-        val recordWithTimeoutJob = launch {
-            recordingFlow.collect(recordingChannel::send)
-            recordingChannel.close()
-            delay(TIMEOUT_AFTER_RECORDING_FINISHED)
+        val samplesChannel = Channel<AudioSample>(Channel.UNLIMITED)
+        val receiveSamplesWithTimeoutJob = launch {
+            samples.collect(samplesChannel::send)
+            samplesChannel.close()
+            delay(TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED)
         }
 
-        val remoteResultJob = recordingChannel.receiveAsFlow()
+        val remoteResultJob = samplesChannel.receiveAsFlow()
             .onEmpty {
-                lastResult = RemoteRecognitionResult.Error.BadRecording(
-                    "Empty audio recording stream"
-                )
+                lastResult = RemoteRecognitionResult.Error.BadRecording("Empty audio samples flow")
             }
-            .transformWhile<AudioRecording, Unit> { recording ->
-                lastResult = recognize(recording)
+            .transformWhile<AudioSample, Unit> { sample ->
+                lastResult = recognize(sample)
                 while (lastResult.isRetryRequired() && retryCounter < RETRY_ON_ERROR_LIMIT) {
                     retryCounter++
-                    lastResult = recognize(recording)
+                    lastResult = recognize(sample)
                 }
-                // continue recognition only if no matches
+                // Continue recognition only if no matches
                 lastResult is RemoteRecognitionResult.NoMatches
             }
             .launchIn(this)
 
         select {
-            remoteResultJob.onJoin { recordWithTimeoutJob.cancelAndJoin() }
-            recordWithTimeoutJob.onJoin { remoteResultJob.cancelAndJoin() }
+            remoteResultJob.onJoin { receiveSamplesWithTimeoutJob.cancelAndJoin() }
+            receiveSamplesWithTimeoutJob.onJoin { remoteResultJob.cancelAndJoin() }
         }
 
         lastResult
@@ -198,9 +191,8 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         private const val DATA_TYPE = "audio"
         private const val SIGNATURE_VERSION = "1"
 
-        val RECORDING_DURATION_LIMIT = 12.seconds
-        private const val RECORDING_MEDIA_TYPE = "audio/mp4"
+        val SAMPLE_DURATION_LIMIT = 12.seconds
+        private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
         private const val RETRY_ON_ERROR_LIMIT = 1
-        private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
     }
 }

@@ -97,7 +97,7 @@ internal fun Context.getWidgetTitleForStatus(status: RecognitionStatus) = when (
 
 internal fun Context.getWidgetSubtitleForStatus(status: RecognitionStatus) = when (status) {
     RecognitionStatus.Ready -> null
-    is RecognitionStatus.Recognizing -> if (status.extraTry) {
+    is RecognitionStatus.Recognizing -> if (status.extraTime) {
         getString(R.string.widget_listening_subtitle_extra_time)
     } else {
         getString(R.string.widget_listening_subtitle)
@@ -108,7 +108,7 @@ internal fun Context.getWidgetSubtitleForStatus(status: RecognitionStatus) = whe
         is RecognitionResult.NoMatches -> getString(R.string.widget_tap_to_try_again)
         is RecognitionResult.ScheduledOffline -> getSubtitle(recognitionResult.recognitionTask)
         is RecognitionResult.Error -> {
-            when (val error = recognitionResult.remoteError) {
+            when (recognitionResult.remoteError) {
                 RemoteRecognitionResult.Error.ApiUsageLimited -> getSubtitle(recognitionResult.recognitionTask)
                     ?: getString(R.string.result_message_service_usage_limited)
 

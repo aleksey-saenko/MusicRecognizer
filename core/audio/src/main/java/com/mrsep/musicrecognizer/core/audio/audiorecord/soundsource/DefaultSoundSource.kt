@@ -11,6 +11,7 @@ import android.media.projection.MediaProjection
 import android.os.Build
 import android.util.Log
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioRecordDispatcher
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharedFlow
@@ -29,7 +30,9 @@ internal class DefaultSoundSource(
     private val mediaProjection: MediaProjection? = null,
 ) : SoundSource {
 
+    override val audioSource = if (mediaProjection == null) AudioSource.MIC else AudioSource.DEVICE
     override val params: SoundSourceConfig? = SoundSourceConfigProvider.config
+
     private val soundLevelMeter = SoundLevelMeter(params)
     override val soundLevel by soundLevelMeter::soundLevel
 

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteRecognitionService {
 
-    suspend fun recognize(recording: AudioRecording): RemoteRecognitionResult
+    suspend fun recognize(sample: AudioSample): RemoteRecognitionResult
 
-    suspend fun recognizeFirst(recordingFlow: Flow<AudioRecording>): RemoteRecognitionResult
+    suspend fun recognizeUntilFirstMatch(samples: Flow<AudioSample>): RemoteRecognitionResult
 }

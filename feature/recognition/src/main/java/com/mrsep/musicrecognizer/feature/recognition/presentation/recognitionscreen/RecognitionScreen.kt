@@ -460,7 +460,7 @@ private fun getButtonTitle(recognitionStatus: RecognitionStatus, skipReady: Bool
             stringResource(StringsR.string.main_screen_tap_to_recognize)
         }
 
-        is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTry) {
+        is RecognitionStatus.Recognizing -> if (recognitionStatus.extraTime) {
             stringResource(StringsR.string.main_screen_listening_extra_time)
         } else {
             stringResource(StringsR.string.main_screen_listening)

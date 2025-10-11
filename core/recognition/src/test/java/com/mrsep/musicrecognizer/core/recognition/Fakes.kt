@@ -1,11 +1,13 @@
 package com.mrsep.musicrecognizer.core.recognition
 
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import org.junit.rules.TemporaryFolder
+import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -34,34 +36,49 @@ internal val fakeTrack = Track(
     ),
 )
 
-internal fun emptyAudioRecordingFlow(delayBeforeClose: Long) = flow<AudioRecording> {
+internal fun emptyAudioRecordingFlow(delayBeforeClose: Long) = flow<AudioSample> {
     delay(delayBeforeClose)
 }
 
-internal fun singleAudioRecordingFlow(initialDelay: Duration) = flow {
+internal fun singleAudioRecordingFlow(
+    initialDelay: Duration,
+    temporaryFolder: TemporaryFolder
+) = flow {
     delay(initialDelay)
     emit(
-        AudioRecording(
-            data = ByteArray(100 * 1024),
+        AudioSample(
+            file = File(temporaryFolder.root, "1").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 1 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 3.seconds,
-            nonSilenceDuration = 3.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
 }
 
-internal fun infinityAudioRecordingFlow(interval: Duration, initialDelay: Duration = interval) = flow {
+internal fun infinityAudioRecordingFlow(
+    interval: Duration,
+    initialDelay: Duration = interval,
+    temporaryFolder: TemporaryFolder
+) = flow {
     var counter = 0L
     delay(initialDelay)
     while (true) {
         emit(
-            AudioRecording(
-                data = ByteArray(100 * 1024),
+            AudioSample(
+                file = File(temporaryFolder.root, "1").also {
+                    if (!it.exists()) {
+                        it.createNewFile()
+                        it.writeBytes(ByteArray (10 * 1024) { 1 })
+                    }
+                },
+                timestamp = Instant.now(),
                 duration = 3.seconds,
-                nonSilenceDuration = 3.seconds,
-                startTimestamp = Instant.now(),
-                isFallback = false
+                mimeType = "audio/mp4",
             )
         )
         println("Emitted rec #$counter")
@@ -76,59 +93,79 @@ internal const val normalAudioDelay2 = 1000L
 internal const val normalAudioDelay3 = 1500L
 internal const val normalAudioDelay4 = 1000L
 internal const val normalAudioDelay5 = 1500L
-internal val normalAudioRecordingFlow get() = flow {
+internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
     delay(normalAudioDelay1)
     emit(
-        AudioRecording(
-            data = ByteArray(100 * 1024) { 1 },
+        AudioSample(
+            file = File(temporaryFolder.root, "1").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 1 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 3.seconds,
-            nonSilenceDuration = 3.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
     println("Emitted rec #1")
     delay(normalAudioDelay2)
     emit(
-        AudioRecording(
-            data = ByteArray(200 * 1024) { 2 },
+        AudioSample(
+            file = File(temporaryFolder.root, "2").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 2 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 4.seconds,
-            nonSilenceDuration = 4.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
     println("Emitted rec #2")
     delay(normalAudioDelay3)
     emit(
-        AudioRecording(
-            data = ByteArray(300 * 1024) { 3 },
+        AudioSample(
+            file = File(temporaryFolder.root, "3").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 3 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 5.seconds,
-            nonSilenceDuration = 5.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
     println("Emitted rec #3")
     delay(normalAudioDelay4)
     emit(
-        AudioRecording(
-            data = ByteArray(400 * 1024) { 4 },
+        AudioSample(
+            file = File(temporaryFolder.root, "4").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 4 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 6.seconds,
-            nonSilenceDuration = 6.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
     println("Emitted rec #4")
     delay(normalAudioDelay5)
     emit(
-        AudioRecording(
-            data = ByteArray(500 * 1024) { 5 },
+        AudioSample(
+            file = File(temporaryFolder.root, "5").also {
+                if (!it.exists()) {
+                    it.createNewFile()
+                    it.writeBytes(ByteArray (10 * 1024) { 5 })
+                }
+            },
+            timestamp = Instant.now(),
             duration = 7.seconds,
-            nonSilenceDuration = 7.seconds,
-            startTimestamp = Instant.now(),
-            isFallback = false
+            mimeType = "audio/mp4",
         )
     )
     println("Emitted rec #5")

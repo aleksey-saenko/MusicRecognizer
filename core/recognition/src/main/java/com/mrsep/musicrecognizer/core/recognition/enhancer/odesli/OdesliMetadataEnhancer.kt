@@ -12,6 +12,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
@@ -58,6 +59,7 @@ internal class OdesliMetadataEnhancer @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
+                ensureActive()
                 RemoteMetadataEnhancingResult.Error.UnhandledError(
                     message = e.message ?: "",
                     cause = e

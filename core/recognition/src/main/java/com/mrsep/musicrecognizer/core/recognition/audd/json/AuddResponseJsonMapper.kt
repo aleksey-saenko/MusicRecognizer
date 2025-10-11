@@ -27,14 +27,14 @@ private const val TAG = "AuddResponseJsonMapper"
 
 internal fun AuddResponseJson.toRecognitionResult(
     json: Json,
-    recordingStartTimestamp: Instant,
-    recordingDuration: Duration,
+    sampleStartTimestamp: Instant,
+    sampleDuration: Duration,
 ): RemoteRecognitionResult {
     return when (status) {
         "success" -> if (result == null) {
             RemoteRecognitionResult.NoMatches
         } else {
-            parseSuccessResult(result, recordingStartTimestamp, recordingDuration, json)
+            parseSuccessResult(result, sampleStartTimestamp, sampleDuration, json)
         }
 
         "error" -> if (error == null) {
@@ -49,8 +49,8 @@ internal fun AuddResponseJson.toRecognitionResult(
 
 private fun parseSuccessResult(
     result: AuddResponseJson.Result,
-    recordingStartTimestamp: Instant,
-    recordingDuration: Duration,
+    sampleStartTimestamp: Instant,
+    sampleDuration: Duration,
     json: Json,
 ): RemoteRecognitionResult {
     val trackTitle = result.parseTrackTitle()
@@ -63,7 +63,7 @@ private fun parseSuccessResult(
 
     val trackDuration = result.parseTrackDuration()
     val recognizedAt = result.timecode?.run(::parseRecognizedAt)
-        ?.minus(recordingDuration)
+        ?.minus(sampleDuration)
         ?.coerceIn(Duration.ZERO, trackDuration)
 
     return RemoteRecognitionResult.Success(
@@ -76,7 +76,7 @@ private fun parseSuccessResult(
             duration = trackDuration,
             recognizedAt = recognizedAt,
             recognizedBy = RecognitionProvider.Audd,
-            recognitionDate = recordingStartTimestamp,
+            recognitionDate = sampleStartTimestamp,
             lyrics = result.parseLyrics(),
             artworkUrl = trackArtwork?.url,
             artworkThumbUrl = trackArtwork?.thumbUrl,

@@ -4,7 +4,7 @@ sealed class RecognitionStatus {
 
     data object Ready : RecognitionStatus()
 
-    data class Recognizing(val extraTry: Boolean) : RecognitionStatus()
+    data class Recognizing(val extraTime: Boolean) : RecognitionStatus()
 
     data class Done(val result: RecognitionResult) : RecognitionStatus()
 }

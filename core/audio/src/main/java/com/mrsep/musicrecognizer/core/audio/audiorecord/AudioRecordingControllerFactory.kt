@@ -1,7 +1,9 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord
 
 import android.content.Context
-import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AdtsRecordingController
+import android.media.projection.MediaProjection
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.Mp4RecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.DefaultSoundSource
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.VisualizerSoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
@@ -10,29 +12,30 @@ import javax.inject.Inject
 
 class AudioRecordingControllerFactory @Inject constructor(
     @ApplicationContext private val appContext: Context,
+    private val audioRecordingDataSource: AudioRecordingDataSource
 ) {
 
     fun getAudioController(audioCaptureConfig: AudioCaptureConfig): AudioRecordingController {
+        fun deviceSoundSource(mediaProjection: MediaProjection?) = if (mediaProjection != null) {
+            DefaultSoundSource(appContext, mediaProjection)
+        } else {
+            VisualizerSoundSource(appContext)
+        }
         return when (audioCaptureConfig) {
-            AudioCaptureConfig.Microphone -> AdtsRecordingController(
-                soundSource = DefaultSoundSource(appContext)
+            AudioCaptureConfig.Microphone -> Mp4RecordingController(
+                soundSource = DefaultSoundSource(appContext),
+                audioRecordingDataSource = audioRecordingDataSource,
             )
 
-            is AudioCaptureConfig.Device -> AdtsRecordingController(
-                soundSource = if (audioCaptureConfig.mediaProjection != null) {
-                    DefaultSoundSource(appContext, audioCaptureConfig.mediaProjection)
-                } else {
-                    VisualizerSoundSource(appContext)
-                }
+            is AudioCaptureConfig.Device -> Mp4RecordingController(
+                soundSource = deviceSoundSource(audioCaptureConfig.mediaProjection),
+                audioRecordingDataSource = audioRecordingDataSource,
             )
 
             is AudioCaptureConfig.Auto -> DeviceFirstAdtsRecordingController(
                 microphoneSoundSource = DefaultSoundSource(appContext),
-                deviceSoundSource = if (audioCaptureConfig.mediaProjection != null) {
-                    DefaultSoundSource(appContext, audioCaptureConfig.mediaProjection)
-                } else {
-                    VisualizerSoundSource(appContext)
-                }
+                deviceSoundSource = deviceSoundSource(audioCaptureConfig.mediaProjection),
+                audioRecordingDataSource = audioRecordingDataSource,
             )
         }
     }

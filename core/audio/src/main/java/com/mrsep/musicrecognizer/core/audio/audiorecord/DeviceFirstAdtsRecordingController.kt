@@ -1,19 +1,25 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord
 
-import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AdtsRecordingController
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.Mp4RecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingSession
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.produceIn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 import kotlin.time.Duration.Companion.seconds
@@ -22,10 +28,11 @@ internal class DeviceFirstAdtsRecordingController(
     microphoneSoundSource: SoundSource,
     deviceSoundSource: SoundSource,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    audioRecordingDataSource: AudioRecordingDataSource,
 ) : AudioRecordingController {
 
-    private val microphoneController = AdtsRecordingController(microphoneSoundSource)
-    private val deviceController = AdtsRecordingController(deviceSoundSource)
+    private val microphoneController = Mp4RecordingController(microphoneSoundSource, audioRecordingDataSource)
+    private val deviceController = Mp4RecordingController(deviceSoundSource, audioRecordingDataSource)
 
     override val soundLevel: StateFlow<Float> = combine(
         microphoneSoundSource.soundLevel,
@@ -38,18 +45,32 @@ internal class DeviceFirstAdtsRecordingController(
         initialValue = 0f
     )
 
-    override fun audioRecordingFlow(scheme: RecordingScheme): Flow<Result<AudioRecording>> {
-        return microphoneController.audioRecordingFlow(scheme)
-            .zip(deviceController.audioRecordingFlow(scheme)) { microphoneResult, deviceResult ->
-                val micRecording = microphoneResult.getOrThrow()
-                val devRecording = deviceResult.getOrThrow()
+    context(scope: CoroutineScope)
+    override fun startRecordingSession(scheme: RecordingScheme): AudioRecordingSession {
+        val microphoneSession = microphoneController.startRecordingSession(scheme)
+        val deviceSession = deviceController.startRecordingSession(scheme)
+
+        val resultChannel = microphoneSession.recordings.receiveAsFlow()
+            .zip(deviceSession.recordings.receiveAsFlow()) { micRecording, devRecording ->
                 val minSignificantDuration = minOf(2.seconds, micRecording.nonSilenceDuration)
                 if (devRecording.nonSilenceDuration > minSignificantDuration) {
-                    deviceResult
+                    devRecording
                 } else {
-                    microphoneResult
+                    micRecording
                 }
             }
-            .catch { emit(Result.failure(it)) }
+            .buffer(Channel.UNLIMITED)
+            .produceIn(scope)
+
+        return object : AudioRecordingSession {
+            override val recordings = resultChannel
+
+            override suspend fun cancelAndDeleteSessionFiles(): Unit = coroutineScope {
+                awaitAll(
+                    async { microphoneSession.cancelAndDeleteSessionFiles() },
+                    async { deviceSession.cancelAndDeleteSessionFiles() }
+                )
+            }
+        }
     }
 }

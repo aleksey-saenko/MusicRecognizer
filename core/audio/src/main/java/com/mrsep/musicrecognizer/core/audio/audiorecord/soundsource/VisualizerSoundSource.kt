@@ -9,6 +9,7 @@ import android.os.HandlerThread
 import android.os.Process
 import android.util.Log
 import androidx.activity.ComponentActivity.AUDIO_SERVICE
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.android.asCoroutineDispatcher
@@ -31,6 +32,8 @@ private const val TAG = "VisualizerSoundSource"
 internal class VisualizerSoundSource(
     appContext: Context,
 ): SoundSource {
+
+    override val audioSource = AudioSource.DEVICE
 
     private val audioManager = appContext.getSystemService(AUDIO_SERVICE) as AudioManager
     private val deviceDefaultOutputSampleRate = audioManager

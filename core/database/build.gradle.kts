@@ -20,6 +20,7 @@ android {
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.core.audio)
 
     implementation(libs.kotlinx.coroutinesAndroid)
     implementation(libs.androidx.core.ktx)

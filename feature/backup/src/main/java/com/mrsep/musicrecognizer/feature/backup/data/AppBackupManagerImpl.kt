@@ -11,7 +11,7 @@ import com.mrsep.musicrecognizer.core.datastore.UserPreferencesProto
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.common.util.getAppVersionCode
-import com.mrsep.musicrecognizer.core.data.enqueued.RecordingFileDataSource
+import com.mrsep.musicrecognizer.core.data.enqueued.AudioSampleDataSource
 import com.mrsep.musicrecognizer.core.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.core.datastore.USER_PREFERENCES_STORE
 import com.mrsep.musicrecognizer.feature.backup.AppBackupManager
@@ -42,7 +42,7 @@ import kotlin.io.path.exists
 
 internal class AppBackupManagerImpl @Inject constructor(
     private val database: ApplicationDatabase,
-    private val recordingFileDataSource: RecordingFileDataSource,
+    private val audioSampleDataSource: AudioSampleDataSource,
     private val userPreferencesDataStore: DataStore<UserPreferencesProto>,
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
@@ -55,7 +55,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     override suspend fun estimateAppDataSize(): Map<BackupEntry, Long> {
         return withContext(ioDispatcher) {
             val databaseSize = database.getDataSize()
-            val recordingsSize = recordingFileDataSource.getTotalSize()
+            val recordingsSize = audioSampleDataSource.getTotalSize()
             val preferencesSize = userPreferencesDataStore.data.first().serializedSize.toLong()
             mapOf(
                 BackupEntry.Data to databaseSize + recordingsSize,
@@ -72,7 +72,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         try {
             val outputStream = try {
                 requireNotNull(appContext.contentResolver.openOutputStream(destination))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 return@withContext BackupResult.FileNotFound
             }
             ZipOutputStream(outputStream.buffered()).use { zipInputStream ->
@@ -117,7 +117,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private suspend fun exportRecordings(zipOutputStream: ZipOutputStream) {
-        val recordings = recordingFileDataSource.getFiles()
+        val recordings = audioSampleDataSource.getFiles()
         with(zipOutputStream) {
             for (recording in recordings) {
                 coroutineContext.ensureActive()
@@ -144,7 +144,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         try {
             val inputStream = try {
                 requireNotNull(appContext.contentResolver.openInputStream(source))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 return@withContext BackupMetadataResult.FileNotFound
             }
             ZipInputStream(inputStream.buffered()).use { zipInputStream ->
@@ -206,7 +206,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         check(entries.isNotEmpty()) { "At least one BackupEntry must be provided" }
         val inputStream = try {
             requireNotNull(appContext.contentResolver.openInputStream(source))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return@withContext RestoreResult.FileNotFound
         }
         try {
@@ -244,7 +244,7 @@ internal class AppBackupManagerImpl @Inject constructor(
                             val recordingName = findRecordingName(currentEntry)
                             if (recordingName != null) {
                                 if (entries.contains(BackupEntry.Data) && appDataDeleted) {
-                                    importRecording(recordingName, zipInputStream)
+                                    importRecording(zipInputStream, recordingName)
                                 }
                             } else {
                                 val msg = "Unknown backup entry \"${currentEntry.name}\""
@@ -275,8 +275,8 @@ internal class AppBackupManagerImpl @Inject constructor(
         Files.copy(zipInputStream, databasePath, StandardCopyOption.REPLACE_EXISTING)
     }
 
-    private suspend fun importRecording(recordingName: String, zipInputStream: ZipInputStream) {
-        recordingFileDataSource.import(zipInputStream, recordingName)
+    private suspend fun importRecording(zipInputStream: ZipInputStream, filename: String) {
+        audioSampleDataSource.import(zipInputStream, filename)
     }
 
     private fun importPreferences(zipInputStream: ZipInputStream) {
@@ -290,7 +290,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         // If we delete only rows, Room will inform all background workers about data deletion,
         // and they will cancel themselves. Bad contract?
         database.clearAllTables()
-        recordingFileDataSource.deleteAll()
+        audioSampleDataSource.deleteAll()
         with(appContext.imageLoader) {
             diskCache?.clear()
             memoryCache?.clear()
@@ -324,7 +324,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         return try {
             json.decodeFromString<BackupMetadata>(metadataJson)
                 .takeIf { it.backupSignature == BACKUP_VERIFICATION_UUID }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -341,6 +341,6 @@ internal class AppBackupManagerImpl @Inject constructor(
         private const val RECORDINGS_DIR_ZIP_ENTRY = "audio_recordings/"
         private const val BACKUP_VERIFICATION_UUID = "9530d0d1-8023-4c3a-99d0-7cbb084020f1"
 
-        private val recordingEntryNamePattern = Regex("^$RECORDINGS_DIR_ZIP_ENTRY(rec_\\d+)\$")
+        private val recordingEntryNamePattern = Regex("^$RECORDINGS_DIR_ZIP_ENTRY(rec_\\d+(?:\\.\\w+)?)\$")
     }
 }

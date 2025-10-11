@@ -1,9 +1,12 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource
 
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSource
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal interface SoundSource {
+
+    val audioSource: AudioSource
 
     /**
      * Null value represents that there is no available SoundSourceConfig for this device.

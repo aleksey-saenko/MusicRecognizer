@@ -3,7 +3,7 @@ package com.mrsep.musicrecognizer.core.recognition.audd
 import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.RemoteRecognitionService
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
@@ -15,12 +15,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.InputProvider
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
+import io.ktor.utils.io.streams.asInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.TimeoutCancellationException
@@ -30,6 +32,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
@@ -38,10 +41,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlinx.io.buffered
 import kotlinx.serialization.json.Json
 import java.io.IOException
-import java.time.Instant
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "AuddRecognitionService"
@@ -54,15 +56,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     private val json: Json,
 ) : RemoteRecognitionService {
 
-    override suspend fun recognize(recording: AudioRecording): RemoteRecognitionResult {
-        return recognize(recording.data, recording.startTimestamp, recording.duration)
-    }
-
-    private suspend fun recognize(
-        recording: ByteArray,
-        startTimestamp: Instant,
-        recordingDuration: Duration,
-    ): RemoteRecognitionResult = withContext(ioDispatcher) {
+    override suspend fun recognize(sample: AudioSample) = withContext(ioDispatcher) {
         val httpClient = httpClientLazy.get()
         val response = try {
             httpClient.submitFormWithBinaryData(
@@ -72,10 +66,12 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     append("return", RETURN_PARAM)
                     append(
                         key = "file",
-                        value = recording,
+                        value = InputProvider(sample.file.length()) {
+                            sample.file.inputStream().asInput().buffered()
+                        },
                         headers = Headers.build {
                             append(HttpHeaders.ContentDisposition, "filename=sample")
-                            append(HttpHeaders.ContentType, RECORDING_MEDIA_TYPE)
+                            append(HttpHeaders.ContentType, sample.mimeType)
                         }
                     )
                 }
@@ -85,9 +81,9 @@ internal class AuddRecognitionService @AssistedInject constructor(
         }
         if (response.status.isSuccess()) {
             try {
-                response.body<AuddResponseJson>()
-                    .toRecognitionResult(json, startTimestamp, recordingDuration)
+                response.body<AuddResponseJson>().toRecognitionResult(json, sample.timestamp, sample.duration)
             } catch (e: Exception) {
+                ensureActive()
                 RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
             }
         } else {
@@ -99,24 +95,24 @@ internal class AuddRecognitionService @AssistedInject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun recognizeFirst(recordingFlow: Flow<AudioRecording>) = withContext(ioDispatcher) {
-        val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
-        var emptyRecordingStream = false
-        val recordWithTimeout = launch {
-            recordingFlow
-                .onEmpty { emptyRecordingStream = true }
-                .collect(recordingChannel::send)
-            recordingChannel.close()
-            if (!emptyRecordingStream) {
-                delay(TIMEOUT_AFTER_RECORDING_FINISHED)
+    override suspend fun recognizeUntilFirstMatch(samples: Flow<AudioSample>) = withContext(ioDispatcher) {
+        val samplesChannel = Channel<AudioSample>(Channel.UNLIMITED)
+        var emptySamplesFlow = false
+        val receiveSamplesWithTimeout = launch {
+            samples
+                .onEmpty { emptySamplesFlow = true }
+                .collect(samplesChannel::send)
+            samplesChannel.close()
+            if (!emptySamplesFlow) {
+                delay(TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED)
             }
         }
 
         // Initially bad connection
-        // for case when after TIMEOUT_AFTER_RECORDING_FINISHED there is no any response yet
+        // for case when after TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED there is no any response yet
         var lastResult: RemoteRecognitionResult = RemoteRecognitionResult.Error.BadConnection
         val remoteResult = async {
-            var unprocessedRecording: AudioRecording? = null
+            var unprocessedSample: AudioSample? = null
             webSocketSession.startReconnectingSession(WEB_SOCKET_RECONNECT_LIMIT) {
                 url {
                     takeFrom(WEB_SOCKET_BASE_URL)
@@ -136,24 +132,34 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     return@mapLatest lastResult
                 }
                 do {
-                    val recordingToSend = unprocessedRecording
-                        ?: recordingChannel.receiveCatching().getOrNull()
-                        ?: break // the channel is closed, no more recordings
-                    unprocessedRecording = recordingToSend
+                    val sampleToSend = unprocessedSample
+                        ?: samplesChannel.receiveCatching().getOrNull()
+                        ?: break // the channel is closed, no more samples
+                    unprocessedSample = sampleToSend
                     // We don't expect any responses right now, but make sure the channel is empty
                     while (wsConnection.responseChannel.tryReceive().isSuccess) {
                         Log.w(TAG, "Unexpected response dropped")
                     }
+                    val sampleData = try {
+                        sampleToSend.file.readBytes()
+                    } catch (e: IOException) {
+                        lastResult = RemoteRecognitionResult.Error.BadRecording(
+                            message = e.message ?: "",
+                            cause = e
+                        )
+                        return@mapLatest lastResult
+                    }
                     try {
-                        wsConnection.sendRecording(recordingToSend.data)
+                        wsConnection.sendSample(sampleData)
                     } catch (_: Exception) {
+                        ensureActive()
                         Log.d(TAG, "WebSocket connection closed for sending")
                         awaitCancellation()
                     }
                     lastResult = try {
                         withTimeout(WEB_SOCKET_RESPONSE_TIMEOUT) {
                             wsConnection.responseChannel.receive().toRecognitionResult(
-                                json, recordingToSend.startTimestamp, recordingToSend.duration
+                                json, sampleToSend.timestamp, sampleToSend.duration
                             )
                         }
                     } catch (_: TimeoutCancellationException) {
@@ -161,20 +167,18 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     } catch (_: ClosedReceiveChannelException) {
                         awaitCancellation()
                     }
-                    unprocessedRecording = null
+                    unprocessedSample = null
                 } while (lastResult == RemoteRecognitionResult.NoMatches)
                 lastResult
             }.first()
         }
 
         select {
-            remoteResult.onJoin { recordWithTimeout.cancelAndJoin() }
-            recordWithTimeout.onJoin {
+            remoteResult.onJoin { receiveSamplesWithTimeout.cancelAndJoin() }
+            receiveSamplesWithTimeout.onJoin {
                 remoteResult.cancelAndJoin()
-                if (emptyRecordingStream) {
-                    lastResult = RemoteRecognitionResult.Error.BadRecording(
-                        "Empty audio recording stream"
-                    )
+                if (emptySamplesFlow) {
+                    lastResult = RemoteRecognitionResult.Error.BadRecording("Empty audio samples flow")
                 }
             }
         }
@@ -190,9 +194,8 @@ internal class AuddRecognitionService @AssistedInject constructor(
         private const val REST_BASE_URL = "https://api.audd.io/"
         private const val WEB_SOCKET_BASE_URL = "wss://api.audd.io/ws/"
         private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
-        private const val RECORDING_MEDIA_TYPE = "audio/mp4"
 
-        private val TIMEOUT_AFTER_RECORDING_FINISHED = 10.seconds
+        private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
         private val WEB_SOCKET_RESPONSE_TIMEOUT = 15.seconds
         private const val WEB_SOCKET_RECONNECT_LIMIT = 1
     }

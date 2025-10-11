@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.core.database.enqueued.model.EnqueuedRecognitionEntity
 import com.mrsep.musicrecognizer.core.database.enqueued.model.EnqueuedRecognitionEntityWithTrack
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
+import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +16,7 @@ import java.io.File
 import javax.inject.Inject
 
 internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
-    private val recordingFileDataSource: RecordingFileDataSource,
+    private val audioSampleDataSource: AudioSampleDataSource,
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     database: ApplicationDatabase
@@ -25,17 +25,14 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
     private val dao = database.enqueuedRecognitionDao()
     private val persistentCoroutineContext = appScope.coroutineContext + ioDispatcher
 
-    override suspend fun createRecognition(audioRecording: AudioRecording, title: String): Int? {
+    override suspend fun createRecognition(sample: AudioSample, title: String): Int? {
         return withContext(persistentCoroutineContext) {
-            recordingFileDataSource.write(
-                audioRecording.data,
-                audioRecording.startTimestamp
-            )?.let { recordingFile ->
+            audioSampleDataSource.copy(sample)?.let { sample ->
                 val enqueued = EnqueuedRecognitionEntity(
                     id = 0,
                     title = title,
-                    recordFile = recordingFile,
-                    creationDate = audioRecording.startTimestamp
+                    recordFile = sample.file,
+                    creationDate = sample.timestamp
                 )
                 dao.insert(enqueued).toInt()
             }
@@ -54,16 +51,16 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getRecordingFile(recognitionId: Int): File? {
+    override suspend fun getAudioSampleFile(recognitionId: Int): File? {
         return withContext(ioDispatcher) {
             dao.getRecordingFile(recognitionId)
         }
     }
 
-    override suspend fun getRecording(recognitionId: Int): AudioRecording? {
+    override suspend fun getAudioSample(recognitionId: Int): AudioSample? {
         return withContext(ioDispatcher) {
             dao.getRecordingFile(recognitionId)?.let { file ->
-                recordingFileDataSource.read(file)
+                audioSampleDataSource.read(file)
             }
         }
     }
@@ -72,13 +69,13 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
         withContext(persistentCoroutineContext) {
             val files = dao.getRecordingFiles(recognitionIds)
             dao.delete(recognitionIds)
-            files.forEach { file -> recordingFileDataSource.delete(file) }
+            files.forEach { file -> audioSampleDataSource.delete(file) }
         }
     }
 
     override suspend fun deleteAll() {
         withContext(persistentCoroutineContext) {
-            recordingFileDataSource.deleteAll()
+            audioSampleDataSource.deleteAll()
             dao.deleteAll()
         }
     }

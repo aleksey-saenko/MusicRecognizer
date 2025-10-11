@@ -2,8 +2,8 @@ package com.mrsep.musicrecognizer.core.data.di
 
 import com.mrsep.musicrecognizer.core.data.ConnectivityManagerNetworkMonitor
 import com.mrsep.musicrecognizer.core.data.enqueued.EnqueuedRecognitionRepositoryImpl
-import com.mrsep.musicrecognizer.core.data.enqueued.RecordingFileDataSource
-import com.mrsep.musicrecognizer.core.data.enqueued.RecordingFileDataSourceImpl
+import com.mrsep.musicrecognizer.core.data.enqueued.AudioSampleDataSource
+import com.mrsep.musicrecognizer.core.data.enqueued.AudioSampleDataSourceImpl
 import com.mrsep.musicrecognizer.core.data.preferences.PreferencesRepositoryImpl
 import com.mrsep.musicrecognizer.core.data.track.TrackRepositoryImpl
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
@@ -36,7 +36,7 @@ internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindRecordingDataSource(impl: RecordingFileDataSourceImpl): RecordingFileDataSource
+    fun bindAudioSampleDataSource(impl: AudioSampleDataSourceImpl): AudioSampleDataSource
 
     @Binds
     @Singleton

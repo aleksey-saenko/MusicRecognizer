@@ -16,11 +16,15 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
+import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
+import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper
 import com.mrsep.musicrecognizer.presentation.MainActivity
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.acra.ACRA
 import org.acra.ACRAConstants
 import org.acra.ReportField
@@ -37,9 +41,13 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
 
     @Inject
     lateinit var imageLoader: dagger.Lazy<ImageLoader>
-
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+    @Inject
+    lateinit var audioRecordingDataSource: AudioRecordingDataSource
+    @Inject
+    @ApplicationScope
+    lateinit var appScope: CoroutineScope
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
@@ -57,11 +65,18 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
         super.onCreate()
         if (ACRA.isACRASenderServiceProcess()) return
         if (BuildConfig.DEBUG) enableStrictMode()
+        cleanup()
         createNotificationChannels()
         createShortcuts()
     }
 
     override fun newImageLoader(context: Context): ImageLoader = imageLoader.get()
+
+    fun cleanup() {
+        appScope.launch {
+            audioRecordingDataSource.clear()
+        }
+    }
 
     private fun createNotificationChannels() {
         getSystemService<NotificationManager>()?.createNotificationChannels(

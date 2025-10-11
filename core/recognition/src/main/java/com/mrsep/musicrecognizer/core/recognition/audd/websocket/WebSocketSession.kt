@@ -17,5 +17,5 @@ internal interface WebSocketConnection {
 
     val responseChannel: ReceiveChannel<AuddResponseJson>
 
-    suspend fun sendRecording(data: ByteArray)
+    suspend fun sendSample(data: ByteArray)
 }

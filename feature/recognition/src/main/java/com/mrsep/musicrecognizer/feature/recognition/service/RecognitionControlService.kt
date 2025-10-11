@@ -26,7 +26,6 @@ import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
-import com.mrsep.musicrecognizer.core.domain.recognition.NetworkMonitor
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.MutableRecognitionStatusHolder
@@ -70,9 +69,6 @@ class RecognitionControlService : Service() {
 
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
-
-    @Inject
-    lateinit var networkMonitor: NetworkMonitor
 
     @Inject
     internal lateinit var resultNotificationHelper: ResultNotificationHelper
@@ -250,7 +246,7 @@ class RecognitionControlService : Service() {
                 serviceNotificationHelper.buildReadyNotification()
             }
             is RecognitionStatus.Recognizing -> {
-                serviceNotificationHelper.buildListeningNotification(status.extraTry)
+                serviceNotificationHelper.buildListeningNotification(status.extraTime)
             }
         }
     }
@@ -296,11 +292,7 @@ class RecognitionControlService : Service() {
 
             soundLevelCurrentFlow.update { recorderController.soundLevel }
 
-            if (networkMonitor.isOffline.first()) {
-                recognitionInteractor.launchOfflineRecognition(serviceScope, recorderController)
-            } else {
-                recognitionInteractor.launchRecognition(serviceScope, recorderController)
-            }
+            recognitionInteractor.launchRecognition(recorderController)
             recognitionInteractor.status.transformWhile { status ->
                 emit(status)
                 status !is RecognitionStatus.Done
@@ -315,7 +307,7 @@ class RecognitionControlService : Service() {
                         widgetStatusHolder.updateStatus(status)
                         requestWidgetsUpdate()
                         requestQuickTileUpdate()
-                        serviceNotificationHelper.notifyListeningStatus(status.extraTry)
+                        serviceNotificationHelper.notifyListeningStatus(status.extraTime)
                     }
 
                     is RecognitionStatus.Done -> {

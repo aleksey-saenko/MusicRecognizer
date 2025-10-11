@@ -5,7 +5,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvid
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.acrcloud.AcrCloudRecognitionService.Companion.RECORDING_DURATION_LIMIT
+import com.mrsep.musicrecognizer.core.recognition.acrcloud.AcrCloudRecognitionService.Companion.SAMPLE_DURATION_LIMIT
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -15,11 +15,11 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 internal fun AcrCloudResponseJson.toRecognitionResult(
-    recordingStartTimestamp: Instant,
-    recordingDuration: Duration,
+    sampleStartTimestamp: Instant,
+    sampleDuration: Duration,
 ): RemoteRecognitionResult {
     return when (status.code) {
-        0 -> parseSuccessResult(recordingStartTimestamp, recordingDuration)
+        0 -> parseSuccessResult(sampleStartTimestamp, sampleDuration)
         1001 -> RemoteRecognitionResult.NoMatches
         2000, 2004 -> RemoteRecognitionResult.Error.BadRecording(getErrorMessage())
         3001, 3014 -> RemoteRecognitionResult.Error.AuthError
@@ -29,13 +29,13 @@ internal fun AcrCloudResponseJson.toRecognitionResult(
 }
 
 private fun AcrCloudResponseJson.parseSuccessResult(
-    recordingStartTimestamp: Instant,
-    recordingDuration: Duration,
+    sampleStartTimestamp: Instant,
+    sampleDuration: Duration,
 ): RemoteRecognitionResult {
     return metadata?.music?.firstWithMostConfidenceOrNull()
-        ?.let { music -> parseMusic(music, recordingStartTimestamp, recordingDuration) }
+        ?.let { music -> parseMusic(music, sampleStartTimestamp, sampleDuration) }
         ?: metadata?.humming?.firstWithMostConfidenceOrNull()
-        ?.let { music -> parseMusic(music, recordingStartTimestamp, recordingDuration) }
+        ?.let { music -> parseMusic(music, sampleStartTimestamp, sampleDuration) }
         ?: RemoteRecognitionResult.NoMatches
 }
 
@@ -50,8 +50,8 @@ private fun List<AcrCloudResponseJson.Metadata.Music>.firstWithMostConfidenceOrN
 
 private fun parseMusic(
     music: AcrCloudResponseJson.Metadata.Music,
-    recordingStartTimestamp: Instant,
-    recordingDuration: Duration,
+    sampleStartTimestamp: Instant,
+    sampleDuration: Duration,
 ): RemoteRecognitionResult.Success? {
     val title = music.title
     val artist = music.artists
@@ -60,8 +60,8 @@ private fun parseMusic(
     if (title == null || artist == null) return null
 
     val trackDuration = music.durationMs?.toLong()?.milliseconds
-    val truncatedPart = (recordingDuration - RECORDING_DURATION_LIMIT).coerceAtLeast(0.seconds)
-    val recognitionDate = recordingStartTimestamp
+    val truncatedPart = (sampleDuration - SAMPLE_DURATION_LIMIT).coerceAtLeast(0.seconds)
+    val recognitionDate = sampleStartTimestamp
         .plusMillis(truncatedPart.inWholeMilliseconds)
         .plusMillis(music.sampleBeginTimeOffsetMs.toLong())
     val recognizedAt = music.dbBeginTimeOffsetMs.milliseconds
@@ -123,7 +123,7 @@ private fun parseReleaseDate(releaseDate: String): LocalDate? {
     if (releaseDate == "None") return null
     return try {
         LocalDate.parse(releaseDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    } catch (e: DateTimeParseException) {
+    } catch (_: DateTimeParseException) {
         val year = releaseDate.toIntOrNull()?.takeIf { it in 1700..LocalDate.now().year }
         year?.run { LocalDate.of(year, 1, 1) }
     }

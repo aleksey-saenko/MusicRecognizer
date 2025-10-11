@@ -35,7 +35,7 @@ internal class WebSocketSessionImpl @Inject constructor(
         val session = httpClient.webSocketSession(block)
         val responseChannel = Channel<AuddResponseJson>(Channel.BUFFERED)
         val connection = object : WebSocketConnection {
-            override suspend fun sendRecording(data: ByteArray) = session.send(data)
+            override suspend fun sendSample(data: ByteArray) = session.send(data)
             override val responseChannel = responseChannel
         }
         emit(Result.success(connection))

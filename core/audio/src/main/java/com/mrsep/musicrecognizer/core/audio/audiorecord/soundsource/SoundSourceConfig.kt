@@ -14,10 +14,8 @@ internal class SoundSourceConfig(
     val chunkSizeInSeconds = audioFormat.run { chunkSize * 1.0 / (sampleRate * bytesPerFrame) }
 
     private fun calcChunkSize(): Int {
-        // It seems that audio is buffered internally in chunks of minBufferSize/2, so use this to minimize latency
-        val preferredSize = minBufferSize / 2
-        // Round to a whole number of frames to avoid partial frames and audio corruption
-        return ((preferredSize + bytesPerFrame - 1) / bytesPerFrame) * bytesPerFrame
+        // Since we use the AAC codec, request a chunk size equal to a single AAC frame (1024 samples per channel)
+        return 1024 * bytesPerFrame // ~21.333 ms at 48 kHz mono
     }
 
     private fun Int.toByteAllocation(): Int {

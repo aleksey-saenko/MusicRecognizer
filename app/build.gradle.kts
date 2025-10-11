@@ -75,6 +75,7 @@ hilt {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.recognition)
+    implementation(projects.core.audio)
     implementation(projects.core.ui)
     implementation(projects.core.strings)
     implementation(projects.core.common)

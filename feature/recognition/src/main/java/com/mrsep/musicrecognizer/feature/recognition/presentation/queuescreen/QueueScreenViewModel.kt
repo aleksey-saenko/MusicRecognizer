@@ -94,8 +94,8 @@ internal class QueueScreenViewModel @Inject constructor(
 
     fun startAudioPlayer(recognitionId: Int) {
         viewModelScope.launch {
-            enqueuedRecognitionRepository.getRecordingFile(recognitionId)?.let { recording ->
-                playerController.start(recognitionId, recording)
+            enqueuedRecognitionRepository.getAudioSampleFile(recognitionId)?.let { sampleFile ->
+                playerController.start(recognitionId, sampleFile)
             }
         }
     }

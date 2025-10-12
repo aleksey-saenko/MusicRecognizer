@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
@@ -48,11 +47,6 @@ internal fun QueueScreen(
             LaunchedEffect(playerStatus) {
                 if (playerStatus is PlayerStatusUi.Error) {
                     Toast.makeText(context, playerStatus.message, Toast.LENGTH_LONG).show()
-                }
-            }
-            LifecycleStartEffect(viewModel) {
-                onStopOrDispose {
-                    viewModel.stopAudioPlayer()
                 }
             }
             val multiSelectionState = rememberMultiSelectionState<Int>(uiState.recognitionList)

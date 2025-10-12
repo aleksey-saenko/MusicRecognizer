@@ -104,6 +104,14 @@ internal class QueueScreenViewModel @Inject constructor(
         playerController.stop()
     }
 
+    fun pauseAudioPlayer() {
+        playerController.pause()
+    }
+
+    fun resumeAudioPlayer() {
+        playerController.resume()
+    }
+
     fun setUseGridLayout(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setUseGridForRecognitionQueue(value)
@@ -114,6 +122,10 @@ internal class QueueScreenViewModel @Inject constructor(
         viewModelScope.launch {
             preferencesRepository.setShowCreationDateInQueue(value)
         }
+    }
+
+    override fun onCleared() {
+        stopAudioPlayer()
     }
 }
 

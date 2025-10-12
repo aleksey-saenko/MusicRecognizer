@@ -1,6 +1,8 @@
 package com.mrsep.musicrecognizer.core.audio.di
 
-import com.mrsep.musicrecognizer.core.audio.audioplayer.MediaPlayerController
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
+import com.mrsep.musicrecognizer.core.audio.audioplayer.ExoPlayerController
 import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerController
 import dagger.Binds
 import dagger.Module
@@ -15,5 +17,6 @@ internal interface AudioModule {
 
     @Binds
     @Singleton
-    fun bindPlayerController(impl: MediaPlayerController): PlayerController
+    @OptIn(UnstableApi::class)
+    fun bindPlayerController(impl: ExoPlayerController): PlayerController
 }

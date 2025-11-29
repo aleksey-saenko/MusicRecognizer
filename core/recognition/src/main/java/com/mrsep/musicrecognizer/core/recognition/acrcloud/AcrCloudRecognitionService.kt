@@ -4,8 +4,9 @@ import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
-import com.mrsep.musicrecognizer.core.domain.recognition.RemoteRecognitionService
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
+import com.mrsep.musicrecognizer.core.recognition.BaseRemoteRecognitionService
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.AcrCloudResponseJson
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.toRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
@@ -24,17 +25,7 @@ import io.ktor.http.isSuccess
 import io.ktor.utils.io.streams.asInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEmpty
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.transformWhile
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import kotlinx.io.buffered
@@ -52,7 +43,16 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     private val artworkFetcher: ArtworkFetcher,
     private val lyricsFetcher: LyricsFetcher,
-) : RemoteRecognitionService {
+) : BaseRemoteRecognitionService(ioDispatcher) {
+
+    override val recordingScheme = RecordingScheme(
+        steps = listOf(
+            RecordingScheme.Step(recordings = listOf(4.seconds, 8.seconds)),
+            RecordingScheme.Step(recordings = listOf(7.seconds))
+        ),
+        fallback = 10.seconds,
+        encodeSteps = true,
+    )
 
     override suspend fun recognize(sample: AudioSample) = withContext(ioDispatcher) {
         if (sample.duration > SAMPLE_DURATION_LIMIT) {
@@ -119,47 +119,6 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         }
     }
 
-    override suspend fun recognizeUntilFirstMatch(samples: Flow<AudioSample>) = withContext(ioDispatcher) {
-        var retryCounter = 0
-        // Initially bad connection
-        // for case when after TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED there is no any response yet
-        var lastResult: RemoteRecognitionResult = RemoteRecognitionResult.Error.BadConnection
-
-        val samplesChannel = Channel<AudioSample>(Channel.UNLIMITED)
-        val receiveSamplesWithTimeoutJob = launch {
-            samples.collect(samplesChannel::send)
-            samplesChannel.close()
-            delay(TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED)
-        }
-
-        val remoteResultJob = samplesChannel.receiveAsFlow()
-            .onEmpty {
-                lastResult = RemoteRecognitionResult.Error.BadRecording("Empty audio samples flow")
-            }
-            .transformWhile<AudioSample, Unit> { sample ->
-                lastResult = recognize(sample)
-                while (lastResult.isRetryRequired() && retryCounter < RETRY_ON_ERROR_LIMIT) {
-                    retryCounter++
-                    lastResult = recognize(sample)
-                }
-                // Continue recognition only if no matches
-                lastResult is RemoteRecognitionResult.NoMatches
-            }
-            .launchIn(this)
-
-        select {
-            remoteResultJob.onJoin { receiveSamplesWithTimeoutJob.cancelAndJoin() }
-            receiveSamplesWithTimeoutJob.onJoin { remoteResultJob.cancelAndJoin() }
-        }
-
-        lastResult
-    }
-
-    private fun RemoteRecognitionResult.isRetryRequired() = when (this) {
-        RemoteRecognitionResult.Error.BadConnection -> true
-        else -> false
-    }
-
     private fun createSignature(timestamp: String, config: AcrCloudConfig): String {
         val sigString = METHOD + "\n" + ENDPOINT + "\n" + config.accessKey +
                 "\n" + DATA_TYPE + "\n" + SIGNATURE_VERSION + "\n" + timestamp
@@ -173,7 +132,7 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             val mac = Mac.getInstance("HmacSHA1")
             mac.init(signingKey)
             val rawHmac = mac.doFinal(data)
-            Base64.Default.encode(rawHmac)
+            Base64.encode(rawHmac)
         } catch (e: Exception) {
             Log.e(this::class.simpleName, "Error during signature encryption", e)
             ""
@@ -192,7 +151,5 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
         private const val SIGNATURE_VERSION = "1"
 
         val SAMPLE_DURATION_LIMIT = 12.seconds
-        private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
-        private const val RETRY_ON_ERROR_LIMIT = 1
     }
 }

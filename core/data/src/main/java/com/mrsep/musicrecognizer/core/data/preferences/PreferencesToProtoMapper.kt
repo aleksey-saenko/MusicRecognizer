@@ -32,6 +32,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 internal fun RecognitionProvider.toProto() = when (this) {
     RecognitionProvider.Audd -> RecognitionProviderProto.Audd
     RecognitionProvider.AcrCloud -> RecognitionProviderProto.AcrCloud
+    RecognitionProvider.Shazam -> RecognitionProviderProto.Shazam
 }
 
 internal fun AcrCloudConfig.toProto() = acrCloudConfigProto {

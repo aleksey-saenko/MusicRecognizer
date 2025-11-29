@@ -79,6 +79,23 @@ internal fun AcrCloudServiceDialog(
 }
 
 @Composable
+internal fun ShazamServiceDialog(
+    modifier: Modifier = Modifier,
+    currentProvider: RecognitionProvider,
+    onProviderChanged: (RecognitionProvider) -> Unit,
+    onSaveClick: () -> Unit,
+    onDismissClick: () -> Unit,
+) {
+    RecognitionServiceDialogBase(
+        modifier = modifier,
+        currentProvider = currentProvider,
+        onProviderChanged = onProviderChanged,
+        onSaveClick = onSaveClick,
+        onDismissClick = onDismissClick,
+    ) { }
+}
+
+@Composable
 private fun RecognitionServiceDialogBase(
     modifier: Modifier = Modifier,
     currentProvider: RecognitionProvider,
@@ -199,4 +216,5 @@ internal fun AuthenticationRow(
 internal fun RecognitionProvider.getTitle() = when (this) {
     RecognitionProvider.Audd -> stringResource(StringsR.string.audd)
     RecognitionProvider.AcrCloud -> stringResource(StringsR.string.acr_cloud)
+    RecognitionProvider.Shazam -> stringResource(StringsR.string.shazam)
 }

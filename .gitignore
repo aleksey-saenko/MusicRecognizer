@@ -96,3 +96,7 @@ output.json
 
 # Kotlin
 .kotlin
+
+# Native blobs
+# core/recognition/src/main/jniLibs/*
+*.so

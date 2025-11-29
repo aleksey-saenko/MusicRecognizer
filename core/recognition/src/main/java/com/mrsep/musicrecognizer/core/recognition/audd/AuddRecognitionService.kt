@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AuddConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.RemoteRecognitionService
+import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.audd.json.AuddResponseJson
 import com.mrsep.musicrecognizer.core.recognition.audd.json.toRecognitionResult
@@ -55,6 +56,15 @@ internal class AuddRecognitionService @AssistedInject constructor(
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     private val json: Json,
 ) : RemoteRecognitionService {
+
+    override val recordingScheme = RecordingScheme(
+        steps = listOf(
+            RecordingScheme.Step(recordings = listOf(4.seconds, 8.seconds)),
+            RecordingScheme.Step(recordings = listOf(7.seconds))
+        ),
+        fallback = 10.seconds,
+        encodeSteps = true,
+    )
 
     override suspend fun recognize(sample: AudioSample) = withContext(ioDispatcher) {
         val httpClient = httpClientLazy.get()

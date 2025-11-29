@@ -3,7 +3,6 @@ package com.mrsep.musicrecognizer.core.audio.audiorecord
 import android.content.Context
 import android.media.projection.MediaProjection
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
-import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.Mp4RecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.DefaultSoundSource
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.VisualizerSoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
@@ -22,17 +21,17 @@ class AudioRecordingControllerFactory @Inject constructor(
             VisualizerSoundSource(appContext)
         }
         return when (audioCaptureConfig) {
-            AudioCaptureConfig.Microphone -> Mp4RecordingController(
+            AudioCaptureConfig.Microphone -> CompositeRecordingController(
                 soundSource = DefaultSoundSource(appContext),
                 audioRecordingDataSource = audioRecordingDataSource,
             )
 
-            is AudioCaptureConfig.Device -> Mp4RecordingController(
+            is AudioCaptureConfig.Device -> CompositeRecordingController(
                 soundSource = deviceSoundSource(audioCaptureConfig.mediaProjection),
                 audioRecordingDataSource = audioRecordingDataSource,
             )
 
-            is AudioCaptureConfig.Auto -> DeviceFirstAdtsRecordingController(
+            is AudioCaptureConfig.Auto -> DeviceFirstCompositeRecordingController(
                 microphoneSoundSource = DefaultSoundSource(appContext),
                 deviceSoundSource = deviceSoundSource(audioCaptureConfig.mediaProjection),
                 audioRecordingDataSource = audioRecordingDataSource,

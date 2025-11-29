@@ -10,6 +10,7 @@ data class AudioRecording(
     val duration: Duration,
     val nonSilenceDuration: Duration,
     val source: AudioSource,
+    val sampleRate: Int,
     val mimeType: String,
     val isFallback: Boolean,
 )
@@ -20,5 +21,6 @@ fun AudioRecording.toAudioSample() = AudioSample(
     file = file,
     timestamp = timestamp,
     duration = duration,
+    sampleRate = sampleRate,
     mimeType = mimeType,
 )

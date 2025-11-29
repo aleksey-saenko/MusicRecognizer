@@ -11,3 +11,5 @@ data class AcrCloudConfig(
     val accessKey: String,
     val accessSecret: String,
 ) : RecognitionServiceConfig()
+
+data object ShazamConfig : RecognitionServiceConfig()

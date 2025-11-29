@@ -41,13 +41,13 @@ internal fun TrackExtrasDialog(
                 track.duration?.let {
                     InfoColumn(
                         title = stringResource(StringsR.string.track_info_title_duration),
-                        subtitle = track.duration.toString()
+                        subtitle = track.duration
                     )
                 }
                 track.recognizedAt?.let {
                     InfoColumn(
                         title = stringResource(StringsR.string.track_info_title_recognized_at),
-                        subtitle = track.recognizedAt.toString()
+                        subtitle = track.recognizedAt
                     )
                 }
                 InfoColumn(
@@ -84,4 +84,5 @@ private fun InfoColumn(
 internal fun RecognitionProvider.getTitle() = when (this) {
     RecognitionProvider.Audd -> stringResource(StringsR.string.audd)
     RecognitionProvider.AcrCloud -> stringResource(StringsR.string.acr_cloud)
+    RecognitionProvider.Shazam -> stringResource(StringsR.string.shazam)
 }

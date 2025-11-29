@@ -1,7 +1,6 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord
 
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
-import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.Mp4RecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingSession
@@ -24,15 +23,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 import kotlin.time.Duration.Companion.seconds
 
-internal class DeviceFirstAdtsRecordingController(
+internal class DeviceFirstCompositeRecordingController(
     microphoneSoundSource: SoundSource,
     deviceSoundSource: SoundSource,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
     audioRecordingDataSource: AudioRecordingDataSource,
 ) : AudioRecordingController {
 
-    private val microphoneController = Mp4RecordingController(microphoneSoundSource, audioRecordingDataSource)
-    private val deviceController = Mp4RecordingController(deviceSoundSource, audioRecordingDataSource)
+    private val microphoneController = CompositeRecordingController(microphoneSoundSource, audioRecordingDataSource)
+    private val deviceController = CompositeRecordingController(deviceSoundSource, audioRecordingDataSource)
 
     override val soundLevel: StateFlow<Float> = combine(
         microphoneSoundSource.soundLevel,

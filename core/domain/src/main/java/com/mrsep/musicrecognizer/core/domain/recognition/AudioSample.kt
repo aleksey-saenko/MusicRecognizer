@@ -8,5 +8,6 @@ data class AudioSample(
     val file: File,
     val timestamp: Instant,
     val duration: Duration,
+    val sampleRate: Int,
     val mimeType: String,
 )

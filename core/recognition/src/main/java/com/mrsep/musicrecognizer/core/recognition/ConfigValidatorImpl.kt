@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.util.Log
 import com.mrsep.musicrecognizer.core.domain.preferences.RecognitionServiceConfig
+import com.mrsep.musicrecognizer.core.domain.preferences.ShazamConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidationResult
 import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidator
@@ -27,12 +28,15 @@ internal class ConfigValidatorImpl @Inject constructor(
 ) : ConfigValidator {
 
     override suspend fun validate(config: RecognitionServiceConfig): ConfigValidationResult {
+        if (config is ShazamConfig) return ConfigValidationResult.Success
+
         val testSample = try {
             getTestSample()
         } catch (e: Exception) {
             Log.e(TAG, "Failed to read test audio sample", e)
             return ConfigValidationResult.Error.UnknownError
         }
+
         val service = recognitionServiceFactory.getService(config)
         return when (service.recognize(testSample)) {
             is RemoteRecognitionResult.Success,
@@ -63,6 +67,7 @@ internal class ConfigValidatorImpl @Inject constructor(
             file = cachedSample.toFile(),
             duration = 3.5.seconds,
             timestamp = Instant.now(),
+            sampleRate = 48_000,
             mimeType = "audio/ogg"
         )
     }

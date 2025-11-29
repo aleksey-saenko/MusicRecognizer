@@ -27,6 +27,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     currentRecognitionProvider = when (currentRecognitionProvider!!) {
         RecognitionProviderProto.Audd -> RecognitionProvider.Audd
         RecognitionProviderProto.AcrCloud -> RecognitionProvider.AcrCloud
+        RecognitionProviderProto.Shazam -> RecognitionProvider.Shazam
         RecognitionProviderProto.UNRECOGNIZED -> error("Unexpected proto value")
     },
     auddConfig = AuddConfig(apiToken = apiToken),

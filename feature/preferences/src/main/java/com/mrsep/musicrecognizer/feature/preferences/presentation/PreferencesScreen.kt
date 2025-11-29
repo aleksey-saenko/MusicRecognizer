@@ -26,6 +26,7 @@ import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AcrCloudServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AuddServiceDialog
+import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.ShazamServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.getTitle
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAcrCloudPreferencesState
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.rememberAuddPreferencesState
@@ -113,6 +114,18 @@ internal fun PreferencesScreen(
                                             } else {
                                                 state.showErrors()
                                             }
+                                        },
+                                        onDismissClick = { showServiceDialog = false }
+                                    )
+                                }
+
+                                RecognitionProvider.Shazam -> {
+                                    ShazamServiceDialog(
+                                        currentProvider = visibleProvider,
+                                        onProviderChanged = { visibleProvider = it },
+                                        onSaveClick = {
+                                            viewModel.setRecognitionProvider(visibleProvider)
+                                            showServiceDialog = false
                                         },
                                         onDismissClick = { showServiceDialog = false }
                                     )

@@ -20,8 +20,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.yield
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 private const val TAG = "DefaultSoundSource"
 
@@ -122,19 +120,4 @@ internal class DefaultSoundSource(
         private const val DEFAULT_AUDIO_SOURCE = MediaRecorder.AudioSource.MIC
         private const val RECORDER_SHARING_TIMEOUT_MS = 0L
     }
-}
-
-internal fun FloatArray.toByteArray(): ByteArray {
-    val byteBuffer = ByteBuffer
-        .allocate(this.size * Float.SIZE_BYTES)
-        .order(ByteOrder.nativeOrder())
-    byteBuffer.asFloatBuffer().put(this)
-    return byteBuffer.array()
-}
-
-internal fun ByteArray.toShortArray(): ShortArray {
-    val output = ShortArray(size.div(Short.SIZE_BYTES))
-    val buffer = ByteBuffer.wrap(this).order(ByteOrder.nativeOrder()).asShortBuffer()
-    buffer.get(output)
-    return output
 }

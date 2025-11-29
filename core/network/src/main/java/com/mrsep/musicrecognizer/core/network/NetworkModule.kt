@@ -17,7 +17,6 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
@@ -73,7 +72,7 @@ internal object NetworkModule {
             pingInterval = 15.seconds
             contentConverter = KotlinxWebsocketSerializationConverter(json)
         }
-        install(UserAgent) {
+        install(UserAgentIfMissing) {
             agent = "Audile/${appContext.getAppVersionName(removeDebug = true)}" +
                     " (Android ${Build.VERSION.RELEASE})"
         }

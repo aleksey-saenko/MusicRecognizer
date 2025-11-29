@@ -55,6 +55,7 @@ internal fun singleAudioRecordingFlow(
             },
             timestamp = Instant.now(),
             duration = 3.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )
@@ -78,6 +79,7 @@ internal fun infinityAudioRecordingFlow(
                 },
                 timestamp = Instant.now(),
                 duration = 3.seconds,
+                sampleRate = 48_000,
                 mimeType = "audio/mp4",
             )
         )
@@ -105,6 +107,7 @@ internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
             },
             timestamp = Instant.now(),
             duration = 3.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )
@@ -120,6 +123,7 @@ internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
             },
             timestamp = Instant.now(),
             duration = 4.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )
@@ -135,6 +139,7 @@ internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
             },
             timestamp = Instant.now(),
             duration = 5.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )
@@ -150,6 +155,7 @@ internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
             },
             timestamp = Instant.now(),
             duration = 6.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )
@@ -165,6 +171,7 @@ internal fun normalAudioRecordingFlow(temporaryFolder: TemporaryFolder) = flow {
             },
             timestamp = Instant.now(),
             duration = 7.seconds,
+            sampleRate = 48_000,
             mimeType = "audio/mp4",
         )
     )

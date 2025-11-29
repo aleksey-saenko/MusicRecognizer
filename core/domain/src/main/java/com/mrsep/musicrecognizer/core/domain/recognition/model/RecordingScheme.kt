@@ -18,11 +18,12 @@ import kotlin.time.Duration
 data class RecordingScheme(
     val steps: List<Step>,
     val fallback: Duration? = null,
+    val encodeSteps: Boolean,
 ) {
     data class Step(val recordings: List<Duration>)
 
     init {
-        require(steps.isNotEmpty()) { "Steps list must not be empty" }
+        require(steps.isNotEmpty() || fallback != null) { "Steps list must not be empty" }
         steps.forEachIndexed { stepIndex, step ->
             require(step.recordings.isNotEmpty()) {
                 "Step at index $stepIndex must contain at least one recording duration"

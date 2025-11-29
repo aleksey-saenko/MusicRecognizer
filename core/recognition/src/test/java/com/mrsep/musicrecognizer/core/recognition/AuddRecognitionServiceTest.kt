@@ -441,6 +441,7 @@ class AuddRecognitionServiceTest {
                 file = File("not_exist"),
                 timestamp = Instant.now(),
                 duration = 3.seconds,
+                sampleRate = 48_000,
                 mimeType = "audio/mp4",
             ))
         })

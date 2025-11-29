@@ -10,7 +10,7 @@ internal object SoundSourceConfigProvider {
             AudioFormat.ENCODING_PCM_16BIT,
             // Most AAC encoders seem to support only 16-bit integer PCM input
             // So use ENCODING_PCM_FLOAT as a last resort
-            AudioFormat.ENCODING_PCM_FLOAT,
+//            AudioFormat.ENCODING_PCM_FLOAT,
         )
         val sampleRates = arrayOf(
             48_000,

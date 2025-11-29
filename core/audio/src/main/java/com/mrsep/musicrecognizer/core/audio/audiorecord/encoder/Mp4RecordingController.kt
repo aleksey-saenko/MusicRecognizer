@@ -182,6 +182,7 @@ internal class Mp4RecordingController(
                                 source = soundSource.audioSource,
                                 duration = currentMuxerDuration,
                                 nonSilenceDuration = currentMuxerDuration - silenceDuration,
+                                sampleRate = soundSourceParams.audioFormat.sampleRate,
                                 mimeType = MIME_TYPE,
                                 isFallback = scheduledRecording.isFallback
                             )
@@ -285,7 +286,7 @@ private class MuxerWrapper(
     }
 }
 
-private fun RecordingScheme.flatten() = buildList {
+internal fun RecordingScheme.flatten() = buildList {
     fallback?.let { fallbackDuration ->
         add(
             ScheduledRecording(
@@ -310,7 +311,7 @@ private fun RecordingScheme.flatten() = buildList {
     }
 }
 
-private data class ScheduledRecording(
+internal data class ScheduledRecording(
     val presentationOffset: Duration,
     val minDuration: Duration,
     val isFallback: Boolean,

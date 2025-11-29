@@ -18,7 +18,6 @@ import java.nio.file.StandardCopyOption
 import java.time.Instant
 import java.util.zip.ZipInputStream
 import javax.inject.Inject
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 internal class AudioSampleDataSourceImpl @Inject constructor(
@@ -77,49 +76,63 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun read(file: File): AudioSample? {
-        return withContext(ioDispatcher) {
-            try {
-                AudioSample(
-                    file = file,
-                    timestamp = file.nameWithoutExtension
-                        .takeLastWhile(Char::isDigit).toLong().run(Instant::ofEpochMilli),
-                    duration = parseSampleDuration(file),
-                    mimeType = file.parseSampleMimeType()
-                )
-            } catch (e: Exception) {
-                ensureActive()
-                Log.e(this::class.simpleName, "Failed to read sample file", e)
-                null
-            }
-        }
-    }
-
-    override suspend fun delete(file: File): Boolean {
-        return withContext(ioDispatcher) {
-            var numTries = 0
-            val maxTries = 3
-            while (numTries < maxTries) {
-                try {
-                    if (file.exists() && file.delete()) return@withContext true
-                } catch (e: Exception) {
-                    Log.e(this::class.simpleName, "Failed to delete sample file ${file.path}", e)
+    @OptIn(UnstableApi::class)
+    override suspend fun read(file: File): AudioSample? = withContext(ioDispatcher) {
+        val extractor = MediaExtractorCompat(appContext)
+        try {
+            extractor.setDataSource(file.absolutePath)
+            var trackIndex = -1
+            for (i in 0 until extractor.trackCount) {
+                val format = extractor.getTrackFormat(i)
+                val mimeType = format.getString(MediaFormat.KEY_MIME)
+                if (MimeTypes.isAudio(mimeType)) {
+                    trackIndex = i
+                    break
                 }
-                numTries++
-                delay(500L)
             }
-            false
+            require(trackIndex >= 0) { "No audio track found" }
+            extractor.selectTrack(trackIndex)
+            val mediaFormat = extractor.getTrackFormat(trackIndex)
+            AudioSample(
+                file = file,
+                timestamp = file.nameWithoutExtension
+                    .takeLastWhile(Char::isDigit).toLong().run(Instant::ofEpochMilli),
+                duration = mediaFormat.getLong(MediaFormat.KEY_DURATION).let { durationUs ->
+                    ((durationUs + 500) / 1000).milliseconds
+                },
+                sampleRate = mediaFormat.getInteger(MediaFormat.KEY_SAMPLE_RATE),
+                mimeType = file.parseSampleMimeType(),
+            )
+        } catch (e: Exception) {
+            ensureActive()
+            Log.e(this::class.simpleName, "Failed to read sample file", e)
+            null
+        } finally {
+            extractor.release()
         }
     }
 
-    override suspend fun deleteAll(): Boolean {
-        return withContext(ioDispatcher) {
-            var allDeleted = true
-            samplesDir.listFiles()?.forEach { file ->
-                if (!delete(file)) allDeleted = false
+    override suspend fun delete(file: File): Boolean = withContext(ioDispatcher) {
+        var numTries = 0
+        val maxTries = 3
+        while (numTries < maxTries) {
+            try {
+                if (file.exists() && file.delete()) return@withContext true
+            } catch (e: Exception) {
+                Log.e(this::class.simpleName, "Failed to delete sample file ${file.path}", e)
             }
-            allDeleted
+            numTries++
+            delay(500L)
         }
+        false
+    }
+
+    override suspend fun deleteAll(): Boolean = withContext(ioDispatcher) {
+        var allDeleted = true
+        samplesDir.listFiles()?.forEach { file ->
+            if (!delete(file)) allDeleted = false
+        }
+        allDeleted
     }
 
     private fun getNewSampleName(timestamp: Instant, mimeType: String): String {
@@ -128,33 +141,15 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
 
     private fun String.mimeTypeToFileExtension(): String = when (lowercase()) {
         "audio/mp4" -> "m4a"
+        "audio/x-wav" -> "wav"
         else -> error("Unexpected mime type")
     }
 
     private fun File.parseSampleMimeType(): String = when (extension.lowercase()) {
         "m4a" -> "audio/mp4"
+        "wav" -> "audio/x-wav"
+        "" -> "audio/aac" // Legacy sample format
         else -> error("Unexpected file extension")
-    }
-
-    @OptIn(UnstableApi::class)
-    @Throws(Exception::class)
-    private fun parseSampleDuration(file: File): Duration {
-        val mediaExtractor = MediaExtractorCompat(appContext).apply {
-            setDataSource(file.absolutePath)
-        }
-        fun findFirstAudioTrack(): Int {
-            for (i in 0 until mediaExtractor.trackCount) {
-                val format = mediaExtractor.getTrackFormat(i)
-                val mimeType = format.getString(MediaFormat.KEY_MIME)
-                if (MimeTypes.isAudio(mimeType)) {
-                    return i
-                }
-            }
-            error("No audio track found")
-        }
-        val mediaFormat = mediaExtractor.getTrackFormat(findFirstAudioTrack())
-        val durationUs = mediaFormat.getLong(MediaFormat.KEY_DURATION)
-        return ((durationUs + 500) / 1000).milliseconds
     }
 
     companion object {

@@ -179,10 +179,10 @@ internal class ExoPlayerController @Inject constructor(
     // see https://developer.android.com/media/media3/exoplayer/shrinking
     private val audioOnlyRenderersFactory = RenderersFactory {
             handler: Handler,
-            videoListener: VideoRendererEventListener,
+            _: VideoRendererEventListener,
             audioListener: AudioRendererEventListener,
-            textOutput: TextOutput,
-            metadataOutput: MetadataOutput,
+            _: TextOutput,
+            _: MetadataOutput,
         ->
         arrayOf<Renderer>(
             MediaCodecAudioRenderer(context, MediaCodecSelector.DEFAULT, handler, audioListener)

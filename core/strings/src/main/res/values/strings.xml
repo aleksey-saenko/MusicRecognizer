@@ -310,6 +310,7 @@
     <!-- Other services -->
     <string name="audd" translatable="false">AudD</string>
     <string name="acr_cloud" translatable="false">ACRCloud</string>
+    <string name="shazam" translatable="false">Shazam</string>
     <string name="odesli" translatable="false">Odesli</string>
     <string name="wikipedia" translatable="false">Wikipedia</string>
     <!-- Untranslatable, as these terms are used only in English on recognition provider websites (dashboards, guides) -->

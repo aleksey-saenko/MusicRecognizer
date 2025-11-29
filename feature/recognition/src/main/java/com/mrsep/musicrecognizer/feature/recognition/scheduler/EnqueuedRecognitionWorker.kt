@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.ShazamConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
@@ -55,6 +56,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 val serviceConfig = when (userPreferences.currentRecognitionProvider) {
                     RecognitionProvider.Audd -> userPreferences.auddConfig
                     RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
+                    RecognitionProvider.Shazam -> ShazamConfig
                 }
                 val recognitionService = recognitionServiceFactory.getService(serviceConfig)
                 val sample = enqueuedRecognitionRepository.getAudioSample(enqueuedRecognition.id)

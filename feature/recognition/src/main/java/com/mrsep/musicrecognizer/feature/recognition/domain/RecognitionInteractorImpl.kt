@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.feature.recognition.domain
 
 import com.mrsep.musicrecognizer.core.domain.preferences.FallbackAction
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.preferences.ShazamConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
@@ -14,7 +15,6 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvid
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
-import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.toAudioSample
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
@@ -53,14 +53,6 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val _status = MutableStateFlow<RecognitionStatus>(RecognitionStatus.Ready)
     override val status = _status.asStateFlow()
 
-    private val recordingScheme = RecordingScheme(
-        steps = listOf(
-            RecordingScheme.Step(recordings = listOf(4.seconds, 8.seconds)),
-            RecordingScheme.Step(recordings = listOf(7.seconds))
-        ),
-        fallback = 10.seconds
-    )
-
     private var recognitionJob: Job? = null
     private val isRecognitionJobCompleted get() = recognitionJob?.isCompleted ?: true
 
@@ -70,12 +62,18 @@ internal class RecognitionInteractorImpl @Inject constructor(
             _status.update { RecognitionStatus.Recognizing(false) }
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
             val isFallbackRequired = userPreferences.fallbackPolicy.isFallbackRequired
+            val serviceConfig = when (userPreferences.currentRecognitionProvider) {
+                RecognitionProvider.Audd -> userPreferences.auddConfig
+                RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
+                RecognitionProvider.Shazam -> ShazamConfig
+            }
+            val recognitionService = recognitionServiceFactory.getService(serviceConfig)
+            val recordingScheme = recognitionService.recordingScheme.takeIf { isFallbackRequired }
+                ?: recognitionService.recordingScheme.copy(fallback = null)
 
             val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
             val fallbackRecording = if (isFallbackRequired) CompletableDeferred<AudioRecording>() else null
 
-            val recordingScheme = recordingScheme.takeIf { isFallbackRequired }
-                ?: recordingScheme.copy(fallback = null)
             val recordingSession = recordingController.startRecordingSession(recordingScheme)
 
             val extraTimeNotifier = launch {
@@ -84,11 +82,6 @@ internal class RecognitionInteractorImpl @Inject constructor(
                 _status.update { RecognitionStatus.Recognizing(extraTime = true) }
             }
 
-            val serviceConfig = when (userPreferences.currentRecognitionProvider) {
-                RecognitionProvider.Audd -> userPreferences.auddConfig
-                RecognitionProvider.AcrCloud -> userPreferences.acrCloudConfig
-            }
-            val recognitionService = recognitionServiceFactory.getService(serviceConfig)
             val remoteRecognitionResult = async {
                 recognitionService.recognizeUntilFirstMatch(
                     recordingChannel.receiveAsFlow().map { it.toAudioSample() }

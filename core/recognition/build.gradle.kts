@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.common)
     implementation(projects.core.network)
+    implementation(projects.core.audio)
 
     implementation(platform(libs.okhttp.bom))
     implementation(libs.kotlinx.serializationJson)

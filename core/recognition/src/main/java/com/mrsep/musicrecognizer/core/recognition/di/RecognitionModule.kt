@@ -12,6 +12,8 @@ import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessio
 import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliMetadataEnhancer
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcherImpl
+import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGenerator
+import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGeneratorVibra
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -47,4 +49,7 @@ internal interface RecognitionModule {
     @Binds
     @Singleton
     fun bindWebSocketSession(impl: WebSocketSessionImpl): WebSocketSession
+
+    @Binds
+    fun bindShazamSignatureGenerator(impl: ShazamSignatureGeneratorVibra): ShazamSignatureGenerator
 }

@@ -1,9 +1,9 @@
-package com.mrsep.signature
+package com.mrsep.musicrecognizer.core.recognition.shazam
 
-internal object ShazamSignature {
+internal object VibraSignature {
 
     init {
-        System.loadLibrary("")
+        System.loadLibrary("vibra_fp")
     }
 
     const val REQUIRED_SAMPLE_RATE = 16_000

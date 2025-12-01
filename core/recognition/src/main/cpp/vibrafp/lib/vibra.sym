@@ -1,0 +1,6 @@
+{
+  global:
+    Java_com_mrsep_musicrecognizer_core_recognition_shazam_VibraSignature_*;
+  local:
+    *;
+};

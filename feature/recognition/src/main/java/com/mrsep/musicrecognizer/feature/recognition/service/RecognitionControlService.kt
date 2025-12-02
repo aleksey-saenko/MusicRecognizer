@@ -26,11 +26,15 @@ import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
+import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.Track
+import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.MutableRecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper.Companion.NOTIFICATION_ID_STATUS
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
+import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -66,6 +70,9 @@ class RecognitionControlService : Service() {
     @Inject
     @WidgetStatusHolder
     internal lateinit var widgetStatusHolder: MutableRecognitionStatusHolder
+
+    @Inject
+    lateinit var trackRepository: TrackRepository
 
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
@@ -313,12 +320,7 @@ class RecognitionControlService : Service() {
                     is RecognitionStatus.Done -> {
                         val recognitionResult = status.result
                         if (recognitionResult is RecognitionResult.Success) {
-                            listOfNotNull(
-                                recognitionResult.track.artworkThumbUrl,
-                                recognitionResult.track.artworkUrl
-                            ).map { imageUrl ->
-                                async { downloadImageToDiskCache(imageUrl) }
-                            }.awaitAll()
+                            prepareTrackImages(recognitionResult.track)
                         }
                         val isScreenUpdated = screenStatusHolder.updateStatusIfObserving(status)
                         if (isScreenUpdated) {
@@ -347,6 +349,17 @@ class RecognitionControlService : Service() {
             } else {
                 stopSelf()
             }
+        }
+    }
+
+    private suspend fun prepareTrackImages(track: Track) = withContext(Dispatchers.Default) {
+        listOfNotNull(track.artworkThumbUrl, track.artworkUrl)
+            .map { imageUrl -> async { downloadImageToDiskCache(imageUrl) } }
+            .awaitAll()
+        track.artworkUrl?.let { artworkUrl ->
+            getCachedImageOrNull(artworkUrl, allowHardware = false)
+                ?.getDominantColor()
+                ?.let { themeColor -> trackRepository.setThemeSeedColor(track.id, themeColor) }
         }
     }
 

@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.utils
 
-import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
@@ -11,16 +10,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.palette.graphics.Palette
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
-
-internal fun Bitmap.getDominantColor(): Int? {
-    return Palette.Builder(this)
-        .maximumColorCount(24)
-        .generate()
-        .dominantSwatch?.rgb
-}
 
 @Composable
 internal fun SwitchingMusicRecognizerTheme(

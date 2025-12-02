@@ -102,7 +102,8 @@ internal fun LyricsScreen(
                             onBackPressed = onBackPressed,
                             onShowLyricsStyleSettings = { showLyricsStyleSheet = true },
                             onChangeLyricsStyle = viewModel::setLyricsStyle,
-                            createSeedColor = uiState.artworkBasedThemeEnabled,
+                            createSeedColor = uiState.artworkBasedThemeEnabled &&
+                                    uiState.themeSeedColor == null,
                             onSeedColorCreated = { seedColor ->
                                 if (seedColor == uiState.themeSeedColor) return@PlainLyricsContent
                                 viewModel.setThemeSeedColor(uiState.trackId, seedColor)
@@ -121,7 +122,8 @@ internal fun LyricsScreen(
                             onBackPressed = onBackPressed,
                             onShowLyricsStyleSettings = { showLyricsStyleSheet = true },
                             onChangeLyricsStyle = viewModel::setLyricsStyle,
-                            createSeedColor = uiState.artworkBasedThemeEnabled,
+                            createSeedColor = uiState.artworkBasedThemeEnabled &&
+                                    uiState.themeSeedColor == null,
                             onSeedColorCreated = { seedColor ->
                                 if (seedColor == uiState.themeSeedColor) return@SyncedLyricsContent
                                 viewModel.setThemeSeedColor(uiState.trackId, seedColor)

@@ -16,16 +16,20 @@ import kotlinx.coroutines.withContext
 internal suspend fun Context.getCachedImageOrNull(
     url: String,
     allowHardware: Boolean,
-    @Px widthPx: Int,
-    @Px heightPx: Int,
+    @Px widthPx: Int? = null,
+    @Px heightPx: Int? = null,
 ): Bitmap? {
     return withContext(Dispatchers.IO) {
-        val request = ImageRequest.Builder(this@getCachedImageOrNull)
+        val builder = ImageRequest.Builder(this@getCachedImageOrNull)
             .allowHardware(allowHardware)
             .data(url)
-            .size(widthPx, heightPx)
             .networkCachePolicy(CachePolicy.DISABLED)
-            .build()
+
+        if (widthPx != null && heightPx != null) {
+            builder.size(widthPx, heightPx)
+        }
+
+        val request = builder.build()
         imageLoader.execute(request).image?.toBitmap()
     }
 }

@@ -25,7 +25,7 @@ import coil3.request.crossfade
 import coil3.size.Size
 import coil3.toBitmap
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.feature.track.presentation.utils.getDominantColor
+import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

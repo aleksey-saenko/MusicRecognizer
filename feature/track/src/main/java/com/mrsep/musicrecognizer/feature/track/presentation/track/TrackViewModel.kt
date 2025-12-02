@@ -33,9 +33,11 @@ internal class TrackViewModel @Inject constructor(
     val uiStateStream = combine(
         trackRepository.getTrackFlow(args.trackId),
         preferencesRepository.userPreferencesFlow,
-        trackMetadataEnhancerScheduler.isRunning(args.trackId)
-    ) { track, preferences, isMetaEnhancerRunning ->
-        track?.toUiState(preferences, isMetaEnhancerRunning) ?: TrackUiState.TrackNotFound
+        trackMetadataEnhancerScheduler.isTrackLinksFetcherRunning(args.trackId),
+        trackMetadataEnhancerScheduler.isLyricsFetcherRunning(args.trackId),
+    ) { track, preferences, isTrackLinksFetcherRunning, isLyricsFetcherRunning ->
+        track?.toUiState(preferences, isTrackLinksFetcherRunning, isLyricsFetcherRunning)
+            ?: TrackUiState.TrackNotFound
     }.transformWhile { uiState ->
         // do not update track state if track removal was requested
         // after track deletion and final animation, the screen should be destroyed
@@ -84,7 +86,8 @@ internal sealed class TrackUiState {
     data class Success(
         val track: TrackUi,
         val isTrackViewed: Boolean,
-        val isMetadataEnhancerRunning: Boolean,
+        val isTrackLinksFetcherRunning: Boolean,
+        val isLyricsFetcherRunning: Boolean,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
         val usePureBlackForDarkTheme: Boolean,
@@ -93,14 +96,16 @@ internal sealed class TrackUiState {
 
 private fun Track.toUiState(
     preferences: UserPreferences,
-    isMetadataEnhancerRunning: Boolean
+    isTrackLinksFetcherRunning: Boolean,
+    isLyricsFetcherRunning: Boolean,
 ): TrackUiState.Success {
     val trackUi = this.toUi(preferences.requiredMusicServices)
     return TrackUiState.Success(
         track = this.toUi(preferences.requiredMusicServices),
         isTrackViewed = this.properties.isViewed,
-        isMetadataEnhancerRunning = isMetadataEnhancerRunning &&
+        isTrackLinksFetcherRunning = isTrackLinksFetcherRunning &&
                 trackUi.trackLinks.size < preferences.requiredMusicServices.size,
+        isLyricsFetcherRunning = isLyricsFetcherRunning,
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         themeMode = preferences.themeMode,
         usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,

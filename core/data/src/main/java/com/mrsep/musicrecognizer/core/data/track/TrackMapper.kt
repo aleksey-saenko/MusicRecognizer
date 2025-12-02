@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.core.data.track
 
 import com.mrsep.musicrecognizer.core.database.track.TrackEntity
+import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
@@ -18,14 +19,7 @@ internal fun Track.toEntity() = TrackEntity(
     recognizedAt = recognizedAt,
     recognizedBy = recognizedBy,
     recognitionDate = recognitionDate,
-    lyrics = when (val localLyrics = lyrics) {
-        is SyncedLyrics -> LyricsConverter().formatToString(
-            lyrics = SyncedLyricsWithMetadata(metadata = emptyMap(), lines = localLyrics.lines),
-            formatMetadata = false
-        )
-        is PlainLyrics -> localLyrics.plain
-        null -> null
-    },
+    lyrics = lyrics?.toDbLyricsData(),
     isLyricsSynced = when (lyrics) {
         is SyncedLyrics -> true
         is PlainLyrics,
@@ -68,12 +62,7 @@ internal fun TrackEntity.toDomain() = Track(
     recognizedAt = recognizedAt,
     recognizedBy = recognizedBy,
     recognitionDate = recognitionDate,
-    lyrics = if (isLyricsSynced) {
-        lyrics?.let { LyricsConverter().parseFromString(input = it, parseMetadata = false) }
-            ?.lines?.run(::SyncedLyrics)
-    } else {
-        lyrics?.run(::PlainLyrics)
-    },
+    lyrics = lyrics?.let { parseDbLyricsData(it, isLyricsSynced) },
     artworkThumbUrl = links.artworkThumbnail,
     artworkUrl = links.artwork,
     trackLinks = with(links) {
@@ -102,3 +91,18 @@ internal fun TrackEntity.toDomain() = Track(
         themeSeedColor = properties.themeSeedColor,
     )
 )
+
+internal fun Lyrics.toDbLyricsData() = when (this) {
+    is SyncedLyrics -> LyricsConverter().formatToString(
+        lyrics = SyncedLyricsWithMetadata(metadata = emptyMap(), lines = lines),
+        formatMetadata = false
+    )
+    is PlainLyrics -> plain
+}
+
+internal fun parseDbLyricsData(data: String, isSynced: Boolean): Lyrics? = if (isSynced) {
+    data.let { LyricsConverter().parseFromString(input = it, parseMetadata = false) }
+        ?.lines?.run(::SyncedLyrics)
+} else {
+    data.run(::PlainLyrics)
+}

@@ -4,13 +4,13 @@ import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.AcrCloudConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.BaseRemoteRecognitionService
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.AcrCloudResponseJson
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.toRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -42,7 +42,6 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     private val artworkFetcher: ArtworkFetcher,
-    private val lyricsFetcher: LyricsFetcher,
 ) : BaseRemoteRecognitionService(ioDispatcher) {
 
     override val recordingScheme = RecordingScheme(
@@ -101,11 +100,10 @@ internal class AcrCloudRecognitionService @AssistedInject constructor(
             if (remoteResult is RemoteRecognitionResult.Success) {
                 val track = remoteResult.track
                 val artworkDeferred = async { artworkFetcher.fetchUrl(track) }
-                val lyricsDeferred = async { lyricsFetcher.fetch(track) }
+                val artwork = (artworkDeferred.await() as? NetworkResult.Success)?.data
                 val finalTrack = track.copy(
-                    lyrics = lyricsDeferred.await(),
-                    artworkThumbUrl = artworkDeferred.await()?.thumbUrl,
-                    artworkUrl = artworkDeferred.await()?.url,
+                    artworkThumbUrl = track.artworkThumbUrl ?: artwork?.thumbUrl,
+                    artworkUrl = track.artworkUrl ?: artwork?.url,
                 )
                 RemoteRecognitionResult.Success(finalTrack)
             } else {

@@ -108,7 +108,10 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                             resultDate = Instant.now()
                         )
                         enqueuedRecognitionRepository.update(updatedEnqueued)
-                        trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
+                        trackMetadataEnhancerScheduler.enqueueTrackLinksFetcher(updatedTrack.id)
+                        if (updatedTrack.lyrics == null) {
+                            trackMetadataEnhancerScheduler.enqueueLyricsFetcher(updatedTrack.id)
+                        }
                         resultNotificationHelper.notifyResult(updatedEnqueued)
                         Result.success()
                     }

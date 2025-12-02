@@ -17,19 +17,26 @@ interface TrackDao {
     suspend fun upsert(tracks: List<TrackEntity>)
 
     @Update
-    suspend fun update(tracks: List<TrackEntity>)
+    suspend fun update(track: TrackEntity)
 
     @Transaction
     suspend fun upsertKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
-        val trackList = copyKeepProperties(tracks)
+        val trackList = tracks.map { newTrack ->
+            val oldTrack = getTrack(newTrack.id) ?: return@map newTrack
+            newTrack.copy(properties = oldTrack.properties)
+        }
         upsert(trackList)
         return trackList
     }
 
     @Transaction
-    suspend fun updateKeepProperties(tracks: List<TrackEntity>) {
-        val trackList = copyKeepProperties(tracks)
-        update(trackList)
+    suspend fun updateTransform(
+        trackId: String,
+        transform: (previous: TrackEntity) -> TrackEntity,
+    ) {
+        val previous = getTrack(trackId) ?: return
+        val transformed = transform(previous)
+        update(transformed)
     }
 
     @Transaction
@@ -51,6 +58,9 @@ interface TrackDao {
 
     @Query("UPDATE track SET theme_seed_color = :color WHERE id = :trackId")
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
+
+    @Query("UPDATE track SET lyrics = :lyrics, is_lyrics_synced = :isSynced WHERE id = :trackId")
+    suspend fun setLyrics(trackId: String, lyrics: String, isSynced: Boolean)
 
     @Query("SELECT NOT EXISTS(SELECT 1 FROM track LIMIT 1)")
     fun isEmptyDatabaseFlow(): Flow<Boolean>
@@ -148,11 +158,4 @@ interface TrackDao {
         sortBy: SortBy,
         orderBy: OrderBy
     ): Flow<List<TrackPreviewTuple>>
-
-    private suspend fun copyKeepProperties(tracks: List<TrackEntity>): List<TrackEntity> {
-        return tracks.map { newTrack ->
-            val oldTrack = getTrack(newTrack.id) ?: return@map newTrack
-            newTrack.copy(properties = oldTrack.properties)
-        }
-    }
 }

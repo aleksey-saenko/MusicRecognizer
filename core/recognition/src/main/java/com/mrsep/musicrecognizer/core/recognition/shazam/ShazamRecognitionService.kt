@@ -8,7 +8,6 @@ import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.recognition.BaseRemoteRecognitionService
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.headers
@@ -23,7 +22,6 @@ import io.ktor.http.takeFrom
 import io.ktor.util.appendAll
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.time.Instant
@@ -37,7 +35,6 @@ internal class ShazamRecognitionService @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     private val signatureGenerator: ShazamSignatureGenerator,
-    private val lyricsFetcher: LyricsFetcher,
 ) : BaseRemoteRecognitionService(ioDispatcher) {
 
     override val recordingScheme = RecordingScheme(
@@ -110,20 +107,11 @@ internal class ShazamRecognitionService @Inject constructor(
                 return@withContext RemoteRecognitionResult.Error.BadConnection
             }
             if (response.status.isSuccess()) {
-                val remoteResult = try {
+                try {
                     response.body<ShazamResponseJson>()
                         .toRecognitionResult(sample.timestamp, sample.duration)
                 } catch (e: Exception) {
                     RemoteRecognitionResult.Error.UnhandledError(e.message ?: "", e)
-                }
-                if (remoteResult is RemoteRecognitionResult.Success) {
-                    val track = remoteResult.track
-                    val finalTrack = track.copy(
-                        lyrics = async { lyricsFetcher.fetch(track) }.await(),
-                    )
-                    RemoteRecognitionResult.Success(finalTrack)
-                } else {
-                    remoteResult
                 }
             } else {
                 RemoteRecognitionResult.Error.HttpError(

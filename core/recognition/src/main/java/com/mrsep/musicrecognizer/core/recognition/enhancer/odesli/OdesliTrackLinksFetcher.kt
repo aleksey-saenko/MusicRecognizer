@@ -2,10 +2,12 @@ package com.mrsep.musicrecognizer.core.recognition.enhancer.odesli
 
 import android.content.Context
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancer
-import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteMetadataEnhancingResult
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
+import com.mrsep.musicrecognizer.core.recognition.enhancer.RemoteTrackLinks
+import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackLinksFetcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -17,19 +19,19 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-internal class OdesliMetadataEnhancer @Inject constructor(
+internal class OdesliTrackLinksFetcher @Inject constructor(
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : TrackMetadataEnhancer {
+) : TrackLinksFetcher {
 
     private val locale get() = appContext.resources.configuration.locales[0]
 
-    override suspend fun enhance(track: Track): RemoteMetadataEnhancingResult {
+    override suspend fun fetch(track: Track): NetworkResult<RemoteTrackLinks> {
         val queryUrl = getPriorityLinkForQuery(track.trackLinks)
-        queryUrl ?: return RemoteMetadataEnhancingResult.NoEnhancement
+        queryUrl ?: return NetworkResult.Success(RemoteTrackLinks())
         val hasAllLinks = track.trackLinks.size == MusicService.entries.size
-        if (hasAllLinks) return RemoteMetadataEnhancingResult.NoEnhancement
+        if (hasAllLinks) return NetworkResult.Success(RemoteTrackLinks())
 
         return withContext(ioDispatcher) {
             val httpClient = httpClientLazy.get()
@@ -41,26 +43,29 @@ internal class OdesliMetadataEnhancer @Inject constructor(
                         parameters.append("songIfSingle", "true")
                     }
                 }
-            } catch (_: IOException) {
-                return@withContext RemoteMetadataEnhancingResult.Error.BadConnection
+            } catch (e: IOException) {
+                return@withContext NetworkError.BadConnection(e.message)
             }
             try {
                 if (response.status.isSuccess()) {
                     val successDto: OdesliResponseJson = response.body()
                     val trackLinks = successDto.toTrackLinks()
                     val artworkUrl = track.artworkUrl ?: successDto.toArtworkUrl()
-                    val newTrack = track.updateLinks(artworkUrl, trackLinks)
-                    RemoteMetadataEnhancingResult.Success(newTrack)
+                    NetworkResult.Success(RemoteTrackLinks(
+                        artworkThumbUrl = null,
+                        artworkUrl = artworkUrl,
+                        trackLinks = trackLinks
+                    ))
                 } else {
                     val errorDto: OdesliErrorResponseJson = response.body()
-                    RemoteMetadataEnhancingResult.Error.HttpError(
+                    NetworkError.HttpError(
                         code = errorDto.code ?: response.status.value,
                         message = errorDto.message ?: response.status.description
                     )
                 }
             } catch (e: Exception) {
                 ensureActive()
-                RemoteMetadataEnhancingResult.Error.UnhandledError(
+                NetworkError.UnhandledError(
                     message = e.message ?: "",
                     cause = e
                 )
@@ -86,12 +91,4 @@ internal class OdesliMetadataEnhancer @Inject constructor(
             ?: links[MusicService.Boomplay]
             ?: links[MusicService.Anghami]
     }
-
-    private fun Track.updateLinks(
-        newArtworkUrl: String?,
-        newTrackLinks: Map<MusicService, String>
-    ): Track = copy(
-        artworkUrl = artworkUrl ?: newArtworkUrl,
-        trackLinks = trackLinks + (newTrackLinks - trackLinks.keys),
-    )
 }

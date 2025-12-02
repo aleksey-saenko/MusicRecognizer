@@ -175,7 +175,10 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     val updatedTrack = trackWithStoredProps.copy(
                         properties = trackWithStoredProps.properties.copy(isViewed = false)
                     )
-                    trackMetadataEnhancerScheduler.enqueue(updatedTrack.id)
+                    trackMetadataEnhancerScheduler.enqueueTrackLinksFetcher(updatedTrack.id)
+                    if (updatedTrack.lyrics == null) {
+                        trackMetadataEnhancerScheduler.enqueueLyricsFetcher(updatedTrack.id)
+                    }
                     RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                 }
             }

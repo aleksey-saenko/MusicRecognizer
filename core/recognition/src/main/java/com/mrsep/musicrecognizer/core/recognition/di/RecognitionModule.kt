@@ -2,14 +2,14 @@ package com.mrsep.musicrecognizer.core.recognition.di
 
 import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidator
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancer
 import com.mrsep.musicrecognizer.core.recognition.ConfigValidatorImpl
 import com.mrsep.musicrecognizer.core.recognition.RecognitionServiceFactoryImpl
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessionImpl
-import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliMetadataEnhancer
+import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackLinksFetcher
+import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGenerator
@@ -35,8 +35,7 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindTrackMetadataEnhancer(impl: OdesliMetadataEnhancer): TrackMetadataEnhancer
-
+    fun bindTrackLinksFetcher(impl: OdesliTrackLinksFetcher): TrackLinksFetcher
 
     @Binds
     @Singleton

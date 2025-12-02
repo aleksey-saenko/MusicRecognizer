@@ -1,7 +1,8 @@
 package com.mrsep.musicrecognizer.core.recognition.lyrics
 
-import android.util.Log
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
@@ -17,10 +18,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import javax.inject.Inject
 
 internal class LyricsFetcherImpl @Inject constructor(
@@ -28,7 +30,7 @@ internal class LyricsFetcherImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LyricsFetcher {
 
-    override suspend fun fetch(track: Track): Lyrics? {
+    override suspend fun fetch(track: Track): NetworkResult<Lyrics?> {
         return withContext(ioDispatcher) {
             channelFlow {
                 val tasks = listOf(
@@ -37,12 +39,16 @@ internal class LyricsFetcherImpl @Inject constructor(
                 )
                 tasks.forEach { task -> launch { send(task.await()) } }
             }
-                .filterNotNull()
+                .transformWhile { result ->
+                    emit(result)
+                    (result as? NetworkResult.Success)?.data == null
+                }
                 .firstOrNull()
+                ?: NetworkError.BadConnection()
         }
     }
 
-    private suspend fun fetchFromLrcLib(track: Track): Lyrics? {
+    private suspend fun fetchFromLrcLib(track: Track): NetworkResult<Lyrics?> {
         val request = HttpRequestBuilder().apply {
             method = HttpMethod.Get
             url {
@@ -54,9 +60,10 @@ internal class LyricsFetcherImpl @Inject constructor(
                 }
             }
         }
-        val json = fetchByRequest<LrcLibResponseJson>(request)
-        return json?.syncedLyrics?.takeValidContent()?.parseToSyncedLyrics()
-            ?: json?.plainLyrics?.takeValidContent()?.run(::PlainLyrics)
+        return fetchByRequest<LrcLibResponseJson>(request) { json ->
+            json.syncedLyrics?.takeValidContent()?.parseToSyncedLyrics()
+                ?: json.plainLyrics?.takeValidContent()?.run(::PlainLyrics)
+        }
     }
 
     private fun String.takeValidContent() = trim().takeIf { it.isNotBlank() }
@@ -67,17 +74,29 @@ internal class LyricsFetcherImpl @Inject constructor(
             ?.lines?.run(::SyncedLyrics)
     }
 
-    private suspend inline fun <reified T> fetchByRequest(builder: HttpRequestBuilder): T? {
-        return try {
+    private suspend inline fun <reified T> fetchByRequest(
+        builder: HttpRequestBuilder,
+        transform: (T) -> Lyrics?
+    ): NetworkResult<Lyrics?> {
+        val response = try {
             val httpClient = httpClientLazy.get()
-            val response = httpClient.request(builder)
-            if (!response.status.isSuccess()) return null
-            response.body<T>()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e(this::class.simpleName, "Lyrics fetching is failed (${builder.url.host})", e)
-            null
+            httpClient.request(builder)
+        } catch (e: IOException) {
+            return NetworkError.BadConnection(e.message)
+        }
+        return if (response.status.isSuccess()) {
+            try {
+                NetworkResult.Success(transform(response.body<T>()))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                NetworkError.UnhandledError(message = e.message ?: "", cause = e)
+            }
+        } else {
+            NetworkError.HttpError(
+                code = response.status.value,
+                message = response.status.description
+            )
         }
     }
 }

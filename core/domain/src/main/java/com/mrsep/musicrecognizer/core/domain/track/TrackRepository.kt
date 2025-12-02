@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.core.domain.track
 
 import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
+import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.model.SearchResult
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
@@ -9,13 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
 
-    suspend fun upsert(tracks: List<Track>)
-
     suspend fun upsertKeepProperties(tracks: List<Track>): List<Track>
-
-    suspend fun updateKeepProperties(tracks: List<Track>)
-
-    suspend fun update(tracks: List<Track>)
 
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
@@ -36,4 +31,8 @@ interface TrackRepository {
     fun getPreviewsByFilterFlow(filter: TrackFilter): Flow<List<TrackPreview>>
 
     fun getSearchResultFlow(query: String, searchScope: Set<TrackDataField>): Flow<SearchResult>
+
+    suspend fun fetchAndUpdateTrackLinks(trackId: String): NetworkResult<Unit>
+
+    suspend fun fetchAndUpdateLyrics(trackId: String): NetworkResult<Unit>
 }

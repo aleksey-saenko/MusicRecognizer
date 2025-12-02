@@ -4,11 +4,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackMetadataEnhancerScheduler {
 
-    fun enqueue(trackId: String)
+    fun enqueueTrackLinksFetcher(trackId: String)
+    fun enqueueLyricsFetcher(trackId: String)
 
-    fun isRunning(trackId: String): Flow<Boolean>
+    fun isTrackLinksFetcherRunning(trackId: String): Flow<Boolean>
+    fun isLyricsFetcherRunning(trackId: String): Flow<Boolean>
 
-    fun cancel(trackId: String)
+    fun cancelTrackLinksFetcher(trackId: String)
+    fun cancelLyricsFetcher(trackId: String)
 
     fun cancelAll()
 }

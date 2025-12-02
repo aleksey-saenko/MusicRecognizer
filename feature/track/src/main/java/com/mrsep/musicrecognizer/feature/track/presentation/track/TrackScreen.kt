@@ -138,7 +138,7 @@ internal fun TrackScreen(
                                 )
                                 TrackSection(
                                     track = uiState.track,
-                                    isLoadingLinks = uiState.isMetadataEnhancerRunning,
+                                    isLoadingLinks = uiState.isTrackLinksFetcherRunning,
                                     isExpandedScreen = isExpandedScreen,
                                     onArtworkClick = {
                                         artworkShieldUrl = uiState.track.artworkUrl

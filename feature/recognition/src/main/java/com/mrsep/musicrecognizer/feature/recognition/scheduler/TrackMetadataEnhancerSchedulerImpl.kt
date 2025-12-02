@@ -17,31 +17,46 @@ internal class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
 
     private val workManager get() = WorkManager.getInstance(appContext)
 
-    override fun enqueue(trackId: String) {
+    override fun enqueueTrackLinksFetcher(trackId: String) {
         workManager.enqueueUniqueWork(
-            getUniqueWorkerName(trackId),
+            TrackLinksFetcherWorker.getUniqueWorkerName(trackId),
             ExistingWorkPolicy.REPLACE,
-            TrackMetadataEnhancerWorker.getOneTimeWorkRequest(trackId = trackId)
+            TrackLinksFetcherWorker.getOneTimeWorkRequest(trackId = trackId)
         )
     }
 
-    override fun isRunning(trackId: String): Flow<Boolean> {
-        return workManager.getWorkInfosForUniqueWorkFlow(getUniqueWorkerName(trackId))
+    override fun enqueueLyricsFetcher(trackId: String) {
+        workManager.enqueueUniqueWork(
+            LyricsFetchWorker.getUniqueWorkerName(trackId),
+            ExistingWorkPolicy.REPLACE,
+            LyricsFetchWorker.getOneTimeWorkRequest(trackId = trackId)
+        )
+    }
+
+    override fun isTrackLinksFetcherRunning(trackId: String): Flow<Boolean> {
+        return isWorkerRunning(TrackLinksFetcherWorker.getUniqueWorkerName(trackId))
+    }
+
+    override fun isLyricsFetcherRunning(trackId: String): Flow<Boolean> {
+        return isWorkerRunning(LyricsFetchWorker.getUniqueWorkerName(trackId))
+    }
+
+    private fun isWorkerRunning(workerId: String): Flow<Boolean> {
+        return workManager.getWorkInfosForUniqueWorkFlow(workerId)
             .map { listWorkInfo -> listWorkInfo.lastOrNull()?.state == WorkInfo.State.RUNNING }
             .conflate()
     }
 
-    override fun cancel(trackId: String) {
-        workManager.cancelUniqueWork(getUniqueWorkerName(trackId))
+    override fun cancelTrackLinksFetcher(trackId: String) {
+        workManager.cancelUniqueWork(TrackLinksFetcherWorker.getUniqueWorkerName(trackId))
+    }
+
+    override fun cancelLyricsFetcher(trackId: String) {
+        workManager.cancelUniqueWork(LyricsFetchWorker.getUniqueWorkerName(trackId))
     }
 
     override fun cancelAll() {
-        workManager.cancelAllWorkByTag(TrackMetadataEnhancerWorker.TAG)
-    }
-
-    private fun getUniqueWorkerName(trackId: String) = UNIQUE_NAME_MASK.plus(trackId)
-
-    companion object {
-        private const val UNIQUE_NAME_MASK = "METADATA_ENHANCER_ID#"
+        workManager.cancelAllWorkByTag(TrackLinksFetcherWorker.TAG)
+        workManager.cancelAllWorkByTag(LyricsFetchWorker.TAG)
     }
 }

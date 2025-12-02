@@ -31,11 +31,11 @@ import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlin.coroutines.coroutineContext
 
 class RecognitionWidget : GlanceAppWidget() {
 
@@ -51,7 +51,7 @@ class RecognitionWidget : GlanceAppWidget() {
         )
         val router = hiltEntryPoint.serviceRouter()
         val widgetStatusHolder = hiltEntryPoint.widgetStatusHolder()
-        val glanceCoroutineContext = coroutineContext + Dispatchers.Default
+        val glanceCoroutineContext = currentCoroutineContext() + Dispatchers.Default
 
         val statusFlow = widgetStatusHolder.status.onEach { status ->
             when (status) {

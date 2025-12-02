@@ -22,7 +22,6 @@ dependencies {
     api(libs.kotlinx.serializationJson)
     api(libs.coil.network.ktor)
 
-    implementation(platform(libs.okhttp.bom))
     api(libs.ktor.client.core)
     api(libs.ktor.client.logging)
     api(libs.ktor.client.okhttp)

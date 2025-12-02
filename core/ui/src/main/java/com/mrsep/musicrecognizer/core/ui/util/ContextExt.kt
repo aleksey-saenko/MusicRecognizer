@@ -10,10 +10,11 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
+import androidx.core.net.toUri
 
 fun Context.openUrlImplicitly(url: String) {
     startActivityOrToast(
-        Intent(Intent.ACTION_VIEW, Uri.parse(url)),
+        Intent(Intent.ACTION_VIEW, url.toUri()),
         getString(StringsR.string.web_browser_not_found_toast)
     )
 }

@@ -60,9 +60,8 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.audio)
 
-    implementation(platform(libs.okhttp.bom))
     implementation(libs.kotlinx.serializationJson)
-    implementation(libs.uuid.creator)
+    implementation(libs.uuidCreator)
 
     testImplementation(libs.junit4)
     testImplementation(libs.kotest)

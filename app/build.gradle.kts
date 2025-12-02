@@ -55,9 +55,8 @@ android {
         // Excluded unfinished translations: "fa", "gu", "pl", "ro", "vi", iw
         localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "nl", "pt", "pt-rBR", "ru", "sk", "tr", "zh-rCN")
     }
+    // ./gradlew app:exportLibraryDefinitions
     aboutLibraries {
-        // ./gradlew app:exportLibraryDefinitions
-        android.registerAndroidTasks = false
         license.additionalLicenses = setOf("GPL-3.0-or-later")
         collect.gitHubApiToken = properties["github.token"] as? String
         export.apply {

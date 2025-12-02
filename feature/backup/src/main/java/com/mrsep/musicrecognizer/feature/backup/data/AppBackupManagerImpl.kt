@@ -25,6 +25,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -37,7 +38,6 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 import kotlin.io.path.exists
 
 internal class AppBackupManagerImpl @Inject constructor(
@@ -105,7 +105,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private suspend fun exportDatabase(zipOutputStream: ZipOutputStream) {
-        coroutineContext.ensureActive()
+        currentCoroutineContext().ensureActive()
         val appDatabasePath = appContext.getDatabasePath(database.openHelper.databaseName).toPath()
         check(appDatabasePath.exists()) { "App database file is not found" }
         check(database.checkoutWithRetry()) { "DB checkpoint was not performed, database is busy" }
@@ -120,7 +120,7 @@ internal class AppBackupManagerImpl @Inject constructor(
         val recordings = audioSampleDataSource.getFiles()
         with(zipOutputStream) {
             for (recording in recordings) {
-                coroutineContext.ensureActive()
+                currentCoroutineContext().ensureActive()
                 putNextEntry(ZipEntry("$RECORDINGS_DIR_ZIP_ENTRY${recording.name}"))
                 Files.copy(recording.toPath(), this)
                 closeEntry()
@@ -129,7 +129,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     }
 
     private suspend fun exportUserPreferences(zipOutputStream: ZipOutputStream) {
-        coroutineContext.ensureActive()
+        currentCoroutineContext().ensureActive()
         val preferences = userPreferencesDataStore.data.first()
         with(zipOutputStream) {
             putNextEntry(ZipEntry(PREFERENCES_ZIP_ENTRY))

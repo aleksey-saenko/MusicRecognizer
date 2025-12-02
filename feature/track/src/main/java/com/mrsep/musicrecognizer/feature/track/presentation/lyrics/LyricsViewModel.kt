@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,33 +24,35 @@ internal class LyricsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
+    trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
 ) : ViewModel() {
 
     private val args = LyricsScreen.Args(savedStateHandle)
 
     val uiStateStream = combine(
         flow = trackRepository.getTrackFlow(args.trackId),
-        flow2 = preferencesRepository.userPreferencesFlow
-    ) { track, preferences ->
-        track?.let {
-            track.lyrics?.let { lyrics ->
-                LyricsUiState.Success(
-                    trackId = track.id,
-                    title = track.title,
-                    artist = track.artist,
-                    artworkUrl = track.artworkUrl,
-                    lyrics = lyrics,
-                    trackDuration = track.duration,
-                    recognizedAt = track.recognizedAt,
-                    recognitionDate = track.recognitionDate,
-                    lyricsStyle = preferences.lyricsStyle,
-                    themeSeedColor = track.properties.themeSeedColor,
-                    artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
-                    themeMode = preferences.themeMode,
-                    usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
-                    isTrackViewed = track.properties.isViewed,
-                )
-            }
+        flow2 = preferencesRepository.userPreferencesFlow,
+        flow3 = trackMetadataEnhancerScheduler.isLyricsFetcherRunning(args.trackId)
+    ) { track, preferences, isLyricsFetcherRunning ->
+        if (track == null) return@combine LyricsUiState.TrackNotFound
+        if (isLyricsFetcherRunning) return@combine LyricsUiState.Loading
+        track.lyrics?.let { lyrics ->
+            LyricsUiState.Success(
+                trackId = track.id,
+                title = track.title,
+                artist = track.artist,
+                artworkUrl = track.artworkUrl,
+                lyrics = lyrics,
+                trackDuration = track.duration,
+                recognizedAt = track.recognizedAt,
+                recognitionDate = track.recognitionDate,
+                lyricsStyle = preferences.lyricsStyle,
+                themeSeedColor = track.properties.themeSeedColor,
+                artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
+                themeMode = preferences.themeMode,
+                usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
+                isTrackViewed = track.properties.isViewed,
+            )
         } ?: LyricsUiState.LyricsNotFound
     }
         .stateIn(
@@ -81,6 +84,8 @@ internal class LyricsViewModel @Inject constructor(
 internal sealed class LyricsUiState {
 
     data object Loading : LyricsUiState()
+
+    data object TrackNotFound : LyricsUiState()
 
     data object LyricsNotFound : LyricsUiState()
 

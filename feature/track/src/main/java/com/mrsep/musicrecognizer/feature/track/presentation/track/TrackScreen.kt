@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -159,15 +161,19 @@ internal fun TrackScreen(
                                     scrollBehavior = null,
                                     isFavorite = uiState.track.isFavorite,
                                     isLyricsAvailable = uiState.track.lyrics != null,
+                                    isLyricsLoading = uiState.isLyricsFetcherRunning,
                                     isRetryAllowed = isRetryAllowed,
                                     onFavoriteClick = {
-                                        viewModel.setFavorite(
-                                            uiState.track.id,
-                                            !uiState.track.isFavorite
-                                        )
+                                        viewModel.setFavorite(uiState.track.id, !uiState.track.isFavorite)
                                     },
                                     onLyricsClick = {
-                                        onNavigateToLyricsScreen(uiState.track.id)
+                                        if (uiState.track.lyrics != null) {
+                                            onNavigateToLyricsScreen(uiState.track.id)
+                                        } else if (uiState.isLyricsFetcherRunning) {
+                                            context.toast(StringsR.string.searching_for_lyrics)
+                                        } else {
+                                            context.toast(StringsR.string.no_lyrics_available)
+                                        }
                                     },
                                     onSearchClick = {
                                         showSearchBottomSheet = true
@@ -274,4 +280,8 @@ private fun Context.openWikiSearch(query: String) {
         val url = "https://$lang.wikipedia.org/wiki/Special:Search?search=$encodedQuery"
         openUrlImplicitly(url)
     }
+}
+
+private fun Context.toast(@StringRes stringRes: Int) {
+    Toast.makeText(this, getString(stringRes), Toast.LENGTH_SHORT).show()
 }

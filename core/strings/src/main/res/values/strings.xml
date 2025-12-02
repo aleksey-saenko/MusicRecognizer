@@ -173,6 +173,8 @@
     <string name="share_music_services_links">Music service links</string>
     <string name="track_not_found_title">The track was not found</string>
     <string name="track_not_found_message">Something went wrong, the track may have been removed or modified incorrectly</string>
+    <string name="searching_for_lyrics">Searching for lyrics…</string>
+    <string name="no_lyrics_available">No lyrics available for this song</string>
     <string name="lyrics_start_autoscroll">Start autoscroll</string>
     <string name="lyrics_stop_autoscroll">Stop autoscroll</string>
     <string name="text_style">Text style</string>

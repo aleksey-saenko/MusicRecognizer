@@ -51,7 +51,7 @@ internal fun LyricsScreen(
             LoadingStub(modifier = Modifier.fillMaxSize())
         }
 
-        LyricsUiState.LyricsNotFound -> Column(
+        LyricsUiState.TrackNotFound -> Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
@@ -59,6 +59,16 @@ internal fun LyricsScreen(
         ) {
             LyricsScreenLoadingTopBar(onBackPressed = onBackPressed)
             TrackNotFoundMessage(modifier = Modifier.fillMaxSize())
+        }
+
+        LyricsUiState.LyricsNotFound -> Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .fillMaxSize()
+                .navigationBarsPadding()
+        ) {
+            LyricsScreenLoadingTopBar(onBackPressed = onBackPressed)
+            LyricsNotFoundMessage(modifier = Modifier.fillMaxSize())
         }
 
         is LyricsUiState.Success -> {

@@ -1,0 +1,6 @@
+* Add support for Shazam recognition service (see Preferences -> Recognition provider)
+* Use MP4 container instead of ADTS to store audio samples for deferred recognition for wider compatibility (migration may take time on slow devices)
+* Search for lyrics after recognition in the background instead of waiting synchronously
+* Respect device audio focus when playing stored audio samples
+* Fix some accessibility issues with TalkBack
+* Update translations

@@ -60,6 +60,6 @@ class AudioRecordingDataSource @Inject internal constructor(
     }
 
     companion object {
-        private const val SESSION_ROOT_DIR = "recording_session"
+        private const val SESSION_ROOT_DIR = "recording_sessions"
     }
 }

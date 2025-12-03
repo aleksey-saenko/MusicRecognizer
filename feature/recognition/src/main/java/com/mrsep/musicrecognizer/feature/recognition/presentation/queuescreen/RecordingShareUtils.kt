@@ -21,7 +21,7 @@ internal object RecordingShareUtils {
                 deleteRecursively()
                 mkdirs()
             }
-            val target = file.copyTo(shareFolder.resolve(file.name.plus(".aac")))
+            val target = file.copyTo(shareFolder.resolve("sample.${file.extension}"))
             FileProvider.getUriForFile(
                 context,
                 context.getString(

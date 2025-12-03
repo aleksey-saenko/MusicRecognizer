@@ -17,6 +17,9 @@ interface EnqueuedRecognitionDao {
     @Update
     suspend fun update(recognition: EnqueuedRecognitionEntity)
 
+    @Query("SELECT * FROM enqueued_recognition WHERE id = :recognitionId")
+    suspend fun getRecognition(recognitionId: Int): EnqueuedRecognitionEntity?
+
     @Query("UPDATE enqueued_recognition SET title = :newTitle WHERE id = :recognitionId")
     suspend fun updateTitle(recognitionId: Int, newTitle: String)
 

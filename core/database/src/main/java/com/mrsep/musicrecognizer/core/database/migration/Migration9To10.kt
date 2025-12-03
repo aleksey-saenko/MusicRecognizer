@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.core.database.migration
 import android.content.Context
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.github.f4b6a3.uuid.UuidCreator
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AdtsToMp4Migration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
@@ -18,10 +19,12 @@ import java.time.Instant
 import kotlin.io.path.ExperimentalPathApi
 
 private data class RecognitionFile(
-    val id: Int,
-    val file: File,
+    val recognitionId: Int,
+    val originalFile: File,
+    val migrationFile: File,
 )
 
+// Migrate samples from ADTS to MP4 container, use UUIDs for new filenames
 internal class Migration9To10(private val appContext: Context): Migration(9, 10) {
 
     @OptIn(ExperimentalPathApi::class)
@@ -40,12 +43,13 @@ internal class Migration9To10(private val appContext: Context): Migration(9, 10)
             val fileIndex = cursor.getColumnIndex("record_file")
             while (cursor.moveToNext()) {
                 val id = cursor.getInt(idIndex)
-                val file = cursor.getString(fileIndex).run(::File)
-                val migrationFile = newSamplesDir.resolve("${file.name}.m4a")
+                val originalFile = cursor.getString(fileIndex).run(::File)
+                val uniqueId = UuidCreator.getNameBasedSha1(originalFile.name)
+                val migrationFile = newSamplesDir.resolve("$uniqueId.m4a")
                 when {
-                    file.exists() -> needMigration += RecognitionFile(id, file)
-                    migrationFile.exists() -> migrated += RecognitionFile(id, migrationFile)
-                    else -> corrupted += RecognitionFile(id, file)
+                    originalFile.exists() -> needMigration += RecognitionFile(id, originalFile, migrationFile)
+                    migrationFile.exists() -> migrated += RecognitionFile(id, migrationFile, migrationFile)
+                    else -> corrupted += RecognitionFile(id, originalFile, migrationFile)
                 }
             }
         }
@@ -53,11 +57,11 @@ internal class Migration9To10(private val appContext: Context): Migration(9, 10)
         val semaphore = Semaphore(Runtime.getRuntime().availableProcessors())
         val adtsToMp4Migration = AdtsToMp4Migration(appContext)
         runBlocking {
-            val conversions = needMigration.map { (id, adtsSampleFile) ->
+            val conversions = needMigration.map { (id, adtsSampleFile, migrationFile) ->
                 launch(Dispatchers.IO) {
                     semaphore.withPermit {
                         val adtsFileName = adtsSampleFile.name
-                        val newSampleFileTemp = oldSamplesDir.resolve("${adtsFileName}_temp.m4a").apply {
+                        val newSampleTempFile = oldSamplesDir.resolve("${adtsFileName}_temp.m4a").apply {
                             delete()
                             createNewFile()
                         }
@@ -65,21 +69,20 @@ internal class Migration9To10(private val appContext: Context): Migration(9, 10)
                         val timestamp = Instant.ofEpochMilli(adtsFileName.drop(4).toLong())
                         adtsToMp4Migration.convert(
                             input = adtsSampleFile,
-                            output = newSampleFileTemp,
+                            output = newSampleTempFile,
                             creationTimestamp = timestamp,
                         )
-                        val newSampleFile = newSamplesDir.resolve("${adtsFileName}.m4a")
                         try {
                             Files.move(
-                                newSampleFileTemp.toPath(),
-                                newSampleFile.toPath(),
+                                newSampleTempFile.toPath(),
+                                migrationFile.toPath(),
                                 StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE
                             )
                         } catch (_: AtomicMoveNotSupportedException) {
-                            newSampleFile.delete()
-                            check(newSampleFileTemp.renameTo(newSampleFile))
+                            migrationFile.delete()
+                            check(newSampleTempFile.renameTo(migrationFile))
                         }
-                        migrated += RecognitionFile(id, newSampleFile)
+                        migrated += RecognitionFile(id, adtsSampleFile, migrationFile)
                         adtsSampleFile.delete()
                     }
                 }
@@ -88,8 +91,8 @@ internal class Migration9To10(private val appContext: Context): Migration(9, 10)
         }
         oldSamplesDir.deleteRecursively()
 
-        for ((id, migratedFile) in migrated) {
-            db.execSQL("UPDATE enqueued_recognition SET record_file = '${migratedFile.absolutePath}' WHERE id = $id")
+        for ((id, _, migrationFile) in migrated) {
+            db.execSQL("UPDATE enqueued_recognition SET record_file = '${migrationFile.absolutePath}' WHERE id = $id")
         }
         for ((id, _) in corrupted) {
             db.execSQL("DELETE FROM enqueued_recognition WHERE id = $id")

@@ -16,6 +16,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.time.Instant
+import java.util.UUID
 import java.util.zip.ZipInputStream
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -38,7 +39,7 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
     }
 
     override suspend fun copy(sample: AudioSample): AudioSample? {
-        val sampleName = getNewSampleName(sample.timestamp, sample.mimeType)
+        val sampleName = getNewSampleName(sample.mimeType)
         val persistentSample = sample.copy(file = samplesDir.resolve(sampleName))
         return try {
             withContext(ioDispatcher) {
@@ -77,7 +78,7 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
     }
 
     @OptIn(UnstableApi::class)
-    override suspend fun read(file: File): AudioSample? = withContext(ioDispatcher) {
+    override suspend fun read(file: File, timestamp: Instant): AudioSample? = withContext(ioDispatcher) {
         val extractor = MediaExtractorCompat(appContext)
         try {
             extractor.setDataSource(file.absolutePath)
@@ -95,8 +96,7 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
             val mediaFormat = extractor.getTrackFormat(trackIndex)
             AudioSample(
                 file = file,
-                timestamp = file.nameWithoutExtension
-                    .takeLastWhile(Char::isDigit).toLong().run(Instant::ofEpochMilli),
+                timestamp = timestamp,
                 duration = mediaFormat.getLong(MediaFormat.KEY_DURATION).let { durationUs ->
                     ((durationUs + 500) / 1000).milliseconds
                 },
@@ -135,8 +135,8 @@ internal class AudioSampleDataSourceImpl @Inject constructor(
         allDeleted
     }
 
-    private fun getNewSampleName(timestamp: Instant, mimeType: String): String {
-        return "rec_${timestamp.toEpochMilli()}.${mimeType.mimeTypeToFileExtension()}"
+    private fun getNewSampleName(mimeType: String): String {
+        return "${UUID.randomUUID()}.${mimeType.mimeTypeToFileExtension()}"
     }
 
     private fun String.mimeTypeToFileExtension(): String = when (lowercase()) {

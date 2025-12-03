@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.core.data.enqueued
 
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import java.io.File
+import java.time.Instant
 import java.util.zip.ZipInputStream
 
 interface AudioSampleDataSource {
@@ -14,7 +15,7 @@ interface AudioSampleDataSource {
 
     suspend fun import(inputStream: ZipInputStream, filename: String): File?
 
-    suspend fun read(file: File): AudioSample?
+    suspend fun read(file: File, timestamp: Instant): AudioSample?
 
     suspend fun delete(file: File): Boolean
 

@@ -27,4 +27,5 @@ dependencies {
     api(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
+    implementation(libs.uuidCreator)
 }

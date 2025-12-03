@@ -59,8 +59,8 @@ internal class EnqueuedRecognitionRepositoryImpl @Inject constructor(
 
     override suspend fun getAudioSample(recognitionId: Int): AudioSample? {
         return withContext(ioDispatcher) {
-            dao.getRecordingFile(recognitionId)?.let { file ->
-                audioSampleDataSource.read(file)
+            dao.getRecognition(recognitionId)?.let { recognition ->
+                audioSampleDataSource.read(recognition.recordFile, recognition.creationDate)
             }
         }
     }

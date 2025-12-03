@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="main_screen_tap_to_recognize">לחץ בשביל לזהות</string>
+    <string name="main_screen_listening">מאזין</string>
+    <string name="main_screen_listening_extra_time">מנסה פעם נוספת</string>
 </resources>

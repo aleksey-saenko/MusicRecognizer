@@ -7,13 +7,13 @@
     <string name="widget_tap_to_recognize">Toque para identificar</string>
     <string name="widget_tap_to_try_again">Toque para tentar novamente</string>
     <string name="widget_listening">Escutando</string>
-    <string name="widget_listening_subtitle">Por favor, aguarde</string>
+    <string name="widget_listening_subtitle">Aguarde</string>
     <string name="widget_listening_subtitle_extra_time">Tentando mais uma vez</string>
     <string name="recognition_widget_description">Identifique a música em um toque</string>
     <string name="notification_tap_to_recognize">Toque para identificar</string>
     <string name="notification_tap_to_recognize_subtitle">Reconhecer com qualquer app aberto</string>
     <string name="notification_listening">Escutando</string>
-    <string name="notification_listening_subtitle">Por favor, aguarde</string>
+    <string name="notification_listening_subtitle">Aguarde</string>
     <string name="notification_listening_subtitle_extra_time">Tentando mais uma vez</string>
     <string name="quick_tile_recognize">Identificar música</string>
     <string name="quick_tile_cancel_recognition">Cancelar reconhecimento</string>
@@ -26,7 +26,7 @@
     <string name="apply">Aplicar</string>
     <string name="applied">Aplicado</string>
     <string name="cancel">Cancelar</string>
-    <string name="reset">Redefinir</string>
+    <string name="reset">Reconfigurar</string>
     <string name="close">Fechar</string>
     <string name="not_now">Não agora</string>
     <string name="save">Salvar</string>
@@ -69,7 +69,7 @@
     <string name="result_title_no_matches">Nenhuma correspondência encontrada</string>
     <string name="result_message_no_matches">Desculpe, o app não pôde encontrar essa faixa</string>
     <string name="result_title_bad_connection">Conexão à internet ruim</string>
-    <string name="result_message_bad_connection">Por favor, verifique o estado da sua rede</string>
+    <string name="result_message_bad_connection">Confira o estado da sua rede</string>
     <string name="result_title_recognition_scheduled">Reconhecimento agendado</string>
     <string name="result_message_recognition_saved">O clipe de áudio foi salvo, você pode iniciar o reconhecimento quando quiser manualmente</string>
     <string name="result_message_recognition_scheduled">O clipe de áudio foi salvo, ao voltar online, o app tentará identificar esta música</string>
@@ -78,7 +78,7 @@
     <string name="result_title_bad_network_response">Resposta de rede inválida</string>
     <string name="result_message_bad_network_response">Um erro ocorreu durante solicitação da internet</string>
     <string name="result_title_auth_error">Erro de autenticação</string>
-    <string name="result_message_auth_error">Por favor, confira suas credenciais do serviço de reconhecimento configurado e tente novamente</string>
+    <string name="result_message_auth_error">Confira as credenciais do seu serviço de reconhecimento selecionado e tente novamente</string>
     <string name="result_title_service_usage_limited">Uso do serviço limitado</string>
     <string name="result_message_service_usage_limited">Seu uso do serviço chegou à seu limite. Confira o seu plano ou tente novamente mais tarde</string>
     <string name="result_title_internal_error">Erro interno</string>
@@ -115,7 +115,7 @@
     <string name="recognition_queue">Fila de reconhecimento</string>
     <string name="queue">Fila</string>
     <string name="empty_recognition_queue_title">Nenhum reconhecimento em fila</string>
-    <string name="empty_recognition_queue_subtitle">Quando off-line ou em uma falha, um reconhecimento pode ser adicionado à fila de acordo com sua política de retorno</string>
+    <string name="empty_recognition_queue_subtitle">Quando off-line ou em uma falha, um reconhecimento pode ser adicionado à fila de acordo com sua política de recorrência</string>
     <string name="untitled_recognition">Reconhecimento sem título</string>
     <string name="format_scheduled_recognition_of">Agendado o reconhecimento de %s</string>
     <string name="format_recognition_created">Criado: %s</string>
@@ -180,14 +180,14 @@
     <string name="preferences">Preferências</string>
     <string name="pref_group_recognition">Reconhecimento</string>
     <string name="pref_title_recognize_on_startup">Reconhecer ao abrir o app</string>
-    <string name="pref_title_fallback_policy">Política de retorno de reconhecimento</string>
-    <string name="pref_subtitle_fallback_policy">Definir ações de retorno após identificações malsucedidas</string>
-    <string name="fallback_policy_dialog_title">Política de retorno</string>
-    <string name="fallback_policy_dialog_message">Defina a ação padrão de retorno para cada tipo de resultado mal sucedido:</string>
+    <string name="pref_title_fallback_policy">Política de recorrência de reconhecimento</string>
+    <string name="pref_subtitle_fallback_policy">Configure ações de recorrência após identificações malsucedidas</string>
+    <string name="fallback_policy_dialog_title">Política de recorrência</string>
+    <string name="fallback_policy_dialog_message">Configure a ação padrão de recorrência para cada tipo de resultado malsucedido:</string>
     <string name="fallback_action_save_recording_and_retry">Salvar a gravação e iniciar novamente</string>
     <string name="fallback_action_save_recording">Salvar gravação</string>
     <string name="fallback_action_ignore">Ignorar</string>
-    <string name="fallback_trigger_bad_connection">Conexão à internet ruim</string>
+    <string name="fallback_trigger_bad_connection">Conexão ruim à internet</string>
     <string name="fallback_trigger_no_matches_found">Nenhuma correspondência encontrada</string>
     <string name="fallback_trigger_other_failures">Outras falhas</string>
     <string name="pref_title_recognition_provider">Provedor de reconhecimento</string>
@@ -196,10 +196,10 @@
     <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis de 14 dias. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
     <string name="audd_help_dialog_message_empty_token">Você pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isso limitará o número de reconhecimentos diários.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e cadastrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
-    <string name="acr_cloud_help_dialog_steps_title">Por favor preste atenção nestes passos:</string>
+    <string name="acr_cloud_help_dialog_steps_title">Preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
-    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Áudio gravado\"</string>
-    <string name="acr_cloud_help_dialog_step3">Defina o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
+    <string name="acr_cloud_help_dialog_step2">Configure a fonte de áudio como \"Áudio gravado\"</string>
+    <string name="acr_cloud_help_dialog_step3">Configure o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
     <string name="acr_cloud_help_dialog_step4">Assinale todas as caixas para integração de ID de terceiros</string>
     <string name="pref_group_notifications">Notificações</string>
     <string name="pref_title_notification_service">Serviço por notificação</string>
@@ -281,7 +281,7 @@
     <string name="audio_capture_mode_auto">Automático</string>
     <string name="pref_title_audio_source">Fonte de áudio</string>
     <string name="audio_source_dialog_button_long_press_mode_title">Pressionar e segurar</string>
-    <string name="pref_subtitle_audio_source">Defina a configuração de gravação de áudio</string>
+    <string name="pref_subtitle_audio_source">Configure a gravação de áudio</string>
     <string name="audio_source_dialog_default_mode_title">Padrão</string>
     <string name="audio_source_dialog_default_mode_message">Selecione a fonte de áudio padrão a ser usada caso não for especificado:</string>
     <string name="audio_source_dialog_button_long_press_mode_message">Selecione a fonte de áudio a ser usada quando a botão da tela principal é pressionado e segurado:</string>

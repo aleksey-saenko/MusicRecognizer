@@ -284,4 +284,6 @@
     <string name="notification_channel_desc_foreground_result">Zobrazí výsledky skladeb, když se nacházíte na obrazovce rozpoznávání</string>
     <string name="notification_channel_name_background_result">Výsledky skladeb nalezené na pozadí</string>
     <string name="notification_channel_desc_background_result">Zobrazí výsledky skladeb při minimalizované aplikaci nebo když se nenacházíte na obrazovce rozpoznávání</string>
+    <string name="searching_for_lyrics">Hledání textů…</string>
+    <string name="no_lyrics_available">Pro tuto skladbu nejsou dostupné žádné texty</string>
 </resources>

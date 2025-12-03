@@ -13,4 +13,5 @@ interface PlayerController {
     fun pause()
     fun resume()
     fun stop()
+    fun resetError()
 }

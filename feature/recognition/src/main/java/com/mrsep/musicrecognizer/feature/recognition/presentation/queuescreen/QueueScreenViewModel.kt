@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerController
+import com.mrsep.musicrecognizer.core.audio.audioplayer.PlayerStatus
 import com.mrsep.musicrecognizer.core.common.di.DefaultDispatcher
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
@@ -44,14 +45,12 @@ internal class QueueScreenViewModel @Inject constructor(
                 )
             }
         },
-        flow2 = playerController.statusFlow,
-        flow3 = preferencesRepository.userPreferencesFlow
-    ) { enqueuedWithStatusList, playerStatus, preferences ->
+        flow2 = preferencesRepository.userPreferencesFlow
+    ) { enqueuedWithStatusList, preferences ->
         QueueScreenUiState.Success(
             recognitionList = enqueuedWithStatusList
                 .map { it.toUi(dateFormatter) }
                 .toImmutableList(),
-            playerStatus = playerStatus.toUi(),
             useGridLayout = preferences.useGridForRecognitionQueue,
             showCreationDate = preferences.showCreationDateInQueue,
         )
@@ -59,6 +58,12 @@ internal class QueueScreenViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = QueueScreenUiState.Loading
+    )
+
+    val playerStatusFlow = playerController.statusFlow.map(PlayerStatus::toUi).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = PlayerStatusUi.Idle
     )
 
     fun renameRecognition(recognitionId: Int, newTitle: String) {
@@ -112,6 +117,10 @@ internal class QueueScreenViewModel @Inject constructor(
         playerController.resume()
     }
 
+    fun resetPlayerError() {
+        playerController.resetError()
+    }
+
     fun setUseGridLayout(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setUseGridForRecognitionQueue(value)
@@ -136,7 +145,6 @@ internal sealed class QueueScreenUiState {
 
     data class Success(
         val recognitionList: ImmutableList<EnqueuedRecognitionUi>,
-        val playerStatus: PlayerStatusUi,
         val useGridLayout: Boolean,
         val showCreationDate: Boolean,
     ) : QueueScreenUiState()

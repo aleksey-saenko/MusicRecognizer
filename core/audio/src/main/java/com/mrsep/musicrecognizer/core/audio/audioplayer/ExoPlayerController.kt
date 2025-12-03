@@ -153,6 +153,13 @@ internal class ExoPlayerController @Inject constructor(
         _statusFlow.update { PlayerStatus.Idle }
     }
 
+    @MainThread
+    override fun resetError() {
+        if (_statusFlow.value is PlayerStatus.Error) {
+            _statusFlow.update { PlayerStatus.Idle }
+        }
+    }
+
     private fun startPositionPolling() {
         if (positionPollingJob?.isActive == true) return
         positionPollingJob = playerCoroutineScope.launch {

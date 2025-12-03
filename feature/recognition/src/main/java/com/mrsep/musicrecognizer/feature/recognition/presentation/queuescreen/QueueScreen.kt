@@ -43,11 +43,11 @@ internal fun QueueScreen(
 
         is QueueScreenUiState.Success -> {
             val context = LocalContext.current
-            val playerStatus = uiState.playerStatus
+            val playerStatus by viewModel.playerStatusFlow.collectAsStateWithLifecycle()
             LaunchedEffect(playerStatus) {
-                if (playerStatus is PlayerStatusUi.Error) {
-                    Toast.makeText(context, playerStatus.message, Toast.LENGTH_LONG).show()
-                }
+                val error = (playerStatus as? PlayerStatusUi.Error) ?: return@LaunchedEffect
+                Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                viewModel.resetPlayerError()
             }
             val multiSelectionState = rememberMultiSelectionState<Int>(uiState.recognitionList)
             BackHandler(
@@ -106,7 +106,7 @@ internal fun QueueScreen(
                                 onCancelRecognition = viewModel::cancelRecognition,
                                 onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
                                 onRenameEnqueued = viewModel::renameRecognition,
-                                playerStatus = uiState.playerStatus,
+                                playerStatus = playerStatus,
                                 onStartPlayRecord = viewModel::startAudioPlayer,
                                 onStopPlayRecord = viewModel::stopAudioPlayer,
                                 modifier = Modifier
@@ -124,7 +124,7 @@ internal fun QueueScreen(
                                 onCancelRecognition = viewModel::cancelRecognition,
                                 onDeleteEnqueued = viewModel::cancelAndDeleteRecognition,
                                 onRenameEnqueued = viewModel::renameRecognition,
-                                playerStatus = uiState.playerStatus,
+                                playerStatus = playerStatus,
                                 onStartPlayRecord = viewModel::startAudioPlayer,
                                 onStopPlayRecord = viewModel::stopAudioPlayer,
                                 modifier = Modifier

@@ -40,7 +40,7 @@ internal class ShazamRecognitionService @Inject constructor(
     override val recordingScheme = RecordingScheme(
         steps = listOf(
             RecordingScheme.Step(recordings = listOf(3.seconds, 6.seconds)),
-            RecordingScheme.Step(recordings = listOf(3.seconds, 6.seconds)),
+            RecordingScheme.Step(recordings = listOf(3.seconds, 6.seconds, 9.seconds)),
         ),
         fallback = 10.seconds,
         encodeSteps = false,

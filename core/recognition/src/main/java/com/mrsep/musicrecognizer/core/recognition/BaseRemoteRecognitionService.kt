@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
+import kotlin.math.pow
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 internal abstract class BaseRemoteRecognitionService(
@@ -41,6 +43,7 @@ internal abstract class BaseRemoteRecognitionService(
             .transformWhile<AudioSample, Unit> { sample ->
                 lastResult = recognize(sample)
                 while (lastResult.isRetryRequired() && retryCounter < RETRY_ON_ERROR_LIMIT) {
+                    delayForRetry(retryCounter)
                     retryCounter++
                     lastResult = recognize(sample)
                 }
@@ -57,13 +60,24 @@ internal abstract class BaseRemoteRecognitionService(
         lastResult
     }
 
+    private suspend fun delayForRetry(retryAttempt: Int) {
+        val expDelay = minOf((2.0.pow(retryAttempt) * BASE_RETRY_DELAY).toLong(), MAX_RETRY_DELAY)
+        val jitter = Random.nextLong(0, JITTER_MAX_DELAY)
+        delay(expDelay + jitter)
+    }
+
     private fun RemoteRecognitionResult.isRetryRequired() = when (this) {
         RemoteRecognitionResult.Error.BadConnection -> true
+        is RemoteRecognitionResult.Error.HttpError -> code in 500..599
         else -> false
     }
 
     companion object {
         private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
-        private const val RETRY_ON_ERROR_LIMIT = 1
+        private const val RETRY_ON_ERROR_LIMIT = 2
+
+        private const val BASE_RETRY_DELAY = 1000L
+        private const val MAX_RETRY_DELAY = 5000L
+        private const val JITTER_MAX_DELAY = 1000L
     }
 }

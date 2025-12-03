@@ -207,6 +207,6 @@ internal class AuddRecognitionService @AssistedInject constructor(
 
         private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
         private val WEB_SOCKET_RESPONSE_TIMEOUT = 15.seconds
-        private const val WEB_SOCKET_RECONNECT_LIMIT = 1
+        private const val WEB_SOCKET_RECONNECT_LIMIT = 2
     }
 }

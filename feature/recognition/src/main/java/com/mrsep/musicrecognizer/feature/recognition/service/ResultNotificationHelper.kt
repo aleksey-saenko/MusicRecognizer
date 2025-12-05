@@ -208,7 +208,7 @@ class ResultNotificationHelper @Inject constructor(
         return TaskStackBuilder.create(appContext).run {
             addNextIntentWithParentStack(intent)
             getPendingIntent(
-                0,
+                0, // Each deeplink intent has unique data uri
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
@@ -317,7 +317,7 @@ class ResultNotificationHelper @Inject constructor(
             appContext.getString(StringsR.string.share),
             PendingIntent.getActivity(
                 appContext,
-                0,
+                System.currentTimeMillis().toInt(),
                 wrappedIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )

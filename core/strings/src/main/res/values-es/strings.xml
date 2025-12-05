@@ -275,4 +275,6 @@
     <string name="notification_channel_name_background_result">Resultados de canciones encontradas en segundo plano</string>
     <string name="audio_source_dialog_use_alt_device_source">Usar otra fuente de audio</string>
     <string name="notification_channel_desc_background_result">Muestra resultados de canciones cuando la app está minimizada o no estás en la pantalla de reconocimiento</string>
+    <string name="searching_for_lyrics">Buscando letras…</string>
+    <string name="no_lyrics_available">No hay letras disponibles para esta canción</string>
 </resources>

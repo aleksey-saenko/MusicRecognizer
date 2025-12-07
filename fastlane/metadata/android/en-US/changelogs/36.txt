@@ -1,0 +1,4 @@
+* Fix app crash when using Shazam service on some devices
+* Fix bug where track shared text was reused in multiple notifications
+* Add Ukrainian translation (Thanks @maksim2005UKR!)
+* Update translations

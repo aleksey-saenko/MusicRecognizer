@@ -14,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 35
-        versionName = "1.13.0"
+        versionCode = 36
+        versionName = "1.13.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -52,8 +52,8 @@ android {
     }
     androidResources {
         generateLocaleConfig = true
-        // Excluded unfinished translations: "el", "fa", "gu", "pl", "ro", "vi", "iw", "uk"
-        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "nl", "pt", "pt-rBR", "ru", "sk", "tr", "zh-rCN")
+        // Excluded unfinished translations: "el", "fa", "gu", "pl", "ro", "vi", "iw"
+        localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "it", "nl", "pt", "pt-rBR", "ru", "sk", "tr", "uk", "zh-rCN")
     }
     // ./gradlew app:exportLibraryDefinitions
     aboutLibraries {

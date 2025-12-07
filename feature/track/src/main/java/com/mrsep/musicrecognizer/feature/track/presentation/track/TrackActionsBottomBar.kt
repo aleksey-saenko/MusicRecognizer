@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -22,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,22 +53,25 @@ internal fun TrackActionsBottomBar(
             else -> 0.5f
         }
     )
+    val lyricsButtonExtraElevation by animateDpAsState(if (isLyricsAvailable) 2.dp else 1.dp)
     BottomAppBar(
         scrollBehavior = scrollBehavior,
         modifier = modifier,
         floatingActionButton = {
             Box {
                 FloatingActionButton(
-                    modifier = Modifier.graphicsLayer { alpha = lyricsButtonAlpha },
                     onClick = onLyricsClick,
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                        .copy(alpha = lyricsButtonAlpha)
+                        .compositeOver(BottomAppBarDefaults.containerColor),
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        .copy(alpha = lyricsButtonAlpha),
                     elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 2.dp,
-                        pressedElevation = 3.dp,
-                        focusedElevation = 3.dp,
-                        hoveredElevation = 3.dp
-                    ),
+                        defaultElevation = lyricsButtonExtraElevation,
+                        pressedElevation = 1.dp + lyricsButtonExtraElevation,
+                        focusedElevation = 1.dp + lyricsButtonExtraElevation,
+                        hoveredElevation = 1.dp + lyricsButtonExtraElevation
+                    )
                 ) {
                     Icon(
                         painter = painterResource(UiR.drawable.outline_lyrics_24),
@@ -84,7 +89,7 @@ internal fun TrackActionsBottomBar(
                     VinylRotating(
                         modifier = Modifier
                             .padding(4.dp)
-                            .size(18.dp),
+                            .size(16.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

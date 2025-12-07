@@ -222,9 +222,9 @@
     <string name="theme_mode_follow_system">Systeem volgen</string>
     <string name="theme_mode_light">Licht</string>
     <string name="theme_mode_dark">Donker</string>
-    <string name="theme_use_dynamic_colors">Dynamische kleuren gebruiken</string>
-    <string name="theme_use_artwork_colors">Albumkleuren gebruiken</string>
-    <string name="theme_use_pure_black">Puur zwart gebruiken</string>
+    <string name="theme_use_dynamic_colors">Dynamische kleuren</string>
+    <string name="theme_use_artwork_colors">Albumkleuren</string>
+    <string name="theme_use_pure_black">Puur zwart</string>
     <string name="pref_title_music_services_links">Links naar muziekdiensten</string>
     <string name="pref_subtitle_format_more_services">%1$s, en %2$d meer</string>
     <string name="pref_subtitle_no_selected_services">Geen</string>
@@ -275,4 +275,6 @@
     <string name="crash_dialog_comment_prompt">Hier kun je aanvullende informatie toevoegen:</string>
     <string name="crash_dialog_button_send">Versturen</string>
     <string name="crash_dialog_button_cancel">Annuleren</string>
+    <string name="searching_for_lyrics">Zoeken naar liedtekst…</string>
+    <string name="no_lyrics_available">Geen liedtekst beschikbaar voor dit nummer</string>
 </resources>

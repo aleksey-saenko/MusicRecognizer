@@ -42,10 +42,12 @@ internal class ShazamSignatureGeneratorVibra @Inject constructor(
             channelCount == 1 &&
                     sampleRate == VibraSignature.REQUIRED_SAMPLE_RATE &&
                     pcmEncoding == AudioFormat.ENCODING_PCM_16BIT &&
-                    byteOrder == ByteOrder.LITTLE_ENDIAN
+                    byteOrder == ByteOrder.LITTLE_ENDIAN &&
+                    data.isNotEmpty() && data.size % 2 == 0
         ) {
             "Failed to create shazam signature due to Illegal audio sample format " +
-                    "(ch = $channelCount, sampleRate = $sampleRate, enc = $pcmEncoding, order = ${byteOrder})"
+                    "(ch = $channelCount, sampleRate = $sampleRate, enc = $pcmEncoding, " +
+                    "order = ${byteOrder}, dataSize = ${data.size})"
         }
     }
 

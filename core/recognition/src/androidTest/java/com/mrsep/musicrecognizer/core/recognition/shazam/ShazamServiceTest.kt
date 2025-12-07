@@ -3,8 +3,6 @@ package com.mrsep.musicrecognizer.core.recognition.shazam
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.ktor.client.HttpClient
@@ -43,9 +41,6 @@ class ShazamServiceTest {
             },
             signatureGenerator = object : ShazamSignatureGenerator {
                 override suspend fun generate(sample: File) = Result.success(goldSignature)
-            },
-            lyricsFetcher = object : LyricsFetcher {
-                override suspend fun fetch(track: Track) = null
             },
         )
         val result = shazamService.recognize(

@@ -7,8 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mrsep.musicrecognizer.core.audio.audiorecord.decoder.AudioDecoder
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
-import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.ktor.client.HttpClient
@@ -47,9 +45,6 @@ class VibraLibrary {
         ioDispatcher = Dispatchers.IO,
         httpClientLazy = { httpClient },
         signatureGenerator = ShazamSignatureGeneratorVibra(context),
-        lyricsFetcher = object : LyricsFetcher {
-            override suspend fun fetch(track: Track) = null
-        },
     )
 
     // Test signature generator by comparing outputs with the original signatures created by Vibra,

@@ -128,7 +128,7 @@ void SignatureGenerator::doPeakRecognition()
         spread_ffts_output_[(spread_ffts_output_.position() - 49) % spread_ffts_output_.size()];
 
     auto other_offsets = {-53, -45, 165, 172, 179, 186, 193, 200, 214, 221, 228, 235, 242, 249};
-    for (auto bin_position = 10u; bin_position < decltype(fft_object_)::OUTPUT_SIZE; ++bin_position)
+    for (auto bin_position = 10u; bin_position < decltype(fft_object_)::OUTPUT_SIZE - 8; ++bin_position)
     {
         if (fft_minus_46[bin_position] >= 1.0 / 64.0 &&
             fft_minus_46[bin_position] >= fft_minus_49[bin_position])

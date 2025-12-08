@@ -173,7 +173,7 @@
     <!-- Preferences screen -->
     <string name="preferences">Préférences</string>
     <string name="pref_group_recognition">Reconnaissance</string>
-    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage de l\'application</string>
+    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage de l\'appli</string>
     <string name="pref_title_fallback_policy">Solution de secours de la reconnaissance</string>
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
@@ -279,11 +279,11 @@
     <string name="audd_help_dialog_message">AudD est un service payant qui offre un essai gratuit de 14 jours. Pour utiliser ce service, vous avez besoin de créer un compte et d\'obtenir votre jeton d\'API privé. <![CDATA[<a href="%1$s">Inscrivez-vous</a>]]> si vous n\'en avez pas encore.</string>
     <string name="about_pref_title_licenses">Licences</string>
     <string name="searching_for_lyrics">Recherche des paroles…</string>
-    <string name="no_lyrics_available">Les paroles de cette chanson ne sont pas disponibles.</string>
-    <string name="audio_source_dialog_use_alt_device_source">Utiliser une autre source audio</string>
+    <string name="no_lyrics_available">Aucune parole disponible pour cette chanson</string>
+    <string name="audio_source_dialog_use_alt_device_source">Utiliser une source audio alternative</string>
     <string name="pref_title_manage_notifications">Gérer les notifications</string>
     <string name="notification_channel_name_foreground_result">Résultats de recherche de chansons trouvés au premier plan</string>
-    <string name="notification_channel_desc_foreground_result">Affiche les résultats de recherche musicale lorsque vous êtes sur l\'écran de reconnaissance</string>
-    <string name="notification_channel_name_background_result">Résultats de recherche de chansons en arrière-plan</string>
-    <string name="notification_channel_desc_background_result">Affiche les résultats de la recherche musicale même lorsque l\'application est réduite ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
+    <string name="notification_channel_desc_foreground_result">Affiche les résultats des chansons quand vous êtes sur l\'écran de reconnaissance</string>
+    <string name="notification_channel_name_background_result">Résultats de recherche de chansons trouvés en arrière-plan</string>
+    <string name="notification_channel_desc_background_result">Affiche les résultats des chansons quand l\'application est minimisée ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
 </resources>

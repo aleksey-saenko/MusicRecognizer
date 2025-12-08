@@ -173,7 +173,7 @@
     <!-- Preferences screen -->
     <string name="preferences">Préférences</string>
     <string name="pref_group_recognition">Reconnaissance</string>
-    <string name="pref_title_recognize_on_startup">Reconnaitre au démarrage</string>
+    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage de l\'application</string>
     <string name="pref_title_fallback_policy">Solution de secours de la reconnaissance</string>
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
@@ -219,9 +219,9 @@
     <string name="notification_button_disable_service">Désactiver</string>
     <string name="notification_button_show_lyrics">Afficher les paroles</string>
     <string name="notification_channel_name_control">Contrôler les notifications</string>
-    <string name="notification_channel_desc_control">Permet de contrôler le processus de reconnaissance via les notifications</string>
-    <string name="notification_channel_name_scheduled_result">Résultats de reconnaissance planifiés</string>
-    <string name="notification_channel_desc_scheduled_result">Permet de recevoir les résultats des reconnaissances planifiées via les notifications</string>
+    <string name="notification_channel_desc_control">Permet de contrôler le processus de reconnaissance</string>
+    <string name="notification_channel_name_scheduled_result">Résultats musicaux des reconnaissances programmées</string>
+    <string name="notification_channel_desc_scheduled_result">Affiche les résultats des chansons pour lesquelles les reconnaissances étaient programmées hors ligne ou dans d\'autres cas</string>
     <string name="app_shortcut_recognize_short">Reconnaitre</string>
     <string name="library_menu_mark_all_tracks_as_viewed">Tout marquer comme vu</string>
     <string name="result_title_recognition_saved">Reconnaissance enregistrée</string>
@@ -278,4 +278,12 @@
     <string name="audio_capture_mode_auto">Automatique</string>
     <string name="audd_help_dialog_message">AudD est un service payant qui offre un essai gratuit de 14 jours. Pour utiliser ce service, vous avez besoin de créer un compte et d\'obtenir votre jeton d\'API privé. <![CDATA[<a href="%1$s">Inscrivez-vous</a>]]> si vous n\'en avez pas encore.</string>
     <string name="about_pref_title_licenses">Licences</string>
+    <string name="searching_for_lyrics">Recherche des paroles…</string>
+    <string name="no_lyrics_available">Les paroles de cette chanson ne sont pas disponibles.</string>
+    <string name="audio_source_dialog_use_alt_device_source">Utiliser une autre source audio</string>
+    <string name="pref_title_manage_notifications">Gérer les notifications</string>
+    <string name="notification_channel_name_foreground_result">Résultats de recherche de chansons trouvés au premier plan</string>
+    <string name="notification_channel_desc_foreground_result">Affiche les résultats de recherche musicale lorsque vous êtes sur l\'écran de reconnaissance</string>
+    <string name="notification_channel_name_background_result">Résultats de recherche de chansons en arrière-plan</string>
+    <string name="notification_channel_desc_background_result">Affiche les résultats de la recherche musicale même lorsque l\'application est réduite ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
 </resources>

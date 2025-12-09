@@ -273,6 +273,8 @@
     <string name="pref_title_manage_notifications">Benachrichtigungen verwalten</string>
     <string name="notification_channel_name_foreground_result">Im Vordergrund gefundene Song-Ergebnisse</string>
     <string name="notification_channel_name_background_result">Im Hintergrund gefundene Song-Ergebnisse</string>
-    <string name="notification_channel_desc_foreground_result">Zeigt Song-Ergebnisse an, wenn du dich auf dem Erkennungsbildschirm befindest</string>
+    <string name="notification_channel_desc_foreground_result">Zeigt Lied-Ergebnisse an, wenn du dich auf dem Erkennungsbildschirm befindest</string>
     <string name="notification_channel_desc_background_result">Zeigt Song-Ergebnisse an, wenn die App minimiert ist oder du dich nicht auf dem Erkennungsbildschirm befindest</string>
+    <string name="searching_for_lyrics">Texten werden gesucht  …</string>
+    <string name="no_lyrics_available">Keine Liedtexte für dieses Lied verfügbar</string>
 </resources>

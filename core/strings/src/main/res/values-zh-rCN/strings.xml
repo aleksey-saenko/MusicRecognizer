@@ -275,4 +275,6 @@
     <string name="crash_dialog_comment_prompt">您可以在此添加更多信息：</string>
     <string name="crash_dialog_button_send">发送</string>
     <string name="crash_dialog_button_cancel">取消</string>
+    <string name="searching_for_lyrics">搜索歌词中…</string>
+    <string name="no_lyrics_available">此歌曲没有歌词可用</string>
 </resources>

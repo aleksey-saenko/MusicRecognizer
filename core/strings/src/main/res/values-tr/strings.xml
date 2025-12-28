@@ -285,4 +285,6 @@
     <string name="notification_channel_desc_foreground_result">Tanıma ekranında iken şarkı sonuçlarını gösterir</string>
     <string name="notification_channel_name_background_result">Arkaplanda bulunan şarkı sonuçları</string>
     <string name="notification_channel_desc_background_result">Uygulama küçültüldüğünde ya da tanıma ekranında değil iken şarkı sonuçlarını gösterir</string>
+    <string name="searching_for_lyrics">Sözler aranıyor…</string>
+    <string name="no_lyrics_available">Bu şarkı için sözler yok</string>
 </resources>

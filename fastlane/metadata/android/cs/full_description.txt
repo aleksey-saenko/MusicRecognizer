@@ -1,5 +1,5 @@
-<b>Audile</b> je aplikace pro rozpoznávání hudby, která vám pomůže rychle a přesně rozpoznat hudební skladbu přehrávanou ve vašem okolí.
-Aplikace používá služby AudD a ACRCloud k identifikaci písní a službu Odesli k získání dalších odkazů na skladby specifických pro platformu.
+<b>Audile</b> je open-source aplikace pro rozpoznávání hudby, která vám pomůže rychle a přesně identifikovat hudební skladbu přehrávanou ve vašem okolí.
+Aplikace integruje služby AudD, ACRCloud a Shazam k identifikaci písní a používá službu Odesli k získání dalších odkazů na skladby specifických pro platformu.
 
 <b>Funkce:</b>
 

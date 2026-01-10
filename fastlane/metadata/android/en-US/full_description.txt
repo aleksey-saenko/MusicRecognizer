@@ -1,5 +1,5 @@
-<b>Audile</b> is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
-The app uses AudD and ACRCloud services to perform song identification and Odesli service to retrieve additional platform-specific track links.
+<b>Audile</b> is an open-source music recognition application that can help you quickly and accurately identify a music track playing near you.
+The app integrates AudD, ACRCloud, and Shazam for song identification, and uses Odesli to retrieve additional platform-specific track links.
 
 <b>Features:</b>
 

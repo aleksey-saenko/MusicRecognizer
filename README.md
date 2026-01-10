@@ -1,7 +1,7 @@
 # Audile
 
-Audile is an open-source music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.
-This application uses [AudD](https://audd.io/) and [ACRCloud](https://www.acrcloud.com/) services to perform song identification and [Odesli](https://odesli.co/) service to retrieve additional platform-specific track links.
+Audile is an open-source music recognition application that can help you quickly and accurately identify a music track playing near you.
+The app integrates [AudD](https://audd.io/), [ACRCloud](https://www.acrcloud.com/), and [Shazam](https://www.shazam.com/company/) for song identification, and uses [Odesli](https://odesli.co/) to retrieve platform-specific track links.
 
 [<img src="./img/get-it-on-f-droid.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/en/packages/com.mrsep.musicrecognizer/)
 [<img src="./img/get-it-on-github.png" alt="Get it on GitHub" height="80">](https://github.com/aleksey-saenko/MusicRecognizer/releases/)
@@ -32,7 +32,7 @@ The app runs on Android 8.0 or later.
 
 <details open><summary>AudD</summary><p>
 
-The app uses AudD as the default recognition provider. Please note that AudD is a paid service, and you will need an API token to use this application. If you don't have one, you can [sign up](https://dashboard.audd.io/) for a 14-day trial token.
+AudD is a paid service that requires an API token. If you don't have one, you can [sign up](https://dashboard.audd.io/) for a 14-day trial token.
 
 You can also use the app without a token, but this will significantly restrict the number of daily recognitions that can be performed. Please keep in mind that this behavior is not guaranteed by the service and can be restricted at any time.
 
@@ -61,7 +61,7 @@ Feel free to correct any errors or suggest better translation options for the cu
 ## License
 
 ```
-Copyright (C) 2023-2025 Aleksey Saenko
+Copyright (C) 2023-2026 Aleksey Saenko
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

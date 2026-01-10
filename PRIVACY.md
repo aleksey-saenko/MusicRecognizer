@@ -8,6 +8,8 @@ The app does use third-party services that may collect your personal information
 
 * [ACRCloud](https://www.acrcloud.com/) ([Terms of Service](https://www.acrcloud.com/terms/), [Privacy Policy](https://www.acrcloud.com/privacy/))
 
+* [Shazam](https://www.shazam.com/company/) ([Terms of Service](https://www.shazam.com/terms), [Privacy Policy](https://www.apple.com/privacy))
+
 * [Odesli](https://odesli.co/) ([Terms of Service](https://odesli.co/terms), [Privacy Policy](https://odesli.co/privacy))
 
 Osesli remote service is used after each successful recognition to obtain additional platform-specific track links.

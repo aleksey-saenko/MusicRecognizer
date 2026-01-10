@@ -30,7 +30,7 @@ The app runs on Android 8.0 or later.
 
 ## API Key
 
-<details open><summary>AudD</summary><p>
+<details><summary>AudD</summary><p>
 
 AudD is a paid service that requires an API token. If you don't have one, you can [sign up](https://dashboard.audd.io/) for a 14-day trial token.
 

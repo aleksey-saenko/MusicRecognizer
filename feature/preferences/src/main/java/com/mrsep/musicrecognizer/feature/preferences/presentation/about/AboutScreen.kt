@@ -38,6 +38,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 private const val AUDD_URL = "https://audd.io/"
 private const val ACR_CLOUD_URL = "https://www.acrcloud.com/"
+private const val SHAZAM_URL = "https://www.shazam.com/company/"
 private const val ODESLI_URL = "https://odesli.co/"
 private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
 private const val PRIVACY_POLICY_URL = "https://github.com/aleksey-saenko/MusicRecognizer/blob/master/PRIVACY.md"
@@ -54,7 +55,6 @@ internal fun AboutScreen(
     val version = rememberSaveable {
         context.getAppVersionName() ?: context.getAppVersionCode().toString()
     }
-
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,25 +90,6 @@ internal fun AboutScreen(
                 modifier = Modifier.padding(top = 2.dp)
             )
             Spacer(Modifier.height(16.dp))
-            PreferenceGroup(title = stringResource(StringsR.string.about_pref_group_powered_by)) {
-                PreferenceClickableItem(
-                    title = stringResource(StringsR.string.audd),
-                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
-                    onItemClick = { context.openUrlImplicitly(AUDD_URL) }
-                )
-                PreferenceClickableItem(
-                    title = stringResource(StringsR.string.acr_cloud),
-                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
-                    onItemClick = { context.openUrlImplicitly(ACR_CLOUD_URL) }
-                )
-                PreferenceClickableItem(
-                    title = stringResource(StringsR.string.odesli),
-                    subtitle = stringResource(StringsR.string.about_purpose_track_links_service),
-                    onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
-                )
-            }
-            HorizontalDivider(modifier = Modifier.alpha(0.2f))
-            Spacer(Modifier.height(16.dp))
             PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
                 PreferenceClickableItem(
                     title = stringResource(StringsR.string.about_pref_title_github_repo),
@@ -129,6 +110,30 @@ internal fun AboutScreen(
                     title = stringResource(StringsR.string.about_pref_title_license),
                     subtitle = stringResource(StringsR.string.about_pref_subtitle_license),
                     onItemClick = onNavigateToAppLicenseScreen
+                )
+            }
+            HorizontalDivider(modifier = Modifier.alpha(0.2f))
+            Spacer(Modifier.height(16.dp))
+            PreferenceGroup(title = stringResource(StringsR.string.about_pref_group_powered_by)) {
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.audd),
+                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
+                    onItemClick = { context.openUrlImplicitly(AUDD_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.acr_cloud),
+                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
+                    onItemClick = { context.openUrlImplicitly(ACR_CLOUD_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.shazam),
+                    subtitle = stringResource(StringsR.string.about_purpose_recognition_service),
+                    onItemClick = { context.openUrlImplicitly(SHAZAM_URL) }
+                )
+                PreferenceClickableItem(
+                    title = stringResource(StringsR.string.odesli),
+                    subtitle = stringResource(StringsR.string.about_purpose_track_links_service),
+                    onItemClick = { context.openUrlImplicitly(ODESLI_URL) }
                 )
             }
         }

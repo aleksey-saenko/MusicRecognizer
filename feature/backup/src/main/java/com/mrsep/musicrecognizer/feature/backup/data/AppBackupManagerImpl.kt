@@ -341,6 +341,6 @@ internal class AppBackupManagerImpl @Inject constructor(
         private const val RECORDINGS_DIR_ZIP_ENTRY = "audio_recordings/"
         private const val BACKUP_VERIFICATION_UUID = "9530d0d1-8023-4c3a-99d0-7cbb084020f1"
 
-        private val recordingEntryNamePattern = Regex("^$RECORDINGS_DIR_ZIP_ENTRY(rec_\\d+(?:\\.\\w+)?)\$")
+        private val recordingEntryNamePattern = Regex("^$RECORDINGS_DIR_ZIP_ENTRY([^/]+)\$")
     }
 }

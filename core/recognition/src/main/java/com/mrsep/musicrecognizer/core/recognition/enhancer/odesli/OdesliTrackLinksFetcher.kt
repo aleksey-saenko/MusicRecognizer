@@ -37,10 +37,10 @@ internal class OdesliTrackLinksFetcher @Inject constructor(
             val httpClient = httpClientLazy.get()
             val response = try {
                 httpClient.get("https://api.song.link/v1-alpha.1/links") {
-                    url {
-                        parameters.append("url", queryUrl)
-                        parameters.append("userCountry", locale.country)
-                        parameters.append("songIfSingle", "true")
+                    with(url.parameters) {
+                        append("url", queryUrl)
+                        append("userCountry", locale.country)
+                        append("songIfSingle", "true")
                     }
                 }
             } catch (e: IOException) {

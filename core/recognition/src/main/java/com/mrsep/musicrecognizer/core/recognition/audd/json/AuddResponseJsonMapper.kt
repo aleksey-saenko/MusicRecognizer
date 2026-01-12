@@ -10,7 +10,6 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
-import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.time.Instant
 import java.time.LocalDate
@@ -26,7 +25,6 @@ import kotlin.time.Duration.Companion.seconds
 private const val TAG = "AuddResponseJsonMapper"
 
 internal fun AuddResponseJson.toRecognitionResult(
-    json: Json,
     sampleStartTimestamp: Instant,
     sampleDuration: Duration,
 ): RemoteRecognitionResult {
@@ -34,7 +32,7 @@ internal fun AuddResponseJson.toRecognitionResult(
         "success" -> if (result == null) {
             RemoteRecognitionResult.NoMatches
         } else {
-            parseSuccessResult(result, sampleStartTimestamp, sampleDuration, json)
+            parseSuccessResult(result, sampleStartTimestamp, sampleDuration)
         }
 
         "error" -> if (error == null) {
@@ -51,15 +49,14 @@ private fun parseSuccessResult(
     result: AuddResponseJson.Result,
     sampleStartTimestamp: Instant,
     sampleDuration: Duration,
-    json: Json,
 ): RemoteRecognitionResult {
     val trackTitle = result.parseTrackTitle()
     val trackArtist = result.parseTrackArtist()
     if (trackTitle.isNullOrBlank() || trackArtist.isNullOrBlank()) {
         return RemoteRecognitionResult.NoMatches
     }
-    val mediaItems = result.lyricsJson?.parseMediaItems(json)
     val trackArtwork = result.toTrackArtwork()
+    val mediaItems = result.lyricsJson?.media
 
     val trackDuration = result.parseTrackDuration()
     val recognizedAt = result.timecode?.run(::parseRecognizedAt)
@@ -273,10 +270,10 @@ private fun AuddResponseJson.Result.parseSpotifyLink() =
 private fun AuddResponseJson.Result.parseAppleMusicLink() =
     appleMusic?.url?.takeUrlIfValid()
 
-private fun List<LyricsJson.MediaItem>.parseYoutubeLink() =
+private fun List<AuddLyricsJson.MediaItem>.parseYoutubeLink() =
     firstOrNull { item -> item.provider == "youtube" }?.url?.takeUrlIfValid()
 
-private fun List<LyricsJson.MediaItem>.parseSoundCloudLink() =
+private fun List<AuddLyricsJson.MediaItem>.parseSoundCloudLink() =
     firstOrNull { item -> item.provider == "soundcloud" }?.url?.takeUrlIfValid()
 
 private fun AuddResponseJson.Result.parseMusicBrainzLink() =

@@ -43,7 +43,6 @@ import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.io.buffered
-import kotlinx.serialization.json.Json
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
@@ -54,7 +53,6 @@ internal class AuddRecognitionService @AssistedInject constructor(
     private val webSocketSession: WebSocketSession,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val httpClientLazy: dagger.Lazy<HttpClient>,
-    private val json: Json,
 ) : RemoteRecognitionService {
 
     override val recordingScheme = RecordingScheme(
@@ -91,7 +89,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
         }
         if (response.status.isSuccess()) {
             try {
-                response.body<AuddResponseJson>().toRecognitionResult(json, sample.timestamp, sample.duration)
+                response.body<AuddResponseJson>().toRecognitionResult(sample.timestamp, sample.duration)
             } catch (e: Exception) {
                 ensureActive()
                 RemoteRecognitionResult.Error.UnhandledError(message = e.message ?: "", cause = e)
@@ -169,7 +167,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
                     lastResult = try {
                         withTimeout(WEB_SOCKET_RESPONSE_TIMEOUT) {
                             wsConnection.responseChannel.receive().toRecognitionResult(
-                                json, sampleToSend.timestamp, sampleToSend.duration
+                                sampleToSend.timestamp, sampleToSend.duration
                             )
                         }
                     } catch (_: TimeoutCancellationException) {

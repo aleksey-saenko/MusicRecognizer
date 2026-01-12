@@ -1,8 +1,6 @@
 package com.mrsep.musicrecognizer.core.recognition.shazam
 
 import android.util.Log
-import com.github.f4b6a3.uuid.UuidCreator
-import com.github.f4b6a3.uuid.enums.UuidNamespace
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
@@ -25,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
@@ -48,8 +47,7 @@ internal class ShazamRecognitionService @Inject constructor(
 
     override suspend fun recognize(sample: AudioSample): RemoteRecognitionResult {
         if (sample.duration > SAMPLE_DURATION_LIMIT) {
-            // It seems that long signatures work worse than short ones, more testing is needed
-            Log.w(TAG, "It is discouraged to send samples longer than $SAMPLE_DURATION_LIMIT" +
+            Log.w(TAG, "It is discouraged to use samples longer than $SAMPLE_DURATION_LIMIT" +
                     " (attempt with ${sample.duration})")
         }
         return withContext(Dispatchers.IO) {
@@ -60,15 +58,11 @@ internal class ShazamRecognitionService @Inject constructor(
                 )
             }
             val timestamp = Instant.now().epochSecond
-            val name = Random(timestamp).nextInt(1 shl 48).toString()
-            val uuidDns = UuidCreator.getNameBasedSha1(UuidNamespace.NAMESPACE_DNS, name).toString()
-            val uuidUrl = UuidCreator.getNameBasedSha1(UuidNamespace.NAMESPACE_URL, name).toString()
-
             val shazamRequest = ShazamRequestJson(
                 geolocation = ShazamRequestJson.Geolocation(
-                    altitude = Random(timestamp).nextDouble() * 400 + 100,
-                    latitude = Random(timestamp).nextDouble() * 180 - 90,
-                    longitude = Random(timestamp).nextDouble() * 360 - 180
+                    altitude = Random.nextDouble() * 400 + 100,
+                    latitude = Random.nextDouble() * 180 - 90,
+                    longitude = Random.nextDouble() * 360 - 180
                 ),
                 signature = ShazamRequestJson.Signature(
                     samplems = sample.duration.inWholeMilliseconds,
@@ -84,7 +78,9 @@ internal class ShazamRecognitionService @Inject constructor(
                 httpClient.post {
                     url {
                         takeFrom("https://amp.shazam.com/discovery/v5/en/US/android/-/tag/")
-                        appendPathSegments(uuidDns, uuidUrl)
+                        val uuid1 = UUID.randomUUID().toString().uppercase()
+                        val uuid2 = UUID.randomUUID().toString()
+                        appendPathSegments(uuid1, uuid2)
                         @Suppress("SpellCheckingInspection")
                         parameters.appendAll(
                             "sync" to "true",

@@ -30,7 +30,7 @@ internal data class AuddResponseJson(
         @SerialName("deezer")
         val deezerJson: DeezerJson?,
         @SerialName("lyrics")
-        val lyricsJson: LyricsJson?,
+        val lyricsJson: AuddLyricsJson?,
         @SerialName("musicbrainz")
         val musicbrainz: List<MusicbrainzJson>?,
         @SerialName("napster")

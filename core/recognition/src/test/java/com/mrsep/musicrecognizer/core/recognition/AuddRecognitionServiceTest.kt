@@ -85,7 +85,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
@@ -117,7 +116,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(singleAudioRecordingFlow(
             initialDelay = 0.seconds,
@@ -152,7 +150,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         val expectedTime = normalAudioFlowDuration + TEST_RESPONSE_DELAY
@@ -177,7 +174,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         result.shouldBeInstanceOf<RemoteRecognitionResult.Error.UnhandledError>()
@@ -211,7 +207,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         result.shouldBeInstanceOf<RemoteRecognitionResult.Error.BadConnection>()
@@ -242,7 +237,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         val expectedTime = TEST_SOCKET_OPENING_DELAY + TEST_RESPONSE_DELAY
@@ -279,7 +273,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         val expectedTime = normalAudioFlowDuration + TIMEOUT_AFTER_RECORDING_FINISHED
@@ -302,7 +295,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val delayBeforeFlowClose = 5500L
         val result = service.recognizeUntilFirstMatch(emptyAudioRecordingFlow(delayBeforeFlowClose))
@@ -335,7 +327,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(infinityAudioRecordingFlow(
             interval = 3.seconds,
@@ -402,7 +393,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val result = service.recognizeUntilFirstMatch(normalAudioRecordingFlow(temporaryFolder))
         val firstResultTime = normalAudioDelay1 + TEST_RESPONSE_DELAY
@@ -432,7 +422,6 @@ class AuddRecognitionServiceTest {
             ioDispatcher = testDispatcher,
             httpClientLazy = httpClientLazy,
             webSocketSession = webSocketSession,
-            json = json,
         )
         val delayBeforeSampleRead = 40L
         val result = service.recognizeUntilFirstMatch(flow {

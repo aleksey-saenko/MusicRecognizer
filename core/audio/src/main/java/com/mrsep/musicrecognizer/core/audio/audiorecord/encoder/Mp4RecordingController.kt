@@ -11,6 +11,7 @@ import androidx.media3.container.Mp4TimestampData
 import androidx.media3.container.Mp4TimestampData.unixTimeToMp4TimeSeconds
 import androidx.media3.muxer.Mp4Muxer
 import androidx.media3.muxer.Mp4Muxer.LAST_SAMPLE_DURATION_BEHAVIOR_SET_FROM_END_OF_STREAM_BUFFER_OR_DUPLICATE_PREVIOUS
+import androidx.media3.muxer.MuxerException
 import androidx.media3.muxer.MuxerUtil
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderDispatcher
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderHandler
@@ -22,6 +23,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
@@ -100,7 +102,11 @@ internal class Mp4RecordingController(
             var isStartTimestampUpdated = false
             val pcmChunkChannel = soundSource.pcmChunkFlow
                 .transform { pcmChunkResult ->
-                    val pcmChunk = pcmChunkResult.getOrThrow()
+                    val pcmChunk = pcmChunkResult.getOrElse { cause ->
+                        channel.close(cause)
+                        this@launch.cancel()
+                        return@transform
+                    }
                     if (!isStartTimestampUpdated) {
                         recorderStartTimestamp = Instant.now()
                             .minusMillis((soundSourceParams.chunkSizeInSeconds * 1_000).toLong())
@@ -156,7 +162,11 @@ internal class Mp4RecordingController(
                         val muxer = muxers.getOrPut(scheduledRecording) {
                             val startTimestamp = recorderStartTimestamp.plusMillis(bufferPresentationTimestamp.inWholeMilliseconds)
                             val outputFile = runBlocking {
-                                audioRecordingDataSource.createNewFile(sessionId, RECORDING_FILE_EXT).getOrThrow()
+                                audioRecordingDataSource.createNewFile(sessionId, RECORDING_FILE_EXT)
+                            }.getOrElse { cause ->
+                                channel.close(cause)
+                                this@launch.cancel()
+                                return
                             }
                             MuxerWrapper(
                                 outputFile = outputFile,
@@ -169,7 +179,13 @@ internal class Mp4RecordingController(
 
                         val currentMuxerDuration = muxer.currentDuration(bufferPresentationTimestamp)
                         if (currentMuxerDuration < scheduledRecording.minDuration) {
-                            muxer.writeBuffer(outputBuffer, bufferInfo)
+                            try {
+                                muxer.writeBuffer(outputBuffer, bufferInfo)
+                            } catch (e: MuxerException) {
+                                channel.close(e)
+                                this@launch.cancel()
+                                return
+                            }
                         } else {
                             val file = muxer.release()
                             val silenceDuration = silenceTracker.querySilenceDuration(
@@ -196,6 +212,7 @@ internal class Mp4RecordingController(
 
                 override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                     channel.close(e)
+                    this@launch.cancel()
                 }
 
                 override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
@@ -257,6 +274,7 @@ private class MuxerWrapper(
         return nextPresentationTimestamp - startPresentationTimestamp
     }
 
+    @Throws(MuxerException::class)
     fun writeBuffer(byteBuf: ByteBuffer, bufferInfo: MediaCodec.BufferInfo) {
         check(!isReleased)
         val muxer = muxer ?: Mp4Muxer.Builder(outputFile.outputStream())
@@ -279,9 +297,12 @@ private class MuxerWrapper(
     }
 
     fun release(): File {
-        muxer?.close()
-        muxer = null
-        isReleased = true
+        try {
+            muxer?.close()
+        } finally {
+            muxer = null
+            isReleased = true
+        }
         return outputFile
     }
 }

@@ -104,8 +104,6 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     Result.success(Unit)
                 } catch (e: Exception) {
                     ensureActive()
-                    recordingChannel.close()
-                    fallbackRecording?.completeExceptionally(e)
                     Result.failure(e)
                 }
             }
@@ -117,6 +115,8 @@ internal class RecognitionInteractorImpl @Inject constructor(
                         onSuccess = { remoteRecognitionResult.await() },
                         onFailure = { cause ->
                             remoteRecognitionResult.cancel()
+                            recordingChannel.close()
+                            fallbackRecording?.completeExceptionally(cause)
                             RemoteRecognitionResult.Error.BadRecording(cause = cause)
                         }
                     )

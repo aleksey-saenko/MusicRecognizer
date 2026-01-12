@@ -8,21 +8,23 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.produceIn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 import kotlin.time.Duration.Companion.seconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DeviceFirstCompositeRecordingController(
     microphoneSoundSource: SoundSource,
     deviceSoundSource: SoundSource,
@@ -49,20 +51,26 @@ internal class DeviceFirstCompositeRecordingController(
         val microphoneSession = microphoneController.startRecordingSession(scheme)
         val deviceSession = deviceController.startRecordingSession(scheme)
 
-        val resultChannel = microphoneSession.recordings.receiveAsFlow()
-            .zip(deviceSession.recordings.receiveAsFlow()) { micRecording, devRecording ->
-                val minSignificantDuration = minOf(2.seconds, micRecording.nonSilenceDuration)
-                if (devRecording.nonSilenceDuration > minSignificantDuration) {
-                    devRecording
-                } else {
-                    micRecording
+        return object : AudioRecordingSession {
+            override val recordings = scope.produce(capacity = Channel.UNLIMITED) {
+                try {
+                    microphoneSession.recordings.receiveAsFlow()
+                        .zip(deviceSession.recordings.receiveAsFlow()) { micRecording, devRecording ->
+                            val minSignificantDuration =
+                                minOf(2.seconds, micRecording.nonSilenceDuration)
+                            if (devRecording.nonSilenceDuration > minSignificantDuration) {
+                                devRecording
+                            } else {
+                                micRecording
+                            }
+                        }.collect { value ->
+                            send(value)
+                        }
+                } catch (e: Exception) {
+                    ensureActive()
+                    close(e)
                 }
             }
-            .buffer(Channel.UNLIMITED)
-            .produceIn(scope)
-
-        return object : AudioRecordingSession {
-            override val recordings = resultChannel
 
             override suspend fun cancelAndDeleteSessionFiles(): Unit = coroutineScope {
                 awaitAll(

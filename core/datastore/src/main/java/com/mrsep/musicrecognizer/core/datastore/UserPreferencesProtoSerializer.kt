@@ -15,8 +15,8 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
 
     override val defaultValue: UserPreferencesProto
         get() = userPreferencesProto {
-            onboardingCompleted = false
-            currentRecognitionProvider = RecognitionProviderProto.Audd
+            onboardingCompleted = true
+            currentRecognitionProvider = RecognitionProviderProto.Shazam
             apiToken = BuildConfig.AUDD_TOKEN
             acrCloudConfig = acrCloudConfigProto {
                 host = BuildConfig.ACR_CLOUD_HOST

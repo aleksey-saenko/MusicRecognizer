@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.widget
 
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.DeeplinkRouter
@@ -15,4 +16,6 @@ internal interface RecognitionWidgetEntryPoint {
 
     @WidgetStatusHolder
     fun widgetStatusHolder(): RecognitionStatusHolder
+
+    fun preferencesRepository(): PreferencesRepository
 }

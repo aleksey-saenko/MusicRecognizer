@@ -15,12 +15,16 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.material3.ColorProviders
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity.Companion.getRequiredPermissionsForRecognition
+import com.mrsep.musicrecognizer.feature.recognition.service.checkPermissionsGranted
+import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.HorizontalLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout
@@ -32,6 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -84,9 +89,7 @@ class RecognitionWidget : GlanceAppWidget() {
             WidgetUiState(status = status, artwork = artwork)
         }.flowOn(Dispatchers.Default)
 
-        val onLaunchRecognition = actionStartActivity(
-            RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context)
-        )
+        val onLaunchRecognition = actionRunCallback<LaunchRecognition>()
         val onCancelRecognition = actionRunCallback<CancelRecognition>()
 
         provideContent {
@@ -155,6 +158,35 @@ class RecognitionWidget : GlanceAppWidget() {
                     )
                 }
             }
+        }
+    }
+}
+
+internal class LaunchRecognition : ActionCallback {
+
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        val hiltEntryPoint = EntryPointAccessors.fromApplication(
+            context,
+            RecognitionWidgetEntryPoint::class.java
+        )
+        val preferences = hiltEntryPoint.preferencesRepository().userPreferencesFlow.first()
+        val skipMediaProjectionRequest = when (preferences.defaultAudioCaptureMode) {
+            AudioCaptureMode.Microphone -> true
+            AudioCaptureMode.Device,
+            AudioCaptureMode.Auto -> preferences.useAltDeviceSoundSource
+        }
+        val skipPermissionsRequests = skipMediaProjectionRequest &&
+                context.checkPermissionsGranted(getRequiredPermissionsForRecognition())
+        if (skipPermissionsRequests) {
+            val captureMode = preferences.defaultAudioCaptureMode.toServiceMode(null)
+            RecognitionControlService.startRecognition(context, captureMode)
+        } else {
+            val recognitionIntent = RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context)
+            context.startActivity(recognitionIntent)
         }
     }
 }

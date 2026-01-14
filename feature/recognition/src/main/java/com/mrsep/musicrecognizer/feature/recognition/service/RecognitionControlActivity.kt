@@ -30,6 +30,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
+private const val TAG = "RecognitionControlActivity"
+
 /**
  * This transparent activity is used to request required permissions and media projection token,
  * when recognition is requested from widgets, quick tiles, shortcuts, and notifications.
@@ -48,10 +50,16 @@ class RecognitionControlActivity : ComponentActivity() {
 
     private lateinit var requestedAudioCaptureMode: AudioCaptureMode
     private var useAltDeviceSoundSource = false
+    private var intentHandled = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { result: Map<String, Boolean> ->
+        if (result.isEmpty()) {
+            Log.w(TAG, "Permissions request returned an empty result")
+            finish()
+            return@registerForActivityResult
+        }
         val denied = result.mapNotNull { (permission, isGranted) ->
             permission.takeIf { !isGranted }
         }
@@ -70,7 +78,10 @@ class RecognitionControlActivity : ComponentActivity() {
     private val requestMediaProjectionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode != RESULT_OK) finish()
+        if (result.resultCode != RESULT_OK) {
+            finish()
+            return@registerForActivityResult
+        }
         result.data?.let { mediaProjectionData ->
             val mode = requestedAudioCaptureMode.toServiceMode(mediaProjectionData)
             onLaunchRecognition(mode)
@@ -80,10 +91,29 @@ class RecognitionControlActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enforceTransparentEdgeToEdge()
         super.onCreate(savedInstanceState)
+        savedInstanceState?.run {
+            getString(KEY_REQUESTED_CAPTURE_MODE)
+                ?.run(AudioCaptureMode::valueOf)
+                ?.let { requestedAudioCaptureMode = it }
+            useAltDeviceSoundSource = getBoolean(KEY_ALT_DEVICE_SOURCE, false)
+            intentHandled = getBoolean(KEY_INTENT_HANDLED, false)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.run {
+            if (::requestedAudioCaptureMode.isInitialized) {
+                putString(KEY_REQUESTED_CAPTURE_MODE, requestedAudioCaptureMode.name)
+            }
+            putBoolean(KEY_ALT_DEVICE_SOURCE, useAltDeviceSoundSource)
+            putBoolean(KEY_INTENT_HANDLED, intentHandled)
+        }
     }
 
     override fun onStart() {
         super.onStart()
+        if (intentHandled) return
         when (intent.action) {
             ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST -> lifecycleScope.launch {
                 val preferences = preferencesRepository.userPreferencesFlow.first()
@@ -105,6 +135,7 @@ class RecognitionControlActivity : ComponentActivity() {
 
             else -> error("Unknown intent action")
         }
+        intentHandled = true
     }
 
     private fun onRecognitionPermissionsGranted() {
@@ -128,20 +159,6 @@ class RecognitionControlActivity : ComponentActivity() {
     private fun onLaunchRecognition(audioCaptureServiceMode: AudioCaptureServiceMode) {
         RecognitionControlService.startRecognition(this.applicationContext, audioCaptureServiceMode)
         finish()
-    }
-
-    private fun checkPermissionsGranted(permissions: Array<String>): Boolean {
-        return permissions.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    private fun getRequiredPermissionsForRecognition(): Array<String> {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.RECORD_AUDIO)
-        } else {
-            arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
-        }
     }
 
     private fun getPermissionDialogTheme(): Int {
@@ -234,6 +251,17 @@ class RecognitionControlActivity : ComponentActivity() {
 
     companion object {
         private const val ACTION_LAUNCH_RECOGNITION_WITH_PERMISSIONS_REQUEST = "com.mrsep.musicrecognizer.control_activity.action.launch_recognition_permissions"
+        private const val KEY_INTENT_HANDLED = "key_intent_handled"
+        private const val KEY_REQUESTED_CAPTURE_MODE = "key_requested_capture_mode"
+        private const val KEY_ALT_DEVICE_SOURCE = "key_alt_device_source"
+
+        fun getRequiredPermissionsForRecognition(): Array<String> {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                arrayOf(Manifest.permission.RECORD_AUDIO)
+            } else {
+                arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
 
         fun startRecognitionWithPermissionRequestIntent(context: Context): Intent {
             return Intent(context, RecognitionControlActivity::class.java)
@@ -250,6 +278,10 @@ class RecognitionControlActivity : ComponentActivity() {
             )
         }
     }
+}
+
+internal fun Context.checkPermissionsGranted(permissions: Array<String>): Boolean = permissions.all {
+    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
 }
 
 internal fun MediaProjectionManager.createScreenCaptureIntentForDisplay(): Intent {

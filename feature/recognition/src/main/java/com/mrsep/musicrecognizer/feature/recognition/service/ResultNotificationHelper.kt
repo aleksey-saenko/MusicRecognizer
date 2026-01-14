@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.NotificationCompat
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
@@ -24,6 +25,7 @@ import com.mrsep.musicrecognizer.core.ui.util.dpToPx
 import com.mrsep.musicrecognizer.feature.recognition.DeeplinkRouter
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -34,6 +36,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 class ResultNotificationHelper @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val deeplinkRouter: DeeplinkRouter,
+    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
 ) {
 
     private val notificationManager = appContext
@@ -148,6 +151,8 @@ class ResultNotificationHelper @Inject constructor(
             }
 
             is RecognitionResult.Success -> {
+                val isLyricsFetcherRunning = trackMetadataEnhancerScheduler
+                    .isLyricsFetcherRunning(result.track.id).first()
                 resultNotificationBuilder(channelId)
                     .setContentTitle(result.track.title)
                     .setContentText(result.track.artist)
@@ -157,7 +162,7 @@ class ResultNotificationHelper @Inject constructor(
                         contentText = result.track.artistWithAlbumFormatted()
                     )
                     .addTrackDeepLinkIntent(result.track.id)
-                    .addOptionalShowLyricsButton(result.track)
+                    .addOptionalShowLyricsButton(result.track, isLyricsFetcherRunning)
                     .addShareButton(result.track.getSharedBody())
                     .addTrackInfoToExtras(result.track)
             }
@@ -178,6 +183,8 @@ class ResultNotificationHelper @Inject constructor(
         }
         val contentText = "${track.title} - ${track.artist}"
 
+        val isLyricsFetcherRunning = trackMetadataEnhancerScheduler
+            .isLyricsFetcherRunning(track.id).first()
         val notification = NotificationCompat.Builder(
             appContext,
             NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT
@@ -197,7 +204,7 @@ class ResultNotificationHelper @Inject constructor(
                 contentText = track.title + "\n" + track.artistWithAlbumFormatted()
             )
             .addTrackDeepLinkIntent(track.id)
-            .addOptionalShowLyricsButton(track)
+            .addOptionalShowLyricsButton(track, isLyricsFetcherRunning)
             .addShareButton(track.getSharedBody())
             .addTrackInfoToExtras(track)
             .build()
@@ -293,8 +300,9 @@ class ResultNotificationHelper @Inject constructor(
 
     private fun NotificationCompat.Builder.addOptionalShowLyricsButton(
         track: Track,
+        isLyricsFetcherRunning: Boolean,
     ): NotificationCompat.Builder {
-        if (track.lyrics == null) return this
+        if (track.lyrics == null && !isLyricsFetcherRunning) return this
         val deepLinkIntent = deeplinkRouter.getDeepLinkIntentToLyrics(track.id)
         val pendingIntent = createPendingIntentForDeeplink(deepLinkIntent)
         return addAction(

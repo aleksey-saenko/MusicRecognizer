@@ -1,0 +1,10 @@
+<b>Audile</b> és una aplicació de reconeixement musical que us pot ajudar a identificar ràpidament i amb precisió una pista de música que soni a prop vostre.
+L'aplicació utilitza els serveis AudD i ACRCloud per identificar la cançó i el servei Odesli per obtenir enllaços addicionals de la pista específics de la plataforma.
+
+<b>Característiques:</b>
+
+<b>Reconeixement</b> - Audile permet reconèixer cançons amb un sol clic. L'aplicació desarà l'enregistrament si no hi ha connexió a internet, i el procés de reconeixement s'executarà quan torneu a tenir connexió. Podeu personalitzar el comportament predeterminat per a reconeixements fallits (sense internet, cap resultat o un altre error) a través de les preferències.
+<b>Ús en segon pla</b> - Utilitzeu l'aplicació de manera fluida des del panell de notificacions, el giny de la pantalla d'inici o la fitxa de la configuració ràpida. Gestioneu el procés de reconeixement i obteniu informació de la pista sense haver d'obrir l'aplicació.
+<b>Informació de la pista</b> - En cas de reconeixement correcte, es proporciona informació sobre la pista, com ara el títol, l'artista, l'àlbum i l'any, la portada, enllaços a aquesta pista en serveis de música popular i la lletra.
+<b>Biblioteca</b> - Totes les cançons reconegudes es desen a la biblioteca de l'aplicació. Podeu filtrar la llista de cançons, crear una col·lecció de preferides, cercar cançons o esborrar-les.
+<b>Preferències</b> - L'aplicació té diverses opcions per personalitzar-ne el comportament i l'aspecte, que es poden trobar a la pantalla de configuració.

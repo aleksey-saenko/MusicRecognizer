@@ -285,4 +285,6 @@
     <string name="notification_channel_desc_foreground_result">Показывает результаты распознавания песен, когда вы находитесь на экране распознавания</string>
     <string name="notification_channel_desc_background_result">Показывает результаты распознавания песен, когда приложение свернуто или вы не находитесь на экране распознавания</string>
     <string name="audio_source_dialog_use_alt_device_source">Альтернативный источник аудио устройства</string>
+    <string name="searching_for_lyrics">Поиск текста песни…</string>
+    <string name="no_lyrics_available">Не найден текст для этой песни</string>
 </resources>

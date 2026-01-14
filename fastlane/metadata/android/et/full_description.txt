@@ -1,5 +1,5 @@
-<b>Audile</b> rakendus muusika tuvastamiseks ning ta aitab kiiresti ning täpselt teada saada, mis lugu on esitamisel sinu lähikonnas.
-Lugude tuvastamisel on kasutusel AudDi ja ACRCloudi teenused ja lugude platvormikohaste linkide leidmiseks Odesli teenus.
+<b>Audile</b> avatud lähtekoodiga rakendus muusika tuvastamiseks, mis ta aitab kiiresti ning täpselt teada saada, mis lugu on esitamisel sinu lähikonnas.
+Rakendusse on lugude tuvastamiseks lõimitud AudDi, ACRCloudi ja Shazami teenused ja lugude platvormikohaste linkide leidmiseks Odesli teenus.
 
 <b>Funktsionaalsused:</b>
 

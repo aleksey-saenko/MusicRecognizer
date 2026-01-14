@@ -1,5 +1,5 @@
-<b>Audile</b> es una aplicación de reconocimiento de música, que puede ayudarte a reconocer de forma rápida y precisa una pista de música que esté sonando cerca de ti.
-La aplicación utiliza los servicios AudD y ACRCloud para realizar la identificación de canciones y el servicio Odesli para recuperar enlaces de pistas adicionales específicas de la plataforma.
+<b>Audile</b> es una aplicación de código libre de reconocimiento de música, que puede ayudarte a identificar de forma rápida y precisa una pista de música que esté sonando cerca de ti.
+La aplicación usa los servicios AudD, ACRCloud y Shazam para identificar canciones y el servicio Odesli para recuperar además enlaces de pistas específicas de la plataforma.
 
 <b>Características:</b>
 

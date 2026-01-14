@@ -1,0 +1,6 @@
+* Add Galician translation (Thanks ghose!)
+* Fix bug causing "corrupted backup" error when restoring from backup file
+* Fix app crashes in some rare cases
+* Lock screen widget no longer requires device unlock if no permissions are needed
+* Update translations
+* Minor fixes

@@ -13,8 +13,11 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecogniti
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.Track
+import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
 import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
+import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -87,14 +90,6 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 }
                 when (result) {
                     is RemoteRecognitionResult.Success -> {
-                        coroutineScope {
-                            listOfNotNull(
-                                result.track.artworkThumbUrl,
-                                result.track.artworkUrl,
-                            ).map { imageUrl ->
-                                async { appContext.downloadImageToDiskCache(imageUrl) }
-                            }.awaitAll()
-                        }
                         val trackWithStoredProps = trackRepository
                             .upsertKeepProperties(listOf(result.track))
                             .first()
@@ -112,6 +107,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                         if (updatedTrack.lyrics == null) {
                             trackMetadataEnhancerScheduler.enqueueLyricsFetcher(updatedTrack.id)
                         }
+                        prepareTrackImages(updatedTrack)
                         resultNotificationHelper.notifyResult(updatedEnqueued)
                         Result.success()
                     }
@@ -149,6 +145,17 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                 }
             }
             .first()
+    }
+
+    private suspend fun prepareTrackImages(track: Track) = withContext(Dispatchers.Default) {
+        listOfNotNull(track.artworkThumbUrl, track.artworkUrl)
+            .map { imageUrl -> async { appContext.downloadImageToDiskCache(imageUrl) } }
+            .awaitAll()
+        track.artworkUrl?.let { artworkUrl ->
+            appContext.getCachedImageOrNull(artworkUrl, allowHardware = false)
+                ?.getDominantColor()
+                ?.let { themeColor -> trackRepository.setThemeSeedColor(track.id, themeColor) }
+        }
     }
 
     private suspend fun clearPreviousResult(enqueued: EnqueuedRecognition) {

@@ -58,7 +58,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         if (ACRA.isACRASenderServiceProcess()) return
-        setupAcra()
+        if (!BuildConfig.DEBUG) setupAcra()
     }
 
     override fun onCreate() {
@@ -128,7 +128,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
         initAcra {
             buildConfigClass = BuildConfig::class.java
             reportFormat = StringFormat.JSON
-            reportContent = ACRAConstants.DEFAULT_REPORT_FIELDS + ReportField.MEDIA_CODEC_LIST
+            reportContent = ACRAConstants.DEFAULT_REPORT_FIELDS
             stopServicesOnCrash = true
             dialog {
                 title = getString(StringsR.string.crash_dialog_title)

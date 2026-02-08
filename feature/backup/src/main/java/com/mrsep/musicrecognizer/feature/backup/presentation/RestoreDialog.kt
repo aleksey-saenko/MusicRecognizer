@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,14 +33,12 @@ import com.mrsep.musicrecognizer.core.strings.R as StringsR
 @Composable
 internal fun RestoreDialog(
     restoreState: RestoreUiState,
+    onChangeSelectedBackupEntry: (entry: BackupEntry, selected: Boolean) -> Unit,
     onAppRestartRequest: () -> Unit,
-    onRestoreClick: (Uri, Set<BackupEntry>) -> Unit,
+    onRestoreClick: (Uri) -> Unit,
     onDismissRequest: (() -> Unit)?,
 ) {
     val context = LocalContext.current
-    var selectedBackupEntries by rememberSaveable(stateSaver = BackupEntriesSaver) {
-        mutableStateOf(emptySet())
-    }
     var restoreConfirmed by remember { mutableStateOf(false) }
     LaunchedEffect(restoreConfirmed) {
         if (restoreConfirmed) {
@@ -55,12 +52,12 @@ internal fun RestoreDialog(
             Text(text = stringResource(StringsR.string.restore_dialog_title))
         },
         confirmButton = {
-            if (restoreState is RestoreUiState.BackupMetadata) {
+            if (restoreState is RestoreUiState.Ready) {
                 TextButton(
-                    enabled = selectedBackupEntries.isNotEmpty(),
+                    enabled = restoreState.selectedEntries.isNotEmpty(),
                     onClick = {
                         if (restoreConfirmed) {
-                            onRestoreClick(restoreState.uri, selectedBackupEntries)
+                            onRestoreClick(restoreState.uri)
                         } else {
                             restoreConfirmed = true
                             Toast.makeText(
@@ -94,19 +91,17 @@ internal fun RestoreDialog(
                         title = "Checking backup file, please wait…"
                     )
 
-                    is RestoreUiState.BackupMetadata -> {
-                        when (restoreState.result) {
+                    is RestoreUiState.Ready -> {
+                        when (restoreState.metadata) {
                             is BackupMetadataResult.Success -> Column {
-                                if (context.getAppVersionCode() < restoreState.result.metadata.appVersionCode) {
+                                if (context.getAppVersionCode() < restoreState.metadata.metadata.appVersionCode) {
                                     Text("This backup file cannot be used because it was created by a newer app version")
                                 } else {
                                     BackupEntryPicker(
                                         title = "Select what do you want to restore:",
-                                        availableEntriesWithSizes = restoreState.result.entryUncompressedSize,
-                                        selectedBackupEntries = selectedBackupEntries,
-                                        onChangeSelectedBackupEntry = {
-                                            selectedBackupEntries = it
-                                        }
+                                        availableEntriesWithSizes = restoreState.metadata.entryUncompressedSize,
+                                        selectedBackupEntries = restoreState.selectedEntries,
+                                        onChangeSelectedBackupEntry = onChangeSelectedBackupEntry
                                     )
                                     Spacer(Modifier.height(16.dp))
                                     RestoreInfoMessage(modifier = Modifier.fillMaxWidth())

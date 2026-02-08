@@ -15,7 +15,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
@@ -41,35 +40,35 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
 
     /* Backup */
 
-    fun estimateEntriesToBackup(uri: Uri) {
+    fun estimateEntriesToBackup() {
         if (backupMasterJob.children.any { !it.isCompleted }) return
         if (_backupUiState.value != null) return
         backupScope.launch {
-            _backupUiState.update { BackupUiState.EstimatingEntries(uri) }
+            _backupUiState.value = BackupUiState.EstimatingEntries
             val entries = appBackupManager.estimateAppDataSize()
-            _backupUiState.update {
-                BackupUiState.Ready(
-                    uri = uri,
-                    entriesUncompressedSize = entries
-                )
-            }
+            _backupUiState.value = BackupUiState.Ready(
+                entriesUncompressedSize = entries,
+                selectedEntries = entries.keys
+            )
         }
     }
 
-    fun backup(uri: Uri, entries: Set<BackupEntry>) {
+    fun backup(uri: Uri) {
         if (backupMasterJob.children.any { !it.isCompleted }) return
-        if (_backupUiState.value !is BackupUiState.Ready) return
+        val currentState = _backupUiState.value
+        if (currentState !is BackupUiState.Ready) return
+        if (currentState.selectedEntries.isEmpty()) return
         backupScope.launch {
-            _backupUiState.update { BackupUiState.InProgress(uri) }
-            val backupResult = appBackupManager.backup(uri, entries)
-            _backupUiState.update { BackupUiState.Result(uri, backupResult) }
+            _backupUiState.value = BackupUiState.InProgress(uri)
+            val backupResult = appBackupManager.backup(uri, currentState.selectedEntries)
+            _backupUiState.value = BackupUiState.Result(uri, backupResult)
         }
     }
 
     fun cancelBackupScopeJobs() {
         viewModelScope.launch {
             backupMasterJob.children.forEach { it.cancelAndJoin() }
-            _backupUiState.update { null }
+            _backupUiState.value = null
         }
     }
 
@@ -79,33 +78,66 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         if (restoreMasterJob.children.any { !it.isCompleted }) return
         if (_restoreUiState.value != null) return
         restoreScope.launch {
-            _restoreUiState.update { RestoreUiState.ValidatingBackup(uri) }
+            _restoreUiState.value = RestoreUiState.ValidatingBackup(uri)
             val metadataResult = appBackupManager.readBackupMetadata(uri)
-            _restoreUiState.update { RestoreUiState.BackupMetadata(uri, metadataResult) }
+            _restoreUiState.value = RestoreUiState.Ready(
+                uri = uri,
+                metadata = metadataResult,
+                selectedEntries = when (metadataResult) {
+                    is BackupMetadataResult.Success -> metadataResult.entryUncompressedSize.keys
+                    else -> emptySet()
+                }
+            )
         }
     }
 
-    fun restore(uri: Uri, entries: Set<BackupEntry>) {
+    fun restore(uri: Uri) {
         if (restoreMasterJob.children.any { !it.isCompleted }) return
-        val backupMetadata = (restoreUiState.value as? RestoreUiState.BackupMetadata)
-            ?.result as? BackupMetadataResult.Success ?: return
-        check(backupMetadata.entryUncompressedSize.keys.containsAll(entries))
+        val currentState = restoreUiState.value
+        if (currentState !is RestoreUiState.Ready) return
+        val metadata = currentState.metadata as? BackupMetadataResult.Success ?: return
+        if (currentState.selectedEntries.isEmpty()) return
+        check(metadata.entryUncompressedSize.keys.containsAll(currentState.selectedEntries))
         restoreScope.launch {
-            _restoreUiState.update { RestoreUiState.InProgress(uri) }
-            val restoreResult = appBackupManager.restore(uri, entries)
-            _restoreUiState.update { RestoreUiState.Result(uri, restoreResult) }
+            _restoreUiState.value = RestoreUiState.InProgress(uri)
+            val restoreResult = appBackupManager.restore(uri, currentState.selectedEntries)
+            _restoreUiState.value = RestoreUiState.Result(uri, restoreResult)
         }
     }
 
     fun cancelRestoreScopeJobs() {
         viewModelScope.launch {
             restoreMasterJob.children.forEach { it.cancelAndJoin() }
-            _restoreUiState.update { null }
+            _restoreUiState.value = null
         }
     }
 
     fun restartApplicationOnRestore() {
         appRestartManager.restartApplicationOnRestore()
+    }
+
+    fun onChangeSelectedBackupEntry(entry: BackupEntry, selected: Boolean) {
+        val currentState = _backupUiState.value
+        val currentSelectedEntries = when (currentState) {
+            is BackupUiState.Ready -> currentState.selectedEntries
+            else -> return
+        }
+        _backupUiState.value = currentState.copy(
+            selectedEntries = currentSelectedEntries
+                .run { if (selected) plus(entry) else minus(entry) }
+        )
+    }
+
+    fun onChangeSelectedRestoreEntry(entry: BackupEntry, selected: Boolean) {
+        val currentState = _restoreUiState.value
+        val currentSelectedEntries = when (currentState) {
+            is RestoreUiState.Ready -> currentState.selectedEntries
+            else -> return
+        }
+        _restoreUiState.value = currentState.copy(
+            selectedEntries = currentSelectedEntries
+                .run { if (selected) plus(entry) else minus(entry) }
+        )
     }
 }
 
@@ -115,9 +147,10 @@ internal sealed class RestoreUiState {
 
     data class ValidatingBackup(override val uri: Uri) : RestoreUiState()
 
-    data class BackupMetadata(
+    data class Ready(
         override val uri: Uri,
-        val result: BackupMetadataResult,
+        val metadata: BackupMetadataResult,
+        val selectedEntries: Set<BackupEntry>,
     ) : RestoreUiState()
 
     data class InProgress(override val uri: Uri) : RestoreUiState()
@@ -130,19 +163,18 @@ internal sealed class RestoreUiState {
 
 @Stable
 internal sealed class BackupUiState {
-    abstract val uri: Uri
 
-    data class EstimatingEntries(override val uri: Uri) : BackupUiState()
+    data object EstimatingEntries : BackupUiState()
 
     data class Ready(
-        override val uri: Uri,
         val entriesUncompressedSize: Map<BackupEntry, Long>,
+        val selectedEntries: Set<BackupEntry>,
     ) : BackupUiState()
 
-    data class InProgress(override val uri: Uri) : BackupUiState()
+    data class InProgress(val uri: Uri) : BackupUiState()
 
     data class Result(
-        override val uri: Uri,
+        val uri: Uri,
         val result: BackupResult,
     ) : BackupUiState()
 }

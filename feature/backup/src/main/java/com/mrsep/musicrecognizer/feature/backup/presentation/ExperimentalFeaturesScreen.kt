@@ -52,7 +52,7 @@ internal fun ExperimentalFeaturesScreen(
             Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
             return@rememberLauncherForActivityResult
         }
-        viewModel.estimateEntriesToBackup(resultUri)
+        viewModel.backup(resultUri)
     }
 
     val restoreUriLauncher = rememberLauncherForActivityResult(
@@ -68,25 +68,20 @@ internal fun ExperimentalFeaturesScreen(
     backupUiState?.let { backupState ->
         BackupDialog(
             backupState = backupState,
-            onBackupClick = viewModel::backup,
+            onChangeSelectedBackupEntry = viewModel::onChangeSelectedBackupEntry,
+            onBackupClick = { backupUriLauncher.launch(context.getBackupName()) },
             onDismissClick = {
                 when (backupState) {
                     is BackupUiState.EstimatingEntries,
-                    is BackupUiState.Ready,
-                    -> {
-                        if (!context.deleteUriFile(backupState.uri)) {
-                            Toast.makeText(
-                                context,
-                                "Failed to delete unfinished backup file",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    is BackupUiState.Ready -> {
                         viewModel.cancelBackupScopeJobs()
                     }
 
-                    is BackupUiState.InProgress,
-                    is BackupUiState.Result,
-                    -> {
+                    is BackupUiState.InProgress -> {
+                        viewModel.cancelBackupScopeJobs()
+                        context.deleteUnfinishedBackupFile(backupState.uri)
+                    }
+                    is BackupUiState.Result -> {
                         viewModel.cancelBackupScopeJobs()
                     }
                 }
@@ -96,11 +91,12 @@ internal fun ExperimentalFeaturesScreen(
     restoreUiState?.let { restoreState ->
         RestoreDialog(
             restoreState = restoreState,
+            onChangeSelectedBackupEntry = viewModel::onChangeSelectedRestoreEntry,
             onAppRestartRequest = viewModel::restartApplicationOnRestore,
             onRestoreClick = viewModel::restore,
             onDismissRequest = when (restoreState) {
                 is RestoreUiState.ValidatingBackup,
-                is RestoreUiState.BackupMetadata,
+                is RestoreUiState.Ready,
                 -> viewModel::cancelRestoreScopeJobs
 
                 is RestoreUiState.InProgress -> null /* main restore task is not cancelable */
@@ -151,26 +147,25 @@ internal fun ExperimentalFeaturesScreen(
             PreferenceClickableItem(
                 title = stringResource(StringsR.string.pref_title_backup),
                 subtitle = stringResource(StringsR.string.pref_subtitle_backup),
-                onItemClick = {
-                    backupUriLauncher.launch(context.getBackupName())
-                }
+                onItemClick = viewModel::estimateEntriesToBackup
             )
             PreferenceClickableItem(
                 title = stringResource(StringsR.string.pref_title_restore),
                 subtitle = stringResource(StringsR.string.pref_subtitle_restore),
-                onItemClick = {
-                    restoreUriLauncher.launch(arrayOf("*/*"))
-                }
+                onItemClick = { restoreUriLauncher.launch(arrayOf("*/*")) }
             )
         }
     }
 }
 
-private fun Context.deleteUriFile(uri: Uri): Boolean = try {
+private fun Context.deleteUnfinishedBackupFile(uri: Uri) = try {
     DocumentsContract.deleteDocument(contentResolver, uri)
-    true
 } catch (_: FileNotFoundException) {
-    false
+    Toast.makeText(
+        this,
+        "Failed to delete unfinished backup file",
+        Toast.LENGTH_SHORT
+    ).show()
 }
 
 private fun Context.getBackupName(): String = getString(StringsR.string.app_name) + "_Backup" +

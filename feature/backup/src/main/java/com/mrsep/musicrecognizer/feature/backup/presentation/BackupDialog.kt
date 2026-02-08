@@ -1,7 +1,7 @@
 package com.mrsep.musicrecognizer.feature.backup.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,27 +34,15 @@ import com.mrsep.musicrecognizer.feature.backup.BackupEntry
 import com.mrsep.musicrecognizer.feature.backup.BackupResult
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-internal val BackupEntriesSaver: Saver<Set<BackupEntry>, *> = listSaver(
-    save = { entries -> entries.map { it.ordinal } },
-    restore = { savedList -> savedList.map { BackupEntry.entries[it] }.toSet() }
-)
-
 /* Work in progress */
 @Composable
 internal fun BackupDialog(
     backupState: BackupUiState,
-    onBackupClick: (Uri, Set<BackupEntry>) -> Unit,
+    onChangeSelectedBackupEntry: (entry: BackupEntry, selected: Boolean) -> Unit,
+    onBackupClick: () -> Unit,
     onDismissClick: () -> Unit,
 ) {
     val context = LocalContext.current
-    var selectedBackupEntries by rememberSaveable(
-        backupState,
-        stateSaver = BackupEntriesSaver
-    ) {
-        mutableStateOf(
-            (backupState as? BackupUiState.Ready)?.entriesUncompressedSize?.keys ?: emptySet()
-        )
-    }
     val dismissOnClickOutside = backupState !is BackupUiState.InProgress
     AlertDialog(
         title = {
@@ -72,8 +54,8 @@ internal fun BackupDialog(
                 is BackupUiState.InProgress -> {}
 
                 is BackupUiState.Ready -> TextButton(
-                    enabled = selectedBackupEntries.isNotEmpty(),
-                    onClick = { onBackupClick(backupState.uri, selectedBackupEntries) }
+                    enabled = backupState.selectedEntries.isNotEmpty(),
+                    onClick = onBackupClick
                 ) {
                     Text(text = stringResource(StringsR.string.backup_dialog_button_backup))
                 }
@@ -82,6 +64,7 @@ internal fun BackupDialog(
                     BackupResult.Success -> TextButton(
                         enabled = true,
                         onClick = {
+                            @SuppressLint("LocalContextGetResourceValueCall")
                             val subject = context.getString(StringsR.string.app_name) + " backup"
                             context.shareFile(subject, "", backupState.uri)
                         }
@@ -115,8 +98,8 @@ internal fun BackupDialog(
                         BackupEntryPicker(
                             title = "Select what do you want to backup:",
                             availableEntriesWithSizes = backupState.entriesUncompressedSize,
-                            selectedBackupEntries = selectedBackupEntries,
-                            onChangeSelectedBackupEntry = { selectedBackupEntries = it },
+                            selectedBackupEntries = backupState.selectedEntries,
+                            onChangeSelectedBackupEntry = onChangeSelectedBackupEntry,
                         )
                     }
 
@@ -138,14 +121,17 @@ internal fun BackupEntryPicker(
     title: String,
     availableEntriesWithSizes: Map<BackupEntry, Long>,
     selectedBackupEntries: Set<BackupEntry>,
-    onChangeSelectedBackupEntry: (Set<BackupEntry>) -> Unit,
+    onChangeSelectedBackupEntry: (entry: BackupEntry, selected: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     Column(modifier = modifier) {
         Text(text = title)
         Spacer(Modifier.height(12.dp))
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
             availableEntriesWithSizes.forEach { (backupEntry, entrySize) ->
                 val size = remember(entrySize) {
                     context.funFormatByteSize(entrySize)
@@ -155,13 +141,7 @@ internal fun BackupEntryPicker(
                     title = backupEntry.getTitle(),
                     subtitle = size,
                     checked = checked,
-                    onClick = {
-                        onChangeSelectedBackupEntry(
-                            selectedBackupEntries.run {
-                                if (checked) minus(backupEntry) else plus(backupEntry)
-                            }
-                        )
-                    }
+                    onClick = { onChangeSelectedBackupEntry(backupEntry, !checked) }
                 )
             }
         }

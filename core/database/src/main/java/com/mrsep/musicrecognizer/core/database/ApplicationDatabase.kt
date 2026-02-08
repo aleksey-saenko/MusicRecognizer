@@ -43,9 +43,9 @@ abstract class ApplicationDatabase : RoomDatabase() {
 
     fun getDataSize(): Long {
         val q = "SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()"
-        return query(SimpleSQLiteQuery(q)).run {
-            moveToFirst()
-            getLong(0)
+        return query(SimpleSQLiteQuery(q)).use { cursor ->
+            cursor.moveToFirst()
+            cursor.getLong(0)
         }
     }
 
@@ -61,16 +61,18 @@ abstract class ApplicationDatabase : RoomDatabase() {
     }
 
     // https://www.sqlite.org/pragma.html#pragma_wal_checkpoint
+    // Fix SQLite cursor leaks
     private fun checkout(): Boolean {
-        val cursor = query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
-        cursor.moveToFirst()
-        return if (cursor.getInt(0) == 0) {
-            if (cursor.getInt(1) == -1 && cursor.getInt(2) == -1) {
-                Log.w(this::class.simpleName, "There is no write-ahead log for database")
+        return query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)")).use { cursor ->
+            cursor.moveToFirst()
+            if (cursor.getInt(0) == 0) {
+                if (cursor.getInt(1) == -1 && cursor.getInt(2) == -1) {
+                    Log.w(this::class.simpleName, "There is no write-ahead log for database")
+                }
+                true
+            } else {
+                false
             }
-            true
-        } else {
-            false
         }
     }
 }

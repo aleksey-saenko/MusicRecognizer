@@ -244,8 +244,9 @@
     <string name="vibration_feedback_dialog_vibrate_on_result">Вибрация при результате</string>
     <string name="pref_title_experimental_features">Экспериментальные возможности</string>
     <string name="pref_subtitle_experimental_features">В разработке</string>
+    <!-- Backup screen -->
     <string name="pref_title_backup_and_restore">Резервное копирование и восстановление</string>
-    <string name="pref_subtitle_backup_and_restore">Управление резервными копиями данных приложения</string>
+    <string name="pref_subtitle_backup_and_restore">Создать резервную копию данных приложения</string>
     <string name="pref_title_backup">Резервное копирование</string>
     <string name="pref_subtitle_backup">Создать копию данных и настроек приложения</string>
     <string name="pref_title_restore">Восстановление</string>
@@ -254,6 +255,29 @@
     <string name="backup_dialog_button_backup">Создать</string>
     <string name="restore_dialog_title">Восстановление</string>
     <string name="restore_dialog_button_restore">Начать</string>
+    <string name="backup_entry_data">База данных и аудиофайлы</string>
+    <string name="backup_entry_preferences">Настройки</string>
+    <string name="backup_entry_picker_title">Выберите данные для резервного копирования:</string>
+    <string name="restore_entry_picker_title">Выберите данные для восстановления:</string>
+    <string name="backup_estimating_size">Оценка объёма данных…</string>
+    <string name="backup_in_progress">Создаётся резервная копия…</string>
+    <string name="backup_result_success">Резервная копия успешно создана!</string>
+    <string name="restore_erase_warning">Процесс восстановления удалит текущие данные и заменит их содержимым резервной копии. Это действие нельзя отменить. При наличии важных данных сделайте их копию перед продолжением.</string>
+    <string name="restore_info_restart">Приложение перезапустится после завершения восстановления.</string>
+    <string name="restore_checking_backup">Проверка файла резервной копии…</string>
+    <string name="restore_in_progress">Восстановление…</string>
+    <string name="restore_result_success">Успешно!</string>
+    <string name="restore_result_malformed_backup">Файл резервной копии повреждён.</string>
+    <string name="restore_result_not_backup">Этот файл не является резервной копией.</string>
+    <string name="restore_result_newer_version">Резервная копия создана в более новой версии приложения и не может быть восстановлена.</string>
+    <string name="restore_will_restart_in">Приложение перезапустится через %d секунд.</string>
+    <string name="backup_restore_result_file_not_found">Файл резервной копии не найден.</string>
+    <string name="backup_restore_unhandled_error">Произошла непредвиденная ошибка.</string>
+    <string name="backup_restore_unhandled_error_message">Проверьте наличие свободного места и повторите попытку.</string>
+    <string name="toast_no_file_selected">Файл не выбран</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Не удалось удалить неполный файл резервной копии</string>
+    <string name="toast_press_again_to_confirm">Нажмите ещё раз, чтобы подтвердить</string>
+    <!-- About screen -->
     <string name="pref_title_about_app">О приложении</string>
     <string name="about_pref_group_powered_by">Работает с помощью</string>
     <string name="about_purpose_recognition_service">Выполняет распознавание и предоставляет основную информацию о треке</string>

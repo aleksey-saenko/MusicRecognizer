@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -29,7 +30,6 @@ import com.mrsep.musicrecognizer.feature.backup.RestoreResult
 import kotlinx.coroutines.delay
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-/* Work in progress */
 @Composable
 internal fun RestoreDialog(
     restoreState: RestoreUiState,
@@ -39,6 +39,7 @@ internal fun RestoreDialog(
     onDismissRequest: (() -> Unit)?,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     var restoreConfirmed by remember { mutableStateOf(false) }
     LaunchedEffect(restoreConfirmed) {
         if (restoreConfirmed) {
@@ -60,11 +61,8 @@ internal fun RestoreDialog(
                             onRestoreClick(restoreState.uri)
                         } else {
                             restoreConfirmed = true
-                            Toast.makeText(
-                                context,
-                                "Press again to confirm action",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            val message = resources.getString(StringsR.string.toast_press_again_to_confirm)
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         }
                     },
                 ) {
@@ -88,17 +86,17 @@ internal fun RestoreDialog(
             Column(Modifier.fillMaxWidth()) {
                 when (restoreState) {
                     is RestoreUiState.ValidatingBackup -> DialogProgressRow(
-                        title = "Checking backup file, please wait…"
+                        title = stringResource(StringsR.string.restore_checking_backup)
                     )
 
                     is RestoreUiState.Ready -> {
                         when (restoreState.metadata) {
                             is BackupMetadataResult.Success -> Column {
                                 if (context.getAppVersionCode() < restoreState.metadata.metadata.appVersionCode) {
-                                    Text("This backup file cannot be used because it was created by a newer app version")
+                                    Text(stringResource(StringsR.string.restore_result_newer_version))
                                 } else {
                                     BackupEntryPicker(
-                                        title = "Select what do you want to restore:",
+                                        title = stringResource(StringsR.string.restore_entry_picker_title),
                                         availableEntriesWithSizes = restoreState.metadata.entryUncompressedSize,
                                         selectedBackupEntries = restoreState.selectedEntries,
                                         onChangeSelectedBackupEntry = onChangeSelectedBackupEntry
@@ -109,25 +107,26 @@ internal fun RestoreDialog(
                             }
 
                             BackupMetadataResult.FileNotFound -> Text(
-                                text = "The backup file was not found!"
+                                text = stringResource(StringsR.string.backup_restore_result_file_not_found)
                             )
 
                             BackupMetadataResult.MalformedBackup -> Text(
-                                text = "This backup file is corrupted!"
+                                text = stringResource(StringsR.string.restore_result_malformed_backup)
                             )
 
                             BackupMetadataResult.NotBackupFile -> Text(
-                                text = "This file is not recognized as a backup!"
+                                text = stringResource(StringsR.string.restore_result_not_backup)
                             )
 
                             BackupMetadataResult.UnhandledError -> Text(
-                                text = "An unhandled error occurred!"
+                                text = stringResource(StringsR.string.backup_restore_unhandled_error)
                             )
                         }
                     }
 
                     is RestoreUiState.InProgress -> DialogProgressRow(
-                        title = "Restoring, please wait…\nThe app will restart upon completion."
+                        title = stringResource(StringsR.string.restore_in_progress),
+                        subtitle = stringResource(StringsR.string.restore_info_restart)
                     )
 
                     is RestoreUiState.Result -> when (restoreState.result) {
@@ -145,11 +144,11 @@ internal fun RestoreDialog(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                    Text("Success!")
-                                    Text("The app will be restarted in $remaining seconds…")
+                                    Text(stringResource(StringsR.string.restore_result_success))
+                                    Text(stringResource(StringsR.string.restore_will_restart_in).format(remaining))
                                 }
                             } else {
-                                Text("Success!")
+                                Text(stringResource(StringsR.string.restore_result_success))
                             }
                         }
 
@@ -170,22 +169,20 @@ internal fun RestoreDialog(
 private fun RestoreInfoMessage(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = "The restore process will erase current data and replace it with backup files." +
-                    " This action cannot be undone. Back up important data before proceeding."
-        )
-        Text(text = "The app will restart once the restore is complete.")
+        Text(text = stringResource(StringsR.string.restore_erase_warning))
+        Text(text = stringResource(StringsR.string.restore_info_restart))
     }
 }
 
+@Composable
 private fun RestoreResult.getMessage() = when (this) {
-    is RestoreResult.Success -> "Success!"
-    RestoreResult.FileNotFound -> "The backup file was not found!"
-    RestoreResult.MalformedBackup -> "This backup file is corrupted!"
-    RestoreResult.NewerVersionBackup -> "This backup file is created by newer app version!"
-    RestoreResult.NotBackupFile -> "This file is not recognized as a backup!"
-    RestoreResult.UnhandledError -> "An unhandled error occurred!" +
-            "\nPlease check that there is enough free space on your device and try again."
+    is RestoreResult.Success -> stringResource(StringsR.string.restore_result_success)
+    RestoreResult.FileNotFound -> stringResource(StringsR.string.backup_restore_result_file_not_found)
+    RestoreResult.MalformedBackup -> stringResource(StringsR.string.restore_result_malformed_backup)
+    RestoreResult.NewerVersionBackup -> stringResource(StringsR.string.restore_result_newer_version)
+    RestoreResult.NotBackupFile -> stringResource(StringsR.string.restore_result_not_backup)
+    RestoreResult.UnhandledError -> stringResource(StringsR.string.backup_restore_unhandled_error) +
+            "\n" + stringResource(StringsR.string.backup_restore_unhandled_error_message)
 }

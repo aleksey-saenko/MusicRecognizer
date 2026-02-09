@@ -37,8 +37,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.mrsep.musicrecognizer.BuildConfig
-import com.mrsep.musicrecognizer.feature.backup.presentation.ExperimentalFeaturesScreenNavigation.experimentalFeaturesScreen
-import com.mrsep.musicrecognizer.feature.backup.presentation.ExperimentalFeaturesScreenNavigation.navigateToExperimentalFeaturesScreen
+import com.mrsep.musicrecognizer.feature.backup.presentation.BackupRestoreScreenNavigation.backupRestoreScreen
+import com.mrsep.musicrecognizer.feature.backup.presentation.BackupRestoreScreenNavigation.navigateToBackupRestoreScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.developerScreen
 import com.mrsep.musicrecognizer.feature.developermode.presentation.DeveloperScreenNavigation.navigateToDeveloperScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen
@@ -186,7 +186,7 @@ internal fun AppNavigation(
         )
         softwareDetailsScreen(onBackPressed = outerNavController::navigateUp)
         appLicenseScreen(onBackPressed = outerNavController::navigateUp)
-        experimentalFeaturesScreen(onBackPressed = outerNavController::navigateUp)
+        backupRestoreScreen(onBackPressed = outerNavController::navigateUp)
         developerScreen(onBackPressed = outerNavController::navigateUp)
     }
 }
@@ -328,8 +328,8 @@ private fun BarNavHost(
                 onNavigateToAboutScreen = { from ->
                     outerNavController.navigateToAboutScreen(from)
                 },
-                onNavigateToExperimentalFeaturesScreen = { from ->
-                    outerNavController.navigateToExperimentalFeaturesScreen(from)
+                onNavigateToBackupRestoreScreen = { from ->
+                    outerNavController.navigateToBackupRestoreScreen(from)
                 },
                 onNavigateToDeveloperScreen = { from ->
                     outerNavController.navigateToDeveloperScreen(from)

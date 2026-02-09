@@ -14,14 +14,14 @@ object PreferencesScreen {
     fun NavGraphBuilder.preferencesScreen(
         showDeveloperOptions: Boolean,
         onNavigateToAboutScreen: (from: NavBackStackEntry) -> Unit,
-        onNavigateToExperimentalFeaturesScreen: (from: NavBackStackEntry) -> Unit,
+        onNavigateToBackupRestoreScreen: (from: NavBackStackEntry) -> Unit,
         onNavigateToDeveloperScreen: (from: NavBackStackEntry) -> Unit
     ) {
         composable(ROUTE) { backStackEntry ->
             PreferencesScreen(
                 showDeveloperOptions = showDeveloperOptions,
                 onNavigateToAboutScreen = { onNavigateToAboutScreen(backStackEntry) },
-                onNavigateToExperimentalFeaturesScreen = { onNavigateToExperimentalFeaturesScreen(backStackEntry) },
+                onNavigateToBackupRestoreScreen = { onNavigateToBackupRestoreScreen(backStackEntry) },
                 onNavigateToDeveloperScreen = { onNavigateToDeveloperScreen(backStackEntry) }
             )
         }

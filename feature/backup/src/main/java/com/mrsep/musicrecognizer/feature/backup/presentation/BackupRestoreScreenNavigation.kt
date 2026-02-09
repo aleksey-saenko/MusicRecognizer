@@ -7,21 +7,21 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.mrsep.musicrecognizer.core.common.util.lifecycleIsResumed
 
-object ExperimentalFeaturesScreenNavigation {
+object BackupRestoreScreenNavigation {
 
-    const val ROUTE = "preferences_experimental"
+    const val ROUTE = "backup_restore"
 
-    fun NavGraphBuilder.experimentalFeaturesScreen(
+    fun NavGraphBuilder.backupRestoreScreen(
         onBackPressed: () -> Unit
     ) {
         composable(ROUTE) { backStackEntry ->
-            ExperimentalFeaturesScreen(
+            BackupRestoreScreen(
                 onBackPressed = onBackPressed,
             )
         }
     }
 
-    fun NavController.navigateToExperimentalFeaturesScreen(
+    fun NavController.navigateToBackupRestoreScreen(
         from: NavBackStackEntry,
         navOptions: NavOptions? = null
     ) {

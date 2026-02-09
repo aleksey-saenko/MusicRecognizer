@@ -38,7 +38,7 @@ internal fun PreferencesScreen(
     viewModel: PreferencesViewModel = hiltViewModel(),
     showDeveloperOptions: Boolean,
     onNavigateToAboutScreen: () -> Unit,
-    onNavigateToExperimentalFeaturesScreen: () -> Unit,
+    onNavigateToBackupRestoreScreen: () -> Unit,
     onNavigateToDeveloperScreen: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -247,9 +247,9 @@ internal fun PreferencesScreen(
                             }
                         }
                         PreferenceClickableItem(
-                            title = stringResource(StringsR.string.pref_title_experimental_features),
-                            subtitle = stringResource(StringsR.string.pref_subtitle_experimental_features),
-                            onItemClick = onNavigateToExperimentalFeaturesScreen
+                            title = stringResource(StringsR.string.pref_title_backup_and_restore),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_backup_and_restore),
+                            onItemClick = onNavigateToBackupRestoreScreen
                         )
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.pref_title_about_app),

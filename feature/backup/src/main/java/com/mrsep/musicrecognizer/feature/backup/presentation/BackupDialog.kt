@@ -1,6 +1,5 @@
 package com.mrsep.musicrecognizer.feature.backup.presentation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +25,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -34,7 +34,6 @@ import com.mrsep.musicrecognizer.feature.backup.BackupEntry
 import com.mrsep.musicrecognizer.feature.backup.BackupResult
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-/* Work in progress */
 @Composable
 internal fun BackupDialog(
     backupState: BackupUiState,
@@ -43,6 +42,7 @@ internal fun BackupDialog(
     onDismissClick: () -> Unit,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val dismissOnClickOutside = backupState !is BackupUiState.InProgress
     AlertDialog(
         title = {
@@ -64,8 +64,7 @@ internal fun BackupDialog(
                     BackupResult.Success -> TextButton(
                         enabled = true,
                         onClick = {
-                            @SuppressLint("LocalContextGetResourceValueCall")
-                            val subject = context.getString(StringsR.string.app_name) + " backup"
+                            val subject = resources.getString(StringsR.string.app_name)
                             context.shareFile(subject, "", backupState.uri)
                         }
                     ) {
@@ -90,26 +89,22 @@ internal fun BackupDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 when (backupState) {
-                    is BackupUiState.EstimatingEntries -> {
-                        DialogProgressRow(title = "Estimating app data size…")
-                    }
+                    is BackupUiState.EstimatingEntries -> DialogProgressRow(
+                        title = stringResource(StringsR.string.backup_estimating_size)
+                    )
 
-                    is BackupUiState.Ready -> {
-                        BackupEntryPicker(
-                            title = "Select what do you want to backup:",
-                            availableEntriesWithSizes = backupState.entriesUncompressedSize,
-                            selectedBackupEntries = backupState.selectedEntries,
-                            onChangeSelectedBackupEntry = onChangeSelectedBackupEntry,
-                        )
-                    }
+                    is BackupUiState.Ready -> BackupEntryPicker(
+                        title = stringResource(StringsR.string.backup_entry_picker_title),
+                        availableEntriesWithSizes = backupState.entriesUncompressedSize,
+                        selectedBackupEntries = backupState.selectedEntries,
+                        onChangeSelectedBackupEntry = onChangeSelectedBackupEntry,
+                    )
 
-                    is BackupUiState.InProgress -> {
-                        DialogProgressRow(title = "The backup is creating, please wait…")
-                    }
+                    is BackupUiState.InProgress -> DialogProgressRow(
+                        title = stringResource(StringsR.string.backup_in_progress)
+                    )
 
-                    is BackupUiState.Result -> {
-                        Text(backupState.result.getMessage())
-                    }
+                    is BackupUiState.Result -> Text(backupState.result.getMessage())
                 }
             }
         },
@@ -148,11 +143,12 @@ internal fun BackupEntryPicker(
     }
 }
 
+@Composable
 private fun BackupResult.getMessage() = when (this) {
-    BackupResult.Success -> "The backup file was created successfully!"
-    BackupResult.FileNotFound -> "The backup file was not found!"
-    BackupResult.UnhandledError -> "An unhandled error occurred!" +
-            "\nPlease check that there is enough free space on your device and try again."
+    BackupResult.Success -> stringResource(StringsR.string.backup_result_success)
+    BackupResult.FileNotFound -> stringResource(StringsR.string.backup_restore_result_file_not_found)
+    BackupResult.UnhandledError -> stringResource(StringsR.string.backup_restore_unhandled_error) +
+            "\n" + stringResource(StringsR.string.backup_restore_unhandled_error_message)
 }
 
 @Composable
@@ -170,16 +166,20 @@ private fun BackupUiState.dismissButtonText() = when (this) {
 internal fun DialogProgressRow(
     modifier: Modifier = Modifier,
     title: String,
+    subtitle: String? = null,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f)
-        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(text = title)
+            subtitle?.let { Text(text = subtitle) }
+        }
         CircularProgressIndicator(
             modifier = Modifier.size(24.dp),
             strokeWidth = 3.dp,
@@ -227,7 +227,8 @@ internal fun Context.funFormatByteSize(bytes: Long): String {
     return android.text.format.Formatter.formatShortFileSize(this, bytes)
 }
 
+@Composable
 internal fun BackupEntry.getTitle() = when (this) {
-    BackupEntry.Data -> "Database with recordings"
-    BackupEntry.Preferences -> "Preferences"
+    BackupEntry.Data -> stringResource(StringsR.string.backup_entry_data)
+    BackupEntry.Preferences -> stringResource(StringsR.string.backup_entry_preferences)
 }

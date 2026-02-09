@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.backup.presentation
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.widget.Toast
@@ -20,9 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
@@ -34,14 +38,14 @@ import java.time.format.DateTimeFormatter
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-/* Work in progress */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ExperimentalFeaturesScreen(
+internal fun BackupRestoreScreen(
     onBackPressed: () -> Unit,
-    viewModel: ExperimentalFeaturesViewModel = hiltViewModel(),
+    viewModel: BackupRestoreViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val backupUiState by viewModel.backupState.collectAsStateWithLifecycle()
     val restoreUiState by viewModel.restoreUiState.collectAsStateWithLifecycle()
 
@@ -49,7 +53,8 @@ internal fun ExperimentalFeaturesScreen(
         contract = ActivityResultContracts.CreateDocument("*/*")
     ) { resultUri ->
         if (resultUri == null) {
-            Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+            val message = resources.getString(StringsR.string.toast_no_file_selected)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             return@rememberLauncherForActivityResult
         }
         viewModel.backup(resultUri)
@@ -59,7 +64,8 @@ internal fun ExperimentalFeaturesScreen(
         contract = ActivityResultContracts.OpenDocument()
     ) { resultUri ->
         if (resultUri == null) {
-            Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+            val message = resources.getString(StringsR.string.toast_no_file_selected)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             return@rememberLauncherForActivityResult
         }
         viewModel.validateBackup(resultUri)
@@ -69,7 +75,7 @@ internal fun ExperimentalFeaturesScreen(
         BackupDialog(
             backupState = backupState,
             onChangeSelectedBackupEntry = viewModel::onChangeSelectedBackupEntry,
-            onBackupClick = { backupUriLauncher.launch(context.getBackupName()) },
+            onBackupClick = { backupUriLauncher.launch(resources.getBackupName()) },
             onDismissClick = {
                 when (backupState) {
                     is BackupUiState.EstimatingEntries,
@@ -79,7 +85,10 @@ internal fun ExperimentalFeaturesScreen(
 
                     is BackupUiState.InProgress -> {
                         viewModel.cancelBackupScopeJobs()
-                        context.deleteUnfinishedBackupFile(backupState.uri)
+                        if (!context.deleteUriFile(backupState.uri)) {
+                            val message = resources.getString(StringsR.string.toast_failed_delete_incomplete_backup_file)
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        }
                     }
                     is BackupUiState.Result -> {
                         viewModel.cancelBackupScopeJobs()
@@ -127,7 +136,7 @@ internal fun ExperimentalFeaturesScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(StringsR.string.pref_title_experimental_features),
+                    text = stringResource(StringsR.string.pref_title_backup_and_restore).toUpperCase(Locale.current),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -158,15 +167,12 @@ internal fun ExperimentalFeaturesScreen(
     }
 }
 
-private fun Context.deleteUnfinishedBackupFile(uri: Uri) = try {
+private fun Context.deleteUriFile(uri: Uri): Boolean = try {
     DocumentsContract.deleteDocument(contentResolver, uri)
+    true
 } catch (_: FileNotFoundException) {
-    Toast.makeText(
-        this,
-        "Failed to delete unfinished backup file",
-        Toast.LENGTH_SHORT
-    ).show()
+    false
 }
 
-private fun Context.getBackupName(): String = getString(StringsR.string.app_name) + "_Backup" +
+private fun Resources.getBackupName(): String = getString(StringsR.string.app_name) + "_Backup" +
         "_${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(ZonedDateTime.now())}"

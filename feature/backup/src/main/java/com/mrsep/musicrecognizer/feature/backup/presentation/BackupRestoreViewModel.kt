@@ -19,9 +19,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
 
-/* Work in progress */
 @HiltViewModel
-internal class ExperimentalFeaturesViewModel @Inject constructor(
+internal class BackupRestoreViewModel @Inject constructor(
     private val appBackupManager: AppBackupManager,
     private val appRestartManager: AppRestartManager,
 ) : ViewModel() {

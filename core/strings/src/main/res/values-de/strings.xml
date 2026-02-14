@@ -3,10 +3,10 @@
     <string name="onboarding_token_message">Die App nutzt den AudD Musikerkennungs-Service, welcher nicht kostenfrei ist und einen speziellen API-Schlüssel benötigt. Melde dich <![CDATA[<a href="%1$s">hier</a>]]> an, um deinen 14-tägigen Test-Schlüssel zu erhalten, sofern du noch keinen hast.</string>
     <string name="recognition">Erkennung</string>
     <string name="main_screen_listening_extra_time">Noch ein Versuch</string>
-    <string name="widget_tap_to_try_again">Tippe, um erneut zu Versuchen</string>
+    <string name="widget_tap_to_try_again">Zum erneuten Versuchen antippen</string>
     <string name="widget_listening_subtitle">Bitte warten</string>
     <string name="recognition_widget_description">Erkenne den Song mit einem Tipp</string>
-    <string name="notification_tap_to_recognize">Tippe zum Erkennen</string>
+    <string name="notification_tap_to_recognize">Zum Erkennen antippen</string>
     <string name="main_screen_listening">Hört gerade</string>
     <string name="widget_listening">Hört gerade</string>
     <string name="notification_listening_subtitle">Bitte warten</string>
@@ -186,10 +186,10 @@
     <string name="pref_title_experimental_features">Experimentelle Funktionen</string>
     <string name="pref_subtitle_experimental_features">Noch-in-arbeit</string>
     <string name="pref_title_backup_and_restore">Sichern &amp; Wiederherstellen</string>
-    <string name="pref_subtitle_backup_and_restore">Sichere deine Datenbank und Einstellungen</string>
+    <string name="pref_subtitle_backup_and_restore">Erstelle eine Sicherung deiner App-Daten</string>
     <string name="pref_title_backup">Sichern</string>
-    <string name="pref_subtitle_backup">Exportiere Appdaten und -einstellungen</string>
-    <string name="pref_subtitle_restore">Stelle Appdaten und -einstellungen von einer Sicherung wieder her</string>
+    <string name="pref_subtitle_backup">App-Datenbank und -Einstellungen sichern</string>
+    <string name="pref_subtitle_restore">App-Daten aus einer Sicherung wiederherstellen</string>
     <string name="restore_dialog_title">Wiederherstellen</string>
     <string name="restore_dialog_button_restore">Wiederherstellen</string>
     <string name="pref_title_about_app">Über</string>
@@ -210,8 +210,8 @@
     <string name="crash_dialog_title">Audile ist abgestürzt</string>
     <string name="crash_dialog_message">Ein unerwarteter Fehler ist aufgetreten, welcher zum stoppen der App führte. Möchtest du eine Fehlermeldung per Email senden, um zu Helfen das Problem zu lösen?</string>
     <string name="crash_dialog_button_cancel">Abbrechen</string>
-    <string name="main_screen_tap_to_recognize">Tippe zum Erkennen</string>
-    <string name="widget_tap_to_recognize">Tippe zum Erkennen</string>
+    <string name="main_screen_tap_to_recognize">Zum Erkennen antippen</string>
+    <string name="widget_tap_to_recognize">Zum Erkennen antippen</string>
     <string name="widget_listening_subtitle_extra_time">Noch ein Versuch</string>
     <string name="notification_tap_to_recognize_subtitle">Identifiziere Musik während andere Apps geöffnet sind</string>
     <string name="notification_listening_subtitle_extra_time">Noch ein Versuch</string>
@@ -277,4 +277,26 @@
     <string name="notification_channel_desc_background_result">Zeigt Song-Ergebnisse an, wenn die App minimiert ist oder du dich nicht auf dem Erkennungsbildschirm befindest</string>
     <string name="searching_for_lyrics">Texten werden gesucht  …</string>
     <string name="no_lyrics_available">Keine Liedtexte für dieses Lied verfügbar</string>
+    <string name="restore_entry_picker_title">Datum zum Wiederherstellen auswählen:</string>
+    <string name="backup_entry_picker_title">Daten zum Sichern auswählen:</string>
+    <string name="backup_estimating_size">App-Datengröße wird geschätzt…</string>
+    <string name="restore_checking_backup">Sicherungsdatei wird überprüft…</string>
+    <string name="restore_in_progress">Wird wiederhergestellt…</string>
+    <string name="restore_result_success">Erfolg!</string>
+    <string name="restore_result_malformed_backup">Diese Sicherungsdatei ist beschädigt.</string>
+    <string name="restore_will_restart_in">Die App wird in %d Sekunden neu gestartet.</string>
+    <string name="backup_restore_result_file_not_found">Sicherungsdatei nicht gefunden.</string>
+    <string name="backup_restore_unhandled_error">Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="toast_no_file_selected">Keine Datei ausgewählt</string>
+    <string name="backup_entry_data">Datenbank und Audio-Beispiele</string>
+    <string name="backup_entry_preferences">Einstellungen</string>
+    <string name="backup_in_progress">Sicherung wird erstellt…</string>
+    <string name="backup_result_success">Sicherung erfolgreich erstellt!</string>
+    <string name="restore_erase_warning">Durch die Wiederherstellung werden die aktuellen Daten gelöscht und durch den Inhalt der Sicherung ersetzt. Dieser Vorgang kann nicht rückgängig gemacht werden. Sichere alle wichtigen Daten, bevor du fortfährst.</string>
+    <string name="restore_info_restart">Die App wird nach Abschluss der Wiederherstellung neu gestartet.</string>
+    <string name="restore_result_not_backup">Diese Datei ist keine gültige Sicherung.</string>
+    <string name="restore_result_newer_version">Diese Sicherung wurde mit einer neueren App-Version erstellt und kann nicht wiederhergestellt werden.</string>
+    <string name="backup_restore_unhandled_error_message">Bitte stelle sicher, dass du über genügend freien Speicherplatz verfügst, und versuche es erneut.</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Unvollständige Sicherungsdatei konnte nicht gelöscht werden</string>
+    <string name="toast_press_again_to_confirm">Zum Bestätigen erneut drücken</string>
 </resources>

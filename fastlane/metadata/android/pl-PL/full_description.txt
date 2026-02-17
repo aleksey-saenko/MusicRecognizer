@@ -1,0 +1,10 @@
+<b>Audile</b> to aplikacja typu open source do rozpoznawania muzyki, która pomaga szybko i dokładnie zidentyfikować utwór odtwarzany w pobliżu.
+Aplikacja integruje AudD, ACRCloud i Shazam w celu identyfikacji utworów oraz wykorzystuje Odesli do pobierania dodatkowych linków do utworów specyficznych dla danej platformy.
+
+<b>Funkcje:</b>
+
+<b>Rozpoznawanie</b> — Audile umożliwia rozpoznawanie utworów za pomocą jednego kliknięcia. Aplikacja zapisze nagranie, jeśli nie ma połączenia z Internetem, a proces rozpoznawania zostanie wykonany po ponownym połączeniu się z Internetem. W preferencjach można dostosować domyślne zachowanie w przypadku nieudanego rozpoznania (brak połączenia z Internetem, brak dopasowań, inna awaria).
+<b>Korzystanie w tle</b> — korzystaj z aplikacji płynnie z poziomu paska powiadomień, widżetu na ekranie głównym lub kafelka szybkich ustawień. Zarządzaj procesem rozpoznawania i uzyskaj informacje o utworze bez uruchamiania aplikacji.
+<b>Informacje o utworze</b> — w przypadku pomyślnego rozpoznania wyświetlane są informacje o utworze, takie jak nazwa, wykonawca, album i rok, okładka, linki do tego utworu w popularnych serwisach muzycznych oraz tekst piosenki.
+<b>Biblioteka</b> — wszystkie rozpoznane utwory są przechowywane w bibliotece aplikacji. Możesz filtrować listę utworów, tworzyć kolekcję ulubionych, wyszukiwać utwory lub je usuwać.
+<b>Preferencje</b> — aplikacja posiada szereg opcji dostosowywania jej działania i wyglądu, które można znaleźć na ekranie ustawień.

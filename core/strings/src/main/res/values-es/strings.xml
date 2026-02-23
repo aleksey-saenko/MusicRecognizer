@@ -26,7 +26,7 @@
     <string name="result_message_recording_error">Se ha producido un error durante la grabación del audio</string>
     <string name="result_message_auth_error">Por favor, verifica tus credenciales para el servicio de reconocimiento seleccionado y vuelve a intentarlo</string>
     <string name="permissions_denied_message">Se han rechazado solicitudes de permisos anteriores. Puede cambiar su decisión a través de la configuración.</string>
-    <string name="onboarding_permission_message">La aplicación necesita permiso para grabar audio para funcionar correctamente. Al otorgar este permiso, acepta que los datos grabados serán utilizados por <![CDATA[<a href="%1$s"> servicio remoto </a> ]]> para el reconocimiento de música. La aplicación no utiliza estos datos para ningún otro propósito.</string>
+    <string name="onboarding_permission_message">La aplicación necesita permiso para grabar audio para funcionar correctamente. Al otorgar este permiso, acepta que los datos grabados serán utilizados por <![CDATA[<a href="%1$s">servicio remoto</a> ]]> para el reconocimiento de música. La aplicación no utiliza estos datos para ningún otro propósito.</string>
     <string name="app_shortcut_open_and_recognize_long">Abrir la aplicación y reconocerla</string>
     <string name="nav_back">Atrás</string>
     <string name="nav_forward">Adelante</string>
@@ -60,7 +60,7 @@
     <string name="permission_granted">Permiso concedido</string>
     <string name="onboarding_welcome">Bienvenido/-a</string>
     <string name="onboarding_welcome_message">Audile es una aplicación de reconocimiento de música que puede ayudarte a reconocer de forma rápida y precisa una pista de música que se reproduce cerca de ti.</string>
-    <string name="onboarding_token_message">La aplicación utiliza el servicio de reconocimiento de música AudD, que no es gratuito y requiere un token API especial. Regístrate <![CDATA[<a href="%1$s"> aquí </a> ]]> para obtener tu token de prueba de 14 días, si aún no tienes uno.</string>
+    <string name="onboarding_token_message">La aplicación utiliza el servicio de reconocimiento de música AudD, que no es gratuito y requiere un token API especial. Regístrate <![CDATA[<a href="%1$s">aquí</a> ]]> para obtener tu token de prueba de 14 días, si aún no tienes uno.</string>
     <string name="onboarding_token_validating">Validando</string>
     <string name="onboarding_final_title">Estamos listos para empezar</string>
     <string name="onboarding_token_skip_message">Omitir este paso limitará tus reconocimientos diarios, pero siempre podrás especificar tu token personal más adelante en las preferencias.</string>

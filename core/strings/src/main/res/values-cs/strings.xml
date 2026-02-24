@@ -228,9 +228,9 @@
     <string name="pref_title_experimental_features">Experimentální funkce</string>
     <string name="pref_subtitle_experimental_features">Ve vývoji</string>
     <string name="pref_title_backup_and_restore">Záloha a obnovení</string>
-    <string name="pref_subtitle_backup_and_restore">Zálohujte svou databázi a předvolby</string>
+    <string name="pref_subtitle_backup_and_restore">Vytvořit zálohu dat aplikace</string>
     <string name="pref_title_backup">Záloha</string>
-    <string name="pref_subtitle_backup">Exportovat data a předvolby aplikace</string>
+    <string name="pref_subtitle_backup">Zálohovat databázi a předvolby aplikace</string>
     <string name="backup_dialog_title">Záloha</string>
     <string name="backup_dialog_button_backup">Zálohovat</string>
     <string name="restore_dialog_title">Obnovení</string>
@@ -254,7 +254,7 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud je placená služba, která nabízí možnost bezplatného zkušebního období a omezeného použití pro vývojové účely. Chcete-li tuto službu používat, musíte si vytvořit účet a zaregistrovat projekt. Pokud se setkáte s jakýmikoli obtížemi, nahlédněte do <![CDATA[<a href="%1$s">této příručky</a>]]>.</string>
     <string name="acr_cloud_help_dialog_step3">Nastavte preferovaný zvukový engine. Pro obecné použití je nejpřesnější možnost „Audio fingerprinting“</string>
     <string name="acr_cloud_help_dialog_step2">Nastavte zdroj zvuku na „Nahraný zvuk“</string>
-    <string name="pref_subtitle_restore">Obnovit data a předvolby aplikace ze zálohy</string>
+    <string name="pref_subtitle_restore">Obnovit data aplikace ze zálohy</string>
     <string name="pref_title_restore">Obnovení</string>
     <string name="about_pref_title_license">Licence</string>
     <string name="about_pref_title_third_licenses">Licence třetích stran</string>
@@ -286,4 +286,26 @@
     <string name="notification_channel_desc_background_result">Zobrazí výsledky skladeb při minimalizované aplikaci nebo když se nenacházíte na obrazovce rozpoznávání</string>
     <string name="searching_for_lyrics">Hledání textů…</string>
     <string name="no_lyrics_available">Pro tuto skladbu nejsou dostupné žádné texty</string>
+    <string name="backup_entry_data">Databáze a vzorky zvuku</string>
+    <string name="backup_entry_preferences">Předvolby</string>
+    <string name="backup_entry_picker_title">Vyberte data k zálohování:</string>
+    <string name="restore_entry_picker_title">Vyberte data k obnovení:</string>
+    <string name="backup_estimating_size">Odhadování velikosti dat aplikace…</string>
+    <string name="backup_in_progress">Vytváření zálohy…</string>
+    <string name="backup_result_success">Záloha úspěšně vytvořena!</string>
+    <string name="restore_erase_warning">Obnovením se smažou aktuální data a budou nahrazena obsahem zálohy. Tato akce je nevratná. Před pokračováním zálohujte všechna důležitá data.</string>
+    <string name="restore_info_restart">Aplikace se po dokončení obnovení restartuje.</string>
+    <string name="restore_checking_backup">Kontrola souboru zálohy…</string>
+    <string name="restore_in_progress">Obnova…</string>
+    <string name="restore_result_success">Úspěch!</string>
+    <string name="restore_result_malformed_backup">Tento soubor zálohy je poškozen.</string>
+    <string name="restore_result_not_backup">Tento soubor není platnou zálohou.</string>
+    <string name="restore_result_newer_version">Tato záloha byla vytvořena novější verzí aplikace a nelze ji obnovit.</string>
+    <string name="restore_will_restart_in">Aplikace se restartuje za %d sekund.</string>
+    <string name="backup_restore_result_file_not_found">Soubor zálohy nenalezen.</string>
+    <string name="backup_restore_unhandled_error">Došlo k neočekávané chybě.</string>
+    <string name="backup_restore_unhandled_error_message">Ujistěte se prosím, že máte dostatek volného místa, a zkuste to znovu.</string>
+    <string name="toast_no_file_selected">Není vybrán žádný soubor</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Nepodařilo se smazat soubor nedokončené zálohy</string>
+    <string name="toast_press_again_to_confirm">Stiskněte znovu pro potvrzení</string>
 </resources>

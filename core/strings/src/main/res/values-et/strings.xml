@@ -217,8 +217,8 @@
     <string name="backup_dialog_title">Varundus</string>
     <string name="backup_dialog_button_backup">Varunda</string>
     <string name="pref_title_backup">Varundus</string>
-    <string name="pref_subtitle_backup">Ekspordi rakenduse andmed ja eelistused</string>
-    <string name="pref_subtitle_backup_and_restore">Varunda oma rakenduse andmebaas ja eelistused</string>
+    <string name="pref_subtitle_backup">Varunda rakenduse andmed ja eelistused</string>
+    <string name="pref_subtitle_backup_and_restore">Varunda oma rakenduse andmed</string>
     <string name="about_purpose_track_links_service">Täiendavad platvormikohased lugude lingid</string>
     <string name="about_pref_title_github_repo">Lähtekoodi hoidla GitHubis</string>
     <string name="about_pref_subtitle_github_repo">Lähtekood, veahaldus ja muu teave arenduse kohta</string>
@@ -230,7 +230,7 @@
     <string name="about_pref_group_powered_by">Kasutusel on</string>
     <string name="about_purpose_recognition_service">Tagab loo tuvastamise ja esmase meteateabe</string>
     <string name="pref_title_restore">Taastamine</string>
-    <string name="pref_subtitle_restore">Taasta rakenduse andmed ja eelistused varukoopiast</string>
+    <string name="pref_subtitle_restore">Taasta rakenduse andmed varukoopiast</string>
     <string name="about_pref_title_license">Litsents</string>
     <string name="about_pref_title_licenses">Litsentsid</string>
     <string name="about_pref_subtitle_license">Audile on avaldatud GNU Üldise Avaliku Litsentsi versioon 3 või hilisema alusel</string>
@@ -277,4 +277,26 @@
     <string name="notification_channel_desc_background_result">Näitab tulemusi, kui rakendus on minimeeritud või sa tuvastamisvaade pole muul põhjusel kuvatud</string>
     <string name="searching_for_lyrics">Otsin laulusõnu…</string>
     <string name="no_lyrics_available">Selle loo jaoks pole laulusõnu saadaval</string>
+    <string name="backup_entry_data">Andmebaas ja helinäidised</string>
+    <string name="backup_entry_preferences">Eelistused</string>
+    <string name="backup_entry_picker_title">Vali varundatavad andmed:</string>
+    <string name="restore_entry_picker_title">Vali taastatavad andmed:</string>
+    <string name="backup_estimating_size">Hindan rakenduse andmemahtu…</string>
+    <string name="backup_in_progress">Koostan varukoopiat…</string>
+    <string name="backup_result_success">Varukoopia tegemine õnnestus!</string>
+    <string name="restore_erase_warning">Taastamisel kustutatakse senised andmed ja asendatakse nad varukoopia sisuga. Seda tegevust ei saa tagasi pöörata. Enne jätkamist kontrolli, et kõik oluline on varundatud.</string>
+    <string name="restore_info_restart">Peale taastamise lõppemist käivitub rakendus uuesti.</string>
+    <string name="restore_checking_backup">Kontrollin varukoopia faili…</string>
+    <string name="restore_in_progress">Taastan…</string>
+    <string name="restore_result_success">Valmis!</string>
+    <string name="restore_result_malformed_backup">See varukoopia fail on vigane.</string>
+    <string name="restore_result_not_backup">See fail pole korrektne varukoopia.</string>
+    <string name="restore_result_newer_version">See varukoopia on tehtud rakenduse uuema versiooniga ja pole siinkohal taastamiseks kasutatav.</string>
+    <string name="restore_will_restart_in">Rakendus käivitub uuesti %d sekundi pärast.</string>
+    <string name="backup_restore_result_file_not_found">Varukoopiafaili ei leidu.</string>
+    <string name="backup_restore_unhandled_error">Tekkis tundmatu viga.</string>
+    <string name="backup_restore_unhandled_error_message">Palun kontrolli, et nutiseadmes on piisavalt vaba ruumi ja proovi uuesti.</string>
+    <string name="toast_no_file_selected">Sa pole ühtegi faili valinud</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Mittetäieliku varukoopiafaili kustutamine ei õnnestunud</string>
+    <string name="toast_press_again_to_confirm">Kinnitamiseks vajuta uuesti</string>
 </resources>

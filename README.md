@@ -1,3 +1,10 @@
+> [!WARNING]
+> **Free and Open-Source Android is under threat.**
+>
+> Google will turn Android into a locked-down platform, restricting your essential freedom to install apps of your choice. Make your voice heard.
+>
+> [**Keep Android Open**](https://keepandroidopen.org/).
+
 # Audile
 
 Audile is an open-source music recognition application that can help you quickly and accurately identify a music track playing near you.

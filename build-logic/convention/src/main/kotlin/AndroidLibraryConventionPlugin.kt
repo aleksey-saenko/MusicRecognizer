@@ -1,4 +1,4 @@
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.mrsep.musicrecognizer.configureDetekt
 import com.mrsep.musicrecognizer.configureKotlinAndroid
 import com.mrsep.musicrecognizer.libs
@@ -15,7 +15,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
                 apply("io.gitlab.arturbosch.detekt")
             }
 
@@ -26,6 +25,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             configureDetekt(extensions.getByType<DetektExtension>())
 
             dependencies {
+                add("implementation", libs.findLibrary("androidx.core.ktx").get())
                 add("testImplementation", libs.findLibrary("junit4").get())
                 add("androidTestImplementation", libs.findLibrary("androidx.test.ext.junit").get())
             }

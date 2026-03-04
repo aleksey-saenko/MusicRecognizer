@@ -43,6 +43,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
     packaging {
         resources {

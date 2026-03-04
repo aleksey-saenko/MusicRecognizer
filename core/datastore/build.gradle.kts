@@ -47,8 +47,8 @@ protobuf {
         artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
+        all().configureEach {
+            builtins {
                 register("java") {
                     option("lite")
                 }

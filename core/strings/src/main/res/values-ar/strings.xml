@@ -292,4 +292,11 @@
     <string name="notification_channel_desc_foreground_result">يعرض نتائج الأغاني عندما تكون على شاشة التعرف</string>
     <string name="notification_channel_name_background_result">العثور على نتائج الأغاني في الخلفية</string>
     <string name="notification_channel_desc_background_result">يعرض نتائج الأغاني عندما يكون التطبيق مصغرًا أو عندما لا تكون على شاشة التعرف</string>
+    <string name="notification_channel_name_scheduled_result">نتائج الأغاني للتعرفات المجدولة</string>
+    <string name="notification_channel_desc_scheduled_result">يعرض نتائج التعرف على الأغاني التي تمت جدولتها دون اتصال بالإنترنت أو في حالات أخرى</string>
+    <string name="crash_dialog_title">Audile تعطل</string>
+    <string name="crash_dialog_message">حدث خطأ غير متوقع، مما أدى إلى توقف التطبيق. هل ترغب في إرسال تقرير الخطأ عبر البريد الإلكتروني للمساعدة في حل المشكلة؟</string>
+    <string name="crash_dialog_comment_prompt">يمكنك إضافة معلومات إضافية هنا:</string>
+    <string name="crash_dialog_button_send">إرسال</string>
+    <string name="crash_dialog_button_cancel">إلغاء</string>
 </resources>

@@ -275,4 +275,20 @@
     <string name="notification_channel_name_background_result">Resultados de músicas encontradas em segundo plano</string>
     <string name="notification_channel_desc_background_result">Mostra resultados de músicas quando a app está minimizada ou quando não está no ecrã de reconhecimento</string>
     <string name="audio_source_dialog_use_alt_device_source">Usar fonte alternativa de áudio do dispositivo</string>
+    <string name="no_lyrics_available">Nenhuma letra disponível para esta música</string>
+    <string name="backup_entry_preferences">Preferências</string>
+    <string name="backup_entry_picker_title">Selecione dados para fazer backup:</string>
+    <string name="restore_entry_picker_title">Selecione dados para restaurar:</string>
+    <string name="backup_estimating_size">A estimar o tamanho dos dados da app…</string>
+    <string name="backup_in_progress">A criar backup…</string>
+    <string name="backup_result_success">Backup criado com sucesso!</string>
+    <string name="restore_checking_backup">A verificar ficheiro de backup…</string>
+    <string name="restore_result_success">Sucesso!</string>
+    <string name="restore_result_malformed_backup">Este ficheiro de backup está corrompido.</string>
+    <string name="restore_result_not_backup">Este ficheiro não é um backup válido.</string>
+    <string name="restore_will_restart_in">A app reiniciará em %d segundos.</string>
+    <string name="backup_restore_result_file_not_found">Ficheiro de backup não encontrado.</string>
+    <string name="backup_restore_unhandled_error">Ocorreu um erro inesperado.</string>
+    <string name="toast_no_file_selected">Nenhum ficheiro selecionado</string>
+    <string name="toast_press_again_to_confirm">Pressione novamente para confirmar</string>
 </resources>

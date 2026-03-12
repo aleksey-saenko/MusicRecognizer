@@ -80,6 +80,40 @@
             </intent-filter>
         </service>
 
+        <!-- Auto-recognition launcher activity -->
+        <activity
+            android:name=".feature.recognition.service.AutoRecognitionLauncherActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MusicRecognizer.Invisible"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="" />
+
+        <!-- Auto-recognition service -->
+        <service
+            android:name=".feature.recognition.service.AutoRecognitionService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <!-- Auto-recognition quick settings tile -->
+        <service
+            android:name=".feature.recognition.service.AutoRecognitionTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_auto_recognize"
+            android:label="@string/auto_recognize_tile_inactive"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="false" />
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".feature.recognition.service.DisableRecognitionControlServiceReceiver"
             android:exported="false" />

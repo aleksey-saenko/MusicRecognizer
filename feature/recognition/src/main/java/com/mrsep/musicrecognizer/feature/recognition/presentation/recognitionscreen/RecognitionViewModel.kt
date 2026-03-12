@@ -40,7 +40,7 @@ internal class RecognitionViewModel @Inject constructor(
     @MainScreenStatusHolder private val statusHolder: RecognitionStatusHolder,
     private val recognitionController: ScreenRecognitionController,
     private val vibrationManager: VibrationManager,
-    preferencesRepository: PreferencesRepository,
+    private val preferencesRepository: PreferencesRepository,
     networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
@@ -86,6 +86,18 @@ internal class RecognitionViewModel @Inject constructor(
 
     fun vibrateResult(isSuccess: Boolean) {
         vibrationManager.vibrateResult(isSuccess)
+    }
+
+    fun stopAutoRecognition() {
+        viewModelScope.launch {
+            preferencesRepository.setAutoRecognizeEnabled(false)
+        }
+    }
+
+    fun startAutoRecognition() {
+        viewModelScope.launch {
+            preferencesRepository.setAutoRecognizeEnabled(true)
+        }
     }
 }
 

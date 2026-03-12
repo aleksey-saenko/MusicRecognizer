@@ -36,6 +36,7 @@ import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRation
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.feature.recognition.BuildConfig
+import com.mrsep.musicrecognizer.feature.recognition.service.AutoRecognitionService
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.ApiUsageLimitedShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.AuthErrorShield
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.shields.BadConnectionShield
@@ -112,6 +113,9 @@ internal fun RecognitionScreen(
                         mediaProjectionLauncher.launch(intent)
                     }
                 }
+                AudioCaptureMode.AutoRecognizer -> {
+                    startAutoRecognizeService(context, viewModel)
+                }
             }
         } else {
             val activity = context.findActivity()
@@ -158,6 +162,9 @@ internal fun RecognitionScreen(
                         mediaProjectionLauncher.launch(intent)
                     }
                 }
+                AudioCaptureMode.AutoRecognizer -> {
+                    startAutoRecognizeService(context, viewModel)
+                }
             }
         } else if (requiredPermissionsState.shouldShowRationale) {
             showPermissionsRationaleDialog = true
@@ -198,9 +205,17 @@ internal fun RecognitionScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             ) {
+                fun stopAutoRecognize() {
+                    viewModel.stopAutoRecognition()
+                    AutoRecognitionService.stop(context)
+                }
                 fun onClick(captureMode: AudioCaptureMode) {
                     if (recognizeStatus.isDone()) return
                     if (preferences.vibrateOnTap()) viewModel.vibrateOnTap()
+                    if (preferences?.autoRecognizeEnabled == true) {
+                        stopAutoRecognize()
+                        return
+                    }
                     if (recognizeStatus is RecognitionStatus.Recognizing) {
                         viewModel.cancelRecognition()
                     } else {
@@ -211,8 +226,10 @@ internal fun RecognitionScreen(
                     title = getButtonTitle(recognizeStatus, autostart),
                     onButtonClick = { defaultCaptureMode?.run(::onClick) },
                     onButtonLongClick = { longClickCaptureMode?.run(::onClick) },
-                    activated = recognizeStatus is RecognitionStatus.Recognizing,
+                    activated = recognizeStatus is RecognitionStatus.Recognizing || preferences?.autoRecognizeEnabled == true,
                     soundLevelState = soundLevelState,
+                    autoRecognizeActive = preferences?.autoRecognizeEnabled == true,
+                    onAutoRecognizeTap = { stopAutoRecognize() },
                     modifier = Modifier.padding(24.dp)
                 )
             }
@@ -487,4 +504,12 @@ private fun RemoteRecognitionResult.Error.getErrorInfo() = when (this) {
 
     is RemoteRecognitionResult.Error.UnhandledError ->
         "Message:\n$message\n\nCause:\n${cause?.stackTraceToString()}"
+}
+
+private fun startAutoRecognizeService(
+    context: android.content.Context,
+    viewModel: RecognitionViewModel
+) {
+    viewModel.startAutoRecognition()
+    AutoRecognitionService.start(context)
 }

@@ -112,6 +112,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     useGridForRecognitionQueue = useGridForRecognitionQueue,
     showRecognitionDateInLibrary = showRecognitionDateInLibrary,
     showCreationDateInQueue = showCreationDateInQueue,
+    autoRecognizeEnabled = autoRecognizeEnabled,
     themeMode = when (themeMode!!) {
         UserPreferencesProto.ThemeModeProto.FOLLOW_SYSTEM -> ThemeMode.FollowSystem
         UserPreferencesProto.ThemeModeProto.ALWAYS_LIGHT -> ThemeMode.AlwaysLight
@@ -126,7 +127,8 @@ internal fun AudioCaptureModeProto.toDomain() = when (this) {
     AudioCaptureModeProto.Microphone -> AudioCaptureMode.Microphone
     AudioCaptureModeProto.Device -> AudioCaptureMode.Device
     AudioCaptureModeProto.Auto -> AudioCaptureMode.Auto
-    AudioCaptureModeProto.UNRECOGNIZED -> error("Unexpected proto value")
+    AudioCaptureModeProto.AutoRecognizer -> AudioCaptureMode.AutoRecognizer
+    AudioCaptureModeProto.UNRECOGNIZED -> AudioCaptureMode.Microphone
 }
 
 internal fun UserPreferencesProto.FallbackActionProto.toDomain() = when (this) {

@@ -8,4 +8,5 @@ enum AudioCaptureModeProto {
     Microphone = 1;
     Device = 2;
     Auto = 3;
+    AutoRecognizer = 4;
 }

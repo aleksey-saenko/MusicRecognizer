@@ -26,19 +26,25 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.service.AutoRecognitionService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
     private var isServiceStartupHandled = false
+
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -55,6 +61,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) {
             handleRecognitionRequest(intent)
         }
+        resetStaleAutoRecognizePreference()
         startControlServiceOnDemand()
         enableEdgeToEdge()
         setContent {
@@ -106,6 +113,15 @@ class MainActivity : ComponentActivity() {
             ACTION_MAIN -> {
                 if (intent.getBooleanExtra(KEY_RESTART_ON_BACKUP_RESTORE, false)) return
                 viewModel.requestRecognitionOnStartupIfPreferred()
+            }
+        }
+    }
+
+    // Reset autoRecognizeEnabled preference if service isn't actually running (e.g., after reinstall)
+    private fun resetStaleAutoRecognizePreference() {
+        if (!AutoRecognitionService.isRunning) {
+            lifecycleScope.launch {
+                preferencesRepository.setAutoRecognizeEnabled(false)
             }
         }
     }

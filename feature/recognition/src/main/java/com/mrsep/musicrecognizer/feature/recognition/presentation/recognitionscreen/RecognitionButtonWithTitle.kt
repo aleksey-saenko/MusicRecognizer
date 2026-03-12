@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.clickable
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
@@ -27,7 +28,9 @@ internal fun RecognitionButtonWithTitle(
     soundLevelState: State<Float>,
     onButtonClick: () -> Unit,
     onButtonLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    autoRecognizeActive: Boolean = false,
+    onAutoRecognizeTap: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier,
@@ -36,7 +39,7 @@ internal fun RecognitionButtonWithTitle(
     ) {
         AnimatedContent(
             contentAlignment = Alignment.Center,
-            targetState = title,
+            targetState = autoRecognizeActive,
             transitionSpec = {
                 (slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Up,
@@ -53,18 +56,37 @@ internal fun RecognitionButtonWithTitle(
                 )
             },
             label = "buttonTitleTransition"
-        ) {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Medium
-                ),
-                textAlign = TextAlign.Center,
+        ) { isAutoActive ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clearAndSetSemantics { }
                     .fillMaxWidth()
+                    .let { mod ->
+                        if (isAutoActive) mod.clickable { onAutoRecognizeTap?.invoke() }
+                        else mod
+                    }
                     .padding(bottom = 40.dp)
-            )
+            ) {
+                Text(
+                    text = if (isAutoActive) stringResource(StringsR.string.auto_recognize_button_active) else title,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
+                    textAlign = TextAlign.Center,
+                )
+                if (isAutoActive) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(StringsR.string.auto_recognize_tap_to_turn_off),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Normal
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
         }
 
         RecognitionButton(

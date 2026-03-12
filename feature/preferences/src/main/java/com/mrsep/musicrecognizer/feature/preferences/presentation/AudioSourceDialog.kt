@@ -57,6 +57,8 @@ internal fun AudioSourceDialog(
     onChangeUseAltDeviceSoundSource: (Boolean) -> Unit,
     onDismissClick: () -> Unit,
 ) {
+    val availableOptions = AudioCaptureMode.entries.toImmutableList()
+
     AlertDialog(
         title = {
             Text(text = stringResource(StringsR.string.audio_source_dialog_title))
@@ -75,7 +77,7 @@ internal fun AudioSourceDialog(
                 Text(text = stringResource(StringsR.string.audio_source_dialog_default_mode_message))
                 Spacer(Modifier.height(16.dp))
                 AudioCaptureModeDropdownMenu(
-                    modes = allOptions,
+                    modes = availableOptions.filter { it != AudioCaptureMode.AutoRecognizer }.toImmutableList(),
                     label = stringResource(StringsR.string.audio_source_dialog_default_mode_title),
                     selectedMode = defaultAudioCaptureMode,
                     onSelectMode = onChangeDefaultAudioCaptureMode,
@@ -84,7 +86,7 @@ internal fun AudioSourceDialog(
                 Text(text = stringResource(StringsR.string.audio_source_dialog_button_long_press_mode_message))
                 Spacer(Modifier.height(16.dp))
                 AudioCaptureModeDropdownMenu(
-                    modes = allOptions,
+                    modes = availableOptions,
                     label = stringResource(StringsR.string.audio_source_dialog_button_long_press_mode_title),
                     selectedMode = mainButtonLongPressAudioCaptureMode,
                     onSelectMode = onChangeMainButtonLongPressAudioCaptureMode,
@@ -183,14 +185,13 @@ private fun AudioCaptureModeDropdownMenu(
     }
 }
 
-private val allOptions = AudioCaptureMode.entries.toImmutableList()
-
 @Composable
 private fun AudioCaptureMode.getTitle(): String {
     return when (this) {
         AudioCaptureMode.Microphone -> stringResource(StringsR.string.audio_capture_mode_microphone)
         AudioCaptureMode.Device -> stringResource(StringsR.string.audio_capture_mode_device)
         AudioCaptureMode.Auto -> stringResource(StringsR.string.audio_capture_mode_auto)
+        AudioCaptureMode.AutoRecognizer -> stringResource(StringsR.string.audio_capture_mode_auto_recognizer)
     }
 }
 

@@ -7,6 +7,8 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -15,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioCaptureConfig
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioRecordingControllerFactory
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
@@ -84,7 +87,12 @@ class AutoRecognitionService : Service() {
 
     private fun startAutoRecognition() {
         try {
-            startForeground(NOTIFICATION_ID, createNotification())
+            val notification = createNotification()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_MICROPHONE)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
         } catch (e: SecurityException) {
             Log.e(TAG, "Cannot start foreground service - missing permissions", e)
             stopSelf()
@@ -116,16 +124,25 @@ class AutoRecognitionService : Service() {
     }
 
     private suspend fun performRecognition() {
-        val captureConfig = AudioCaptureConfig.Microphone
-        val audioController = audioRecordingControllerFactory.getAudioController(captureConfig)
+        Log.d(TAG, "Starting recognition cycle")
 
         recognitionInteractor.cancelAndJoin()
+
+        val userPreferences = preferencesRepository.userPreferencesFlow.first()
+        val captureConfig = when (userPreferences.defaultAudioCaptureMode) {
+            AudioCaptureMode.Microphone -> AudioCaptureConfig.Microphone
+            AudioCaptureMode.Device -> AudioCaptureConfig.Device(null)
+            AudioCaptureMode.Auto -> AudioCaptureConfig.Auto(null)
+            AudioCaptureMode.AutoRecognizer -> AudioCaptureConfig.Auto(null)
+        }
+        val audioController = audioRecordingControllerFactory.getAudioController(captureConfig)
 
         with(serviceScope) {
             recognitionInteractor.launchRecognition(audioController)
         }
 
         recognitionInteractor.status.transformWhile { status ->
+            Log.d(TAG, "Status update: $status")
             emit(status)
             status !is RecognitionStatus.Done
         }.collect { status ->
@@ -134,12 +151,14 @@ class AutoRecognitionService : Service() {
                 recognitionInteractor.resetFinalStatus()
             }
         }
+        Log.d(TAG, "Recognition cycle completed")
     }
 
     private suspend fun handleRecognitionResult(result: RecognitionResult) {
         when (result) {
             is RecognitionResult.Success -> {
                 val trackId = result.track.id
+                Log.d(TAG, "Recognition success: ${result.track.title} by ${result.track.artist}")
                 if (trackId != lastRecognizedTrackId) {
                     lastRecognizedTrackId = trackId
                     showSongNotification(result.track)
@@ -148,8 +167,12 @@ class AutoRecognitionService : Service() {
             is RecognitionResult.Error -> {
                 Log.e(TAG, "Recognition error: ${result.remoteError}")
             }
-            is RecognitionResult.NoMatches,
-            is RecognitionResult.ScheduledOffline -> { /* no-op */ }
+            is RecognitionResult.NoMatches -> {
+                Log.d(TAG, "Recognition result: NoMatches")
+            }
+            is RecognitionResult.ScheduledOffline -> {
+                Log.d(TAG, "Recognition result: ScheduledOffline")
+            }
         }
     }
 

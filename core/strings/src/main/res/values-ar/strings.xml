@@ -160,7 +160,7 @@
     <string name="lyrics">الكلمات</string>
     <string name="share_music_services_links">روابط خدمات الموسيقى</string>
     <string name="track_not_found_title">لم يتم العثور على المقطوعة</string>
-    <string name="track_not_found_message">حدث خطأ ما، ربما تمت إزالة المقطوعة أو تعديله بشكل غير صحيح.</string>
+    <string name="track_not_found_message">حدث خطأ ما، ربما تمت إزالة المقطوعة أو تعديله بشكل غير صحيح</string>
     <string name="searching_for_lyrics">البحث عن كلمات الأغنية…</string>
     <string name="no_lyrics_available">لا تتوفر كلمات لهذه الأغنية</string>
     <string name="lyrics_start_autoscroll">بدء التمرير التلقائي</string>
@@ -246,7 +246,7 @@
     <string name="backup_dialog_title">النسخ الاحتياطي</string>
     <string name="backup_dialog_button_backup">انسخ احتياطيًا</string>
     <string name="restore_dialog_title">الاستعادة</string>
-    <string name="restore_dialog_button_restore">استعد</string>
+    <string name="restore_dialog_button_restore">استعِدْ</string>
     <string name="backup_entry_data">قاعدة البيانات والعينات الصوتية</string>
     <string name="backup_entry_preferences">التفضيلات</string>
     <string name="backup_entry_picker_title">حدد البيانات المراد نسخها احتياطيًا:</string>

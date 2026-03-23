@@ -63,4 +63,5 @@
     <string name="recognition">Rozpoznawanie</string>
     <string name="button_retry_recognition">Ponów</string>
     <string name="result_title_no_matches">Niczego nie znaleziono</string>
+    <string name="onboarding_permission_message">Aplikacja wymaga pozwolenia na nagrywanie dźwięku, aby działać poprawnie. Udzielając tego pozwolenia, zgadzasz się na wykorzystanie Twoich zarejestrowanych danych przez <![CDATA[<a href="%1$s">usługę zdalną</a>]]> do rozpoznawania muzyki. Aplikacja nie wykorzystuje tych danych do żadnych innych celów.</string>
 </resources>

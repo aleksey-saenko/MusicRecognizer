@@ -25,7 +25,7 @@
     <string name="nav_back">رجوع</string>
     <string name="nav_forward">للأمام</string>
     <string name="loading">يجري التحميل</string>
-    <string name="apply">طبِّق</string>
+    <string name="apply">تطبيق</string>
     <string name="applied">تم التطبيق</string>
     <string name="cancel">إلغاء</string>
     <string name="reset">إعادة الضبط</string>
@@ -133,7 +133,7 @@
     <string name="recording_stop_player">إيقاف</string>
     <string name="delete_recognitions_title">حذف التعرفات</string>
     <string name="delete_recognitions_message">هل أنت متأكد من أنك تريد إلغاء وحذف التعرفات المجدولة المحددة؟ لا يمكن التراجع عن هذا الإجراء.</string>
-    <string name="mark_track_as_favorite">ضع علامة كمفضل</string>
+    <string name="mark_track_as_favorite">ضع علامة كمفضلة</string>
     <string name="unmark_track_as_favorite">إلغاء علامة المفضلة</string>
     <string name="show_track">إظهار المقطوعة</string>
     <string name="show_lyrics">عرض الكلمات</string>

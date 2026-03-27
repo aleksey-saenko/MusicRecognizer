@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.MediaExtractorCompat
+import androidx.media3.inspector.MediaExtractorCompat
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioSample
 import dagger.hilt.android.qualifiers.ApplicationContext

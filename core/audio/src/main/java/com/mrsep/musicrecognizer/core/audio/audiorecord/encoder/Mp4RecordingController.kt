@@ -13,6 +13,7 @@ import androidx.media3.muxer.Mp4Muxer
 import androidx.media3.muxer.Mp4Muxer.LAST_SAMPLE_DURATION_BEHAVIOR_SET_FROM_END_OF_STREAM_BUFFER_OR_DUPLICATE_PREVIOUS
 import androidx.media3.muxer.MuxerException
 import androidx.media3.muxer.MuxerUtil
+import androidx.media3.muxer.SeekableMuxerOutput
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderDispatcher
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderHandler
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
@@ -230,7 +231,7 @@ internal class Mp4RecordingController(
             channel.close(e)
         } finally {
             codecRef?.run { stop(); release() }
-            muxers.forEach { _, muxer -> muxer.release() }
+            muxers.forEach { (_, muxer) -> muxer.release() }
             channel.close()
         }
     }
@@ -277,7 +278,7 @@ private class MuxerWrapper(
     @Throws(MuxerException::class)
     fun writeBuffer(byteBuf: ByteBuffer, bufferInfo: MediaCodec.BufferInfo) {
         check(!isReleased)
-        val muxer = muxer ?: Mp4Muxer.Builder(outputFile.outputStream())
+        val muxer = muxer ?: Mp4Muxer.Builder(SeekableMuxerOutput.of(outputFile.absolutePath))
             // Avoid to place metadata reserved space to minimize result file size
             .setAttemptStreamableOutputEnabled(false)
             .setSampleBatchingEnabled(false)

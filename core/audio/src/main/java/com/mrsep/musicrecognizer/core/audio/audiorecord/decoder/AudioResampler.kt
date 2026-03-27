@@ -31,7 +31,7 @@ class AudioResampler {
             )
             val outputFormat = sonic.configure(inputFormat)
             // Prepare Sonic
-            sonic.flush()
+            sonic.flush(AudioProcessor.StreamMetadata.DEFAULT)
 
             val inputBuf = ByteBuffer.wrap(decodedAudio.data).order(ByteOrder.nativeOrder())
             sonic.queueInput(inputBuf)

@@ -636,30 +636,36 @@
         },
         {
             "uniqueId": "androidx.concurrent:concurrent-futures",
-            "artifactVersion": "1.1.0",
-            "name": "AndroidX Futures",
+            "artifactVersion": "1.2.0",
+            "name": "Futures",
             "description": "Androidx implementation of Guava's ListenableFuture",
-            "website": "https://developer.android.com/topic/libraries/architecture/index.html",
+            "website": "https://developer.android.com/jetpack/androidx/releases/concurrent#1.2.0",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            },
             "licenses": [
                 "Apache-2.0"
             ]
         },
         {
             "uniqueId": "androidx.concurrent:concurrent-futures-ktx",
-            "artifactVersion": "1.1.0",
-            "name": "AndroidX Futures Kotlin Extensions",
+            "artifactVersion": "1.2.0",
+            "name": "Futures Kotlin Extensions",
             "description": "Kotlin Extensions for Androidx implementation of Guava's ListenableFuture",
-            "website": "https://developer.android.com/topic/libraries/architecture/index.html",
+            "website": "https://developer.android.com/jetpack/androidx/releases/concurrent#1.2.0",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            },
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1518,7 +1524,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-common",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 common module",
             "description": "Media3 common module",
             "developers": [
@@ -1532,7 +1538,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-container",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 Container module",
             "description": "Media3 Container module",
             "developers": [
@@ -1546,7 +1552,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-database",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 database module",
             "description": "Media3 database module",
             "developers": [
@@ -1560,7 +1566,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-datasource",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 DataSource module",
             "description": "Media3 DataSource module",
             "developers": [
@@ -1574,7 +1580,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-decoder",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 decoder module",
             "description": "Media3 decoder module",
             "developers": [
@@ -1588,7 +1594,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-exoplayer",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 ExoPlayer module",
             "description": "Media3 ExoPlayer module",
             "developers": [
@@ -1602,7 +1608,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-extractor",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 Extractor module",
             "description": "Media3 Extractor module",
             "developers": [
@@ -1615,8 +1621,22 @@
             ]
         },
         {
+            "uniqueId": "androidx.media3:media3-inspector",
+            "artifactVersion": "1.10.0",
+            "name": "Media3 Inspector module",
+            "description": "Media3 Inspector module",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.media3:media3-muxer",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0",
             "name": "Media3 Muxer module",
             "description": "Media3 Muxer module",
             "developers": [

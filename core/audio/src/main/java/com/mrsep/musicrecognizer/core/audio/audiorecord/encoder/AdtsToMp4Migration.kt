@@ -6,12 +6,12 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.util.MediaFormatUtil
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.common.util.Util.getBufferFlagsFromMediaCodecFlags
 import androidx.media3.container.Mp4TimestampData
 import androidx.media3.container.Mp4TimestampData.unixTimeToMp4TimeSeconds
-import androidx.media3.exoplayer.MediaExtractorCompat
+import androidx.media3.inspector.MediaExtractorCompat
 import androidx.media3.muxer.BufferInfo
 import androidx.media3.muxer.Mp4Muxer
+import androidx.media3.muxer.SeekableMuxerOutput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -25,7 +25,7 @@ class AdtsToMp4Migration (private val appContext: Context) {
         input: File, output: File, creationTimestamp: Instant
     ) = withContext(Dispatchers.IO) {
         val extractor = MediaExtractorCompat(appContext)
-        val muxer = Mp4Muxer.Builder(output.outputStream())
+        val muxer = Mp4Muxer.Builder(SeekableMuxerOutput.of(output.absolutePath))
             // Avoid to place metadata reserved space to minimize result file size
             .setAttemptStreamableOutputEnabled(false)
             .build()
@@ -44,8 +44,7 @@ class AdtsToMp4Migration (private val appContext: Context) {
 
             do {
                 val sampleSize = extractor.sampleSize.toInt()
-                val sampleFlags = getBufferFlagsFromMediaCodecFlags(extractor.getSampleFlags())
-                val bufferInfo = BufferInfo(extractor.sampleTime, sampleSize, sampleFlags)
+                val bufferInfo = BufferInfo(extractor.sampleTime, sampleSize, extractor.sampleFlags)
                 val sampleBuffer = ByteBuffer.allocate(sampleSize)
                 extractor.readSampleData(sampleBuffer,  /* offset= */0)
                 muxer.writeSampleData(muxerTrackId, sampleBuffer, bufferInfo)

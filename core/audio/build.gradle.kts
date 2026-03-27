@@ -12,9 +12,10 @@ dependencies {
     implementation(projects.core.domain)
     implementation(libs.kotlinx.coroutinesAndroid)
 
+    implementation(libs.androidx.media3.container)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.extractor)
-    implementation(libs.androidx.media3.container)
+    implementation(libs.androidx.media3.inspector)
     implementation(libs.androidx.media3.muxer)
 
     testImplementation(libs.junit4)

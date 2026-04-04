@@ -246,7 +246,7 @@
     <string name="backup_dialog_title">النسخ الاحتياطي</string>
     <string name="backup_dialog_button_backup">انسخ احتياطيًا</string>
     <string name="restore_dialog_title">الاستعادة</string>
-    <string name="restore_dialog_button_restore">استعِدْ</string>
+    <string name="restore_dialog_button_restore">الاستعادة</string>
     <string name="backup_entry_data">قاعدة البيانات والعينات الصوتية</string>
     <string name="backup_entry_preferences">التفضيلات</string>
     <string name="backup_entry_picker_title">حدد البيانات المراد نسخها احتياطيًا:</string>
@@ -267,7 +267,7 @@
     <string name="backup_restore_unhandled_error">حدث خطأ غير متوقع.</string>
     <string name="backup_restore_unhandled_error_message">يُرجى التأكد من وجود مساحة تخزين كافية لديك، ثم حاول مرة أخرى.</string>
     <string name="toast_no_file_selected">لم يتم تحديد أي ملف</string>
-    <string name="toast_failed_delete_incomplete_backup_file">تعذر حذف ملف النسخ الاحتياطي غير المكتمل</string>
+    <string name="toast_failed_delete_incomplete_backup_file">تعذّر حذف ملف النسخ الاحتياطي غير المكتمل</string>
     <string name="toast_press_again_to_confirm">اضغط مرة أخرى للتأكيد</string>
     <string name="pref_title_about_app">عن التطبيق</string>
     <string name="about_pref_group_powered_by">مدعوم بواسطة</string>

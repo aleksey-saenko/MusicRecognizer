@@ -1,0 +1,10 @@
+Az <b>Audile</b> egy nyílt forráskódú zenefelismerő alkalmazás, amely segít gyorsan és pontosan azonosítani a közeledben szóló zeneszámokat.
+Az alkalmazás az AudD, az ACRCloud és a Shazam szolgáltatásait integrálja a zenefelismeréshez, és az Odesli segítségével további, platformspecifikus hivatkozásokat biztosít a számokhoz.
+
+<b>Funkciók:</b>
+
+<b>Felismerés</b> - Az Audile lehetővé teszi a zenefelismeréseket egyetlen kattintással. Az alkalmazás elmenti a felvételt, ha nincs internetkapcsolat, és a felismerési folyamatot akkor hajtja végre, amikor újra online leszel. A sikertelen felismerés (nincs internet, nincs találat, egyéb hiba) alapértelmezett működését a beállításokban testre szabhatod.
+<b>Háttérben futás</b> - Használd az alkalmazást zökkenőmentesen az értesítési sávból, a kezdőképernyő widgetből vagy a gyorsbeállításokból. Irányítsd a felismerési folyamatot és tekintsd meg a szám adatait az alkalmazás megnyitása nélkül.
+<b>A számról</b> - Sikeres felismerés esetén megjelennek a zeneszám adatai, például a cím, előadó, album, megjelenési év, borítókép, valamint hivatkozások a népszerű zenei szolgáltatásokon elérhető verziókhoz és a dalszöveghez.
+<b>Könyvtár</b> - Az összes felismert szám az alkalmazás könyvtárában kerül tárolásra. Szűrheted a listát, létrehozhatsz kedvencek gyűjteményt, kereshetsz a számok között, vagy törölheted őket.
+<b>Beállítások</b> - Az alkalmazás számos lehetőséget kínál a működés és a megjelenés testreszabására, amelyek a beállításokban érhetők el.

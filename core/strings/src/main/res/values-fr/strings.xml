@@ -286,4 +286,26 @@
     <string name="notification_channel_desc_foreground_result">Affiche les résultats des chansons quand vous êtes sur l\'écran de reconnaissance</string>
     <string name="notification_channel_name_background_result">Résultats de recherche de chansons trouvés en arrière-plan</string>
     <string name="notification_channel_desc_background_result">Affiche les résultats des chansons quand l\'application est minimisée ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
+    <string name="backup_entry_data">Échantillons de base de données et audio</string>
+    <string name="backup_entry_preferences">Préférences</string>
+    <string name="backup_entry_picker_title">Sélectionnez les données à sauvegarder :</string>
+    <string name="restore_entry_picker_title">Sélectionnez les données à restaurer :</string>
+    <string name="backup_estimating_size">Estimation de la taille des données de l\'application…</string>
+    <string name="backup_in_progress">Création d\'une sauvegarde…</string>
+    <string name="backup_result_success">Sauvegarde créée avec succès !</string>
+    <string name="restore_erase_warning">La restauration effacera les données actuelles et les remplacera par le contenu de la sauvegarde. Cette action est irréversible. Sauvegardez vos données importantes avant de continuer.</string>
+    <string name="restore_info_restart">L\'application redémarrera une fois la restauration terminée.</string>
+    <string name="restore_checking_backup">Vérification du fichier de sauvegarde…</string>
+    <string name="restore_in_progress">Restauration…</string>
+    <string name="restore_result_success">Succès !</string>
+    <string name="restore_result_malformed_backup">Ce fichier de sauvegarde est corrompu.</string>
+    <string name="restore_result_not_backup">Ce fichier n\'est pas une sauvegarde valide.</string>
+    <string name="restore_result_newer_version">Cette sauvegarde a été créée par une version plus récente de l\'application et ne peut pas être restaurée.</string>
+    <string name="restore_will_restart_in">L\'application redémarrera dans %d secondes.</string>
+    <string name="backup_restore_result_file_not_found">Fichier de sauvegarde introuvable.</string>
+    <string name="backup_restore_unhandled_error">Une erreur inattendue s\'est produite.</string>
+    <string name="backup_restore_unhandled_error_message">Veuillez vous assurer d\'avoir suffisamment d\'espace libre et réessayer.</string>
+    <string name="toast_no_file_selected">Aucun fichier sélectionné</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Impossible de supprimer le fichier de sauvegarde incomplet</string>
+    <string name="toast_press_again_to_confirm">Appuyez de nouveau pour confirmer</string>
 </resources>

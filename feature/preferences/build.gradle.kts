@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.material3)
+    implementation(libs.reorderable)
 }

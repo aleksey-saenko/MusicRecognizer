@@ -4,12 +4,20 @@ import android.net.Uri
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.feature.backup.AppBackupManager
 import com.mrsep.musicrecognizer.feature.backup.AppRestartManager
 import com.mrsep.musicrecognizer.feature.backup.BackupEntry
 import com.mrsep.musicrecognizer.feature.backup.BackupMetadataResult
 import com.mrsep.musicrecognizer.feature.backup.BackupResult
+import com.mrsep.musicrecognizer.feature.backup.CsvExportParams
+import com.mrsep.musicrecognizer.feature.backup.CsvExporter
+import com.mrsep.musicrecognizer.feature.backup.CsvField
+import com.mrsep.musicrecognizer.feature.backup.ExportResult
 import com.mrsep.musicrecognizer.feature.backup.RestoreResult
+import com.mrsep.musicrecognizer.feature.backup.TrackField
+import com.mrsep.musicrecognizer.feature.backup.TrackLinkField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
@@ -23,6 +31,7 @@ import javax.inject.Inject
 internal class BackupRestoreViewModel @Inject constructor(
     private val appBackupManager: AppBackupManager,
     private val appRestartManager: AppRestartManager,
+    private val csvExporter: CsvExporter,
 ) : ViewModel() {
 
     private val _backupUiState = MutableStateFlow<BackupUiState?>(null)
@@ -31,11 +40,17 @@ internal class BackupRestoreViewModel @Inject constructor(
     private val _restoreUiState = MutableStateFlow<RestoreUiState?>(null)
     val restoreUiState = _restoreUiState.asStateFlow()
 
+    private val _csvExportUiState = MutableStateFlow<CsvExportUiState?>(null)
+    val csvExportUiState = _csvExportUiState.asStateFlow()
+
     private val backupMasterJob = SupervisorJob()
     private val backupScope = viewModelScope + backupMasterJob
 
     private val restoreMasterJob = SupervisorJob()
     private val restoreScope = viewModelScope + backupMasterJob
+
+    private val csvExportMasterJob = SupervisorJob()
+    private val csvExportScope = viewModelScope + csvExportMasterJob
 
     /* Backup */
 
@@ -138,6 +153,37 @@ internal class BackupRestoreViewModel @Inject constructor(
                 .run { if (selected) plus(entry) else minus(entry) }
         )
     }
+
+    fun prepareForCsvExport() {
+        if (csvExportMasterJob.children.any { !it.isCompleted }) return
+        if (_csvExportUiState.value is CsvExportUiState.InProgress) return
+        _csvExportUiState.value = CsvExportUiState.Ready()
+    }
+
+    fun onChangeExportState(state: CsvExportUiState.Ready) {
+        if (_csvExportUiState.value !is CsvExportUiState.Ready) return
+        _csvExportUiState.value = state
+    }
+
+    fun exportToCsv(destination: Uri) {
+        if (csvExportMasterJob.children.any { !it.isCompleted }) return
+        val currentState = _csvExportUiState.value
+        if (currentState !is CsvExportUiState.Ready) return
+        val exportParams = currentState.toExportParams()
+        if (exportParams.exportFields.isEmpty()) return
+        csvExportScope.launch {
+            _csvExportUiState.value = CsvExportUiState.InProgress(destination)
+            val exportResult = csvExporter.export(destination, exportParams)
+            _csvExportUiState.value = CsvExportUiState.Result(destination, exportResult)
+        }
+    }
+
+    fun cancelCsvExportScopeJobs() {
+        viewModelScope.launch {
+            csvExportMasterJob.children.forEach { it.cancelAndJoin() }
+            _csvExportUiState.value = null
+        }
+    }
 }
 
 @Stable
@@ -176,4 +222,46 @@ internal sealed class BackupUiState {
         val uri: Uri,
         val result: BackupResult,
     ) : BackupUiState()
+}
+
+
+@Stable
+internal sealed class CsvExportUiState {
+
+    data class Ready(
+        val exportFields: List<SelectableCsvField> = SelectableCsvField.DEFAULT_LIST,
+        val writeHeader: Boolean = false,
+        val exportOnlyFavorites: Boolean = false,
+    ) : CsvExportUiState() {
+
+        fun toExportParams() = CsvExportParams(
+            exportFields = exportFields
+                .mapNotNull { selectable -> selectable.field.takeIf { selectable.selected } },
+            writeHeader = writeHeader,
+            favoritesMode = if (exportOnlyFavorites) FavoritesMode.OnlyFavorites else FavoritesMode.All
+        )
+    }
+
+    data class InProgress(val uri: Uri) : CsvExportUiState()
+
+    data class Result(
+        val uri: Uri,
+        val result: ExportResult,
+    ) : CsvExportUiState()
+}
+
+@Stable
+internal data class SelectableCsvField(
+    val field: CsvField,
+    val selected: Boolean,
+) {
+    companion object {
+        val DEFAULT_LIST get() = (TrackField.entries + MusicService.entries.map(::TrackLinkField))
+            .map { field ->
+                val selected = field is TrackField &&
+                        field == TrackField.TITLE ||
+                        field == TrackField.ARTIST
+                SelectableCsvField(field, selected = selected)
+            }
+    }
 }

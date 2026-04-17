@@ -22,6 +22,7 @@ androidxWork = "2.11.2"
 autoService = "1.1.1"
 autoServiceKsp = "1.2.0"
 coil = "3.4.0"
+csv = "1.10.0"
 detektPlugin = "1.23.8"
 detektCompose = "0.5.6"
 hilt = "2.59.2"
@@ -41,6 +42,7 @@ okhttpMockWebServer = "5.3.2"
 palette = "1.0.0"
 protobuf = "4.34.1"
 protobufPlugin = "0.9.6"
+reorderable = "3.0.0"
 room = "2.8.4"
 slf4j = "2.0.17"
 turbine = "1.2.1"
@@ -96,6 +98,7 @@ auto-service-annotations = { module = "com.google.auto.service:auto-service-anno
 auto-service-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoServiceKsp"}
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+csv = { module = "com.jsoizo:kotlin-csv-jvm", version.ref = "csv" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektPlugin" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detektCompose" }
 hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
@@ -121,6 +124,7 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttpMockWebServer" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

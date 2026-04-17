@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.core.strings)
+    implementation(projects.core.domain)
 
     implementation(libs.androidx.palette)
     implementation(libs.androidx.navigation.compose)

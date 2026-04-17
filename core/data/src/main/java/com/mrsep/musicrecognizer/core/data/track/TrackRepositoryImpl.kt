@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.database.ApplicationDatabase
 import com.mrsep.musicrecognizer.core.database.track.TrackEntity
 import com.mrsep.musicrecognizer.core.database.track.TrackPreviewTuple
+import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
 import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
@@ -119,6 +120,12 @@ internal class TrackRepositoryImpl @Inject constructor(
                 )
             }
             .onStart { emit(SearchResult.Pending(query, searchScope)) }
+            .flowOn(ioDispatcher)
+    }
+
+    override fun getTracksFlow(favoritesMode: FavoritesMode): Flow<List<Track>> {
+        return trackDao.getTracksFlow(favoritesMode)
+            .map { list -> list.map(TrackEntity::toDomain) }
             .flowOn(ioDispatcher)
     }
 

@@ -137,6 +137,7 @@
     <string name="recognition_action_show_track">Show track</string>
     <string name="recognition_action_rename">Rename</string>
     <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
     <string name="disable_multi_selection_mode">Disable multi selection mode</string>
     <string name="cancel_selected">Cancel selected</string>
     <string name="delete_selected">Delete selected</string>
@@ -285,6 +286,26 @@
     <string name="toast_no_file_selected">No file selected</string>
     <string name="toast_failed_delete_incomplete_backup_file">Could not delete incomplete backup file</string>
     <string name="toast_press_again_to_confirm">Press again to confirm</string>
+    <!-- CSV export -->
+    <string name="pref_title_export_to_csv">Export to CSV</string>
+    <string name="pref_subtitle_export_to_csv">Export all tracks to a CSV file</string>
+    <string name="export_only_favorites_tracks">Export only favorites tracks</string>
+    <string name="export_write_csv_header">Include CSV header</string>
+    <string name="export_select_fields_to_export">Select fields to export:</string>
+    <string name="export_track_field_title">Title</string>
+    <string name="export_track_field_artist">Artist</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Release date</string>
+    <string name="export_track_field_recognition_date">Recognition date</string>
+    <string name="export_track_field_duration">Duration</string>
+    <string name="export_track_field_playback_offset">Playback offset</string>
+    <string name="export_track_field_provider">Recognition provider</string>
+    <string name="export_track_field_lyrics">Lyrics</string>
+    <string name="export_track_field_favorite">Favorite</string>
+    <string name="export_track_field_artwork_link">Artwork</string>
+    <string name="export_export">Export</string>
+    <string name="export_in_progress">Exporting…</string>
+    <string name="export_csv_result_success">CSV file created successfully!</string>
     <!-- About screen -->
     <string name="pref_title_about_app">About</string>
     <string name="about_pref_group_powered_by">Powered by</string>

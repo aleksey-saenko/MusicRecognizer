@@ -158,4 +158,18 @@ interface TrackDao {
         sortBy: SortBy,
         orderBy: OrderBy
     ): Flow<List<TrackPreviewTuple>>
+
+    @Query(
+        """
+            SELECT * FROM track 
+            WHERE
+                CASE :favoritesMode
+                    WHEN 'All' THEN 1
+                    WHEN 'OnlyFavorites' THEN is_favorite
+                    WHEN 'ExcludeFavorites' THEN NOT is_favorite
+                END
+            ORDER BY recognition_date DESC
+        """
+    )
+    fun getTracksFlow(favoritesMode: FavoritesMode): Flow<List<TrackEntity>>
 }

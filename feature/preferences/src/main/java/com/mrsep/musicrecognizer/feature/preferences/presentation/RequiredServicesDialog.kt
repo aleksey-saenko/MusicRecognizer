@@ -1,12 +1,13 @@
 package com.mrsep.musicrecognizer.feature.preferences.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
-import kotlin.random.Random
+import com.mrsep.musicrecognizer.core.ui.resources.titleId
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @Composable
@@ -56,12 +57,14 @@ internal fun RequiredServicesDialog(
                     text = stringResource(StringsR.string.music_services_links_dialog),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    // Workaround for first element https://issuetracker.google.com/issues/209652366
-                    itemsIndexed(
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
                         items = fullList,
-                        key = { index, (service, _) -> if (index == 0) Random.nextInt() else service }
-                    ) { _, (service, selected) ->
+                        key = { (service, enabled) -> "$service$enabled" }
+                    ) { (service, selected) ->
                         MusicServiceCheckbox(
                             service = service,
                             checked = selected,
@@ -97,7 +100,7 @@ private fun MusicServiceCheckbox(
 ) {
     Surface(
         onClick = { onCheckedChange(!checked) },
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         shape = MaterialTheme.shapes.large,
         modifier = modifier
     ) {
@@ -116,24 +119,4 @@ private fun MusicServiceCheckbox(
             )
         }
     }
-}
-
-@Stable
-internal fun MusicService.titleId() = when (this) {
-    MusicService.AmazonMusic -> StringsR.string.amazon_music
-    MusicService.Anghami -> StringsR.string.anghami
-    MusicService.AppleMusic -> StringsR.string.apple_music
-    MusicService.Audiomack -> StringsR.string.audiomack
-    MusicService.Audius -> StringsR.string.audius
-    MusicService.Boomplay -> StringsR.string.boomplay
-    MusicService.Deezer -> StringsR.string.deezer
-    MusicService.MusicBrainz -> StringsR.string.musicbrainz
-    MusicService.Napster -> StringsR.string.napster
-    MusicService.Pandora -> StringsR.string.pandora
-    MusicService.Soundcloud -> StringsR.string.soundcloud
-    MusicService.Spotify -> StringsR.string.spotify
-    MusicService.Tidal -> StringsR.string.tidal
-    MusicService.YandexMusic -> StringsR.string.yandex_music
-    MusicService.Youtube -> StringsR.string.youtube
-    MusicService.YoutubeMusic -> StringsR.string.youtubeMusic
 }

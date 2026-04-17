@@ -48,6 +48,7 @@ internal fun BackupRestoreScreen(
     val resources = LocalResources.current
     val backupUiState by viewModel.backupState.collectAsStateWithLifecycle()
     val restoreUiState by viewModel.restoreUiState.collectAsStateWithLifecycle()
+    val csvExportUiState by viewModel.csvExportUiState.collectAsStateWithLifecycle()
 
     val backupUriLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("*/*")
@@ -71,17 +72,27 @@ internal fun BackupRestoreScreen(
         viewModel.validateBackup(resultUri)
     }
 
+    val csvExportUriLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("*/*")
+    ) { resultUri ->
+        if (resultUri == null) {
+            val message = resources.getString(StringsR.string.toast_no_file_selected)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            return@rememberLauncherForActivityResult
+        }
+        viewModel.exportToCsv(resultUri)
+    }
+
     backupUiState?.let { backupState ->
         BackupDialog(
             backupState = backupState,
             onChangeSelectedBackupEntry = viewModel::onChangeSelectedBackupEntry,
-            onBackupClick = { backupUriLauncher.launch(resources.getBackupName()) },
+            onBackupClick = { backupUriLauncher.launch(resources.getBackupFileName()) },
             onDismissClick = {
                 when (backupState) {
                     is BackupUiState.EstimatingEntries,
-                    is BackupUiState.Ready -> {
-                        viewModel.cancelBackupScopeJobs()
-                    }
+                    is BackupUiState.Ready,
+                    is BackupUiState.Result -> viewModel.cancelBackupScopeJobs()
 
                     is BackupUiState.InProgress -> {
                         viewModel.cancelBackupScopeJobs()
@@ -89,9 +100,6 @@ internal fun BackupRestoreScreen(
                             val message = resources.getString(StringsR.string.toast_failed_delete_incomplete_backup_file)
                             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         }
-                    }
-                    is BackupUiState.Result -> {
-                        viewModel.cancelBackupScopeJobs()
                     }
                 }
             }
@@ -127,6 +135,29 @@ internal fun BackupRestoreScreen(
         )
     }
 
+    csvExportUiState?.let { exportState ->
+        CsvExportFullScreenDialog(
+            modifier = Modifier.fillMaxSize(),
+            exportState = exportState,
+            onExportClick = { csvExportUriLauncher.launch(resources.getCsvFileName()) },
+            onChangeExportState = viewModel::onChangeExportState,
+            onDismissClick = {
+                when (exportState) {
+                    is CsvExportUiState.Ready,
+                    is CsvExportUiState.Result -> viewModel.cancelCsvExportScopeJobs()
+
+                    is CsvExportUiState.InProgress -> {
+                        viewModel.cancelCsvExportScopeJobs()
+                        if (!context.deleteUriFile(exportState.uri)) {
+                            val message = resources.getString(StringsR.string.toast_failed_delete_incomplete_backup_file)
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            },
+        )
+    }
+
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
@@ -150,9 +181,7 @@ internal fun BackupRestoreScreen(
                 }
             },
         )
-        PreferenceGroup(
-            title = stringResource(StringsR.string.pref_title_backup_and_restore)
-        ) {
+        PreferenceGroup(title = stringResource(StringsR.string.pref_title_backup_and_restore)) {
             PreferenceClickableItem(
                 title = stringResource(StringsR.string.pref_title_backup),
                 subtitle = stringResource(StringsR.string.pref_subtitle_backup),
@@ -162,6 +191,13 @@ internal fun BackupRestoreScreen(
                 title = stringResource(StringsR.string.pref_title_restore),
                 subtitle = stringResource(StringsR.string.pref_subtitle_restore),
                 onItemClick = { restoreUriLauncher.launch(arrayOf("*/*")) }
+            )
+        }
+        PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {
+            PreferenceClickableItem(
+                title = stringResource(StringsR.string.pref_title_export_to_csv),
+                subtitle = stringResource(StringsR.string.pref_subtitle_export_to_csv),
+                onItemClick = viewModel::prepareForCsvExport
             )
         }
     }
@@ -174,5 +210,9 @@ private fun Context.deleteUriFile(uri: Uri): Boolean = try {
     false
 }
 
-private fun Resources.getBackupName(): String = getString(StringsR.string.app_name) + "_Backup" +
+private fun Resources.getBackupFileName(): String = getString(StringsR.string.app_name) + "_Backup" +
         "_${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(ZonedDateTime.now())}"
+
+
+private fun Resources.getCsvFileName(): String = getString(StringsR.string.app_name) + "_Songs" +
+        "_${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(ZonedDateTime.now())}" + ".csv"

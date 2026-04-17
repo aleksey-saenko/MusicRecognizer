@@ -133,6 +133,7 @@
     <string name="recognition_action_show_track">Показать трек</string>
     <string name="recognition_action_rename">Переименовать</string>
     <string name="select_all">Выбрать все</string>
+    <string name="deselect_all">Снять выделение со всех</string>
     <string name="disable_multi_selection_mode">Отключить режим множественного выбора</string>
     <string name="cancel_selected">Отменить выбранные</string>
     <string name="delete_selected">Удалить выбранные</string>
@@ -277,6 +278,26 @@
     <string name="toast_no_file_selected">Файл не выбран</string>
     <string name="toast_failed_delete_incomplete_backup_file">Не удалось удалить неполный файл резервной копии</string>
     <string name="toast_press_again_to_confirm">Нажмите ещё раз, чтобы подтвердить</string>
+    <!-- CSV export -->
+    <string name="pref_title_export_to_csv">Экспорт в CSV</string>
+    <string name="pref_subtitle_export_to_csv">Экспортировать все треки в CSV-файл</string>
+    <string name="export_only_favorites_tracks">Экспортировать только избранные треки</string>
+    <string name="export_write_csv_header">Включить заголовок CSV</string>
+    <string name="export_select_fields_to_export">Выберите поля для экспорта:</string>
+    <string name="export_track_field_title">Название</string>
+    <string name="export_track_field_artist">Исполнитель</string>
+    <string name="export_track_field_album">Альбом</string>
+    <string name="export_track_field_release_date">Дата релиза</string>
+    <string name="export_track_field_recognition_date">Дата распознавания</string>
+    <string name="export_track_field_duration">Длительность</string>
+    <string name="export_track_field_playback_offset">Момент воспроизведения</string>
+    <string name="export_track_field_provider">Сервис распознавания</string>
+    <string name="export_track_field_favorite">Избранный</string>
+    <string name="export_track_field_lyrics">Текст песни</string>
+    <string name="export_track_field_artwork_link">Обложка</string>
+    <string name="export_export">Экспортировать</string>
+    <string name="export_in_progress">Экспортируется…</string>
+    <string name="export_csv_result_success">CSV-файл успешно создан!</string>
     <!-- About screen -->
     <string name="pref_title_about_app">О приложении</string>
     <string name="about_pref_group_powered_by">Работает с помощью</string>

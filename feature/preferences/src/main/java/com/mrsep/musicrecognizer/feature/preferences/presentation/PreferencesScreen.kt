@@ -24,6 +24,7 @@ import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
+import com.mrsep.musicrecognizer.core.ui.resources.titleId
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AcrCloudServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.AuddServiceDialog
 import com.mrsep.musicrecognizer.feature.preferences.presentation.serviceconfig.ShazamServiceDialog
@@ -219,7 +220,10 @@ internal fun PreferencesScreen(
                         )
                         if (showServicesDialog) {
                             RequiredServicesDialog(
-                                modifier = Modifier.fillMaxHeight(0.9f),
+                                modifier = Modifier
+                                    .heightIn(min = 300.dp)
+                                    .fillMaxHeight(0.67f)
+                                ,
                                 requiredServices = requiredMusicServices,
                                 onRequiredServicesChanged = viewModel::setRequiredMusicServices,
                                 onDismissClick = { showServicesDialog = false }

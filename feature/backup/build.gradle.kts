@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
     implementation(projects.core.data)
     implementation(projects.core.database)
     implementation(projects.core.datastore)
@@ -16,4 +17,6 @@ dependencies {
 
     implementation(libs.kotlinx.serializationJson)
     implementation(libs.coil.compose)
+    implementation(libs.csv)
+    implementation(libs.reorderable)
 }

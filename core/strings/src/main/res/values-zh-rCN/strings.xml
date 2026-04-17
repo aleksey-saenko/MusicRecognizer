@@ -299,4 +299,24 @@
     <string name="toast_no_file_selected">未选中文件</string>
     <string name="toast_failed_delete_incomplete_backup_file">无法删除不完整的备份文件</string>
     <string name="toast_press_again_to_confirm">再按一次进行确认</string>
+    <string name="deselect_all">全不选</string>
+    <string name="pref_title_export_to_csv">导出到 CSV</string>
+    <string name="pref_subtitle_export_to_csv">将全部曲目导出到 CSV 文件</string>
+    <string name="export_only_favorites_tracks">只导出收藏的曲目</string>
+    <string name="export_write_csv_header">包括 CSV 标题</string>
+    <string name="export_select_fields_to_export">选择要导出的字段：</string>
+    <string name="export_track_field_title">标题</string>
+    <string name="export_track_field_artist">艺术家</string>
+    <string name="export_track_field_album">专辑</string>
+    <string name="export_track_field_release_date">发行日期</string>
+    <string name="export_track_field_recognition_date">识别日期</string>
+    <string name="export_track_field_duration">时长</string>
+    <string name="export_track_field_playback_offset">播放偏移</string>
+    <string name="export_track_field_provider">识别提供方</string>
+    <string name="export_track_field_lyrics">歌词</string>
+    <string name="export_track_field_favorite">收藏</string>
+    <string name="export_track_field_artwork_link">艺术图</string>
+    <string name="export_export">导出</string>
+    <string name="export_in_progress">导出中…</string>
+    <string name="export_csv_result_success">成功创建了 CSV 文件！</string>
 </resources>

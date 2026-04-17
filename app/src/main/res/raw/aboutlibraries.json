@@ -2255,6 +2255,21 @@
             ]
         },
         {
+            "uniqueId": "com.github.skydoves:compose-stability-runtime",
+            "artifactVersion": "0.7.1",
+            "name": "Compose Stability Analyzer Runtime",
+            "description": "A Compose Compiler plugin that analyzes composable functions and generates stability reports.",
+            "website": "https://github.com/skydoves/compose-stability-analyzer/",
+            "developers": [
+                {
+                    "name": "Jaewoong Eum"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "com.google.accompanist:accompanist-drawablepainter",
             "artifactVersion": "0.37.3",
             "name": "Accompanist Drawable Painter library",
@@ -2540,6 +2555,25 @@
             ]
         },
         {
+            "uniqueId": "com.jsoizo:kotlin-csv-jvm",
+            "artifactVersion": "1.10.0",
+            "name": "kotlin-csv",
+            "description": "Kotlin CSV Reader/Writer",
+            "website": "https://github.com/jsoizo/kotlin-csv",
+            "developers": [
+                {
+                    "name": "jsoizo"
+                }
+            ],
+            "organization": {
+                "name": "com.jsoizo",
+                "url": "https://github.com/jsoizo"
+            },
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "com.materialkolor:material-kolor",
             "artifactVersion": "4.1.1",
             "name": "MaterialKolor",
@@ -2556,7 +2590,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-compose-core",
-            "artifactVersion": "13.2.1",
+            "artifactVersion": "14.0.1",
             "name": "AboutLibraries Compose UI Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2571,7 +2605,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-compose-m3",
-            "artifactVersion": "13.2.1",
+            "artifactVersion": "14.0.1",
             "name": "AboutLibraries Compose Material 3 Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2586,7 +2620,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-core",
-            "artifactVersion": "13.2.1",
+            "artifactVersion": "14.0.1",
             "name": "AboutLibraries Core Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -3310,7 +3344,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.annotation-internal:annotation",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.3",
             "name": "Annotation",
             "description": "Provides source annotations for tooling and readability.",
             "website": "https://github.com/JetBrains/compose-jb",
@@ -3326,7 +3360,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.collection-internal:collection",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.3",
             "name": "collections",
             "description": "Standalone efficient collections.",
             "website": "https://github.com/JetBrains/compose-jb",
@@ -3518,7 +3552,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-tooling-preview",
-            "artifactVersion": "1.10.0-rc02",
+            "artifactVersion": "1.10.3",
             "name": "Compose UI Preview Tooling",
             "description": "Compose tooling library API. This library provides the API required to declare @Preview composables in user apps.",
             "website": "https://github.com/JetBrains/compose-jb",
@@ -3601,6 +3635,54 @@
             "artifactVersion": "2.3.20",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
+            "website": "https://kotlinlang.org/",
+            "developers": [
+                {
+                    "name": "Kotlin Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
+            "artifactVersion": "2.3.20",
+            "name": "Kotlin Stdlib Common",
+            "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
+            "website": "https://kotlinlang.org/",
+            "developers": [
+                {
+                    "name": "Kotlin Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+            "artifactVersion": "1.9.0",
+            "name": "Kotlin Stdlib Jdk7",
+            "description": "Kotlin Standard Library JDK 7 extension",
+            "website": "https://kotlinlang.org/",
+            "developers": [
+                {
+                    "name": "Kotlin Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            "artifactVersion": "1.9.0",
+            "name": "Kotlin Stdlib Jdk8",
+            "description": "Kotlin Standard Library JDK 8 extension",
             "website": "https://kotlinlang.org/",
             "developers": [
                 {
@@ -3742,7 +3824,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-serialization-bom",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3758,7 +3840,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-serialization-core",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3774,7 +3856,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-io",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-serialization-json-io",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3790,7 +3872,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-serialization-json",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3852,6 +3934,21 @@
             },
             "licenses": [
                 "MIT"
+            ]
+        },
+        {
+            "uniqueId": "sh.calvin.reorderable:reorderable",
+            "artifactVersion": "3.0.0",
+            "name": "Reorderable",
+            "description": "A library for reordering items in a LazyColumn",
+            "website": "https://github.com/Calvin-LL/Reorderable",
+            "developers": [
+                {
+                    "name": "Calvin Liang"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
             ]
         }
     ],

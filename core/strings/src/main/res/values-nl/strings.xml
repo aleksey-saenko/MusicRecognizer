@@ -230,7 +230,7 @@
     <string name="pref_subtitle_no_selected_services">Geen</string>
     <string name="music_services_links_dialog">Selecteer de muziekdiensten waarvoor je webkoppelingen wilt zien (indien beschikbaar):</string>
     <string name="pref_group_misc">Overig</string>
-    <string name="pref_title_vibration_feedback">Trilling</string>
+    <string name="pref_title_vibration_feedback">Trillingen</string>
     <string name="vibration_feedback_dialog_title">Trilling</string>
     <string name="vibration_feedback_dialog_message">Trillingsfeedback configureren voor bepaalde acties:</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Trillen bij tikken</string>
@@ -262,7 +262,7 @@
     <string name="about_pref_subtitle_third_licenses">Licenties voor bibliotheken van derden die Audile gebruikt</string>
     <string name="notification_button_disable_service">Dienst stoppen</string>
     <string name="notification_button_show_lyrics">Liedtekst tonen</string>
-    <string name="notification_channel_name_control">Meldingen beheren</string>
+    <string name="notification_channel_name_control">Beheer meldingen</string>
     <string name="notification_channel_desc_control">Maakt het mogelijk om het herkenningsproces te beheren</string>
     <string name="notification_channel_name_foreground_result">Nummerresultaten gevonden op de voorgrond</string>
     <string name="notification_channel_desc_foreground_result">Toont de nummerresultaten wanneer je op het herkenningsscherm bent</string>
@@ -299,4 +299,24 @@
     <string name="toast_no_file_selected">Geen bestand geselecteerd</string>
     <string name="toast_failed_delete_incomplete_backup_file">Kon onvolledig back-upbestand niet verwijderen</string>
     <string name="toast_press_again_to_confirm">Druk op opnieuw om te bevestigen</string>
+    <string name="deselect_all">Alles deselecteren</string>
+    <string name="pref_title_export_to_csv">CSV exporteren</string>
+    <string name="pref_subtitle_export_to_csv">Exporteer alle nummers naar een CSV-bestand</string>
+    <string name="export_only_favorites_tracks">Exporteer alleen favoriete nummers</string>
+    <string name="export_write_csv_header">Inclusief CSV-header</string>
+    <string name="export_select_fields_to_export">Selecteer velden om te exporteren:</string>
+    <string name="export_track_field_title">Titel</string>
+    <string name="export_track_field_artist">Artiest</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Uitgavedatum</string>
+    <string name="export_track_field_recognition_date">Herkenningsdatum</string>
+    <string name="export_track_field_duration">Duur</string>
+    <string name="export_track_field_playback_offset">Afspeelvertraging</string>
+    <string name="export_track_field_provider">Herkenningsaanbieder</string>
+    <string name="export_track_field_lyrics">Liedtekst</string>
+    <string name="export_track_field_favorite">Favoriet</string>
+    <string name="export_track_field_artwork_link">Hoes</string>
+    <string name="export_export">Exporteren</string>
+    <string name="export_in_progress">Exporteren…</string>
+    <string name="export_csv_result_success">CSV-bestand succesvol gemaakt!</string>
 </resources>

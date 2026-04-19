@@ -299,4 +299,24 @@
     <string name="toast_no_file_selected">Sa pole ühtegi faili valinud</string>
     <string name="toast_failed_delete_incomplete_backup_file">Mittetäieliku varukoopiafaili kustutamine ei õnnestunud</string>
     <string name="toast_press_again_to_confirm">Kinnitamiseks vajuta uuesti</string>
+    <string name="deselect_all">Eemalda kogu valik</string>
+    <string name="pref_title_export_to_csv">Ekspordi CSV-faili</string>
+    <string name="pref_subtitle_export_to_csv">Ekspordi kõik lood CSV-faili</string>
+    <string name="export_only_favorites_tracks">Ekspordi vaid lemmiklood CSV-faili</string>
+    <string name="export_write_csv_header">Kaasa CSV-päis</string>
+    <string name="export_select_fields_to_export">Vali eksporditavad väljad:</string>
+    <string name="export_track_field_title">Pealkiri</string>
+    <string name="export_track_field_artist">Esitaja</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Avaldamise kuupäev</string>
+    <string name="export_track_field_recognition_date">Tuvastamise kuupäev</string>
+    <string name="export_track_field_duration">Kestus</string>
+    <string name="export_track_field_playback_offset">Nihe taasesitusel</string>
+    <string name="export_track_field_provider">Tuvastusteenuse pakkuja</string>
+    <string name="export_track_field_lyrics">Laulusõnad</string>
+    <string name="export_track_field_favorite">Lemmik</string>
+    <string name="export_track_field_artwork_link">Kaanepildid</string>
+    <string name="export_export">Ekspordi</string>
+    <string name="export_in_progress">Ekspordin…</string>
+    <string name="export_csv_result_success">CSV-faili loomine õnnestus!</string>
 </resources>

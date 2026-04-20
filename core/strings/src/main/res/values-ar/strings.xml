@@ -90,7 +90,7 @@
     <string name="library_menu_mark_all_tracks_as_viewed">وضع علامة ”تمت المشاهدة“ على الكل</string>
     <string name="unviewed_track_label">جديد</string>
     <string name="format_amount_of_new_tracks">أغاني جديدة: %s</string>
-    <string name="filters">فلاتر</string>
+    <string name="filters">الفلاتر</string>
     <string name="filter_favorites">المفضلة</string>
     <string name="filter_all">الكل</string>
     <string name="filter_only_favorites">المفضلة فقط</string>
@@ -136,7 +136,7 @@
     <string name="mark_track_as_favorite">ضع علامة كمفضلة</string>
     <string name="unmark_track_as_favorite">إلغاء علامة المفضلة</string>
     <string name="show_track">إظهار المقطوعة</string>
-    <string name="show_lyrics">عرض الكلمات</string>
+    <string name="show_lyrics">عرض كلمات الأغنية</string>
     <string name="web_search">البحث على الويب</string>
     <string name="web">الويب</string>
     <string name="search">بحث</string>
@@ -157,7 +157,7 @@
     <string name="artist">الفنان</string>
     <string name="album">الألبوم</string>
     <string name="year">السنة</string>
-    <string name="lyrics">الكلمات</string>
+    <string name="lyrics">كلمات الأغنية</string>
     <string name="share_music_services_links">روابط خدمات الموسيقى</string>
     <string name="track_not_found_title">لم يتم العثور على المقطوعة</string>
     <string name="track_not_found_message">حدث خطأ ما، ربما تمت إزالة المقطوعة أو تعديله بشكل غير صحيح</string>
@@ -244,7 +244,7 @@
     <string name="pref_title_restore">الاستعادة</string>
     <string name="pref_subtitle_restore">استعادة بيانات التطبيق من نسخة احتياطية</string>
     <string name="backup_dialog_title">النسخ الاحتياطي</string>
-    <string name="backup_dialog_button_backup">انسخ احتياطيًا</string>
+    <string name="backup_dialog_button_backup">القيام بالنسخ الاحتياطي</string>
     <string name="restore_dialog_title">الاستعادة</string>
     <string name="restore_dialog_button_restore">استعادة</string>
     <string name="backup_entry_data">قاعدة البيانات والعينات الصوتية</string>
@@ -284,7 +284,7 @@
     <string name="about_pref_subtitle_license">Audile مرخص بموجب رخصة جنو العمومية العامة الإصدار 3 أو أحدث</string>
     <string name="about_pref_title_third_licenses">تراخيص الجهات الخارجية</string>
     <string name="about_pref_subtitle_third_licenses">تراخيص مكتبات الجهات الخارجية التي يستخدمها Audile</string>
-    <string name="notification_button_disable_service">أوقف الخدمة</string>
+    <string name="notification_button_disable_service">إيقاف الخدمة</string>
     <string name="notification_button_show_lyrics">عرض كلمات الأغنية</string>
     <string name="notification_channel_name_control">التحكم في الإشعارات</string>
     <string name="notification_channel_desc_control">يسمح بالتحكم في عملية التعرف</string>
@@ -313,4 +313,10 @@
     <string name="export_track_field_duration">المدة</string>
     <string name="export_track_field_playback_offset">إزاحة التشغيل</string>
     <string name="export_track_field_provider">مزود التعرف</string>
+    <string name="export_track_field_lyrics">كلمات الأغنية</string>
+    <string name="export_track_field_favorite">مفضّلة</string>
+    <string name="export_track_field_artwork_link">عمل فني</string>
+    <string name="export_export">تصدير</string>
+    <string name="export_in_progress">جارٍ التصدير…</string>
+    <string name="export_csv_result_success">تم إنشاء ملف CSV بنجاح!</string>
 </resources>

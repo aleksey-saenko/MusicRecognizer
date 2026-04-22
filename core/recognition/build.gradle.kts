@@ -62,6 +62,7 @@ dependencies {
 
     implementation(libs.kotlinx.serializationJson)
     implementation(libs.uuidCreator)
+    implementation(libs.stringSimilarity)
 
     testImplementation(libs.junit4)
     testImplementation(libs.kotest)

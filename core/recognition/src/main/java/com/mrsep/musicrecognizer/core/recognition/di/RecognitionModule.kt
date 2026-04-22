@@ -35,10 +35,6 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindTrackLinksFetcher(impl: OdesliTrackLinksFetcher): TrackLinksFetcher
-
-    @Binds
-    @Singleton
     fun bindArtworkFetcher(impl: ArtworkFetcherImpl): ArtworkFetcher
 
     @Binds

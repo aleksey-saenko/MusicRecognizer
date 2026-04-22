@@ -17,7 +17,8 @@ import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackPreview
 import com.mrsep.musicrecognizer.core.recognition.enhancer.RemoteTrackLinks
-import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackLinksFetcher
+import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliTrackLinksFetcher
+import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.YoutubeTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,8 @@ internal class TrackRepositoryImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val lyricsFetcher: LyricsFetcher,
-    private val trackLinksFetcher: TrackLinksFetcher,
+    private val odesliTrackLinksFetcher: OdesliTrackLinksFetcher,
+    private val youtubeTrackLinksFetcher: YoutubeTrackLinksFetcher,
     database: ApplicationDatabase
 ) : TrackRepository {
 
@@ -130,23 +132,34 @@ internal class TrackRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAndUpdateTrackLinks(trackId: String): NetworkResult<Unit> {
-        return getTrackFlow(trackId)
-            .distinctUntilChangedBy { track -> track?.id }
-            .mapLatest { oldTrack ->
-                // Null means that track was not found or was deleted in process
-                if (oldTrack == null) return@mapLatest NetworkResult.Success(Unit)
-                when (val result = trackLinksFetcher.fetch(oldTrack)) {
-                    is NetworkResult.Success -> {
-                        trackDao.updateTransform(trackId) { previous ->
-                            previous.copy(links = previous.links.merge(result.data))
+        val fetchers = listOf(
+            odesliTrackLinksFetcher,
+            youtubeTrackLinksFetcher,
+        )
+        var lastError: NetworkError? = null
+        for (fetcher in fetchers) {
+            getTrackFlow(trackId)
+                .distinctUntilChangedBy { track -> track?.id }
+                .mapLatest { oldTrack ->
+                    // Null means that track was not found or was deleted in process
+                    if (oldTrack == null) return@mapLatest null
+                    when (val result = fetcher.fetch(oldTrack)) {
+                        is NetworkResult.Success -> {
+                            trackDao.updateTransform(trackId) { previous ->
+                                previous.copy(links = previous.links.merge(result.data))
+                            }
+                            NetworkResult.Success(Unit)
                         }
-                        NetworkResult.Success(Unit)
+                        is NetworkError -> {
+                            lastError = result
+                            result
+                        }
                     }
-                    is NetworkError -> result
                 }
-            }
-            .flowOn(ioDispatcher)
-            .first()
+                .flowOn(ioDispatcher)
+                .first()
+        }
+        return lastError ?: NetworkResult.Success(Unit)
     }
 
     override suspend fun fetchAndUpdateLyrics(trackId: String): NetworkResult<Unit> {

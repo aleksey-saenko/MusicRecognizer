@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-internal class OdesliTrackLinksFetcher @Inject constructor(
+class OdesliTrackLinksFetcher @Inject constructor(
     private val httpClientLazy: dagger.Lazy<HttpClient>,
     @ApplicationContext private val appContext: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,

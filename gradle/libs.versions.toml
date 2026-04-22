@@ -45,6 +45,7 @@ protobufPlugin = "0.9.6"
 reorderable = "3.0.0"
 room = "2.8.4"
 slf4j = "2.0.17"
+stringSimilarity = "2.0.0"
 turbine = "1.2.1"
 uuidCreator = "6.1.1"
 zoomable = "2.11.1"
@@ -129,6 +130,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+stringSimilarity = { module = "info.debatty:java-string-similarity", version.ref = "stringSimilarity" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 uuidCreator = { module = "com.github.f4b6a3:uuid-creator", version.ref = "uuidCreator" }
 zoomable = { module = "net.engawapg.lib:zoomable-android", version.ref = "zoomable" }

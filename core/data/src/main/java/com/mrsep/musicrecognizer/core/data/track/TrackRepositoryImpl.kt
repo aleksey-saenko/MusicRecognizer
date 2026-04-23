@@ -131,59 +131,59 @@ internal class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun fetchAndUpdateTrackLinks(trackId: String): NetworkResult<Unit> {
+    override suspend fun fetchAndUpdateTrackLinks(
+        trackId: String,
+        requiredServices: Set<MusicService>
+    ): NetworkResult<Unit> = withContext(ioDispatcher) {
+        if (requiredServices.isEmpty()) return@withContext NetworkResult.Success(Unit)
         val fetchers = listOf(
             odesliTrackLinksFetcher,
             youtubeTrackLinksFetcher,
-        )
+        ).filter { fetcher ->
+            requiredServices.any(fetcher.supportedServices::contains)
+        }
         var lastError: NetworkError? = null
         for (fetcher in fetchers) {
-            getTrackFlow(trackId)
-                .distinctUntilChangedBy { track -> track?.id }
-                .mapLatest { oldTrack ->
-                    // Null means that track was not found or was deleted in process
-                    if (oldTrack == null) return@mapLatest null
-                    when (val result = fetcher.fetch(oldTrack)) {
-                        is NetworkResult.Success -> {
-                            trackDao.updateTransform(trackId) { previous ->
-                                previous.copy(links = previous.links.merge(result.data))
-                            }
-                            NetworkResult.Success(Unit)
-                        }
-                        is NetworkError -> {
-                            lastError = result
-                            result
-                        }
+            // Null if track was not found or was deleted in process
+            val track = getTrackFlow(trackId).first() ?: return@withContext NetworkResult.Success(Unit)
+
+            val availableServices = fetcher.supportedServices intersect requiredServices
+            val shouldSearchForLinks = availableServices.any { it !in track.trackLinks }
+            if (!shouldSearchForLinks) return@withContext NetworkResult.Success(Unit)
+
+            when (val result = fetcher.fetch(track)) {
+                is NetworkResult.Success -> {
+                    trackDao.updateTransform(trackId) { previous ->
+                        previous.copy(links = previous.links.merge(result.data))
                     }
                 }
-                .flowOn(ioDispatcher)
-                .first()
-        }
-        return lastError ?: NetworkResult.Success(Unit)
-    }
-
-    override suspend fun fetchAndUpdateLyrics(trackId: String): NetworkResult<Unit> {
-        return getTrackFlow(trackId)
-            .distinctUntilChangedBy { track -> track?.id }
-            .mapLatest { oldTrack ->
-                // Null means that track was not found or was deleted in process
-                if (oldTrack == null) return@mapLatest NetworkResult.Success(Unit)
-                when (val result = lyricsFetcher.fetch(oldTrack)) {
-                    is NetworkResult.Success -> {
-                        result.data?.let { lyrics ->
-                            trackDao.setLyrics(
-                                trackId,
-                                lyrics = lyrics.toDbLyricsData(),
-                                isSynced = lyrics is SyncedLyrics
-                            )
-                        }
-                        NetworkResult.Success(Unit)
-                    }
-                    is NetworkError -> result
+                is NetworkError -> {
+                    lastError = result
                 }
             }
-            .flowOn(ioDispatcher)
-            .first()
+        }
+        lastError ?: NetworkResult.Success(Unit)
+    }
+
+    override suspend fun fetchAndUpdateLyrics(
+        trackId: String
+    ): NetworkResult<Unit> = withContext(ioDispatcher) {
+        // Null if track was not found or was deleted in process
+        val track = getTrackFlow(trackId).first() ?: return@withContext NetworkResult.Success(Unit)
+
+        when (val result = lyricsFetcher.fetch(track)) {
+            is NetworkResult.Success -> {
+                result.data?.let { lyrics ->
+                    trackDao.setLyrics(
+                        trackId,
+                        lyrics = lyrics.toDbLyricsData(),
+                        isSynced = lyrics is SyncedLyrics
+                    )
+                }
+                NetworkResult.Success(Unit)
+            }
+            is NetworkError -> result
+        }
     }
 }
 

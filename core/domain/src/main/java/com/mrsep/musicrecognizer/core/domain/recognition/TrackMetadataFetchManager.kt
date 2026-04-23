@@ -2,7 +2,7 @@ package com.mrsep.musicrecognizer.core.domain.recognition
 
 import kotlinx.coroutines.flow.Flow
 
-interface TrackMetadataEnhancerScheduler {
+interface TrackMetadataFetchManager {
 
     fun enqueueTrackLinksFetcher(trackId: String)
     fun enqueueLyricsFetcher(trackId: String)
@@ -12,6 +12,8 @@ interface TrackMetadataEnhancerScheduler {
 
     fun cancelTrackLinksFetcher(trackId: String)
     fun cancelLyricsFetcher(trackId: String)
+
+    fun cancelAllForTrack(trackId: String)
 
     fun cancelAll()
 }

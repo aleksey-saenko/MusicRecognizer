@@ -6,9 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
+import com.mrsep.musicrecognizer.core.domain.usecase.DeleteTrack
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ internal class TrackViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferencesRepository: PreferencesRepository,
     private val trackRepository: TrackRepository,
-    trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
+    trackMetadataFetchManager: TrackMetadataFetchManager,
+    private val deleteTrackUseCase: DeleteTrack,
 ) : ViewModel() {
 
     private val args = TrackScreen.Args(savedStateHandle)
@@ -33,8 +35,8 @@ internal class TrackViewModel @Inject constructor(
     val uiStateStream = combine(
         trackRepository.getTrackFlow(args.trackId),
         preferencesRepository.userPreferencesFlow,
-        trackMetadataEnhancerScheduler.isTrackLinksFetcherRunning(args.trackId),
-        trackMetadataEnhancerScheduler.isLyricsFetcherRunning(args.trackId),
+        trackMetadataFetchManager.isTrackLinksFetcherRunning(args.trackId),
+        trackMetadataFetchManager.isLyricsFetcherRunning(args.trackId),
     ) { track, preferences, isTrackLinksFetcherRunning, isLyricsFetcherRunning ->
         track?.toUiState(preferences, isTrackLinksFetcherRunning, isLyricsFetcherRunning)
             ?: TrackUiState.TrackNotFound
@@ -52,7 +54,7 @@ internal class TrackViewModel @Inject constructor(
     fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
-            trackRepository.delete(listOf(trackId))
+            deleteTrackUseCase(trackId)
             _trackExistingState.update { false }
         }
     }

@@ -15,7 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.NotificationCompat
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionTask
@@ -36,7 +36,7 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 class ResultNotificationHelper @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val deeplinkRouter: DeeplinkRouter,
-    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
+    private val trackMetadataFetchManager: TrackMetadataFetchManager,
 ) {
 
     private val notificationManager = appContext
@@ -151,7 +151,7 @@ class ResultNotificationHelper @Inject constructor(
             }
 
             is RecognitionResult.Success -> {
-                val isLyricsFetcherRunning = trackMetadataEnhancerScheduler
+                val isLyricsFetcherRunning = trackMetadataFetchManager
                     .isLyricsFetcherRunning(result.track.id).first()
                 resultNotificationBuilder(channelId)
                     .setContentTitle(result.track.title)
@@ -183,7 +183,7 @@ class ResultNotificationHelper @Inject constructor(
         }
         val contentText = "${track.title} - ${track.artist}"
 
-        val isLyricsFetcherRunning = trackMetadataEnhancerScheduler
+        val isLyricsFetcherRunning = trackMetadataFetchManager
             .isLyricsFetcherRunning(track.id).first()
         val notification = NotificationCompat.Builder(
             appContext,

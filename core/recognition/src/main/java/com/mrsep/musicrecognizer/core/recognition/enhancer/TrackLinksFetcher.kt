@@ -5,6 +5,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 
 interface TrackLinksFetcher {
+    val supportedServices: Set<MusicService>
     suspend fun fetch(track: Track): NetworkResult<RemoteTrackLinks>
 }
 

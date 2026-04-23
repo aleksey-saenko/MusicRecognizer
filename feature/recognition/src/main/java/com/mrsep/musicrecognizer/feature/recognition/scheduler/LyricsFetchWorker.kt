@@ -15,6 +15,7 @@ import androidx.work.WorkerParameters
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl.Companion.workTagForTrack
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -68,6 +69,7 @@ internal class LyricsFetchWorker @AssistedInject constructor(
                 .build()
             return OneTimeWorkRequestBuilder<LyricsFetchWorker>()
                 .addTag(TAG)
+                .addTag(workTagForTrack(trackId))
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

@@ -2,9 +2,9 @@ package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractorImpl
-import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataEnhancerSchedulerImpl
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
@@ -21,7 +21,8 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindRecognitionInteractor(impl: RecognitionInteractorImpl): RecognitionInteractor
+    fun bindRecognitionInteractor(impl: RecognitionInteractorImpl):
+            RecognitionInteractor
 
     @Binds
     @Singleton
@@ -35,6 +36,6 @@ internal interface RecognitionModule {
 
     @Binds
     @Singleton
-    fun bindTrackMetadataEnhancerScheduler(impl: TrackMetadataEnhancerSchedulerImpl):
-            TrackMetadataEnhancerScheduler
+    fun bindTrackMetadataFetchManager(impl: TrackMetadataFetchManagerImpl):
+            TrackMetadataFetchManager
 }

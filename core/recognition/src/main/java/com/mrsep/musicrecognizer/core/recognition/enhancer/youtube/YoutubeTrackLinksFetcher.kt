@@ -35,6 +35,11 @@ class YoutubeTrackLinksFetcher @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : TrackLinksFetcher {
 
+    override val supportedServices = setOf(
+        MusicService.Youtube,
+        MusicService.YoutubeMusic,
+    )
+
     override suspend fun fetch(track: Track): NetworkResult<RemoteTrackLinks> {
         val query = buildSearchQuery(track)
         if (query.isBlank()) return NetworkResult.Success(RemoteTrackLinks())

@@ -3,6 +3,7 @@ package com.mrsep.musicrecognizer.core.domain.track
 import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
 import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.SearchResult
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
@@ -35,7 +36,7 @@ interface TrackRepository {
 
     fun getTracksFlow(favoritesMode: FavoritesMode): Flow<List<Track>>
 
-    suspend fun fetchAndUpdateTrackLinks(trackId: String): NetworkResult<Unit>
+    suspend fun fetchAndUpdateTrackLinks(trackId: String, requiredServices: Set<MusicService>): NetworkResult<Unit>
 
     suspend fun fetchAndUpdateLyrics(trackId: String): NetworkResult<Unit>
 }

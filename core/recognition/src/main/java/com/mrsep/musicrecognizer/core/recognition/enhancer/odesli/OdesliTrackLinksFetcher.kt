@@ -25,12 +25,30 @@ class OdesliTrackLinksFetcher @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : TrackLinksFetcher {
 
+    override val supportedServices = setOf(
+        MusicService.AmazonMusic,
+        MusicService.Anghami,
+        MusicService.AppleMusic,
+        MusicService.Audiomack,
+        MusicService.Audius,
+        MusicService.Boomplay,
+        MusicService.Deezer,
+        MusicService.Napster,
+        MusicService.Pandora,
+        MusicService.Soundcloud,
+        MusicService.Spotify,
+        MusicService.Tidal,
+        MusicService.YandexMusic,
+        MusicService.Youtube,
+        MusicService.YoutubeMusic,
+    )
+
     private val locale get() = appContext.resources.configuration.locales[0]
 
     override suspend fun fetch(track: Track): NetworkResult<RemoteTrackLinks> {
         val queryUrl = getPriorityLinkForQuery(track.trackLinks)
         queryUrl ?: return NetworkResult.Success(RemoteTrackLinks())
-        val hasAllLinks = track.trackLinks.size == MusicService.entries.size
+        val hasAllLinks = supportedServices.all(track.trackLinks::contains)
         if (hasAllLinks) return NetworkResult.Success(RemoteTrackLinks())
 
         return withContext(ioDispatcher) {

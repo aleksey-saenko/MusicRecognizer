@@ -12,18 +12,22 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
+import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl.Companion.workTagForTrack
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 
 @HiltWorker
-internal class TrackLinksFetcherWorker @AssistedInject constructor(
+internal class TrackLinksFetchWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val trackRepository: TrackRepository,
+    private val preferencesRepository: PreferencesRepository,
 ) : CoroutineWorker(appContext, workerParams) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -32,7 +36,10 @@ internal class TrackLinksFetcherWorker @AssistedInject constructor(
         val trackId = inputData.getString(INPUT_KEY_TRACK_ID)
         checkNotNull(trackId) { "$TAG requires track ID as parameter" }
 
-        return when (val result = trackRepository.fetchAndUpdateTrackLinks(trackId)) {
+        val requiredServices = preferencesRepository.userPreferencesFlow.first()
+            .requiredMusicServices.toSet()
+        if (requiredServices.isEmpty()) return Result.success()
+        return when (val result = trackRepository.fetchAndUpdateTrackLinks(trackId, requiredServices)) {
             is NetworkResult.Success -> Result.success()
             is NetworkError.BadConnection -> handleRetryOnAttempt()
             is NetworkError.HttpError -> {
@@ -52,7 +59,7 @@ internal class TrackLinksFetcherWorker @AssistedInject constructor(
     }
 
     companion object {
-        const val TAG = "TrackLinksFetcherWorker"
+        const val TAG = "TrackLinksFetchWorker"
         private const val MAX_ATTEMPTS = 3
         private const val INPUT_KEY_TRACK_ID = "TRACK_ID"
 
@@ -65,8 +72,9 @@ internal class TrackLinksFetcherWorker @AssistedInject constructor(
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
-            return OneTimeWorkRequestBuilder<TrackLinksFetcherWorker>()
+            return OneTimeWorkRequestBuilder<TrackLinksFetchWorker>()
                 .addTag(TAG)
+                .addTag(workTagForTrack(trackId))
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

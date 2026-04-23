@@ -4,24 +4,24 @@ import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
+internal class TrackMetadataFetchManagerImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
-) : TrackMetadataEnhancerScheduler {
+) : TrackMetadataFetchManager {
 
     private val workManager get() = WorkManager.getInstance(appContext)
 
     override fun enqueueTrackLinksFetcher(trackId: String) {
         workManager.enqueueUniqueWork(
-            TrackLinksFetcherWorker.getUniqueWorkerName(trackId),
+            TrackLinksFetchWorker.getUniqueWorkerName(trackId),
             ExistingWorkPolicy.REPLACE,
-            TrackLinksFetcherWorker.getOneTimeWorkRequest(trackId = trackId)
+            TrackLinksFetchWorker.getOneTimeWorkRequest(trackId = trackId)
         )
     }
 
@@ -34,7 +34,7 @@ internal class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
     }
 
     override fun isTrackLinksFetcherRunning(trackId: String): Flow<Boolean> {
-        return isWorkerRunning(TrackLinksFetcherWorker.getUniqueWorkerName(trackId))
+        return isWorkerRunning(TrackLinksFetchWorker.getUniqueWorkerName(trackId))
     }
 
     override fun isLyricsFetcherRunning(trackId: String): Flow<Boolean> {
@@ -48,15 +48,23 @@ internal class TrackMetadataEnhancerSchedulerImpl @Inject constructor(
     }
 
     override fun cancelTrackLinksFetcher(trackId: String) {
-        workManager.cancelUniqueWork(TrackLinksFetcherWorker.getUniqueWorkerName(trackId))
+        workManager.cancelUniqueWork(TrackLinksFetchWorker.getUniqueWorkerName(trackId))
     }
 
     override fun cancelLyricsFetcher(trackId: String) {
         workManager.cancelUniqueWork(LyricsFetchWorker.getUniqueWorkerName(trackId))
     }
 
+    override fun cancelAllForTrack(trackId: String) {
+        workManager.cancelAllWorkByTag(workTagForTrack(trackId))
+    }
+
     override fun cancelAll() {
-        workManager.cancelAllWorkByTag(TrackLinksFetcherWorker.TAG)
+        workManager.cancelAllWorkByTag(TrackLinksFetchWorker.TAG)
         workManager.cancelAllWorkByTag(LyricsFetchWorker.TAG)
+    }
+
+    companion object {
+        fun workTagForTrack(trackId: String) = "work_of_track_$trackId"
     }
 }

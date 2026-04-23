@@ -8,7 +8,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.ShazamConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
@@ -35,7 +35,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val resultNotificationHelper: ResultNotificationHelper,
-    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
+    private val trackMetadataFetchManager: TrackMetadataFetchManager,
 ) : CoroutineWorker(appContext, workerParams) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -103,9 +103,13 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
                             resultDate = Instant.now()
                         )
                         enqueuedRecognitionRepository.update(updatedEnqueued)
-                        trackMetadataEnhancerScheduler.enqueueTrackLinksFetcher(updatedTrack.id)
+                        val shouldSearchForLinks = preferencesRepository.userPreferencesFlow.first()
+                            .requiredMusicServices.any { it !in updatedTrack.trackLinks }
+                        if (shouldSearchForLinks) {
+                            trackMetadataFetchManager.enqueueTrackLinksFetcher(updatedTrack.id)
+                        }
                         if (updatedTrack.lyrics == null) {
-                            trackMetadataEnhancerScheduler.enqueueLyricsFetcher(updatedTrack.id)
+                            trackMetadataFetchManager.enqueueLyricsFetcher(updatedTrack.id)
                         }
                         prepareTrackImages(updatedTrack)
                         resultNotificationHelper.notifyResult(updatedEnqueued)

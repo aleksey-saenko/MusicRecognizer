@@ -10,7 +10,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionSche
 import com.mrsep.musicrecognizer.core.domain.recognition.NetworkMonitor
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
@@ -46,7 +46,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val trackRepository: TrackRepository,
     private val enqueuedRecognitionRepository: EnqueuedRecognitionRepository,
     private val enqueuedRecognitionScheduler: EnqueuedRecognitionScheduler,
-    private val trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
+    private val trackMetadataFetchManager: TrackMetadataFetchManager,
     private val networkMonitor: NetworkMonitor,
 ) : RecognitionInteractor {
 
@@ -175,9 +175,13 @@ internal class RecognitionInteractorImpl @Inject constructor(
                     val updatedTrack = trackWithStoredProps.copy(
                         properties = trackWithStoredProps.properties.copy(isViewed = false)
                     )
-                    trackMetadataEnhancerScheduler.enqueueTrackLinksFetcher(updatedTrack.id)
+                    val shouldSearchForLinks = preferencesRepository.userPreferencesFlow.first()
+                        .requiredMusicServices.any { it !in updatedTrack.trackLinks }
+                    if (shouldSearchForLinks) {
+                        trackMetadataFetchManager.enqueueTrackLinksFetcher(updatedTrack.id)
+                    }
                     if (updatedTrack.lyrics == null) {
-                        trackMetadataEnhancerScheduler.enqueueLyricsFetcher(updatedTrack.id)
+                        trackMetadataFetchManager.enqueueLyricsFetcher(updatedTrack.id)
                     }
                     RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                 }

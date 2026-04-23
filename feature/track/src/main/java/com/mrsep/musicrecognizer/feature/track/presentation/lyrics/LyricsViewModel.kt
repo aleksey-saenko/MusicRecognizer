@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
-import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataEnhancerScheduler
+import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ internal class LyricsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
-    trackMetadataEnhancerScheduler: TrackMetadataEnhancerScheduler,
+    trackMetadataFetchManager: TrackMetadataFetchManager,
 ) : ViewModel() {
 
     private val args = LyricsScreen.Args(savedStateHandle)
@@ -32,7 +32,7 @@ internal class LyricsViewModel @Inject constructor(
     val uiStateStream = combine(
         flow = trackRepository.getTrackFlow(args.trackId),
         flow2 = preferencesRepository.userPreferencesFlow,
-        flow3 = trackMetadataEnhancerScheduler.isLyricsFetcherRunning(args.trackId)
+        flow3 = trackMetadataFetchManager.isLyricsFetcherRunning(args.trackId)
     ) { track, preferences, isLyricsFetcherRunning ->
         if (track == null) return@combine LyricsUiState.TrackNotFound
         if (isLyricsFetcherRunning) return@combine LyricsUiState.Loading

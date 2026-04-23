@@ -8,6 +8,7 @@ import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.usecase.DeleteTrack
 import com.mrsep.musicrecognizer.feature.library.presentation.model.TrackUi
 import com.mrsep.musicrecognizer.feature.library.presentation.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,7 @@ internal class LibraryViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val dateTimeFormatter: AppDateTimeFormatter,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    private val deleteTrackUseCase: DeleteTrack,
 ) : ViewModel() {
 
     val uiState = combine(
@@ -71,7 +73,7 @@ internal class LibraryViewModel @Inject constructor(
 
     fun deleteTracks(trackIds: Set<String>) {
         viewModelScope.launch {
-            trackRepository.delete(trackIds.toList())
+            deleteTrackUseCase(trackIds.toList())
         }
     }
 

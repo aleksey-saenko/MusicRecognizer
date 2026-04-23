@@ -56,15 +56,16 @@ android {
         // Excluded unfinished translations: "ca", "el", "fa", "gu", "pl", "ro", "vi", "iw"
         localeFilters += listOf("en", "cs", "de", "es", "et", "fr", "gl", "it", "nl", "pt", "pt-rBR", "ru", "sk", "tr", "uk", "zh-rCN")
     }
-    // ./gradlew app:exportLibraryDefinitions
-    aboutLibraries {
-        license.additionalLicenses = setOf("GPL-3.0-or-later")
-        collect.gitHubApiToken = properties["github.token"] as? String
-        export.apply {
-            prettyPrint = true
-            excludeFields = setOf("funding", "scm")
-            outputPath = layout.projectDirectory.file("src/main/res/raw/aboutlibraries.json")
-        }
+}
+
+// ./gradlew app:exportLibraryDefinitions
+aboutLibraries {
+    license.additionalLicenses = setOf("GPL-3.0-or-later")
+    collect.gitHubApiToken = properties["github.token"] as? String
+    export.apply {
+        prettyPrint = true
+        excludeFields = setOf("funding", "scm")
+        outputPath = layout.projectDirectory.file("src/main/res/raw/aboutlibraries.json")
     }
 }
 

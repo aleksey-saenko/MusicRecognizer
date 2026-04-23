@@ -12,8 +12,8 @@ The app does use third-party services that may collect your personal information
 
 * [Odesli](https://odesli.co/) ([Terms of Service](https://odesli.co/terms), [Privacy Policy](https://odesli.co/privacy))
 
-Osesli remote service is used after each successful recognition to obtain additional platform-specific track links.
-
 For recognition purposes, Audile uses one of the remote services AudD, ACRCloud, or Shazam, as selected by the user. When AudD or ACRCloud is used, short audio recordings (3–10 seconds) are sent directly to the selected remote service for identification. When Shazam is used, the app converts the recorded audio on the device into compact audio fingerprints (signatures) and sends only those fingerprints to Shazam for matching; the original audio samples never leave the device and cannot be reconstructed from the fingerprints. No other sensitive information is shared. As Audile is intended to be an open-source application, it does not use any closed-source audio-fingerprinting libraries.
+
+After a successful recognition, the app may make additional requests to external services, when necessary, to obtain extra information about the track. To retrieve additional platform-specific track links, the app uses the Odesli service or makes direct search requests to required music services. To retrieve song lyrics, the app uses the [LRCLIB](https://lrclib.net/) service.
 
 Audile uses [ACRA](https://github.com/ACRA/acra) to generate crash reports in case of application failures. These reports contain detailed device and crash information, which can be useful for fixing issues. Reports are not sent automatically; instead, the app provides an option to email the report to developers, granting users full control over sharing their information.

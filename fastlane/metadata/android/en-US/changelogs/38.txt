@@ -1,0 +1,7 @@
+* Add Arabic, Hungarian, Hebrew and Polish translations
+* Add CSV export for tracks
+* Add buttons for manual track search on music services
+* Fix broken search for track links on YouTube and YouTube Music
+* Update translations
+
+Many thanks to all the translators!

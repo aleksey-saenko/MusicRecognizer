@@ -53,7 +53,7 @@
     <string name="permissions_denied_message">Eelmine kord oled sa oled keeldunud õiguste jagamisest. Seda otsust saad muuta rakenduse seadistustest.</string>
     <string name="permissions_denied_open_settings">Ava seadistused</string>
     <string name="permission_granted">Õigused on olemas</string>
-    <string name="onboarding_welcome_message">Audile on muusika tuvastamise rakendus, mis aitab sul kiiresti ja täpselt ära tunda muusikapala, mis sinu lähikonnas kõlab.</string>
+    <string name="onboarding_welcome_message">Audile on muusika tuvastamise rakendus, mis aitab sul kiiresti ja täpselt ära tunda muusikat, mis sinu lähikonnas kõlab.</string>
     <string name="onboarding_token_message">Rakendus kasutab muusikatuvastusteenust AudD, mis pole tasuta ja eeldab kasutamiseks API tunnusluba. Liitudes <![CDATA[<a href="%1$s">siin</a>]]> saad 14-päevase ajutise tunnusloa (kui sul seda veel pole).</string>
     <string name="onboarding_token_skip_message">Kui jätad selle sammu vahele, siis igas päevas lubatud tuvastuste arv on ülipiiratud. Soovi korral saad seadistusest tunnusloa alati lisada.</string>
     <string name="onboarding_token_validating">Kontrollime õigsust</string>
@@ -117,7 +117,7 @@
     <string name="recording_stop_player">Peata</string>
     <string name="select_all">Vali kõik</string>
     <string name="delete_recognitions_message">Kas sa oled kindel, et soovid katkestada ja kustutada valitud ajastatud tuvastamised? Seda tegevust ei saa tagasi pöörata.</string>
-    <string name="result_title_bad_network_response">Võrgupäringu vigane vastus</string>
+    <string name="result_title_bad_network_response">Võrgupäringu ei toiminid</string>
     <string name="result_title_unknown_error">Tundmatu viga</string>
     <string name="library">Muusikakogu</string>
     <string name="filters">Filtrid</string>
@@ -252,7 +252,7 @@
     <string name="fallback_trigger_bad_connection">Kehv internetiühendus</string>
     <string name="fallback_trigger_no_matches_found">Tuvastamisel ei leidu vastet</string>
     <string name="fallback_trigger_other_failures">Muud vead</string>
-    <string name="audd_help_dialog_message">AuD on tauline teenus, mis pakub ka 14-päevast katseperioodi. Teenuse kasutamiseks pead looma kasutajakonto ja saama API tunnusloa. Kui sa pole veel liitunud, siis saad <![CDATA[<a href="%1$s">seda teha siin</a>]]>.</string>
+    <string name="audd_help_dialog_message">AudD on tasuline teenus, mis pakub 14-päevast katseperioodi. Teenuse kasutamiseks pead looma kasutajakonto ja saama API tunnusloa. Kui sa pole veel liitunud, siis saad <![CDATA[<a href="%1$s">seda teha siin</a>]]>.</string>
     <string name="audd_help_dialog_message_empty_token">Teenust saad proovimise mõttes kasutada ka ilma tunnusloata, aga palun arvesta, et sel juhul toimib iga päev vaid mõni tuvastamine.</string>
     <string name="acr_cloud_help_dialog_steps_title">Palun arvesta nende asjaoludega:</string>
     <string name="acr_cloud_help_dialog_step1">Internetiühenduse väiksema latentsuse nimel palun vali endale lähim geograafiline piirkond</string>
@@ -319,4 +319,13 @@
     <string name="export_export">Ekspordi</string>
     <string name="export_in_progress">Ekspordin…</string>
     <string name="export_csv_result_success">CSV-faili loomine õnnestus!</string>
+    <string name="audio_source_dialog_device_audio_limited">Sellel rakendusel on piiratud helisalvestuse tugi Androidi versioonsi 9 ja varasemates</string>
+    <string name="audio_source_dialog_methods">See rakendus võimaldab kasutada heli salvestamist nutiseadmes kahel viisil:</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Toetatud kõikides Androidi versioonides</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Helikvaliteet on kehvem ja see meetod ei pruugi toimida kõikides seadmetes</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">See meetod tagab parima kvaliteedi ning toimib kõikides nutiseadmetest alates Androidi 10-st versioonist</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Mõned rakendused võivad helihõivet blokeerida ja sel puhul Audile salvestab vaid vaikust</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternatiivne meetod</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Ekraanihõive (põhimeetod)</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Ei eelda ekraanihõive õigusi ja väldib rakenduste poolt juhitud helihõive piiranguid</string>
 </resources>

@@ -32,11 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.fromHtml
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.ui.R
@@ -44,8 +39,6 @@ import com.mrsep.musicrecognizer.core.ui.components.DialogSwitch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
-
-// TODO: finalize feature and use proper string resources
 
 @Composable
 internal fun AudioSourceDialog(
@@ -113,7 +106,7 @@ internal fun AudioSourceDialog(
                         )
                     } else {
                         Text(
-                            text = "The app uses experimental support for recording device audio on Android 9 and below",
+                            text = stringResource(StringsR.string.audio_source_dialog_device_audio_limited),
                             modifier = Modifier.weight(1f),
                         )
                         IconButton(
@@ -194,7 +187,6 @@ private fun AudioCaptureMode.getTitle(): String {
     }
 }
 
-private const val ISSUE_TRACKER = "https://github.com/aleksey-saenko/MusicRecognizer/issues"
 @Composable
 internal fun AltDeviceSourceHelpDialog(
     modifier: Modifier = Modifier,
@@ -213,38 +205,29 @@ internal fun AltDeviceSourceHelpDialog(
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Text(
-                    text = "The app supports two methods for recording device audio:",
+                    text = stringResource(StringsR.string.audio_source_dialog_methods),
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "1. Screen Casting (primary method)",
+                    text = stringResource(StringsR.string.audio_source_dialog_screen_casting_title),
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(12.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "• This method provides the best sound quality and is supported by all devices running Android 10 and above.")
-                    Text(text = "• Some apps may implicitly block audio capture by using capture policies. In this case, Audile will receive silence.")
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(text = "• ${stringResource(StringsR.string.audio_source_dialog_screen_casting_bullet_1)}")
+                    Text(text = "• ${stringResource(StringsR.string.audio_source_dialog_screen_casting_bullet_2)}")
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "2. Alternative method (experimental)",
+                    text = stringResource(StringsR.string.audio_source_dialog_alt_method_title),
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(12.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "• Does not require screen casting permission and bypasses app restrictions on audio capture.")
-                    Text(text = "• Supported by all Android versions.")
-                    Text(text = "• The sound quality is worse, and this method may not work on some devices.")
-                    Text(
-                        text = AnnotatedString.fromHtml(
-                            htmlString = "• If you encounter distorted audio recordings, please <a href=\"$ISSUE_TRACKER\">report an issue</a>.",
-                            linkStyles = TextLinkStyles(
-                                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                                hoveredStyle = SpanStyle(textDecoration = TextDecoration.Underline),
-                            )
-                        )
-                    )
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(text = "• ${stringResource(StringsR.string.audio_source_dialog_alt_method_bullet_1)}")
+                    Text(text = "• ${stringResource(StringsR.string.audio_source_dialog_alt_method_bullet_2)}")
+                    Text(text = "• ${stringResource(StringsR.string.audio_source_dialog_alt_method_bullet_3)}")
                 }
             }
         },

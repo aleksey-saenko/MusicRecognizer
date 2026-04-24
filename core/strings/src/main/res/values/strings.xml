@@ -13,7 +13,7 @@
     <string name="widget_listening_subtitle_extra_time">Trying one more time</string>
     <string name="recognition_widget_description">Recognize the song in one tap</string>
     <string name="notification_tap_to_recognize">Tap to recognize</string>
-    <string name="notification_tap_to_recognize_subtitle">Identify music while any app open</string>
+    <string name="notification_tap_to_recognize_subtitle">Identify music while any app is open</string>
     <string name="notification_listening">Listening</string>
     <string name="notification_listening_subtitle">Please wait</string>
     <string name="notification_listening_subtitle_extra_time">Trying one more time</string>
@@ -47,7 +47,7 @@
     <string name="copied">Copied</string>
     <string name="share">Share</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
-    <string name="cannot_share_toast">Can\'t find any application to share</string>
+    <string name="cannot_share_toast">Can\'t find any app to share to</string>
     <string name="help">Help</string>
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>
@@ -55,13 +55,13 @@
     <string name="permissions">Permissions</string>
     <string name="request_permission">Request permission</string>
     <string name="permission_rationale_record_audio">To perform music recognition, the app needs access to your microphone.</string>
-    <string name="permission_rationale_post_notifications">To control recognition and get result even when the app is minimized, it requires permission to send notifications.</string>
+    <string name="permission_rationale_post_notifications">To control recognition and get results even when the app is minimized, it requires permission to send notifications.</string>
     <string name="permissions_denied_message">Previous permissions requests have been denied. You can change your decision through the settings.</string>
     <string name="permissions_denied_open_settings">Open settings</string>
     <string name="permission_granted">Permission granted</string>
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Welcome</string>
-    <string name="onboarding_welcome_message">Audile is a music recognition application, that can help you quickly and accurately recognize a music track playing nearby you.</string>
+    <string name="onboarding_welcome_message">Audile is a music recognition app that can help you quickly and accurately recognize music playing nearby you.</string>
     <string name="onboarding_permission_message">The app requires permission to record audio in order to work properly. By granting this permission, you agree that your recorded data will be used by <![CDATA[<a href="%1$s">remote service</a>]]> for music recognition. The app does not use this data for any other purpose.</string>
     <string name="onboarding_token_message">The app uses AudD music recognition service, which is not free and requires a special API token. Sign up <![CDATA[<a href="%1$s">here</a>]]> to get your 14-day trial token, if you don\'t have one yet.</string>
     <string name="onboarding_token_skip_message">Skipping this step will limit your daily recognitions, but you can always specify your personal token later in preferences.</string>
@@ -76,19 +76,19 @@
     <string name="result_title_no_matches">No matches found</string>
     <string name="result_message_no_matches">Sorry, the app couldn\'t recognize this song</string>
     <string name="result_title_bad_connection">Bad internet connection</string>
-    <string name="result_message_bad_connection">Please, check your network status</string>
+    <string name="result_message_bad_connection">Please check your network status</string>
     <string name="result_title_recognition_saved">Recognition saved</string>
     <string name="result_message_recognition_saved">The audio sample was saved, you can launch recognition whenever you want manually</string>
     <string name="result_title_recognition_scheduled">Recognition scheduled</string>
     <string name="result_message_recognition_scheduled">The audio sample was saved, when you get back online, the app will try to identify this song</string>
     <string name="result_title_recording_error">Recording error</string>
     <string name="result_message_recording_error">An error occurred during audio recording</string>
-    <string name="result_title_bad_network_response">Bad network response</string>
-    <string name="result_message_bad_network_response">An error occurred during internet request</string>
+    <string name="result_title_bad_network_response">Network request failed</string>
+    <string name="result_message_bad_network_response">An error occurred during an internet request</string>
     <string name="result_title_auth_error">Authentication error</string>
-    <string name="result_message_auth_error">Please, check your credentials for the selected recognition service and try again</string>
+    <string name="result_message_auth_error">Please check your credentials for the selected recognition service and try again</string>
     <string name="result_title_service_usage_limited">Service usage limited</string>
-    <string name="result_message_service_usage_limited">Your service usage has reached its limit. Please, check your plan or try again later</string>
+    <string name="result_message_service_usage_limited">Your service usage has reached its limit. Please check your plan or try again later</string>
     <string name="result_title_internal_error">Internal error</string>
     <string name="result_message_internal_error">An internal error occurred</string>
     <string name="result_title_unknown_error">Unknown error</string>
@@ -123,7 +123,7 @@
     <string name="recognition_queue">Recognition queue</string>
     <string name="queue">Queue</string>
     <string name="empty_recognition_queue_title">No queued recognitions</string>
-    <string name="empty_recognition_queue_subtitle">In offline or on failure, a recognition can be queued according to the chosen fallback policy</string>
+    <string name="empty_recognition_queue_subtitle">When offline or after a failure, a recognition can be queued according to the selected fallback policy</string>
     <string name="untitled_recognition">Untitled recognition</string>
     <string name="format_scheduled_recognition_of">Scheduled recognition of %s</string>
     <string name="format_recognition_created">Created: %s</string>
@@ -138,7 +138,7 @@
     <string name="recognition_action_rename">Rename</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
-    <string name="disable_multi_selection_mode">Disable multi selection mode</string>
+    <string name="disable_multi_selection_mode">Disable multi-selection mode</string>
     <string name="cancel_selected">Cancel selected</string>
     <string name="delete_selected">Delete selected</string>
     <string name="recording_start_player">Play</string>
@@ -202,11 +202,20 @@
     <string name="audio_capture_mode_device">Device audio</string>
     <string name="audio_capture_mode_auto">Automatic</string>
     <string name="audio_source_dialog_use_alt_device_source">Use alternative device audio source</string>
+    <string name="audio_source_dialog_device_audio_limited">The app has limited support for recording device audio on Android 9 and earlier</string>
+    <string name="audio_source_dialog_methods">The app supports two ways to record device audio:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Screen casting (primary method)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">This method provides the best sound quality and works on all devices running Android 10 and above</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Some apps may block audio capture with capture policies, and in that case Audile will receive silence</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternative method</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Does not require screen casting permission and bypasses audio capture restrictions set by other apps</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Supported on all Android versions</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Sound quality is lower, and this method may not work on some devices</string>
     <string name="pref_title_fallback_policy">Recognition fallback policy</string>
     <string name="pref_subtitle_fallback_policy">Set fallback actions after unsuccessful recognitions</string>
     <string name="fallback_policy_dialog_title">Fallback policy</string>
     <string name="fallback_policy_dialog_message">Set the default fallback action for each type of unsuccessful result:</string>
-    <string name="fallback_action_save_recording_and_retry">Save the recording and launch retry</string>
+    <string name="fallback_action_save_recording_and_retry">Save the recording and retry</string>
     <string name="fallback_action_save_recording">Save the recording</string>
     <string name="fallback_action_ignore">Ignore</string>
     <string name="fallback_trigger_bad_connection">Bad internet connection</string>
@@ -216,12 +225,12 @@
     <string name="recognition_provider_dialog_title">Provider</string>
     <string name="recognition_provider_dialog_message">Select the recognition provider:</string>
     <string name="recognition_provider_dialog_format_auth">%s authentication:</string>
-    <string name="audd_help_dialog_message">AudD is a paid service that offers the option of a free trial period for 14 days. To use this service, you need to create an account and get your private API token. <![CDATA[<a href="%1$s">Sign up</a>]]> if you don\'t have one yet.</string>
+    <string name="audd_help_dialog_message">AudD is a paid service that offers a 14-day free trial. To use this service, you need to create an account and get your private API token. <![CDATA[<a href="%1$s">Sign up</a>]]> if you don\'t have one yet.</string>
     <string name="audd_help_dialog_message_empty_token">You can try using the service for testing purposes without providing the token, but please note that this will limit your daily recognitions.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud is a paid service that offers the option of a free trial period and limited usage for development purposes. To use this service, you need to create an account and register a project. If you encounter any difficulties, please refer to <![CDATA[<a href="%1$s">this guide</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Please pay attention to these steps:</string>
     <string name="acr_cloud_help_dialog_step1">Select the geographical region closest to you to minimize internet latency</string>
-    <string name="acr_cloud_help_dialog_step2">Set the audio source as \"Recorded audio\"</string>
+    <string name="acr_cloud_help_dialog_step2">Set the audio source to \"Recorded audio\"</string>
     <string name="acr_cloud_help_dialog_step3">Set the audio engine of your choice. The option \"Audio fingerprinting\" is the most accurate for general use</string>
     <string name="acr_cloud_help_dialog_step4">Check all the boxes for 3rd party ID integration</string>
     <string name="pref_group_notifications">Notifications</string>
@@ -289,7 +298,7 @@
     <!-- CSV export -->
     <string name="pref_title_export_to_csv">Export to CSV</string>
     <string name="pref_subtitle_export_to_csv">Export all tracks to a CSV file</string>
-    <string name="export_only_favorites_tracks">Export only favorites tracks</string>
+    <string name="export_only_favorites_tracks">Export only favorite tracks</string>
     <string name="export_write_csv_header">Include CSV header</string>
     <string name="export_select_fields_to_export">Select fields to export:</string>
     <string name="export_track_field_title">Title</string>
@@ -314,7 +323,7 @@
     <string name="about_pref_title_github_repo">GitHub repository</string>
     <string name="about_pref_subtitle_github_repo">Source code, issues and other information</string>
     <string name="about_pref_title_privacy_policy">Privacy policy</string>
-    <string name="about_pref_subtitle_privacy_policy">Learn more how the app handles your data</string>
+    <string name="about_pref_subtitle_privacy_policy">Learn more about how the app handles your data</string>
     <string name="about_pref_title_license">License</string>
     <string name="about_pref_title_licenses">Licenses</string>
     <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3 or later</string>

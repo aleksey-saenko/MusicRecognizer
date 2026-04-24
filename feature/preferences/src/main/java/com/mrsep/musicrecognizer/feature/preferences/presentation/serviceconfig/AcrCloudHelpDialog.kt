@@ -56,11 +56,11 @@ internal fun AcrCloudHelpDialog(
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(Modifier.height(12.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step1))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step2))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step3))
-                    Text(text = "\u2022 " + stringResource(StringsR.string.acr_cloud_help_dialog_step4))
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(text = "• ${stringResource(StringsR.string.acr_cloud_help_dialog_step1)}")
+                    Text(text = "• ${stringResource(StringsR.string.acr_cloud_help_dialog_step2)}")
+                    Text(text = "• ${stringResource(StringsR.string.acr_cloud_help_dialog_step3)}")
+                    Text(text = "• ${stringResource(StringsR.string.acr_cloud_help_dialog_step4)}")
                 }
             }
         },

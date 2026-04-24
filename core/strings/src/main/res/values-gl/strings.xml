@@ -299,4 +299,24 @@
     <string name="toast_no_file_selected">Sen selección de ficheiro</string>
     <string name="toast_failed_delete_incomplete_backup_file">Non se puido eliminar o ficheiro de copia incompleto</string>
     <string name="toast_press_again_to_confirm">Preme outra vez para confirmar</string>
+    <string name="deselect_all">Seleccionar nada</string>
+    <string name="pref_title_export_to_csv">Exportar a CSV</string>
+    <string name="pref_subtitle_export_to_csv">Exportar todas as pistas a un ficheiro CSV</string>
+    <string name="export_only_favorites_tracks">Exportar só as pistas favoritas</string>
+    <string name="export_write_csv_header">Incluír cabeceira CSV</string>
+    <string name="export_select_fields_to_export">Seleccionar os campos a exportar:</string>
+    <string name="export_track_field_title">Título</string>
+    <string name="export_track_field_artist">Artista</string>
+    <string name="export_track_field_album">Álbum</string>
+    <string name="export_track_field_release_date">Data de publicación</string>
+    <string name="export_track_field_recognition_date">Data da identificación</string>
+    <string name="export_track_field_duration">Duración</string>
+    <string name="export_track_field_playback_offset">Retraso na reprodución</string>
+    <string name="export_track_field_provider">Provedor da identificación</string>
+    <string name="export_track_field_lyrics">Letras</string>
+    <string name="export_track_field_favorite">Favorita</string>
+    <string name="export_track_field_artwork_link">Arte</string>
+    <string name="export_export">Exportar</string>
+    <string name="export_in_progress">Exportando…</string>
+    <string name="export_csv_result_success">CSV creado correctamente!</string>
 </resources>

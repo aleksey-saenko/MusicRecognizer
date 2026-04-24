@@ -308,4 +308,24 @@
     <string name="toast_no_file_selected">Není vybrán žádný soubor</string>
     <string name="toast_failed_delete_incomplete_backup_file">Nepodařilo se smazat soubor nedokončené zálohy</string>
     <string name="toast_press_again_to_confirm">Stiskněte znovu pro potvrzení</string>
+    <string name="deselect_all">Zrušit výběr všeho</string>
+    <string name="pref_title_export_to_csv">Exportovat do CSV</string>
+    <string name="pref_subtitle_export_to_csv">Exportovat všechny skladby do souboru CSV</string>
+    <string name="export_only_favorites_tracks">Exportovat pouze oblíbené skladby</string>
+    <string name="export_write_csv_header">Zahrnout hlavičku CSV</string>
+    <string name="export_select_fields_to_export">Vyberte pole k exportování:</string>
+    <string name="export_track_field_title">Název</string>
+    <string name="export_track_field_artist">Umělec</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Datum vydání</string>
+    <string name="export_track_field_recognition_date">Datum rozpoznání</string>
+    <string name="export_track_field_duration">Délka</string>
+    <string name="export_track_field_playback_offset">Posunutí přehrávání</string>
+    <string name="export_track_field_provider">Poskytovatel rozpoznání</string>
+    <string name="export_track_field_lyrics">Texty</string>
+    <string name="export_track_field_favorite">Oblíbení</string>
+    <string name="export_track_field_artwork_link">Obal</string>
+    <string name="export_export">Export</string>
+    <string name="export_in_progress">Exportování…</string>
+    <string name="export_csv_result_success">Soubor CSV úspěšně vytvořen!</string>
 </resources>

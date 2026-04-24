@@ -99,7 +99,7 @@
     <string name="filter_recognition_date">Data rozpoznania</string>
     <string name="filter_title">Tytuł</string>
     <string name="filter_artist">Artysta</string>
-    <string name="filter_release_date">Data premiery</string>
+    <string name="filter_release_date">Data wydania</string>
     <string name="filter_order_By">Ułóż według</string>
     <string name="filter_ascending">Rosnąco</string>
     <string name="filter_descending">Malejąco</string>
@@ -148,7 +148,7 @@
     <string name="track_info_title_recognized_at">Rozpoznano o:</string>
     <string name="track_info_title_recognized_by">Rozpoznano przez:</string>
     <string name="track_info_title_date_of_last_recognition">Data ostatniego rozpoznania:</string>
-    <string name="artwork">Grafika</string>
+    <string name="artwork">Okładka</string>
     <string name="artwork_share_menu_link">Link</string>
     <string name="artwork_share_menu_image">Obraz</string>
     <string name="track_metadata">Metadane</string>
@@ -299,4 +299,24 @@
     <string name="crash_dialog_comment_prompt">W tym miejscu możesz dodać dodatkowe informacje:</string>
     <string name="crash_dialog_button_send">Wyślij</string>
     <string name="crash_dialog_button_cancel">Anuluj</string>
+    <string name="deselect_all">Odznacz wszystko</string>
+    <string name="pref_title_export_to_csv">Eksportuj do CSV</string>
+    <string name="pref_subtitle_export_to_csv">Eksportuj wszystkie utwory do pliku CSV</string>
+    <string name="export_only_favorites_tracks">Eksportuj tylko ulubione utwory</string>
+    <string name="export_write_csv_header">Dodaj nagłówek pliku CSV</string>
+    <string name="export_select_fields_to_export">Wybierz pola do wyeksportowania:</string>
+    <string name="export_track_field_title">Tytuł</string>
+    <string name="export_track_field_artist">Artysta</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Data wydania</string>
+    <string name="export_track_field_recognition_date">Data rozpoznania</string>
+    <string name="export_track_field_duration">Czas trwania</string>
+    <string name="export_track_field_playback_offset">Przesunięcie odtwarzania</string>
+    <string name="export_track_field_provider">Dostawca usługi rozpoznawania</string>
+    <string name="export_track_field_lyrics">Tekst utworu</string>
+    <string name="export_track_field_favorite">Ulubione</string>
+    <string name="export_track_field_artwork_link">Okładka</string>
+    <string name="export_export">Eksportuj</string>
+    <string name="export_in_progress">Eksportowanie…</string>
+    <string name="export_csv_result_success">Plik CSV został pomyślnie utworzony!</string>
 </resources>

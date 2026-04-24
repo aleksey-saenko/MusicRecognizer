@@ -299,4 +299,24 @@
     <string name="toast_no_file_selected">Файл не вибрано</string>
     <string name="toast_failed_delete_incomplete_backup_file">Не вдалося видалити неповний файл резервної копії</string>
     <string name="toast_press_again_to_confirm">Натисніть ще раз для підтвердження</string>
+    <string name="deselect_all">Зняти вибір усіх</string>
+    <string name="pref_title_export_to_csv">Експорт у CSV</string>
+    <string name="pref_subtitle_export_to_csv">Експортувати всі пісні у файл CSV</string>
+    <string name="export_only_favorites_tracks">Експортувати лише улюблені пісні</string>
+    <string name="export_write_csv_header">Додати заголовок CSV</string>
+    <string name="export_select_fields_to_export">Оберіть поля для експорту:</string>
+    <string name="export_track_field_title">Назва</string>
+    <string name="export_track_field_artist">Виконавець</string>
+    <string name="export_track_field_album">Альбом</string>
+    <string name="export_track_field_release_date">Дата виходу</string>
+    <string name="export_track_field_recognition_date">Дата розпізнання</string>
+    <string name="export_track_field_duration">Тривалість</string>
+    <string name="export_track_field_playback_offset">Початок відтворення</string>
+    <string name="export_track_field_provider">Сервіс розпізнання</string>
+    <string name="export_track_field_lyrics">Текст пісні</string>
+    <string name="export_track_field_favorite">Улюблена</string>
+    <string name="export_track_field_artwork_link">Ілюстрація</string>
+    <string name="export_export">Експортувати</string>
+    <string name="export_in_progress">Есплртування…</string>
+    <string name="export_csv_result_success">Файл CSV успішно стаорено!</string>
 </resources>

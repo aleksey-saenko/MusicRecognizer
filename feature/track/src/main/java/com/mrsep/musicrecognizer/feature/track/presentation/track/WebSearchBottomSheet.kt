@@ -20,15 +20,41 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
+import com.mrsep.musicrecognizer.core.ui.resources.titleId
+import kotlinx.collections.immutable.ImmutableList
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-internal enum class SearchProvider { WebDefault, Wikipedia }
+internal sealed class SearchProvider {
+    data object WebDefault : SearchProvider()
+    data object Wikipedia : SearchProvider()
+    data class Service(val service: MusicService) : SearchProvider()
+}
+
+private val SearchProviderSaver: Saver<SearchProvider, String> = Saver(
+    save = { original ->
+        when (original) {
+            SearchProvider.WebDefault -> "WebDefault"
+            SearchProvider.Wikipedia -> "Wikipedia"
+            is SearchProvider.Service -> original.service.name
+        }
+    },
+    restore = { saveable ->
+        when (saveable) {
+            "WebDefault" -> SearchProvider.WebDefault
+            "Wikipedia" -> SearchProvider.Wikipedia
+            else -> SearchProvider.Service(MusicService.valueOf(saveable))
+        }
+    }
+)
+
 internal enum class SearchTarget { Track, Artist, Album }
 
 internal data class SearchParams(
@@ -41,6 +67,7 @@ internal data class SearchParams(
 internal fun WebSearchBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
+    requiredServices: ImmutableList<MusicService>,
     albumAvailable: Boolean,
     onPerformWebSearchClick: (SearchParams) -> Unit,
     modifier: Modifier = Modifier,
@@ -50,7 +77,9 @@ internal fun WebSearchBottomSheet(
         sheetState = sheetState,
         modifier = modifier
     ) {
-        var providerSelected by rememberSaveable { mutableStateOf(SearchProvider.WebDefault) }
+        var providerSelected by rememberSaveable(stateSaver = SearchProviderSaver) {
+            mutableStateOf(SearchProvider.WebDefault)
+        }
         var targetSelected by rememberSaveable { mutableStateOf(SearchTarget.Track) }
 
         Text(
@@ -82,6 +111,21 @@ internal fun WebSearchBottomSheet(
                         onClick = { providerSelected = SearchProvider.Wikipedia },
                         label = { Text(text = stringResource(StringsR.string.wikipedia)) }
                     )
+                }
+                Spacer(Modifier.height(16.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    requiredServices.forEach { service ->
+                        FilterChip(
+                            selected = providerSelected == SearchProvider.Service(service),
+                            onClick = { providerSelected = SearchProvider.Service(service) },
+                            label = { Text(text = stringResource(service.titleId())) }
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(8.dp))

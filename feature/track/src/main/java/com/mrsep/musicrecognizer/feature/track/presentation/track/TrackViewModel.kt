@@ -8,9 +8,12 @@ import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.usecase.DeleteTrack
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.annotation.concurrent.Immutable
@@ -90,6 +93,7 @@ internal sealed class TrackUiState {
         val isTrackViewed: Boolean,
         val isTrackLinksFetcherRunning: Boolean,
         val isLyricsFetcherRunning: Boolean,
+        val requiredServices: ImmutableList<MusicService>,
         val artworkBasedThemeEnabled: Boolean,
         val themeMode: ThemeMode,
         val usePureBlackForDarkTheme: Boolean,
@@ -108,6 +112,7 @@ private fun Track.toUiState(
         isTrackLinksFetcherRunning = isTrackLinksFetcherRunning &&
                 trackUi.trackLinks.size < preferences.requiredMusicServices.size,
         isLyricsFetcherRunning = isLyricsFetcherRunning,
+        requiredServices = preferences.requiredMusicServices.toImmutableList(),
         artworkBasedThemeEnabled = preferences.artworkBasedThemeEnabled,
         themeMode = preferences.themeMode,
         usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,

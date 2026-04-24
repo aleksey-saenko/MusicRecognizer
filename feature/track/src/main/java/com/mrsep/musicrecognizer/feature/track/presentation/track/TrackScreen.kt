@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
+import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
@@ -207,6 +208,7 @@ internal fun TrackScreen(
                                     WebSearchBottomSheet(
                                         sheetState = searchSheetState,
                                         onDismissRequest = { showSearchBottomSheet = false },
+                                        requiredServices = uiState.requiredServices,
                                         albumAvailable = uiState.track.album != null,
                                         onPerformWebSearchClick = { searchParams ->
                                             hideSearchSheet()
@@ -248,23 +250,34 @@ internal fun shouldUseDarkTheme(
     ThemeMode.AlwaysDark -> true
 }
 
+// TODO refactor search module
+
 private fun performWebSearch(
     context: Context,
     searchParams: SearchParams,
     track: TrackUi,
 ) {
-    val query = track.getWebSearchQuery(searchParams.target, context)
     when (searchParams.provider) {
-        SearchProvider.WebDefault -> context.openWebSearchImplicitly(query)
-        SearchProvider.Wikipedia -> context.openWikiSearch(query)
+        SearchProvider.WebDefault -> {
+            val query = track.genericSearchQuery(searchParams.target)
+            context.openWebSearchImplicitly(query)
+        }
+        SearchProvider.Wikipedia -> {
+            val query = track.genericSearchQuery(searchParams.target)
+            context.openWikiSearch(query)
+        }
+        is SearchProvider.Service -> {
+            val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
+            context.openUrlImplicitly(url)
+        }
     }
 }
 
-private fun TrackUi.getWebSearchQuery(target: SearchTarget, context: Context) = when (target) {
-    SearchTarget.Track -> "$title $artist"
-    SearchTarget.Artist -> artist
-    SearchTarget.Album -> album?.run { "$this $artist" }
-        ?: "$title $artist ${context.getString(StringsR.string.album)}"
+private fun TrackUi.genericSearchQuery(target: SearchTarget): String = when (target) {
+    SearchTarget.Track -> "$title $artist".trim()
+    SearchTarget.Artist -> artist.trim()
+    SearchTarget.Album -> album?.trim()?.takeIf { it.isNotBlank() }?.run { "$this $artist" }?.trim()
+        ?: "$title $artist".trim()
 }
 
 private fun Context.openWikiSearch(query: String) {
@@ -282,6 +295,71 @@ private fun Context.openWikiSearch(query: String) {
         openUrlImplicitly(url)
     }
 }
+
+private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget): String {
+    val queryEncoded = track.genericSearchQuery(target).urlEncode()
+    return when (this) {
+        MusicService.AmazonMusic -> when (target) {
+            SearchTarget.Track ->   "https://music.amazon.com/search/${queryEncoded}"
+            SearchTarget.Artist ->  "https://music.amazon.com/search/${queryEncoded}/artists"
+            SearchTarget.Album ->   "https://music.amazon.com/search/${queryEncoded}/albums"
+        }
+        MusicService.Anghami -> when (target) {
+            SearchTarget.Track ->   "https://play.anghami.com/search/${queryEncoded}/song"
+            SearchTarget.Artist ->  "https://play.anghami.com/search/${queryEncoded}/artist"
+            SearchTarget.Album ->   "https://play.anghami.com/search/${queryEncoded}/album"
+        }
+        MusicService.AppleMusic ->  "https://music.apple.com/search?term=${queryEncoded}"
+        MusicService.Audiomack -> when (target) {
+            SearchTarget.Track ->   "https://audiomack.com/search?q=${queryEncoded}&show=songs"
+            SearchTarget.Artist ->  "https://audiomack.com/search?q=${queryEncoded}&show=artists"
+            SearchTarget.Album ->   "https://audiomack.com/search?q=${queryEncoded}&show=albums"
+        }
+        MusicService.Audius ->      "https://audius.co/search?query=${queryEncoded}"
+        MusicService.Boomplay -> when (target) {
+            SearchTarget.Track ->   "https://www.boomplay.com/search/default/${queryEncoded}"
+            SearchTarget.Artist ->  "https://www.boomplay.com/search/artist/${queryEncoded}"
+            SearchTarget.Album ->   "https://www.boomplay.com/search/album/${queryEncoded}"
+        }
+        MusicService.Deezer -> when (target) {
+            SearchTarget.Track ->   "https://www.deezer.com/search/${queryEncoded}/track"
+            SearchTarget.Artist ->  "https://www.deezer.com/search/${queryEncoded}/artist"
+            SearchTarget.Album ->   "https://www.deezer.com/search/${queryEncoded}/album"
+        }
+        MusicService.MusicBrainz -> when (target) {
+            SearchTarget.Track ->   "https://musicbrainz.org/search?query=${queryEncoded}&type=recording&limit=25&method=indexed"
+            SearchTarget.Artist ->  "https://musicbrainz.org/search?query=${queryEncoded}&type=artist&limit=25&method=indexed"
+            SearchTarget.Album ->   "https://musicbrainz.org/search?query=${queryEncoded}&type=release&limit=25&method=indexed"
+        }
+        // TODO is this service still relevant? consider delete
+        MusicService.Napster ->     "https://app.napster.com/search?q=${queryEncoded}"
+        MusicService.Pandora -> when (target) {
+            SearchTarget.Track ->   "https://www.pandora.com/search/${queryEncoded}/songs"
+            SearchTarget.Artist ->  "https://www.pandora.com/search/${queryEncoded}/artists"
+            SearchTarget.Album ->   "https://www.pandora.com/search/${queryEncoded}/albums"
+        }
+        MusicService.Soundcloud -> when (target) {
+            SearchTarget.Track ->   "https://soundcloud.com/search/sounds?q=${queryEncoded}"
+            SearchTarget.Artist ->  "https://soundcloud.com/search/people?q=${queryEncoded}"
+            SearchTarget.Album ->   "https://soundcloud.com/search/albums?q=${queryEncoded}"
+        }
+        MusicService.Spotify -> when (target) {
+            SearchTarget.Track ->   "https://open.spotify.com/search/${queryEncoded}/tracks"
+            SearchTarget.Artist ->  "https://open.spotify.com/search/${queryEncoded}/artists"
+            SearchTarget.Album ->   "https://open.spotify.com/search/${queryEncoded}/albums"
+        }
+        MusicService.Tidal -> when (target) {
+            SearchTarget.Track ->   "https://tidal.com/search/tracks?q=${queryEncoded}"
+            SearchTarget.Artist ->  "https://tidal.com/search/artists?q=${queryEncoded}"
+            SearchTarget.Album ->   "https://tidal.com/search/albums?q=${queryEncoded}"
+        }
+        MusicService.YandexMusic -> "https://music.yandex.ru/search?text=${queryEncoded}"
+        MusicService.Youtube ->     "https://www.youtube.com/results?search_query=${queryEncoded}"
+        MusicService.YoutubeMusic -> "https://music.youtube.com/search?q=${queryEncoded}"
+    }
+}
+
+private fun String.urlEncode(): String = Uri.encode(trim())
 
 private fun Context.toast(@StringRes stringRes: Int) {
     Toast.makeText(this, getString(stringRes), Toast.LENGTH_SHORT).show()

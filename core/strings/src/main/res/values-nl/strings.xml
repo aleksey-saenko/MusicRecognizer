@@ -43,7 +43,7 @@
     <string name="permissions_denied_open_settings">Open instellingen</string>
     <string name="permission_granted">Toestemming verleend</string>
     <string name="onboarding_welcome">Welkom</string>
-    <string name="onboarding_welcome_message">Audile is een applicatie voor muziekherkenning, die je kan helpen om muzieknummers die in de buurt worden afgespeeld snel en acuraat te herkennen.</string>
+    <string name="onboarding_welcome_message">Audile is een muziekherkennings-app die je helpt om snel en nauwkeurig muziek te herkennen die in je omgeving wordt afgespeeld.</string>
     <string name="onboarding_permission_message">De app vereist toestemming om audio op te nemen. Door het verlenen van deze toestemming stem je ermee in dat de data gebruikt wordt door <![CDATA[<a href="%1$s">remote service</a>]]> voor muziekherkenning. De app gebruikt deze data niet voor andere doeleinden.</string>
     <string name="onboarding_token_validating">Valideren</string>
     <string name="onboarding_final_title">We zijn er klaar voor</string>
@@ -57,10 +57,10 @@
     <string name="result_title_recognition_scheduled">Herkenning gepland</string>
     <string name="result_title_recording_error">Opnamefout</string>
     <string name="result_message_recording_error">Er is een fout opgetreden tijdens opnemen audio</string>
-    <string name="result_title_bad_network_response">Onjuiste netwerkantwoord</string>
+    <string name="result_title_bad_network_response">Netwerkverzoek mislukt</string>
     <string name="result_title_auth_error">Aanmeldfout</string>
     <string name="result_title_service_usage_limited">Servicegebruik beperkt</string>
-    <string name="result_message_service_usage_limited">Je servicegebruik heeft zijn limiet bereikt. Controleer je abonnement of probeer later opnieuw</string>
+    <string name="result_message_service_usage_limited">Je dienstverbruik heeft de limiet bereikt. Controleer je abonnement of probeer later opnieuw</string>
     <string name="result_title_unknown_error">Onbekende fout</string>
     <string name="library">Bibliotheek</string>
     <string name="unviewed_track_label">NIEUW</string>
@@ -117,7 +117,7 @@
     <string name="result_message_recognition_scheduled">Het audiobestand is bewaard. Als je weer online bent, zal de app proberen het nummer te identificeren</string>
     <string name="library_menu_mark_all_tracks_as_viewed">Alles markeren als bekeken</string>
     <string name="result_message_bad_network_response">Er is een fout opgetreden tijdens een internetaanvraag</string>
-    <string name="result_message_auth_error">Controleer je aanmeldgegevens voor de geselecteerde herkenningsservice a.u.b</string>
+    <string name="result_message_auth_error">Controleer je aanmeldgegevens voor de geselecteerde herkenningsdienst en probeer opnieuw</string>
     <string name="empty_library_subtitle">Je recent herkende en favoriete nummers worden hier getoond</string>
     <string name="not_now">Niet nu</string>
     <string name="permissions">Toestemmingen</string>
@@ -153,7 +153,7 @@
     <string name="track_not_found_title">Het nummer is niet gevonden</string>
     <string name="font_size_normal">Normaal</string>
     <string name="empty_recognition_queue_title">Geen herkenningen in wachtrij</string>
-    <string name="empty_recognition_queue_subtitle">Zonder internet of bij een fout kan een herkenning in de wachtrij worden geplaatst volgens het gekozen alternatief</string>
+    <string name="empty_recognition_queue_subtitle">Zonder internet of bij een fout kan een herkenning in de wachtrij worden geplaatst volgens het geselecteerde alternatief</string>
     <string name="untitled_recognition">Onbenoemde herkenning</string>
     <string name="format_scheduled_recognition_of">Herkenning van %s ingeroosterd</string>
     <string name="format_recognition_created">Gemaakt: %s</string>
@@ -200,7 +200,7 @@
     <string name="recognition_provider_dialog_title">Aanbieder</string>
     <string name="recognition_provider_dialog_message">Herkenningsaanbieder selecteren:</string>
     <string name="recognition_provider_dialog_format_auth">%s authenticatie:</string>
-    <string name="audd_help_dialog_message">AudD is een betaalde dienst die de mogelijkheid biedt voor een gratis proefperiode van 14 dagen. Om deze dienst te gebruiken, moet je een account aanmaken en je eigen API-token ontvangen. <![CDATA[<a href="%1$s">Aanmelden</a>]]> als je er nog geen hebt.</string>
+    <string name="audd_help_dialog_message">AudD is een betaalde dienst met een gratis proefperiode van 14 dagen. Om deze dienst te gebruiken, moet je een account aanmaken en je eigen API-token ontvangen. <![CDATA[<a href="%1$s">Aanmelden</a>]]> als je er nog geen hebt.</string>
     <string name="audd_help_dialog_message_empty_token">Je kunt de service voor testdoeleinden gebruiken zonder de token te verstrekken, maar houd er rekening mee dat dit het aantal dagelijkse herkenningen beperkt.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud is een betaalde dienst die de mogelijkheid biedt van een gratis proefperiode en beperkt gebruik voor ontwikkelingsdoeleinden. Om deze dienst te gebruiken, moet je een account aanmaken en een project registreren. Raadpleeg <![CDATA[<a href="%1$s">deze handleiding</a>]]> als je problemen ondervindt.</string>
     <string name="acr_cloud_help_dialog_steps_title">Let op deze stappen:</string>
@@ -319,4 +319,13 @@
     <string name="export_export">Exporteren</string>
     <string name="export_in_progress">Exporteren…</string>
     <string name="export_csv_result_success">CSV-bestand succesvol gemaakt!</string>
+    <string name="audio_source_dialog_device_audio_limited">De app heeft beperkte ondersteuning voor het opnemen van apparaataudio op Android 9 en ouder</string>
+    <string name="audio_source_dialog_methods">De app ondersteunt twee manieren om apparaataudio op te nemen:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Scherm delen (primaire methode)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Deze methode biedt de beste geluidskwaliteit en werkt op alle apparaten met Android 10 en hoger</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Sommige apps blokkeren audio-opnames mogelijk via opnamebeleid, in dat geval zal Audile alleen stilte ontvangen</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternatieve methode</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Vereist geen toestemming voor scherm delen en omzeilt beperkingen voor audio-opname die door andere apps zijn ingesteld</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Ondersteund op alle Android-versies</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">De geluidskwaliteit is lager en deze methode werkt mogelijk niet op alle apparaten</string>
 </resources>

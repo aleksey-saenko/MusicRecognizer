@@ -309,7 +309,7 @@ private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget
             SearchTarget.Artist ->  "https://play.anghami.com/search/${queryEncoded}/artist"
             SearchTarget.Album ->   "https://play.anghami.com/search/${queryEncoded}/album"
         }
-        MusicService.AppleMusic ->  "https://music.apple.com/search?term=${queryEncoded}"
+        MusicService.AppleMusic ->  "https://music.apple.com/us/search?term=${queryEncoded}"
         MusicService.Audiomack -> when (target) {
             SearchTarget.Track ->   "https://audiomack.com/search?q=${queryEncoded}&show=songs"
             SearchTarget.Artist ->  "https://audiomack.com/search?q=${queryEncoded}&show=artists"

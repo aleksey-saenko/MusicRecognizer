@@ -10,7 +10,7 @@
     <string name="widget_listening_subtitle_extra_time">正在重试识别</string>
     <string name="recognition_widget_description">一键识别歌曲</string>
     <string name="notification_tap_to_recognize">轻触识别</string>
-    <string name="notification_tap_to_recognize_subtitle">无需切换应用即可识别</string>
+    <string name="notification_tap_to_recognize_subtitle">任何应用处于打开状态时识别音乐</string>
     <string name="notification_listening">正在识别</string>
     <string name="notification_listening_subtitle">请等待</string>
     <string name="notification_listening_subtitle_extra_time">正在重试识别</string>
@@ -42,7 +42,7 @@
     <string name="copied">已复制</string>
     <string name="share">分享</string>
     <string name="web_browser_not_found_toast">未找到网页浏览器</string>
-    <string name="cannot_share_toast">未找到可用的分享应用</string>
+    <string name="cannot_share_toast">找不到任何可分享的应用</string>
     <string name="help">帮助</string>
     <string name="show_more">显示更多</string>
     <string name="show_less">收起</string>
@@ -75,7 +75,7 @@
     <string name="result_message_recognition_scheduled">音频样本已保存，联网后将自动尝试识别</string>
     <string name="result_title_recording_error">录音出错</string>
     <string name="result_message_recording_error">录音过程中发生错误</string>
-    <string name="result_title_bad_network_response">网络响应异常</string>
+    <string name="result_title_bad_network_response">网络请求失败</string>
     <string name="result_message_bad_network_response">网络请求过程中发生错误</string>
     <string name="year">年份</string>
     <string name="lyrics">歌词</string>
@@ -126,7 +126,7 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud 是一项付费服务，提供免费试用和开发用途的限量使用。使用该服务需创建账户并注册项目。如遇困难，请参阅<![CDATA[<a href="%1$s">本指南</a>]]>。</string>
     <string name="acr_cloud_help_dialog_steps_title">请注意以下步骤：</string>
     <string name="acr_cloud_help_dialog_step1">选择离您最近的地理区域，以降低网络延迟</string>
-    <string name="acr_cloud_help_dialog_step2">将音频来源设置为“录制音频”</string>
+    <string name="acr_cloud_help_dialog_step2">将音频来源设置为“录制的音频”</string>
     <string name="acr_cloud_help_dialog_step3">设置您选择的音频引擎。“音频指纹”选项在通用场景下最为准确</string>
     <string name="acr_cloud_help_dialog_step4">勾选所有第三方 ID 集成选项</string>
     <string name="pref_group_notifications">通知设置</string>
@@ -180,7 +180,7 @@
     <string name="recognition_queue">识别队列</string>
     <string name="queue">队列</string>
     <string name="empty_recognition_queue_title">暂无待识别内容</string>
-    <string name="empty_recognition_queue_subtitle">离线或识别失败时，可根据所选的回退策略将识别加入队列</string>
+    <string name="empty_recognition_queue_subtitle">离线或识别失败后，可根据所选的回退策略将识别加入队列</string>
     <string name="untitled_recognition">未命名识别</string>
     <string name="format_scheduled_recognition_of">已安排识别：%s</string>
     <string name="format_recognition_created">创建时间：%s</string>
@@ -254,7 +254,7 @@
     <string name="about_pref_title_github_repo">GitHub 仓库</string>
     <string name="about_pref_subtitle_github_repo">源代码、问题反馈及其他信息</string>
     <string name="about_pref_title_privacy_policy">隐私政策</string>
-    <string name="about_pref_subtitle_privacy_policy">了解应用如何处理您的数据</string>
+    <string name="about_pref_subtitle_privacy_policy">了解应用如何处理您的数据的更多信息</string>
     <string name="about_pref_title_license">许可证</string>
     <string name="about_pref_title_licenses">许可证信息</string>
     <string name="about_pref_subtitle_license">Audile 遵循 GNU GPLv3 或更高版本许可协议</string>
@@ -319,4 +319,13 @@
     <string name="export_export">导出</string>
     <string name="export_in_progress">导出中…</string>
     <string name="export_csv_result_success">成功创建了 CSV 文件！</string>
+    <string name="audio_source_dialog_device_audio_limited">本应用在 Andorid 9 及更老版本系统上对录制设备音频支持有限</string>
+    <string name="audio_source_dialog_methods">本应用支持双向录制设备音频：</string>
+    <string name="audio_source_dialog_screen_casting_title">1. 投屏（主要方法）</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">此方法提供最佳音质并在所有运行 Android 10 或更高系统版本的设备上工作</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">一些应用可能用录制策略阻止录音，如果是这样 Audile 什么也录不到</string>
+    <string name="audio_source_dialog_alt_method_title">2. 替代方法</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">无需投屏权限并绕过其他应用设置的录音限制</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">支持所有 Android 版本</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">音质较差，此方法在某些设备上可能不工作</string>
 </resources>

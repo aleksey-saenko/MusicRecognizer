@@ -50,7 +50,7 @@
     <string name="permission_granted">Oprávnění uděleno</string>
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Vítejte</string>
-    <string name="onboarding_welcome_message">Audile je aplikace pro rozpoznávání hudby, která vám rychle a spolehlivě pomůže rozpoznat skladbu, která hraje poblíž vás.</string>
+    <string name="onboarding_welcome_message">Audile je aplikace pro rozpoznávání hudby, která vám rychle a spolehlivě pomůže rozpoznat hudbu, která hraje poblíž vás.</string>
     <string name="onboarding_permission_message">Tato aplikace pro správnou funkčnost vyžaduje oprávnění k nahrávání zvuku. Udělením tohoto oprávnění souhlasíte s použitím vašich nahraných dat <![CDATA[<a href="%1$s">vzdálenou službou</a>]]> pro účely rozpoznání hudby. Aplikace tato data nevyužívá k žádnému jinému účelu.</string>
     <string name="onboarding_token_message">Aplikace používá službu rozpoznávání hudby AudD, která vyžaduje speciální token API. Pokud ještě token nemáte, zaregistrujte se <![CDATA[<a href="%1$s">zde</a>]]> pro jeho získání.</string>
     <string name="onboarding_token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
@@ -65,13 +65,13 @@
     <string name="result_title_no_matches">Nenalezeny žádné shody</string>
     <string name="result_message_no_matches">Omlouváme se, tuto skladbu jsme nerozeznali</string>
     <string name="result_title_bad_connection">Špatné připojení k internetu</string>
-    <string name="result_message_bad_connection">Zkontrolujte prosím vaši síť</string>
+    <string name="result_message_bad_connection">Zkontrolujte prosím stav vaší sítě</string>
     <string name="result_title_recognition_scheduled">Rozpoznání naplánováno</string>
     <string name="result_message_recognition_saved">Vzorek zvuku byl uložen, rozpoznávání můžete kdykoli spustit ručně</string>
     <string name="result_message_recognition_scheduled">Vzorek zvuku byl uložen, jakmile budete opět online, pokusí se aplikace identifikovat tuto skladbu</string>
     <string name="result_title_recording_error">Chyba nahrávání</string>
     <string name="result_message_recording_error">Při nahrávání zvuku se vyskytla chyba</string>
-    <string name="result_title_bad_network_response">Špatná odpověď sítě</string>
+    <string name="result_title_bad_network_response">Síťová žádost selhala</string>
     <string name="result_message_bad_network_response">Při žádosti o internet se vyskytla chyba</string>
     <string name="result_title_internal_error">Interní chyba</string>
     <string name="result_message_internal_error">Vyskytla se interní chyba</string>

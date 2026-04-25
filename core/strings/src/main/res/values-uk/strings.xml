@@ -42,19 +42,19 @@
     <string name="copied">Скопійовано</string>
     <string name="share">Поділитися</string>
     <string name="web_browser_not_found_toast">Веббраузер не знайдено</string>
-    <string name="cannot_share_toast">Не можу знайти жодної програми для спільного використання</string>
+    <string name="cannot_share_toast">Не можу знайти жодного застосунку, аби поділитися</string>
     <string name="help">Допомога</string>
     <string name="show_more">Показати більше</string>
     <string name="show_less">Показати менше</string>
     <string name="permissions">Дозволи</string>
     <string name="request_permission">Запит дозволу</string>
     <string name="permission_rationale_record_audio">Для розпізнавання музики програмі потрібен доступ до вашого мікрофона.</string>
-    <string name="permission_rationale_post_notifications">Щоб контролювати розпізнавання та отримувати результат, навіть коли застосунок згорнуто, потрібен дозвіл на надсилання сповіщень.</string>
+    <string name="permission_rationale_post_notifications">Щоб контролювати розпізнавання та отримувати результат , навіть коли застосунок згорнуто, потрібен дозвіл на надсилання сповіщень.</string>
     <string name="permissions_denied_message">Попередні запити на дозволи було відхилено. Ви можете змінити своє рішення в налаштуваннях.</string>
     <string name="permissions_denied_open_settings">Відкрити налаштування</string>
     <string name="permission_granted">Дозвіл надано</string>
     <string name="onboarding_welcome">Ласкаво просимо</string>
-    <string name="onboarding_welcome_message">Audile — це програма для розпізнавання музики, яка допоможе вам швидко та точно розпізнати музичний трек, що відтворюється поруч.</string>
+    <string name="onboarding_welcome_message">Audile — це застосунок для розпізнавання музики, який допоможе вам швидко та точно розпізнати музику, що відтворюється поруч.</string>
     <string name="onboarding_permission_message">Для належної роботи програми потрібен дозвіл на запис аудіо. Надаючи цей дозвіл, ви погоджуєтеся з тим, що ваші записані дані будуть використані <![CDATA[<a href="%1$s">віддаленою службою</a>]]> для розпізнавання музики. Програма не використовує ці дані для жодних інших цілей.</string>
     <string name="onboarding_token_message">Застосунок використовує службу розпізнавання музики AudD, яка не є безкоштовною та вимагає спеціального токена API. Зареєструйтесь <![CDATA[<a href="%1$s">тут</a>]]>, щоб отримати свій 14-денний пробний токен, якщо у вас його ще немає.</string>
     <string name="onboarding_token_skip_message">Пропуск цього кроку обмежить ваші щоденні розпізнавання, але ви завжди можете вказати свій особистий токен пізніше в налаштуваннях.</string>
@@ -68,19 +68,19 @@
     <string name="result_title_no_matches">Збігів не знайдено</string>
     <string name="result_message_no_matches">Вибачте, застосунок не зміг розпізнати цю пісню</string>
     <string name="result_title_bad_connection">Погане інтернет-з\'єднання</string>
-    <string name="result_message_bad_connection">Будь ласка, перевірте стан вашої мережі</string>
+    <string name="result_message_bad_connection">Перевірте стан вашої мережі</string>
     <string name="result_title_recognition_saved">Розпізнавання збережено</string>
     <string name="result_message_recognition_saved">Аудіо зразок збережено, ви можете запустити розпізнавання будь-коли вручну</string>
     <string name="result_title_recognition_scheduled">Визнання заплановано</string>
     <string name="result_message_recognition_scheduled">Аудіозразок збережено. Коли ви знову під\'єднаєтеся до Інтернету, програма спробує розпізнати цю пісню</string>
     <string name="result_title_recording_error">Помилка запису</string>
     <string name="result_message_recording_error">Під час аудіозапису сталася помилка</string>
-    <string name="result_title_bad_network_response">Погана відповідь мережі</string>
+    <string name="result_title_bad_network_response">Помилка мережевого запиту</string>
     <string name="result_message_bad_network_response">Під час запиту до Інтернету сталася помилка</string>
     <string name="result_title_auth_error">Помилка автентифікації</string>
-    <string name="result_message_auth_error">Будь ласка, перевірте свої облікові дані для вибраної служби розпізнавання та спробуйте ще раз</string>
+    <string name="result_message_auth_error">Перевірте свої облікові дані для вибраної служби розпізнавання та спробуйте ще раз</string>
     <string name="result_title_service_usage_limited">Використання послуг обмежене</string>
-    <string name="result_message_service_usage_limited">Використання вашого сервісу досягло ліміту. Будь ласка, перевірте свій тарифний план або спробуйте пізніше</string>
+    <string name="result_message_service_usage_limited">Використання вашого сервісу досягло ліміту. Перевірте свій тарифний план або спробуйте пізніше</string>
     <string name="result_title_internal_error">Внутрішня помилка</string>
     <string name="result_message_internal_error">Сталася внутрішня помилка</string>
     <string name="result_title_unknown_error">Невідома помилка</string>
@@ -112,7 +112,7 @@
     <string name="recognition_queue">Черга розпізнавання</string>
     <string name="queue">Черга</string>
     <string name="empty_recognition_queue_title">Немає розпізнань у черзі</string>
-    <string name="empty_recognition_queue_subtitle">В автономному режимі або у разі збою розпізнавання може бути поставлено в чергу відповідно до обраної резервної політики</string>
+    <string name="empty_recognition_queue_subtitle">Поза мережею або після збою розпізнавання може бути поставлене в чергу відповідно до обраної політики відкату</string>
     <string name="untitled_recognition">Безіменне визнання</string>
     <string name="format_scheduled_recognition_of">Заплановане розпізнавання %s</string>
     <string name="format_recognition_created">Створено: %s</string>
@@ -202,12 +202,12 @@
     <string name="recognition_provider_dialog_title">Постачальник</string>
     <string name="recognition_provider_dialog_message">Виберіть постачальника послуг розпізнавання:</string>
     <string name="recognition_provider_dialog_format_auth">%s автентифікація:</string>
-    <string name="audd_help_dialog_message">AudD – це платний сервіс, який пропонує можливість безкоштовного пробного періоду протягом 14 днів. Щоб користуватися цим сервісом, вам потрібно створити обліковий запис та отримати свій приватний токен API. <![CDATA[<a href="%1$s">Зареєструватися</a>]]> якщо у вас його ще немає.</string>
+    <string name="audd_help_dialog_message">AudD — це платний сервіс, який пропонує 14-денний безплатний пробний період. Щоб користуватися цим сервісом, вам потрібно створити обліковий запис та отримати свій приватний токен API. <![CDATA[<a href="%1$s">Зареєструйтеся</a>]]>, якщо у вас його ще немає.</string>
     <string name="audd_help_dialog_message_empty_token">Ви можете спробувати скористатися сервісом для тестування без надання токена, але зверніть увагу, що це обмежить ваші щоденні розпізнавання.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud – це платний сервіс, який пропонує можливість безплатного пробного періоду та обмеженого використання для цілей розробки. Щоб скористатися цим сервісом, вам потрібно створити обліковий запис і зареєструвати проєкт. Якщо у вас виникнуть труднощі, зверніться до <![CDATA[<a href="%1$s">цього посібника</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Будь ласка, зверніть увагу на ці кроки:</string>
     <string name="acr_cloud_help_dialog_step1">Виберіть найближчий до вас географічний регіон, щоб мінімізувати затримку інтернету</string>
-    <string name="acr_cloud_help_dialog_step2">Встановіть джерело аудіо як «Записане аудіо»</string>
+    <string name="acr_cloud_help_dialog_step2">Встановіть джерело аудіо на «Записане аудіо»</string>
     <string name="acr_cloud_help_dialog_step3">Встановіть аудіорушій на ваш вибір. Параметр «Аудіовідбитки» є найточнішим для загального використання</string>
     <string name="acr_cloud_help_dialog_step4">Поставте позначки у всіх пунктах для інтеграції сторонніх ідентифікаторів</string>
     <string name="pref_group_notifications">Сповіщення</string>
@@ -319,4 +319,13 @@
     <string name="export_export">Експортувати</string>
     <string name="export_in_progress">Есплртування…</string>
     <string name="export_csv_result_success">Файл CSV успішно стаорено!</string>
+    <string name="audio_source_dialog_device_audio_limited">Застосунок має обмежену підтримку запису звуку пристрою на Android 9 та старіше</string>
+    <string name="audio_source_dialog_methods">Застосунок підтримує два способи запису звуку з пристрою:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Трансляція екрана (основний метод)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Цей метод забезпечує найкращу якість звуку та працює на всіх пристроях під керуванням Android 10 і новіше</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Деякі застосунки можуть блокувати захоплення звуку за допомогою політик захоплення, і в такому разі Audile отримуватиме тишу</string>
+    <string name="audio_source_dialog_alt_method_title">2. Альтернативний метод</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Не потребує дозволу на трансляцію екрана та обходить обмеження на захоплення звуку, встановлені іншими застосунками</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Підтримується на всіх версіях Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Якість звуку нижча, і цей метод може не працювати на деяких пристроях</string>
 </resources>

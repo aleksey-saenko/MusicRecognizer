@@ -119,7 +119,7 @@
     <string name="recognition_queue">Очередь распознавания</string>
     <string name="queue">Очередь</string>
     <string name="empty_recognition_queue_title">Нет распознаваний в очереди</string>
-    <string name="empty_recognition_queue_subtitle">При отсутствии сети или в случае неуспеха распознавание может быть добавленно в очередь в соответствии с настройками</string>
+    <string name="empty_recognition_queue_subtitle">При отсутствии сети или в случае неуспеха распознавание может быть добавлено в очередь в соответствии с настройками</string>
     <string name="untitled_recognition">Без названия</string>
     <string name="format_scheduled_recognition_of">Запланированное распознавание от %s</string>
     <string name="format_recognition_created">Создано: %s</string>
@@ -332,4 +332,13 @@
     <string name="audio_source_dialog_use_alt_device_source">Альтернативный источник аудио устройства</string>
     <string name="searching_for_lyrics">Поиск текста песни…</string>
     <string name="no_lyrics_available">Не найден текст для этой песни</string>
+    <string name="audio_source_dialog_device_audio_limited">Приложение имеет ограниченную поддержку записи звука устройства на Android 9 и ниже</string>
+    <string name="audio_source_dialog_methods">Приложение поддерживает два способа записи звука, воспроизводимого устройством:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Трансляция экрана (основной способ)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Этот способ обеспечивает лучшее качество звука и работает на всех устройствах с Android 10 и выше</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Некоторые приложения могут блокировать запись воспроизводимого ими звука, в этом случае Audile запишет тишину</string>
+    <string name="audio_source_dialog_alt_method_title">2. Альтернативный способ</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Не требует разрешения на трансляцию экрана и обходит ограничения приложений на запись звука</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Поддерживается всеми версиями Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Качество звука хуже, и этот способ может не работать на вашем устройстве</string>
 </resources>

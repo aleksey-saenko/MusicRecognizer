@@ -11,7 +11,7 @@
     <string name="widget_listening_subtitle_extra_time">Intentándolo una vez más</string>
     <string name="recognition_widget_description">Reconoce la canción con un solo toque</string>
     <string name="notification_tap_to_recognize">Toca para identificar</string>
-    <string name="notification_tap_to_recognize_subtitle">Identificar la música mientras usas otras aplicaciones</string>
+    <string name="notification_tap_to_recognize_subtitle">Identificar música mientras usas otras aplicaciones</string>
     <string name="notification_listening">Escuchando</string>
     <string name="notification_listening_subtitle">Espera por favor</string>
     <string name="notification_listening_subtitle_extra_time">Inténtalo una vez más</string>
@@ -72,16 +72,16 @@
     <string name="result_title_no_matches">Sin coincidencias</string>
     <string name="result_message_no_matches">Lo sentimos, la aplicación no pudo reconocer esta canción</string>
     <string name="result_title_bad_connection">Mala conexión a Internet</string>
-    <string name="result_message_bad_connection">Por favor, comprueba el estado de su red</string>
+    <string name="result_message_bad_connection">Por favor, comprueba el estado de la red</string>
     <string name="result_title_recognition_saved">Reconocimiento guardado</string>
     <string name="result_title_recognition_scheduled">Reconocimiento programado</string>
     <string name="result_message_recognition_scheduled">La muestra de audio se ha guardado, cuando vuelvas a conectarte, la aplicación intentará identificar esta canción</string>
     <string name="result_title_recording_error">Error de grabación</string>
-    <string name="result_title_bad_network_response">Respuesta de red no válida</string>
-    <string name="result_message_bad_network_response">Se produjo un error al consultar en Internet</string>
+    <string name="result_title_bad_network_response">Respuesta de red fallida</string>
+    <string name="result_message_bad_network_response">Se produjo un error al consultar en internet</string>
     <string name="result_title_auth_error">Error de autenticación</string>
     <string name="result_title_service_usage_limited">Servicios limitados</string>
-    <string name="result_message_service_usage_limited">El uso de tu servicio ha alcanzado el límite. Por favor, revisa tu plan o vuelve a intentarlo más tarde</string>
+    <string name="result_message_service_usage_limited">El uso del servicio ha alcanzado el límite. Por favor, revisa tu plan o vuelve a intentarlo más tarde</string>
     <string name="result_title_internal_error">Error interno</string>
     <string name="result_message_internal_error">Se produjo un error interno</string>
     <string name="result_title_unknown_error">Error desconocido</string>
@@ -113,7 +113,7 @@
     <string name="recognition_queue">Cola de reconocimiento</string>
     <string name="queue">Cola</string>
     <string name="empty_recognition_queue_title">No hay reconocimientos en cola</string>
-    <string name="empty_recognition_queue_subtitle">Sin conexión o en caso de error, un reconocimiento se puede poner en cola de acuerdo con la política de respaldo elegida</string>
+    <string name="empty_recognition_queue_subtitle">Sin conexión o en caso de error, un reconocimiento se puede poner en cola de acuerdo con la política alternativa elegida</string>
     <string name="untitled_recognition">Reconocimiento sin nombre</string>
     <string name="format_scheduled_recognition_of">Reconocimiento programado de %s</string>
     <string name="format_recognition_created">Creado: %s</string>
@@ -127,7 +127,7 @@
     <string name="recognition_action_show_track">Mostrar pista</string>
     <string name="recognition_action_rename">Renombrar</string>
     <string name="select_all">Seleccionar todo</string>
-    <string name="disable_multi_selection_mode">Desactivar el modo de selección múltiple</string>
+    <string name="disable_multi_selection_mode">Desactivar modo de selección múltiple</string>
     <string name="cancel_selected">Cancelar seleccionado</string>
     <string name="delete_selected">Eliminar seleccionado</string>
     <string name="recording_start_player">Reproducir</string>
@@ -203,8 +203,8 @@
     <string name="pref_title_recognition_provider">Proveedor de reconocimiento</string>
     <string name="recognition_provider_dialog_title">Proveedor</string>
     <string name="recognition_provider_dialog_message">Seleccionar el proveedor de reconocimiento:</string>
-    <string name="audd_help_dialog_message">AudD es un servicio de pago que ofrece la opción de un período de prueba gratuito durante 14 días. Para utilizar este servicio, debe crear una cuenta y obtener tu token de API privado. <![CDATA[<a href="%1$s">Regístrese</a>]]> si aún no tienes uno.</string>
-    <string name="acr_cloud_help_dialog_step2">Configura la fuente del audio como \"Audio grabado\"</string>
+    <string name="audd_help_dialog_message">AudD es un servicio de pago que ofrece un período de prueba gratuito de 14 días. Para utilizar este servicio, debe crear una cuenta y obtener tu token de API privado. <![CDATA[<a href="%1$s">Regístrese</a>]]> si aún no tienes uno.</string>
+    <string name="acr_cloud_help_dialog_step2">Configura la fuente de audio como \"Audio grabado\"</string>
     <string name="theme_mode_follow_system">Sistema</string>
     <string name="theme_mode_light">Claro</string>
     <string name="theme_mode_dark">Oscuro</string>
@@ -264,7 +264,7 @@
     <string name="about_pref_title_license">Licencia</string>
     <string name="about_pref_subtitle_github_repo">Código fuente, problemas y otra información</string>
     <string name="about_pref_title_privacy_policy">Política de privacidad</string>
-    <string name="about_pref_subtitle_privacy_policy">Obtenga más información sobre cómo la aplicación maneja sus datos</string>
+    <string name="about_pref_subtitle_privacy_policy">Obtén más información sobre cómo maneja sus datos la app</string>
     <string name="notification_channel_desc_control">Permite controlar el proceso de reconocimiento</string>
     <string name="notification_channel_name_scheduled_result">Resultados de canciones de reconocimiento programado</string>
     <string name="notification_channel_desc_scheduled_result">Muestra resultados de canciones de reconocimientos que se programaron sin conexión o en otros casos</string>
@@ -302,12 +302,12 @@
     <string name="deselect_all">Deseleccionar todo</string>
     <string name="pref_title_export_to_csv">Exportar a CSV</string>
     <string name="pref_subtitle_export_to_csv">Exportar todas las pistas a archivo CSV</string>
-    <string name="export_only_favorites_tracks">Exportar solo las pistas favoritas</string>
+    <string name="export_only_favorites_tracks">Exportar sólo pistas favoritas</string>
     <string name="export_write_csv_header">Incluir encabezado CSV</string>
-    <string name="export_select_fields_to_export">Selecciona los campos a exportar:</string>
+    <string name="export_select_fields_to_export">Seleccionar campos a exportar:</string>
     <string name="export_track_field_title">Título</string>
     <string name="export_track_field_artist">Artista</string>
-    <string name="export_track_field_album">Álbum</string>
+    <string name="export_track_field_album">Album</string>
     <string name="export_track_field_release_date">Fecha de lanzamiento</string>
     <string name="export_track_field_recognition_date">Fecha de reconocimiento</string>
     <string name="export_track_field_duration">Duración</string>
@@ -319,4 +319,13 @@
     <string name="export_export">Exportar</string>
     <string name="export_in_progress">Exportando…</string>
     <string name="export_csv_result_success">¡Archivo CSV creado correctamente!</string>
+    <string name="audio_source_dialog_device_audio_limited">La aplicación ofrece soporte limitado para dispositivos de grabación con Android 9 y anteriores</string>
+    <string name="audio_source_dialog_methods">La app soporta dos tipos de dispositivos de grabación de audio:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Compartir pantalla (método primario)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Este método ofrece la mejor calidad de sonido y funciona en todos los dispositivos con Android 10 y superior</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Algunas aplicaciones puede bloquear la captura de audio mediante la política de capturas, y en este caso Audile recibirá silencio</string>
+    <string name="audio_source_dialog_alt_method_title">2. Método alternativo</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">No requere permiso para compartir pantalla y elude las restricciones de captura impuestas por otras apps</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Compatible con todas las versiones de Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">La calidad de sonido es inferior, y este método podría no funcionar en algunos dispositivos</string>
 </resources>

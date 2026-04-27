@@ -19,10 +19,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val properties = Properties().apply {
-            load(rootProject.file("local.properties").reader())
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
         }
-        val devOptionsEnabled = properties["dev.options"]?.toString() ?: "false"
+        val devOptionsEnabled = localProperties["dev.options"]?.toString() ?: "false"
         buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
     }
 

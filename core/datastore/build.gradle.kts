@@ -14,13 +14,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        val properties = Properties().apply {
-            load(rootProject.file("local.properties").reader())
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
         }
-        val auddApiToken = properties["audd.api.token"]?.toString() ?: "\"\""
-        val acrCloudHost = properties["acr.cloud.host"]?.toString() ?: "\"\""
-        val acrCloudAccessKey = properties["acr.cloud.access.key"]?.toString() ?: "\"\""
-        val acrCloudAccessSecret = properties["acr.cloud.access.secret"]?.toString() ?: "\"\""
+        val auddApiToken = localProperties["audd.api.token"]?.toString() ?: "\"\""
+        val acrCloudHost = localProperties["acr.cloud.host"]?.toString() ?: "\"\""
+        val acrCloudAccessKey = localProperties["acr.cloud.access.key"]?.toString() ?: "\"\""
+        val acrCloudAccessSecret = localProperties["acr.cloud.access.secret"]?.toString() ?: "\"\""
 
         buildConfigField("String", "AUDD_TOKEN", auddApiToken)
         buildConfigField("String", "ACR_CLOUD_HOST", acrCloudHost)

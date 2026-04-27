@@ -65,6 +65,9 @@ If you'd like to help translate the app into your language, you can do so throug
 
 Feel free to correct any errors or suggest better translation options for the current translations.
 
+## Building from sources
+Please see [BUILDING.md](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/BUILDING.md) for detailed instructions.
+
 ## License
 
 ```

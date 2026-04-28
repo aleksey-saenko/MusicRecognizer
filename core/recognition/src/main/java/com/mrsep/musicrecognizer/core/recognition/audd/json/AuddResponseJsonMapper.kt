@@ -75,6 +75,7 @@ private fun parseSuccessResult(
             recognizedBy = RecognitionProvider.Audd,
             recognitionDate = sampleStartTimestamp,
             lyrics = result.parseLyrics(),
+            isrc = result.parseIsrc(),
             artworkUrl = trackArtwork?.url,
             artworkThumbUrl = trackArtwork?.thumbUrl,
             trackLinks = buildMap {
@@ -304,6 +305,12 @@ private fun AuddResponseJson.Result.parseArtworkSeedColor(): Int? {
         }
     }
 }
+
+private fun AuddResponseJson.Result.parseIsrc() =
+    isrc?.takeIf { it.isNotBlank() }
+    ?: appleMusic?.isrc?.takeIf { it.isNotBlank() }
+    ?: spotify?.externalIds?.isrc?.takeIf { it.isNotBlank() }
+    ?: musicbrainz?.firstOrNull()?.isrcs?.firstOrNull()?.takeIf { it.isNotBlank() }
 
 private fun parseErrorResult(error: AuddResponseJson.Error): RemoteRecognitionResult {
     return when (error.errorCode) {

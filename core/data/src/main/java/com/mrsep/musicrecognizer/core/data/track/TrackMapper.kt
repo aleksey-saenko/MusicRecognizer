@@ -25,6 +25,7 @@ internal fun Track.toEntity() = TrackEntity(
         is PlainLyrics,
         null -> false
     },
+    isrc = isrc,
     links = TrackEntity.Links(
         artworkThumbnail = artworkThumbUrl,
         artwork = artworkUrl,
@@ -63,6 +64,7 @@ internal fun TrackEntity.toDomain() = Track(
     recognizedBy = recognizedBy,
     recognitionDate = recognitionDate,
     lyrics = lyrics?.let { parseDbLyricsData(it, isLyricsSynced) },
+    isrc = isrc,
     artworkThumbUrl = links.artworkThumbnail,
     artworkUrl = links.artwork,
     trackLinks = with(links) {

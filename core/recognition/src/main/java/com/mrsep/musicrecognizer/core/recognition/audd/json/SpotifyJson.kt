@@ -14,7 +14,9 @@ internal data class SpotifyJson(
     @SerialName("external_urls")
     val externalUrls: ExternalUrls?,
     @SerialName("name")
-    val name: String?
+    val name: String?,
+    @SerialName("external_ids")
+    val externalIds: ExternalIds?,
 ) {
     @Serializable
     data class Album(
@@ -47,5 +49,11 @@ internal data class SpotifyJson(
     data class ExternalUrls(
         @SerialName("spotify")
         val spotify: String?
+    )
+
+    @Serializable
+    data class ExternalIds(
+        @SerialName("isrc")
+        val isrc: String?,
     )
 }

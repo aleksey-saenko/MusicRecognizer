@@ -32,6 +32,7 @@ internal class RoomModule {
                 Migration8To9,
                 Migration7To9,
                 Migration9To10(appContext),
+                Migration10To11,
             )
             .build()
     }

@@ -201,7 +201,7 @@ internal class AuddRecognitionService @AssistedInject constructor(
     companion object {
         private const val REST_BASE_URL = "https://api.audd.io/"
         private const val WEB_SOCKET_BASE_URL = "wss://api.audd.io/ws/"
-        private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz"
+        private const val RETURN_PARAM = "lyrics,spotify,apple_music,deezer,napster,musicbrainz,isrc!"
 
         private val TIMEOUT_AFTER_LAST_SAMPLE_RECEIVED = 10.seconds
         private val WEB_SOCKET_RESPONSE_TIMEOUT = 15.seconds

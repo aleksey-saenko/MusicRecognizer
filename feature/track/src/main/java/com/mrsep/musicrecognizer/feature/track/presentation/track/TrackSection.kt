@@ -130,7 +130,8 @@ private fun Preview() {
                 recognizedBy = RecognitionProvider.Audd,
                 lastRecognitionDate = "Now",
                 themeSeedColor = null,
-                lyrics = null
+                lyrics = null,
+                isrc = "isrc-example"
             ),
             isLoadingLinks = false,
             isExpandedScreen = true,

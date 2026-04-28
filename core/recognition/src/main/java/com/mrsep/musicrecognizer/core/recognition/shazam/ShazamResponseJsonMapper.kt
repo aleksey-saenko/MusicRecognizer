@@ -15,7 +15,7 @@ internal fun ShazamResponseJson.toRecognitionResult(
     sampleStartTimestamp: Instant,
     sampleDuration: Duration,
 ): RemoteRecognitionResult {
-    if (this.track == null ||
+    if (track == null ||
         track.title.isNullOrBlank() ||
         track.subtitle.isNullOrBlank()
     ) return RemoteRecognitionResult.NoMatches
@@ -55,12 +55,13 @@ internal fun ShazamResponseJson.toRecognitionResult(
                     ?.run { result.put(MusicService.AppleMusic, this) }
                 result
             },
+            isrc = track.isrc?.trim()?.takeIf { it.isNotBlank() },
             artworkThumbUrl = this.track.images?.coverarthq?.convertImageUrl("400x400cc")
-                ?: this.track.images?.background?.convertImageUrl("400x400cc")
-                ?: this.track.images?.coverart?.convertImageUrl("400x400cc"),
-            artworkUrl = this.track.images?.coverarthq?.convertImageUrl("1500x1500cc")
-                ?: this.track.images?.background?.convertImageUrl("1500x1500cc")
-                ?: this.track.images?.coverart?.convertImageUrl("1500x1500cc"),
+                ?: track.images?.background?.convertImageUrl("400x400cc")
+                ?: track.images?.coverart?.convertImageUrl("400x400cc"),
+            artworkUrl = track.images?.coverarthq?.convertImageUrl("1500x1500cc")
+                ?: track.images?.background?.convertImageUrl("1500x1500cc")
+                ?: track.images?.coverart?.convertImageUrl("1500x1500cc"),
             properties = Track.Properties(
                 isFavorite = false,
                 isViewed = false,

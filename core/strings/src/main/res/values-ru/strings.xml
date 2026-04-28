@@ -153,6 +153,7 @@
     <string name="search_in">Поиск в</string>
     <string name="format_open_website_or_app">Открыть %s</string>
     <string name="track_info">О треке</string>
+    <string name="track_info_title_format_isrc">%s:</string>
     <string name="track_info_title_duration">Продолжительность:</string>
     <string name="track_info_title_recognized_at">Момент распознавания:</string>
     <string name="track_info_title_recognized_by">Распознано с помощью:</string>

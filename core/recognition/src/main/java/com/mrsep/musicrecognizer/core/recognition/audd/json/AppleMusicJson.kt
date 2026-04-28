@@ -19,6 +19,8 @@ internal data class AppleMusicJson(
     val name: String?,
     @SerialName("albumName")
     val albumName: String?,
+    @SerialName("isrc")
+    val isrc: String?,
 ) {
 
     @Serializable

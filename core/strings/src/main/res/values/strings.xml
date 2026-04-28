@@ -157,6 +157,8 @@
     <string name="search_in">Search in</string>
     <string name="format_open_website_or_app">Open %s</string>
     <string name="track_info">Track info</string>
+    <!-- Formatted with ISRC label, e.g. "ISRC:" in English -->
+    <string name="track_info_title_format_isrc">%s:</string>
     <string name="track_info_title_duration">Track duration:</string>
     <string name="track_info_title_recognized_at">Recognized at:</string>
     <string name="track_info_title_recognized_by">Recognized by:</string>
@@ -346,6 +348,7 @@
     <string name="crash_dialog_button_send">Send</string>
     <string name="crash_dialog_button_cancel">Cancel</string>
 
+    <string name="isrc" translatable="false">ISRC</string>
     <!-- Music streaming services -->
     <string name="amazon_music" translatable="false">Amazon Music</string>
     <string name="anghami" translatable="false">Anghami</string>

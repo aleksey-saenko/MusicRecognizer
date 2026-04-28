@@ -80,6 +80,7 @@ private fun parseMusic(
         lyrics = null,
         artworkThumbUrl = null,
         artworkUrl = null,
+        isrc = music.externalIds?.isrc?.trim()?.takeIf { it.isNotBlank() },
         trackLinks = buildMap {
             parseDeezerUrl(music)?.let { link -> put(MusicService.Deezer, link) }
             parseSpotifyUrl(music)?.let { link -> put(MusicService.Spotify, link) }

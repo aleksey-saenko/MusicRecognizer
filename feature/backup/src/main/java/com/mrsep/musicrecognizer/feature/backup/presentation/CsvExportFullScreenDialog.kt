@@ -341,6 +341,7 @@ internal fun CsvField.header(context: Context) = when (this) {
     TrackField.ARTIST -> context.getString(StringsR.string.export_track_field_artist)
     TrackField.ALBUM -> context.getString(StringsR.string.export_track_field_album)
     TrackField.RELEASE_DATE -> context.getString(StringsR.string.export_track_field_release_date)
+    TrackField.ISRC -> context.getString(StringsR.string.isrc)
     TrackField.DURATION -> context.getString(StringsR.string.export_track_field_duration)
     TrackField.PLAYBACK_OFFSET -> context.getString(StringsR.string.export_track_field_playback_offset)
     TrackField.RECOGNITION_DATE -> context.getString(StringsR.string.export_track_field_recognition_date)

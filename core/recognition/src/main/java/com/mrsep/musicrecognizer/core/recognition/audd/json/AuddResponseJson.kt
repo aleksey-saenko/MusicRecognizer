@@ -39,6 +39,8 @@ internal data class AuddResponseJson(
         val spotify: SpotifyJson?,
         @SerialName("apple_music")
         val appleMusic: AppleMusicJson?,
+        @SerialName("isrc")
+        val isrc: String?,
     )
 
     @Serializable

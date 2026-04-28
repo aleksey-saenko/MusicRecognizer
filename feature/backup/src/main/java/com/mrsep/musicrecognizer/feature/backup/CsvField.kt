@@ -21,6 +21,7 @@ internal enum class TrackField(
     ARTIST({ artist }),
     ALBUM({ album }),
     RELEASE_DATE({ releaseDate?.toString() }),
+    ISRC({ isrc }),
     RECOGNITION_DATE({ recognitionDate.toString() }),
     DURATION({ duration?.toString() }),
     PLAYBACK_OFFSET({ recognizedAt?.toString() }),

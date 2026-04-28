@@ -12,7 +12,9 @@ internal data class MusicbrainzJson(
     @SerialName("length")
     val durationMillis: Int?,
     @SerialName("artist-credit")
-    val artistCredit: List<ArtistCredit?>?
+    val artistCredit: List<ArtistCredit?>?,
+    @SerialName("isrcs")
+    val isrcs: List<String?>?,
 ) {
 
     @Serializable

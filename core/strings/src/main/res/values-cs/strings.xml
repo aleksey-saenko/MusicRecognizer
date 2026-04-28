@@ -105,7 +105,7 @@
     <string name="recognition_queue">Fronta na rozpoznání</string>
     <string name="queue">Fronta</string>
     <string name="empty_recognition_queue_title">Žádná rozpoznání ve frontě</string>
-    <string name="empty_recognition_queue_subtitle">V případě neúspěšného rozpoznání jej může aplikace uložit v do fronty v závislosti na nastavených záložních pravidlech</string>
+    <string name="empty_recognition_queue_subtitle">Když jste offline nebo v případě neúspěšného rozpoznání jej může aplikace uložit do fronty v závislosti na zvolených záložních pravidlech</string>
     <string name="untitled_recognition">Nepojmenované rozpoznání</string>
     <string name="format_scheduled_recognition_of">Naplánované rozpoznávání %s</string>
     <string name="format_recognition_created">Vytvořeno: %s</string>
@@ -162,7 +162,7 @@
     <string name="pref_subtitle_fallback_policy">Nastavte záložních akci po neúspěšném rozpoznání</string>
     <string name="fallback_policy_dialog_title">Selhání rozpoznávání</string>
     <string name="fallback_policy_dialog_message">Nastavte výchozí záložní akci pro každý typ neúspěšného výsledku:</string>
-    <string name="fallback_action_save_recording_and_retry">Uložit nahrávku a zkusit znovu rozpoznat</string>
+    <string name="fallback_action_save_recording_and_retry">Uložit nahrávku a zkusit to znovu</string>
     <string name="fallback_action_save_recording">Uložit nahrávku</string>
     <string name="fallback_action_ignore">Ignorovat</string>
     <string name="fallback_trigger_bad_connection">Špatné připojení k internetu</string>
@@ -250,7 +250,7 @@
     <string name="pref_title_recognition_provider">Poskytovatel rozpoznávání</string>
     <string name="recognition_provider_dialog_message">Zvolte poskytovatele rozpoznávání:</string>
     <string name="recognition_provider_dialog_format_auth">Autentifikace služby %s:</string>
-    <string name="audd_help_dialog_message">AudD je placená služba poskytující možnost bezplatné 14denní zkušební doby. Pro používání této služby si musíte vytvořit účet a získat svůj soukromý klíč API. Pokud účet ještě nemáte, <![CDATA[<a href="%1$s">zaregistrujte se zde</a>]]>.</string>
+    <string name="audd_help_dialog_message">AudD je placená služba poskytující bezplatnou 14denní zkušební dobu. Pro používání této služby si musíte vytvořit účet a získat svůj soukromý klíč API. Pokud účet ještě nemáte, <![CDATA[<a href="%1$s">zaregistrujte se zde</a>]]>.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud je placená služba, která nabízí možnost bezplatného zkušebního období a omezeného použití pro vývojové účely. Chcete-li tuto službu používat, musíte si vytvořit účet a zaregistrovat projekt. Pokud se setkáte s jakýmikoli obtížemi, nahlédněte do <![CDATA[<a href="%1$s">této příručky</a>]]>.</string>
     <string name="acr_cloud_help_dialog_step3">Nastavte preferovaný zvukový engine. Pro obecné použití je nejpřesnější možnost „Audio fingerprinting“</string>
     <string name="acr_cloud_help_dialog_step2">Nastavte zdroj zvuku na „Nahraný zvuk“</string>
@@ -328,4 +328,13 @@
     <string name="export_export">Export</string>
     <string name="export_in_progress">Exportování…</string>
     <string name="export_csv_result_success">Soubor CSV úspěšně vytvořen!</string>
+    <string name="audio_source_dialog_device_audio_limited">Aplikace má omezenou podporu záznamu zvuku zařízení na systému Android 9 a starších</string>
+    <string name="audio_source_dialog_methods">Aplikace podporuje dva způsoby záznamu zvuku zařízení:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Záznam obrazovky (primární způsob)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Tento způsob poskytuje nejlepší kvalitu zvuku a funguje na všech zařízeních se systémem Android 10 a novějším</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Některé aplikace mohou blokovat záznam zvuku pomocí zásad záznamu, v takovém případě Audile obdrží ticho</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternativní způsob</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Nevyžaduje oprávnění k záznamu obrazovky a obchází omezení záznamu zvuku nastavená jinými aplikacemi</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Podporováno na všech verzích systému Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Kvalita zvuku bude nižší a tento způsob nemusí fungovat na některých zařízeních</string>
 </resources>

@@ -75,8 +75,8 @@
     <string name="result_message_recognition_scheduled">O clipe de áudio foi salvo, ao voltar online, o app tentará identificar esta música</string>
     <string name="result_title_recording_error">Erro de gravação</string>
     <string name="result_message_recording_error">Um erro ocorreu durante a gravação de áudio</string>
-    <string name="result_title_bad_network_response">Resposta de rede inválida</string>
-    <string name="result_message_bad_network_response">Um erro ocorreu durante solicitação da internet</string>
+    <string name="result_title_bad_network_response">Solicitação de rede inválida</string>
+    <string name="result_message_bad_network_response">Um erro ocorreu durante uma solicitação da internet</string>
     <string name="result_title_auth_error">Erro de autenticação</string>
     <string name="result_message_auth_error">Confira as credenciais do seu serviço de reconhecimento selecionado e tente novamente</string>
     <string name="result_title_service_usage_limited">Uso do serviço limitado</string>
@@ -115,7 +115,7 @@
     <string name="recognition_queue">Fila de reconhecimento</string>
     <string name="queue">Fila</string>
     <string name="empty_recognition_queue_title">Nenhum reconhecimento em fila</string>
-    <string name="empty_recognition_queue_subtitle">Quando off-line ou em uma falha, um reconhecimento pode ser adicionado à fila de acordo com sua política de recorrência</string>
+    <string name="empty_recognition_queue_subtitle">Quando off-line ou após uma falha, um reconhecimento pode ser adicionado à fila de acordo com sua política de recorrência</string>
     <string name="untitled_recognition">Reconhecimento sem título</string>
     <string name="format_scheduled_recognition_of">Agendado o reconhecimento de %s</string>
     <string name="format_recognition_created">Criado: %s</string>
@@ -184,7 +184,7 @@
     <string name="pref_subtitle_fallback_policy">Configure ações de recorrência após identificações malsucedidas</string>
     <string name="fallback_policy_dialog_title">Política de recorrência</string>
     <string name="fallback_policy_dialog_message">Configure a ação padrão de recorrência para cada tipo de resultado malsucedido:</string>
-    <string name="fallback_action_save_recording_and_retry">Salvar a gravação e iniciar novamente</string>
+    <string name="fallback_action_save_recording_and_retry">Salvar a gravação e tentar novamente</string>
     <string name="fallback_action_save_recording">Salvar gravação</string>
     <string name="fallback_action_ignore">Ignorar</string>
     <string name="fallback_trigger_bad_connection">Conexão ruim à internet</string>
@@ -193,12 +193,12 @@
     <string name="pref_title_recognition_provider">Provedor de reconhecimento</string>
     <string name="recognition_provider_dialog_message">Selecione o provedor de reconhecimento:</string>
     <string name="recognition_provider_dialog_format_auth">Autenticação %s:</string>
-    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis de 14 dias. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
+    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece um período de teste grátis de 14 dias. Para usar este serviço, você precisa criar uma conta e obter seu token de API privado. <![CDATA[<a href="%1$s">Registre-se</a>]]> se você ainda não tiver um.</string>
     <string name="audd_help_dialog_message_empty_token">Você pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isso limitará o número de reconhecimentos diários.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, você precisa criar uma conta e cadastrar um projeto. Se você ter alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de você para minimizar latência da internet</string>
-    <string name="acr_cloud_help_dialog_step2">Configure a fonte de áudio como \"Áudio gravado\"</string>
+    <string name="acr_cloud_help_dialog_step2">Configure a fonte de áudio para \"Áudio gravado\"</string>
     <string name="acr_cloud_help_dialog_step3">Configure o mecanismo de áudio de sua escolha. A opção \"Impressão digital do áudio\" é a mais precisa para uso geral</string>
     <string name="acr_cloud_help_dialog_step4">Assinale todas as caixas para integração de ID de terceiros</string>
     <string name="pref_group_notifications">Notificações</string>
@@ -336,4 +336,13 @@
     <string name="export_export">Exportar</string>
     <string name="export_in_progress">Exportando…</string>
     <string name="export_csv_result_success">Arquivo CSV criado com sucesso!</string>
+    <string name="audio_source_dialog_device_audio_limited">O app tem limitações no suporte de gravação de áudio do dispositivo no Android 9 ou anterior</string>
+    <string name="audio_source_dialog_methods">O app suporta duas formas de gravar o áudio do dispositivo:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Espelhamento de tela (método primário)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Esse método fornece a melhor qualidade de áudio e funciona em todos os dispositivos rodando Android 10 ou superior</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Alguns apps podem bloquear a captura de áudio, nesses casos o Audile vai receber silêncio</string>
+    <string name="audio_source_dialog_alt_method_title">2. Método alternativo</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Não requer a permissão de espelhamento de tela, e cortorna as restrições de captura de áudio de outros apps</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Suportada em todas as versões do Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">A qualidade de áudo é pior, e esse método pode não funcionar em alguns dispositivos</string>
 </resources>

@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">无需投屏权限并绕过其他应用设置的录音限制</string>
     <string name="audio_source_dialog_alt_method_bullet_2">支持所有 Android 版本</string>
     <string name="audio_source_dialog_alt_method_bullet_3">音质较差，此方法在某些设备上可能不工作</string>
+    <string name="track_info_title_format_isrc">%s：</string>
 </resources>

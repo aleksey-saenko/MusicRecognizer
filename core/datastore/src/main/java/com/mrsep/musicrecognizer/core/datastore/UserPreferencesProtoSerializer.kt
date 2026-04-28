@@ -47,6 +47,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                     MusicServiceProto.AmazonMusic,
                     MusicServiceProto.Deezer,
                     MusicServiceProto.Tidal,
+                    MusicServiceProto.Qobuz,
                     MusicServiceProto.Soundcloud,
                     MusicServiceProto.YandexMusic,
                     MusicServiceProto.Napster,

@@ -3,9 +3,6 @@ package com.mrsep.musicrecognizer.core.recognition.enhancer
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.TrackCandidate
-import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.TrackMatcherOptions
-import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.TrackMatcher
 import org.junit.Test
 import java.time.Instant
 import kotlin.time.Duration
@@ -26,6 +23,7 @@ internal class TrackCandidateScoreTest {
         recognizedBy = RecognitionProvider.Shazam,
         recognitionDate = Instant.now(),
         lyrics = null,
+        isrc = null,
         artworkThumbUrl = null,
         artworkUrl = null,
         trackLinks = emptyMap(),

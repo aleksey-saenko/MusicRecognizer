@@ -8,8 +8,6 @@ import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
 import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessionImpl
-import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackLinksFetcher
-import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGenerator

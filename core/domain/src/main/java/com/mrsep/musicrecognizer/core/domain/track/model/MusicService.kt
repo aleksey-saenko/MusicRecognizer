@@ -11,6 +11,7 @@ enum class MusicService {
     MusicBrainz,
     Napster,
     Pandora,
+    Qobuz,
     Soundcloud,
     Spotify,
     Tidal,

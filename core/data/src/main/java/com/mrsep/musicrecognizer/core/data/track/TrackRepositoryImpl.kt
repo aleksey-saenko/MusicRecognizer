@@ -18,6 +18,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackPreview
 import com.mrsep.musicrecognizer.core.recognition.enhancer.RemoteTrackLinks
 import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliTrackLinksFetcher
+import com.mrsep.musicrecognizer.core.recognition.enhancer.qobuz.QobuzTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.YoutubeTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +36,7 @@ internal class TrackRepositoryImpl @Inject constructor(
     private val lyricsFetcher: LyricsFetcher,
     private val odesliTrackLinksFetcher: OdesliTrackLinksFetcher,
     private val youtubeTrackLinksFetcher: YoutubeTrackLinksFetcher,
+    private val qobuzTrackLinksFetcher: QobuzTrackLinksFetcher,
     database: ApplicationDatabase
 ) : TrackRepository {
 
@@ -139,6 +141,7 @@ internal class TrackRepositoryImpl @Inject constructor(
         val fetchers = listOf(
             odesliTrackLinksFetcher,
             youtubeTrackLinksFetcher,
+//            qobuzTrackLinksFetcher,
         ).filter { fetcher ->
             requiredServices.any(fetcher.supportedServices::contains)
         }
@@ -200,6 +203,7 @@ private fun TrackEntity.Links.merge(remote: RemoteTrackLinks) = copy(
     musicBrainz = musicBrainz ?: remote.trackLinks[MusicService.MusicBrainz],
     napster = napster ?: remote.trackLinks[MusicService.Napster],
     pandora = pandora ?: remote.trackLinks[MusicService.Pandora],
+    qobuz = qobuz ?: remote.trackLinks[MusicService.Qobuz],
     soundCloud = soundCloud ?: remote.trackLinks[MusicService.Soundcloud],
     spotify = spotify ?: remote.trackLinks[MusicService.Spotify],
     tidal = tidal ?: remote.trackLinks[MusicService.Tidal],

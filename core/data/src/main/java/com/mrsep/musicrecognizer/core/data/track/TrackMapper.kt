@@ -39,6 +39,7 @@ internal fun Track.toEntity() = TrackEntity(
         musicBrainz = trackLinks[MusicService.MusicBrainz],
         napster = trackLinks[MusicService.Napster],
         pandora = trackLinks[MusicService.Pandora],
+        qobuz = trackLinks[MusicService.Qobuz],
         soundCloud = trackLinks[MusicService.Soundcloud],
         spotify = trackLinks[MusicService.Spotify],
         tidal = trackLinks[MusicService.Tidal],
@@ -79,6 +80,7 @@ internal fun TrackEntity.toDomain() = Track(
             musicBrainz?.run { put(MusicService.MusicBrainz, this) }
             napster?.run { put(MusicService.Napster, this) }
             pandora?.run { put(MusicService.Pandora, this) }
+            qobuz?.run { put(MusicService.Qobuz, this) }
             soundCloud?.run { put(MusicService.Soundcloud, this) }
             spotify?.run { put(MusicService.Spotify, this) }
             tidal?.run { put(MusicService.Tidal, this) }

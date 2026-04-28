@@ -1,5 +1,7 @@
 package com.mrsep.musicrecognizer.core.common.di
 
+import com.mrsep.musicrecognizer.core.common.AppLocaleProvider
+import com.mrsep.musicrecognizer.core.common.LocaleProvider
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatter
 import com.mrsep.musicrecognizer.core.common.util.AppDateTimeFormatterImpl
 import dagger.Binds
@@ -14,4 +16,7 @@ internal interface UtilModule {
 
     @Binds
     fun bindAppDateTimeFormatter(implementation: AppDateTimeFormatterImpl): AppDateTimeFormatter
+
+    @Binds
+    fun bindLocaleProvider(impl: AppLocaleProvider): LocaleProvider
 }

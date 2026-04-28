@@ -6,7 +6,10 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.enhancer.RemoteTrackLinks
+import com.mrsep.musicrecognizer.core.recognition.enhancer.ScoredTrackCandidate
+import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackCandidate
 import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackLinksFetcher
+import com.mrsep.musicrecognizer.core.recognition.enhancer.TrackMatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header
@@ -169,7 +172,6 @@ class YoutubeTrackLinksFetcher @Inject constructor(
                 NetworkError.HttpError(
                     code = response.status.value,
                     message = response.status.description
-                        .ifBlank { "Failed to parse YouTube search response" }
                 )
             }
         } catch (e: Exception) {
@@ -272,7 +274,6 @@ class YoutubeTrackLinksFetcher @Inject constructor(
                 NetworkError.HttpError(
                     code = response.status.value,
                     message = response.status.description
-                        .ifBlank { "Failed to parse YouTube Music search response" }
                 )
             }
         } catch (e: Exception) {

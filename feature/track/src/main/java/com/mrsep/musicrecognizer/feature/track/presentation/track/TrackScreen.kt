@@ -338,6 +338,11 @@ private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget
             SearchTarget.Artist ->  "https://www.pandora.com/search/${queryEncoded}/artists"
             SearchTarget.Album ->   "https://www.pandora.com/search/${queryEncoded}/albums"
         }
+        MusicService.Qobuz -> when (target) {
+            SearchTarget.Track ->   "https://www.qobuz.com/gb-en/search/tracks/${queryEncoded}"
+            SearchTarget.Artist ->  "https://www.qobuz.com/gb-en/search/artists/${queryEncoded}"
+            SearchTarget.Album ->   "https://www.qobuz.com/gb-en/search/albums/${queryEncoded}"
+        }
         MusicService.Soundcloud -> when (target) {
             SearchTarget.Track ->   "https://soundcloud.com/search/sounds?q=${queryEncoded}"
             SearchTarget.Artist ->  "https://soundcloud.com/search/people?q=${queryEncoded}"

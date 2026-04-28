@@ -49,6 +49,7 @@ class YoutubeTrackLinksFetcherTest {
             recognizedBy = RecognitionProvider.Shazam,
             recognitionDate = Instant.now(),
             lyrics = null,
+            isrc = null,
             artworkThumbUrl = null,
             artworkUrl = null,
             trackLinks = emptyMap(),

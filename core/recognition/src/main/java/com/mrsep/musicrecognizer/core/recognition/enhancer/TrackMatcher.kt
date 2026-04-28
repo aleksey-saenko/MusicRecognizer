@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.core.recognition.enhancer.youtube
+package com.mrsep.musicrecognizer.core.recognition.enhancer
 
 import android.util.Log
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService

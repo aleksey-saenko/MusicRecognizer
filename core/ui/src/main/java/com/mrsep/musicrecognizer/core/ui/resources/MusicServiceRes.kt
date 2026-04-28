@@ -17,6 +17,7 @@ fun MusicService.titleId() = when (this) {
     MusicService.MusicBrainz -> StringsR.string.musicbrainz
     MusicService.Napster -> StringsR.string.napster
     MusicService.Pandora -> StringsR.string.pandora
+    MusicService.Qobuz -> StringsR.string.qobuz
     MusicService.Soundcloud -> StringsR.string.soundcloud
     MusicService.Spotify -> StringsR.string.spotify
     MusicService.Tidal -> StringsR.string.tidal
@@ -37,6 +38,7 @@ fun MusicService.iconId() = when (this) {
     MusicService.MusicBrainz -> UiR.drawable.ic_musicbrainz_24
     MusicService.Napster -> UiR.drawable.ic_napster_24
     MusicService.Pandora -> UiR.drawable.ic_pandora_24
+    MusicService.Qobuz -> UiR.drawable.ic_qobuz_24
     MusicService.Soundcloud -> UiR.drawable.ic_soundcloud_24
     MusicService.Spotify -> UiR.drawable.ic_spotify_24
     MusicService.Tidal -> UiR.drawable.ic_tidal_24

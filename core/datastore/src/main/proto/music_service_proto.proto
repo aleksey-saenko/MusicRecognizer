@@ -20,4 +20,5 @@ enum MusicServiceProto {
     YandexMusic = 13;
     Youtube = 14;
     YoutubeMusic = 15;
+    Qobuz = 16;
 }

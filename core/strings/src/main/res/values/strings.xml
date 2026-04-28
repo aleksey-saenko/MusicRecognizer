@@ -355,11 +355,13 @@
     <string name="apple_music" translatable="false">Apple Music</string>
     <string name="audiomack" translatable="false">Audiomack</string>
     <string name="audius" translatable="false">Audius</string>
+    <string name="bandcamp" translatable="false">Bandcamp</string>
     <string name="boomplay" translatable="false">Boomplay</string>
     <string name="deezer" translatable="false">Deezer</string>
     <string name="musicbrainz" translatable="false">MusicBrainz</string>
     <string name="napster" translatable="false">Napster</string>
     <string name="pandora" translatable="false">Pandora</string>
+    <string name="qobuz" translatable="false">Qobuz</string>
     <string name="soundcloud" translatable="false">SoundCloud</string>
     <string name="spotify" translatable="false">Spotify</string>
     <string name="tidal" translatable="false">Tidal</string>

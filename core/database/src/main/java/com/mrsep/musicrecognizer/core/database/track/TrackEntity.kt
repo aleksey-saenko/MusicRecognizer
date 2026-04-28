@@ -68,6 +68,8 @@ data class TrackEntity(
         val napster: String?,
         @ColumnInfo(name = "pandora")
         val pandora: String?,
+        @ColumnInfo(name = "qobuz")
+        val qobuz: String?,
         @ColumnInfo(name = "soundcloud")
         val soundCloud: String?,
         @ColumnInfo(name = "spotify")

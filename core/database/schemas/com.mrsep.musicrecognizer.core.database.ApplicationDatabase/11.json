@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "5848475428591eae6dd34831bdcefc8b",
+    "identityHash": "2f010b613128ddeadbc169d7a516da12",
     "entities": [
       {
         "tableName": "track",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `duration` INTEGER, `recognized_at` INTEGER, `recognized_by` TEXT NOT NULL, `recognition_date` INTEGER NOT NULL, `lyrics` TEXT, `is_lyrics_synced` INTEGER NOT NULL, `isrc` TEXT, `link_artwork_thumb` TEXT, `link_artwork` TEXT, `link_amazon_music` TEXT, `link_anghami` TEXT, `link_apple_music` TEXT, `link_audiomack` TEXT, `link_audius` TEXT, `link_boomplay` TEXT, `link_deezer` TEXT, `link_musicbrainz` TEXT, `link_napster` TEXT, `link_pandora` TEXT, `link_soundcloud` TEXT, `link_spotify` TEXT, `link_tidal` TEXT, `link_yandex_music` TEXT, `link_youtube` TEXT, `link_youtube_music` TEXT, `is_favorite` INTEGER NOT NULL, `is_viewed` INTEGER NOT NULL, `theme_seed_color` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT, `release_date` INTEGER, `duration` INTEGER, `recognized_at` INTEGER, `recognized_by` TEXT NOT NULL, `recognition_date` INTEGER NOT NULL, `lyrics` TEXT, `is_lyrics_synced` INTEGER NOT NULL, `isrc` TEXT, `link_artwork_thumb` TEXT, `link_artwork` TEXT, `link_amazon_music` TEXT, `link_anghami` TEXT, `link_apple_music` TEXT, `link_audiomack` TEXT, `link_audius` TEXT, `link_boomplay` TEXT, `link_deezer` TEXT, `link_musicbrainz` TEXT, `link_napster` TEXT, `link_pandora` TEXT, `link_qobuz` TEXT, `link_soundcloud` TEXT, `link_spotify` TEXT, `link_tidal` TEXT, `link_yandex_music` TEXT, `link_youtube` TEXT, `link_youtube_music` TEXT, `is_favorite` INTEGER NOT NULL, `is_viewed` INTEGER NOT NULL, `theme_seed_color` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -132,6 +132,11 @@
           {
             "fieldPath": "links.pandora",
             "columnName": "link_pandora",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "links.qobuz",
+            "columnName": "link_qobuz",
             "affinity": "TEXT"
           },
           {
@@ -283,7 +288,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5848475428591eae6dd34831bdcefc8b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2f010b613128ddeadbc169d7a516da12')"
     ]
   }
 }

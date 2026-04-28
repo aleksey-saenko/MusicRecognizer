@@ -65,6 +65,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
             MusicServiceProto.YandexMusic -> MusicService.YandexMusic
             MusicServiceProto.Youtube -> MusicService.Youtube
             MusicServiceProto.YoutubeMusic -> MusicService.YoutubeMusic
+            MusicServiceProto.Qobuz -> MusicService.Qobuz
             MusicServiceProto.UNRECOGNIZED -> error("Unexpected proto value")
         }
     },

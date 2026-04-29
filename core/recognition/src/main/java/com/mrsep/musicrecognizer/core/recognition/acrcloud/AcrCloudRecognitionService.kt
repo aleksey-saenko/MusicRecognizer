@@ -10,7 +10,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.recognition.BaseRemoteRecognitionService
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.AcrCloudResponseJson
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.json.toRecognitionResult
-import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
+import com.mrsep.musicrecognizer.core.metadata.artwork.ArtworkFetcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

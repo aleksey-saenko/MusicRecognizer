@@ -59,10 +59,10 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.network)
     implementation(projects.core.audio)
+    implementation(projects.core.metadata)
 
     implementation(libs.kotlinx.serializationJson)
     implementation(libs.uuidCreator)
-    implementation(libs.stringSimilarity)
 
     testImplementation(libs.junit4)
     testImplementation(libs.kotest)

@@ -16,11 +16,11 @@ import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackPreview
-import com.mrsep.musicrecognizer.core.recognition.enhancer.RemoteTrackLinks
-import com.mrsep.musicrecognizer.core.recognition.enhancer.odesli.OdesliTrackLinksFetcher
-import com.mrsep.musicrecognizer.core.recognition.enhancer.qobuz.QobuzTrackLinksFetcher
-import com.mrsep.musicrecognizer.core.recognition.enhancer.youtube.YoutubeTrackLinksFetcher
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
+import com.mrsep.musicrecognizer.core.metadata.tracklink.RemoteTrackLinks
+import com.mrsep.musicrecognizer.core.metadata.tracklink.odesli.OdesliTrackLinksFetcher
+import com.mrsep.musicrecognizer.core.metadata.tracklink.qobuz.QobuzTrackLinksFetcher
+import com.mrsep.musicrecognizer.core.metadata.tracklink.youtube.YoutubeTrackLinksFetcher
+import com.mrsep.musicrecognizer.core.metadata.lyrics.LyricsFetcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

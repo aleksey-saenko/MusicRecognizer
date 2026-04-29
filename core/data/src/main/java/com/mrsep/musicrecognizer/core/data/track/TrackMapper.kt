@@ -6,8 +6,8 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsConverter
-import com.mrsep.musicrecognizer.core.recognition.lyrics.SyncedLyricsWithMetadata
+import com.mrsep.musicrecognizer.core.metadata.lyrics.LyricsConverter
+import com.mrsep.musicrecognizer.core.metadata.lyrics.SyncedLyricsWithMetadata
 
 internal fun Track.toEntity() = TrackEntity(
     id = id,

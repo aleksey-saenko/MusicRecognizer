@@ -4,12 +4,8 @@ import com.mrsep.musicrecognizer.core.domain.recognition.ConfigValidator
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionServiceFactory
 import com.mrsep.musicrecognizer.core.recognition.ConfigValidatorImpl
 import com.mrsep.musicrecognizer.core.recognition.RecognitionServiceFactoryImpl
-import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcher
-import com.mrsep.musicrecognizer.core.recognition.artwork.ArtworkFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSession
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessionImpl
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcher
-import com.mrsep.musicrecognizer.core.recognition.lyrics.LyricsFetcherImpl
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGenerator
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGeneratorVibra
 import dagger.Binds
@@ -30,14 +26,6 @@ internal interface RecognitionModule {
     @Binds
     @Singleton
     fun bindConfigValidator(impl: ConfigValidatorImpl): ConfigValidator
-
-    @Binds
-    @Singleton
-    fun bindArtworkFetcher(impl: ArtworkFetcherImpl): ArtworkFetcher
-
-    @Binds
-    @Singleton
-    fun bindLyricsFetcher(impl: LyricsFetcherImpl): LyricsFetcher
 
     @Binds
     @Singleton

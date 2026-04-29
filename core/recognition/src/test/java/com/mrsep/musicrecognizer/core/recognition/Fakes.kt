@@ -26,6 +26,7 @@ internal val fakeTrack = Track(
     recognizedBy = RecognitionProvider.Audd,
     recognitionDate = Instant.now(),
     lyrics = PlainLyrics("lyrics stub"),
+    isrc = null,
     artworkThumbUrl = null,
     artworkUrl = null,
     trackLinks = emptyMap(),

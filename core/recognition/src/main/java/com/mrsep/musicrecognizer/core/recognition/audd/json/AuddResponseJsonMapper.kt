@@ -9,7 +9,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.recognition.artwork.TrackArtwork
+import com.mrsep.musicrecognizer.core.metadata.artwork.TrackArtwork
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.time.Instant
 import java.time.LocalDate

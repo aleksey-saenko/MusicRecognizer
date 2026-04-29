@@ -19,26 +19,26 @@ internal class TrackMetadataFetchManagerImpl @Inject constructor(
 
     override fun enqueueTrackLinksFetcher(trackId: String) {
         workManager.enqueueUniqueWork(
-            TrackLinksFetchWorker.getUniqueWorkerName(trackId),
+            TrackLinksFetchWorker.buildUniqueWorkerName(trackId),
             ExistingWorkPolicy.REPLACE,
-            TrackLinksFetchWorker.getOneTimeWorkRequest(trackId = trackId)
+            TrackLinksFetchWorker.buildOneTimeWorkRequest(trackId = trackId)
         )
     }
 
     override fun enqueueLyricsFetcher(trackId: String) {
         workManager.enqueueUniqueWork(
-            LyricsFetchWorker.getUniqueWorkerName(trackId),
+            LyricsFetchWorker.buildUniqueWorkerName(trackId),
             ExistingWorkPolicy.REPLACE,
-            LyricsFetchWorker.getOneTimeWorkRequest(trackId = trackId)
+            LyricsFetchWorker.buildOneTimeWorkRequest(trackId = trackId)
         )
     }
 
     override fun isTrackLinksFetcherRunning(trackId: String): Flow<Boolean> {
-        return isWorkerRunning(TrackLinksFetchWorker.getUniqueWorkerName(trackId))
+        return isWorkerRunning(TrackLinksFetchWorker.buildUniqueWorkerName(trackId))
     }
 
     override fun isLyricsFetcherRunning(trackId: String): Flow<Boolean> {
-        return isWorkerRunning(LyricsFetchWorker.getUniqueWorkerName(trackId))
+        return isWorkerRunning(LyricsFetchWorker.buildUniqueWorkerName(trackId))
     }
 
     private fun isWorkerRunning(workerId: String): Flow<Boolean> {
@@ -48,15 +48,15 @@ internal class TrackMetadataFetchManagerImpl @Inject constructor(
     }
 
     override fun cancelTrackLinksFetcher(trackId: String) {
-        workManager.cancelUniqueWork(TrackLinksFetchWorker.getUniqueWorkerName(trackId))
+        workManager.cancelUniqueWork(TrackLinksFetchWorker.buildUniqueWorkerName(trackId))
     }
 
     override fun cancelLyricsFetcher(trackId: String) {
-        workManager.cancelUniqueWork(LyricsFetchWorker.getUniqueWorkerName(trackId))
+        workManager.cancelUniqueWork(LyricsFetchWorker.buildUniqueWorkerName(trackId))
     }
 
     override fun cancelAllForTrack(trackId: String) {
-        workManager.cancelAllWorkByTag(workTagForTrack(trackId))
+        workManager.cancelAllWorkByTag(buildWorkTagForTrack(trackId))
     }
 
     override fun cancelAll() {
@@ -65,6 +65,6 @@ internal class TrackMetadataFetchManagerImpl @Inject constructor(
     }
 
     companion object {
-        fun workTagForTrack(trackId: String) = "work_of_track_$trackId"
+        fun buildWorkTagForTrack(trackId: String) = "work_of_track_$trackId"
     }
 }

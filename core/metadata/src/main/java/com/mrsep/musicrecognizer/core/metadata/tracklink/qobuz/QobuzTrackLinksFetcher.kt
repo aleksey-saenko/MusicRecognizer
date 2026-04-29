@@ -10,6 +10,7 @@ import com.mrsep.musicrecognizer.core.metadata.tracklink.RemoteTrackLinks
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.tracklink.ScoredTrackCandidate
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackCandidate
+import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksSource
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackMatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,6 +32,7 @@ class QobuzTrackLinksFetcher @Inject constructor(
     private val localeProvider: LocaleProvider,
 ) : TrackLinksFetcher {
 
+    override val source = TrackLinksSource.Qobuz
     override val supportedServices: Set<MusicService> = setOf(MusicService.Qobuz)
 
     override suspend fun fetch(

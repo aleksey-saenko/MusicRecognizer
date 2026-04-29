@@ -15,7 +15,7 @@ import androidx.work.WorkerParameters
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
-import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl.Companion.workTagForTrack
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl.Companion.buildWorkTagForTrack
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,9 +58,9 @@ internal class LyricsFetchWorker @AssistedInject constructor(
         private const val MAX_ATTEMPTS = 3
         private const val INPUT_KEY_TRACK_ID = "TRACK_ID"
 
-        fun getUniqueWorkerName(trackId: String) = "LYRICS_FETCHER_ID#$trackId"
+        fun buildUniqueWorkerName(trackId: String) = "LYRICS_FETCHER_ID#$trackId"
 
-        fun getOneTimeWorkRequest(trackId: String): OneTimeWorkRequest {
+        fun buildOneTimeWorkRequest(trackId: String): OneTimeWorkRequest {
             val data = Data.Builder()
                 .putString(INPUT_KEY_TRACK_ID, trackId)
                 .build()
@@ -69,7 +69,7 @@ internal class LyricsFetchWorker @AssistedInject constructor(
                 .build()
             return OneTimeWorkRequestBuilder<LyricsFetchWorker>()
                 .addTag(TAG)
-                .addTag(workTagForTrack(trackId))
+                .addTag(buildWorkTagForTrack(trackId))
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

@@ -15,10 +15,12 @@ android {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.audio)
+    implementation(projects.core.metadata)
 
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
 
+    implementation(libs.kotlinx.coroutinesGuava)
     implementation(libs.androidx.workKtx)
     implementation(libs.hilt.ext.work)
     ksp(libs.hilt.ext.compiler)

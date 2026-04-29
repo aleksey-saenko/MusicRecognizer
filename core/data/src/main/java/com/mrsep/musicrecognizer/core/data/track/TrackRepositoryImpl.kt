@@ -10,16 +10,11 @@ import com.mrsep.musicrecognizer.core.domain.preferences.TrackFilter
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkError
 import com.mrsep.musicrecognizer.core.domain.recognition.model.NetworkResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
-import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.SearchResult
 import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackDataField
 import com.mrsep.musicrecognizer.core.domain.track.model.TrackPreview
-import com.mrsep.musicrecognizer.core.metadata.tracklink.RemoteTrackLinks
-import com.mrsep.musicrecognizer.core.metadata.tracklink.odesli.OdesliTrackLinksFetcher
-import com.mrsep.musicrecognizer.core.metadata.tracklink.qobuz.QobuzTrackLinksFetcher
-import com.mrsep.musicrecognizer.core.metadata.tracklink.youtube.YoutubeTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.lyrics.LyricsFetcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +29,6 @@ internal class TrackRepositoryImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val lyricsFetcher: LyricsFetcher,
-    private val odesliTrackLinksFetcher: OdesliTrackLinksFetcher,
-    private val youtubeTrackLinksFetcher: YoutubeTrackLinksFetcher,
-    private val qobuzTrackLinksFetcher: QobuzTrackLinksFetcher,
     database: ApplicationDatabase
 ) : TrackRepository {
 
@@ -46,6 +38,14 @@ internal class TrackRepositoryImpl @Inject constructor(
     override suspend fun upsertKeepProperties(tracks: List<Track>): List<Track> {
         return withContext(persistentCoroutineContext) {
             trackDao.upsertKeepProperties(tracks.map(Track::toEntity)).map(TrackEntity::toDomain)
+        }
+    }
+
+    override suspend fun updateTransform(trackId: String, transform: (previous: Track) -> Track) {
+        withContext(persistentCoroutineContext) {
+            trackDao.updateTransform(trackId) { trackEntity ->
+                transform(trackEntity.toDomain()).toEntity()
+            }
         }
     }
 
@@ -133,41 +133,6 @@ internal class TrackRepositoryImpl @Inject constructor(
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun fetchAndUpdateTrackLinks(
-        trackId: String,
-        requiredServices: Set<MusicService>
-    ): NetworkResult<Unit> = withContext(ioDispatcher) {
-        if (requiredServices.isEmpty()) return@withContext NetworkResult.Success(Unit)
-        val fetchers = listOf(
-            odesliTrackLinksFetcher,
-            youtubeTrackLinksFetcher,
-//            qobuzTrackLinksFetcher,
-        ).filter { fetcher ->
-            requiredServices.any(fetcher.supportedServices::contains)
-        }
-        var lastError: NetworkError? = null
-        for (fetcher in fetchers) {
-            // Null if track was not found or was deleted in process
-            val track = getTrackFlow(trackId).first() ?: return@withContext NetworkResult.Success(Unit)
-
-            val availableServices = fetcher.supportedServices intersect requiredServices
-            val shouldSearchForLinks = availableServices.any { it !in track.trackLinks }
-            if (!shouldSearchForLinks) return@withContext NetworkResult.Success(Unit)
-
-            when (val result = fetcher.fetch(track)) {
-                is NetworkResult.Success -> {
-                    trackDao.updateTransform(trackId) { previous ->
-                        previous.copy(links = previous.links.merge(result.data))
-                    }
-                }
-                is NetworkError -> {
-                    lastError = result
-                }
-            }
-        }
-        lastError ?: NetworkResult.Success(Unit)
-    }
-
     override suspend fun fetchAndUpdateLyrics(
         trackId: String
     ): NetworkResult<Unit> = withContext(ioDispatcher) {
@@ -189,25 +154,3 @@ internal class TrackRepositoryImpl @Inject constructor(
         }
     }
 }
-
-private fun TrackEntity.Links.merge(remote: RemoteTrackLinks) = copy(
-    artworkThumbnail = artworkThumbnail ?: remote.artworkThumbUrl,
-    artwork = artwork ?: remote.artworkUrl,
-    amazonMusic = amazonMusic ?: remote.trackLinks[MusicService.AmazonMusic],
-    anghami = anghami ?: remote.trackLinks[MusicService.Anghami],
-    appleMusic = appleMusic ?: remote.trackLinks[MusicService.AppleMusic],
-    audiomack = audiomack ?: remote.trackLinks[MusicService.Audiomack],
-    audius = audius ?: remote.trackLinks[MusicService.Audius],
-    boomplay = boomplay ?: remote.trackLinks[MusicService.Boomplay],
-    deezer = deezer ?: remote.trackLinks[MusicService.Deezer],
-    musicBrainz = musicBrainz ?: remote.trackLinks[MusicService.MusicBrainz],
-    napster = napster ?: remote.trackLinks[MusicService.Napster],
-    pandora = pandora ?: remote.trackLinks[MusicService.Pandora],
-    qobuz = qobuz ?: remote.trackLinks[MusicService.Qobuz],
-    soundCloud = soundCloud ?: remote.trackLinks[MusicService.Soundcloud],
-    spotify = spotify ?: remote.trackLinks[MusicService.Spotify],
-    tidal = tidal ?: remote.trackLinks[MusicService.Tidal],
-    yandexMusic = yandexMusic ?: remote.trackLinks[MusicService.YandexMusic],
-    youtube = youtube ?: remote.trackLinks[MusicService.Youtube],
-    youtubeMusic = youtubeMusic ?: remote.trackLinks[MusicService.YoutubeMusic],
-)

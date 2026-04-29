@@ -27,7 +27,7 @@ internal class EnqueuedRecognitionSchedulerImpl @Inject constructor(
             workManager.enqueueUniqueWork(
                 uniqueWorkName,
                 ExistingWorkPolicy.REPLACE,
-                EnqueuedRecognitionWorker.getOneTimeWorkRequest(
+                EnqueuedRecognitionWorker.buildOneTimeWorkRequest(
                     recognitionId = id,
                     identifyTag = uniqueWorkName,
                     forceLaunch = forceLaunch

@@ -8,6 +8,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.metadata.tracklink.RemoteTrackLinks
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksFetcher
+import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -24,6 +25,8 @@ class OdesliTrackLinksFetcher @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val localeProvider: LocaleProvider,
 ) : TrackLinksFetcher {
+
+    override val source = TrackLinksSource.Odesli
 
     override val supportedServices = setOf(
         MusicService.AmazonMusic,

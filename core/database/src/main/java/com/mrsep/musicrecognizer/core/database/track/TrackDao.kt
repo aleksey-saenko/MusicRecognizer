@@ -36,6 +36,7 @@ interface TrackDao {
     ) {
         val previous = getTrack(trackId) ?: return
         val transformed = transform(previous)
+        check(previous.id == transformed.id)
         update(transformed)
     }
 

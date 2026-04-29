@@ -176,7 +176,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
         private const val INPUT_KEY_ENQUEUED_RECOGNITION_ID = "ENQUEUED_RECOGNITION_ID"
         private const val INPUT_KEY_FORCE_LAUNCH = "FORCE_LAUNCH"
 
-        fun getOneTimeWorkRequest(
+        fun buildOneTimeWorkRequest(
             recognitionId: Int,
             identifyTag: String,
             forceLaunch: Boolean,

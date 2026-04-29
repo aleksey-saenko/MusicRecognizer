@@ -9,6 +9,7 @@ import com.mrsep.musicrecognizer.core.metadata.tracklink.RemoteTrackLinks
 import com.mrsep.musicrecognizer.core.metadata.tracklink.ScoredTrackCandidate
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackCandidate
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksFetcher
+import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksSource
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackMatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -38,10 +39,8 @@ class YoutubeTrackLinksFetcher @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : TrackLinksFetcher {
 
-    override val supportedServices = setOf(
-        MusicService.Youtube,
-        MusicService.YoutubeMusic,
-    )
+    override val source = TrackLinksSource.YouTube
+    override val supportedServices = setOf(MusicService.Youtube, MusicService.YoutubeMusic)
 
     override suspend fun fetch(track: Track): NetworkResult<RemoteTrackLinks> {
         val query = buildSearchQuery(track)

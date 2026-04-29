@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Не потребує дозволу на трансляцію екрана та обходить обмеження на захоплення звуку, встановлені іншими застосунками</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Підтримується на всіх версіях Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">Якість звуку нижча, і цей метод може не працювати на деяких пристроях</string>
+    <string name="track_info_title_format_isrc">%s:</string>
 </resources>

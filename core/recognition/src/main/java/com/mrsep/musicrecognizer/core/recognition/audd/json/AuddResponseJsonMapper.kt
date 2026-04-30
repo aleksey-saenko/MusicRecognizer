@@ -15,6 +15,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Locale
 import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -307,10 +308,17 @@ private fun AuddResponseJson.Result.parseArtworkSeedColor(): Int? {
 }
 
 private fun AuddResponseJson.Result.parseIsrc() =
-    isrc?.takeIf { it.isNotBlank() }
-    ?: appleMusic?.isrc?.takeIf { it.isNotBlank() }
-    ?: spotify?.externalIds?.isrc?.takeIf { it.isNotBlank() }
-    ?: musicbrainz?.firstOrNull()?.isrcs?.firstOrNull()?.takeIf { it.isNotBlank() }
+    isrc?.normalizedIsrcOrNull()
+    ?: appleMusic?.isrc?.normalizedIsrcOrNull()
+    ?: spotify?.externalIds?.isrc?.normalizedIsrcOrNull()
+    ?: musicbrainz?.firstOrNull()?.isrcs?.firstOrNull()?.normalizedIsrcOrNull()
+
+internal fun String.normalizedIsrcOrNull() =
+    trim()
+    .takeIf { it.isNotBlank() }
+    ?.uppercase(Locale.ROOT)
+    ?.replace(Regex("[^A-Z0-9]"), "")
+    ?.takeIf { Regex("^[A-Z]{2}[A-Z0-9]{3}\\d{7}$").matches(it) }
 
 private fun parseErrorResult(error: AuddResponseJson.Error): RemoteRecognitionResult {
     return when (error.errorCode) {

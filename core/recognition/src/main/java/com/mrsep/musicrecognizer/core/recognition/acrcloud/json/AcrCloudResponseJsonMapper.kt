@@ -6,6 +6,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.core.recognition.acrcloud.AcrCloudRecognitionService.Companion.SAMPLE_DURATION_LIMIT
+import com.mrsep.musicrecognizer.core.recognition.audd.json.normalizedIsrcOrNull
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -80,7 +81,7 @@ private fun parseMusic(
         lyrics = null,
         artworkThumbUrl = null,
         artworkUrl = null,
-        isrc = music.externalIds?.isrc?.trim()?.takeIf { it.isNotBlank() },
+        isrc = music.externalIds?.isrc?.normalizedIsrcOrNull(),
         trackLinks = buildMap {
             parseDeezerUrl(music)?.let { link -> put(MusicService.Deezer, link) }
             parseSpotifyUrl(music)?.let { link -> put(MusicService.Spotify, link) }

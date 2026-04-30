@@ -6,6 +6,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognition
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.domain.track.model.PlainLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
+import com.mrsep.musicrecognizer.core.recognition.audd.json.normalizedIsrcOrNull
 import java.time.Instant
 import java.time.LocalDate
 import kotlin.time.Duration
@@ -55,7 +56,7 @@ internal fun ShazamResponseJson.toRecognitionResult(
                     ?.run { result.put(MusicService.AppleMusic, this) }
                 result
             },
-            isrc = track.isrc?.trim()?.takeIf { it.isNotBlank() },
+            isrc = track.isrc?.normalizedIsrcOrNull(),
             artworkThumbUrl = this.track.images?.coverarthq?.convertImageUrl("400x400cc")
                 ?: track.images?.background?.convertImageUrl("400x400cc")
                 ?: track.images?.coverart?.convertImageUrl("400x400cc"),

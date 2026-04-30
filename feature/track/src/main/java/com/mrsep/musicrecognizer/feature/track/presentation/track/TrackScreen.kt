@@ -327,9 +327,31 @@ private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget
             SearchTarget.Album ->   "https://www.deezer.com/search/${queryEncoded}/album"
         }
         MusicService.MusicBrainz -> when (target) {
-            SearchTarget.Track ->   "https://musicbrainz.org/search?query=${queryEncoded}&type=recording&limit=25&method=indexed"
-            SearchTarget.Artist ->  "https://musicbrainz.org/search?query=${queryEncoded}&type=artist&limit=25&method=indexed"
-            SearchTarget.Album ->   "https://musicbrainz.org/search?query=${queryEncoded}&type=release&limit=25&method=indexed"
+            // Don't use 'type=work' because for work searches artist means composer/lyricist, not performer,
+            // so we can't specify track artist to narrow the search
+            SearchTarget.Track ->   {
+                val advancedQuery = if (track.isrc?.trim()?.isBlank() == false) {
+                    """isrc:"${track.isrc.trim()}""""
+                } else {
+                    """recording:"${track.title.trim()}" AND artist:"${track.artist.trim()}""""
+                }
+                val encodedQuery = advancedQuery.urlEncode()
+                "https://musicbrainz.org/search?query=$encodedQuery&type=recording&limit=25&method=advanced"
+            }
+            SearchTarget.Artist ->  {
+                val advancedQuery = """artist:"${track.artist.trim()}""""
+                val encodedQuery = advancedQuery.urlEncode()
+                "https://musicbrainz.org/search?query=$encodedQuery&type=artist&limit=25&method=advanced"
+            }
+            SearchTarget.Album ->   {
+                val advancedQuery = if (track.album?.trim()?.isBlank() == false) {
+                    """releasegroup:"${track.album.trim()}" AND artist:"${track.artist.trim()}""""
+                } else {
+                    """artist:"${track.artist.trim()}""""
+                }
+                val encodedQuery = advancedQuery.urlEncode()
+                "https://musicbrainz.org/search?query=$encodedQuery&type=release_group&limit=25&method=advanced"
+            }
         }
         // TODO is this service still relevant? consider delete
         MusicService.Napster ->     "https://app.napster.com/search?q=${queryEncoded}"

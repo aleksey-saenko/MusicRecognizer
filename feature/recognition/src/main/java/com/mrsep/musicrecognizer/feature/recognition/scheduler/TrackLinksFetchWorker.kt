@@ -20,6 +20,7 @@ import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.tracklink.TrackLinksSource
+import com.mrsep.musicrecognizer.core.metadata.tracklink.musicbrainz.MusicBrainzTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.tracklink.odesli.OdesliTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.tracklink.qobuz.QobuzTrackLinksFetcher
 import com.mrsep.musicrecognizer.core.metadata.tracklink.youtube.YoutubeTrackLinksFetcher
@@ -42,6 +43,7 @@ internal class TrackLinksFetchWorker @AssistedInject constructor(
     private val odesliTrackLinksFetcher: OdesliTrackLinksFetcher,
     private val youtubeTrackLinksFetcher: YoutubeTrackLinksFetcher,
     private val qobuzTrackLinksFetcher: QobuzTrackLinksFetcher,
+    private val musicBrainzTrackLinksFetcher: MusicBrainzTrackLinksFetcher,
 ) : CoroutineWorker(appContext, workerParams) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -86,7 +88,11 @@ internal class TrackLinksFetchWorker @AssistedInject constructor(
         if (requiredServices.isEmpty() || allowedSources.isEmpty()) return emptySet()
 
         val fetcherBatches = listOf(
-            listOf(odesliTrackLinksFetcher, qobuzTrackLinksFetcher),
+            listOf(
+                odesliTrackLinksFetcher,
+                qobuzTrackLinksFetcher,
+                musicBrainzTrackLinksFetcher,
+            ),
             listOf(youtubeTrackLinksFetcher),
         ).mapNotNull { batch ->
             batch
@@ -163,6 +169,7 @@ internal class TrackLinksFetchWorker @AssistedInject constructor(
         TrackLinksSource.Odesli -> odesliTrackLinksFetcher
         TrackLinksSource.YouTube -> youtubeTrackLinksFetcher
         TrackLinksSource.Qobuz -> qobuzTrackLinksFetcher
+        TrackLinksSource.MusicBrainz -> musicBrainzTrackLinksFetcher
     }
 
     companion object {

@@ -20,4 +20,5 @@ enum class TrackLinksSource {
     Odesli,
     YouTube,
     Qobuz,
+    MusicBrainz,
 }

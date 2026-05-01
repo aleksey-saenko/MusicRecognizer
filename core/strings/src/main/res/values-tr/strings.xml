@@ -11,7 +11,7 @@
     <string name="widget_listening_subtitle_extra_time">Bir kez daha deneniyor</string>
     <string name="recognition_widget_description">Şarkıyı tek dokunuşla tanıyın</string>
     <string name="notification_tap_to_recognize">Tanımak için dokun</string>
-    <string name="notification_tap_to_recognize_subtitle">Herhangi bir uygulama açıkken tanımla</string>
+    <string name="notification_tap_to_recognize_subtitle">Herhangi bir uygulama açıkken müziği tanımla</string>
     <string name="notification_listening">Dinleniyor</string>
     <string name="notification_listening_subtitle">Lütfen bekleyin</string>
     <string name="notification_listening_subtitle_extra_time">Bir kez daha deneniyor</string>
@@ -40,7 +40,7 @@
     <string name="copied">Kopyalandı</string>
     <string name="share">Paylaş</string>
     <string name="web_browser_not_found_toast">Web tarayıcısı bulunamadı</string>
-    <string name="cannot_share_toast">Paylaşmak için herhangi bir uygulama bulunamıyor</string>
+    <string name="cannot_share_toast">Paylaşılabilecek herhangi bir uygulama bulunamıyor</string>
     <string name="help">Yardım</string>
     <string name="show_more">Daha fazla göster</string>
     <string name="show_less">Daha az göster</string>
@@ -54,7 +54,7 @@
     <string name="permission_granted">İzin verildi</string>
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Hoş Geldiniz</string>
-    <string name="onboarding_welcome_message">Audile, yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
+    <string name="onboarding_welcome_message">Audile, yakınınızda çalan müziği hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
     <string name="onboarding_permission_message">Uygulamanın düzgün çalışabilmesi için ses kaydetme izni gereklidir. Bu izni vererek, kaydedilen verilerinizin müzik tanıma için <![CDATA[<a href="%1$s">uzak hizmet</a>]]> tarafından kullanılmasını kabul etmiş olursunuz. Uygulama bu verileri başka hiçbir amaçla kullanmaz.</string>
     <string name="onboarding_token_message">Uygulama, ücretsiz olmayan ve özel bir API anahtarı gerektiren AudD müzik tanıma hizmetini kullanır. Henüz bir deneme anahtarınız yoksa <![CDATA[<a href="%1$s">buradan</a>]]> kaydolarak bir tane alabilirsiniz.</string>
     <string name="onboarding_token_skip_message">Bu adımı atlamak günlük tanıma sayınızı sınırlayacaktır, ancak daha sonra tercihler bölümünden kişisel anahtarınızı her zaman belirtebilirsiniz.</string>
@@ -75,12 +75,12 @@
     <string name="result_message_recognition_scheduled">Ses örneği kaydedildi, çevrimiçi olduğunuzda, uygulama bu şarkıyı tanımlamaya çalışacak</string>
     <string name="result_title_recording_error">Kayıt hatası</string>
     <string name="result_message_recording_error">Ses kaydı sırasında bir hata oluştu</string>
-    <string name="result_title_bad_network_response">Kötü ağ yanıtı</string>
+    <string name="result_title_bad_network_response">Ağ isteği başarısız oldu</string>
     <string name="result_message_bad_network_response">İnternet isteği sırasında bir hata oluştu</string>
     <string name="result_title_auth_error">Kimlik doğrulama hatası</string>
     <string name="result_message_auth_error">Lütfen seçili tanıma hizmeti için kimlik bilgilerinizi kontrol edin ve tekrar deneyin</string>
     <string name="result_title_service_usage_limited">Hizmet kullanımı sınırlı</string>
-    <string name="result_message_service_usage_limited">Hizmet kullanımınız sınıra ulaştı. Lütfen planınızı kontrol edin veya daha sonra tekrar deneyin</string>
+    <string name="result_message_service_usage_limited">Hizmet kullanımınız limite ulaştı. Lütfen planınızı kontrol edin veya daha sonra tekrar deneyin</string>
     <string name="result_title_internal_error">Dahili hata</string>
     <string name="result_message_internal_error">Dahili bir hata oluştu</string>
     <string name="result_title_unknown_error">Bilinmeyen hata</string>
@@ -115,7 +115,7 @@
     <string name="recognition_queue">Tanıma kuyruğu</string>
     <string name="queue">Kuyruk</string>
     <string name="empty_recognition_queue_title">Kuyrukta tanıma yok</string>
-    <string name="empty_recognition_queue_subtitle">Çevrimdışı veya hata durumunda, seçilen yedek politikaya göre bir tanıma kuyruğa alınabilir</string>
+    <string name="empty_recognition_queue_subtitle">Çevrimdışıyken veya bir hata sonrasında, seçilen yedek politikaya göre bir tanıma kuyruğa alınabilir</string>
     <string name="untitled_recognition">İsimsiz tanıma</string>
     <string name="format_scheduled_recognition_of">%s\'in planlanmış tanıması</string>
     <string name="format_recognition_created">Oluşturulma: %s</string>
@@ -184,7 +184,7 @@
     <string name="pref_subtitle_fallback_policy">Başarısız tanımalardan sonra yedek eylemleri ayarlayın</string>
     <string name="fallback_policy_dialog_title">Yedek politika</string>
     <string name="fallback_policy_dialog_message">Her başarısız sonuç türü için varsayılan yedek eylemi ayarlayın:</string>
-    <string name="fallback_action_save_recording_and_retry">Kaydı kaydet ve yeniden denemeyi başlat</string>
+    <string name="fallback_action_save_recording_and_retry">Kaydı kaydet ve tekrar dene</string>
     <string name="fallback_action_save_recording">Kaydı kaydet</string>
     <string name="fallback_action_ignore">Yoksay</string>
     <string name="fallback_trigger_bad_connection">Kötü internet bağlantısı</string>
@@ -193,12 +193,12 @@
     <string name="pref_title_recognition_provider">Tanıma sağlayıcısı</string>
     <string name="recognition_provider_dialog_message">Tanıma sağlayıcısını seçin:</string>
     <string name="recognition_provider_dialog_format_auth">%s kimlik doğrulaması:</string>
-    <string name="audd_help_dialog_message">AudD, ücretsiz deneme süresi seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API anahtarınızı almanız gerekir. <![CDATA[<a href="%1$s">Kaydolun</a>]]> henüz bir hesabınız yoksa.</string>
+    <string name="audd_help_dialog_message">AudD, 14 günlük ücretsiz deneme süresi sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve özel API token almanız gerekir. Henüz bir hesabınız yoksa <![CDATA[<a href="%1$s">kaydolun</a>]]>.</string>
     <string name="audd_help_dialog_message_empty_token">Anahtarı sağlamadan test amaçlı olarak hizmeti kullanmayı deneyebilirsiniz, ancak bunun günlük tanımalarınızı sınırlayacağını unutmayın.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud, ücretsiz deneme süresi ve geliştirme amaçlı sınırlı kullanım seçeneği sunan ücretli bir hizmettir. Bu hizmeti kullanmak için bir hesap oluşturmanız ve bir proje kaydetmeniz gerekir. Herhangi bir zorlukla karşılaşırsanız, lütfen <![CDATA[<a href="%1$s">bu kılavuza</a>]]> bakın.</string>
     <string name="acr_cloud_help_dialog_steps_title">Lütfen bu adımlara dikkat edin:</string>
     <string name="acr_cloud_help_dialog_step1">İnternet gecikmesini en aza indirmek için size en yakın coğrafi bölgeyi seçin</string>
-    <string name="acr_cloud_help_dialog_step2">Ses kaynağını \"Kaydedilmiş ses\" olarak ayarlayın</string>
+    <string name="acr_cloud_help_dialog_step2">Ses kaynağını \"Kayıtlı ses\" olarak ayarlayın</string>
     <string name="acr_cloud_help_dialog_step3">Seçtiğiniz ses motorunu ayarlayın. \"Ses parmak izi\" seçeneği genel kullanım için en doğru olanıdır</string>
     <string name="acr_cloud_help_dialog_step4">3. taraf ID entegrasyonu için tüm kutuları işaretleyin</string>
     <string name="pref_group_notifications">Bildirimler</string>
@@ -276,7 +276,7 @@
     <string name="pref_title_restore">Kurtarma</string>
     <string name="about_pref_title_third_licenses">Üçüncü taraf lisansları</string>
     <string name="about_pref_subtitle_third_licenses">Audile\'nin kullandığı üçüncü taraf lisansları</string>
-    <string name="about_pref_subtitle_privacy_policy">Uygulamanın verinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
+    <string name="about_pref_subtitle_privacy_policy">Uygulamanın verilerinizi nasıl işlediği hakkında daha fazla bilgi edinin</string>
     <string name="about_pref_title_licenses">Lisanslar</string>
     <string name="about_pref_subtitle_license">Audile, GNU GPLv3 veya sonrası altında lisanslıdır</string>
     <string name="audio_source_dialog_use_alt_device_source">Alternatif cihaz ses kaynağı kullan</string>
@@ -309,4 +309,33 @@
     <string name="toast_failed_delete_incomplete_backup_file">Tamamlanmamış yedekleme dosyası silinemedi</string>
     <string name="toast_press_again_to_confirm">Onaylamak için yeniden basın</string>
     <string name="restore_erase_warning">Geri yükleme, mevcut verileri siler ve bunları yedeklemenin içeriğiyle değiştirir. Bu eylem geri alınamaz. Devam etmeden önce önemli verilerinizi yedekleyin.</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="deselect_all">Tümünün seçimini kaldır</string>
+    <string name="audio_source_dialog_device_audio_limited">Uygulama, Android 9 ve önceki sürümlerde cihaz sesini kaydetme konusunda sınırlı desteğe sahiptir</string>
+    <string name="audio_source_dialog_methods">Uygulama, cihaz sesini kaydetmek için iki yöntem destekliyor:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Ekran kaydı (birincil yöntem)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Bu yöntem en iyi ses kalitesini sağlar ve Android 10 ve üzeri tüm cihazlarda çalışır</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Bazı uygulamalar, kayıt politikalarıyla ses kaydını engelleyebilir ve bu durumda Audile sessizlik alacaktır</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternatif yöntem</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Ekran kaydı izni gerektirmez ve diğer uygulamalar tarafından belirlenen ses yakalama kısıtlamalarını atlar</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Tüm Android sürümlerinde desteklenmektedir</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">Ses kalitesi daha düşük ve bu yöntem bazı cihazlarda çalışmayabilir</string>
+    <string name="pref_title_export_to_csv">CSV\'ye aktar</string>
+    <string name="pref_subtitle_export_to_csv">Tüm parçaları CSV dosyasına aktarır</string>
+    <string name="export_only_favorites_tracks">Yalnızca favori parçaları dışa aktar</string>
+    <string name="export_write_csv_header">CSV başlığını dahil et</string>
+    <string name="export_select_fields_to_export">Dışa aktarılacak alanlar:</string>
+    <string name="export_track_field_title">Başlık</string>
+    <string name="export_track_field_artist">Sanatçı</string>
+    <string name="export_track_field_album">Albüm</string>
+    <string name="export_track_field_release_date">Yayın tarihi</string>
+    <string name="export_track_field_recognition_date">Tanıma tarihi</string>
+    <string name="export_track_field_duration">Süre</string>
+    <string name="export_track_field_playback_offset">Oynatma kayması</string>
+    <string name="export_track_field_provider">Tanınma sağlayıcı</string>
+    <string name="export_track_field_lyrics">Şarkı sözleri</string>
+    <string name="export_track_field_favorite">Favori</string>
+    <string name="export_export">Dışa aktar</string>
+    <string name="export_in_progress">Dışa aktarılıyor…</string>
+    <string name="export_csv_result_success">CSV dosyası başarıyla oluşturuldu!</string>
 </resources>

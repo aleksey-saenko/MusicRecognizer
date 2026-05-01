@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_screen_tap_to_recognize">Koppints az felismeréshez</string>
+    <string name="main_screen_tap_to_recognize">Koppints a felismeréshez</string>
     <string name="main_screen_listening">Hallgatás</string>
     <string name="main_screen_listening_extra_time">Újrapróbálkozás</string>
     <string name="widget_tap_to_recognize">Koppints a felismeréshez</string>
@@ -49,7 +49,7 @@
     <string name="permissions">Engedélyek</string>
     <string name="request_permission">Engedély kérése</string>
     <string name="permission_rationale_record_audio">A zene felismeréséhez az alkalmazásnak hozzáférésre van szüksége a mikrofonhoz.</string>
-    <string name="permission_rationale_post_notifications">A felismerés vezérléséhez és az eredmények megjelenítéséhez az alkalmazás minimalizált állapotában is, engedély szükséges az értesítések küldésére.</string>
+    <string name="permission_rationale_post_notifications">A felismerés vezérléséhez és a háttérben történő működéshez értesítési engedély szükséges.</string>
     <string name="permissions_denied_message">A korábbi engedélykérések elutasításra kerültek. A beállításokban módosítható a döntés.</string>
     <string name="permissions_denied_open_settings">Beállítások megnyitása</string>
     <string name="permission_granted">Engedély megadva</string>
@@ -299,4 +299,33 @@
     <string name="about_pref_group_powered_by">Üzemelteti a</string>
     <string name="about_pref_title_github_repo">GitHub tároló</string>
     <string name="notification_channel_name_foreground_result">Előtérben talált dalok</string>
+    <string name="pref_title_export_to_csv">Exportálás CSV-be</string>
+    <string name="pref_subtitle_export_to_csv">Összes szám exportálása CSV-fájlba</string>
+    <string name="export_only_favorites_tracks">Csak a kedvenc számok exportálása</string>
+    <string name="export_write_csv_header">CSV-fejléc hozzáadása</string>
+    <string name="export_select_fields_to_export">Exportálandó mezők kiválasztása:</string>
+    <string name="export_track_field_title">Cím</string>
+    <string name="export_track_field_artist">Előadó</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Megjelenési dátum</string>
+    <string name="export_track_field_recognition_date">Felismerése ideje</string>
+    <string name="export_track_field_duration">Időtartam</string>
+    <string name="export_track_field_provider">Felismerési szolgáltató</string>
+    <string name="export_track_field_lyrics">Dalszöveg</string>
+    <string name="export_track_field_favorite">Kedvenc</string>
+    <string name="export_track_field_artwork_link">Borítókép</string>
+    <string name="export_export">Exportálás</string>
+    <string name="export_in_progress">Exportálás…</string>
+    <string name="export_csv_result_success">CSV-fájl sikeresen létrehozva!</string>
+    <string name="deselect_all">Kijelölés megszüntetése</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="audio_source_dialog_device_audio_limited">Az alkalmazás csak korlátozottan képes rögzíteni az eszköz hangját Android 9 és korábbi rendszereken</string>
+    <string name="audio_source_dialog_methods">Az alkalmazás két lehetőséget támogat az eszköz hangjának rögzítésére:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Képernyőtükrözés (elsődleges módszer)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Ez a módszer biztosítja a legjobb hangminőséget, és minden Android 10 vagy újabb eszközön működik</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Egyes alkalmazások letilthatják a hangrögzítést a saját védelmi szabályaik szerint; ilyenkor az Audile csak csendet fog rögzíteni</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternatív módszer</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Nem igényel képernyőtükrözési engedélyt, és megkerüli az egyéb alkalmazások hangrögzítési korlátozásait</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Minden Android verzión támogatott</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">A hangminőség gyengébb, és ez a módszer egyes eszközökön nem biztos, hogy működik</string>
 </resources>

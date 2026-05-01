@@ -337,4 +337,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Nevyžaduje oprávnění k záznamu obrazovky a obchází omezení záznamu zvuku nastavená jinými aplikacemi</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Podporováno na všech verzích systému Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">Kvalita zvuku bude nižší a tento způsob nemusí fungovat na některých zařízeních</string>
+    <string name="track_info_title_format_isrc">%s:</string>
 </resources>

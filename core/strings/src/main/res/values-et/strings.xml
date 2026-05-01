@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_title">2. Alternatiivne meetod</string>
     <string name="audio_source_dialog_screen_casting_title">1. Ekraanihõive (põhimeetod)</string>
     <string name="audio_source_dialog_alt_method_bullet_1">Ei eelda ekraanihõive õigusi ja väldib rakenduste poolt juhitud helihõive piiranguid</string>
+    <string name="track_info_title_format_isrc">%s:</string>
 </resources>

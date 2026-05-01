@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">No requere permiso para compartir pantalla y elude las restricciones de captura impuestas por otras apps</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Compatible con todas las versiones de Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">La calidad de sonido es inferior, y este método podría no funcionar en algunos dispositivos</string>
+    <string name="track_info_title_format_isrc">%s:</string>
 </resources>

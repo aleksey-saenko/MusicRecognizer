@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Vereist geen toestemming voor scherm delen en omzeilt beperkingen voor audio-opname die door andere apps zijn ingesteld</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Ondersteund op alle Android-versies</string>
     <string name="audio_source_dialog_alt_method_bullet_3">De geluidskwaliteit is lager en deze methode werkt mogelijk niet op alle apparaten</string>
+    <string name="track_info_title_format_isrc">%s:</string>
 </resources>

@@ -273,7 +273,7 @@
     <string name="toast_press_again_to_confirm">Nyomj újra a megerősítéshez</string>
     <string name="pref_title_about_app">Névjegy</string>
     <string name="about_purpose_recognition_service">Zenefelismerést és alapvető metaadatokat biztosít</string>
-    <string name="about_purpose_track_links_service">További platform-specifikus zeneszámlinkeket biztosít</string>
+    <string name="about_purpose_track_links_service">Platform-specifikus linkeket biztosít a zeneszámokhoz</string>
     <string name="about_pref_subtitle_github_repo">Forráskód, hibajegyek és egyéb információk</string>
     <string name="about_pref_title_privacy_policy">Adatvédelmi irányelvek</string>
     <string name="about_pref_subtitle_privacy_policy">További információ az adatok kezeléséről az alkalmazásban</string>

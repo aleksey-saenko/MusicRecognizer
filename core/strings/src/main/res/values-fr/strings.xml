@@ -11,7 +11,7 @@
     <string name="widget_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
     <string name="recognition_widget_description">Reconnaître la chanson en un seul clic</string>
     <string name="notification_tap_to_recognize">Appuyez pour reconnaitre</string>
-    <string name="notification_tap_to_recognize_subtitle">Identifiez la musique dans d’autres applis</string>
+    <string name="notification_tap_to_recognize_subtitle">Identifier un morceau de musique lorsque n\'importe quelle application est ouverte</string>
     <string name="notification_listening">Écoute en cours</string>
     <string name="notification_listening_subtitle">Veuillez patienter</string>
     <string name="notification_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
@@ -40,20 +40,20 @@
     <string name="copied">Copié</string>
     <string name="share">Partager</string>
     <string name="web_browser_not_found_toast">Navigateur Web introuvable</string>
-    <string name="cannot_share_toast">Impossible de trouver une application pour partager</string>
+    <string name="cannot_share_toast">Je ne trouve aucune application pour partager</string>
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
     <!-- Permissions -->
     <string name="permissions">Autorisations</string>
     <string name="request_permission">Demander l\'autorisation</string>
     <string name="permission_rationale_record_audio">L\'application a besoin d\'accéder à votre microphone pour effectuer la reconnaissance musicale.</string>
-    <string name="permission_rationale_post_notifications">Pour contrôler la reconnaissance et obtenir le résultat même lorsque l\'application est minimisée, elle nécessite l\'autorisation d\'envoyer des notifications.</string>
+    <string name="permission_rationale_post_notifications">Pour gérer la reconnaissance et obtenir des résultats même lorsque l\'application est réduite, celle-ci doit disposer d\'une autorisation pour envoyer des notifications.</string>
     <string name="permissions_denied_message">Les précédentes demandes de permissions ont été refusées. Vous pouvez changer votre décision dans les paramètres.</string>
     <string name="permissions_denied_open_settings">Ouvrir les paramètres</string>
     <string name="permission_granted">Autorisation accordée</string>
     <!-- Onboarding screen -->
     <string name="onboarding_welcome">Bienvenue</string>
-    <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui peut vous aider à identifier rapidement et précisément une piste musicale jouée à proximité de vous.</string>
+    <string name="onboarding_welcome_message">Audile est une application de reconnaissance musicale qui vous permet d\'identifier rapidement et avec précision les morceaux diffusés autour de vous.</string>
     <string name="onboarding_permission_message">L’application nécessite l’autorisation d’enregistrer l’audio pour fonctionner correctement. En accordant cette permission, vous acceptez que vos enregistrements soient utilisés par <![CDATA[<a href="%1$s">remote service</a>]]> pour la reconnaissance musicale. L’application n’utilise pas ces données à d’autres fins.</string>
     <string name="onboarding_token_message">L\'application utilise le service de reconnaissance musicale AudD, qui n\'est pas gratuit et nécessite un jeton API spécial. Inscrivez-vous <![CDATA[<a href="%1$s">ici</a>]]> pour obtenir votre jeton d\'essai, si vous n\'en avez pas encore.</string>
     <string name="onboarding_token_skip_message">Ignorer cette étape limitera votre nombre de reconnaissances quotidiennes, mais vous pourrez toujours spécifier ultérieurement votre jeton personnel dans les préférences.</string>
@@ -68,18 +68,18 @@
     <string name="result_title_no_matches">Aucune correspondance trouvée</string>
     <string name="result_message_no_matches">Désolé, l\'application n\'a pas pu identifier cette chanson</string>
     <string name="result_title_bad_connection">Mauvaise connexion internet</string>
-    <string name="result_message_bad_connection">Veuillez vérifier votre état de connexion réseau</string>
+    <string name="result_message_bad_connection">Veuillez vérifier l\'état de votre réseau</string>
     <string name="result_title_recognition_scheduled">Reconnaissance planifiée</string>
     <string name="result_message_recognition_saved">L\'échantillon audio a été enregistré, Vous pouvez lancer la reconnaissance manuellement à tout moment</string>
     <string name="result_message_recognition_scheduled">L\'échantillon audio a été enregistré, Lorsque vous serez de nouveau en ligne, l\'application tentera d\'identifier cette chanson</string>
     <string name="result_title_recording_error">Erreur d\'enregistrement</string>
     <string name="result_message_recording_error">Une erreur s\'est produite lors de l\'enregistrement audio</string>
-    <string name="result_title_bad_network_response">Mauvaise réponse du réseau</string>
-    <string name="result_message_bad_network_response">Une erreur s\'est produite lors de la requête Internet</string>
+    <string name="result_title_bad_network_response">Échec de la requête réseau</string>
+    <string name="result_message_bad_network_response">Une erreur s\'est produite lors d\'une requête Internet</string>
     <string name="result_title_auth_error">Erreur d\'authentification</string>
-    <string name="result_message_auth_error">Veuillez vérifier vos identifiants pour le service sélectionné et réessayer</string>
+    <string name="result_message_auth_error">Veuillez vérifier vos identifiants pour le service de reconnaissance sélectionné, puis réessayez</string>
     <string name="result_title_service_usage_limited">Utilisation du service limitée</string>
-    <string name="result_message_service_usage_limited">Votre utilisation du service a atteint sa limite. Veuillez vérifier votre plan ou réessayer plus tard</string>
+    <string name="result_message_service_usage_limited">Vous avez atteint la limite d\'utilisation de votre service. Vérifiez votre forfait ou réessayez plus tard</string>
     <string name="result_title_internal_error">Erreur interne</string>
     <string name="result_message_internal_error">Une erreur interne s\'est produite</string>
     <string name="result_title_unknown_error">Erreur inconnue</string>
@@ -111,7 +111,7 @@
     <string name="recognition_queue">File d\'attente de reconnaissance</string>
     <string name="queue">File d\'attente</string>
     <string name="empty_recognition_queue_title">Aucune reconnaissance en attente</string>
-    <string name="empty_recognition_queue_subtitle">Hors ligne ou en cas d\'échec, une reconnaissance peut être mise en attente selon la politique de secours définie dans les paramètres</string>
+    <string name="empty_recognition_queue_subtitle">En mode hors ligne ou après une panne, une reconnaissance peut être mise en file d\'attente conformément à la politique de secours sélectionnée</string>
     <string name="untitled_recognition">Reconnaissance sans titre</string>
     <string name="format_scheduled_recognition_of">Reconnaissance planifiée de %s</string>
     <string name="format_recognition_created">Créé : %s</string>
@@ -178,7 +178,7 @@
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
     <string name="fallback_policy_dialog_message">Définir l\'action de secours par défaut pour chaque type de résultat infructueux :</string>
-    <string name="fallback_action_save_recording_and_retry">Sauvegarder l\'enregistrement et lancer une nouvelle tentative</string>
+    <string name="fallback_action_save_recording_and_retry">Enregistrez l\'enregistrement et réessayez</string>
     <string name="fallback_action_save_recording">Sauvegarder l\'enregistrement</string>
     <string name="fallback_action_ignore">Ignorer</string>
     <string name="fallback_trigger_bad_connection">Mauvaise connexion internet</string>
@@ -236,10 +236,10 @@
     <string name="acr_cloud_help_dialog_step1">Sélectionnez la région géographique la plus proche de vous pour réduire la latence du réseau</string>
     <string name="unviewed_track_label">+1</string>
     <string name="lyrics_start_autoscroll">Démarrer le défilement auto</string>
-    <string name="acr_cloud_help_dialog_step2">Définir la source audio comme « Audio enregistré »</string>
-    <string name="pref_subtitle_backup_and_restore">Sauvegardez votre base de données et vos préférences</string>
+    <string name="acr_cloud_help_dialog_step2">Sélectionnez « Enregistrement audio » comme source audio</string>
+    <string name="pref_subtitle_backup_and_restore">Effectuez une sauvegarde des données de votre application</string>
     <string name="pref_title_backup">Sauvegarde</string>
-    <string name="pref_subtitle_backup">Exportez les données et préférences de l\'appli</string>
+    <string name="pref_subtitle_backup">Sauvegarder la base de données et les préférences de l\'application</string>
     <string name="backup_dialog_title">Sauvegarde</string>
     <string name="backup_dialog_button_backup">Sauvegarder</string>
     <string name="acr_cloud_help_dialog_steps_title">Veuillez prêter attention à ces étapes :</string>
@@ -249,7 +249,7 @@
     <string name="pref_title_backup_and_restore">Sauvegarde et restauration</string>
     <string name="lyrics_stop_autoscroll">Arrêter le défilement auto</string>
     <string name="acr_cloud_help_dialog_step3">Réglez le moteur audio de votre choix. L\'option « empreinte audio » est la plus précise pour une utilisation générale</string>
-    <string name="pref_subtitle_restore">Restaurez les données et les préférences de l\'appli à partir d\'une sauvegarde</string>
+    <string name="pref_subtitle_restore">Restaurer les données d\'une application à partir d\'une sauvegarde</string>
     <string name="restore_dialog_title">Restauration</string>
     <string name="restore_dialog_button_restore">Restaurer</string>
     <string name="crash_dialog_comment_prompt">Vous pouvez ajouter des informations supplémentaires ici :</string>
@@ -259,7 +259,7 @@
     <string name="about_pref_subtitle_github_repo">Code source, problèmes et autres informations</string>
     <string name="about_pref_title_third_licenses">Licences tierces</string>
     <string name="about_pref_subtitle_third_licenses">Licences des bibliothèques tierces utilisées par Audile</string>
-    <string name="about_pref_subtitle_privacy_policy">En savoir plus sur la manière dont l\'application gère vos données</string>
+    <string name="about_pref_subtitle_privacy_policy">En savoir plus sur la manière dont l\'application traite vos données</string>
     <string name="about_pref_title_license">Licence</string>
     <string name="crash_dialog_title">Audile a planté</string>
     <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
@@ -276,7 +276,7 @@
     <string name="audio_capture_mode_microphone">Microphone</string>
     <string name="audio_capture_mode_device">Audio de l\'appareil</string>
     <string name="audio_capture_mode_auto">Automatique</string>
-    <string name="audd_help_dialog_message">AudD est un service payant qui offre un essai gratuit de 14 jours. Pour utiliser ce service, vous avez besoin de créer un compte et d\'obtenir votre jeton d\'API privé. <![CDATA[<a href="%1$s">Inscrivez-vous</a>]]> si vous n\'en avez pas encore.</string>
+    <string name="audd_help_dialog_message">AudD est un service payant qui propose un essai gratuit de 14 jours. Pour utiliser ce service, vous devez créer un compte et obtenir votre jeton API privé. <![CDATA[<a href="%1$s">S'inscrire</a>]]> si vous n\'en avez pas encore.</string>
     <string name="about_pref_title_licenses">Licences</string>
     <string name="searching_for_lyrics">Recherche des paroles…</string>
     <string name="no_lyrics_available">Aucune parole disponible pour cette chanson</string>
@@ -308,4 +308,34 @@
     <string name="toast_no_file_selected">Aucun fichier sélectionné</string>
     <string name="toast_failed_delete_incomplete_backup_file">Impossible de supprimer le fichier de sauvegarde incomplet</string>
     <string name="toast_press_again_to_confirm">Appuyez de nouveau pour confirmer</string>
+    <string name="deselect_all">Tout désélectionner</string>
+    <string name="track_info_title_format_isrc">%s :</string>
+    <string name="audio_source_dialog_device_audio_limited">L\'application offre une prise en charge limitée de l\'enregistrement audio de l\'appareil sous Android 9 et les versions antérieures</string>
+    <string name="audio_source_dialog_methods">L\'application propose deux méthodes pour enregistrer le son de l\'appareil :</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Capture d\'écran (méthode principale)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Cette méthode offre la meilleure qualité sonore et fonctionne sur tous les appareils équipés d\'Android 10 ou d\'une version ultérieure</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Certaines applications peuvent bloquer la capture audio via des règles de capture ; dans ce cas, Audile recevra un signal silencieux</string>
+    <string name="audio_source_dialog_alt_method_title">2. Autre méthode</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Ne nécessite pas d\'autorisation pour la capture d\'écran et contourne les restrictions de capture audio imposées par d\'autres applications</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Compatible avec toutes les versions d\'Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">La qualité sonore est moindre, et cette méthode peut ne pas fonctionner sur certains appareils</string>
+    <string name="pref_title_export_to_csv">Exporter au format CSV</string>
+    <string name="pref_subtitle_export_to_csv">Exporter toutes les pistes vers un fichier CSV</string>
+    <string name="export_only_favorites_tracks">Exporter uniquement les morceaux favoris</string>
+    <string name="export_write_csv_header">Inclure l\'en-tête du fichier CSV</string>
+    <string name="export_select_fields_to_export">Sélectionnez les champs à exporter :</string>
+    <string name="export_track_field_title">Titre</string>
+    <string name="export_track_field_artist">Artiste</string>
+    <string name="export_track_field_album">Album</string>
+    <string name="export_track_field_release_date">Date de sortie</string>
+    <string name="export_track_field_recognition_date">Date de reconnaissance</string>
+    <string name="export_track_field_duration">Durée</string>
+    <string name="export_track_field_playback_offset">Décalage de lecture</string>
+    <string name="export_track_field_provider">Fournisseur de services de reconnaissance</string>
+    <string name="export_track_field_lyrics">Paroles</string>
+    <string name="export_track_field_favorite">Favoris</string>
+    <string name="export_track_field_artwork_link">Illustration</string>
+    <string name="export_export">Exporter</string>
+    <string name="export_in_progress">Exportation en cours…</string>
+    <string name="export_csv_result_success">Le fichier CSV a été créé avec succès !</string>
 </resources>

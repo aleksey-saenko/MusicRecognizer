@@ -9,7 +9,7 @@
     <string name="notification_listening_subtitle">Por favor, espere</string>
     <string name="notification_listening_subtitle_extra_time">A tentar mais uma vez</string>
     <string name="delete">Apagar</string>
-    <string name="permission_rationale_post_notifications">Para controlar o reconhecimento e conseguir um resultado mesmo quando o app é minimizado, é necessário a permissão para enviar notificações.</string>
+    <string name="permission_rationale_post_notifications">Para controlar o reconhecimento e conseguir um resultado mesmo quando a app é minimizada, é necessário a permissão para enviar notificações.</string>
     <string name="permissions_denied_message">Solicitações prévias de permissões foram negadas. Pode mudar a sua decisão pelas configurações.</string>
     <string name="onboarding_permission_message">A app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, concorda que os seus dados gravados serão usados pelo <![CDATA[<a href="%1$s">serviço remoto</a>]]> para o reconhecimento de música. A app não usa esses dados para qualquer outro propósito.</string>
     <string name="result_message_recognition_saved">O clipe de áudio foi gravado, pode iniciar o reconhecimento quando quiser manualmente</string>
@@ -39,12 +39,12 @@
     <string name="about_purpose_track_links_service">Fornece ligações de faixa específicos de plataforma adicionais</string>
     <string name="about_pref_subtitle_license">O Audile é licenciado sob a GNU GPLv3 ou posterior</string>
     <string name="notification_channel_desc_control">Permite controlar o processo de reconhecimento</string>
-    <string name="notification_channel_name_scheduled_result">Resultados de reconhecimentos agendados</string>
+    <string name="notification_channel_name_scheduled_result">Resultados de músicas de reconhecimentos agendados</string>
     <string name="recognition_widget_description">Identificar a música num toque</string>
     <string name="widget_listening_subtitle">Por favor, espere</string>
     <string name="widget_listening_subtitle_extra_time">A tentar mais uma vez</string>
     <string name="notification_tap_to_recognize">Toque para identificar</string>
-    <string name="notification_tap_to_recognize_subtitle">Reconhecer com qualquer app aberto</string>
+    <string name="notification_tap_to_recognize_subtitle">Reconhecer com qualquer app aberta</string>
     <string name="notification_listening">A escutar</string>
     <string name="quick_tile_recognize">Identificar música</string>
     <string name="app_shortcut_recognize_long">Reconhecer em segundo plano</string>
@@ -73,7 +73,7 @@
     <string name="copied">Copiado</string>
     <string name="share">Partilhar</string>
     <string name="web_browser_not_found_toast">Navegador web não encontrado</string>
-    <string name="cannot_share_toast">Não foi possível encontrar nenhum app para partilhar</string>
+    <string name="cannot_share_toast">Não foi possível encontrar nenhuma app a partilhar</string>
     <string name="help">Ajuda</string>
     <string name="show_more">Mostrar mais</string>
     <string name="show_less">Mostrar menos</string>
@@ -83,7 +83,7 @@
     <string name="permissions_denied_open_settings">Abrir configurações</string>
     <string name="permission_granted">Permissão concedida</string>
     <string name="onboarding_welcome">Bem-vindo</string>
-    <string name="onboarding_welcome_message">Audile é uma aplicação para reconhecimento de músicas, que pode ajudar a rapidamente e com precisão identificar uma faixa tocando ao redor de si.</string>
+    <string name="onboarding_welcome_message">Audile é uma app para reconhecimento de músicas, que pode-o ajudar a identificar rapidamente e com precisão uma faixa a reproduzir ao redor de si.</string>
     <string name="onboarding_token_message">O app usa o serviço de reconhecimento de música AudD, que não é grátis e requer um token de API especial. Registe-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter o seu token de avaliação, se ainda não tiver um.</string>
     <string name="onboarding_token_skip_message">Pular este passo limitará os seus reconhecimentos diários, mas sempre pode especificar o seu token pessoal depois nas preferências.</string>
     <string name="onboarding_token_validating">A validar</string>
@@ -100,12 +100,12 @@
     <string name="result_title_recognition_saved">Reconhecimento gravado</string>
     <string name="result_message_recognition_scheduled">O clipe de áudio foi gravado, ao voltar online, a app tentará identificar esta música</string>
     <string name="result_message_recording_error">Um erro ocorreu durante a gravação de áudio</string>
-    <string name="result_title_bad_network_response">Resposta de rede inválida</string>
-    <string name="result_message_bad_network_response">Um erro ocorreu durante a solicitação da internet</string>
+    <string name="result_title_bad_network_response">Solicitação de rede inválida</string>
+    <string name="result_message_bad_network_response">Um erro ocorreu durante uma solicitação da internet</string>
     <string name="result_title_auth_error">Erro de autenticação</string>
     <string name="result_message_service_usage_limited">O seu uso do serviço chegou ao limite. Verifique o seu plano ou tente novamente mais tarde</string>
     <string name="result_title_internal_error">Erro interno</string>
-    <string name="result_message_auth_error">Verifique as suas credenciais para o serviço de reconhecimento configurado e tente novamente</string>
+    <string name="result_message_auth_error">Verifique as credenciais do seu serviço de reconhecimento selecionado e tente novamente</string>
     <string name="result_title_service_usage_limited">Uso do serviço limitado</string>
     <string name="result_title_unknown_error">Erro desconhecido</string>
     <string name="library">Biblioteca</string>
@@ -132,7 +132,7 @@
     <string name="delete_tracks_title">Apagar faixas</string>
     <string name="recognition_queue">Fila de reconhecimento</string>
     <string name="empty_recognition_queue_title">Nenhum reconhecimento em fila</string>
-    <string name="empty_recognition_queue_subtitle">Quando off-line ou numa falha, um reconhecimento pode ser adicionado à fila de acordo com a sua política de retorno</string>
+    <string name="empty_recognition_queue_subtitle">Quando off-line ou após uma falha, um reconhecimento pode ser adicionado à fila de acordo com a sua política de recorrência</string>
     <string name="untitled_recognition">Reconhecimento sem título</string>
     <string name="format_scheduled_recognition_of">Agendada o reconhecimento de %s</string>
     <string name="recognition_status_enqueued">Enfileirado</string>
@@ -202,7 +202,7 @@
     <string name="audio_capture_mode_device">Áudio do dispositivo</string>
     <string name="audio_capture_mode_auto">Automático</string>
     <string name="fallback_policy_dialog_message">Definir a ação padrão de retorno para cada tipo de resultado malsucedido:</string>
-    <string name="fallback_action_save_recording_and_retry">Gravar a gravação e iniciar novamente</string>
+    <string name="fallback_action_save_recording_and_retry">Gravar a gravação e tentar novamente</string>
     <string name="fallback_action_save_recording">Gravar a gravação</string>
     <string name="pref_title_fallback_policy">Política de retorno de reconhecimento</string>
     <string name="pref_subtitle_fallback_policy">Definir ações de retorno após identificações malsucedidas</string>
@@ -215,12 +215,12 @@
     <string name="pref_title_recognition_provider">Provedor de reconhecimento</string>
     <string name="recognition_provider_dialog_message">Selecione o provedor de reconhecimento:</string>
     <string name="recognition_provider_dialog_format_auth">Autenticação %s:</string>
-    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece a opção de um período de teste grátis. Para usar este serviço, precisa criar uma conta e obter o seu token de API privado. <![CDATA[<a href="%1$s">Registe-se</a>]]> se ainda não tiver um.</string>
+    <string name="audd_help_dialog_message">O AudD é um serviço pago que oferece um período de teste grátis de 14 dias. Para usar este serviço, precisa criar uma conta e obter o seu token de API privado. <![CDATA[<a href="%1$s">Registe-se</a>]]> se ainda não tiver um.</string>
     <string name="audd_help_dialog_message_empty_token">Pode usar testar o serviço para propósitos de teste sem fornecer o token, mas saiba que isto limitará o número de reconhecimentos diários.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud é um serviço pago que oferece a opção de um período de teste grátis e uso limitado para motivos de desenvolvimento. Para usar este serviço, precisa criar uma conta e registar um projeto. Se tiver alguma dificuldade, consulte <![CDATA[<a href="%1$s">este guia</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Por favor preste atenção nestes passos:</string>
     <string name="acr_cloud_help_dialog_step1">Selecione a região geográfica mais perto de si para minimizar latência da internet</string>
-    <string name="acr_cloud_help_dialog_step2">Defina a fonte de áudio como \"Audio gravado\"</string>
+    <string name="acr_cloud_help_dialog_step2">Configure a fonte de áudio para \"Áudio gravado\"</string>
     <string name="acr_cloud_help_dialog_step4">Assinale todas as caixas para integração de ID de terceiros</string>
     <string name="pref_group_notifications">Notificações</string>
     <string name="pref_title_notification_service">Serviço por notificação</string>
@@ -243,11 +243,11 @@
     <string name="pref_title_experimental_features">Funções experimentais</string>
     <string name="pref_subtitle_experimental_features">Trabalho-em-progresso</string>
     <string name="pref_title_backup_and_restore">Backup &amp; Restauração</string>
-    <string name="pref_subtitle_backup_and_restore">Fazer backup do seu banco de dados e preferências</string>
+    <string name="pref_subtitle_backup_and_restore">Crie um backup dos seus dados da app</string>
     <string name="pref_title_backup">Fazer backup</string>
-    <string name="pref_subtitle_backup">Exportar dados do app e preferências</string>
+    <string name="pref_subtitle_backup">Faça backup da base de dados e preferências da app</string>
     <string name="backup_dialog_title">Fazer backup</string>
-    <string name="pref_subtitle_restore">Restaurar dados do app e preferências de um backup</string>
+    <string name="pref_subtitle_restore">Restaure os dados da app de um backup</string>
     <string name="restore_dialog_title">Restaurar</string>
     <string name="restore_dialog_button_restore">Restaurar</string>
     <string name="pref_title_about_app">Sobre</string>
@@ -262,7 +262,7 @@
     <string name="notification_button_disable_service">Parar serviço</string>
     <string name="notification_button_show_lyrics">Mostrar letras</string>
     <string name="notification_channel_name_control">Controlar notificações</string>
-    <string name="notification_channel_desc_scheduled_result">Permite receber resultados de reconhecimentos agendados pelas notificações</string>
+    <string name="notification_channel_desc_scheduled_result">Mostra resultados de músicas de reconhecimentos que foram agendados enquanto off-line ou noutros casos</string>
     <string name="crash_dialog_title">O Audile crashou</string>
     <string name="crash_dialog_message">Um erro inesperado ocorreu, fazendo com o que o app parasse. Gostaria de enviar um relatório de erros via e-mail para ajudar nos a resolver o problema?</string>
     <string name="crash_dialog_comment_prompt">Pode adicionar informações extras aqui:</string>
@@ -291,4 +291,41 @@
     <string name="backup_restore_unhandled_error">Ocorreu um erro inesperado.</string>
     <string name="toast_no_file_selected">Nenhum ficheiro selecionado</string>
     <string name="toast_press_again_to_confirm">Pressione novamente para confirmar</string>
+    <string name="deselect_all">Deselecionar tudo</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="searching_for_lyrics">A procurar pela letra…</string>
+    <string name="audio_source_dialog_device_audio_limited">A app tem limitações no apoio de gravação de áudio do dispositivo no Android 9 ou anterior</string>
+    <string name="audio_source_dialog_methods">A app apoia duas formas de gravar o áudio do dispositivo:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Espelhamento de ecrã (método primário)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Este método fornece a melhor qualidade de áudio e funciona em todos os dispositivos que executam Android 10 ou superior</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Algumas apps podem bloquear a captura de áudio, nesses casos o Audile vai receber silêncio</string>
+    <string name="audio_source_dialog_alt_method_title">2. Método alternativo</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Apoiada em todas as versões do Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">A qualidade de áudio é pior e este método pode não funcionar em alguns dispositivos</string>
+    <string name="backup_entry_data">Base de dados e amostras de áudio</string>
+    <string name="restore_erase_warning">Ao restaurar, os dados existentes serão apagados e substituídos com os conteúdos do backup. Isto não pode ser desfeito. Faça backup de quaisquer dados importantes antes de continuar.</string>
+    <string name="restore_info_restart">A app reiniciará na conclusão da restauração.</string>
+    <string name="restore_in_progress">A restaurar…</string>
+    <string name="restore_result_newer_version">Este backup foi criado por uma versão mais nova da app e não pode ser restaurado.</string>
+    <string name="backup_restore_unhandled_error_message">Certifique-se que tem espaço de armazenamento suficiente e tente novamente.</string>
+    <string name="toast_failed_delete_incomplete_backup_file">Não foi possível apagar o ficheiro de backup incompleto</string>
+    <string name="pref_title_export_to_csv">Exportar para CSV</string>
+    <string name="pref_subtitle_export_to_csv">Exporte todas as faixas para um ficheiro CSV</string>
+    <string name="export_only_favorites_tracks">Exportar apenas faixas favoritas</string>
+    <string name="export_write_csv_header">Incluir cabeçalho CSV</string>
+    <string name="export_select_fields_to_export">Selecione os campos para exportar:</string>
+    <string name="export_track_field_title">Título</string>
+    <string name="export_track_field_artist">Artista</string>
+    <string name="export_track_field_album">Álbum</string>
+    <string name="export_track_field_release_date">Data de lançamento</string>
+    <string name="export_track_field_recognition_date">Data de reconhecimento</string>
+    <string name="export_track_field_duration">Duração</string>
+    <string name="export_track_field_playback_offset">Correção de reprodução</string>
+    <string name="export_track_field_provider">Provedor de reconhecimento</string>
+    <string name="export_track_field_lyrics">Letra</string>
+    <string name="export_track_field_favorite">Favorito</string>
+    <string name="export_track_field_artwork_link">Arte</string>
+    <string name="export_export">Exportar</string>
+    <string name="export_in_progress">A exportar…</string>
+    <string name="export_csv_result_success">Ficheiro CSV criado com sucesso!</string>
 </resources>

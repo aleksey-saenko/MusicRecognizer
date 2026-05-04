@@ -296,7 +296,7 @@
     <string name="crash_dialog_comment_prompt">Itt adhatsz meg további információt:</string>
     <string name="crash_dialog_button_send">Küldés</string>
     <string name="crash_dialog_button_cancel">Mégse</string>
-    <string name="about_pref_group_powered_by">Üzemelteti a</string>
+    <string name="about_pref_group_powered_by">Üzemeltetők</string>
     <string name="about_pref_title_github_repo">GitHub tároló</string>
     <string name="notification_channel_name_foreground_result">Előtérben talált dalok</string>
     <string name="pref_title_export_to_csv">Exportálás CSV-be</string>
@@ -328,4 +328,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Nem igényel képernyőtükrözési engedélyt, és megkerüli az egyéb alkalmazások hangrögzítési korlátozásait</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Minden Android verzión támogatott</string>
     <string name="audio_source_dialog_alt_method_bullet_3">A hangminőség gyengébb, és ez a módszer egyes eszközökön nem biztos, hogy működik</string>
+    <string name="export_track_field_playback_offset">Időbélyeg-eltolódás</string>
 </resources>

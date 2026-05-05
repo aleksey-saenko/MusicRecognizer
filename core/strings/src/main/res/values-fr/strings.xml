@@ -276,7 +276,7 @@
     <string name="audio_capture_mode_microphone">Microphone</string>
     <string name="audio_capture_mode_device">Audio de l\'appareil</string>
     <string name="audio_capture_mode_auto">Automatique</string>
-    <string name="audd_help_dialog_message">AudD est un service payant qui propose un essai gratuit de 14 jours. Pour utiliser ce service, vous devez créer un compte et obtenir votre jeton API privé. <![CDATA[<a href="%1$s">S'inscrire</a>]]> si vous n\'en avez pas encore.</string>
+    <string name="audd_help_dialog_message">AudD est un service payant qui propose un essai gratuit de 14 jours. Pour utiliser ce service, vous devez créer un compte et obtenir votre jeton API privé. <![CDATA[<a href="%1$s">S\'inscrire</a>]]> si vous n\'en avez pas encore.</string>
     <string name="about_pref_title_licenses">Licences</string>
     <string name="searching_for_lyrics">Recherche des paroles…</string>
     <string name="no_lyrics_available">Aucune parole disponible pour cette chanson</string>

@@ -7,6 +7,10 @@ plugins {
 android {
     namespace = "com.mrsep.musicrecognizer.feature.recognition"
 
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
     buildFeatures {
         buildConfig = true
     }

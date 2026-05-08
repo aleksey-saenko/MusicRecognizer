@@ -1,3 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="main_screen_tap_to_recognize">Tanımaq üçün toxunun</string>
+    <string name="main_screen_listening">Dinləyir</string>
+    <string name="main_screen_listening_extra_time">Bir dəfə daha cəhd edirəm</string>
+    <string name="widget_tap_to_recognize">Tanımaq üçün toxunun</string>
+    <string name="widget_tap_to_try_again">Yenidən cəhd etmək üçün toxunun</string>
+    <string name="widget_listening">Dinləyir</string>
+    <string name="widget_listening_subtitle">Zəhmət olmasa gözləyin</string>
+    <string name="widget_listening_subtitle_extra_time">Bir dəfə daha cəhd edirəm</string>
+    <string name="recognition_widget_description">Mahnını bir toxunuşla tanıyın</string>
+    <string name="notification_tap_to_recognize">Tanımaq üçün toxunun</string>
+    <string name="notification_tap_to_recognize_subtitle">İstənilən tətbiq açıq olarkən musiqini müəyyən edin</string>
+    <string name="notification_listening">Dinləyir</string>
+    <string name="notification_listening_subtitle">Zəhmət olmasa gözləyin</string>
+    <string name="notification_listening_subtitle_extra_time">Bir dəfə daha cəhd edirəm</string>
+    <string name="quick_tile_recognize">Mahnını tanıyın</string>
+    <string name="quick_tile_cancel_recognition">Tanınmanı ləğv edin</string>
+    <string name="action_recognize">Tanımaq</string>
+    <string name="action_cancel_recognition">Tanınmanı ləğv edin</string>
+    <string name="app_shortcut_recognize_short">Tanımaq</string>
+    <string name="app_shortcut_recognize_long">Arxa planda tanıyın</string>
+    <string name="app_shortcut_open_and_recognize_short">Açın və tanıyın</string>
+    <string name="app_shortcut_open_and_recognize_long">Tətbiqi açın və tanıyın</string>
+    <string name="nav_back">Geri</string>
+    <string name="nav_forward">İrəli</string>
+    <string name="loading">Yüklənir</string>
+    <string name="apply">Tətbiq edin</string>
+    <string name="applied">Tətbiq edildi</string>
+    <string name="cancel">Ləğv et</string>
+    <string name="reset">Sıfırla</string>
+    <string name="close">Bağla</string>
 </resources>

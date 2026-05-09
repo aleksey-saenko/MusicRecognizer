@@ -183,7 +183,7 @@
     <string name="audio_source_dialog_default_mode_title">الافتراضي</string>
     <string name="audio_source_dialog_default_mode_message">حدّد مصدر الصوت الافتراضي المراد استخدامه ما لم يتم تحديد خلاف ذلك:</string>
     <string name="audio_source_dialog_button_long_press_mode_title">الضغط المطول على الزر</string>
-    <string name="audio_source_dialog_button_long_press_mode_message">حدّد مصدر الصوت المراد استخدامه عند الضغط المطول على زر الشاشة الرئيسية:</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">حدّد مصدر الصوت المراد استخدامه عند الضغط المطول على زر الشاشة الرئيسة:</string>
     <string name="audio_capture_mode_microphone">الميكروفون</string>
     <string name="audio_capture_mode_device">صوت الجهاز</string>
     <string name="audio_capture_mode_auto">تلقائي</string>

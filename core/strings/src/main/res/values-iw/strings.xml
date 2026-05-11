@@ -39,19 +39,19 @@
     <string name="copied">הועתק</string>
     <string name="share">שתף</string>
     <string name="web_browser_not_found_toast">דפדפן לא נמצא</string>
-    <string name="cannot_share_toast">לא נמצאה שום אפליקציה לשיתוף</string>
+    <string name="cannot_share_toast">לא נמצא שום יישומון לשתף אליו</string>
     <string name="help">עזרה</string>
     <string name="show_more">הצג עוד</string>
     <string name="show_less">הצג פחות</string>
     <string name="permissions">הרשאות</string>
     <string name="request_permission">בקש הרשאה</string>
     <string name="permission_rationale_record_audio">כדי לבצע זיהוי מוזיקה, האפליקציה זקוקה לגישה למיקרופון שלך.</string>
-    <string name="permission_rationale_post_notifications">כדי לשלוט בזיהוי ולקבל תוצאות גם כאשר האפליקציה ממוזערת, נדרשת הרשאה לשליחת התראות.</string>
+    <string name="permission_rationale_post_notifications">כדי לשלוט בזיהוי ולקבל תוצאה גם כאשר היישומון ממוזער, נדרשת הרשאה לשליחת התראות.</string>
     <string name="permissions_denied_message">בקשות הרשאות קודמות נדחו. באפשרותך לשנות את החלטתך דרך ההגדרות.</string>
     <string name="permissions_denied_open_settings">פתח הגדרות</string>
     <string name="permission_granted">הרשאה ניתנה</string>
     <string name="onboarding_welcome">ברוך הבא</string>
-    <string name="onboarding_welcome_message">Audile היא אפליקציית זיהוי מוזיקה, שיכולה לעזור לך לזהות במהירות ובדיוק מוזיקה המתנגנת בקרבתך.</string>
+    <string name="onboarding_welcome_message">Audile הוא יישומון זיהוי מוזיקה, שיכול לעזור לך לזהות במהירות ובצורה מדויקת מוזיקה המתנגנת בקרבתך.</string>
     <string name="onboarding_permission_message">האפליקציה דורשת הרשאה להקלטת אודיו על מנת לפעול כראוי. על ידי מתן הרשאה זו, הנך מסכים שהנתונים המוקלטים שלך ישמשו את<![CDATA[<a href="%1$s">שירות מרוחק</a>]]> לזיהוי מוזיקה. האפליקציה אינה משתמשת בנתונים אלה לכל מטרה אחרת.</string>
     <string name="onboarding_token_message">האפליקציה משתמשת בשירות זיהוי מוזיקה של AudD, שאינו חינמי ודורש API token מיוחד. הירשמו <![CDATA[<a href="%1$s">כאן</a>]]> כדי לקבל את אסימון הניסיון שלכם ל-14 יום, אם עדיין אין לכם אחד.</string>
     <string name="onboarding_token_skip_message">דילוג על שלב זה יגביל את אפשרויות הזיהוי היומיות שלך, אך תמיד תוכל לציין את האסימון האישי שלך מאוחר יותר בהעדפות.</string>
@@ -133,7 +133,7 @@
     <string name="result_message_recognition_scheduled">דגימת האודיו נשמרה, כשתחזור לרשת, האפליקציה תנסה לזהות את השיר הזה</string>
     <string name="result_title_recording_error">שגיאת הקלטה</string>
     <string name="result_message_recording_error">אירעה שגיאה במהלך הקלטת אודיו</string>
-    <string name="result_title_bad_network_response">תגובת רשת גרועה</string>
+    <string name="result_title_bad_network_response">בקשת רשת נכשלה</string>
     <string name="result_message_bad_network_response">אירעה שגיאה במהלך בקשת אינטרנט</string>
     <string name="result_title_auth_error">שגיאת אימות</string>
     <string name="result_message_auth_error">אנא בדוק את פרטי הגישה שלך לשירות הזיהוי שנבחר ונסה שוב</string>
@@ -165,7 +165,7 @@
     <string name="delete_tracks_title">מחק שירים</string>
     <string name="delete_tracks_message">האם אתה בטוח שברצונך למחוק את השירים שנבחרו? פעולה זו אינה ניתנת לביטול.</string>
     <string name="queue">תור</string>
-    <string name="empty_recognition_queue_subtitle">במצב לא מקוון או במקרה של כשל, ניתן להכניס זיהוי לתור בהתאם למדיניות הגיבוי שנבחרה</string>
+    <string name="empty_recognition_queue_subtitle">במצב לא מקוון או במקרה של כשל, ניתן להכניס זיהוי לתור בהתאם למדיניות החזרה (fallback) שנבחרה</string>
     <string name="recognition_status_enqueued">הוכנס לתור</string>
     <string name="recognition_status_running">רץ</string>
     <string name="recognition_status_track_found">שיר נמצא</string>
@@ -181,7 +181,7 @@
     <string name="pref_subtitle_fallback_policy">הגדר פעולות גיבוי לאחר זיהויים שלא הצליחו</string>
     <string name="fallback_policy_dialog_message">הגדר את פעולת הגיבוי המוגדרת כברירת מחדל עבור כל סוג של זיהוי שלא הצליח:</string>
     <string name="fallback_policy_dialog_title">מדיניות גיבוי</string>
-    <string name="fallback_action_save_recording_and_retry">שמור את ההקלטה והפעל ניסיון חוזר</string>
+    <string name="fallback_action_save_recording_and_retry">שמור את ההקלטה ונסה שוב</string>
     <string name="fallback_action_save_recording">שמור את ההקלטה</string>
     <string name="fallback_action_ignore">התעלם</string>
     <string name="fallback_trigger_bad_connection">חיבור אינטרנט גרוע</string>
@@ -191,7 +191,7 @@
     <string name="recognition_provider_dialog_title">ספק שירות</string>
     <string name="recognition_provider_dialog_message">בחר את ספק שירות הזיהוי:</string>
     <string name="recognition_provider_dialog_format_auth">%s אימות:</string>
-    <string name="audd_help_dialog_message">AudD היא שירות בתשלום שמציע תקופת ניסיון חינמית של 14 יום. כדי להשתמש בשירות, יש ליצור חשבון ולקבל את אסימון ה-API הפרטי שלך. <![CDATA[<a href="%1$s">הירשם</a>]]> אם עדיין אין לך אחד.</string>
+    <string name="audd_help_dialog_message">AudD הוא שירות בתשלום שמציע תקופת ניסיון חינמית של 14 יום. כדי להשתמש בשירות, יש ליצור חשבון ולקבל את אסימון ה־API הפרטי שלך. <![CDATA[<a href="%1$s">הירשם</a>]]> אם עדיין אין לך אחד.</string>
     <string name="audd_help_dialog_message_empty_token">ניתן לנסות להשתמש בשירות למטרות בדיקה ללא אסימון, אך יש לשים לב כי הדבר יגביל את מספר הזיהויים היומיים שלך.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud היא שירות בתשלום המציע תקופת ניסיון חינמית ושימוש מוגבל למטרות פיתוח. כדי להשתמש בשירות, יש ליצור חשבון ולהירשם פרויקט. אם תיתקל בקשיים, עיין ב-<![CDATA[<a href="%1$s">מדריך זה</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">אנא שים לב לשלבים הבאים:</string>
@@ -217,7 +217,7 @@
     <string name="recognition_action_force_launch">כפה הפעלה</string>
     <string name="web">אינטרנט</string>
     <string name="lyrics">מילות השיר</string>
-    <string name="acr_cloud_help_dialog_step2">הגדר את מקור השמע כ\"אודיו מוקלט\"</string>
+    <string name="acr_cloud_help_dialog_step2">הגדר את מקור השמע כ\"שמע מוקלט\"</string>
     <string name="acr_cloud_help_dialog_step3">בחר את מנוע האודיו המועדף עליך. האפשרות \"טביעת אצבע אודיו\" היא המדויקת ביותר לשימוש כללי</string>
     <string name="acr_cloud_help_dialog_step4">סמן את כל תיבות הסימון לצורך שילוב מזהי צד שלישי</string>
     <string name="pref_group_notifications">התראות</string>
@@ -249,13 +249,13 @@
     <string name="pref_title_experimental_features">תכונות ניסיוניות</string>
     <string name="pref_subtitle_experimental_features">בתהליך פיתוח</string>
     <string name="pref_title_backup_and_restore">גבה &amp; שחזר</string>
-    <string name="pref_subtitle_backup_and_restore">גבה את בסיס הנתונים וההעדפות שלך</string>
+    <string name="pref_subtitle_backup_and_restore">גבה את בסיס הנתונים של היישומון שלך</string>
     <string name="pref_title_backup">גיבוי</string>
-    <string name="pref_subtitle_backup">ייצא נתוני אפליקציה והעדפות</string>
+    <string name="pref_subtitle_backup">גיבוי מסד נתוני היישומון והעדפות</string>
     <string name="backup_dialog_title">גיבוי</string>
     <string name="backup_dialog_button_backup">גבה</string>
     <string name="pref_title_restore">שחזור</string>
-    <string name="pref_subtitle_restore">שחזר נתוני אפליקציה והעדפות מגיבוי</string>
+    <string name="pref_subtitle_restore">שחזר נתוני יישומון והעדפות מגיבוי</string>
     <string name="restore_dialog_title">שחזור</string>
     <string name="restore_dialog_button_restore">שחזר</string>
     <string name="pref_title_about_app">אודות</string>
@@ -265,7 +265,7 @@
     <string name="about_pref_title_github_repo">מאגר GitHub</string>
     <string name="about_pref_subtitle_github_repo">קוד מקור, בעיות ומידע נוסף</string>
     <string name="about_pref_title_privacy_policy">מדיניות פרטיות</string>
-    <string name="about_pref_subtitle_privacy_policy">למד/י עוד כיצד האפליקציה מנהלת את הנתונים שלך</string>
+    <string name="about_pref_subtitle_privacy_policy">למד עוד כיצד היישומון מנהל את הנתונים שלך</string>
     <string name="about_pref_title_license">רשיון</string>
     <string name="about_pref_title_licenses">רישיונות</string>
     <string name="about_pref_subtitle_license">Audile ברישיון GNU GPLv3 או גרסה חדשה יותר</string>
@@ -277,4 +277,56 @@
     <string name="notification_tap_to_recognize_subtitle">זיהוי מוזיקה בזמן שכל אפליקציה פתוחה</string>
     <string name="reset">איפוס</string>
     <string name="pref_subtitle_no_selected_services">ללא</string>
+    <string name="deselect_all">ביטול בחירת הכל</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="audio_source_dialog_device_audio_limited">ליישומון יש תמיכה מוגבלת בהקלטת שמע מהמכשיר באנדרואיד 9 ומטה</string>
+    <string name="audio_source_dialog_methods">היישומון תומך בשתי דרכים להקלטת שמע מהמכשיר:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. שידור מסך (שיטה ראשית)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">שיטה זו מספקת איכות שמע מיטבית ופועלת על כל המכשירים עם אנדרואיד 10 ומעלה</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">חלק מהיישומונים עשויים לחסום לכידת שמע באמצעות מדיניות לכידה, ובמקרה כזה Audile תקבל שקט</string>
+    <string name="audio_source_dialog_alt_method_title">2. שיטה אלטרנטיבית</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">לא דורשת הרשאת שידור מסך ועוקפת הגבלות לכידת שמע המוגדרות ע\"י יישומונים אחרים</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">נתמכת בכל גרסאות אנדרואיד</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">איכות שמע נמוכה יותר, ושיטה זו אולי לא תעבוד במכשירים מסויימים</string>
+    <string name="backup_entry_data">מסד נתונים ודגימות שמע</string>
+    <string name="backup_entry_preferences">העדפות</string>
+    <string name="backup_entry_picker_title">בחר נתונים לגיבוי:</string>
+    <string name="restore_entry_picker_title">בחר נתונים לשחזור:</string>
+    <string name="backup_estimating_size">מעריך גודל נתוני יישומון…</string>
+    <string name="backup_in_progress">יוצר גיבוי…</string>
+    <string name="backup_result_success">גיבוי נוצר בהצלחה!</string>
+    <string name="restore_erase_warning">שחזור ימחק נתונים קיימים ויחליף אותם עם תוכן הגיבוי. פעולה זו לא ניתנת לביטול. גבה נתונים חשובים לפני שתמשיך.</string>
+    <string name="restore_info_restart">היישומון יופעל מחדש לאחר סיום השחזור.</string>
+    <string name="restore_checking_backup">בודק קובץ גיבוי…</string>
+    <string name="restore_in_progress">משחזר…</string>
+    <string name="restore_result_success">הצלחה!</string>
+    <string name="restore_result_malformed_backup">קובץ הגיבוי הזה פגום.</string>
+    <string name="restore_result_not_backup">קובץ זה אינו קובץ גיבוי תקין.</string>
+    <string name="restore_result_newer_version">גיבוי זה נוצר ע\"י גירסה חדשה יותר של היישומון ולא ניתן לשחזור.</string>
+    <string name="restore_will_restart_in">היישומון יופעל מחדש בעוד %d שניות.</string>
+    <string name="backup_restore_result_file_not_found">לא נמצא קובץ גיבוי.</string>
+    <string name="backup_restore_unhandled_error">אירעה שגיאה בלתי צפויה.</string>
+    <string name="backup_restore_unhandled_error_message">אנא ודא שיש לך מספיק מקום פנוי ונסה שוב.</string>
+    <string name="toast_no_file_selected">לא נבחר קובץ</string>
+    <string name="toast_failed_delete_incomplete_backup_file">לא ניתן למחוק קובץ גיבוי לא שלם</string>
+    <string name="toast_press_again_to_confirm">לחץ שוב לאישור</string>
+    <string name="pref_title_export_to_csv">ייצא ל־CSV</string>
+    <string name="pref_subtitle_export_to_csv">ייצא את כל הרצועות לקובץ CSV</string>
+    <string name="export_only_favorites_tracks">ייצא רק רצועות מועדפות</string>
+    <string name="export_write_csv_header">כלול כותרת CSV</string>
+    <string name="export_select_fields_to_export">בחר שדות לייצוא:</string>
+    <string name="export_track_field_title">כותרת</string>
+    <string name="export_track_field_artist">אומן</string>
+    <string name="export_track_field_album">אלבום</string>
+    <string name="export_track_field_release_date">תאריך הוצאה</string>
+    <string name="export_track_field_recognition_date">תאריך זיהוי</string>
+    <string name="export_track_field_duration">משך זמן</string>
+    <string name="export_track_field_playback_offset">Playback offset</string>
+    <string name="export_track_field_provider">ספק זיהוי</string>
+    <string name="export_track_field_lyrics">מילים</string>
+    <string name="export_track_field_favorite">מועדף</string>
+    <string name="export_track_field_artwork_link">תמונת עטיפה</string>
+    <string name="export_export">ייצוא</string>
+    <string name="export_in_progress">מייצא…</string>
+    <string name="export_csv_result_success">קובץ CSV נוצר בהצלחה!</string>
 </resources>

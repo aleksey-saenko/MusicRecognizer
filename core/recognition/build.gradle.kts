@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.android.build.api.variant.LibraryVariant
+import com.mrsep.musicrecognizer.CargoNdkBuildTask
+
 plugins {
     alias(libs.plugins.musicrecognizer.android.library)
     alias(libs.plugins.musicrecognizer.hilt)
@@ -8,13 +11,14 @@ plugins {
 
 android {
     namespace = "com.mrsep.musicrecognizer.core.recognition"
+    ndkVersion = libs.versions.ndk.get()
+
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
         }
-        ndkVersion = "29.0.14206865"
     }
 
     externalNativeBuild {
@@ -52,6 +56,33 @@ android {
             }
         }
     }
+}
+
+// Build SongRec fingerprinting module
+
+val rustCrateDir = layout.projectDirectory.dir("native/songrecfp")
+val rustOutputRoot = layout.buildDirectory.dir("generated/rust/jniLibs")
+val rustTargetRoot = layout.buildDirectory.dir("rust-target")
+
+val abiFiltersForRust = android.defaultConfig.ndk.abiFilters.toList()
+val minSdkVersion = libs.versions.sdkMin.get().toInt()
+
+androidComponents.onVariants { variant: LibraryVariant ->
+    val taskName = "build${variant.name.replaceFirstChar(Char::uppercaseChar)}SongRecFP"
+    val buildRust = tasks.register<CargoNdkBuildTask>(taskName) {
+        group = "build"
+        description = "Build SongRecFP Rust library for ${variant.name}"
+
+        crateDir = rustCrateDir
+        variantName = variant.name
+        buildProfile = if (variant.buildType == "release") "release" else "debug"
+        minSdk = minSdkVersion
+        abis = abiFiltersForRust
+        outputDir = rustOutputRoot.map { it.dir(variant.name) }
+        cargoTargetDir = rustTargetRoot.map { it.dir(variant.name) }
+        ndkPath = androidComponents.sdkComponents.ndkDirectory.get().asFile.absolutePath
+    }
+    variant.sources.jniLibs?.addGeneratedSourceDirectory(buildRust, CargoNdkBuildTask::outputDir)
 }
 
 dependencies {

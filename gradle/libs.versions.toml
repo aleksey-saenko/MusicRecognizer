@@ -2,6 +2,7 @@
 sdkCompile = "36"
 sdkMin = "26"
 sdkTarget = "36"
+ndk = "29.0.14206865"
 
 aboutLibraries = "14.0.1"
 accompanist = "0.37.3"

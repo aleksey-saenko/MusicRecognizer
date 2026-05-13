@@ -11,6 +11,7 @@ plugins {
 
 android {
     namespace = "com.mrsep.musicrecognizer"
+    ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"

@@ -1,0 +1,27 @@
+[package]
+name = "songrecfp"
+description = "Fingerprinting module based on SongRec (https://github.com/marin-m/SongRec)"
+license = "GPL-3.0+"
+version = "1.0.0"
+rust-version = "1.88"
+authors = ["marin-m", "aleksey-saenko"]
+edition = "2024"
+
+[lib]
+name = "songrecfp"
+crate-type = ["cdylib"]
+
+[dependencies]
+jni = "0.22.4"
+rustfft = "6.4.1"
+realfft = "3.5.0"
+byteorder = "1.5.0"
+base64 = "0.22.1"
+crc32fast = "1.5.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "s"
+strip = true
+# panic = "abort"

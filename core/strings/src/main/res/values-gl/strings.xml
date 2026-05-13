@@ -49,12 +49,12 @@
     <string name="permissions">Permisos</string>
     <string name="request_permission">Solicitar permiso</string>
     <string name="permission_rationale_record_audio">Para poder identificar a música a app precisa acceder ao micrófono.</string>
-    <string name="permission_rationale_post_notifications">Para xestionar a identificación e obter o resultado incluso cando a app está minimizada, precisa ter permiso para enviar notificacións.</string>
+    <string name="permission_rationale_post_notifications">Para xestionar a identificación e obter o resultados incluso cando a app está minimizada, precisa ter permiso para enviar notificacións.</string>
     <string name="permissions_denied_message">Non se concederon os permisos anteriores. Podes cambiar a túa decisión indo aos axustes.</string>
     <string name="permissions_denied_open_settings">Abrir axustes</string>
     <string name="permission_granted">Permiso concedido</string>
     <string name="onboarding_welcome">Benvida</string>
-    <string name="onboarding_welcome_message">Audile é unha aplicación para identificar música, pode ser útil para coñecer de xeito rápido e fiable a música que está soando preto de ti.</string>
+    <string name="onboarding_welcome_message">Audile é unha app para identificar música, pode ser útil para coñecer de xeito rápido e fiable a música que está soando preto de ti.</string>
     <string name="onboarding_permission_message">A app precisa permiso para gravar audio e funcionar correctamente. Ao conceder este permiso aceptas que os datos gravados se usen nun <![CDATA[<a href="%1$s">servizo remoto</a>]]> para identificar a música. A app non usa estes datos para ningún outro propósito.</string>
     <string name="onboarding_token_message">A app usa o servizo de identificación de música AudD, que non é gratuíto e require un Token da API especial. Crea unha conta <![CDATA[<a href="%1$s">aquí</a>]]> para ter un token de proba 14 días gratis, se é que aínda non ten un.</string>
     <string name="onboarding_token_skip_message">Se omites este paso terás un límite diario de identificacións, pero sempre poderás engadir o teu token máis tarde nas preferencias.</string>
@@ -68,17 +68,17 @@
     <string name="result_title_no_matches">Non atopamos coincidencias</string>
     <string name="result_message_no_matches">Lamentámolo, pero a app non recoñecee esta canción</string>
     <string name="result_title_bad_connection">Conexión a internet de baixa calidade</string>
-    <string name="result_message_bad_connection">Por favor, comproba o estado da rede</string>
+    <string name="result_message_bad_connection">Comproba o estado da rede</string>
     <string name="result_title_recognition_saved">Gardouse a identificación</string>
     <string name="result_message_recognition_saved">Gardouse unha mostra do audio, podes retomar a identificación cando queiras de xeito manual</string>
     <string name="result_title_recognition_scheduled">Identificación programada</string>
     <string name="result_message_recognition_scheduled">Gardouse unha mostra do audio, cando volvas ter conexión, a app vai intentar identificar esta canción</string>
     <string name="result_title_recording_error">Erro ao gravar</string>
     <string name="result_message_recording_error">Algo fallou ao gravar o audio</string>
-    <string name="result_title_bad_network_response">Resposta non válida da rede</string>
-    <string name="result_message_bad_network_response">Algo fallou ao facer a petición en internet</string>
+    <string name="result_title_bad_network_response">Fallou a resposta da rede</string>
+    <string name="result_message_bad_network_response">Algo fallou ao facer a petición a internet</string>
     <string name="result_title_auth_error">Erro de autenticación</string>
-    <string name="result_message_auth_error">Por favor, comproba as credenciais para o servizo de identificación seleccionado e volve a intentalo</string>
+    <string name="result_message_auth_error">Por favor comproba as credenciais para o servizo de identificación seleccionado e volve a intentalo</string>
     <string name="result_title_service_usage_limited">Uso do servizo limitado</string>
     <string name="result_message_service_usage_limited">Acadaches o límite de uso do servizo. Por favor, comproba a túa subscrición ou inténtao máis tarde</string>
     <string name="result_title_internal_error">Erro interno</string>
@@ -202,7 +202,7 @@
     <string name="recognition_provider_dialog_title">Provedor</string>
     <string name="recognition_provider_dialog_message">Selecciona o provedor de identificación:</string>
     <string name="recognition_provider_dialog_format_auth">%s de autenticación:</string>
-    <string name="audd_help_dialog_message">AudD é un servizo de pago que ofrece un período gratuíto de 14 días de proba. Para usar este servizo tes que crear unha conta e obter un token da API privado. <![CDATA[<a href="%1$s">Crea a conta</a>]]> se aínda non tes unha.</string>
+    <string name="audd_help_dialog_message">AudD é un servizo de pago que ofrece 14 días de proba gratis. Para usar este servizo tes que crear unha conta e obter un token da API privado. <![CDATA[<a href="%1$s">Crea a conta</a>]]> se aínda non tes unha.</string>
     <string name="audd_help_dialog_message_empty_token">Podes usar o servizo para realizar probas sen ter que proporcionar o token, pero ten en conta que terás as peticións diarias limitadas.</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud é un servzo de pago que ofrece a opción dun período de proba e un uso limitado para probas e desenvolvemento. Para usar o servizo debes crear unha conta e rexistrar un proxecto. Se atopas problemas mira <![CDATA[<a href="%1$s">esta guía</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">Pon atención a estes pasos:</string>
@@ -241,10 +241,10 @@
     <string name="pref_subtitle_experimental_features">En desenvolvemento</string>
     <string name="pref_title_backup_and_restore">Copia e Restablecemento</string>
     <string name="pref_subtitle_backup_and_restore">Fai copia de apoio dos datos da app</string>
-    <string name="pref_title_backup">Copia</string>
+    <string name="pref_title_backup">Copia de apoio</string>
     <string name="pref_subtitle_backup">Copia da base de datos app e preferencias</string>
     <string name="backup_dialog_title">Copiar</string>
-    <string name="backup_dialog_button_backup">Copia</string>
+    <string name="backup_dialog_button_backup">Gardar</string>
     <string name="pref_title_restore">Restablecer</string>
     <string name="pref_subtitle_restore">Restablecer desde a copia de apoio</string>
     <string name="restore_dialog_title">Restablecer</string>
@@ -319,4 +319,14 @@
     <string name="export_export">Exportar</string>
     <string name="export_in_progress">Exportando…</string>
     <string name="export_csv_result_success">CSV creado correctamente!</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="audio_source_dialog_device_audio_limited">A app ten compatibilidade limitada para gravar audio en Android 9 e anterior</string>
+    <string name="audio_source_dialog_methods">A app pode gravar audio de dous xeitos:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Desde a propia pantalla (método primario)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Este método proporciona a mellor calidade de audio e funciona en todos os dipositivos a partir de Android 10</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Algunhas apps poderían bloquear a captura do audio debido a restricións, neste caso Audile só recibiría silencio</string>
+    <string name="audio_source_dialog_alt_method_title">2. Método alternativo</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Non require o permiso de acceso á pantalla e evita as restricións de captura de audio establecido por outras apps</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Compatible con todas as versións de Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_3">A calidade do audio é inferior, e este método podería fallar nalgúns dispositivos</string>
 </resources>

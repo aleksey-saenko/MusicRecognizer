@@ -328,4 +328,5 @@
     <string name="export_export">Exportar</string>
     <string name="export_in_progress">A exportar…</string>
     <string name="export_csv_result_success">Ficheiro CSV criado com sucesso!</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Não requer a permissão de espelhar o ecrã e contorna as restrições de captura de áudio de outras apps</string>
 </resources>

@@ -112,7 +112,7 @@
     <string name="recognition_queue">Felismerési várólista</string>
     <string name="queue">Várólista</string>
     <string name="empty_recognition_queue_title">Nincsenek várakozó felismerések</string>
-    <string name="empty_recognition_queue_subtitle">Offline módban vagy hiba esetén a felismerés a kiválasztott tartalékbeállítás szerint várólistára kerülhet</string>
+    <string name="empty_recognition_queue_subtitle">Hiba vagy offline állapot esetén a felismerés a tartalékbeállítás alapján várólistára kerül</string>
     <string name="untitled_recognition">Cím nélküli felismerés</string>
     <string name="format_scheduled_recognition_of">%s ütemezett felismerése</string>
     <string name="format_recognition_created">Létrehozva: %s</string>
@@ -182,7 +182,7 @@
     <string name="audio_source_dialog_default_mode_title">Alapértelmezett</string>
     <string name="audio_source_dialog_default_mode_message">Alapértelmezett hangforrás kiválasztása (ha nincs más megadva):</string>
     <string name="audio_source_dialog_button_long_press_mode_title">Gomb hosszan nyomva tartása</string>
-    <string name="audio_source_dialog_button_long_press_mode_message">Hangforrás kiválasztása, amikor a főképernyőn hosszan van nyomva a gomb:</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">Hangforrás kiválasztása hosszú gombnyomásra a főképernyőn:</string>
     <string name="audio_capture_mode_microphone">Mikrofon</string>
     <string name="audio_capture_mode_device">Eszköz hangja</string>
     <string name="audio_capture_mode_auto">Automatikus</string>
@@ -190,7 +190,7 @@
     <string name="pref_subtitle_fallback_policy">Tartalékműveletek beállítása sikertelen felismerés esetén</string>
     <string name="pref_title_fallback_policy">Teendők sikertelen felismeréskor</string>
     <string name="fallback_policy_dialog_title">Tartalékműveletek</string>
-    <string name="fallback_policy_dialog_message">Alapértelmezett tartalékművelet beállítása a sikertelen eredménytípusokhoz:</string>
+    <string name="fallback_policy_dialog_message">Alapértelmezett tartalékművelet beállítása sikertelen eredménytípusokhoz:</string>
     <string name="fallback_action_save_recording_and_retry">Felvétel mentése és újrapróbálás</string>
     <string name="fallback_action_save_recording">Felvétel mentése</string>
     <string name="fallback_action_ignore">Mellőzés</string>
@@ -233,7 +233,7 @@
     <string name="pref_group_misc">Egyéb</string>
     <string name="pref_title_vibration_feedback">Rezgő visszajelzés</string>
     <string name="vibration_feedback_dialog_title">Rezgés</string>
-    <string name="vibration_feedback_dialog_message">Rezgő visszajelzés konfigurálása egyes alkalmazáson belüli műveletekhez:</string>
+    <string name="vibration_feedback_dialog_message">Rezgés beállítása alkalmazáson belüli műveletekhez:</string>
     <string name="vibration_feedback_dialog_vibrate_on_tap">Rezgés koppintáskor</string>
     <string name="vibration_feedback_dialog_vibrate_on_result">Rezgés találat esetén</string>
     <string name="pref_title_experimental_features">Kísérleti funkciók</string>
@@ -276,7 +276,7 @@
     <string name="about_purpose_track_links_service">Platform-specifikus linkeket biztosít a zeneszámokhoz</string>
     <string name="about_pref_subtitle_github_repo">Forráskód, hibajegyek és egyéb információk</string>
     <string name="about_pref_title_privacy_policy">Adatvédelmi irányelvek</string>
-    <string name="about_pref_subtitle_privacy_policy">További információ az adatok kezeléséről az alkalmazásban</string>
+    <string name="about_pref_subtitle_privacy_policy">További adatkezelési információ az alkalmazásban</string>
     <string name="about_pref_title_license">Licensz</string>
     <string name="about_pref_title_licenses">Licenszek</string>
     <string name="about_pref_subtitle_license">Az Audile a GNU GPLv3 vagy újabb verzió szerint licenszelt</string>
@@ -300,7 +300,7 @@
     <string name="about_pref_title_github_repo">GitHub tároló</string>
     <string name="notification_channel_name_foreground_result">Előtérben talált dalok</string>
     <string name="pref_title_export_to_csv">Exportálás CSV-be</string>
-    <string name="pref_subtitle_export_to_csv">Összes szám exportálása CSV-fájlba</string>
+    <string name="pref_subtitle_export_to_csv">Összes zeneszám exportálása CSV-fájlba</string>
     <string name="export_only_favorites_tracks">Csak a kedvenc számok exportálása</string>
     <string name="export_write_csv_header">CSV-fejléc hozzáadása</string>
     <string name="export_select_fields_to_export">Exportálandó mezők kiválasztása:</string>

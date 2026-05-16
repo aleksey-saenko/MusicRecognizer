@@ -20,42 +20,6 @@ android {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
         }
     }
-
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/vibrafp/lib/CMakeLists.txt")
-            version = "3.22.1"
-        }
-    }
-
-    buildTypes {
-        release {
-            externalNativeBuild {
-                cmake {
-                    arguments += listOf(
-                        "-DENABLE_LTO=ON",
-                        "-DCMAKE_BUILD_TYPE=Release"
-                    )
-                }
-            }
-            ndk {
-                debugSymbolLevel = "NONE"
-            }
-        }
-        debug {
-            externalNativeBuild {
-                cmake {
-                    arguments += listOf(
-                        "-DENABLE_LTO=OFF",
-                        "-DCMAKE_BUILD_TYPE=Debug"
-                    )
-                }
-            }
-            ndk {
-                debugSymbolLevel = "FULL"
-            }
-        }
-    }
 }
 
 // Build SongRec fingerprinting module

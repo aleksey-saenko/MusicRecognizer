@@ -8,7 +8,6 @@ import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessio
 import com.mrsep.musicrecognizer.core.recognition.audd.websocket.WebSocketSessionImpl
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGenerator
 import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGeneratorSongRec
-import com.mrsep.musicrecognizer.core.recognition.shazam.ShazamSignatureGeneratorVibra
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,6 +32,5 @@ internal interface RecognitionModule {
     fun bindWebSocketSession(impl: WebSocketSessionImpl): WebSocketSession
 
     @Binds
-//    fun bindShazamSignatureGenerator(impl: ShazamSignatureGeneratorVibra): ShazamSignatureGenerator
     fun bindShazamSignatureGenerator(impl: ShazamSignatureGeneratorSongRec): ShazamSignatureGenerator
 }

@@ -1,1 +1,0 @@
-C++ implementation of Shazam's audio fingerprinting algorithm based on Vibra (https://github.com/BayernMuller/vibra)

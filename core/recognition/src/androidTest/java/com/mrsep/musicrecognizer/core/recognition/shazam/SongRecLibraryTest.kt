@@ -169,21 +169,21 @@ class SongRecLibraryTest {
     }
 }
 
-//internal data class RemoteSample(
-//    val url: String,
-//    val sha256: String,
-//    val signature: String,
-//)
-//
-//internal data class LocalSample(
-//    val filename: String,
-//    val sha256: String,
-//    val signature: String,
-//    val duration: Duration,
-//    val trackTitle: String,
-//    val trackArtist: String,
-//)
-//
-//internal fun ByteArray.sha256(): String = MessageDigest.getInstance("SHA-256")
-//    .digest(this)
-//    .joinToString("") { "%02x".format(it) }
+internal data class RemoteSample(
+    val url: String,
+    val sha256: String,
+    val signature: String,
+)
+
+internal data class LocalSample(
+    val filename: String,
+    val sha256: String,
+    val signature: String,
+    val duration: Duration,
+    val trackTitle: String,
+    val trackArtist: String,
+)
+
+internal fun ByteArray.sha256(): String = MessageDigest.getInstance("SHA-256")
+    .digest(this)
+    .joinToString("") { "%02x".format(it) }

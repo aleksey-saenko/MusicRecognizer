@@ -1,36 +1,32 @@
 # Building Audile
 
-These instructions are intended for Debian-based systems. Please adapt them for your operating system if needed.
+These instructions are intended for Debian-based systems. Adapt them for your operating system if needed.
 
 ## Prerequisites
 
-First, build the FFTW 3.3.10 static library.
+### Install Rust and cargo-ndk
 
-### Install dependencies
+Install Rust with `rustup`, which is the [recommended installation method](https://rust-lang.org/tools/install/):
 
 ```bash
-sudo apt update
-sudo apt install -y sdkmanager build-essential curl tar gzip git
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+cargo install cargo-ndk@4.1.2 --locked
 ```
 
-### Install the required NDK version
+### Install the required Android NDK version
 
-If NDK **29.0.14206865** is not installed:
+The app uses NDK version **29.0.14206865**.
+
+If you use Android Studio, you can install the NDK from **Tools → SDK Manager → SDK Tools**.
+
+Or install it with `sdkmanager`:
 
 ```bash
+sudo apt update && sudo apt install -y sdkmanager
 mkdir -p "$HOME/Android/Sdk"
 export ANDROID_HOME="$HOME/Android/Sdk"
-sdkmanager "ndk;29.0.14206865"
-```
-
-### Clone the app repository and build FFTW
-```bash
-git clone https://github.com/aleksey-saenko/MusicRecognizer.git
-cd ./MusicRecognizer
-pushd ./core/recognition/src/main/cpp/vibrafp/third_party
-chmod +x ./build-fftw-android.sh
-./build-fftw-android.sh --ndk "$ANDROID_HOME/ndk/29.0.14206865"
-popd
+sdkmanager --install "ndk;29.0.14206865"
 ```
 
 ## Build the app with Android Studio

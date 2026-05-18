@@ -6,58 +6,188 @@ import android.media.AudioAttributes
 import android.os.Build
 import android.os.VibrationAttributes
 import android.os.VibrationEffect
+import android.os.Vibrator
+import androidx.annotation.RequiresApi
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class VibrationManagerImpl @Inject constructor(
-    @ApplicationContext appContext: Context
+    @ApplicationContext private val appContext: Context
 ) : VibrationManager {
 
-    private val vibrator = appContext.getDefaultVibrator()
+    private val vibrator: Vibrator = appContext.getDefaultVibrator()
 
-    private val successEffect by lazy {
-        val timings = longArrayOf(90)
-        val amplitudes = intArrayOf(-1)
-        VibrationEffect.createWaveform(timings, amplitudes, -1)
-    }
-
-    private val failureEffect by lazy {
-        val timings = longArrayOf(50, 90, 50)
-        val amplitudes = intArrayOf(-1, 0, -1)
-        VibrationEffect.createWaveform(timings, amplitudes, -1)
-    }
-
-    private val tapEffect by lazy {
-        val timings = longArrayOf(50)
-        val amplitudes = intArrayOf(-1)
-        VibrationEffect.createWaveform(timings, amplitudes, -1)
-    }
-
-    override fun vibrateResult(isSuccess: Boolean) {
+    override fun vibrateSuccess() {
         if (!vibrator.hasVibrator()) return
-        vibrate(if (isSuccess) successEffect else failureEffect)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (trySuccessComposition()) return
+//            if (tryPredefined(VibrationEffect.EFFECT_HEAVY_CLICK, HapticUsage.RecognitionResult)) return
+        }
+
+        if (vibrator.hasAmplitudeControl()) {
+            vibrateWaveform(
+                usage = HapticUsage.RecognitionResult,
+                timings = longArrayOf(0, 13, 13, 13, 13, 13, 13, 13),
+                amplitudes = intArrayOf(0, 30, 70, 105, 140, 175, 220, 255)
+            )
+        } else {
+            vibrateWaveform(
+                usage = HapticUsage.RecognitionResult,
+                timings = longArrayOf(0, 90)
+            )
+        }
+    }
+
+    override fun vibrateFailure() {
+        if (!vibrator.hasVibrator()) return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (tryFailureComposition()) return
+//            if (tryPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK, HapticUsage.RecognitionResult)) return
+        }
+
+        if (vibrator.hasAmplitudeControl()) {
+            vibrateWaveform(
+                usage = HapticUsage.RecognitionResult,
+                timings = longArrayOf(0, 15, 15, 15, 15, 90, 15, 15, 15, 15),
+                amplitudes = intArrayOf(0, 50, 150, 250, 50, 0, 50, 150, 100, 50)
+            )
+        } else {
+            vibrateWaveform(
+                usage = HapticUsage.RecognitionResult,
+                timings = longArrayOf(0, 55, 90, 55)
+            )
+        }
     }
 
     override fun vibrateOnTap() {
         if (!vibrator.hasVibrator()) return
-        vibrate(tapEffect)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (tryPredefined(VibrationEffect.EFFECT_CLICK, HapticUsage.Tap)) return
+        }
+
+        if (vibrator.hasAmplitudeControl()) {
+            vibrateWaveform(
+                usage = HapticUsage.Tap,
+                timings = longArrayOf(0, 15, 15, 15),
+                amplitudes = intArrayOf(0, 40, 80, 40),
+            )
+        } else {
+            vibrateWaveform(
+                usage = HapticUsage.Tap,
+                timings = longArrayOf(0, 45),
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun trySuccessComposition(): Boolean = when {
+        vibrator.areAllPrimitivesSupported(
+            VibrationEffect.Composition.PRIMITIVE_QUICK_RISE,
+            VibrationEffect.Composition.PRIMITIVE_TICK,
+        ) -> {
+            vibrate(
+                effect = VibrationEffect.startComposition()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_QUICK_RISE, 1f)
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_TICK, 0.60f, 70)
+                    .compose(),
+                usage = HapticUsage.RecognitionResult
+            )
+            true
+        }
+
+        else -> false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun tryFailureComposition(): Boolean = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && vibrator.areAllPrimitivesSupported(
+            VibrationEffect.Composition.PRIMITIVE_QUICK_FALL,
+            VibrationEffect.Composition.PRIMITIVE_THUD,
+            VibrationEffect.Composition.PRIMITIVE_LOW_TICK
+        ) -> {
+            vibrate(
+                effect = VibrationEffect.startComposition()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_QUICK_FALL, 0.8f)
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_THUD, 0.80f, 55)
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, 0.55f, 55)
+                    .compose(),
+                usage = HapticUsage.RecognitionResult
+            )
+            true
+        }
+
+        vibrator.areAllPrimitivesSupported(
+            VibrationEffect.Composition.PRIMITIVE_QUICK_FALL,
+            VibrationEffect.Composition.PRIMITIVE_TICK
+        ) -> {
+            vibrate(
+                effect = VibrationEffect.startComposition()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_QUICK_FALL, 0.8f)
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.5f, 55)
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.5f, 55)
+                    .compose(),
+                usage = HapticUsage.RecognitionResult
+            )
+            true
+        }
+
+        else -> false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun tryPredefined(effectId: Int, usage: HapticUsage): Boolean {
+        if (vibrator.areAllEffectsSupported(effectId) != Vibrator.VIBRATION_EFFECT_SUPPORT_YES) return false
+        vibrate(VibrationEffect.createPredefined(effectId), usage)
+        return true
     }
 
     @SuppressLint("MissingPermission")
-    private fun vibrate(vibrationEffect: VibrationEffect) {
+    private fun vibrate(effect: VibrationEffect, usage: HapticUsage) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val vibrationAttributes = VibrationAttributes.Builder()
-                .setUsage(VibrationAttributes.USAGE_MEDIA)
-                .build()
-            vibrator.vibrate(vibrationEffect, vibrationAttributes)
+            vibrator.vibrate(
+                effect,
+                VibrationAttributes.Builder()
+                    .setUsage(usage.asVibrationAttribute)
+                    .build()
+            )
         } else {
-            val audioAttributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
             @Suppress("DEPRECATION")
-            vibrator.vibrate(vibrationEffect, audioAttributes)
+            vibrator.vibrate(
+                effect,
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            )
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun vibrateWaveform(
+        usage: HapticUsage,
+        timings: LongArray,
+        amplitudes: IntArray? = null,
+    ) {
+        val effect = if (amplitudes != null) {
+            VibrationEffect.createWaveform(timings, amplitudes, -1)
+        } else {
+            VibrationEffect.createWaveform(timings, -1)
+        }
+        vibrate(effect, usage)
+    }
+}
+
+private enum class HapticUsage {
+    Tap,
+    RecognitionResult;
+
+    val asVibrationAttribute @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    get() = when (this) {
+        Tap -> VibrationAttributes.USAGE_TOUCH
+        RecognitionResult -> VibrationAttributes.USAGE_MEDIA
     }
 }

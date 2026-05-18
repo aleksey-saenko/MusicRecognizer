@@ -84,8 +84,12 @@ internal class RecognitionViewModel @Inject constructor(
         vibrationManager.vibrateOnTap()
     }
 
-    fun vibrateResult(isSuccess: Boolean) {
-        vibrationManager.vibrateResult(isSuccess)
+    fun vibrateSuccess() {
+        vibrationManager.vibrateSuccess()
+    }
+
+    fun vibrateFailure() {
+        vibrationManager.vibrateFailure()
     }
 }
 

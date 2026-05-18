@@ -362,10 +362,10 @@ internal fun RecognitionScreen(
                 if (vibrated.value) return@LaunchedEffect
                 when (status.result) {
                     is RecognitionResult.ScheduledOffline,
-                    is RecognitionResult.Success -> viewModel.vibrateResult(true)
+                    is RecognitionResult.Success -> viewModel.vibrateSuccess()
 
                     is RecognitionResult.Error,
-                    is RecognitionResult.NoMatches -> viewModel.vibrateResult(false)
+                    is RecognitionResult.NoMatches -> viewModel.vibrateFailure()
                 }
                 vibrated.value = true
             }

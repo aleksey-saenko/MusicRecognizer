@@ -1,23 +1,21 @@
 package com.mrsep.musicrecognizer
 
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.extensions.DetektExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.withType
 
 internal fun Project.configureDetekt(extension: DetektExtension) = extension.apply {
-    tasks.named<Detekt>("detekt") {
+    tasks.withType<Detekt>().configureEach {
         reports {
+            checkstyle.required.set(false)
             html.required.set(true)
-            xml.required.set(false)
-            txt.required.set(false)
             sarif.required.set(false)
-            md.required.set(false)
+            markdown.required.set(false)
         }
     }
     dependencies {
-        "detektPlugins"(libs.findLibrary("detekt-formatting").get())
         "detektPlugins"(libs.findLibrary("detekt-compose").get())
     }
 }

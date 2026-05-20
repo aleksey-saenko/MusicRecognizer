@@ -2,7 +2,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.mrsep.musicrecognizer.configureDetekt
 import com.mrsep.musicrecognizer.configureKotlinAndroid
 import com.mrsep.musicrecognizer.libs
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import dev.detekt.gradle.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -14,7 +14,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
-                apply("io.gitlab.arturbosch.detekt")
+                apply("dev.detekt")
             }
 
             configureDetekt(extensions.getByType<DetektExtension>())

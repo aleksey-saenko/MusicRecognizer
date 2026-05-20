@@ -55,11 +55,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.annotation:annotation",
-            "artifactVersion": "1.9.1",
-            "name": "Annotation",
-            "description": "Provides source annotations for tooling and readability.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.9.1",
+            "uniqueId": "androidx.annotation:annotation-experimental",
+            "artifactVersion": "1.4.1",
+            "name": "Experimental annotation",
+            "description": "Java annotation for use on unstable Android API surfaces. When used in conjunction with the Experimental annotation lint checks, this annotation provides functional parity with Kotlin's Experimental annotation.",
+            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.4.1",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -73,11 +73,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.annotation:annotation-experimental",
-            "artifactVersion": "1.5.0",
-            "name": "Experimental annotation",
-            "description": "Java annotation for use on unstable Android API surfaces. When used in conjunction with the Experimental annotation lint checks, this annotation provides functional parity with Kotlin's Experimental annotation.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.5.0",
+            "uniqueId": "androidx.annotation:annotation-jvm",
+            "artifactVersion": "1.9.1",
+            "name": "Annotation",
+            "description": "Provides source annotations for tooling and readability.",
+            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.9.1",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -154,7 +154,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.collection:collection",
+            "uniqueId": "androidx.collection:collection-jvm",
             "artifactVersion": "1.5.0",
             "name": "collections",
             "description": "Standalone efficient collections.",
@@ -190,11 +190,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.animation:animation",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.animation:animation-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Animation",
             "description": "Compose animation library",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-animation#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-animation#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -208,11 +208,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.animation:animation-core",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.animation:animation-core-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Animation Core",
             "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-animation#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-animation#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -226,11 +226,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.foundation:foundation",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.foundation:foundation-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Foundation",
             "description": "Higher level abstractions of the Compose UI primitives. This library is design system agnostic, providing the high-level building blocks for both application and design-system developers",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-foundation#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-foundation#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -244,11 +244,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.foundation:foundation-layout",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.foundation:foundation-layout-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Layouts",
             "description": "Compose layout implementations",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-foundation#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-foundation#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -262,7 +262,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.material3:material3",
+            "uniqueId": "androidx.compose.material3:material3-android",
             "artifactVersion": "1.4.0",
             "name": "Compose Material3 Components",
             "description": "Compose Material You Design Components library",
@@ -280,7 +280,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.material3:material3-window-size-class",
+            "uniqueId": "androidx.compose.material3:material3-window-size-class-android",
             "artifactVersion": "1.4.0",
             "name": "Compose Material 3 Window Size Class",
             "description": "Provides window size classes for building responsive UIs",
@@ -298,11 +298,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.material:material-ripple",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.material:material-ripple-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Material Ripple",
             "description": "Material ripple used to build interactive components",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-material#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-material#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -316,11 +316,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.runtime:runtime",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.runtime:runtime-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Runtime",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -334,11 +334,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.runtime:runtime-annotation",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.runtime:runtime-annotation-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Runtime Annotation",
             "description": "Provides Compose-specific annotations used by the compiler and tooling",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -352,11 +352,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.runtime:runtime-retain",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.runtime:runtime-retain-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Runtime Retain",
             "description": "Preserve state in composable methods across configuration changes and other transient content destruction scenarios",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -370,11 +370,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.runtime:runtime-saveable",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.runtime:runtime-saveable-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Saveable",
             "description": "Compose components that allow saving and restoring the local ui state",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-runtime#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -388,11 +388,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose UI",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -406,11 +406,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-geometry",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-geometry-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Geometry",
             "description": "Compose classes related to dimensions without units",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -424,47 +424,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-graphics",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-graphics-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Graphics",
             "description": "Compose graphics",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            },
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.compose.ui:ui-test",
-            "artifactVersion": "1.11.0",
-            "name": "Compose Testing",
-            "description": "Compose testing library",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            },
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.compose.ui:ui-test-junit4",
-            "artifactVersion": "1.11.0",
-            "name": "Compose Testing for JUnit4",
-            "description": "Compose testing integration with JUnit4",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -479,10 +443,10 @@
         },
         {
             "uniqueId": "androidx.compose.ui:ui-test-manifest",
-            "artifactVersion": "1.11.0",
+            "artifactVersion": "1.11.2",
             "name": "Compose Testing manifest dependency",
             "description": "Compose testing library that should be added as a debugImplementation dependency to add properties to the debug manifest necessary for testing an application",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -496,11 +460,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-text",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-text-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose UI Text",
             "description": "Compose Text primitives and utilities",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -514,11 +478,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-tooling",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-tooling-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Tooling",
             "description": "Compose tooling library. This library exposes information to our tools for better IDE support.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -532,11 +496,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-tooling-data",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-tooling-data-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Tooling Data",
             "description": "Compose tooling library data. This library provides data about compose for different tooling purposes.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -550,11 +514,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-tooling-preview",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-tooling-preview-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose UI Preview Tooling",
             "description": "Compose tooling library API. This library provides the API required to declare @Preview composables in user apps.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -568,11 +532,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-unit",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-unit-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Unit",
             "description": "Compose classes for simple units",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -586,11 +550,11 @@
             ]
         },
         {
-            "uniqueId": "androidx.compose.ui:ui-util",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "androidx.compose.ui:ui-util-android",
+            "artifactVersion": "1.11.2",
             "name": "Compose Util",
             "description": "Internal Compose utilities used by other modules",
-            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/compose-ui#1.11.2",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -605,7 +569,7 @@
         },
         {
             "uniqueId": "androidx.compose:compose-bom",
-            "artifactVersion": "2026.04.01",
+            "artifactVersion": "2026.05.01",
             "name": "Jetpack Compose Libraries BOM",
             "description": "A compatible set of Jetpack Compose libraries.",
             "website": "https://developer.android.com/jetpack",
@@ -773,7 +737,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore",
+            "uniqueId": "androidx.datastore:datastore-android",
             "artifactVersion": "1.2.1",
             "name": "DataStore",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
@@ -791,7 +755,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore-core",
+            "uniqueId": "androidx.datastore:datastore-core-android",
             "artifactVersion": "1.2.1",
             "name": "DataStore Core",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
@@ -809,7 +773,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore-core-okio",
+            "uniqueId": "androidx.datastore:datastore-core-okio-jvm",
             "artifactVersion": "1.2.1",
             "name": "DataStore Core Okio",
             "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
@@ -827,7 +791,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore-preferences",
+            "uniqueId": "androidx.datastore:datastore-preferences-android",
             "artifactVersion": "1.2.1",
             "name": "Preferences DataStore",
             "description": "Android Preferences DataStore",
@@ -845,7 +809,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore-preferences-core",
+            "uniqueId": "androidx.datastore:datastore-preferences-core-android",
             "artifactVersion": "1.2.1",
             "name": "Preferences DataStore Core",
             "description": "Android Preferences DataStore without the Android Dependencies",
@@ -1085,7 +1049,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.graphics:graphics-shapes",
+            "uniqueId": "androidx.graphics:graphics-shapes-android",
             "artifactVersion": "1.1.0",
             "name": "Graphics Shapes",
             "description": "create and render rounded polygonal shapes",
@@ -1223,10 +1187,10 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-common",
+            "uniqueId": "androidx.lifecycle:lifecycle-common-java8",
             "artifactVersion": "2.10.0",
-            "name": "Lifecycle-Common",
-            "description": "Android Lifecycle-Common",
+            "name": "Lifecycle-Common for Java 8",
+            "description": "Android Lifecycle-Common for Java 8 Language",
             "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.10.0",
             "developers": [
                 {
@@ -1241,10 +1205,10 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-common-java8",
+            "uniqueId": "androidx.lifecycle:lifecycle-common-jvm",
             "artifactVersion": "2.10.0",
-            "name": "Lifecycle-Common for Java 8",
-            "description": "Android Lifecycle-Common for Java 8 Language",
+            "name": "Lifecycle-Common",
+            "description": "Android Lifecycle-Common",
             "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.10.0",
             "developers": [
                 {
@@ -1331,7 +1295,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-runtime",
+            "uniqueId": "androidx.lifecycle:lifecycle-runtime-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle Runtime",
             "description": "Android Lifecycle Runtime",
@@ -1349,7 +1313,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-runtime-compose",
+            "uniqueId": "androidx.lifecycle:lifecycle-runtime-compose-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle Runtime Compose",
             "description": "Compose integration with Lifecycle",
@@ -1367,7 +1331,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-runtime-ktx",
+            "uniqueId": "androidx.lifecycle:lifecycle-runtime-ktx-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle Kotlin Extensions",
             "description": "Kotlin extensions for 'lifecycle' artifact",
@@ -1403,7 +1367,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel",
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle ViewModel",
             "description": "Android Lifecycle ViewModel",
@@ -1421,7 +1385,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-compose",
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-compose-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle ViewModel Compose",
             "description": "Compose integration with Lifecycle ViewModel",
@@ -1457,7 +1421,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-savedstate",
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android",
             "artifactVersion": "2.10.0",
             "name": "Lifecycle ViewModel with SavedState",
             "description": "Android Lifecycle ViewModel",
@@ -1506,7 +1470,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-common",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 common module",
             "description": "Media3 common module",
             "developers": [
@@ -1520,7 +1484,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-container",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 Container module",
             "description": "Media3 Container module",
             "developers": [
@@ -1534,7 +1498,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-database",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 database module",
             "description": "Media3 database module",
             "developers": [
@@ -1548,7 +1512,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-datasource",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 DataSource module",
             "description": "Media3 DataSource module",
             "developers": [
@@ -1562,7 +1526,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-decoder",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 decoder module",
             "description": "Media3 decoder module",
             "developers": [
@@ -1576,7 +1540,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-exoplayer",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 ExoPlayer module",
             "description": "Media3 ExoPlayer module",
             "developers": [
@@ -1590,7 +1554,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-extractor",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 Extractor module",
             "description": "Media3 Extractor module",
             "developers": [
@@ -1604,7 +1568,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-inspector",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 Inspector module",
             "description": "Media3 Inspector module",
             "developers": [
@@ -1618,7 +1582,7 @@
         },
         {
             "uniqueId": "androidx.media3:media3-muxer",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.10.1",
             "name": "Media3 Muxer module",
             "description": "Media3 Muxer module",
             "developers": [
@@ -1631,7 +1595,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigation:navigation-common",
+            "uniqueId": "androidx.navigation:navigation-common-android",
             "artifactVersion": "2.9.8",
             "name": "Navigation Common",
             "description": "Android Navigation-Common",
@@ -1649,7 +1613,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigation:navigation-compose",
+            "uniqueId": "androidx.navigation:navigation-compose-android",
             "artifactVersion": "2.9.8",
             "name": "Compose Navigation",
             "description": "Compose integration with Navigation",
@@ -1667,7 +1631,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigation:navigation-runtime",
+            "uniqueId": "androidx.navigation:navigation-runtime-android",
             "artifactVersion": "2.9.8",
             "name": "Navigation Runtime",
             "description": "Android Navigation-Runtime",
@@ -1685,7 +1649,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigationevent:navigationevent",
+            "uniqueId": "androidx.navigationevent:navigationevent-android",
             "artifactVersion": "1.0.0",
             "name": "Navigation Event",
             "description": "Provides APIs to easily intercept platform navigation events, including swipes and clicks, to provide a consistent API surface for handling these events.",
@@ -1703,7 +1667,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigationevent:navigationevent-compose",
+            "uniqueId": "androidx.navigationevent:navigationevent-compose-android",
             "artifactVersion": "1.0.0",
             "name": "NavigationEvent Compose",
             "description": "Compose integration with NavigationEvent",
@@ -1784,7 +1748,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.room:room-common",
+            "uniqueId": "androidx.room:room-common-jvm",
             "artifactVersion": "2.8.4",
             "name": "Room-Common",
             "description": "Android Room-Common",
@@ -1820,7 +1784,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.room:room-runtime",
+            "uniqueId": "androidx.room:room-runtime-android",
             "artifactVersion": "2.8.4",
             "name": "Room-Runtime",
             "description": "Android Room-Runtime",
@@ -1838,7 +1802,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.savedstate:savedstate",
+            "uniqueId": "androidx.savedstate:savedstate-android",
             "artifactVersion": "1.4.0",
             "name": "Saved State",
             "description": "Android Lifecycle Saved State",
@@ -1856,7 +1820,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.savedstate:savedstate-compose",
+            "uniqueId": "androidx.savedstate:savedstate-compose-android",
             "artifactVersion": "1.4.0",
             "name": "Saved State Compose",
             "description": "Compose integration with Saved State",
@@ -1892,7 +1856,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.sqlite:sqlite",
+            "uniqueId": "androidx.sqlite:sqlite-android",
             "artifactVersion": "2.6.2",
             "name": "SQLite",
             "description": "SQLite API",
@@ -1910,7 +1874,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.sqlite:sqlite-framework",
+            "uniqueId": "androidx.sqlite:sqlite-framework-android",
             "artifactVersion": "2.6.2",
             "name": "SQLite Framework Integration",
             "description": "The implementation of SQLite library using the framework code.",
@@ -1929,73 +1893,10 @@
         },
         {
             "uniqueId": "androidx.startup:startup-runtime",
-            "artifactVersion": "1.2.0",
-            "name": "Startup Runtime",
+            "artifactVersion": "1.1.1",
+            "name": "Android App Startup Runtime",
             "description": "Android App Startup Runtime",
-            "website": "https://developer.android.com/jetpack/androidx/releases/startup#1.2.0",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            },
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.test.espresso:espresso-core",
-            "artifactVersion": "3.7.0",
-            "name": "AndroidX Test Library",
-            "description": "The AndroidX Test Library provides an extensive framework for testing Android apps",
-            "website": "https://developer.android.com/testing",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.test.ext:junit",
-            "artifactVersion": "1.3.0",
-            "name": "AndroidX Test Library",
-            "description": "The AndroidX Test Library provides an extensive framework for testing Android apps",
-            "website": "https://developer.android.com/testing",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.test.services:storage",
-            "artifactVersion": "1.6.0",
-            "name": "AndroidX Test Library",
-            "description": "The AndroidX Test Library provides an extensive framework for testing Android apps",
-            "website": "https://developer.android.com/testing",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "androidx.test:monitor",
-            "artifactVersion": "1.8.0",
-            "name": "AndroidX Test Library",
-            "description": "The AndroidX Test Library provides an extensive framework for testing Android apps",
-            "website": "https://developer.android.com/testing",
+            "website": "https://developer.android.com/jetpack/androidx/releases/startup#1.1.1",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -2132,7 +2033,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.window:window-core",
+            "uniqueId": "androidx.window:window-core-android",
             "artifactVersion": "1.5.1",
             "name": "WindowManager Core",
             "description": "WindowManager Core Library.",
@@ -2207,7 +2108,7 @@
             ]
         },
         {
-            "uniqueId": "com.github.ajalt.colormath:colormath",
+            "uniqueId": "com.github.ajalt.colormath:colormath-jvm",
             "artifactVersion": "3.6.1",
             "name": "Colormath",
             "description": "Multiplatform color space conversions for Kotlin",
@@ -2237,7 +2138,7 @@
             ]
         },
         {
-            "uniqueId": "com.github.skydoves:compose-stability-runtime",
+            "uniqueId": "com.github.skydoves:compose-stability-runtime-android",
             "artifactVersion": "0.7.1",
             "name": "Compose Stability Analyzer Runtime",
             "description": "A Compose Compiler plugin that analyzes composable functions and generates stability reports.",
@@ -2474,9 +2375,9 @@
         },
         {
             "uniqueId": "com.google.guava:listenablefuture",
-            "artifactVersion": "9999.0-empty-to-avoid-conflict-with-guava",
+            "artifactVersion": "1.0",
             "name": "Guava ListenableFuture only",
-            "description": "An empty artifact that Guava depends on to signal that it is providing\n    ListenableFuture -- but is also available in a second \"version\" that\n    contains com.google.common.util.concurrent.ListenableFuture class, without\n    any other Guava classes. The idea is:\n\n    - If users want only ListenableFuture, they depend on listenablefuture-1.0.\n\n    - If users want all of Guava, they depend on guava, which, as of Guava\n    27.0, depends on\n    listenablefuture-9999.0-empty-to-avoid-conflict-with-guava. The 9999.0-...\n    version number is enough for some build systems (notably, Gradle) to select\n    that empty artifact over the \"real\" listenablefuture-1.0 -- avoiding a\n    conflict with the copy of ListenableFuture in guava itself. If users are\n    using an older version of Guava or a build system other than Gradle, they\n    may see class conflicts. If so, they can solve them by manually excluding\n    the listenablefuture artifact or manually forcing their build systems to\n    use 9999.0-....",
+            "description": "Contains Guava's com.google.common.util.concurrent.ListenableFuture class,\n    without any of its other classes -- but is also available in a second\n    \"version\" that omits the class to avoid conflicts with the copy in Guava\n    itself. The idea is:\n\n    - If users want only ListenableFuture, they depend on listenablefuture-1.0.\n\n    - If users want all of Guava, they depend on guava, which, as of Guava\n    27.0, depends on\n    listenablefuture-9999.0-empty-to-avoid-conflict-with-guava. The 9999.0-...\n    version number is enough for some build systems (notably, Gradle) to select\n    that empty artifact over the \"real\" listenablefuture-1.0 -- avoiding a\n    conflict with the copy of ListenableFuture in guava itself. If users are\n    using an older version of Guava or a build system other than Gradle, they\n    may see class conflicts. If so, they can solve them by manually excluding\n    the listenablefuture artifact or manually forcing their build systems to\n    use 9999.0-....",
             "website": "https://github.com/google/guava/listenablefuture",
             "developers": [
                 {
@@ -2506,9 +2407,9 @@
         },
         {
             "uniqueId": "com.google.protobuf:protobuf-javalite",
-            "artifactVersion": "4.34.1",
+            "artifactVersion": "4.35.0",
             "name": "Protocol Buffers [Lite]",
-            "description": "Lite version of Protocol Buffers library. This version is optimized for code size, but does\n    not guarantee API/ABI stability.",
+            "description": "Lite version of Protocol Buffers library. This version is targeted for mobile client use\n    rather than server side use. It is optimized for code size, but does not guarantee API/ABI\n    stability.",
             "website": "https://developers.google.com/protocol-buffers/protobuf-javalite/",
             "developers": [
                 {
@@ -2522,7 +2423,7 @@
         },
         {
             "uniqueId": "com.google.protobuf:protobuf-kotlin-lite",
-            "artifactVersion": "4.34.1",
+            "artifactVersion": "4.35.0",
             "name": "Protocol Buffers [Kotlin-Lite]",
             "description": "Kotlin lite Protocol Buffers library. Protocol Buffers are a way of encoding structured data in an\n    efficient yet extensible format.",
             "website": "https://developers.google.com/protocol-buffers/protobuf-kotlin-lite/",
@@ -2556,7 +2457,7 @@
             ]
         },
         {
-            "uniqueId": "com.materialkolor:material-kolor",
+            "uniqueId": "com.materialkolor:material-color-utilities-android",
             "artifactVersion": "4.1.1",
             "name": "MaterialKolor",
             "description": "Material You dynamic color for Compose Multiplatform",
@@ -2571,8 +2472,8 @@
             ]
         },
         {
-            "uniqueId": "com.mikepenz:aboutlibraries-compose-core",
-            "artifactVersion": "14.0.1",
+            "uniqueId": "com.mikepenz:aboutlibraries-compose-core-android",
+            "artifactVersion": "14.2.0",
             "name": "AboutLibraries Compose UI Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2586,8 +2487,8 @@
             ]
         },
         {
-            "uniqueId": "com.mikepenz:aboutlibraries-compose-m3",
-            "artifactVersion": "14.0.1",
+            "uniqueId": "com.mikepenz:aboutlibraries-compose-m3-android",
+            "artifactVersion": "14.2.0",
             "name": "AboutLibraries Compose Material 3 Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2601,8 +2502,8 @@
             ]
         },
         {
-            "uniqueId": "com.mikepenz:aboutlibraries-core",
-            "artifactVersion": "14.0.1",
+            "uniqueId": "com.mikepenz:aboutlibraries-core-android",
+            "artifactVersion": "14.2.0",
             "name": "AboutLibraries Core Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2616,7 +2517,7 @@
             ]
         },
         {
-            "uniqueId": "com.squareup.okhttp3:okhttp",
+            "uniqueId": "com.squareup.okhttp3:okhttp-android",
             "artifactVersion": "5.3.2",
             "name": "okhttp",
             "description": "Square\u2019s meticulous HTTP client for Java and Kotlin.",
@@ -2631,7 +2532,7 @@
             ]
         },
         {
-            "uniqueId": "com.squareup.okio:okio",
+            "uniqueId": "com.squareup.okio:okio-jvm",
             "artifactVersion": "3.16.4",
             "name": "okio",
             "description": "A modern I/O library for Android, Java, and Kotlin Multiplatform.",
@@ -2646,7 +2547,7 @@
             ]
         },
         {
-            "uniqueId": "dev.drewhamilton.poko:poko-annotations",
+            "uniqueId": "dev.drewhamilton.poko:poko-annotations-jvm",
             "artifactVersion": "0.21.1",
             "name": "Poko Annotations",
             "description": "A Kotlin compiler plugin for generating equals, hashCode, and toString for plain old Kotlin objects.",
@@ -2677,7 +2578,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil",
+            "uniqueId": "io.coil-kt.coil3:coil-android",
             "artifactVersion": "3.4.0",
             "name": "coil",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2692,7 +2593,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-compose",
+            "uniqueId": "io.coil-kt.coil3:coil-compose-android",
             "artifactVersion": "3.4.0",
             "name": "coil-compose",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2707,7 +2608,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-compose-core",
+            "uniqueId": "io.coil-kt.coil3:coil-compose-core-android",
             "artifactVersion": "3.4.0",
             "name": "coil-compose-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2722,7 +2623,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-core",
+            "uniqueId": "io.coil-kt.coil3:coil-core-android",
             "artifactVersion": "3.4.0",
             "name": "coil-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2737,7 +2638,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-core",
+            "uniqueId": "io.coil-kt.coil3:coil-network-core-android",
             "artifactVersion": "3.4.0",
             "name": "coil-network-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2752,7 +2653,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3",
+            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3-android",
             "artifactVersion": "3.4.0",
             "name": "coil-network-ktor3",
             "description": "An image loading library for Android and Compose Multiplatform.",
@@ -2767,8 +2668,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-content-negotiation",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-client-content-negotiation-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-client-content-negotiation",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2783,8 +2684,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-core",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-client-core-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-client-core",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2799,8 +2700,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-logging",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-client-logging-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-client-logging",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2815,8 +2716,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-okhttp",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-client-okhttp-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-client-okhttp",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2831,8 +2732,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-websockets",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-client-websockets-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-client-websockets",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2847,8 +2748,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-events",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-events-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-events",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2863,24 +2764,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-http",
-            "artifactVersion": "3.4.3",
-            "name": "ktor-http",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "website": "https://github.com/ktorio/ktor",
-            "developers": [
-                {
-                    "name": "Jetbrains Team",
-                    "organisationUrl": "https://www.jetbrains.com"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-http-cio",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-http-cio-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-http-cio",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2895,8 +2780,24 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-io",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-http-jvm",
+            "artifactVersion": "3.5.0",
+            "name": "ktor-http",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "website": "https://github.com/ktorio/ktor",
+            "developers": [
+                {
+                    "name": "Jetbrains Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-io-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-io",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2911,8 +2812,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-network",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-network-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-network",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2927,8 +2828,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-serialization",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-serialization-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-serialization",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2943,24 +2844,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-serialization-kotlinx",
-            "artifactVersion": "3.4.3",
-            "name": "ktor-serialization-kotlinx",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "website": "https://github.com/ktorio/ktor",
-            "developers": [
-                {
-                    "name": "Jetbrains Team",
-                    "organisationUrl": "https://www.jetbrains.com"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-serialization-kotlinx-json",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-serialization-kotlinx-json-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-serialization-kotlinx-json",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2975,8 +2860,24 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-sse",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-serialization-kotlinx-jvm",
+            "artifactVersion": "3.5.0",
+            "name": "ktor-serialization-kotlinx",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "website": "https://github.com/ktorio/ktor",
+            "developers": [
+                {
+                    "name": "Jetbrains Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-sse-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-sse",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -2991,8 +2892,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-utils",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-utils-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-utils",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -3007,8 +2908,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-websocket-serialization",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-websocket-serialization-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-websocket-serialization",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -3023,8 +2924,8 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-websockets",
-            "artifactVersion": "3.4.3",
+            "uniqueId": "io.ktor:ktor-websockets-jvm",
+            "artifactVersion": "3.5.0",
             "name": "ktor-websockets",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "website": "https://github.com/ktorio/ktor",
@@ -3080,36 +2981,8 @@
             ]
         },
         {
-            "uniqueId": "junit:junit",
-            "artifactVersion": "4.13.2",
-            "name": "JUnit",
-            "description": "JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.",
-            "website": "http://junit.org",
-            "developers": [
-                {
-                    "name": "Kevin Cooney"
-                },
-                {
-                    "name": "Stefan Birkner"
-                },
-                {
-                    "name": "David Saff"
-                },
-                {
-                    "name": "Marc Philipp"
-                }
-            ],
-            "organization": {
-                "name": "JUnit",
-                "url": "http://www.junit.org"
-            },
-            "licenses": [
-                "EPL-1.0"
-            ]
-        },
-        {
             "uniqueId": "net.engawapg.lib:zoomable-android",
-            "artifactVersion": "2.11.1",
+            "artifactVersion": "2.12.0",
             "name": "Engawapg Zoomable",
             "description": "An android library for Jetpack Compose that enables contents zoomable.",
             "website": "https://github.com/usuiat/Zoomable",
@@ -3153,60 +3026,6 @@
             ],
             "licenses": [
                 "MIT"
-            ]
-        },
-        {
-            "uniqueId": "org.hamcrest:hamcrest-core",
-            "artifactVersion": "1.3",
-            "name": "Hamcrest Core",
-            "description": "This is the core API of hamcrest matcher framework to be used by third-party framework providers. This includes the a foundation set of matcher implementations for common operations.",
-            "website": "https://github.com/hamcrest/JavaHamcrest/hamcrest-core",
-            "developers": [
-                {
-                    "name": "Tom Denley"
-                },
-                {
-                    "name": "Joe Walnes"
-                },
-                {
-                    "name": "Steve Freeman"
-                },
-                {
-                    "name": "Neil Dunn"
-                },
-                {
-                    "name": "Nat Pryce"
-                }
-            ],
-            "licenses": [
-                "BSD-3-Clause"
-            ]
-        },
-        {
-            "uniqueId": "org.hamcrest:hamcrest-library",
-            "artifactVersion": "1.3",
-            "name": "Hamcrest library",
-            "description": "Hamcrest library of matcher implementations.",
-            "website": "https://github.com/hamcrest/JavaHamcrest/hamcrest-library",
-            "developers": [
-                {
-                    "name": "Tom Denley"
-                },
-                {
-                    "name": "Joe Walnes"
-                },
-                {
-                    "name": "Steve Freeman"
-                },
-                {
-                    "name": "Neil Dunn"
-                },
-                {
-                    "name": "Nat Pryce"
-                }
-            ],
-            "licenses": [
-                "BSD-3-Clause"
             ]
         },
         {
@@ -3355,7 +3174,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.annotation-internal:annotation",
-            "artifactVersion": "1.10.3",
+            "artifactVersion": "1.9.3",
             "name": "Annotation",
             "description": "Provides source annotations for tooling and readability.",
             "website": "https://github.com/JetBrains/compose-jb",
@@ -3371,7 +3190,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.collection-internal:collection",
-            "artifactVersion": "1.10.3",
+            "artifactVersion": "1.9.3",
             "name": "collections",
             "description": "Standalone efficient collections.",
             "website": "https://github.com/JetBrains/compose-jb",
@@ -3498,7 +3317,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler",
+            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler-android-debug",
             "artifactVersion": "1.9.3",
             "name": "Compose Multiplatform BackHandler",
             "description": "Provides BackHandler in Compose Multiplatform projects",
@@ -3706,7 +3525,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-collections-immutable",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm",
             "artifactVersion": "0.4.0",
             "name": "kotlinx-collections-immutable",
             "description": "Kotlin Immutable Collections multiplatform library",
@@ -3723,7 +3542,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-android",
-            "artifactVersion": "1.10.2",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-coroutines-android",
             "description": "Coroutines support libraries for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
@@ -3739,7 +3558,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-bom",
-            "artifactVersion": "1.10.2",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-coroutines-bom",
             "description": "Coroutines support libraries for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
@@ -3754,8 +3573,8 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core",
-            "artifactVersion": "1.10.2",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-coroutines-core",
             "description": "Coroutines support libraries for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
@@ -3770,8 +3589,24 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-guava",
+            "artifactVersion": "1.11.0",
+            "name": "kotlinx-coroutines-guava",
+            "description": "Coroutines support libraries for Kotlin",
+            "website": "https://github.com/Kotlin/kotlinx.coroutines",
+            "developers": [
+                {
+                    "name": "JetBrains Team",
+                    "organisationUrl": "https://www.jetbrains.com"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j",
-            "artifactVersion": "1.10.2",
+            "artifactVersion": "1.11.0",
             "name": "kotlinx-coroutines-slf4j",
             "description": "Coroutines support libraries for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
@@ -3786,24 +3621,8 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-test",
-            "artifactVersion": "1.10.2",
-            "name": "kotlinx-coroutines-test",
-            "description": "Coroutines support libraries for Kotlin",
-            "website": "https://github.com/Kotlin/kotlinx.coroutines",
-            "developers": [
-                {
-                    "name": "JetBrains Team",
-                    "organisationUrl": "https://www.jetbrains.com"
-                }
-            ],
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-bytestring",
-            "artifactVersion": "0.8.2",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm",
+            "artifactVersion": "0.9.0",
             "name": "kotlinx-io-bytestring",
             "description": "IO support for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx-io",
@@ -3818,8 +3637,8 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-core",
-            "artifactVersion": "0.8.2",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-core-jvm",
+            "artifactVersion": "0.9.0",
             "name": "kotlinx-io-core",
             "description": "IO support for Kotlin",
             "website": "https://github.com/Kotlin/kotlinx-io",
@@ -3835,7 +3654,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "artifactVersion": "1.11.0",
+            "artifactVersion": "1.7.3",
             "name": "kotlinx-serialization-bom",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3850,8 +3669,8 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core",
-            "artifactVersion": "1.11.0",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm",
+            "artifactVersion": "1.7.3",
             "name": "kotlinx-serialization-core",
             "description": "Kotlin multiplatform serialization runtime library",
             "website": "https://github.com/Kotlin/kotlinx.serialization",
@@ -3866,7 +3685,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-io",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm",
             "artifactVersion": "1.11.0",
             "name": "kotlinx-serialization-json-io",
             "description": "Kotlin multiplatform serialization runtime library",
@@ -3930,7 +3749,7 @@
         },
         {
             "uniqueId": "org.slf4j:slf4j-api",
-            "artifactVersion": "2.0.17",
+            "artifactVersion": "2.0.18",
             "name": "SLF4J API Module",
             "description": "The slf4j API",
             "website": "http://www.slf4j.org",
@@ -3948,7 +3767,7 @@
             ]
         },
         {
-            "uniqueId": "sh.calvin.reorderable:reorderable",
+            "uniqueId": "sh.calvin.reorderable:reorderable-android-debug",
             "artifactVersion": "3.1.0",
             "name": "Reorderable",
             "description": "A library for reordering items in lazy lists and grids in Compose",
@@ -3979,14 +3798,6 @@
             "internalHash": "BSD-3-Clause",
             "spdxId": "BSD-3-Clause",
             "hash": "BSD-3-Clause"
-        },
-        "EPL-1.0": {
-            "name": "Eclipse Public License 1.0",
-            "url": "https://spdx.org/licenses/EPL-1.0.html",
-            "content": "Eclipse Public License - v 1.0\n\nTHE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (\"AGREEMENT\"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.\n\n1. DEFINITIONS\n\n\"Contribution\" means:\n     a) in the case of the initial Contributor, the initial code and documentation distributed under this Agreement, and\n     b) in the case of each subsequent Contributor:\n          i) changes to the Program, and\n          ii) additions to the Program;\n\nwhere such changes and/or additions to the Program originate from and are distributed by that particular Contributor. A Contribution 'originates' from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include additions to the Program which: (i) are separate modules of software distributed in conjunction with the Program under their own license agreement, and (ii) are not derivative works of the Program.\n\"Contributor\" means any person or entity that distributes the Program.\n\n\"Licensed Patents\" mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.\n\n\"Program\" means the Contributions distributed in accordance with this Agreement.\n\n\"Recipient\" means anyone who receives the Program under this Agreement, including all Contributors.\n\n2. GRANT OF RIGHTS\n\n     a) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, distribute and sublicense the Contribution of such Contributor, if any, and such derivative works, in source code and object code form.\n \n     b) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free patent license under Licensed Patents to make, use, sell, offer to sell, import and otherwise transfer the Contribution of such Contributor, if any, in source code and object code form. This patent license shall apply to the combination of the Contribution and the Program if, at the time the Contribution is added by the Contributor, such addition of the Contribution causes such combination to be covered by the Licensed Patents. The patent license shall not apply to any other combinations which include the Contribution. No hardware per se is licensed hereunder.\n\n     c) Recipient understands that although each Contributor grants the licenses to its Contributions set forth herein, no assurances are provided by any Contributor that the Program does not infringe the patent or other intellectual property rights of any other entity. Each Contributor disclaims any liability to Recipient for claims brought by any other entity based on infringement of intellectual property rights or otherwise. As a condition to exercising the rights and licenses granted hereunder, each Recipient hereby assumes sole responsibility to secure any other intellectual property rights needed, if any. For example, if a third party patent license is required to allow Recipient to distribute the Program, it is Recipient's responsibility to acquire that license before distributing the Program.\n\n     d) Each Contributor represents that to its knowledge it has sufficient copyright rights in its Contribution, if any, to grant the copyright license set forth in this Agreement.\n\n3. REQUIREMENTS\nA Contributor may choose to distribute the Program in object code form under its own license agreement, provided that:\n\n     a) it complies with the terms and conditions of this Agreement; and\n \n     b) its license agreement:\n          i) effectively disclaims on behalf of all Contributors all warranties and conditions, express and implied, including warranties or conditions of title and non-infringement, and implied warranties or conditions of merchantability and fitness for a particular purpose;\n          ii) effectively excludes on behalf of all Contributors all liability for damages, including direct, indirect, special, incidental and consequential damages, such as lost profits;\n          iii) states that any provisions which differ from this Agreement are offered by that Contributor alone and not by any other party; and\n          iv) states that source code for the Program is available from such Contributor, and informs licensees how to obtain it in a reasonable manner on or through a medium customarily used for software exchange.\n\nWhen the Program is made available in source code form:\n\n     a) it must be made available under this Agreement; and\n\n     b) a copy of this Agreement must be included with each copy of the Program.\nContributors may not remove or alter any copyright notices contained within the Program.\n\nEach Contributor must identify itself as the originator of its Contribution, if any, in a manner that reasonably allows subsequent Recipients to identify the originator of the Contribution.\n\n4. COMMERCIAL DISTRIBUTION\nCommercial distributors of software may accept certain responsibilities with respect to end users, business partners and the like. While this license is intended to facilitate the commercial use of the Program, the Contributor who includes the Program in a commercial product offering should do so in a manner which does not create potential liability for other Contributors. Therefore, if a Contributor includes the Program in a commercial product offering, such Contributor (\"Commercial Contributor\") hereby agrees to defend and indemnify every other Contributor (\"Indemnified Contributor\") against any losses, damages and costs (collectively \"Losses\") arising from claims, lawsuits and other legal actions brought by a third party against the Indemnified Contributor to the extent caused by the acts or omissions of such Commercial Contributor in connection with its distribution of the Program in a commercial product offering. The obligations in this section do not apply to any claims or Losses relating to any actual or alleged intellectual property infringement. In order to qualify, an Indemnified Contributor must: a) promptly notify the Commercial Contributor in writing of such claim, and b) allow the Commercial Contributor to control, and cooperate with the Commercial Contributor in, the defense and any related settlement negotiations. The Indemnified Contributor may participate in any such claim at its own expense.\n\nFor example, a Contributor might include the Program in a commercial product offering, Product X. That Contributor is then a Commercial Contributor. If that Commercial Contributor then makes performance claims, or offers warranties related to Product X, those performance claims and warranties are such Commercial Contributor's responsibility alone. Under this section, the Commercial Contributor would have to defend claims against the other Contributors related to those performance claims and warranties, and if a court requires any other Contributor to pay any damages as a result, the Commercial Contributor must pay those damages.\n\n5. NO WARRANTY\nEXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely responsible for determining the appropriateness of using and distributing the Program and assumes all risks associated with its exercise of rights under this Agreement , including but not limited to the risks and costs of program errors, compliance with applicable laws, damage to or loss of data, programs or equipment, and unavailability or interruption of operations.\n\n6. DISCLAIMER OF LIABILITY\nEXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.\n\n7. GENERAL\n\nIf any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement, and without further action by the parties hereto, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.\n\nIf Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinations of the Program with other software or hardware) infringes such Recipient's patent(s), then such Recipient's rights granted under Section 2(b) shall terminate as of the date such litigation is filed.\n\nAll Recipient's rights under this Agreement shall terminate if it fails to comply with any of the material terms or conditions of this Agreement and does not cure such failure in a reasonable period of time after becoming aware of such noncompliance. If all Recipient's rights under this Agreement terminate, Recipient agrees to cease use and distribution of the Program as soon as reasonably practicable. However, Recipient's obligations under this Agreement and any licenses granted by Recipient relating to the Program shall continue and survive.\n\nEveryone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. The Eclipse Foundation is the initial Agreement Steward. The Eclipse Foundation may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to distribute the Program (including its Contributions) under the new version. Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved.\n\nThis Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.",
-            "internalHash": "EPL-1.0",
-            "spdxId": "EPL-1.0",
-            "hash": "EPL-1.0"
         },
         "GPL-3.0-or-later": {
             "name": "GNU General Public License v3.0 or later",

@@ -9,6 +9,7 @@ interface TrackMetadataFetchManager {
 
     fun isTrackLinksFetcherRunning(trackId: String): Flow<Boolean>
     fun isLyricsFetcherRunning(trackId: String): Flow<Boolean>
+    fun isLyricsFetcherEnqueuedOrRunning(trackId: String): Flow<Boolean>
 
     fun cancelTrackLinksFetcher(trackId: String)
     fun cancelLyricsFetcher(trackId: String)

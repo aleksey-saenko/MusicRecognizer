@@ -28,9 +28,11 @@ import com.mrsep.musicrecognizer.feature.recognition.DeeplinkRouter
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import java.util.Locale
 import javax.inject.Inject
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
@@ -153,15 +155,16 @@ class ResultNotificationHelper @Inject constructor(
             is RecognitionResult.Success -> {
                 notificationTag = result.track.id
                 val isLyricsFetcherRunning = trackMetadataFetchManager
-                    .isLyricsFetcherRunning(result.track.id).first()
+                    .isLyricsFetcherEnqueuedOrRunning(result.track.id).first()
                 resultNotificationBuilder(channelId)
                     .setContentTitle(result.track.title)
                     .setContentText(result.track.artist)
-                    .setExpandedStyleWithTrack(
-                        artworkUrl = result.track.artworkUrl,
-                        contentTitle = result.track.title,
-                        contentText = result.track.artistWithAlbumFormatted()
+                    .setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .setBigContentTitle(result.track.title)
+                            .bigText(result.track.artist)
                     )
+                    .setLargeIconWithTrack(result.track.artworkUrl)
                     .addTrackDeepLinkIntent(result.track.id)
                     .addOptionalShowLyricsButton(result.track, isLyricsFetcherRunning)
                     .addShareButton(result.track.getSharedBody())
@@ -192,15 +195,10 @@ class ResultNotificationHelper @Inject constructor(
             is RemoteRecognitionResult.Success -> result.track
             else -> return
         }
-        val contentTitle = enqueuedRecognition.title.ifBlank {
-            val dateFormatted = enqueuedRecognition.creationDate.atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-            appContext.getString(StringsR.string.format_scheduled_recognition_of, dateFormatted)
-        }
+        val contentTitle = appContext.getString(StringsR.string.notification_title_match_found)
         val contentText = "${track.title} - ${track.artist}"
-
         val isLyricsFetcherRunning = trackMetadataFetchManager
-            .isLyricsFetcherRunning(track.id).first()
+            .isLyricsFetcherEnqueuedOrRunning(track.id).first()
 
         val channelId = NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT
         val groupKey = groupKeyForChannel(channelId)
@@ -214,13 +212,15 @@ class ResultNotificationHelper @Inject constructor(
             .setAutoCancel(true)
             .setOngoing(false)
             .setCategory(Notification.CATEGORY_MESSAGE)
+            .setSubText(formatDateAsSubText(enqueuedRecognition.creationDate))
             .setContentTitle(contentTitle)
             .setContentText(contentText)
-            .setExpandedStyleWithTrack(
-                artworkUrl = track.artworkUrl,
-                contentTitle = contentTitle,
-                contentText = track.title + "\n" + track.artistWithAlbumFormatted()
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle(contentTitle)
+                    .bigText("${track.title}\n${track.artist}")
             )
+            .setLargeIconWithTrack(track.artworkUrl)
             .setGroup(groupKey)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
             .addTrackDeepLinkIntent(track.id)
@@ -349,6 +349,21 @@ class ResultNotificationHelper @Inject constructor(
         }
     }
 
+    private fun formatDateAsSubText(instant: Instant): String? {
+        val zoneId = ZoneId.systemDefault()
+        val recognitionDate = instant.atZone(zoneId)
+        val now = ZonedDateTime.now(zoneId)
+
+        val sameDay = recognitionDate.toLocalDate() == now.toLocalDate()
+        if (sameDay) return null
+
+        val pattern = when {
+            recognitionDate.year == now.year -> "d MMM"
+            else -> "d MMM yyyy"
+        }
+        return recognitionDate.format(DateTimeFormatter.ofPattern(pattern, Locale.getDefault()))
+    }
+
     private suspend fun NotificationCompat.Builder.setLargeIconWithTrack(
         artworkUrl: String?
     ): NotificationCompat.Builder {
@@ -363,43 +378,6 @@ class ResultNotificationHelper @Inject constructor(
             )
         }
         return if (largeIcon != null) setLargeIcon(largeIcon) else this
-    }
-
-    private suspend fun NotificationCompat.Builder.setExpandedStyleWithTrack(
-        artworkUrl: String?,
-        contentTitle: String,
-        contentText: String,
-    ): NotificationCompat.Builder {
-        var bitmap: Bitmap? = null
-        if (artworkUrl != null) {
-            // Notification image should be no wider than 450 dp and should use 2:1 aspect ratio
-            val imageWidthPx = appContext.dpToPx(450f).toInt()
-            val imageHeightPx = imageWidthPx / 2
-            bitmap = appContext.getCachedImageOrNull(
-                url = artworkUrl,
-                allowHardware = false,
-                widthPx = imageWidthPx,
-                heightPx = imageHeightPx,
-            )
-        }
-        val style = if (bitmap == null) {
-            NotificationCompat.BigTextStyle()
-                .setBigContentTitle(contentTitle)
-                .bigText(contentText)
-        } else {
-            NotificationCompat.BigPictureStyle()
-                .bigPicture(bitmap)
-                .setBigContentTitle(contentTitle)
-                .setSummaryText(contentText)
-                .run {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        showBigPictureWhenCollapsed(true)
-                    } else {
-                        this
-                    }
-                }
-        }
-        return setStyle(style)
     }
 
     private fun NotificationCompat.Builder.addTrackDeepLinkIntent(
@@ -522,15 +500,6 @@ class ResultNotificationHelper @Inject constructor(
         RecognitionTask.Ignored -> null
     }
 
-    private fun Track.artistWithAlbumFormatted(): String {
-        val albumAndYear = album?.let { alb ->
-            releaseDate?.year?.let { year -> "$alb ($year)" } ?: album
-        }
-        return albumAndYear?.let { albAndYear ->
-            "$artist\n$albAndYear"
-        } ?: artist
-    }
-
     private fun resultNotificationIdForChannel(channelId: String) = when (channelId) {
         NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT -> NOTIFICATION_ID_BACKGROUND_RESULT
         NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT -> NOTIFICATION_ID_FOREGROUND_RESULT
@@ -552,7 +521,7 @@ class ResultNotificationHelper @Inject constructor(
         else -> error("Unknown group key")
     }
 
-    private fun Track.getSharedBody() = "$title - ${this.artistWithAlbumFormatted()}"
+    private fun Track.getSharedBody() = "$title - $artist"
 
     companion object {
         private const val NOTIFICATION_ID_BACKGROUND_RESULT = 2

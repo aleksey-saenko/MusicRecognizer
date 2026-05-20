@@ -331,6 +331,8 @@
     <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3 or later</string>
     <string name="about_pref_title_third_licenses">Third-party licences</string>
     <string name="about_pref_subtitle_third_licenses">Licenses of the third-party libraries Audile uses</string>
+    <!-- Notification title shown when the app has found a song for a scheduled recognition -->
+    <string name="notification_title_match_found">Match found!</string>
     <string name="notification_button_disable_service">Stop service</string>
     <string name="notification_button_show_lyrics">Show lyrics</string>
     <string name="notification_channel_name_control">Control notifications</string>

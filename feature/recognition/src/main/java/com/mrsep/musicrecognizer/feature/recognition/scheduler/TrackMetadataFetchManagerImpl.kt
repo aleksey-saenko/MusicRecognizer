@@ -41,9 +41,19 @@ internal class TrackMetadataFetchManagerImpl @Inject constructor(
         return isWorkerRunning(LyricsFetchWorker.buildUniqueWorkerName(trackId))
     }
 
+    override fun isLyricsFetcherEnqueuedOrRunning(trackId: String): Flow<Boolean> {
+        return isWorkerEnqueuedOrRunning(LyricsFetchWorker.buildUniqueWorkerName(trackId))
+    }
+
     private fun isWorkerRunning(workerId: String): Flow<Boolean> {
         return workManager.getWorkInfosForUniqueWorkFlow(workerId)
             .map { listWorkInfo -> listWorkInfo.lastOrNull()?.state == WorkInfo.State.RUNNING }
+            .conflate()
+    }
+
+    private fun isWorkerEnqueuedOrRunning(workerId: String): Flow<Boolean> {
+        return workManager.getWorkInfosForUniqueWorkFlow(workerId)
+            .map { it.lastOrNull()?.state.let { it == WorkInfo.State.ENQUEUED || it == WorkInfo.State.RUNNING } }
             .conflate()
     }
 

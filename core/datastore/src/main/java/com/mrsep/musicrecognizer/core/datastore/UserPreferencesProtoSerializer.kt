@@ -38,7 +38,8 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
             }
             recognizeOnStartup = false
             requiredMusicServices.addAll(
-                // ordered by popularity
+                // Ordered by popularity
+                // Disable services that cannot be resolved using only the Odesli API and require additional calls
                 listOf(
                     MusicServiceProto.Spotify,
                     MusicServiceProto.AppleMusic,
@@ -47,7 +48,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                     MusicServiceProto.AmazonMusic,
                     MusicServiceProto.Deezer,
                     MusicServiceProto.Tidal,
-                    MusicServiceProto.Qobuz,
+//                    MusicServiceProto.Qobuz,
                     MusicServiceProto.Soundcloud,
                     MusicServiceProto.YandexMusic,
                     MusicServiceProto.Napster,
@@ -56,7 +57,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                     MusicServiceProto.Audiomack,
                     MusicServiceProto.Audius,
                     MusicServiceProto.Boomplay,
-                    MusicServiceProto.MusicBrainz,
+//                    MusicServiceProto.MusicBrainz,
                 )
             )
             notificationServiceEnabled = false

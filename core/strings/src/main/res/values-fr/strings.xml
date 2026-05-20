@@ -338,4 +338,5 @@
     <string name="export_export">Exporter</string>
     <string name="export_in_progress">Exportation en cours…</string>
     <string name="export_csv_result_success">Le fichier CSV a été créé avec succès !</string>
+    <string name="notification_title_match_found">Correspondance trouvée !</string>
 </resources>

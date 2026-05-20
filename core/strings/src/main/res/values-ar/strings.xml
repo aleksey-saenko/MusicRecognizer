@@ -89,7 +89,7 @@
     <string name="empty_library_subtitle">سيتم عرض الأغاني التي تم التعرف عليها مؤخرًا والأغاني المفضلة لديك هنا</string>
     <string name="library_menu_mark_all_tracks_as_viewed">وضع علامة ”تمت المشاهدة“ على الكل</string>
     <string name="unviewed_track_label">جديد</string>
-    <string name="format_amount_of_new_tracks">أغاني جديدة: %s</string>
+    <string name="format_amount_of_new_tracks">مقطوعات موسيقية جديدة: %s</string>
     <string name="filters">المرشّحات</string>
     <string name="filter_favorites">المفضلة</string>
     <string name="filter_all">الكل</string>
@@ -181,9 +181,9 @@
     <string name="pref_subtitle_audio_source">ضبط إعدادات تسجيل الصوت</string>
     <string name="audio_source_dialog_title">مصدر الصوت</string>
     <string name="audio_source_dialog_default_mode_title">الافتراضي</string>
-    <string name="audio_source_dialog_default_mode_message">حدد مصدر الصوت الافتراضي المراد استخدامه ما لم يتم تحديد خلاف ذلك:</string>
+    <string name="audio_source_dialog_default_mode_message">حدّد مصدر الصوت الافتراضي المراد استخدامه ما لم يتم تحديد خلاف ذلك:</string>
     <string name="audio_source_dialog_button_long_press_mode_title">الضغط المطول على الزر</string>
-    <string name="audio_source_dialog_button_long_press_mode_message">حدّد مصدر الصوت المراد استخدامه عند الضغط المطول على زر الشاشة الرئيسية:</string>
+    <string name="audio_source_dialog_button_long_press_mode_message">حدّد مصدر الصوت المراد استخدامه عند الضغط المطول على زر الشاشة الرئيسة:</string>
     <string name="audio_capture_mode_microphone">الميكروفون</string>
     <string name="audio_capture_mode_device">صوت الجهاز</string>
     <string name="audio_capture_mode_auto">تلقائي</string>
@@ -207,8 +207,8 @@
     <string name="acr_cloud_help_dialog_step1">اختر المنطقة الجغرافية الأقرب إليك لتقليل تأخر زمن استجابة الإنترنت</string>
     <string name="acr_cloud_help_dialog_step2">ضبط مصدر الصوت على \"صوت مسجَّل\"</string>
     <string name="acr_cloud_help_dialog_step3">اختر محرك الصوت الذي تفضله. يُعد خيار \"بصمة الصوت\" الأكثر دقة للاستخدام العام</string>
-    <string name="acr_cloud_help_dialog_step4">حدد جميع الخيارات لدمج هوية الطرف الثالث</string>
-    <string name="pref_group_notifications">إشعارات</string>
+    <string name="acr_cloud_help_dialog_step4">حدّد جميع الخيارات لدمج هوية الطرف الثالث</string>
+    <string name="pref_group_notifications">الإشعارات</string>
     <string name="pref_title_manage_notifications">إدارة الإشعارات</string>
     <string name="pref_title_notification_service">خدمة الإشعار</string>
     <string name="pref_subtitle_notification_service">التحكم في التعرف من الإشعارات</string>
@@ -217,7 +217,7 @@
     <string name="pref_title_show_recognition_date">إظهار تاريخ التعرف</string>
     <string name="pref_title_show_creation_date">عرض تاريخ الإنشاء</string>
     <string name="pref_title_theme">السمة</string>
-    <string name="theme_dialog_message">حدد وضع السمة:</string>
+    <string name="theme_dialog_message">حدّد وضع السمة:</string>
     <string name="theme_mode">الوضع</string>
     <string name="theme_mode_follow_system">اتباع النظام</string>
     <string name="theme_mode_light">فاتح</string>
@@ -244,13 +244,13 @@
     <string name="pref_title_restore">الاستعادة</string>
     <string name="pref_subtitle_restore">استعادة بيانات التطبيق من نسخة احتياطية</string>
     <string name="backup_dialog_title">النسخ الاحتياطي</string>
-    <string name="backup_dialog_button_backup">القيام بالنسخ الاحتياطي</string>
+    <string name="backup_dialog_button_backup">نسخ</string>
     <string name="restore_dialog_title">الاستعادة</string>
     <string name="restore_dialog_button_restore">استعادة</string>
     <string name="backup_entry_data">قاعدة البيانات والعينات الصوتية</string>
     <string name="backup_entry_preferences">التفضيلات</string>
-    <string name="backup_entry_picker_title">حدد البيانات المراد نسخها احتياطيًّا:</string>
-    <string name="restore_entry_picker_title">حدد البيانات المراد استعادتها:</string>
+    <string name="backup_entry_picker_title">حدّد البيانات المراد نسخها احتياطيًّا:</string>
+    <string name="restore_entry_picker_title">حدّد البيانات المراد استعادتها:</string>
     <string name="backup_estimating_size">تقدير حجم بيانات التطبيق…</string>
     <string name="backup_in_progress">جارٍ إنشاء نسخة احتياطية…</string>
     <string name="backup_result_success">تم إنشاء النسخة الاحتياطية بنجاح!</string>
@@ -304,7 +304,7 @@
     <string name="pref_subtitle_export_to_csv">تصدير جميع المقطوعات الموسيقية إلى ملف CSV</string>
     <string name="export_only_favorites_tracks">تصدير المقطوعات الموسيقية المفضلة فقط</string>
     <string name="export_write_csv_header">تضمين رأسية ملف CSV</string>
-    <string name="export_select_fields_to_export">حدد الحقول المراد تصديرها:</string>
+    <string name="export_select_fields_to_export">حدّد الحقول المراد تصديرها:</string>
     <string name="export_track_field_title">العنوان</string>
     <string name="export_track_field_artist">الفنان</string>
     <string name="export_track_field_album">الألبوم</string>

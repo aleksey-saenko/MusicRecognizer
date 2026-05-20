@@ -8,5 +8,7 @@ interface DeeplinkRouter {
 
     fun getDeepLinkIntentToLyrics(trackId: String): Intent
 
+    fun getDeepLinkIntentToLibrary(): Intent
+
     fun getDeepLinkIntentToQueue(): Intent
 }

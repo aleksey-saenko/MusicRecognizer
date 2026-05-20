@@ -308,8 +308,7 @@ class RecognitionControlService : Service() {
                     RecognitionStatus.Ready -> {} // NO-OP
 
                     is RecognitionStatus.Recognizing -> {
-                        // Cancel last result notification if it exists
-                        resultNotificationHelper.cancelResultNotification()
+                        resultNotificationHelper.cancelUnsuccessfulBackgroundAndForegroundResults()
                         screenStatusHolder.updateStatus(status)
                         widgetStatusHolder.updateStatus(status)
                         requestWidgetsUpdate()

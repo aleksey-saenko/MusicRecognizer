@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.UserPreferences
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.ResultNotificationManager
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.MusicService
@@ -26,6 +27,7 @@ internal class TrackViewModel @Inject constructor(
     private val trackRepository: TrackRepository,
     trackMetadataFetchManager: TrackMetadataFetchManager,
     private val deleteTrackUseCase: DeleteTrack,
+    private val resultNotificationManager: ResultNotificationManager,
 ) : ViewModel() {
 
     private val args = TrackScreen.Args(savedStateHandle)
@@ -57,7 +59,7 @@ internal class TrackViewModel @Inject constructor(
     fun deleteTrack(trackId: String) {
         trackRemovalRequested = true
         viewModelScope.launch {
-            deleteTrackUseCase(trackId)
+            deleteTrackUseCase(listOf(trackId))
             _trackExistingState.update { false }
         }
     }
@@ -77,6 +79,7 @@ internal class TrackViewModel @Inject constructor(
     fun setTrackAsViewed(trackId: String) {
         viewModelScope.launch {
             trackRepository.setViewed(trackId, true)
+            resultNotificationManager.cancelBackgroundMatches(setOf(trackId))
         }
     }
 }

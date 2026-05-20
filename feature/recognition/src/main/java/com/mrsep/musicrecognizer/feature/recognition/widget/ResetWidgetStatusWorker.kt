@@ -9,13 +9,11 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
-import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.selects.select
 
 @HiltWorker
 internal class ResetWidgetStatusWorker @AssistedInject constructor(
@@ -23,7 +21,6 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     @WidgetStatusHolder private val statusHolder: RecognitionStatusHolder,
     private val trackRepository: TrackRepository,
-    private val notificationHelper: ResultNotificationHelper,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -33,15 +30,13 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
             return@coroutineScope Result.success()
         }
 
-        select {
-            val result = statusSnapshot.result
-            if (result is RecognitionResult.Success) {
-                launch {
-                    suspendWhileTrackIsNotViewed(result.track.id)
-                    notificationHelper.cancelResultNotification()
-                }.onJoin { }
+        val result = statusSnapshot.result
+        if (result is RecognitionResult.Success) {
+            withTimeoutOrNull(RESULT_RESET_DELAY_MILLIS) {
+                suspendWhileTrackIsNotViewed(result.track.id)
             }
-            launch { delay(RESULT_RESET_DELAY_MILLIS) }.onJoin { }
+        } else {
+            delay(RESULT_RESET_DELAY_MILLIS)
         }
 
         statusHolder.resetFinalStatus()

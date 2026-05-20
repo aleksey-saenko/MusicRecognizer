@@ -24,7 +24,6 @@ class ServiceNotificationHelper @Inject constructor(
             .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setGroup(NOTIFICATION_CHANNEL_ID_STATUS)
             .setOngoing(true) // Can be dismissed by user since API 34
             .setCategory(Notification.CATEGORY_SERVICE)
             .setSilent(true) // Avoids alert sound during recording
@@ -33,13 +32,18 @@ class ServiceNotificationHelper @Inject constructor(
     }
 
     fun buildReadyNotification(): Notification {
+        val title = appContext.getString(StringsR.string.notification_tap_to_recognize)
+        val body = appContext.getString(StringsR.string.notification_tap_to_recognize_subtitle)
         return statusNotificationBuilder()
-            .setContentTitle(appContext.getString(StringsR.string.notification_tap_to_recognize))
-            .setContentText(appContext.getString(StringsR.string.notification_tap_to_recognize_subtitle))
+            .setContentTitle(title)
+            .setContentText(body)
             .setContentIntent(
-                RecognitionControlActivity.startRecognitionWithPermissionRequestPendingIntent(
-                    appContext
-                )
+                RecognitionControlActivity.startRecognitionWithPermissionRequestPendingIntent(appContext)
+            )
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle(title)
+                    .bigText(body)
             )
             .apply {
                 /* Status notification is truly ongoing for API 33 and below, so add disable button.
@@ -50,22 +54,33 @@ class ServiceNotificationHelper @Inject constructor(
                         appContext.getString(StringsR.string.notification_button_disable_service),
                         DisableRecognitionControlServiceReceiver.pendingIntent(appContext),
                     )
+                } else {
+                    addInvisibleAction(
+                        android.R.drawable.ic_menu_close_clear_cancel,
+                        appContext.getString(StringsR.string.notification_button_disable_service),
+                        DisableRecognitionControlServiceReceiver.pendingIntent(appContext),
+                    )
                 }
             }
             .build()
     }
 
     fun buildListeningNotification(extraTry: Boolean): Notification {
+        val title = appContext.getString(StringsR.string.notification_listening)
+        val body = if (extraTry) {
+            appContext.getString(StringsR.string.notification_listening_subtitle_extra_time)
+        } else {
+            appContext.getString(StringsR.string.notification_listening_subtitle)
+        }
         return statusNotificationBuilder()
-            .setContentTitle(appContext.getString(StringsR.string.notification_listening))
-            .setContentText(
-                if (extraTry) {
-                    appContext.getString(StringsR.string.notification_listening_subtitle_extra_time)
-                } else {
-                    appContext.getString(StringsR.string.notification_listening_subtitle)
-                }
-            )
+            .setContentTitle(title)
+            .setContentText(body)
             .setSmallIcon(UiR.drawable.ic_notification_listening)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle(title)
+                    .bigText(body)
+            )
             .addAction(
                 android.R.drawable.ic_menu_close_clear_cancel,
                 appContext.getString(StringsR.string.cancel),
@@ -101,6 +116,10 @@ class ServiceNotificationHelper @Inject constructor(
     companion object {
         const val NOTIFICATION_ID_STATUS = 1
         private const val NOTIFICATION_CHANNEL_ID_STATUS = "com.mrsep.musicrecognizer.status"
+
+        // TODO: Consider grouping status notifications to prevent accidental auto-grouping with others
+//        private const val NOTIFICATION_ID_STATUS_SUMMARY = 101
+//        private const val NOTIFICATION_GROUP_KEY_STATUS = "com.mrsep.musicrecognizer.notification_group.status"
 
         fun getChannelForRecognitionStatuses(context: Context): NotificationChannel {
             val name = context.getString(StringsR.string.notification_channel_name_control)

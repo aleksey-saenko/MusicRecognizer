@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import androidx.core.net.toUri
+import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen
 import com.mrsep.musicrecognizer.feature.recognition.presentation.queuescreen.RecognitionQueueScreen
 import com.mrsep.musicrecognizer.feature.recognition.DeeplinkRouter
 import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsScreen
@@ -23,6 +24,10 @@ class AppDeeplinkRouter @Inject constructor(
 
     override fun getDeepLinkIntentToLyrics(trackId: String): Intent {
         return getDeepLinkIntent(LyricsScreen.createDeepLink(trackId).toUri())
+    }
+
+    override fun getDeepLinkIntentToLibrary(): Intent {
+        return getDeepLinkIntent(LibraryScreen.createDeepLink().toUri())
     }
 
     override fun getDeepLinkIntentToQueue(): Intent {

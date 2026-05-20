@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
+import com.mrsep.musicrecognizer.core.domain.recognition.ResultNotificationManager
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Lyrics
@@ -25,6 +26,7 @@ internal class LyricsViewModel @Inject constructor(
     private val trackRepository: TrackRepository,
     private val preferencesRepository: PreferencesRepository,
     trackMetadataFetchManager: TrackMetadataFetchManager,
+    private val resultNotificationManager: ResultNotificationManager,
 ) : ViewModel() {
 
     private val args = LyricsScreen.Args(savedStateHandle)
@@ -70,6 +72,7 @@ internal class LyricsViewModel @Inject constructor(
     fun setTrackAsViewed(trackId: String) {
         viewModelScope.launch {
             trackRepository.setViewed(trackId, true)
+            resultNotificationManager.cancelBackgroundMatches(setOf(trackId))
         }
     }
 

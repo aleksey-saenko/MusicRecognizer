@@ -2,12 +2,14 @@ package com.mrsep.musicrecognizer.feature.recognition.di
 
 import com.mrsep.musicrecognizer.core.domain.recognition.EnqueuedRecognitionScheduler
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
+import com.mrsep.musicrecognizer.core.domain.recognition.ResultNotificationManager
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.feature.recognition.domain.RecognitionInteractorImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionController
 import com.mrsep.musicrecognizer.feature.recognition.presentation.recognitionscreen.ScreenRecognitionControllerImpl
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.EnqueuedRecognitionSchedulerImpl
+import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,4 +40,9 @@ internal interface RecognitionModule {
     @Singleton
     fun bindTrackMetadataFetchManager(impl: TrackMetadataFetchManagerImpl):
             TrackMetadataFetchManager
+
+    @Binds
+    @Singleton
+    fun bindResultNotificationManager(impl: ResultNotificationHelper):
+            ResultNotificationManager
 }

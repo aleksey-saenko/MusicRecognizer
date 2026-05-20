@@ -13,8 +13,10 @@ import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.service.notification.StatusBarNotification
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.NotificationCompat
+import com.mrsep.musicrecognizer.core.domain.recognition.ResultNotificationManager
 import com.mrsep.musicrecognizer.core.domain.recognition.TrackMetadataFetchManager
 import com.mrsep.musicrecognizer.core.domain.recognition.model.EnqueuedRecognition
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
@@ -37,14 +39,10 @@ class ResultNotificationHelper @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val deeplinkRouter: DeeplinkRouter,
     private val trackMetadataFetchManager: TrackMetadataFetchManager,
-) {
+) : ResultNotificationManager {
 
     private val notificationManager = appContext
         .getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
-
-    fun cancelResultNotification() {
-        notificationManager.cancel(NOTIFICATION_ID_RESULT)
-    }
 
     suspend fun notifyForegroundResult(result: RecognitionResult) {
         if (appContext.isPostNotificationPermissionDenied()) return
@@ -57,6 +55,8 @@ class ResultNotificationHelper @Inject constructor(
     }
 
     private suspend fun notify(result: RecognitionResult, channelId: String) {
+        var notificationTag: String? = null
+        val groupKey = groupKeyForChannel(channelId)
         val notificationBuilder = when (result) {
             is RecognitionResult.Error -> {
                 val (errorTitle, errorMessage) = when (result.remoteError) {
@@ -151,6 +151,7 @@ class ResultNotificationHelper @Inject constructor(
             }
 
             is RecognitionResult.Success -> {
+                notificationTag = result.track.id
                 val isLyricsFetcherRunning = trackMetadataFetchManager
                     .isLyricsFetcherRunning(result.track.id).first()
                 resultNotificationBuilder(channelId)
@@ -167,7 +168,22 @@ class ResultNotificationHelper @Inject constructor(
                     .addTrackInfoToExtras(result.track)
             }
         }
-        notificationManager.notify(NOTIFICATION_ID_RESULT, notificationBuilder.build())
+
+        val notification = notificationBuilder.build()
+        val notificationId = resultNotificationIdForChannel(channelId)
+
+        // Notification posting is async, so consecutive notify() calls may briefly
+        // observe the group as empty even when a notification is already being sent.
+        // The only side effect in our case is an extra summary refresh.
+        // And we don't notify results so frequently.
+        val isGroupEmpty = isGroupEmpty(groupKey) // Check before notify
+        notificationManager.notify(notificationTag, notificationId, notification)
+
+        if (isGroupEmpty) {
+            val summaryNotification = buildResultsSummaryNotification(channelId)
+            val summaryNotificationId = summaryNotificationIdForGroup(groupKey)
+            notificationManager.notify(summaryNotificationId, summaryNotification)
+        }
     }
 
     suspend fun notifyResult(enqueuedRecognition: EnqueuedRecognition) {
@@ -185,10 +201,12 @@ class ResultNotificationHelper @Inject constructor(
 
         val isLyricsFetcherRunning = trackMetadataFetchManager
             .isLyricsFetcherRunning(track.id).first()
-        val notification = NotificationCompat.Builder(
-            appContext,
-            NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT
-        )
+
+        val channelId = NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT
+        val groupKey = groupKeyForChannel(channelId)
+        val notificationTag = track.id
+
+        val notification = NotificationCompat.Builder(appContext, channelId)
             .setSmallIcon(UiR.drawable.ic_notification_ready)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             .setOnlyAlertOnce(true)
@@ -203,13 +221,123 @@ class ResultNotificationHelper @Inject constructor(
                 contentTitle = contentTitle,
                 contentText = track.title + "\n" + track.artistWithAlbumFormatted()
             )
+            .setGroup(groupKey)
+            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
             .addTrackDeepLinkIntent(track.id)
             .addOptionalShowLyricsButton(track, isLyricsFetcherRunning)
             .addShareButton(track.getSharedBody())
             .addTrackInfoToExtras(track)
             .build()
-        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+
+        val isGroupEmpty = isGroupEmpty(groupKey) // Check before notify
+        notificationManager.notify(notificationTag, NOTIFICATION_ID_DEFERRED_RESULT, notification)
+
+        if (isGroupEmpty) {
+            val summaryNotification = buildResultsSummaryNotification(channelId)
+            val summaryNotificationId = summaryNotificationIdForGroup(groupKey)
+            notificationManager.notify(summaryNotificationId, summaryNotification)
+        }
     }
+
+    override fun cancelBackgroundMatches(trackIds: Set<String>) {
+        cancelActiveNotifications(
+            trackIds = trackIds,
+            channelIds = setOf(NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT)
+        )
+    }
+
+    override fun cancelForegroundMatches(trackIds: Set<String>) {
+        cancelActiveNotifications(
+            trackIds = trackIds,
+            channelIds = setOf(NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT)
+        )
+    }
+
+    override fun cancelScheduledRecognitionsMatches(trackIds: Set<String>) {
+        cancelActiveNotifications(
+            trackIds = trackIds,
+            channelIds = setOf(NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT)
+        )
+    }
+
+    override fun cancelAllMatches(trackIds: Set<String>) {
+        cancelActiveNotifications(
+            trackIds = trackIds,
+            channelIds = setOf(
+                NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT,
+                NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT,
+                NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT
+            )
+        )
+    }
+
+    override fun cancelUnsuccessfulBackgroundAndForegroundResults() {
+        val notificationIds = setOf(
+            NOTIFICATION_ID_BACKGROUND_RESULT,
+            NOTIFICATION_ID_FOREGROUND_RESULT
+        )
+        notificationIds.forEach(notificationManager::cancel)
+        cancelSummaryForEmptyGroups(
+            groupKeys = setOf(
+                NOTIFICATION_GROUP_KEY_BACKGROUND_RESULT,
+                NOTIFICATION_GROUP_KEY_FOREGROUND_RESULT
+            ),
+            isPendingCancellation = { groupNotification ->
+                groupNotification.id in notificationIds && groupNotification.tag == null
+            }
+        )
+    }
+
+    private fun cancelActiveNotifications(trackIds: Set<String>, channelIds: Set<String>) {
+        if (trackIds.size <= 10) {
+            channelIds.forEach { channelId ->
+                val notificationId = resultNotificationIdForChannel(channelId)
+                trackIds.forEach { trackId -> notificationManager.cancel(trackId, notificationId) }
+            }
+        } else {
+            // When removing many tracks at once, it is faster to filter a dozen active notifications
+            // than to call cancel() thousands of times for each notification
+            notificationManager.activeNotifications
+                .filter { sbn -> sbn.tag in trackIds && sbn.notification.channelId in channelIds }
+                .forEach { notification ->
+                    notificationManager.cancel(notification.tag, notification.id)
+                }
+        }
+        val groupKeys = channelIds.map(::groupKeyForChannel).toSet()
+        cancelSummaryForEmptyGroups(
+            groupKeys = groupKeys,
+            isPendingCancellation = { groupNotification ->  groupNotification.tag in trackIds }
+        )
+    }
+
+    // This function is called immediately after some group notifications are canceled.
+    // Because cancel() is async, those notifications may still appear in NotificationManager.activeNotifications.
+    // To avoid that, we pass a filter of notifications that are still pending removal.
+    private fun cancelSummaryForEmptyGroups(
+        groupKeys: Set<String>,
+        isPendingCancellation: (groupNotification: StatusBarNotification) -> Boolean,
+    ) {
+        val nonEmptyGroupKeys = mutableSetOf<String>()
+        notificationManager.activeNotifications.forEach { sbn ->
+            if (sbn.notification.group !in groupKeys) return@forEach
+            if (sbn.notification.isGroupSummary) return@forEach
+            if (isPendingCancellation(sbn)) return@forEach
+
+            sbn.notification.group?.let { groupKey ->
+                nonEmptyGroupKeys += groupKey
+            }
+        }
+        groupKeys.forEach { groupKey ->
+            if (groupKey !in nonEmptyGroupKeys) {
+                notificationManager.cancel(summaryNotificationIdForGroup(groupKey))
+            }
+        }
+    }
+
+    private fun isGroupEmpty(groupKey: String) = notificationManager.activeNotifications
+        .none { sbn -> sbn.notification.group == groupKey && !sbn.notification.isGroupSummary }
+
+    private val Notification.isGroupSummary get() = (flags and Notification.FLAG_GROUP_SUMMARY) != 0
 
     private fun createPendingIntentForDeeplink(intent: Intent): PendingIntent {
         return TaskStackBuilder.create(appContext).run {
@@ -244,7 +372,7 @@ class ResultNotificationHelper @Inject constructor(
     ): NotificationCompat.Builder {
         var bitmap: Bitmap? = null
         if (artworkUrl != null) {
-            // Notification image should be ≤ 450dp wide, 2:1 aspect ratio
+            // Notification image should be no wider than 450 dp and should use 2:1 aspect ratio
             val imageWidthPx = appContext.dpToPx(450f).toInt()
             val imageHeightPx = imageWidthPx / 2
             bitmap = appContext.getCachedImageOrNull(
@@ -298,6 +426,12 @@ class ResultNotificationHelper @Inject constructor(
         }
     }
 
+    private fun NotificationCompat.Builder.addLibraryScreenDeepLink(): NotificationCompat.Builder {
+        val deepLinkIntent = deeplinkRouter.getDeepLinkIntentToLibrary()
+        val pendingIntent = createPendingIntentForDeeplink(deepLinkIntent)
+        return setContentIntent(pendingIntent)
+    }
+
     private fun NotificationCompat.Builder.addOptionalShowLyricsButton(
         track: Track,
         isLyricsFetcherRunning: Boolean,
@@ -337,8 +471,10 @@ class ResultNotificationHelper @Inject constructor(
     ): NotificationCompat.Builder {
         return addExtras(
             Bundle().apply {
+                putString(BUNDLE_KEY_TRACK_ID, track.id)
                 putString(BUNDLE_KEY_TRACK_TITLE, track.title)
                 putString(BUNDLE_KEY_TRACK_ARTIST, track.artist)
+                track.isrc?.let { putString(BUNDLE_KEY_TRACK_ISRC, it) }
                 track.album?.let { putString(BUNDLE_KEY_TRACK_ALBUM, it) }
                 track.releaseDate?.toString()?.let { putString(BUNDLE_KEY_TRACK_RELEASE_DATE, it) }
                 putString(BUNDLE_KEY_TRACK_SAMPLE_TIMESTAMP, track.recognitionDate.toString())
@@ -356,10 +492,25 @@ class ResultNotificationHelper @Inject constructor(
             .setShowWhen(true)
             .setOngoing(false)
             .setAutoCancel(true)
-            .setGroup(channelId)
+            .setCategory(Notification.CATEGORY_MESSAGE)
+            .setGroup(groupKeyForChannel(channelId))
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
     }
 
+    private fun buildResultsSummaryNotification(channelId: String): Notification {
+        return NotificationCompat.Builder(appContext, channelId)
+            .setSmallIcon(UiR.drawable.ic_notification_ready)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
+            .setOnlyAlertOnce(true)
+            .setShowWhen(true)
+            .setOngoing(false)
+            .setAutoCancel(true)
+            .setSilent(true)
+            .setGroup(groupKeyForChannel(channelId))
+            .setGroupSummary(true)
+            .addLibraryScreenDeepLink()
+            .build()
+    }
 
     private fun RecognitionTask.getMessage(): String? = when (this) {
         is RecognitionTask.Created -> if (launched)
@@ -380,17 +531,50 @@ class ResultNotificationHelper @Inject constructor(
         } ?: artist
     }
 
+    private fun resultNotificationIdForChannel(channelId: String) = when (channelId) {
+        NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT -> NOTIFICATION_ID_BACKGROUND_RESULT
+        NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT -> NOTIFICATION_ID_FOREGROUND_RESULT
+        NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT -> NOTIFICATION_ID_DEFERRED_RESULT
+        else -> error("Unknown notification channel id")
+    }
+
+    private fun groupKeyForChannel(channelId: String) = when (channelId) {
+        NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT -> NOTIFICATION_GROUP_KEY_BACKGROUND_RESULT
+        NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT -> NOTIFICATION_GROUP_KEY_FOREGROUND_RESULT
+        NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT -> NOTIFICATION_GROUP_KEY_DEFERRED_RESULT
+        else -> error("Unknown notification channel id")
+    }
+
+    private fun summaryNotificationIdForGroup(groupKey: String) = when (groupKey) {
+        NOTIFICATION_GROUP_KEY_BACKGROUND_RESULT -> NOTIFICATION_ID_BACKGROUND_RESULT_SUMMARY
+        NOTIFICATION_GROUP_KEY_FOREGROUND_RESULT -> NOTIFICATION_ID_FOREGROUND_RESULT_SUMMARY
+        NOTIFICATION_GROUP_KEY_DEFERRED_RESULT -> NOTIFICATION_ID_DEFERRED_RESULT_SUMMARY
+        else -> error("Unknown group key")
+    }
+
     private fun Track.getSharedBody() = "$title - ${this.artistWithAlbumFormatted()}"
 
     companion object {
-        private const val NOTIFICATION_ID_RESULT = 2
+        private const val NOTIFICATION_ID_BACKGROUND_RESULT = 2
+        private const val NOTIFICATION_ID_FOREGROUND_RESULT = 3
+        private const val NOTIFICATION_ID_DEFERRED_RESULT = 4
+
+        private const val NOTIFICATION_ID_BACKGROUND_RESULT_SUMMARY = 102
+        private const val NOTIFICATION_ID_FOREGROUND_RESULT_SUMMARY = 103
+        private const val NOTIFICATION_ID_DEFERRED_RESULT_SUMMARY = 104
+
+        private const val NOTIFICATION_GROUP_KEY_BACKGROUND_RESULT = "com.mrsep.musicrecognizer.notification_group.background_result"
+        private const val NOTIFICATION_GROUP_KEY_FOREGROUND_RESULT = "com.mrsep.musicrecognizer.notification_group.foreground_result"
+        private const val NOTIFICATION_GROUP_KEY_DEFERRED_RESULT = "com.mrsep.musicrecognizer.notification_group.deferred_result"
 
         private const val NOTIFICATION_CHANNEL_ID_BACKGROUND_RESULT = "com.mrsep.musicrecognizer.result"
         private const val NOTIFICATION_CHANNEL_ID_FOREGROUND_RESULT = "com.mrsep.musicrecognizer.foreground_result"
-        private const val NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT = "com.mrsep.musicrecognizer.enqueued_result"
+        private const val NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT = "com.mrsep.musicrecognizer.enqueued_result"
 
+        private const val BUNDLE_KEY_TRACK_ID = "com.mrsep.musicrecognizer.track_metadata.id"
         private const val BUNDLE_KEY_TRACK_TITLE = "com.mrsep.musicrecognizer.track_metadata.title"
         private const val BUNDLE_KEY_TRACK_ARTIST = "com.mrsep.musicrecognizer.track_metadata.artist"
+        private const val BUNDLE_KEY_TRACK_ISRC = "com.mrsep.musicrecognizer.track_metadata.isrc"
         private const val BUNDLE_KEY_TRACK_ALBUM = "com.mrsep.musicrecognizer.track_metadata.album"
         private const val BUNDLE_KEY_TRACK_RELEASE_DATE = "com.mrsep.musicrecognizer.track_metadata.release_date"
         private const val BUNDLE_KEY_TRACK_DURATION = "com.mrsep.musicrecognizer.track_metadata.duration"
@@ -427,7 +611,7 @@ class ResultNotificationHelper @Inject constructor(
             val name = context.getString(StringsR.string.notification_channel_name_scheduled_result)
             val importance = NotificationManager.IMPORTANCE_HIGH
             return NotificationChannel(
-                NOTIFICATION_CHANNEL_ID_ENQUEUED_RESULT,
+                NOTIFICATION_CHANNEL_ID_DEFERRED_RESULT,
                 name,
                 importance
             ).apply {

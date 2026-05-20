@@ -1,7 +1,8 @@
 [versions]
-sdkCompile = "36"
+sdkCompile = "37"
+sdkCompileMinorApiLevel = "0"
 sdkMin = "26"
-sdkTarget = "36"
+sdkTarget = "37"
 ndk = "29.0.14206865"
 
 aboutLibraries = "14.2.0"

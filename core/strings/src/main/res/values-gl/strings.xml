@@ -329,4 +329,5 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Non require o permiso de acceso á pantalla e evita as restricións de captura de audio establecido por outras apps</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Compatible con todas as versións de Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">A calidade do audio é inferior, e este método podería fallar nalgúns dispositivos</string>
+    <string name="notification_title_match_found">Atopámola!</string>
 </resources>

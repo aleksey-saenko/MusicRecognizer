@@ -339,4 +339,5 @@
     <string name="export_in_progress">Dışa aktarılıyor…</string>
     <string name="export_csv_result_success">CSV dosyası başarıyla oluşturuldu!</string>
     <string name="export_track_field_artwork_link">Kapak resmi</string>
+    <string name="notification_title_match_found">Eşleşme bulundu!</string>
 </resources>

@@ -1,6 +1,6 @@
 Rust implementation of Shazam's audio fingerprinting algorithm based on SongRec (https://github.com/marin-m/SongRec)
 
-Based on commit: `be369cc0cb6e8fda18f3c7a462f392bb8dd5ac39`
+Based on commit: `5afbf7361fcd72a3edaaeed24dc0ea150fd79385` (tag 0.7.3)
 
 Modifications:
 

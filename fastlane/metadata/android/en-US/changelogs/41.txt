@@ -1,0 +1,5 @@
+* Use SongRec’s Shazam fingerprinting module instead of Vibra (slightly higher match success rate)
+* Various improvements to result notification appearance and behavior
+* Better vibration feedback on new devices
+* Target Android 17
+* Update translations

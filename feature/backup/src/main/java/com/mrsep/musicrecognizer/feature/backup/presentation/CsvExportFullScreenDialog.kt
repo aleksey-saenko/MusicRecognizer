@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -264,7 +263,7 @@ private fun CsvExportReadyContent(
             hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
         }
         LazyColumn(
-            modifier = Modifier.weight(1f).clip(MaterialTheme.shapes.medium),
+            modifier = Modifier.weight(1f),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {

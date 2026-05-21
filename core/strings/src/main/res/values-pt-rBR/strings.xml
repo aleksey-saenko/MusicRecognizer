@@ -346,4 +346,5 @@
     <string name="audio_source_dialog_alt_method_bullet_2">Suportada em todas as versões do Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">A qualidade de áudo é pior, e esse método pode não funcionar em alguns dispositivos</string>
     <string name="track_info_title_format_isrc">%s:</string>
+    <string name="notification_title_match_found">Correspondência encontrada!</string>
 </resources>

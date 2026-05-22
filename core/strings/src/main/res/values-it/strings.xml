@@ -170,7 +170,7 @@
     <string name="delete_tracks_title">Rimuovi tracce</string>
     <string name="recognition_queue">Coda di riconoscimento</string>
     <string name="empty_recognition_queue_title">Nessuna coda di riconoscimento</string>
-    <string name="empty_recognition_queue_subtitle">In modalità non in linea o in caso di problemi, un riconoscimento può essere accodato in base al metodo di ripiego scelto</string>
+    <string name="empty_recognition_queue_subtitle">Quando si è offline o in seguito a un errore, un riconoscimento può essere messo in coda in base alla politica di riserva selezionata</string>
     <string name="delete_recognitions_message">Siete sicuri di voler annullare ed eliminare i riconoscimenti programmati selezionati? Questa azione non può essere annullata.</string>
     <string name="mark_track_as_favorite">Segna come preferito</string>
     <string name="search_in">Cerca in</string>
@@ -196,7 +196,7 @@
     <string name="recognition_provider_dialog_title">Fornitore</string>
     <string name="recognition_provider_dialog_message">Seleziona il fornitore di riconoscimento:</string>
     <string name="recognition_provider_dialog_format_auth">%s autenticazione:</string>
-    <string name="audd_help_dialog_message">AudD è un servizio a pagamento che offre l\'opzione di un periodo di prova gratuito di 14 giorni. Per utilizzare questo servizio, è necessario creare un account e ottenere il token API privato. <![CDATA[<a href="%1$s">Iscriviti</a>]]> se non ne hai ancora uno.</string>
+    <string name="audd_help_dialog_message">AudD è un servizio a pagamento che offre un periodo di prova gratuito di 14 giorni. Per utilizzare questo servizio, è necessario creare un account e ottenere il token API privato. <![CDATA[<a href="%1$s">Iscriviti</a>]]> se non ne hai ancora uno.</string>
     <string name="acr_cloud_help_dialog_steps_title">Prestare attenzione a questi passaggi:</string>
     <string name="acr_cloud_help_dialog_step1">Selezionate la regione geografica più vicina a voi per ridurre al minimo la latenza di rete</string>
     <string name="acr_cloud_help_dialog_step2">Imposta la sorgente audio come \"Riduzione audio\"</string>
@@ -245,7 +245,7 @@
     <string name="crash_dialog_message">Si è verificato un errore imprevisto che ha causato l\'arresto dell\'applicazione. Si desidera inviare via e-mail la segnalazione del bug per contribuire alla risoluzione del problema?</string>
     <string name="fallback_trigger_no_matches_found">Nessun risultato trovato</string>
     <string name="fallback_trigger_other_failures">Altri errori</string>
-    <string name="pref_title_recognition_provider">Fornitore di riconoscimento</string>
+    <string name="pref_title_recognition_provider">Servizio di riconoscimento</string>
     <string name="audd_help_dialog_message_empty_token">È possibile provare a utilizzare il servizio a scopo di test senza fornire il token, ma si noti che ciò limiterà i riconoscimenti giornalieri.</string>
     <string name="theme_mode_dark">Scuro</string>
     <string name="acr_cloud_help_dialog_message">ACRCloud è un servizio a pagamento che offre la possibilità di un periodo di prova gratuito e di un utilizzo limitato per scopi di sviluppo. Per utilizzare questo servizio, è necessario creare un account e registrare un progetto. In caso di difficoltà, consultate <![CDATA[<a href="%1$s">questa guida</a>]]>.</string>
@@ -307,7 +307,7 @@
     <string name="audio_source_dialog_screen_casting_bullet_2">Alcune app potrebbero bloccare l\'acquisizione dell\'audio tramite le impostazioni di acquisizione; in tal caso, Audile riceverà solo silenzio</string>
     <string name="audio_source_dialog_alt_method_title">2. Metodo alternativo</string>
     <string name="audio_source_dialog_alt_method_bullet_1">Non richiede l\'autorizzazione per la condivisione dello schermo e aggira le restrizioni sulla registrazione audio imposte da altre app</string>
-    <string name="audio_source_dialog_alt_method_bullet_2">Compatibile su tutte le versioni di Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">Compatibile con tutte le versioni di Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">La qualità del suono è inferiore e questo metodo potrebbe non funzionare su alcuni dispositivi</string>
     <string name="pref_title_export_to_csv">Esporta in CSV</string>
     <string name="pref_subtitle_export_to_csv">Esporta tutti i brani come file CSV</string>
@@ -328,4 +328,6 @@
     <string name="export_export">Esporta</string>
     <string name="export_in_progress">Esportazione…</string>
     <string name="export_csv_result_success">File CSV creato con successo!</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="notification_title_match_found">Corrispondenza trovata!</string>
 </resources>

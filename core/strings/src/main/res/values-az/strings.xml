@@ -30,4 +30,8 @@
     <string name="cancel">Ləğv et</string>
     <string name="reset">Sıfırla</string>
     <string name="close">Bağla</string>
+    <string name="not_now">İndi yox</string>
+    <string name="save">Yadda saxla</string>
+    <string name="delete">Sil</string>
+    <string name="hide">Gizlət</string>
 </resources>

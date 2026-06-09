@@ -32,7 +32,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                     "androidx.navigation.compose",
                     "androidx.hilt.navigation.compose",
 
-                    "androidx.core.ktx",
+                    "androidx.core",
                     "androidx.activity.compose",
                     "androidx.lifecycle.runtimeKtx",
                     "androidx.lifecycle.runtime.compose",

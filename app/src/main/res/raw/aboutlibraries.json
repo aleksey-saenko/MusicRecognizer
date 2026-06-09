@@ -74,10 +74,10 @@
         },
         {
             "uniqueId": "androidx.annotation:annotation-jvm",
-            "artifactVersion": "1.9.1",
+            "artifactVersion": "1.10.0",
             "name": "Annotation",
             "description": "Provides source annotations for tooling and readability.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.9.1",
+            "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.10.0",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -618,10 +618,10 @@
         },
         {
             "uniqueId": "androidx.core:core",
-            "artifactVersion": "1.18.0",
+            "artifactVersion": "1.19.0",
             "name": "Core",
             "description": "Provides backward-compatible implementations of Android platform APIs and features.",
-            "website": "https://developer.android.com/jetpack/androidx/releases/core#1.18.0",
+            "website": "https://developer.android.com/jetpack/androidx/releases/core#1.19.0",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -2439,9 +2439,9 @@
         },
         {
             "uniqueId": "com.jsoizo:kotlin-csv-jvm",
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "2.0.0",
             "name": "kotlin-csv",
-            "description": "Kotlin CSV Reader/Writer",
+            "description": "Pure Kotlin CSV reader and writer",
             "website": "https://github.com/jsoizo/kotlin-csv",
             "developers": [
                 {
@@ -2473,7 +2473,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-compose-core-android",
-            "artifactVersion": "14.2.0",
+            "artifactVersion": "14.2.1",
             "name": "AboutLibraries Compose UI Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2488,7 +2488,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-compose-m3-android",
-            "artifactVersion": "14.2.0",
+            "artifactVersion": "14.2.1",
             "name": "AboutLibraries Compose Material 3 Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -2503,7 +2503,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-core-android",
-            "artifactVersion": "14.2.0",
+            "artifactVersion": "14.2.1",
             "name": "AboutLibraries Core Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "website": "https://github.com/mikepenz/AboutLibraries",
@@ -3446,7 +3446,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-parcelize-runtime",
-            "artifactVersion": "2.3.21",
+            "artifactVersion": "2.4.0",
             "name": "Parcelize Runtime",
             "description": "Runtime library for the Parcelize compiler plugin",
             "website": "https://kotlinlang.org/",
@@ -3462,7 +3462,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib",
-            "artifactVersion": "2.3.21",
+            "artifactVersion": "2.4.0",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
             "website": "https://kotlinlang.org/",
@@ -3478,7 +3478,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
-            "artifactVersion": "2.3.21",
+            "artifactVersion": "2.4.0",
             "name": "Kotlin Stdlib Common",
             "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
             "website": "https://kotlinlang.org/",

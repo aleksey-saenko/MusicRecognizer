@@ -25,7 +25,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             configureDetekt(extensions.getByType<DetektExtension>())
 
             dependencies {
-                add("implementation", libs.findLibrary("androidx.core.ktx").get())
+                add("implementation", libs.findLibrary("androidx.core").get())
                 add("testImplementation", libs.findLibrary("junit4").get())
                 add("androidTestImplementation", libs.findLibrary("androidx.test.ext.junit").get())
             }

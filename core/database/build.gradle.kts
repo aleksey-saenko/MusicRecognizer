@@ -23,7 +23,7 @@ dependencies {
     implementation(projects.core.audio)
 
     implementation(libs.kotlinx.coroutinesAndroid)
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core)
     api(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)

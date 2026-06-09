@@ -16,7 +16,7 @@ dependencies {
     implementation(projects.core.common)
 
     implementation(libs.kotlinx.coroutinesAndroid)
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core)
 
     implementation(libs.androidx.media3.inspector)
 }

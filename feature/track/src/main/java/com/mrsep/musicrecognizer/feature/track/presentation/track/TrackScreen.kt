@@ -1,9 +1,11 @@
 package com.mrsep.musicrecognizer.feature.track.presentation.track
 
+import android.app.SearchManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
@@ -267,8 +269,53 @@ private fun performWebSearch(
             context.openWikiSearch(query)
         }
         is SearchProvider.Service -> {
-            val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
-            context.openUrlImplicitly(url)
+            when (searchParams.provider.service) {
+                // Spotify app can intercept links like "https://open.spotify.com/search/${queryEncoded}/tracks"
+                // However, it appears to parse only the last path segment, so the query becomes "track"
+                // We can remove the search filter completly or try opening Spotify directly, as below
+                MusicService.Spotify -> {
+                    val query = track.genericSearchQuery(searchParams.target)
+                    // Works as well, but it's less specific
+//                    val intent = Intent(Intent.ACTION_SEARCH).apply {
+//                        setPackage("com.spotify.music")
+//                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                        putExtra(SearchManager.QUERY, query)
+//                    }
+                    // Spotify seems to ignore EXTRA_MEDIA_FOCUS now and fallback to QUERY
+                    val intent = Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH).apply {
+                        setPackage("com.spotify.music")
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        when (searchParams.target) {
+                            SearchTarget.Track -> {
+                                putExtra(MediaStore.EXTRA_MEDIA_FOCUS, MediaStore.Audio.Media.ENTRY_CONTENT_TYPE)
+                                putExtra(MediaStore.EXTRA_MEDIA_TITLE, track.title)
+                                putExtra(MediaStore.EXTRA_MEDIA_ARTIST, track.artist)
+                            }
+                            SearchTarget.Artist -> {
+                                putExtra(MediaStore.EXTRA_MEDIA_FOCUS, MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE)
+                                putExtra(MediaStore.EXTRA_MEDIA_ARTIST, track.artist)
+                            }
+                            SearchTarget.Album -> {
+                                putExtra(MediaStore.EXTRA_MEDIA_FOCUS, MediaStore.Audio.Albums.ENTRY_CONTENT_TYPE)
+                                putExtra(MediaStore.EXTRA_MEDIA_ARTIST, track.artist)
+                                putExtra(MediaStore.EXTRA_MEDIA_ALBUM, track.album)
+                            }
+                        }
+                        putExtra(SearchManager.QUERY, query)
+                    }
+                    try {
+                        context.startActivity(intent)
+                    } catch (_: ActivityNotFoundException) {
+                        // Open Spotify link with the search filter
+                        val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
+                        context.openUrlImplicitly(url)
+                    }
+                }
+                else -> {
+                    val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
+                    context.openUrlImplicitly(url)
+                }
+            }
         }
     }
 }
@@ -285,6 +332,7 @@ private fun Context.openWikiSearch(query: String) {
         type = "text/plain"
         `package` = "org.wikipedia"
         putExtra(Intent.EXTRA_TEXT, query)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
     try {
         startActivity(wikiSendIntent)

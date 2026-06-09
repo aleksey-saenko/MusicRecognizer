@@ -85,6 +85,7 @@ class AudioDecoder(private val appContext: Context) {
                     .getCapabilitiesForType(inputMimeType)
                     .isFeatureSupported(FEATURE_MultipleFrames)
                 if (isBatchingMode) {
+                    Log.d(TAG, "MediaCodec will be configured in batching mode")
                     inputFormat.apply {
                         setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, BATCH_MODE_MAX_INPUT_SIZE)
                         setInteger(MediaFormat.KEY_BUFFER_BATCH_MAX_OUTPUT_SIZE, BATCH_MODE_MAX_OUTPUT_SIZE)
@@ -92,7 +93,6 @@ class AudioDecoder(private val appContext: Context) {
                     }
                 }
             }
-            Log.d(TAG, "MediaCodec will be configured in batching mode")
 
             val handlerThread = HandlerThread("audio-decoder").apply {
                 start()
@@ -111,13 +111,22 @@ class AudioDecoder(private val appContext: Context) {
 
                 override fun onInputBufferAvailable(codec: MediaCodec, bufferId: Int) {
                     if (sentInputEOS || bufferId < 0) return
-                    val inputBuffer = codec.getInputBuffer(bufferId) ?: return
 
-                    if (sawInputEOS && !sentInputEOS) {
-                        codec.queueInputBuffer(bufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                    if (sawInputEOS) {
+                        try {
+                            codec.queueInputBuffer(bufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                         sentInputEOS = true
+                        return
                     }
-                    if (sentInputEOS) return
+
+                    val inputBuffer = try {
+                        codec.getInputBuffer(bufferId) ?: return
+                    } catch (_: IllegalStateException) {
+                        return
+                    }
 
                     if (isBatchingMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                         var offset = 0
@@ -139,11 +148,20 @@ class AudioDecoder(private val appContext: Context) {
                             offset += sampleSize
                             sawInputEOS = extractor.advance().not()
                         }
+                        if (infos.isEmpty()) return
                         inputBuffer.position(0)
-                        codec.queueInputBuffers(bufferId, infos)
+                        try {
+                            codec.queueInputBuffers(bufferId, infos)
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                     } else {
                         val sampleSize = extractor.readSampleData(inputBuffer,  /* offset= */0)
-                        codec.queueInputBuffer(bufferId, 0, sampleSize, extractor.sampleTime, extractor.sampleFlags)
+                        try {
+                            codec.queueInputBuffer(bufferId, 0, sampleSize, extractor.sampleTime, extractor.sampleFlags)
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                         sawInputEOS = extractor.advance().not()
                     }
                 }
@@ -156,13 +174,21 @@ class AudioDecoder(private val appContext: Context) {
                 ) {
                     if (bufferId < 0) return
                     if (infos.any { it.size > 0 }) {
-                        val outputBuffer = codec.getOutputBuffer(bufferId) ?: return
+                        val outputBuffer = try {
+                            codec.getOutputBuffer(bufferId) ?: return
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                         val chunk = ByteArray(outputBuffer.remaining())
                         outputBuffer.get(chunk)
                         outputChunks.add(chunk)
                         outputChunksByteSize += chunk.size
                     }
-                    codec.releaseOutputBuffer(bufferId, false)
+                    try {
+                        codec.releaseOutputBuffer(bufferId, false)
+                    } catch (_: IllegalStateException) {
+                        return
+                    }
                     if (infos.any { it.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0 }) {
                         completion.complete(Unit)
                     }
@@ -172,17 +198,29 @@ class AudioDecoder(private val appContext: Context) {
                 override fun onOutputBufferAvailable(codec: MediaCodec, bufferId: Int, info: BufferInfo) {
                     if (bufferId < 0) return
                     if (info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
-                        codec.releaseOutputBuffer(bufferId, false)
+                        try {
+                            codec.releaseOutputBuffer(bufferId, false)
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                         completion.complete(Unit)
                         return
                     }
                     if (info.size > 0) {
-                        val outputBuffer = codec.getOutputBuffer(bufferId) ?: return
+                        val outputBuffer = try {
+                            codec.getOutputBuffer(bufferId) ?: return
+                        } catch (_: IllegalStateException) {
+                            return
+                        }
                         val chunk = ByteArray(outputBuffer.remaining()).apply { outputBuffer.get(this) }
                         outputChunks.add(chunk)
                         outputChunksByteSize += chunk.size
                     }
-                    codec.releaseOutputBuffer(bufferId, false)
+                    try {
+                        codec.releaseOutputBuffer(bufferId, false)
+                    } catch (_: IllegalStateException) {
+                        return
+                    }
                 }
 
                 override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
@@ -225,7 +263,7 @@ class AudioDecoder(private val appContext: Context) {
             ensureActive()
             Result.failure(e)
         } finally {
-            codecRef?.stop()
+            codecRef?.runCatching { stop() }
             codecRef?.release()
             extractor.release()
             handlerThreadRef?.quit()

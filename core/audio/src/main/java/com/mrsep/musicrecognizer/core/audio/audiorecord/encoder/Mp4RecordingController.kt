@@ -26,6 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -122,17 +123,22 @@ internal class Mp4RecordingController(
             val inputBufferIdChannel = Channel<Int>(Channel.UNLIMITED)
             var nextPresentationTimeSec = 0.0
             inputBufferIdChannel.receiveAsFlow().onEach { bufferId ->
-                val inputBuffer = codec.getInputBuffer(bufferId) ?: return@onEach
-                val pcmChunk = pcmChunkChannel.receive()
-                inputBuffer.put(pcmChunk)
-                codec.queueInputBuffer(
-                    /* index = */ bufferId,
-                    /* offset = */ 0,
-                    /* size = */ pcmChunk.size,
-                    /* presentationTimeUs = */ (nextPresentationTimeSec * 1_000_000).roundToLong(),
-                    /* flags = */ 0
-                )
-                nextPresentationTimeSec += soundSourceParams.chunkSizeInSeconds
+                try {
+                    val inputBuffer = codec.getInputBuffer(bufferId) ?: return@onEach
+                    val pcmChunk = pcmChunkChannel.receive()
+                    inputBuffer.put(pcmChunk)
+                    codec.queueInputBuffer(
+                        /* index = */ bufferId,
+                        /* offset = */ 0,
+                        /* size = */ pcmChunk.size,
+                        /* presentationTimeUs = */ (nextPresentationTimeSec * 1_000_000).roundToLong(),
+                        /* flags = */ 0
+                    )
+                    nextPresentationTimeSec += soundSourceParams.chunkSizeInSeconds
+                } catch (_: IllegalStateException) {
+                    // Codec is already stopped
+                    return@onEach
+                }
             }.launchIn(this)
 
             val callback = object : MediaCodec.Callback() {
@@ -154,7 +160,11 @@ internal class Mp4RecordingController(
                         codec.releaseOutputBuffer(bufferId, false)
                         return
                     }
-                    val outputBuffer = codec.getOutputBuffer(bufferId) ?: return
+                    val outputBuffer = try {
+                        codec.getOutputBuffer(bufferId) ?: return
+                    } catch (_: IllegalStateException) {
+                        return
+                    }
                     val bufferPresentationTimestamp = bufferInfo.presentationTimeUs.microseconds
 
                     for (scheduledRecording in scheduledRecordings) {
@@ -230,7 +240,9 @@ internal class Mp4RecordingController(
             ensureActive()
             channel.close(e)
         } finally {
-            codecRef?.run { stop(); release() }
+            coroutineContext.cancelChildren()
+            codecRef?.runCatching { stop() }
+            codecRef?.release()
             muxers.forEach { (_, muxer) -> muxer.release() }
             channel.close()
         }

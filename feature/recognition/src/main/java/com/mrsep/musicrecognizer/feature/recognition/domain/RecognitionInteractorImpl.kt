@@ -22,6 +22,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
@@ -76,118 +78,125 @@ internal class RecognitionInteractorImpl @Inject constructor(
 
             val recordingSession = recordingController.startRecordingSession(recordingScheme)
 
-            val extraTimeNotifier = launch {
-                val extraTime = recordingScheme.run { steps.first().recordings.last() + 3.5.seconds }
-                delay(extraTime)
-                _status.update { RecognitionStatus.Recognizing(extraTime = true) }
-            }
+            try {
+                val extraTimeNotifier = launch {
+                    val extraTime = recordingScheme.run { steps.first().recordings.last() + 3.5.seconds }
+                    delay(extraTime)
+                    _status.update { RecognitionStatus.Recognizing(extraTime = true) }
+                }
 
-            val remoteRecognitionResult = async {
-                recognitionService.recognizeUntilFirstMatch(
-                    recordingChannel.receiveAsFlow().map { it.toAudioSample() }
-                )
-            }
+                val remoteRecognitionResult = async {
+                    recognitionService.recognizeUntilFirstMatch(
+                        recordingChannel.receiveAsFlow().map { it.toAudioSample() }
+                    )
+                }
 
-            val samplesDistributionResult = async {
-                try {
-                    for (recording in recordingSession.recordings) {
-                        if (recording.isFallback) {
-                            fallbackRecording?.complete(recording)
-                        } else if (recording.nonSilenceDuration > 0.5.seconds) {
-                            recordingChannel.send(recording)
+                val samplesDistributionResult = async {
+                    try {
+                        for (recording in recordingSession.recordings) {
+                            if (recording.isFallback) {
+                                fallbackRecording?.complete(recording)
+                            } else if (recording.nonSilenceDuration > 0.5.seconds) {
+                                recordingChannel.send(recording)
+                            }
+                        }
+                        recordingChannel.close()
+                        fallbackRecording?.completeExceptionally(
+                            IllegalStateException("Fallback recording missed")
+                        )
+                        Result.success(Unit)
+                    } catch (e: Exception) {
+                        ensureActive()
+                        Result.failure(e)
+                    }
+                }
+
+                val result: RemoteRecognitionResult = select {
+                    remoteRecognitionResult.onAwait { it }
+                    samplesDistributionResult.onAwait { result ->
+                        result.fold(
+                            onSuccess = { remoteRecognitionResult.await() },
+                            onFailure = { cause ->
+                                remoteRecognitionResult.cancel()
+                                recordingChannel.close()
+                                fallbackRecording?.completeExceptionally(cause)
+                                RemoteRecognitionResult.Error.BadRecording(cause = cause)
+                            }
+                        )
+                    }
+                }
+
+                extraTimeNotifier.cancelAndJoin()
+
+                suspend fun stopRecordingAndDeleteSessionFiles() {
+                    samplesDistributionResult.cancelAndJoin()
+                    recordingSession.cancelAndDeleteSessionFiles()
+                }
+
+                val recognitionResult = when (result) {
+                    is RemoteRecognitionResult.Error.BadRecording -> {
+                        stopRecordingAndDeleteSessionFiles()
+                        RecognitionStatus.Done(RecognitionResult.Error(result, RecognitionTask.Ignored))
+                    }
+
+                    is RemoteRecognitionResult.Error.BadConnection -> {
+                        val recognitionTask = processDeferredRecognition(
+                            userPreferences.fallbackPolicy.badConnection,
+                            fallbackRecording
+                        )
+                        stopRecordingAndDeleteSessionFiles()
+                        if (recognitionTask is RecognitionTask.Created && networkMonitor.isOffline.first()) {
+                            RecognitionStatus.Done(RecognitionResult.ScheduledOffline(recognitionTask))
+                        } else {
+                            RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                         }
                     }
-                    recordingChannel.close()
-                    fallbackRecording?.completeExceptionally(
-                        IllegalStateException("Fallback recording missed")
-                    )
-                    Result.success(Unit)
-                } catch (e: Exception) {
-                    ensureActive()
-                    Result.failure(e)
-                }
-            }
 
-            val result: RemoteRecognitionResult = select {
-                remoteRecognitionResult.onAwait { it }
-                samplesDistributionResult.onAwait { result ->
-                    result.fold(
-                        onSuccess = { remoteRecognitionResult.await() },
-                        onFailure = { cause ->
-                            remoteRecognitionResult.cancel()
-                            recordingChannel.close()
-                            fallbackRecording?.completeExceptionally(cause)
-                            RemoteRecognitionResult.Error.BadRecording(cause = cause)
-                        }
-                    )
-                }
-            }
-            extraTimeNotifier.cancelAndJoin()
-
-            suspend fun stopRecordingAndDeleteSessionFiles() {
-                samplesDistributionResult.cancelAndJoin()
-                recordingSession.cancelAndDeleteSessionFiles()
-            }
-
-            val recognitionResult = when (result) {
-                is RemoteRecognitionResult.Error.BadRecording -> {
-                    stopRecordingAndDeleteSessionFiles()
-                    RecognitionStatus.Done(RecognitionResult.Error(result, RecognitionTask.Ignored))
-                }
-
-                is RemoteRecognitionResult.Error.BadConnection -> {
-                    val recognitionTask = processDeferredRecognition(
-                        userPreferences.fallbackPolicy.badConnection,
-                        fallbackRecording
-                    )
-                    stopRecordingAndDeleteSessionFiles()
-                    if (recognitionTask is RecognitionTask.Created && networkMonitor.isOffline.first()) {
-                        RecognitionStatus.Done(RecognitionResult.ScheduledOffline(recognitionTask))
-                    } else {
+                    is RemoteRecognitionResult.Error -> {
+                        val recognitionTask = processDeferredRecognition(
+                            userPreferences.fallbackPolicy.anotherFailure,
+                            fallbackRecording
+                        )
+                        stopRecordingAndDeleteSessionFiles()
                         RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
                     }
-                }
 
-                is RemoteRecognitionResult.Error -> {
-                    val recognitionTask = processDeferredRecognition(
-                        userPreferences.fallbackPolicy.anotherFailure,
-                        fallbackRecording
-                    )
-                    stopRecordingAndDeleteSessionFiles()
-                    RecognitionStatus.Done(RecognitionResult.Error(result, recognitionTask))
-                }
-
-                RemoteRecognitionResult.NoMatches -> {
-                    val recognitionTask = processDeferredRecognition(
-                        userPreferences.fallbackPolicy.noMatches,
-                        fallbackRecording
-                    )
-                    stopRecordingAndDeleteSessionFiles()
-                    RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
-                }
-
-                is RemoteRecognitionResult.Success -> {
-                    stopRecordingAndDeleteSessionFiles()
-                    val trackWithStoredProps = trackRepository
-                        .upsertKeepProperties(listOf(result.track))
-                        .first()
-                    trackRepository.setViewed(trackWithStoredProps.id, false)
-                    val updatedTrack = trackWithStoredProps.copy(
-                        properties = trackWithStoredProps.properties.copy(isViewed = false)
-                    )
-                    val shouldSearchForLinks = preferencesRepository.userPreferencesFlow.first()
-                        .requiredMusicServices.any { it !in updatedTrack.trackLinks }
-                    if (shouldSearchForLinks) {
-                        trackMetadataFetchManager.enqueueTrackLinksFetcher(updatedTrack.id)
+                    RemoteRecognitionResult.NoMatches -> {
+                        val recognitionTask = processDeferredRecognition(
+                            userPreferences.fallbackPolicy.noMatches,
+                            fallbackRecording
+                        )
+                        stopRecordingAndDeleteSessionFiles()
+                        RecognitionStatus.Done(RecognitionResult.NoMatches(recognitionTask))
                     }
-                    if (updatedTrack.lyrics == null) {
-                        trackMetadataFetchManager.enqueueLyricsFetcher(updatedTrack.id)
+
+                    is RemoteRecognitionResult.Success -> {
+                        stopRecordingAndDeleteSessionFiles()
+                        val trackWithStoredProps = trackRepository
+                            .upsertKeepProperties(listOf(result.track))
+                            .first()
+                        trackRepository.setViewed(trackWithStoredProps.id, false)
+                        val updatedTrack = trackWithStoredProps.copy(
+                            properties = trackWithStoredProps.properties.copy(isViewed = false)
+                        )
+                        val shouldSearchForLinks = preferencesRepository.userPreferencesFlow.first()
+                            .requiredMusicServices.any { it !in updatedTrack.trackLinks }
+                        if (shouldSearchForLinks) {
+                            trackMetadataFetchManager.enqueueTrackLinksFetcher(updatedTrack.id)
+                        }
+                        if (updatedTrack.lyrics == null) {
+                            trackMetadataFetchManager.enqueueLyricsFetcher(updatedTrack.id)
+                        }
+                        RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
                     }
-                    RecognitionStatus.Done(RecognitionResult.Success(updatedTrack))
+                }
+
+                _status.update { recognitionResult }
+            } finally {
+                withContext(NonCancellable) {
+                    recordingSession.cancelAndDeleteSessionFiles()
                 }
             }
-
-            _status.update { recognitionResult }
         }
     }
 

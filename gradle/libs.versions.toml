@@ -24,7 +24,7 @@ androidxWork = "2.11.2"
 autoService = "1.1.1"
 autoServiceKsp = "1.2.0"
 coil = "3.4.0"
-csv = "1.10.0"
+csv = "2.0.0"
 detektPlugin = "2.0.0-alpha.3"
 detektCompose = "0.5.8"
 hilt = "2.59.2"
@@ -101,7 +101,7 @@ auto-service-annotations = { module = "com.google.auto.service:auto-service-anno
 auto-service-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoServiceKsp"}
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
-csv = { module = "com.jsoizo:kotlin-csv-jvm", version.ref = "csv" }
+csv = { module = "com.jsoizo:kotlin-csv", version.ref = "csv" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detektCompose" }
 hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }

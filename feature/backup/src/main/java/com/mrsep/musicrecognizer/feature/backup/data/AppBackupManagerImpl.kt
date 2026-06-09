@@ -30,7 +30,6 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.time.Instant
@@ -99,7 +98,7 @@ internal class AppBackupManagerImpl @Inject constructor(
     private fun deleteUnfinishedBackup(uri: Uri) {
         try {
             DocumentsContract.deleteDocument(appContext.contentResolver, uri)
-        } catch (e: FileNotFoundException) {
+        } catch (e: Exception) {
             Log.e(this::class.simpleName, "Failed to delete unfinished backup file", e)
         }
     }

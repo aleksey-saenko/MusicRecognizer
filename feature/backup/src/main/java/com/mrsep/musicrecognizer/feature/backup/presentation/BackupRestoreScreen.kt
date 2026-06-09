@@ -1,9 +1,6 @@
 package com.mrsep.musicrecognizer.feature.backup.presentation
 
-import android.content.Context
 import android.content.res.Resources
-import android.net.Uri
-import android.provider.DocumentsContract
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceClickableItem
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceGroup
 import com.mrsep.musicrecognizer.feature.backup.RestoreResult
-import java.io.FileNotFoundException
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
@@ -88,21 +84,7 @@ internal fun BackupRestoreScreen(
             backupState = backupState,
             onChangeSelectedBackupEntry = viewModel::onChangeSelectedBackupEntry,
             onBackupClick = { backupUriLauncher.launch(resources.getBackupFileName()) },
-            onDismissClick = {
-                when (backupState) {
-                    is BackupUiState.EstimatingEntries,
-                    is BackupUiState.Ready,
-                    is BackupUiState.Result -> viewModel.cancelBackupScopeJobs()
-
-                    is BackupUiState.InProgress -> {
-                        viewModel.cancelBackupScopeJobs()
-                        if (!context.deleteUriFile(backupState.uri)) {
-                            val message = resources.getString(StringsR.string.toast_failed_delete_incomplete_backup_file)
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
+            onDismissClick = viewModel::cancelBackupScopeJobs,
         )
     }
     restoreUiState?.let { restoreState ->
@@ -141,20 +123,7 @@ internal fun BackupRestoreScreen(
             exportState = exportState,
             onExportClick = { csvExportUriLauncher.launch(resources.getCsvFileName()) },
             onChangeExportState = viewModel::onChangeExportState,
-            onDismissClick = {
-                when (exportState) {
-                    is CsvExportUiState.Ready,
-                    is CsvExportUiState.Result -> viewModel.cancelCsvExportScopeJobs()
-
-                    is CsvExportUiState.InProgress -> {
-                        viewModel.cancelCsvExportScopeJobs()
-                        if (!context.deleteUriFile(exportState.uri)) {
-                            val message = resources.getString(StringsR.string.toast_failed_delete_incomplete_backup_file)
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            },
+            onDismissClick = viewModel::cancelCsvExportScopeJobs,
         )
     }
 
@@ -201,13 +170,6 @@ internal fun BackupRestoreScreen(
             )
         }
     }
-}
-
-private fun Context.deleteUriFile(uri: Uri): Boolean = try {
-    DocumentsContract.deleteDocument(contentResolver, uri)
-    true
-} catch (_: FileNotFoundException) {
-    false
 }
 
 private fun Resources.getBackupFileName(): String = getString(StringsR.string.app_name) + "_Backup" +

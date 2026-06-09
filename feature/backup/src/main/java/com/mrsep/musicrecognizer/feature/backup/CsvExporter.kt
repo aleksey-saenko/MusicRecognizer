@@ -4,7 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.util.Log
-import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.jsoizo.kotlincsv.csvWriter
+import com.jsoizo.kotlincsv.writer.write
 import com.mrsep.musicrecognizer.core.common.di.IoDispatcher
 import com.mrsep.musicrecognizer.core.domain.preferences.FavoritesMode
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
@@ -12,15 +13,15 @@ import com.mrsep.musicrecognizer.feature.backup.CsvField.Companion.extractFrom
 import com.mrsep.musicrecognizer.feature.backup.presentation.header
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import java.io.FileNotFoundException
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 internal interface CsvExporter {
 
-    suspend fun export(destination: Uri, params: CsvExportParams) : ExportResult
+    suspend fun export(destination: Uri, params: CsvExportParams): ExportResult
 }
 
 internal data class CsvExportParams(
@@ -39,23 +40,28 @@ internal class CsvExporterImpl @Inject constructor(
 
     override suspend fun export(destination: Uri, params: CsvExportParams) = withContext(ioDispatcher) {
         try {
-            val outputStream = try {
-                requireNotNull(appContext.contentResolver.openOutputStream(destination))
-            } catch (_: Exception) {
-                return@withContext ExportResult.FileNotFound
-            }
-            val tracks = trackRepository.getTracksFlow(params.favoritesMode).first()
-            val csvRows = tracks.mapNotNull { track ->
-                val row = params.exportFields.extractFrom(track)
-                row.takeIf { it.any { value -> !value.isNullOrBlank() } }
-            }
-            csvWriter.openAsync(outputStream) {
-                if (params.writeHeader) {
-                    writeRow(params.exportFields.map { it.header(appContext) })
+            val outputStream = runCatching {
+                appContext.contentResolver.openOutputStream(destination)
+            }.getOrNull() ?: return@withContext ExportResult.FileNotFound
+
+            var trackCount = 0
+            val trackRows = trackRepository.getTracksFlow(params.favoritesMode).first()
+                .asSequence()
+                .mapNotNull { track ->
+                    coroutineContext.ensureActive()
+                    params.exportFields.extractFrom(track, "")
+                        .takeIf { values -> values.any { value -> value.isNotBlank() } }
+                        ?.also { trackCount++ }
                 }
-                writeRows(csvRows)
+
+            outputStream.use { stream ->
+                if (params.writeHeader) {
+                    val headerRow = listOf(params.exportFields.map { it.header(appContext) })
+                    csvWriter.write(headerRow, stream)
+                }
+                csvWriter.write(trackRows, stream)
             }
-            ExportResult.Success(csvRows.size)
+            ExportResult.Success(trackCount)
         } catch (e: CancellationException) {
             deleteUnfinishedExportFile(destination)
             throw e
@@ -70,7 +76,7 @@ internal class CsvExporterImpl @Inject constructor(
     private fun deleteUnfinishedExportFile(uri: Uri) {
         try {
             DocumentsContract.deleteDocument(appContext.contentResolver, uri)
-        } catch (e: FileNotFoundException) {
+        } catch (e: Exception) {
             Log.e(this::class.simpleName, "Failed to delete unfinished CSV file", e)
         }
     }

@@ -69,7 +69,7 @@ import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
 
-private const val SCREEN_TRANSITION_DURATION = 500
+private const val SCREEN_TRANSITION_DURATION = 250
 
 @Composable
 internal fun AppNavigation(

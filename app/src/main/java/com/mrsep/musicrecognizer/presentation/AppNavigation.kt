@@ -69,7 +69,7 @@ import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.navigateToTrackScreen
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackScreen.trackScreen
 
-private const val SCREEN_TRANSITION_DURATION = 250
+private const val SCREEN_TRANSITION_DURATION = 500
 
 @Composable
 internal fun AppNavigation(
@@ -139,6 +139,7 @@ internal fun AppNavigation(
         startDestination = BAR_HOST_ROUTE,
         enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
+        modifier = Modifier.fillMaxSize(),
     ) {
         onboardingScreen(onOnboardingClose = onOnboardingClose)
         barNavHost(
@@ -202,16 +203,12 @@ private fun NavGraphBuilder.barNavHost(
     innerNavController: NavHostController
 ) {
     composable(BAR_HOST_ROUTE) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
-                    .weight(1f, false)
+                    .weight(1f)
                     .windowInsetsPadding(
                         WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
                     )
@@ -228,7 +225,7 @@ private fun NavGraphBuilder.barNavHost(
                     setRecognitionRequested = setRecognitionRequested,
                     outerNavController = outerNavController,
                     innerNavController = innerNavController,
-                    modifier = Modifier.weight(1f, false)
+                    modifier = Modifier.weight(1f)
                 )
             }
             if (!shouldShowNavRail) {
@@ -252,7 +249,7 @@ private fun BarNavHost(
     NavHost(
         navController = innerNavController,
         startDestination = TopLevelDestination.Recognition.route,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         enterTransition = { fadeIn(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
     ) {

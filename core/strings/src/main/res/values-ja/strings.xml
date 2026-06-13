@@ -63,4 +63,11 @@
     <string name="onboarding_welcome">こんにちは</string>
     <string name="onboarding_welcome_message">Audileは、流れている音楽を素早く正確に特定できる音楽認識アプリです。</string>
     <string name="onboarding_token_validating">トーケンの検証中</string>
+    <string name="onboarding_final_title">準備できました</string>
+    <string name="onboarding_final_message">初期設定は完了しました</string>
+    <string name="result_title_no_matches">一致する項目が見つかりませんでした</string>
+    <string name="result_message_no_matches">曲を承認できなくて申し訳ございません</string>
+    <string name="result_title_bad_connection">インターネットに接続できませんでした</string>
+    <string name="result_message_bad_connection">ネットワークの状態を確認してください</string>
+    <string name="onboarding_final_get_started">さぁ始めましょう！</string>
 </resources>

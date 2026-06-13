@@ -270,9 +270,8 @@ private fun performWebSearch(
         }
         is SearchProvider.Service -> {
             when (searchParams.provider.service) {
-                // Spotify app can intercept links like "https://open.spotify.com/search/${queryEncoded}/tracks"
-                // However, it appears to parse only the last path segment, so the query becomes "track"
-                // We can remove the search filter completly or try opening Spotify directly, as below
+                // Spotify app can intercept links like "https://open.spotify.com/search/${queryEncoded}"
+                // but we try passing the search filter through intent extras
                 MusicService.Spotify -> {
                     val query = track.genericSearchQuery(searchParams.target)
                     // Works as well, but it's less specific
@@ -306,8 +305,10 @@ private fun performWebSearch(
                     try {
                         context.startActivity(intent)
                     } catch (_: ActivityNotFoundException) {
-                        // Open Spotify link with the search filter
                         val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
+                        // Spotify mobile web player (website) does not auto-fill the search field,
+                        // so copy the query to the clipboard for quick pasting
+                        context.copyTextToClipboard(track.genericSearchQuery(searchParams.target))
                         context.openUrlImplicitly(url)
                     }
                 }
@@ -418,11 +419,13 @@ private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget
             SearchTarget.Artist ->  "https://soundcloud.com/search/people?q=${queryEncoded}"
             SearchTarget.Album ->   "https://soundcloud.com/search/albums?q=${queryEncoded}"
         }
-        MusicService.Spotify -> when (target) {
-            SearchTarget.Track ->   "https://open.spotify.com/search/${queryEncoded}/tracks"
-            SearchTarget.Artist ->  "https://open.spotify.com/search/${queryEncoded}/artists"
-            SearchTarget.Album ->   "https://open.spotify.com/search/${queryEncoded}/albums"
-        }
+        // Desktop and mobile Spotify website behave differently:
+        // - On desktop, links like "https://open.spotify.com/search/${queryEncoded}/artists" work well,
+        // and "tracks" or "artists" or "albums" filter works.
+        // - On mobile, the second path segment is inserted into the search field, so "artists" becomes the query.
+        // If the filter is removed entirely, the mobile version inserts nothing into the search field.
+        // I couldn't find documentation, but the safest option seems to be "https://open.spotify.com/search/${queryEncoded}"
+        MusicService.Spotify -> "https://open.spotify.com/search/${queryEncoded}"
         MusicService.Tidal -> when (target) {
             SearchTarget.Track ->   "https://tidal.com/search/tracks?q=${queryEncoded}"
             SearchTarget.Artist ->  "https://tidal.com/search/artists?q=${queryEncoded}"

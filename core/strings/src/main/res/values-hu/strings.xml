@@ -329,4 +329,5 @@
     <string name="audio_source_dialog_alt_method_bullet_2">Minden Android verzión támogatott</string>
     <string name="audio_source_dialog_alt_method_bullet_3">A hangminőség gyengébb, és ez a módszer egyes eszközökön nem biztos, hogy működik</string>
     <string name="export_track_field_playback_offset">Időbélyeg-eltolódás</string>
+    <string name="notification_title_match_found">Egyezés találva!</string>
 </resources>

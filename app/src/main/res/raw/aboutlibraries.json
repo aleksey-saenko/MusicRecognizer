@@ -2407,7 +2407,7 @@
         },
         {
             "uniqueId": "com.google.protobuf:protobuf-javalite",
-            "artifactVersion": "4.35.0",
+            "artifactVersion": "4.35.1",
             "name": "Protocol Buffers [Lite]",
             "description": "Lite version of Protocol Buffers library. This version is targeted for mobile client use\n    rather than server side use. It is optimized for code size, but does not guarantee API/ABI\n    stability.",
             "website": "https://developers.google.com/protocol-buffers/protobuf-javalite/",
@@ -2423,7 +2423,7 @@
         },
         {
             "uniqueId": "com.google.protobuf:protobuf-kotlin-lite",
-            "artifactVersion": "4.35.0",
+            "artifactVersion": "4.35.1",
             "name": "Protocol Buffers [Kotlin-Lite]",
             "description": "Kotlin lite Protocol Buffers library. Protocol Buffers are a way of encoding structured data in an\n    efficient yet extensible format.",
             "website": "https://developers.google.com/protocol-buffers/protobuf-kotlin-lite/",
@@ -2533,7 +2533,7 @@
         },
         {
             "uniqueId": "com.squareup.okio:okio-jvm",
-            "artifactVersion": "3.16.4",
+            "artifactVersion": "3.17.0",
             "name": "okio",
             "description": "A modern I/O library for Android, Java, and Kotlin Multiplatform.",
             "website": "https://github.com/square/okio/",
@@ -2579,7 +2579,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -2594,7 +2594,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-compose-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil-compose",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -2609,7 +2609,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-compose-core-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil-compose-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -2624,7 +2624,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-core-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -2639,7 +2639,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-network-core-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil-network-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -2654,7 +2654,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-network-ktor3-android",
-            "artifactVersion": "3.4.0",
+            "artifactVersion": "3.5.0",
             "name": "coil-network-ktor3",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "website": "https://github.com/coil-kt/coil",
@@ -3142,10 +3142,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.animation:animation",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Animation",
             "description": "Compose animation library",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3158,10 +3158,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.animation:animation-core",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Animation Core",
             "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3206,10 +3206,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.foundation:foundation",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Foundation",
             "description": "Higher level abstractions of the Compose UI primitives. This library is design system agnostic, providing the high-level building blocks for both application and design-system developers",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3222,10 +3222,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.foundation:foundation-layout",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Layouts",
             "description": "Compose layout implementations",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3270,10 +3270,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.runtime:runtime",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Runtime",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3286,10 +3286,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.runtime:runtime-saveable",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Saveable",
             "description": "Compose components that allow saving and restoring the local ui state",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3302,10 +3302,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui",
-            "artifactVersion": "1.9.3",
-            "name": "Compose UI primitives",
+            "artifactVersion": "1.11.1",
+            "name": "Compose UI",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3334,10 +3334,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-geometry",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Geometry",
             "description": "Compose classes related to dimensions without units",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3350,10 +3350,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-graphics",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Graphics",
             "description": "Compose graphics",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3366,10 +3366,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-text",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose UI Text",
             "description": "Compose Text primitives and utilities",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3398,10 +3398,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-unit",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Unit",
             "description": "Compose classes for simple units",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",
@@ -3414,10 +3414,10 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-util",
-            "artifactVersion": "1.9.3",
+            "artifactVersion": "1.11.1",
             "name": "Compose Util",
             "description": "Internal Compose utilities used by other modules",
-            "website": "https://github.com/JetBrains/compose-jb",
+            "website": "https://github.com/JetBrains/compose-multiplatform",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team",

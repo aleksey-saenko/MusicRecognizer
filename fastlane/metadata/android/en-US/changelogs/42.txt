@@ -1,0 +1,3 @@
+* Add Indonesian translation (Thanks @arifpedia)
+* Fix app crashes in some rare cases and several minor bugs
+* Update translations

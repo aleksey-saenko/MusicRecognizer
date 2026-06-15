@@ -213,6 +213,8 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Does not require screen casting permission and bypasses audio capture restrictions set by other apps</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Supported on all Android versions</string>
     <string name="audio_source_dialog_alt_method_bullet_3">Sound quality is lower, and this method may not work on some devices</string>
+    <string name="pref_title_prerecording_buffer">Prerecording buffer</string>
+    <string name="pref_subtitle_prerecording_buffer">Record a short audio buffer while the app is open for faster recognition</string>
     <string name="pref_title_fallback_policy">Recognition fallback policy</string>
     <string name="pref_subtitle_fallback_policy">Set fallback actions after unsuccessful recognitions</string>
     <string name="fallback_policy_dialog_title">Fallback policy</string>

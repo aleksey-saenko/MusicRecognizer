@@ -330,4 +330,6 @@
     <string name="audio_source_dialog_alt_method_bullet_3">Якість звуку нижча, і цей метод може не працювати на деяких пристроях</string>
     <string name="track_info_title_format_isrc">%s:</string>
     <string name="notification_title_match_found">Збіг знайдено!</string>
+    <string name="pref_title_prerecording_buffer">Буфер попереднього запису</string>
+    <string name="pref_subtitle_prerecording_buffer">Записує невеликий фрагмент аудіо, поки застосунок відкритий, щоби пришвидшити розпізнавання</string>
 </resources>

@@ -330,4 +330,6 @@
     <string name="audio_source_dialog_alt_method_bullet_1">Ei eelda ekraanihõive õigusi ja väldib rakenduste poolt juhitud helihõive piiranguid</string>
     <string name="track_info_title_format_isrc">%s:</string>
     <string name="notification_title_match_found">Otsingule leidus vaste!</string>
+    <string name="pref_title_prerecording_buffer">Eelsalvestuse puhver</string>
+    <string name="pref_subtitle_prerecording_buffer">Kiirema tuvastamise nimel salvesta rakenduse avades lühike helilõik</string>
 </resources>

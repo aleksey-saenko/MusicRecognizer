@@ -330,4 +330,6 @@
     <string name="audio_source_dialog_alt_method_bullet_3">音质较差，此方法在某些设备上可能不工作</string>
     <string name="track_info_title_format_isrc">%s：</string>
     <string name="notification_title_match_found">找到匹配！</string>
+    <string name="pref_title_prerecording_buffer">预录制缓冲</string>
+    <string name="pref_subtitle_prerecording_buffer">打开应用时录制短时音频缓冲以加快识别</string>
 </resources>

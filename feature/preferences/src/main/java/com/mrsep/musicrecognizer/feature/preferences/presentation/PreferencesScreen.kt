@@ -166,6 +166,12 @@ internal fun PreferencesScreen(
                             )
                         }
                         PreferenceSwitchItem(
+                            title = stringResource(StringsR.string.pref_title_prerecording_buffer),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_prerecording_buffer),
+                            checked = uiState.preferences.usePrerecording,
+                            onClick = { viewModel.setUsePrerecording(!uiState.preferences.usePrerecording) },
+                        )
+                        PreferenceSwitchItem(
                             title = stringResource(StringsR.string.pref_title_recognize_on_startup),
                             onClick = {
                                 viewModel.setRecognizeOnStartup(!uiState.preferences.recognizeOnStartup)

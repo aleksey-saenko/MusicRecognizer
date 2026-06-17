@@ -38,6 +38,9 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
     ),
     defaultAudioCaptureMode = defaultAudioCaptureMode.toDomain(),
     mainButtonLongPressAudioCaptureMode = mainButtonLongPressAudioCaptureMode.toDomain(),
+    usePrerecording = usePrerecording
+        .takeIf { hasUsePrerecording() }
+        ?: true,
     useAltDeviceSoundSource = useAltDeviceSoundSource
         .takeIf { hasUseAltDeviceSoundSource() }
         ?: (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q),

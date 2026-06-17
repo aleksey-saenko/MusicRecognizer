@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.yield
+import kotlin.time.Clock
 
 private const val TAG = "DefaultSoundSource"
 
@@ -34,7 +35,7 @@ internal class DefaultSoundSource(
     private val soundLevelMeter = SoundLevelMeter(params)
     override val soundLevel by soundLevelMeter::soundLevel
 
-    override val pcmChunkFlow: SharedFlow<Result<ByteArray>> = flow {
+    override val pcmChunkFlow: SharedFlow<Result<PcmChunk>> = flow {
         val params = checkNotNull(params) {
             "$TAG: No available configuration for audio recording"
         }
@@ -65,44 +66,61 @@ internal class DefaultSoundSource(
                 .setAudioFormat(params.audioFormat)
                 .setBufferSizeInBytes(realBuffer)
                 .build()
-            audioRecordRef = audioRecord // False-positive lint warning, don't delete this line
+            audioRecordRef = audioRecord
             audioRecord.startRecording()
             check(audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 "AudioRecord cant start recording, is audio input captured by another app?"
             }
+            Log.d(TAG, "AudioRecord started")
+            val startAnchor = Clock.System.now()
+            val frameCount = params.chunkFrameCount
+            var nextFrameIndex = 0L
+
             while (true) {
                 val pcmChunk = when (params.audioFormat.encoding) {
                     AudioFormat.ENCODING_PCM_16BIT -> {
                         ByteArray(params.chunkSize).apply {
-                            audioRecord.read(
+                            val read = audioRecord.read(
                                 this,
                                 0,
                                 this.size,
                                 AudioRecord.READ_BLOCKING
                             )
+                            check(read >= 0) { "AudioRecord returned error code ($read)" }
+                            check(read == size) { "AudioRecord read $read bytes, expected $size" }
                             soundLevelMeter.processNewChunk(this.toShortArray())
                         }
                     }
 
                     AudioFormat.ENCODING_PCM_FLOAT -> {
                         FloatArray(params.chunkSize / Float.SIZE_BYTES).apply {
-                            audioRecord.read(
+                            val read = audioRecord.read(
                                 this,
                                 0,
                                 this.size,
                                 AudioRecord.READ_BLOCKING
                             )
+                            check(read >= 0) { "AudioRecord returned error code ($read)" }
+                            check(read == size) { "AudioRecord read $read floats, expected $size" }
                             soundLevelMeter.processNewChunk(this)
                         }.toByteArray()
                     }
 
                     else -> error("Unsupported encoding")
                 }
-                emit(Result.success(pcmChunk))
+                val chunk = PcmChunk(
+                    data = pcmChunk,
+                    audioFormat = params.audioFormat,
+                    firstFrameIndex = nextFrameIndex,
+                    anchorInstant = startAnchor,
+                )
+                nextFrameIndex += frameCount
+                emit(Result.success(chunk))
                 yield()
             }
         } finally {
             audioRecordRef?.release()
+            Log.d(TAG, "AudioRecord released")
         }
     }
         .catch { cause ->

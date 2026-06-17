@@ -3,8 +3,7 @@ package com.mrsep.musicrecognizer.core.audio.audiorecord
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.AudioRecordingDataSource
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.Mp4RecordingController
 import com.mrsep.musicrecognizer.core.audio.audiorecord.encoder.WavRecordingController
-import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
+import com.mrsep.musicrecognizer.core.audio.audiorecord.prerecording.PrerecordingSoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingSession
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineScope
@@ -20,25 +19,20 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CompositeRecordingController(
-    soundSource: SoundSource,
+    soundSource: PrerecordingSoundSource,
     audioRecordingDataSource: AudioRecordingDataSource,
-) : AudioRecordingController {
+) : AudioRecordingSessionFactory {
 
     private val mp4Controller = Mp4RecordingController(soundSource, audioRecordingDataSource)
     private val wavController = WavRecordingController(soundSource, audioRecordingDataSource)
 
-    override val soundLevel = soundSource.soundLevel
-
     context(scope: CoroutineScope)
-    override fun startRecordingSession(scheme: RecordingScheme): AudioRecordingSession = when {
-
-        scheme.encodeSteps -> mp4Controller.startRecordingSession(scheme)
-
-        scheme.fallback == null -> wavController.startRecordingSession(scheme)
-
+    override fun startRecordingSession(scheme: RecordingScheme, includeBuffered: Boolean): AudioRecordingSession = when {
+        scheme.encodeSteps -> mp4Controller.startRecordingSession(scheme, includeBuffered)
+        scheme.fallback == null -> wavController.startRecordingSession(scheme, includeBuffered)
         else -> {
-            val stepsSession = wavController.startRecordingSession(scheme.copy(fallback = null))
-            val fallbackSession = mp4Controller.startRecordingSession(scheme.copy(steps = emptyList()))
+            val stepsSession = wavController.startRecordingSession(scheme.copy(fallback = null), includeBuffered)
+            val fallbackSession = mp4Controller.startRecordingSession(scheme.copy(steps = emptyList()), includeBuffered)
 
             object : AudioRecordingSession {
                 override val recordings = scope.produce(capacity = Channel.UNLIMITED) {

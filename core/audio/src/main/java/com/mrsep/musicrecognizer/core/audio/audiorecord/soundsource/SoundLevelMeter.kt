@@ -21,6 +21,7 @@ import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.time.DurationUnit
 
 private const val TAG = "SoundLevelMeter"
 
@@ -42,7 +43,7 @@ internal class SoundLevelMeter(
         chunkEnergyChannel.receiveAsFlow()
             .transformEnergyToRMS(
                 movingWindowSizeChunks = MOVING_WINDOW_MILLISECONDS
-                    .div(params.chunkSizeInSeconds * 1000)
+                    .div(params.chunkDuration.toDouble(DurationUnit.MILLISECONDS))
                     .roundToInt(),
                 samplesPerChunk = params.chunkSize / params.bytesPerFrame
             )

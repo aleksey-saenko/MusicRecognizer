@@ -59,7 +59,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
     private val isRecognitionJobCompleted get() = recognitionJob?.isCompleted ?: true
 
     context(scope: CoroutineScope)
-    override fun launchRecognition(recordingController: AudioRecordingController) {
+    override fun launchRecognition(recordingController: AudioRecordingController, usePrerecordingBuffer: Boolean) {
         launchRecognitionIfPreviousCompleted {
             _status.update { RecognitionStatus.Recognizing(false) }
             val userPreferences = preferencesRepository.userPreferencesFlow.first()
@@ -76,7 +76,10 @@ internal class RecognitionInteractorImpl @Inject constructor(
             val recordingChannel = Channel<AudioRecording>(Channel.UNLIMITED)
             val fallbackRecording = if (isFallbackRequired) CompletableDeferred<AudioRecording>() else null
 
-            val recordingSession = recordingController.startRecordingSession(recordingScheme)
+            val recordingSession = recordingController.startRecordingSession(
+                recordingScheme,
+                usePrerecordingBuffer
+            )
 
             try {
                 val extraTimeNotifier = launch {
@@ -195,6 +198,7 @@ internal class RecognitionInteractorImpl @Inject constructor(
             } finally {
                 withContext(NonCancellable) {
                     recordingSession.cancelAndDeleteSessionFiles()
+                    recordingController.release()
                 }
             }
         }

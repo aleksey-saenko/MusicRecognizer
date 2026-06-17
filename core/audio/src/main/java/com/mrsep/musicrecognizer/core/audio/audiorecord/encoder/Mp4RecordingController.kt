@@ -16,9 +16,9 @@ import androidx.media3.muxer.MuxerUtil
 import androidx.media3.muxer.SeekableMuxerOutput
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderDispatcher
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderHandler
-import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
+import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioRecordingSessionFactory
+import com.mrsep.musicrecognizer.core.audio.audiorecord.prerecording.PrerecordingSoundSource
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingSession
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineScope
@@ -43,25 +43,23 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.nio.ByteBuffer
-import java.time.Instant
 import java.util.UUID
-import kotlin.math.roundToLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.microseconds
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 @OptIn(UnstableApi::class)
 internal class Mp4RecordingController(
-    private val soundSource: SoundSource,
+    private val soundSource: PrerecordingSoundSource,
     private val audioRecordingDataSource: AudioRecordingDataSource,
-) : AudioRecordingController {
-
-    override val soundLevel = soundSource.soundLevel
+) : AudioRecordingSessionFactory {
 
     context(scope: CoroutineScope)
-    override fun startRecordingSession(scheme: RecordingScheme) = object : AudioRecordingSession {
+    override fun startRecordingSession(scheme: RecordingScheme, includeBuffered: Boolean) = object : AudioRecordingSession {
         private val sessionId = UUID.randomUUID()
         override val recordings = Channel<AudioRecording>(Channel.UNLIMITED)
-        private val job = scope.produceRecordingsToChannel(sessionId, scheme, recordings)
+        private val job = scope.produceRecordingsToChannel(sessionId, scheme, includeBuffered, recordings)
 
         override suspend fun cancelAndDeleteSessionFiles() {
             job.cancelAndJoin()
@@ -72,6 +70,7 @@ internal class Mp4RecordingController(
     private fun CoroutineScope.produceRecordingsToChannel(
         sessionId: UUID,
         scheme: RecordingScheme,
+        includeBuffered: Boolean,
         channel: SendChannel<AudioRecording>,
     ): Job = launch(AudioEncoderDispatcher) {
         var codecRef: MediaCodec? = null
@@ -100,19 +99,16 @@ internal class Mp4RecordingController(
                     .collect(silenceTracker::onSilenceStateChanged)
             }
 
-            lateinit var recorderStartTimestamp: Instant
-            var isStartTimestampUpdated = false
-            val pcmChunkChannel = soundSource.pcmChunkFlow
+            var streamStartTimestamp: Instant? = null
+            val pcmChunkChannel = soundSource.captureFlow(includeBuffered)
                 .transform { pcmChunkResult ->
                     val pcmChunk = pcmChunkResult.getOrElse { cause ->
                         channel.close(cause)
                         this@launch.cancel()
                         return@transform
                     }
-                    if (!isStartTimestampUpdated) {
-                        recorderStartTimestamp = Instant.now()
-                            .minusMillis((soundSourceParams.chunkSizeInSeconds * 1_000).toLong())
-                        isStartTimestampUpdated = true
+                    if (streamStartTimestamp == null) {
+                        streamStartTimestamp = pcmChunk.startInstant
                     }
                     emit(pcmChunk)
                 }
@@ -121,20 +117,20 @@ internal class Mp4RecordingController(
 
 
             val inputBufferIdChannel = Channel<Int>(Channel.UNLIMITED)
-            var nextPresentationTimeSec = 0.0
+            var nextPresentationTime: Duration = Duration.ZERO
             inputBufferIdChannel.receiveAsFlow().onEach { bufferId ->
                 try {
                     val inputBuffer = codec.getInputBuffer(bufferId) ?: return@onEach
                     val pcmChunk = pcmChunkChannel.receive()
-                    inputBuffer.put(pcmChunk)
+                    inputBuffer.put(pcmChunk.data)
                     codec.queueInputBuffer(
                         /* index = */ bufferId,
                         /* offset = */ 0,
-                        /* size = */ pcmChunk.size,
-                        /* presentationTimeUs = */ (nextPresentationTimeSec * 1_000_000).roundToLong(),
-                        /* flags = */ 0
+                        /* size = */ pcmChunk.data.size,
+                        /* presentationTimeUs = */ nextPresentationTime.inWholeMicroseconds,
+                        /* flags = */ 0,
                     )
-                    nextPresentationTimeSec += soundSourceParams.chunkSizeInSeconds
+                    nextPresentationTime += pcmChunk.duration
                 } catch (_: IllegalStateException) {
                     // Codec is already stopped
                     return@onEach
@@ -171,7 +167,8 @@ internal class Mp4RecordingController(
                         if (bufferPresentationTimestamp < scheduledRecording.presentationOffset) continue
 
                         val muxer = muxers.getOrPut(scheduledRecording) {
-                            val startTimestamp = recorderStartTimestamp.plusMillis(bufferPresentationTimestamp.inWholeMilliseconds)
+                            requireNotNull(streamStartTimestamp)
+                            val startTimestamp = streamStartTimestamp + bufferPresentationTimestamp
                             val outputFile = runBlocking {
                                 audioRecordingDataSource.createNewFile(sessionId, RECORDING_FILE_EXT)
                             }.getOrElse { cause ->
@@ -201,11 +198,11 @@ internal class Mp4RecordingController(
                             val file = muxer.release()
                             val silenceDuration = silenceTracker.querySilenceDuration(
                                 startTime = muxer.startTimestamp,
-                                endTime = muxer.startTimestamp.plusMillis(currentMuxerDuration.inWholeMilliseconds)
+                                endTime = muxer.startTimestamp + currentMuxerDuration,
                             )
                             val recording = AudioRecording(
                                 file = file,
-                                timestamp = muxer.startTimestamp,
+                                timestamp = muxer.startTimestamp.toJavaInstant(),
                                 source = soundSource.audioSource,
                                 duration = currentMuxerDuration,
                                 nonSilenceDuration = currentMuxerDuration - silenceDuration,
@@ -272,7 +269,7 @@ internal class Mp4RecordingController(
 }
 
 
-@UnstableApi
+@OptIn(UnstableApi::class)
 private class MuxerWrapper(
     private val outputFile: File,
     private val mediaFormat: MediaFormat,
@@ -299,7 +296,7 @@ private class MuxerWrapper(
             .setLastSampleDurationBehavior(LAST_SAMPLE_DURATION_BEHAVIOR_SET_FROM_END_OF_STREAM_BUFFER_OR_DUPLICATE_PREVIOUS)
             .build().apply {
                 addTrack(MediaFormatUtil.createFormatFromMediaFormat(mediaFormat))
-                val time = unixTimeToMp4TimeSeconds(startTimestamp.toEpochMilli())
+                val time = unixTimeToMp4TimeSeconds(startTimestamp.toEpochMilliseconds())
                 addMetadataEntry(Mp4TimestampData(time, time))
                 muxer = this
             }

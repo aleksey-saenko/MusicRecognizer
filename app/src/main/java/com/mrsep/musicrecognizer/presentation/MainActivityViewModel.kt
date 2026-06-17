@@ -2,6 +2,7 @@ package com.mrsep.musicrecognizer.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
@@ -41,7 +42,10 @@ class MainActivityViewModel @Inject constructor(
             notificationServiceEnabled = preferences.notificationServiceEnabled,
             dynamicColorsEnabled = preferences.dynamicColorsEnabled,
             themeMode = preferences.themeMode,
-            usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme
+            usePureBlackForDarkTheme = preferences.usePureBlackForDarkTheme,
+            usePrerecording = preferences.usePrerecording,
+            defaultAudioCaptureMode = preferences.defaultAudioCaptureMode,
+            mainButtonLongPressAudioCaptureMode = preferences.mainButtonLongPressAudioCaptureMode,
         ) }
         .stateIn(
             scope = viewModelScope,
@@ -87,5 +91,8 @@ sealed class MainActivityUiState {
         val dynamicColorsEnabled: Boolean,
         val themeMode: ThemeMode,
         val usePureBlackForDarkTheme: Boolean,
+        val usePrerecording: Boolean,
+        val defaultAudioCaptureMode: AudioCaptureMode,
+        val mainButtonLongPressAudioCaptureMode: AudioCaptureMode,
     ) : MainActivityUiState()
 }

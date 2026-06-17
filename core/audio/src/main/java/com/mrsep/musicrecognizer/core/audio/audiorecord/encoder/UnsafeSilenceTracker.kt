@@ -1,8 +1,8 @@
 package com.mrsep.musicrecognizer.core.audio.audiorecord.encoder
 
-import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 internal data class Interval(
     val startMillis: Long,
@@ -21,6 +21,7 @@ internal class UnsafeSilenceTracker(
     private var currentIsSilence: Boolean = initialIsSilence
 
     fun onSilenceStateChanged(isSilence: Boolean) {
+        if (isSilence == currentIsSilence) return
         val transitionTime = currentTimeProvider()
         intervals.add(
             Interval(
@@ -34,8 +35,8 @@ internal class UnsafeSilenceTracker(
     }
 
     fun querySilenceDuration(startTime: Instant, endTime: Instant): Duration {
-        val startMillis = startTime.toEpochMilli()
-        val endMillis = endTime.toEpochMilli()
+        val startMillis = startTime.toEpochMilliseconds()
+        val endMillis = endTime.toEpochMilliseconds()
         val nowMillis = currentTimeProvider()
         val effectiveEndTime = minOf(endMillis, nowMillis)
         if (startMillis >= effectiveEndTime) return Duration.ZERO

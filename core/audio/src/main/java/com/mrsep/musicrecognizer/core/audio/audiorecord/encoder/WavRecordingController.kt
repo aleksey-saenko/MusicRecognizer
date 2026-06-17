@@ -3,10 +3,10 @@ package com.mrsep.musicrecognizer.core.audio.audiorecord.encoder
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioEncoderDispatcher
-import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSource
+import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioRecordingSessionFactory
+import com.mrsep.musicrecognizer.core.audio.audiorecord.prerecording.PrerecordingSoundSource
 import com.mrsep.musicrecognizer.core.audio.audiorecord.soundsource.SoundSourceConfig
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecording
-import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingSession
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecordingScheme
 import kotlinx.coroutines.CoroutineScope
@@ -25,25 +25,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
-import java.time.Instant
 import java.util.UUID
 import kotlin.getOrElse
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
-@OptIn(UnstableApi::class)
 internal class WavRecordingController(
-    private val soundSource: SoundSource,
+    private val soundSource: PrerecordingSoundSource,
     private val audioRecordingDataSource: AudioRecordingDataSource,
-) : AudioRecordingController {
-
-    override val soundLevel = soundSource.soundLevel
+) : AudioRecordingSessionFactory {
 
     context(scope: CoroutineScope)
-    override fun startRecordingSession(scheme: RecordingScheme) = object : AudioRecordingSession {
+    override fun startRecordingSession(scheme: RecordingScheme, includeBuffered: Boolean) = object : AudioRecordingSession {
         private val sessionId = UUID.randomUUID()
         override val recordings = Channel<AudioRecording>(Channel.UNLIMITED)
-        private val job = scope.produceRecordingsToChannel(sessionId, scheme, recordings)
+        private val job = scope.produceRecordingsToChannel(sessionId, scheme, includeBuffered, recordings)
 
         override suspend fun cancelAndDeleteSessionFiles() {
             job.cancelAndJoin()
@@ -54,6 +51,7 @@ internal class WavRecordingController(
     private fun CoroutineScope.produceRecordingsToChannel(
         sessionId: UUID,
         scheme: RecordingScheme,
+        includeBuffered: Boolean,
         channel: SendChannel<AudioRecording>,
     ): Job = launch(AudioEncoderDispatcher) {
         val fileWrappers: MutableMap<ScheduledRecording, WavWriterWrapper> = mutableMapOf()
@@ -71,11 +69,9 @@ internal class WavRecordingController(
             val scheduledRecordings = scheme.flatten()
             var emittedRecordingCount = 0
 
-            lateinit var recorderStartTimestamp: Instant
-            var isStartTimestampUpdated = false
-            var nextPresentationTimeSec = 0.0
+            var streamStartTimestamp: Instant? = null
 
-            soundSource.pcmChunkFlow
+            soundSource.captureFlow(includeBuffered)
                 .buffer(Channel.UNLIMITED)
                 .collect { pcmChunkResult ->
                     val pcmChunk = pcmChunkResult.getOrElse { cause ->
@@ -83,21 +79,15 @@ internal class WavRecordingController(
                         this@launch.cancel()
                         return@collect
                     }
-
-                    if (!isStartTimestampUpdated) {
-                        recorderStartTimestamp = Instant.now()
-                            .minusMillis((soundSourceParams.chunkSizeInSeconds * 1_000).toLong())
-                        isStartTimestampUpdated = true
+                    if (streamStartTimestamp == null) {
+                        streamStartTimestamp = pcmChunk.startInstant
                     }
-
-                    val presentationTimestamp = nextPresentationTimeSec.seconds
-                    nextPresentationTimeSec += soundSourceParams.chunkSizeInSeconds
-
+                    val chunkOffset = pcmChunk.startInstant - streamStartTimestamp
                     for (scheduledRecording in scheduledRecordings) {
-                        if (presentationTimestamp < scheduledRecording.presentationOffset) continue
+                        if (chunkOffset < scheduledRecording.presentationOffset) continue
 
                         val fileWrapper = fileWrappers.getOrPut(scheduledRecording) {
-                            val startTimestamp = recorderStartTimestamp.plusMillis(presentationTimestamp.inWholeMilliseconds)
+                            val startTimestamp = streamStartTimestamp + chunkOffset
                             val outputFile = runBlocking {
                                 audioRecordingDataSource.createNewFile(sessionId, RECORDING_FILE_EXT)
                             }.getOrElse { cause ->
@@ -107,7 +97,6 @@ internal class WavRecordingController(
                             }
                             WavWriterWrapper(
                                 outputFile = outputFile,
-                                chunkDuration = soundSourceParams.chunkSizeInSeconds.seconds,
                                 startTimestamp = startTimestamp,
                                 soundSourceConfig = soundSourceParams
                             )
@@ -117,7 +106,7 @@ internal class WavRecordingController(
                         val currentFileDuration = fileWrapper.currentDuration
                         if (currentFileDuration < scheduledRecording.minDuration) {
                             try {
-                                fileWrapper.writeChunk(pcmChunk)
+                                fileWrapper.writeChunk(pcmChunk.data, pcmChunk.duration)
                             } catch (e: IOException) {
                                 channel.close(e)
                                 this@launch.cancel()
@@ -127,11 +116,11 @@ internal class WavRecordingController(
                             val file = fileWrapper.release()
                             val silenceDuration = silenceTracker.querySilenceDuration(
                                 startTime = fileWrapper.startTimestamp,
-                                endTime = fileWrapper.startTimestamp.plusMillis(currentFileDuration.inWholeMilliseconds)
+                                endTime = fileWrapper.startTimestamp + currentFileDuration,
                             )
                             val recording = AudioRecording(
                                 file = file,
-                                timestamp = fileWrapper.startTimestamp,
+                                timestamp = fileWrapper.startTimestamp.toJavaInstant(),
                                 source = soundSource.audioSource,
                                 duration = currentFileDuration,
                                 nonSilenceDuration = currentFileDuration - silenceDuration,
@@ -163,22 +152,22 @@ internal class WavRecordingController(
     }
 }
 
-@UnstableApi
+@OptIn(UnstableApi::class)
 private class WavWriterWrapper(
     private val outputFile: File,
-    private val chunkDuration: Duration,
     val startTimestamp: Instant,
     val soundSourceConfig: SoundSourceConfig,
 ) {
     var isReleased = false
         private set
 
-    private var chunkCount = 0
-    val currentDuration get() = chunkDuration * chunkCount
+    var currentDuration: Duration = Duration.ZERO
+        private set
+
     private var wavWriter: WavWriter? = null
 
     @Throws(IOException::class)
-    fun writeChunk(chunk: ByteArray) {
+    fun writeChunk(chunk: ByteArray, chunkDuration: Duration) {
         check(!isReleased)
         val wavWriter = wavWriter ?: WavWriter(
             outputFile = outputFile,
@@ -189,7 +178,7 @@ private class WavWriterWrapper(
             wavWriter = this
         }
         wavWriter.write(chunk)
-        chunkCount++
+        currentDuration += chunkDuration
     }
 
     fun release(): File {

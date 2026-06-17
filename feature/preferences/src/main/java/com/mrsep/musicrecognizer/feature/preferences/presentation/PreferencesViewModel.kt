@@ -65,6 +65,12 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setUsePrerecording(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setUsePrerecording(value)
+        }
+    }
+
     fun setUseAltDeviceSoundSource(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setUseAltDeviceSoundSource(value)

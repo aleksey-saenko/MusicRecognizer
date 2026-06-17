@@ -9,7 +9,7 @@ interface RecognitionInteractor {
     val status: StateFlow<RecognitionStatus>
 
     context(scope: CoroutineScope)
-    fun launchRecognition(recordingController: AudioRecordingController)
+    fun launchRecognition(recordingController: AudioRecordingController, usePrerecordingBuffer: Boolean)
 
     suspend fun cancelAndJoin()
 

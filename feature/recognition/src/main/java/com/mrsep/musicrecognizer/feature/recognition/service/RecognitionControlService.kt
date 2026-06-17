@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
+import java.util.UUID
 
 private const val TAG = "RecognitionControlService"
 
@@ -275,10 +276,10 @@ class RecognitionControlService : Service() {
                     )?.run {
                         mediaProjection = this
                         registerCallback(mediaProjectionCallback, Handler(appContext.mainLooper))
-                        AudioCaptureConfig.Device(this)
+                        AudioCaptureConfig.Device(this, UUID.randomUUID().toString())
                     }
                 } else {
-                    AudioCaptureConfig.Device(null)
+                    AudioCaptureConfig.Device(null, null)
                 }
 
                 is AudioCaptureServiceMode.Auto ->if (audioCaptureServiceMode.mediaProjectionData != null) {
@@ -288,10 +289,10 @@ class RecognitionControlService : Service() {
                     )?.run {
                         mediaProjection = this
                         registerCallback(mediaProjectionCallback, Handler(appContext.mainLooper))
-                        AudioCaptureConfig.Auto(this)
+                        AudioCaptureConfig.Auto(this, UUID.randomUUID().toString())
                     }
                 } else {
-                    AudioCaptureConfig.Auto(null)
+                    AudioCaptureConfig.Auto(null, null)
                 }
             }
             if (captureConfig == null) return@launch
@@ -299,7 +300,9 @@ class RecognitionControlService : Service() {
 
             soundLevelCurrentFlow.update { recorderController.soundLevel }
 
-            recognitionInteractor.launchRecognition(recorderController)
+            // We didn't start prerecording for Device sound source, so we can't get boost for Device/Auto config
+            val usePrerecordingBuffer = captureConfig is AudioCaptureConfig.Microphone
+            recognitionInteractor.launchRecognition(recorderController, usePrerecordingBuffer)
             recognitionInteractor.status.transformWhile { status ->
                 emit(status)
                 status !is RecognitionStatus.Done

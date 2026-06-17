@@ -20,5 +20,5 @@ internal interface SoundSource {
      */
     val soundLevel: StateFlow<Float>
 
-    val pcmChunkFlow: SharedFlow<Result<ByteArray>>
+    val pcmChunkFlow: SharedFlow<Result<PcmChunk>>
 }

@@ -46,10 +46,11 @@ import com.mrsep.musicrecognizer.feature.recognition.service.AudioCaptureService
 import com.mrsep.musicrecognizer.feature.recognition.service.createScreenCaptureIntentForDisplay
 import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-internal const val animationDurationButton = 600
-internal const val animationDurationShield = 220
+internal const val animationDurationButton = 200
+internal const val animationDurationShield = 250
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -336,7 +337,7 @@ internal fun RecognitionScreen(
 
                     is RecognitionResult.Success -> {
                         LaunchedEffect(result) {
-                            delay(animationDurationButton.toLong())
+                            delay(animationDurationButton.milliseconds)
                             onNavigateToTrackScreen(result.track.id)
                         }
                         DisposableEffect(result) {
@@ -373,37 +374,17 @@ internal fun RecognitionScreen(
     }
 }
 
-private val enterTransitionButton = slideInVertically(
-    animationSpec = tween(
+private val enterTransitionButton = fadeIn(
+    tween(
         durationMillis = animationDurationButton,
-        delayMillis = animationDurationShield,
-        easing = EaseOutBack
-    ),
-    initialOffsetY = { fullHeight -> fullHeight }
-).plus(
-    fadeIn(
-        tween(
-            durationMillis = animationDurationButton,
-            delayMillis = animationDurationShield
-        ),
-        initialAlpha = 0.8f
+        delayMillis = animationDurationShield
     )
 )
 
-private val exitTransitionButton = slideOutVertically(
-    animationSpec = tween(
+private val exitTransitionButton = fadeOut(
+    tween(
         durationMillis = animationDurationButton,
-        delayMillis = 0,
-        easing = EaseInCubic
-    ),
-    targetOffsetY = { fullHeight -> fullHeight }
-).plus(
-    fadeOut(
-        tween(
-            durationMillis = animationDurationButton,
-            delayMillis = 0
-        ),
-        targetAlpha = 0.8f
+        delayMillis = 0
     )
 )
 

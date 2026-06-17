@@ -330,4 +330,6 @@
     <string name="audio_source_dialog_alt_method_bullet_3">De geluidskwaliteit is lager en deze methode werkt mogelijk niet op alle apparaten</string>
     <string name="track_info_title_format_isrc">%s:</string>
     <string name="notification_title_match_found">Overeenkomst gevonden!</string>
+    <string name="pref_title_prerecording_buffer">Vooropnamebuffer</string>
+    <string name="pref_subtitle_prerecording_buffer">Neem een korte audiobuffer op terwijl de app open is voor snellere herkenning</string>
 </resources>

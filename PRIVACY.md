@@ -1,6 +1,8 @@
 ## Privacy policy
 
-As a client application, Audile respects your privacy and doesn't collect or analyze any personal data. The app doesn't use ads, tracking and analytics services. The app records audio from the microphone only during a short recognition session on your demand. Recorded data is used solely for recognition purposes and is stored in app private storage for deferred recognitions based on the selected fallback policy.
+As a client application, Audile respects your privacy and doesn't track or profile its users. The app doesn't use ads, tracking and analytics services.
+
+By default, while the app is open, it continuously records audio into a small circular in-memory buffer to reduce the time to the first match. This option can be disabled in settings, and in that case the app records audio only during a short recognition session at your request. All recorded audio is used solely for music recognition. If there is no internet connection or another error occurs, audio samples may be stored in app-private storage for deferred recognition attempts. This behavior can also be changed by selecting a different fallback policy in settings.
 
 The app does use third-party services that may collect your personal information. When using these remote services, you agree to the terms of use of these services:
 

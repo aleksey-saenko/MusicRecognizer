@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="main_screen_tap_to_recognize">انقر للتعرف</string>
-    <string name="main_screen_listening">جارٍ الاستماع</string>
+    <string name="main_screen_listening">يجري الاستماع</string>
     <string name="main_screen_listening_extra_time">المحاولة مرةً أخرى</string>
     <string name="widget_tap_to_recognize">انقر للتعرف</string>
-    <string name="widget_tap_to_try_again">انقر للمحاولة مرة أخرى</string>
-    <string name="widget_listening">جارٍ الاستماع</string>
+    <string name="widget_tap_to_try_again">انقر للمحاولة مرةً أخرى</string>
+    <string name="widget_listening">يجري الاستماع</string>
     <string name="widget_listening_subtitle">الرجاء الانتظار</string>
     <string name="widget_listening_subtitle_extra_time">المحاولة مرةً أخرى</string>
-    <string name="recognition_widget_description">التعرف على الأغنية بنقرة واحدة</string>
+    <string name="recognition_widget_description">التعرف على الأغنية بنقرةٍ واحدة</string>
     <string name="notification_tap_to_recognize">انقر للتعرف</string>
-    <string name="notification_tap_to_recognize_subtitle">التعرف على الموسيقى أثناء فتح أي تطبيق</string>
-    <string name="notification_listening">جارٍ الاستماع</string>
+    <string name="notification_tap_to_recognize_subtitle">التعرف على الموسيقى عند فتح أي تطبيق</string>
+    <string name="notification_listening">يجري الاستماع</string>
     <string name="notification_listening_subtitle">الرجاء الانتظار</string>
     <string name="notification_listening_subtitle_extra_time">المحاولة مرةً أخرى</string>
     <string name="quick_tile_recognize">التعرف على الأغنية</string>
@@ -24,7 +24,7 @@
     <string name="app_shortcut_open_and_recognize_long">فتح التطبيق والتعرف</string>
     <string name="nav_back">رجوع</string>
     <string name="nav_forward">تقدُّم</string>
-    <string name="loading">جارٍ التحميل</string>
+    <string name="loading">يجري التحميل</string>
     <string name="apply">تطبيق</string>
     <string name="applied">تم التطبيق</string>
     <string name="cancel">إلغاء</string>
@@ -37,7 +37,7 @@
     <string name="show">إظهار</string>
     <string name="edit">تعديل</string>
     <string name="clear_text_field">محو</string>
-    <string name="text_field_must_not_be_empty">يجب ألا يكون فارغًا</string>
+    <string name="text_field_must_not_be_empty">يجب ألّا يكون فارغًا</string>
     <string name="copy">نسخ</string>
     <string name="copied">تم النسخ</string>
     <string name="share">مشاركة</string>
@@ -54,11 +54,11 @@
     <string name="permissions_denied_open_settings">فتح الإعدادات</string>
     <string name="permission_granted">تم منح الإذن</string>
     <string name="onboarding_welcome">مرحبًا</string>
-    <string name="onboarding_welcome_message">أوديل هو تطبيق للتعرف على الموسيقى، يمكنه مساعدتك في التعرف بسرعة ودقة على الموسيقى التي يتم تشغيلها بالقرب منك.</string>
-    <string name="onboarding_permission_message">يتطلب التطبيق إذنًا لتسجيل الصوت لكي يعمل بشكل صحيح. بمنح هذا الإذن، فإنك توافق على استخدام بياناتك المسجلة من قِبل <![CDATA[<a href="%1$s">خدمة عن بُعد</a>]]> للتعرف على الموسيقى. لا يستخدم التطبيق هذه البيانات لأي غرض آخر.</string>
-    <string name="onboarding_token_message">يستخدم التطبيق خدمة التعرف على الموسيقى AudD، وهي خدمة مدفوعة وتتطلب رمز واجهة برمجة تطبيقات (API) خاص. سجّل <![CDATA[<a href="%1$s">هنا</a>]]> للحصول على رمز تجريبي لمدة ١٤ يومًا، إن لم يكن لديك واحد بالفعل.</string>
+    <string name="onboarding_welcome_message">أوديل هو تطبيقٌ للتعرف على الموسيقى، يمكنه أن يساعدك في التعرف بسرعة ودقة على الموسيقى التي يتم تشغيلها بالقرب منك.</string>
+    <string name="onboarding_permission_message">يتطلب التطبيق إذنًا لتسجيل الصوت لكي يعمل بشكل صحيح. بمنح هذا الإذن، فإنك توافق على استخدام بياناتك المسجلة من قِبل <![CDATA[<a href="%1$s">خدمةٍ عن بُعد</a>]]> للتعرف على الموسيقى. لا يستخدم التطبيق هذه البيانات لأي غرضٍ آخر.</string>
+    <string name="onboarding_token_message">يستخدم التطبيق خدمة التعرف على الموسيقى AudD، وهي خدمة مدفوعة وتتطلب رمز واجهة برمجة تطبيقاتٍ (API) خاص. سجّل <![CDATA[<a href="%1$s">هنا</a>]]> للحصول على رمزٍ تجريبيٍّ لمدة ١٤ يومًا، إن لم يكن لديك واحدٌ بالفعل.</string>
     <string name="onboarding_token_skip_message">سيؤدي تخطي هذه الخطوة إلى الحد من عدد مرات التعرف اليومية، ولكن يمكنك دائمًا تحديد الرمز الشخصي الخاص بك لاحقًا في الإعدادات.</string>
-    <string name="onboarding_token_validating">جارٍ التحقق</string>
+    <string name="onboarding_token_validating">يجري التحقق</string>
     <string name="onboarding_final_title">نحن جاهزون</string>
     <string name="onboarding_final_message">تم الإعداد بنجاح</string>
     <string name="onboarding_final_get_started">ابدأ</string>
@@ -74,20 +74,20 @@
     <string name="result_title_recognition_scheduled">تم تحديد موعد للتعرف</string>
     <string name="result_message_recognition_scheduled">تم حفظ عيّنة الصوت، وعندما يعود اتصالك بالإنترنت، سيحاول التطبيق التعرف على هذه الأغنية</string>
     <string name="result_title_recording_error">خطأ في التسجيل</string>
-    <string name="result_message_recording_error">حدث خطأ أثناء تسجيل الصوت</string>
+    <string name="result_message_recording_error">حدث خطأٌ أثناء تسجيل الصوت</string>
     <string name="result_title_bad_network_response">فشل طلب الشبكة</string>
-    <string name="result_message_bad_network_response">حدث خطأ أثناء طلب الإنترنت</string>
+    <string name="result_message_bad_network_response">حدث خطأٌ أثناء طلب الإنترنت</string>
     <string name="result_title_auth_error">خطأ في المصادقة</string>
-    <string name="result_message_auth_error">يُرجى التحقق من بيانات اعتمادك لخدمة التعرف المحددة والمحاولة مرة أخرى</string>
+    <string name="result_message_auth_error">يُرجى التحقق من بيانات اعتمادك لخدمة التعرف المحددة والمحاولة مرةً أخرى</string>
     <string name="result_title_service_usage_limited">استخدام الخدمة محدود</string>
-    <string name="result_message_service_usage_limited">لقد وصل استخدامك للخدمة إلى الحد الأقصى. يُرجى مراجعة باقتك أو المحاولة مرة أخرى لاحقًا</string>
+    <string name="result_message_service_usage_limited">لقد وصل استخدامك للخدمة إلى الحد الأقصى. يُرجى مراجعة باقتك أو المحاولة مرةً أخرى لاحقًا</string>
     <string name="result_title_internal_error">خطأ داخلي</string>
-    <string name="result_message_internal_error">حدث خطأ داخلي</string>
+    <string name="result_message_internal_error">حدث خطأٌ داخلي</string>
     <string name="result_title_unknown_error">خطأ غير معروف</string>
     <string name="library">المكتبة</string>
     <string name="empty_library_title">لا توجد أغانٍ مُتعرف عليها</string>
     <string name="empty_library_subtitle">سيتم عرض الأغاني التي تم التعرف عليها مؤخرًا والمفضلة لديك هنا</string>
-    <string name="library_menu_mark_all_tracks_as_viewed">تحديد الكل كمشاهَد</string>
+    <string name="library_menu_mark_all_tracks_as_viewed">تحديد الكل كمُشاهد</string>
     <string name="unviewed_track_label">جديد</string>
     <string name="format_amount_of_new_tracks">أغاني جديدة: %s</string>
     <string name="filters">المرشحات</string>
@@ -105,8 +105,8 @@
     <string name="filter_descending">تنازليًّا</string>
     <string name="library_search">البحث عن أغنية</string>
     <string name="library_search_hint">البحث عن أغنية…</string>
-    <string name="no_tracks_match_filter">لا توجد أغاني تُطابق المرشحات المحددة</string>
-    <string name="no_tracks_match_search">لا توجد أغاني تُطابق معايير البحث</string>
+    <string name="no_tracks_match_filter">لا توجد أغاني تطابق المرشحات المحددة</string>
+    <string name="no_tracks_match_search">لا توجد أغاني تطابق معايير البحث</string>
     <string name="delete_tracks_title">حذف الأغاني</string>
     <string name="delete_tracks_message">هل تريد حذف الأغاني المحددة؟ لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="recognition_queue">قائمة انتظار عمليات التعرف</string>
@@ -127,8 +127,8 @@
     <string name="recognition_action_rename">إعادة تسمية</string>
     <string name="select_all">تحديد الكل</string>
     <string name="disable_multi_selection_mode">تعطيل وضع التحديد المتعدد</string>
-    <string name="cancel_selected">إلغاء المحدَّد</string>
-    <string name="delete_selected">حذف المحدَّد</string>
+    <string name="cancel_selected">إلغاء المُحدد</string>
+    <string name="delete_selected">حذف المُحدد</string>
     <string name="recording_start_player">تشغيل</string>
     <string name="recording_stop_player">إيقاف</string>
     <string name="delete_recognitions_title">حذف عمليات التعرف</string>
@@ -176,7 +176,7 @@
     <string name="high_contrast_text">نص عالي التباين</string>
     <string name="preferences">التفضيلات</string>
     <string name="pref_group_recognition">التعرف</string>
-    <string name="pref_title_recognize_on_startup">التعرف عند بدء التطبيق</string>
+    <string name="pref_title_recognize_on_startup">التعرف عند بدء تشغيل التطبيق</string>
     <string name="pref_title_audio_source">مصدر الصوت</string>
     <string name="pref_subtitle_audio_source">اضبط إعدادات تسجيل الصوت</string>
     <string name="audio_source_dialog_title">مصدر الصوت</string>
@@ -205,7 +205,7 @@
     <string name="acr_cloud_help_dialog_message">ACRCloud خدمة مدفوعة توفر خيار فترة تجريبية مجانية واستخدام محدود لأغراض التطوير. لاستخدام هذه الخدمة، عليك إنشاء حساب وتسجيل مشروع. في حال واجهت أي صعوبات، يُرجى الرجوع إلى <![CDATA[<a href="%1$s">هذا الدليل</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">يُرجى الانتباه إلى هذه الخطوات:</string>
     <string name="acr_cloud_help_dialog_step1">اختر المنطقة الجغرافية الأقرب إليك لتقليل تأخير زمن استجابة الإنترنت</string>
-    <string name="acr_cloud_help_dialog_step2">ضبط مصدر الصوت على ”صوت مسجَّل“</string>
+    <string name="acr_cloud_help_dialog_step2">ضبط مصدر الصوت على ”صوت مُسجل“</string>
     <string name="acr_cloud_help_dialog_step3">اختر محرك الصوت الذي تفضله. يُعدّ خيار ”بصمة الصوت“ الأكثر دقة للاستخدام العام</string>
     <string name="acr_cloud_help_dialog_step4">حدد جميع الخيارات لدمج هوية الطرف الثالث</string>
     <string name="pref_group_notifications">الإشعارات</string>
@@ -238,9 +238,9 @@
     <string name="pref_title_experimental_features">الميزات التجريبية</string>
     <string name="pref_subtitle_experimental_features">قيد التطوير</string>
     <string name="pref_title_backup_and_restore">النسخ الاحتياطي والاستعادة</string>
-    <string name="pref_subtitle_backup_and_restore">أنشئ نسخةً احتياطية من بيانات تطبيقك</string>
+    <string name="pref_subtitle_backup_and_restore">أنشئ نسخةً احتياطيةً من بيانات تطبيقك</string>
     <string name="pref_title_backup">النسخ الاحتياطي</string>
-    <string name="pref_subtitle_backup">نسخ قاعدة بيانات التطبيق وتفضيلاته احتياطيًّا</string>
+    <string name="pref_subtitle_backup">انسخ قاعدة بيانات التطبيق وتفضيلاته احتياطيًّا</string>
     <string name="pref_title_restore">الاستعادة</string>
     <string name="pref_subtitle_restore">استعادة بيانات التطبيق من نسخةٍ احتياطية</string>
     <string name="backup_dialog_title">النسخ الاحتياطي</string>
@@ -251,13 +251,13 @@
     <string name="backup_entry_preferences">التفضيلات</string>
     <string name="backup_entry_picker_title">حدد البيانات المراد نسخها احتياطيًّا:</string>
     <string name="restore_entry_picker_title">حدد البيانات المراد استعادتها:</string>
-    <string name="backup_estimating_size">جارٍ تقدير حجم بيانات التطبيق…</string>
-    <string name="backup_in_progress">جارٍ إنشاء نسخة احتياطية…</string>
+    <string name="backup_estimating_size">يجري تقدير حجم بيانات التطبيق…</string>
+    <string name="backup_in_progress">يجري إنشاء نسخة احتياطية…</string>
     <string name="backup_result_success">تم إنشاء النسخة الاحتياطية بنجاح!</string>
     <string name="restore_erase_warning">ستؤدي عملية الاستعادة إلى مسح البيانات الحالية واستبدالها بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء. لذا، يُرجى نسخ أي بيانات مهمة احتياطيًّا قبل المتابعة.</string>
     <string name="restore_info_restart">سيتم إعادة تشغيل التطبيق بعد اكتمال عملية الاستعادة.</string>
-    <string name="restore_checking_backup">جارٍ فحص ملف النسخ الاحتياطي…</string>
-    <string name="restore_in_progress">جارٍ الاستعادة…</string>
+    <string name="restore_checking_backup">يجري فحص ملف النسخ الاحتياطي…</string>
+    <string name="restore_in_progress">يجري الاستعادة…</string>
     <string name="restore_result_success">نجاح!</string>
     <string name="restore_result_malformed_backup">ملف النسخ الاحتياطي هذا تالف.</string>
     <string name="restore_result_not_backup">هذا الملف ليس نسخةً احتياطيةً صالحة.</string>
@@ -317,7 +317,7 @@
     <string name="export_track_field_favorite">المفضلة</string>
     <string name="export_track_field_artwork_link">الأعمال الفنية</string>
     <string name="export_export">تصدير</string>
-    <string name="export_in_progress">جارٍ التصدير…</string>
+    <string name="export_in_progress">يجري التصدير…</string>
     <string name="export_csv_result_success">تم إنشاء ملف CSV بنجاح!</string>
     <string name="audio_source_dialog_screen_casting_bullet_2">قد تحظر بعض التطبيقات تسجيل الصوت بسبب سياسات التسجيل، وفي هذه الحالة سيستقبل تطبيق أوديل صمتًا</string>
     <string name="track_info_title_format_isrc">%s:</string>
@@ -330,4 +330,6 @@
     <string name="audio_source_dialog_alt_method_bullet_2">يدعم جميع إصدارات Android</string>
     <string name="audio_source_dialog_alt_method_bullet_3">جودة الصوت أقل، وقد لا تعمل هذه الطريقة على بعض الأجهزة</string>
     <string name="notification_title_match_found">تم العثور على تطابق!</string>
+    <string name="pref_title_prerecording_buffer">مخزّن مؤقت للتسجيل المُسبق</string>
+    <string name="pref_subtitle_prerecording_buffer">تسجيل مقطعٍ صوتيٍّ قصيرٍ أثناء فتح التطبيق لتسريع عملية التعرف</string>
 </resources>

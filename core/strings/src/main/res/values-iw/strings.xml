@@ -321,7 +321,7 @@
     <string name="export_track_field_release_date">תאריך הוצאה</string>
     <string name="export_track_field_recognition_date">תאריך זיהוי</string>
     <string name="export_track_field_duration">משך זמן</string>
-    <string name="export_track_field_playback_offset">Playback offset</string>
+    <string name="export_track_field_playback_offset">נקודת זמן הזיהוי</string>
     <string name="export_track_field_provider">ספק זיהוי</string>
     <string name="export_track_field_lyrics">מילים</string>
     <string name="export_track_field_favorite">מועדף</string>
@@ -329,4 +329,5 @@
     <string name="export_export">ייצוא</string>
     <string name="export_in_progress">מייצא…</string>
     <string name="export_csv_result_success">קובץ CSV נוצר בהצלחה!</string>
+    <string name="notification_title_match_found">נמצאה התאמה!</string>
 </resources>

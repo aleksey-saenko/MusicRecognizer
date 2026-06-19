@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
-import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -38,7 +36,6 @@ import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
 import kotlinx.coroutines.launch
 import java.util.Locale
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -173,10 +170,6 @@ internal fun TrackScreen(
                                     onLyricsClick = {
                                         if (uiState.track.lyrics != null) {
                                             onNavigateToLyricsScreen(uiState.track.id)
-                                        } else if (uiState.isLyricsFetcherRunning) {
-                                            context.toast(StringsR.string.searching_for_lyrics)
-                                        } else {
-                                            context.toast(StringsR.string.no_lyrics_available)
                                         }
                                     },
                                     onSearchClick = {
@@ -306,7 +299,7 @@ private fun performWebSearch(
                         context.startActivity(intent)
                     } catch (_: ActivityNotFoundException) {
                         val url = searchParams.provider.service.createSearchUrlFor(track, searchParams.target)
-                        // Spotify mobile web player (website) does not auto-fill the search field,
+                        // Spotify mobile web player (website) doesn't autofill the search field,
                         // so copy the query to the clipboard for quick pasting
                         context.copyTextToClipboard(track.genericSearchQuery(searchParams.target))
                         context.openUrlImplicitly(url)
@@ -439,6 +432,3 @@ private fun MusicService.createSearchUrlFor(track: TrackUi, target: SearchTarget
 
 private fun String.urlEncode(): String = Uri.encode(trim())
 
-private fun Context.toast(@StringRes stringRes: Int) {
-    Toast.makeText(this, getString(stringRes), Toast.LENGTH_SHORT).show()
-}

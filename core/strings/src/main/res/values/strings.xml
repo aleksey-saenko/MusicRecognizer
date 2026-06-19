@@ -73,6 +73,7 @@
     <string name="recognition">Recognition</string>
     <string name="popup_offline_mode">Offline mode</string>
     <string name="button_retry_recognition">Retry</string>
+    <string name="button_retry_recognition_hint">Hold to retry recognition</string>
     <string name="result_title_no_matches">No matches found</string>
     <string name="result_message_no_matches">Sorry, the app couldn\'t recognize this song</string>
     <string name="result_title_bad_connection">Bad internet connection</string>

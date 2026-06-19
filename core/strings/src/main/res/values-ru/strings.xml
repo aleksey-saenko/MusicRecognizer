@@ -71,6 +71,7 @@
     <string name="recognition">Распознавание</string>
     <string name="popup_offline_mode">Офлайн-режим</string>
     <string name="button_retry_recognition">Повторить</string>
+    <string name="button_retry_recognition_hint">Зажмите для повторного распознавания</string>
     <string name="result_title_no_matches">Совпадений не найдено</string>
     <string name="result_message_no_matches">Извините, приложение не смогло распознать эту песню</string>
     <string name="result_title_bad_connection">Плохое интернет соединение</string>

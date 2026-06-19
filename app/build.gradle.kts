@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mrsep.musicrecognizer"
-        versionCode = 42
-        versionName = "1.16.1"
+        versionCode = 43
+        versionName = "1.17.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

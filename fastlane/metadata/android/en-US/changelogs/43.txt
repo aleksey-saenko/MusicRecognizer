@@ -1,0 +1,4 @@
+* Add optional prerecording feature: the app continuously records audio into a short buffer while it's open for faster recognition. This option works only for microphone mode, not for device audio or auto mode.
+* The app no longer waits for high-res artwork to load before showing the track result
+* The Retry button now requires a long press to prevent accidental taps
+* Update translations

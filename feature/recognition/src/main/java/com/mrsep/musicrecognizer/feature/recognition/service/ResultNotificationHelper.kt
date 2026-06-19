@@ -164,7 +164,7 @@ class ResultNotificationHelper @Inject constructor(
                             .setBigContentTitle(result.track.title)
                             .bigText(result.track.artist)
                     )
-                    .setLargeIconWithTrack(result.track.artworkUrl)
+                    .setLargeIconWithTrack(result.track.artworkThumbUrl, result.track.artworkUrl)
                     .addTrackDeepLinkIntent(result.track.id)
                     .addOptionalShowLyricsButton(result.track, isLyricsFetcherRunning)
                     .addShareButton(result.track.getSharedBody())
@@ -220,7 +220,7 @@ class ResultNotificationHelper @Inject constructor(
                     .setBigContentTitle(contentTitle)
                     .bigText("${track.title}\n${track.artist}")
             )
-            .setLargeIconWithTrack(track.artworkUrl)
+            .setLargeIconWithTrack(track.artworkThumbUrl, track.artworkUrl)
             .setGroup(groupKey)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
             .addTrackDeepLinkIntent(track.id)
@@ -365,17 +365,20 @@ class ResultNotificationHelper @Inject constructor(
     }
 
     private suspend fun NotificationCompat.Builder.setLargeIconWithTrack(
-        artworkUrl: String?
+        artworkThumbUrl: String?,
+        artworkUrl: String?,
     ): NotificationCompat.Builder {
         var largeIcon: Bitmap? = null
-        if (artworkUrl != null) {
-            val imageSizePx = appContext.dpToPx(64f).toInt()
+        val imageSizePx = appContext.dpToPx(64f).toInt()
+        val urlsInPriorityOrder = listOfNotNull(artworkThumbUrl, artworkUrl)
+        for (url in urlsInPriorityOrder) {
             largeIcon = appContext.getCachedImageOrNull(
-                url = artworkUrl,
+                url = url,
                 allowHardware = false,
                 widthPx = imageSizePx,
                 heightPx = imageSizePx,
             )
+            if (largeIcon != null) break
         }
         return if (largeIcon != null) setLargeIcon(largeIcon) else this
     }

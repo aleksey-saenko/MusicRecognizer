@@ -3,8 +3,10 @@ package com.mrsep.musicrecognizer.core.network
 import android.content.Context
 import android.os.Build
 import coil3.ImageLoader
+import coil3.annotation.ExperimentalCoilApi
 import coil3.disk.DiskCache
 import coil3.disk.directory
+import coil3.network.DeDupeConcurrentRequestStrategy
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import com.mrsep.musicrecognizer.core.common.di.ApplicationScope
@@ -94,12 +96,18 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
+    @OptIn(ExperimentalCoilApi::class)
     fun provideImageLoader(
         @ApplicationContext appContext: Context,
         httpClient: dagger.Lazy<HttpClient>,
     ) = ImageLoader.Builder(appContext)
         .components {
-            add(KtorNetworkFetcherFactory(httpClient = { httpClient.get() }))
+            add(
+                KtorNetworkFetcherFactory(
+                    httpClient = { httpClient.get() },
+                    concurrentRequestStrategy = { DeDupeConcurrentRequestStrategy() },
+                )
+            )
         }
         .diskCache {
             DiskCache.Builder()

@@ -43,6 +43,7 @@ internal fun LyricsScreenTopBar(
     modifier: Modifier = Modifier,
     title: String,
     artist: String,
+    artworkThumbUrl: String?,
     artworkUrl: String?,
     isScrolled: Boolean,
     selectedCount: Int,
@@ -92,6 +93,7 @@ internal fun LyricsScreenTopBar(
             ) { selectionMode ->
                 if (!selectionMode) {
                     TrackInfoRow(
+                        artworkThumbUrl = artworkThumbUrl,
                         artworkUrl = artworkUrl,
                         title = title,
                         artist = artist,
@@ -211,7 +213,8 @@ private fun TrackInfoRow(
     modifier: Modifier = Modifier,
     title: String,
     artist: String,
-    artworkUrl: String? = null,
+    artworkThumbUrl: String?,
+    artworkUrl: String?,
     createSeedColor: Boolean,
     onSeedColorCreated: (Int) -> Unit,
 ) {
@@ -220,16 +223,19 @@ private fun TrackInfoRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        if (artworkUrl != null) AlbumArtwork(
-            url = artworkUrl,
-            elevation = 1.dp,
-            shape = MaterialTheme.shapes.extraSmall,
-            createSeedColor = createSeedColor,
-            onSeedColorCreated = onSeedColorCreated,
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .aspectRatio(1f, matchHeightConstraintsFirst = true)
-        )
+        if (artworkThumbUrl != null || artworkUrl != null) {
+            AlbumArtwork(
+                artworkThumbUrl = artworkThumbUrl,
+                artworkUrl = artworkUrl,
+                elevation = 1.dp,
+                shape = MaterialTheme.shapes.extraSmall,
+                createSeedColor = createSeedColor,
+                onSeedColorCreated = onSeedColorCreated,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            )
+        }
         Column(
             modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)

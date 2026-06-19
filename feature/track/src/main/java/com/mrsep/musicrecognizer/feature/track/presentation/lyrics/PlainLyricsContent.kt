@@ -58,6 +58,7 @@ internal fun PlainLyricsContent(
     lyrics: String,
     title: String,
     artist: String,
+    artworkThumbUrl: String?,
     artworkUrl: String?,
     trackDuration: Duration?,
     lyricsStyle: LyricsStyle,
@@ -123,6 +124,7 @@ internal fun PlainLyricsContent(
             LyricsScreenTopBar(
                 title = title,
                 artist = artist,
+                artworkThumbUrl = artworkThumbUrl,
                 artworkUrl = artworkUrl,
                 isScrolled = scrollState.canScrollBackward,
                 selectedCount = multiSelectionState.selectedCount,

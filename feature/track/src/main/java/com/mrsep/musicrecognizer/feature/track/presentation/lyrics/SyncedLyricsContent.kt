@@ -104,6 +104,7 @@ internal fun SyncedLyricsContent(
     lyrics: SyncedLyrics,
     title: String,
     artist: String,
+    artworkThumbUrl: String?,
     artworkUrl: String?,
     trackDuration: Duration?,
     recognizedAt: Duration?,
@@ -217,6 +218,7 @@ internal fun SyncedLyricsContent(
             LyricsScreenTopBar(
                 title = title,
                 artist = artist,
+                artworkThumbUrl = artworkThumbUrl,
                 artworkUrl = artworkUrl,
                 isScrolled = listState.canScrollBackward,
                 selectedCount = multiSelectionState.selectedCount,

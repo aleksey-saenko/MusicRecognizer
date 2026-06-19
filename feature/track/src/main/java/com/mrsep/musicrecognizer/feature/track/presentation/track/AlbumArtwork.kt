@@ -22,7 +22,6 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.crossfade
-import coil3.size.Size
 import coil3.toBitmap
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
 import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
@@ -35,7 +34,8 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 @Composable
 internal fun AlbumArtwork(
     modifier: Modifier = Modifier,
-    url: String?,
+    artworkThumbUrl: String?,
+    artworkUrl: String?,
     elevation: Dp,
     shape: Shape,
     onLoadedArtworkClick: (() -> Unit)? = null,
@@ -49,16 +49,32 @@ internal fun AlbumArtwork(
     )
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val painter = rememberAsyncImagePainter(
+    val thumbPainter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context)
-            .data(url)
-            .apply {
-                if (createSeedColor) size(Size.ORIGINAL)
-            }
+            .data(artworkThumbUrl)
             .allowHardware(!createSeedColor)
-            .crossfade(50)
+            .crossfade(200)
             .build(),
         error = placeholder,
+        fallback = placeholder,
+        contentScale = ContentScale.Crop,
+        onSuccess = { state ->
+            if (createSeedColor && !state.result.request.allowHardware) {
+                scope.launch(Dispatchers.Default) {
+                    val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
+                    withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
+                }
+            }
+        }
+    )
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(artworkUrl)
+            .placeholderMemoryCacheKey(artworkThumbUrl)
+            .allowHardware(!createSeedColor)
+            .crossfade(200)
+            .build(),
+        error = thumbPainter,
         fallback = placeholder,
         contentScale = ContentScale.Crop,
         onSuccess = { state ->

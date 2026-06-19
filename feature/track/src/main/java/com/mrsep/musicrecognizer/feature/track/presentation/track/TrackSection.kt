@@ -36,7 +36,8 @@ internal fun TrackSection(
     if (isExpandedScreen) {
         Row(modifier = modifier) {
             AlbumArtwork(
-                url = track.artworkUrl,
+                artworkThumbUrl = track.artworkThumbUrl,
+                artworkUrl = track.artworkUrl,
                 elevation = 2.dp,
                 shape = MaterialTheme.shapes.extraLarge,
                 onLoadedArtworkClick = onArtworkClick,
@@ -75,7 +76,8 @@ internal fun TrackSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AlbumArtwork(
-                url = track.artworkUrl,
+                artworkThumbUrl = track.artworkThumbUrl,
+                artworkUrl = track.artworkUrl,
                 elevation = 2.dp,
                 shape = MaterialTheme.shapes.extraLarge,
                 onLoadedArtworkClick = onArtworkClick,
@@ -123,6 +125,7 @@ private fun Preview() {
                 album = "Track album",
                 year = "2024",
                 artworkUrl = null,
+                artworkThumbUrl = null,
                 trackLinks = MusicService.entries.map { TrackLink("", it) }.toImmutableList(),
                 isFavorite = false,
                 duration = "2:45",

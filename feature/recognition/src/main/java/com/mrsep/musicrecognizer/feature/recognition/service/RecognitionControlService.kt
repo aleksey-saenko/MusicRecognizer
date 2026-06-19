@@ -28,13 +28,10 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
 import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.MutableRecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper.Companion.NOTIFICATION_ID_STATUS
-import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
-import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -51,6 +48,13 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackArtworkPrefetchWorker
+import com.mrsep.musicrecognizer.feature.recognition.service.ext.prefetchArtworkAndGenerateSeedColor
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 
 private const val TAG = "RecognitionControlService"
 
@@ -354,14 +358,58 @@ class RecognitionControlService : Service() {
         }
     }
 
+    // Try to fetch at least one image so there is something to show on the screen/notification/widget,
+    // also compute themeSeedColor to avoid a color transition when opening the track screen
     private suspend fun prepareTrackImages(track: Track) = withContext(Dispatchers.Default) {
-        listOfNotNull(track.artworkThumbUrl, track.artworkUrl)
-            .map { imageUrl -> async { downloadImageToDiskCache(imageUrl) } }
-            .awaitAll()
-        track.artworkUrl?.let { artworkUrl ->
-            getCachedImageOrNull(artworkUrl, allowHardware = false)
-                ?.getDominantColor()
-                ?.let { themeColor -> trackRepository.setThemeSeedColor(track.id, themeColor) }
+        val thumbUrl = track.artworkThumbUrl
+        val artworkUrl = track.artworkUrl
+
+        when {
+            thumbUrl == null && artworkUrl == null -> Unit
+
+            thumbUrl != null && artworkUrl == null -> {
+                prefetchArtworkAndGenerateSeedColor(thumbUrl) { seedColor ->
+                    trackRepository.setThemeSeedColor(track.id, seedColor)
+                }
+            }
+
+            thumbUrl == null && artworkUrl != null -> {
+                prefetchArtworkAndGenerateSeedColor(artworkUrl) { seedColor ->
+                    trackRepository.setThemeSeedColor(track.id, seedColor)
+                }
+            }
+
+            // When both URLs are available, wait only for thumb to avoid delaying the success result delivery
+            thumbUrl != null && artworkUrl != null -> {
+                val thumbPrefetchAsync = async {
+                    prefetchArtworkAndGenerateSeedColor(thumbUrl) { seedColor ->
+                        trackRepository.setThemeSeedColor(track.id, seedColor)
+                    }
+                }
+
+                val workManager = WorkManager.getInstance(appContext)
+                val workerName = TrackArtworkPrefetchWorker.buildUniqueWorkerName(track.id)
+                workManager.enqueueUniqueWork(
+                    workerName,
+                    ExistingWorkPolicy.KEEP,
+                    TrackArtworkPrefetchWorker.buildRequest(track.id, artworkUrl),
+                )
+
+                val thumbPrefetched = thumbPrefetchAsync.await()
+                if (!thumbPrefetched) {
+                    // Don't wait if the worker hasn't started yet for some reason
+                    // Otherwise, we wait for the image download to finish
+                    workManager.getWorkInfosForUniqueWorkFlow(workerName)
+                        .map { infos -> infos.lastOrNull()?.state }
+                        .transform { state ->
+                            when {
+                                state == WorkInfo.State.ENQUEUED -> emit(Unit)
+                                state?.isFinished == true -> emit(Unit)
+                            }
+                        }
+                        .first()
+                }
+            }
         }
     }
 

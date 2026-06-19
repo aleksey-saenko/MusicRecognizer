@@ -1,6 +1,7 @@
 package com.mrsep.musicrecognizer.feature.recognition.widget
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,14 +16,17 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.material3.ColorProviders
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
-import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
+import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackArtworkPrefetchWorker
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity.Companion.getRequiredPermissionsForRecognition
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import com.mrsep.musicrecognizer.feature.recognition.service.checkPermissionsGranted
 import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
@@ -37,10 +41,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 
 class RecognitionWidget : GlanceAppWidget() {
 
@@ -50,6 +57,7 @@ class RecognitionWidget : GlanceAppWidget() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val workManager = WorkManager.getInstance(context)
         val hiltEntryPoint = EntryPointAccessors.fromApplication(
             context,
             RecognitionWidgetEntryPoint::class.java
@@ -60,8 +68,7 @@ class RecognitionWidget : GlanceAppWidget() {
 
         val statusFlow = widgetStatusHolder.status.onEach { status ->
             when (status) {
-                RecognitionStatus.Ready -> {} // NO-OP
-
+                RecognitionStatus.Ready -> Unit
                 is RecognitionStatus.Recognizing -> ResetWidgetStatusWorker.cancel(context)
                 is RecognitionStatus.Done -> ResetWidgetStatusWorker.enqueue(context)
             }
@@ -69,24 +76,48 @@ class RecognitionWidget : GlanceAppWidget() {
 
         /* Glance can't round image corners prior to API 31
          * so we must do it on-demand based on the required image size */
-        fun widgetUiFlow(widgetLayout: RecognitionWidgetLayout) = statusFlow.mapLatest { status ->
-            val artwork = when (status) {
+        fun widgetUiFlow(widgetLayout: RecognitionWidgetLayout) = statusFlow.flatMapLatest { status ->
+            when (status) {
                 is RecognitionStatus.Done -> when (val result = status.result) {
-                    is RecognitionResult.Success -> result.track.artworkUrl
-                        ?.takeIf { widgetLayout.showArtwork }
-                        ?.let { artworkUrl ->
-                            context.getWidgetArtworkOrNull(
-                                url = artworkUrl,
-                                widthPx = widgetLayout.artworkSizePx,
-                                heightPx = widgetLayout.artworkSizePx,
-                                artworkStyle = widgetLayout.artworkStyle
+                    is RecognitionResult.Success -> flow {
+                        val track = result.track
+                        if (!widgetLayout.showArtwork ||
+                            (track.artworkThumbUrl == null && track.artworkUrl == null)
+                        ) {
+                            emit(WidgetUiState(status, null))
+                            return@flow
+                        }
+
+                        val minRequiredArtworkSizePx = (widgetLayout.artworkSizePx / 1.25f).toInt()
+                        val isHiResRequired = minRequiredArtworkSizePx > 400 // Typical thumb is about 400x400
+
+                        val initialArtwork = context.resolveWidgetArtworkOrNull(
+                            artworkThumbUrl = track.artworkThumbUrl,
+                            artworkUrl = track.artworkUrl,
+                            widgetLayout = widgetLayout,
+                            preferHiRes = isHiResRequired
+                        )
+                        emit(WidgetUiState(status = status, artwork = initialArtwork))
+
+                        if (!isHiResRequired && initialArtwork != null) return@flow
+
+                        val isSuccess = workManager.awaitArtworkPrefetchWorkerResult(track.id)
+                        if (isSuccess) {
+                            val refreshedArtwork = context.resolveWidgetArtworkOrNull(
+                                artworkThumbUrl = track.artworkThumbUrl,
+                                artworkUrl = track.artworkUrl,
+                                widgetLayout = widgetLayout,
+                                preferHiRes = true
                             )
+                            emit(WidgetUiState(status = status, artwork = refreshedArtwork))
+                        }
                     }
-                    else -> null
+
+                    else -> flowOf(WidgetUiState(status = status, artwork = null))
                 }
-                else -> null
+
+                else -> flowOf(WidgetUiState(status = status, artwork = null))
             }
-            WidgetUiState(status = status, artwork = artwork)
         }.flowOn(Dispatchers.Default)
 
         val onLaunchRecognition = actionRunCallback<LaunchRecognition>()
@@ -159,6 +190,46 @@ class RecognitionWidget : GlanceAppWidget() {
                 }
             }
         }
+    }
+
+    private suspend fun Context.resolveWidgetArtworkOrNull(
+        artworkThumbUrl: String?,
+        artworkUrl: String?,
+        widgetLayout: RecognitionWidgetLayout,
+        preferHiRes: Boolean,
+    ): Bitmap? {
+        val urlsInPriorityOrder = if (preferHiRes) {
+            listOfNotNull(artworkUrl, artworkThumbUrl)
+        } else {
+            listOfNotNull(artworkThumbUrl, artworkUrl)
+        }
+        for (url in urlsInPriorityOrder) {
+            val artwork = getWidgetArtworkOrNull(
+                url = url,
+                widthPx = widgetLayout.artworkSizePx,
+                heightPx = widgetLayout.artworkSizePx,
+                artworkStyle = widgetLayout.artworkStyle
+            )
+            if (artwork != null) return artwork
+        }
+        return null
+    }
+
+    private suspend fun WorkManager.awaitArtworkPrefetchWorkerResult(trackId: String): Boolean {
+        val uniqueWorkName = TrackArtworkPrefetchWorker.buildUniqueWorkerName(trackId)
+        return getWorkInfosForUniqueWorkFlow(uniqueWorkName)
+            .transform { infos ->
+                when (infos.lastOrNull()?.state) {
+                    WorkInfo.State.ENQUEUED,
+                    WorkInfo.State.RUNNING -> Unit
+                    WorkInfo.State.SUCCEEDED -> emit(true)
+                    WorkInfo.State.FAILED,
+                    WorkInfo.State.BLOCKED,
+                    WorkInfo.State.CANCELLED,
+                    null -> emit(false)
+                }
+            }
+            .first()
     }
 }
 

@@ -8,8 +8,10 @@ import coil3.decode.BlackholeDecoder
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import coil3.toBitmap
+import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -35,8 +37,8 @@ internal suspend fun Context.getCachedImageOrNull(
 }
 
 @OptIn(ExperimentalCoilApi::class)
-internal suspend fun Context.downloadImageToDiskCache(url: String) {
-    withContext(Dispatchers.IO) {
+internal suspend fun Context.downloadImageToDiskCache(url: String): Boolean {
+    return withContext(Dispatchers.IO) {
         val request = ImageRequest.Builder(this@downloadImageToDiskCache)
             .data(url)
             .networkCachePolicy(CachePolicy.ENABLED)
@@ -46,6 +48,20 @@ internal suspend fun Context.downloadImageToDiskCache(url: String) {
             // Skips the decode step so we don't waste time/memory decoding the image into memory
             .decoderFactory(BlackholeDecoder.Factory())
             .build()
-        imageLoader.execute(request)
+        imageLoader.execute(request) is SuccessResult
     }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+internal suspend fun Context.prefetchArtworkAndGenerateSeedColor(
+    artworkUrl: String,
+    onSeedColorCreated: suspend (Int) -> Unit,
+): Boolean = withContext(Dispatchers.IO) {
+    val downloaded = downloadImageToDiskCache(artworkUrl)
+    if (downloaded) {
+        getCachedImageOrNull(artworkUrl, allowHardware = false)
+            ?.getDominantColor()
+            ?.let { seedColor -> onSeedColorCreated(seedColor) }
+    }
+    downloaded
 }

@@ -130,4 +130,6 @@
     <string name="format_amount_of_new_tracks">新しいトラック：%s</string>
     <string name="filters">絞り込む</string>
     <string name="filter_only_favorites">お気に入りのみ</string>
+    <string name="button_retry_recognition_hint">長押しして認識を再試行する</string>
+    <string name="result_message_bad_network_response">インターネットリクエストの実行中にエラーが発生しました</string>
 </resources>

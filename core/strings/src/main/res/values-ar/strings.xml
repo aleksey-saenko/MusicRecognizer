@@ -10,7 +10,7 @@
     <string name="widget_listening_subtitle_extra_time">المحاولة مرةً أخرى</string>
     <string name="recognition_widget_description">التعرف على الأغنية بنقرةٍ واحدة</string>
     <string name="notification_tap_to_recognize">انقر للتعرف</string>
-    <string name="notification_tap_to_recognize_subtitle">التعرف على الموسيقى عند فتح أي تطبيق</string>
+    <string name="notification_tap_to_recognize_subtitle">التعرف على الموسيقى أثناء فتح أي تطبيق</string>
     <string name="notification_listening">يجري الاستماع</string>
     <string name="notification_listening_subtitle">الرجاء الانتظار</string>
     <string name="notification_listening_subtitle_extra_time">المحاولة مرةً أخرى</string>
@@ -202,7 +202,7 @@
     <string name="recognition_provider_dialog_title">المزود</string>
     <string name="recognition_provider_dialog_message">حدد مزود خدمة التعرف:</string>
     <string name="audd_help_dialog_message_empty_token">يمكنك تجربة استخدام الخدمة لأغراض الاختبار دون تقديم الرمز، ولكن يُرجى ملاحظة أن هذا سيحد من عمليات التعرف اليومية.</string>
-    <string name="acr_cloud_help_dialog_message">ACRCloud خدمة مدفوعة توفر خيار فترة تجريبية مجانية واستخدام محدود لأغراض التطوير. لاستخدام هذه الخدمة، عليك إنشاء حساب وتسجيل مشروع. في حال واجهت أي صعوبات، يُرجى الرجوع إلى <![CDATA[<a href="%1$s">هذا الدليل</a>]]>.</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloud خدمةٌ مدفوعةٌ توفر خيار فترةٍ تجريبيةٍ مجانيةٍ واستخدام محدود لأغراض التطوير. لاستخدام هذه الخدمة، عليك إنشاء حسابٍ وتسجيل مشروع. في حال واجهت أي صعوبات، يُرجى الرجوع إلى <![CDATA[<a href="%1$s">هذا الدليل</a>]]>.</string>
     <string name="acr_cloud_help_dialog_steps_title">يُرجى الانتباه إلى هذه الخطوات:</string>
     <string name="acr_cloud_help_dialog_step1">اختر المنطقة الجغرافية الأقرب إليك لتقليل تأخير زمن استجابة الإنترنت</string>
     <string name="acr_cloud_help_dialog_step2">ضبط مصدر الصوت على ”صوت مُسجل“</string>
@@ -254,7 +254,7 @@
     <string name="backup_estimating_size">يجري تقدير حجم بيانات التطبيق…</string>
     <string name="backup_in_progress">يجري إنشاء نسخة احتياطية…</string>
     <string name="backup_result_success">تم إنشاء النسخة الاحتياطية بنجاح!</string>
-    <string name="restore_erase_warning">ستؤدي عملية الاستعادة إلى مسح البيانات الحالية واستبدالها بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء. لذا، يُرجى نسخ أي بيانات مهمة احتياطيًّا قبل المتابعة.</string>
+    <string name="restore_erase_warning">ستؤدي عملية الاستعادة إلى مسح البيانات الحالية واستبدالها بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء. لذا، يُرجى نسخ أي بياناتٍ مهمةٍ احتياطيًّا قبل المتابعة.</string>
     <string name="restore_info_restart">سيتم إعادة تشغيل التطبيق بعد اكتمال عملية الاستعادة.</string>
     <string name="restore_checking_backup">يجري فحص ملف النسخ الاحتياطي…</string>
     <string name="restore_in_progress">يجري الاستعادة…</string>
@@ -264,8 +264,8 @@
     <string name="restore_result_newer_version">تم إنشاء هذه النسخة الاحتياطية بواسطة إصدارٍ أحدث من التطبيق ولا يمكن استعادتها.</string>
     <string name="restore_will_restart_in">سيتم إعادة تشغيل التطبيق خلال %d من الثواني.</string>
     <string name="backup_restore_result_file_not_found">لم يتم العثور على ملف النسخ الاحتياطي.</string>
-    <string name="backup_restore_unhandled_error">حدث خطأ غير متوقع.</string>
-    <string name="backup_restore_unhandled_error_message">يُرجى التأكد من وجود مساحة تخزين كافية لديك، ثم حاول مرة أخرى.</string>
+    <string name="backup_restore_unhandled_error">حدث خطأٌ غير متوقع.</string>
+    <string name="backup_restore_unhandled_error_message">يُرجى التأكد من وجود مساحة تخزين كافية لديك، ثم حاول مرةً أخرى.</string>
     <string name="toast_no_file_selected">لم يتم تحديد أي ملف</string>
     <string name="toast_failed_delete_incomplete_backup_file">تعذر حذف ملف النسخ الاحتياطي غير المكتمل</string>
     <string name="toast_press_again_to_confirm">اضغط مرة أخرى للتأكيد</string>
@@ -274,7 +274,7 @@
     <string name="about_purpose_recognition_service">يوفر تحديد الأغاني والبيانات الوصفية الأساسية</string>
     <string name="about_purpose_track_links_service">يوفر روابط إضافية للأغاني خاصة بكل منصة</string>
     <string name="recognition_provider_dialog_format_auth">مصادقة %s:</string>
-    <string name="audd_help_dialog_message">AudD خدمة مدفوعة توفر فترة تجريبية مجانية لمدة ١٤ يومًا. لاستخدام هذه الخدمة، عليك إنشاء حساب والحصول على رمز واجهة برمجة تطبيقات (API) خاص بك. <![CDATA[<a href="%1$s">سجّل</a>]]> الآن إن لم يكن لديك حساب بالفعل.</string>
+    <string name="audd_help_dialog_message">AudD خدمةٌ مدفوعةٌ توفر فترةً تجريبيةً مجانيةً لمدة ١٤ يومًا. لاستخدام هذه الخدمة، عليك إنشاء حسابٍ والحصول على رمز واجهة برمجة تطبيقاتٍ خاصٍّ بك. <![CDATA[<a href="%1$s">سجّل</a>]]> الآن إن لم يكن لديك حسابٌ بالفعل.</string>
     <string name="about_pref_title_github_repo">مستودع GitHub</string>
     <string name="about_pref_subtitle_github_repo">الكود المصدري، والبلاغات، ومعلومات أخرى</string>
     <string name="about_pref_title_privacy_policy">سياسة الخصوصية</string>
@@ -295,7 +295,7 @@
     <string name="notification_channel_name_scheduled_result">نتائج الأغاني لعمليات التعرف المجدولة</string>
     <string name="notification_channel_desc_scheduled_result">يعرض نتائج التعرف على الأغاني التي جُدولت دون اتصال بالإنترنت أو في حالات أخرى</string>
     <string name="crash_dialog_title">تعطل أوديل</string>
-    <string name="crash_dialog_message">حدث خطأ غير متوقع، مما أدى إلى توقف التطبيق. هل ترغب في إرسال تقرير الخطأ عبر البريد الإلكتروني للمساعدة في حل المشكلة؟</string>
+    <string name="crash_dialog_message">حدث خطأٌ غير متوقع، مما أدى إلى توقف التطبيق. هل ترغب في إرسال تقرير الخطأ عبر البريد الإلكتروني للمساعدة في حل المشكلة؟</string>
     <string name="crash_dialog_comment_prompt">يمكنك إضافة معلومات إضافية هنا:</string>
     <string name="crash_dialog_button_send">إرسال</string>
     <string name="crash_dialog_button_cancel">إلغاء</string>
@@ -321,15 +321,16 @@
     <string name="export_csv_result_success">تم إنشاء ملف CSV بنجاح!</string>
     <string name="audio_source_dialog_screen_casting_bullet_2">قد تحظر بعض التطبيقات تسجيل الصوت بسبب سياسات التسجيل، وفي هذه الحالة سيستقبل تطبيق أوديل صمتًا</string>
     <string name="track_info_title_format_isrc">%s:</string>
-    <string name="audio_source_dialog_device_audio_limited">يدعم التطبيق تسجيل صوت الجهاز بشكل محدود على نظام Android 9 والإصدارات الأقدم</string>
+    <string name="audio_source_dialog_device_audio_limited">يدعم التطبيق تسجيل صوت الجهاز بشكل محدود على نظام أندرويد ٩ والإصدارات الأقدم</string>
     <string name="audio_source_dialog_methods">يدعم التطبيق طريقتين لتسجيل صوت الجهاز:</string>
     <string name="audio_source_dialog_screen_casting_title">١. بث الشاشة (الطريقة الأساسية)</string>
-    <string name="audio_source_dialog_screen_casting_bullet_1">توفر هذه الطريقة أفضل جودة صوت وتعمل على جميع الأجهزة التي تعمل بنظام Android 10 والإصدارات الأحدث</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">توفر هذه الطريقة أفضل جودة صوت وتعمل على جميع الأجهزة التي تعمل بنظام أندرويد ١٠ والإصدارات الأحدث</string>
     <string name="audio_source_dialog_alt_method_title">٢. طريقة بديلة</string>
     <string name="audio_source_dialog_alt_method_bullet_1">لا يتطلب إذنًا لبث الشاشة ويتجاوز قيود تسجيل الصوت التي تفرضها التطبيقات الأخرى</string>
-    <string name="audio_source_dialog_alt_method_bullet_2">يدعم جميع إصدارات Android</string>
+    <string name="audio_source_dialog_alt_method_bullet_2">يدعم جميع إصدارات أندرويد</string>
     <string name="audio_source_dialog_alt_method_bullet_3">جودة الصوت أقل، وقد لا تعمل هذه الطريقة على بعض الأجهزة</string>
     <string name="notification_title_match_found">تم العثور على تطابق!</string>
     <string name="pref_title_prerecording_buffer">مخزّن مؤقت للتسجيل المُسبق</string>
-    <string name="pref_subtitle_prerecording_buffer">تسجيل مقطعٍ صوتيٍّ قصيرٍ أثناء فتح التطبيق لتسريع عملية التعرف</string>
+    <string name="pref_subtitle_prerecording_buffer">سجّل مقطعًا صوتيًّا قصيرًا أثناء فتح التطبيق لتسريع عملية التعرف</string>
+    <string name="button_retry_recognition_hint">اضغط مطولًا لإعادة محاولة التعرف</string>
 </resources>

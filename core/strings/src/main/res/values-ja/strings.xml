@@ -132,4 +132,6 @@
     <string name="filter_only_favorites">お気に入りのみ</string>
     <string name="button_retry_recognition_hint">長押しして認識を再試行する</string>
     <string name="result_message_bad_network_response">インターネットリクエストの実行中にエラーが発生しました</string>
+    <string name="result_message_auth_error">選択した認識サービスのログイン情報の確認の上、もう一度試してください</string>
+    <string name="result_title_service_usage_limited">サービスの利用が制限しています</string>
 </resources>

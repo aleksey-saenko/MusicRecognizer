@@ -330,4 +330,7 @@
     <string name="audio_source_dialog_alt_method_bullet_3">La calidad de sonido es inferior, y este método podría no funcionar en algunos dispositivos</string>
     <string name="track_info_title_format_isrc">%s:</string>
     <string name="notification_title_match_found">Coincidencia encontrada!</string>
+    <string name="button_retry_recognition_hint">Mantén presionado para reintentar</string>
+    <string name="pref_title_prerecording_buffer">Búfer de pregrabación</string>
+    <string name="pref_subtitle_prerecording_buffer">Graba un búfer corto mientras la app está abierta para acelerar el reconocimiento</string>
 </resources>

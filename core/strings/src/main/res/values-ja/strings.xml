@@ -159,4 +159,21 @@
     <string name="select_all">すべて選択</string>
     <string name="delete_recognitions_title">認識を削除する</string>
     <string name="delete_recognitions_message">予約した認識を中止し削除してもよろしいですか？この操作は元に戻せません。</string>
+    <string name="untitled_recognition">名前のない認識</string>
+    <string name="recognition_action_show_track">トラックを表示する</string>
+    <string name="deselect_all">選択を削除する</string>
+    <string name="mark_track_as_favorite">お気に入りに追加</string>
+    <string name="unmark_track_as_favorite">お気に入りから外す</string>
+    <string name="show_track">トラックを表示</string>
+    <string name="show_lyrics">歌詞を表示</string>
+    <string name="web_search">ウェブ検索</string>
+    <string name="web">ウェブ</string>
+    <string name="artwork">ジャケット</string>
+    <string name="artwork_share_menu_link">リンク</string>
+    <string name="track_not_found_title">トラックが見つかりませんでした</string>
+    <string name="no_lyrics_available">この曲の歌詞が掲載されていません</string>
+    <string name="font_size">文字サイズ</string>
+    <string name="preferences">設定</string>
+    <string name="pref_title_recognize_on_startup">アプリの起動時に認識を開始する</string>
+    <string name="pref_title_audio_source">音声ソース</string>
 </resources>

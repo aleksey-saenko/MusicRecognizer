@@ -75,7 +75,7 @@
     <string name="result_message_recognition_scheduled">تم حفظ عينة الصوت، وعندما يعود اتصالك بالإنترنت، سيحاول التطبيق التعرف على هذه الأغنية</string>
     <string name="result_title_recording_error">خطأ في التسجيل</string>
     <string name="result_message_recording_error">حدث خطأ أثناء تسجيل الصوت</string>
-    <string name="result_title_bad_network_response">فشل في طلب الشبكة</string>
+    <string name="result_title_bad_network_response">فشل طلب الشبكة</string>
     <string name="result_message_bad_network_response">حدث خطأ أثناء طلب الإنترنت</string>
     <string name="result_title_auth_error">خطأ في المصادقة</string>
     <string name="result_message_auth_error">يرجى التحقق من بيانات اعتمادك لخدمة التعرف المحددة والمحاولة مرة أخرى</string>
@@ -94,7 +94,7 @@
     <string name="filter_favorites">المفضلة</string>
     <string name="filter_all">الكل</string>
     <string name="filter_only_favorites">المفضلة فقط</string>
-    <string name="filter_exclude_favorites">استبعاد المفضلات</string>
+    <string name="filter_exclude_favorites">استبعاد المفضلة</string>
     <string name="filter_sort_by">الفرز حسب</string>
     <string name="filter_recognition_date">تاريخ التعرف</string>
     <string name="filter_title">العنوان</string>
@@ -251,13 +251,13 @@
     <string name="backup_entry_preferences">التفضيلات</string>
     <string name="backup_entry_picker_title">حدد البيانات المُراد نسخها احتياطيًّا:</string>
     <string name="restore_entry_picker_title">حدد البيانات المراد استعادتها:</string>
-    <string name="backup_estimating_size">جاري تقدير حجم بيانات التطبيق…</string>
-    <string name="backup_in_progress">جاري إنشاء نسخة احتياطية…</string>
+    <string name="backup_estimating_size">يجري تقدير حجم بيانات التطبيق…</string>
+    <string name="backup_in_progress">يجري إنشاء نسخة احتياطية…</string>
     <string name="backup_result_success">تم إنشاء النسخة الاحتياطية بنجاح!</string>
     <string name="restore_erase_warning">ستؤدي عملية الاستعادة إلى مسح البيانات الحالية واستبدالها بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء. لذا، يرجى نسخ أي بيانات مهمة احتياطيًّا قبل المتابعة.</string>
     <string name="restore_info_restart">سيتم إعادة تشغيل التطبيق بعد اكتمال عملية الاستعادة.</string>
-    <string name="restore_checking_backup">جاري فحص ملف النسخ الاحتياطي…</string>
-    <string name="restore_in_progress">جاري الاستعادة…</string>
+    <string name="restore_checking_backup">يجري فحص ملف النسخ الاحتياطي…</string>
+    <string name="restore_in_progress">يجري الاستعادة…</string>
     <string name="restore_result_success">نجاح!</string>
     <string name="restore_result_malformed_backup">ملف النسخ الاحتياطي هذا تالف.</string>
     <string name="restore_result_not_backup">هذا الملف ليس نسخة احتياطية صالحة.</string>
@@ -287,7 +287,7 @@
     <string name="notification_button_disable_service">إيقاف الخدمة</string>
     <string name="notification_button_show_lyrics">عرض كلمات الأغنية</string>
     <string name="notification_channel_name_control">التحكم في الإشعارات</string>
-    <string name="notification_channel_desc_control">السماح بالتحكم في عملية التعرف</string>
+    <string name="notification_channel_desc_control">يسمح بالتحكم في عملية التعرف</string>
     <string name="notification_channel_name_foreground_result">العثور على نتائج الأغاني في الواجهة</string>
     <string name="notification_channel_desc_foreground_result">يعرض نتائج الأغاني عندما تكون على شاشة التعرف</string>
     <string name="notification_channel_name_background_result">العثور على نتائج الأغاني في الخلفية</string>
@@ -303,7 +303,7 @@
     <string name="pref_title_export_to_csv">تصدير إلى ملف CSV</string>
     <string name="pref_subtitle_export_to_csv">تصدير جميع الأغاني إلى ملف CSV</string>
     <string name="export_only_favorites_tracks">تصدير الأغاني المفضلة فقط</string>
-    <string name="export_write_csv_header">تضمين رؤس ملف CSV</string>
+    <string name="export_write_csv_header">تضمين ترويسة ملف CSV</string>
     <string name="export_select_fields_to_export">حدد الحقول المراد تصديرها:</string>
     <string name="export_track_field_title">العنوان</string>
     <string name="export_track_field_artist">الفنان</string>

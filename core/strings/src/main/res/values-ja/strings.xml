@@ -176,4 +176,23 @@
     <string name="preferences">設定</string>
     <string name="pref_title_recognize_on_startup">アプリの起動時に認識を開始する</string>
     <string name="pref_title_audio_source">音声ソース</string>
+    <string name="recognition_queue">認識待ちリスト</string>
+    <string name="queue">認識待ちリスト</string>
+    <string name="empty_recognition_queue_title">認識待ちの曲がありません</string>
+    <string name="empty_recognition_queue_subtitle">オフライン時や認識が失敗した場合に、選択されたフォールバック処理に従って録音されたサンプルを認識待ちリストに入れることができます</string>
+    <string name="recognition_action_enqueue">認識待ちリストに追加</string>
+    <string name="recognition_action_force_launch">強制的に認識する</string>
+    <string name="disable_multi_selection_mode">複数選択モードを無効にする</string>
+    <string name="cancel_selected">選択された認識を中止</string>
+    <string name="delete_selected">選択さらた認識を削除</string>
+    <string name="track_metadata">トラック情報</string>
+    <string name="title">タイトル</string>
+    <string name="share_music_services_links">音楽配信サービス</string>
+    <string name="search_for">検索内容</string>
+    <string name="search_in">検索サービス</string>
+    <string name="track_info">トラック情報</string>
+    <string name="track_info_title_recognized_by">認識サービス︰</string>
+    <string name="track_info_title_date_of_last_recognition">最近の認識日付︰</string>
+    <string name="track_info_title_format_isrc">%s︰</string>
+    <string name="track_info_title_duration">再生時間︰</string>
 </resources>

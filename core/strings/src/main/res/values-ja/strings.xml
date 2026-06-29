@@ -195,4 +195,5 @@
     <string name="track_info_title_date_of_last_recognition">最近の認識日付︰</string>
     <string name="track_info_title_format_isrc">%s︰</string>
     <string name="track_info_title_duration">再生時間︰</string>
+    <string name="track_info_title_recognized_at">認識された時の再生位置︰</string>
 </resources>

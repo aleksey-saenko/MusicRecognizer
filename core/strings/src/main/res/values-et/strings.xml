@@ -332,4 +332,5 @@
     <string name="notification_title_match_found">Otsingule leidus vaste!</string>
     <string name="pref_title_prerecording_buffer">Eelsalvestuse puhver</string>
     <string name="pref_subtitle_prerecording_buffer">Kiirema tuvastamise nimel salvesta rakenduse avades lühike helilõik</string>
+    <string name="button_retry_recognition_hint">Hoia all proovimaks uuesti tuvastamist</string>
 </resources>

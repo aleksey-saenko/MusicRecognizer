@@ -340,4 +340,7 @@
     <string name="export_csv_result_success">CSV dosyası başarıyla oluşturuldu!</string>
     <string name="export_track_field_artwork_link">Kapak resmi</string>
     <string name="notification_title_match_found">Eşleşme bulundu!</string>
+    <string name="button_retry_recognition_hint">Tanımlamayı yeniden denemek için basılı tutun</string>
+    <string name="pref_title_prerecording_buffer">ön kayıt belleği</string>
+    <string name="pref_subtitle_prerecording_buffer">Tanımlamanın daha hızlı olabilmesi için dinletilen seslerden ufak kesitleri uygulamada kaydet</string>
 </resources>

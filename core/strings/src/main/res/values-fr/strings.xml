@@ -167,7 +167,7 @@
     <string name="font_size_normal">Normal</string>
     <string name="font_size_large">Grand</string>
     <string name="font_size_huge">Énorme</string>
-    <string name="align_to_start">Aligner au début</string>
+    <string name="align_to_start">Aligner à gauche</string>
     <string name="bold_text">Texte en gras</string>
     <string name="high_contrast_text">Texte à fort contraste</string>
     <!-- Preferences screen -->

@@ -239,4 +239,16 @@
     <string name="fallback_trigger_no_matches_found">一致する曲が見つからない場合</string>
     <string name="recognition_provider_dialog_format_auth">%sの認証情報︰</string>
     <string name="audd_help_dialog_message">AudDは有料サービスですが、14日間の無料トライアルが利用可能です。このサービスを利用するには、アカウントを作成し、専用のAPIトークンを取得する必要があります。まだお持ちでない場合は、<![CDATA[<a href="%1$s">サインアップ</a>]]> してください。</string>
+    <string name="about_pref_subtitle_license">AudileはGNU GPLv3またはそれ以降のバージョンに基づいてライセンスされています</string>
+    <string name="about_pref_title_third_licenses">サードパーティのライセンス</string>
+    <string name="about_pref_subtitle_third_licenses">Audileが使用するサードパーティ製ライブラリーのライセンス</string>
+    <string name="pref_title_about_app">このアプリについて</string>
+    <string name="about_purpose_recognition_service">楽曲の認識及びその基本の情報を提供します</string>
+    <string name="about_purpose_track_links_service">配信サービスごとのトラックへのリンクを追加で提供します</string>
+    <string name="about_pref_title_github_repo">GitHubリポジトリ</string>
+    <string name="about_pref_subtitle_github_repo">ソースコード、バグ報告、機能要望などの情報</string>
+    <string name="about_pref_title_privacy_policy">プライバシーポリシー</string>
+    <string name="about_pref_subtitle_privacy_policy">パーソナルデータの取得、利用、提供などについて</string>
+    <string name="audd_help_dialog_message_empty_token">トークンを指定せずにテスト目的で本サービスを利用することも可能ですが、その場合は1日あたりの認識回数が制限しています。</string>
+    <string name="acr_cloud_help_dialog_step1">インターネットの遅延を最小限に抑えるため、お住まいの場所に最も近い地域を選択してください</string>
 </resources>

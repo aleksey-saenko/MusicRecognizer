@@ -251,4 +251,8 @@
     <string name="about_pref_subtitle_privacy_policy">パーソナルデータの取得、利用、提供などについて</string>
     <string name="audd_help_dialog_message_empty_token">トークンを指定せずにテスト目的で本サービスを利用することも可能ですが、その場合は1日あたりの認識回数が制限しています。</string>
     <string name="acr_cloud_help_dialog_step1">インターネットの遅延を最小限に抑えるため、お住まいの場所に最も近い地域を選択してください</string>
+    <string name="acr_cloud_help_dialog_message">ACRCloudは有料サービスですが、開発目的での無料トライアル期間や利用制限付きのプランもご用意しています。このサービスをご利用になるには、アカウントを作成し、プロジェクトを登録する必要があります。問題が発生した場合は、<![CDATA[<a href="%1$s">こちらのガイド</a>]]>をご参照ください。</string>
+    <string name="acr_cloud_help_dialog_steps_title">以下の点にご注意ください︰</string>
+    <string name="acr_cloud_help_dialog_step3">お好みのオーディオエンジンを設定してください。汎用用途には「オーディオフィンガープリント」が最も精度が高いものです</string>
+    <string name="acr_cloud_help_dialog_step4">「サードパーティIDの連携」という項目にあるチェックボックスをすべてチェックしてください</string>
 </resources>

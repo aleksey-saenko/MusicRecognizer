@@ -26,6 +26,8 @@
     <string name="app_shortcut_recognize_long">Recognize in background</string>
     <string name="app_shortcut_open_and_recognize_short">Open &amp; Recognize</string>
     <string name="app_shortcut_open_and_recognize_long">Open app and recognize</string>
+    <string name="app_shortcut_show_floating_button_short">Button</string>
+    <string name="app_shortcut_show_floating_button_long">Floating button</string>
     <!-- General use -->
     <string name="nav_back">Back</string>
     <string name="nav_forward">Forward</string>
@@ -242,6 +244,8 @@
     <string name="pref_title_manage_notifications">Manage notifications</string>
     <string name="pref_title_notification_service">Notification service</string>
     <string name="pref_subtitle_notification_service">Control recognition from notifications</string>
+    <string name="pref_title_floating_button">Floating button</string>
+    <string name="pref_subtitle_floating_button">Show a floating button above other apps for quick access to recognition</string>
     <string name="pref_group_appearance">Appearance</string>
     <string name="pref_title_use_grid_layout">Use grid layout</string>
     <string name="pref_title_show_recognition_date">Show recognition date</string>

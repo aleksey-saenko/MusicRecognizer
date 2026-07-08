@@ -255,4 +255,16 @@
     <string name="acr_cloud_help_dialog_steps_title">以下の点にご注意ください︰</string>
     <string name="acr_cloud_help_dialog_step3">お好みのオーディオエンジンを設定してください。汎用用途には「オーディオフィンガープリント」が最も精度が高いものです</string>
     <string name="acr_cloud_help_dialog_step4">「サードパーティIDの連携」という項目にあるチェックボックスをすべてチェックしてください</string>
+    <string name="pref_title_notification_service">通知サービス</string>
+    <string name="pref_subtitle_notification_service">通知から認識を制御する</string>
+    <string name="pref_group_appearance">外観</string>
+    <string name="pref_title_use_grid_layout">グリッドレイアウトを使用する</string>
+    <string name="pref_title_show_recognition_date">認識の日付を表示する</string>
+    <string name="pref_title_show_creation_date">作成日を表示する</string>
+    <string name="pref_title_theme">テーマ</string>
+    <string name="theme_dialog_message">テーマを選択してください︰</string>
+    <string name="theme_mode">モード</string>
+    <string name="theme_mode_follow_system">システムに合わせる</string>
+    <string name="theme_use_dynamic_colors">ダイナミックカラー</string>
+    <string name="theme_use_artwork_colors">カバーのカラーに合わせる</string>
 </resources>

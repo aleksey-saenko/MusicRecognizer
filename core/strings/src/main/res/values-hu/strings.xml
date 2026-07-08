@@ -330,4 +330,7 @@
     <string name="audio_source_dialog_alt_method_bullet_3">A hangminőség gyengébb, és ez a módszer egyes eszközökön nem biztos, hogy működik</string>
     <string name="export_track_field_playback_offset">Időbélyeg-eltolódás</string>
     <string name="notification_title_match_found">Egyezés találva!</string>
+    <string name="button_retry_recognition_hint">Tartsd nyomva az újrapróbálkozáshoz</string>
+    <string name="pref_title_prerecording_buffer">Előfelvételi puffer</string>
+    <string name="pref_subtitle_prerecording_buffer">Rövid hangpuffer rögzítése a gyorsabb felismeréshez, amíg az alkalmazás nyitva van</string>
 </resources>

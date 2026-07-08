@@ -1,5 +1,5 @@
-<b>Audile</b> yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde bulabilmenize yardımcı olabilecek bir müzik algılama uygulamasıdır.
-Uygulama, şarkı tanımlama işlemini gerçekleştirmek için AudD ve ACRCloud hizmetlerini ve platforma özgü ek parça bağlantılarını almak için Odesli hizmetini kullanır.
+<b>Audile</b> yakınınızda çalan bir müzik parçasını hızlı ve doğru bir şekilde bulabilmenize yardımcı olabilecek açık kaynlaklı bir müzik tanımlama uygulamasıdır.
+Uygulama, şarkı tanımlama işlemini gerçekleştirmek için AudD, ACRCloud ve Shazam hizmetlerini ve platforma özgü ek parça bağlantılarını almak için Odesli'yi kullanır.
 
 <b>Özellikler:</b>
 

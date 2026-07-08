@@ -167,7 +167,7 @@
     <string name="font_size_normal">Normal</string>
     <string name="font_size_large">Grand</string>
     <string name="font_size_huge">Énorme</string>
-    <string name="align_to_start">Aligner au début</string>
+    <string name="align_to_start">Aligner à gauche</string>
     <string name="bold_text">Texte en gras</string>
     <string name="high_contrast_text">Texte à fort contraste</string>
     <!-- Preferences screen -->
@@ -341,4 +341,5 @@
     <string name="notification_title_match_found">Correspondance trouvée !</string>
     <string name="pref_title_prerecording_buffer">Tampon de pré-enregistrement</string>
     <string name="pref_subtitle_prerecording_buffer">Enregistrez un court extrait audio pendant que l\'application est ouverte pour accélérer la reconnaissance</string>
+    <string name="button_retry_recognition_hint">Maintenez enfoncé pour relancer la reconnaissance</string>
 </resources>

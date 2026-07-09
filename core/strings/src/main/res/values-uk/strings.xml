@@ -333,4 +333,8 @@
     <string name="pref_title_prerecording_buffer">Буфер попереднього запису</string>
     <string name="pref_subtitle_prerecording_buffer">Записує невеликий фрагмент аудіо, поки застосунок відкритий, щоби пришвидшити розпізнавання</string>
     <string name="button_retry_recognition_hint">Утримуйте, щоби повторити розпізнавання</string>
+    <string name="app_shortcut_show_floating_button_short">Кнопка</string>
+    <string name="app_shortcut_show_floating_button_long">Плавуча кнопка</string>
+    <string name="pref_title_floating_button">Плавуча кнопка</string>
+    <string name="pref_subtitle_floating_button">Показувати плавучу кнопку над іншими застосунками для швидкого доступу до функції розпізнавання</string>
 </resources>

@@ -333,4 +333,8 @@
     <string name="pref_subtitle_prerecording_buffer">Gravar un pequeno fragmento de audio mentras a app está aberta para recoñecemento máis rápido</string>
     <string name="pref_title_prerecording_buffer">Almacenaxe anticipada</string>
     <string name="button_retry_recognition_hint">Mantén premido para volver a intentalo</string>
+    <string name="app_shortcut_show_floating_button_short">Botón</string>
+    <string name="app_shortcut_show_floating_button_long">Botón flotante</string>
+    <string name="pref_title_floating_button">Botón flotante</string>
+    <string name="pref_subtitle_floating_button">Mostra un botón superposto a outras aplicacións para un acceso rápido á identificación</string>
 </resources>

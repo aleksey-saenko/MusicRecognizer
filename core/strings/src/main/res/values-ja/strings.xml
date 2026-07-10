@@ -267,4 +267,7 @@
     <string name="theme_mode_follow_system">システムに合わせる</string>
     <string name="theme_use_dynamic_colors">ダイナミックカラー</string>
     <string name="theme_use_artwork_colors">カバーのカラーに合わせる</string>
+    <string name="app_shortcut_show_floating_button_short">ボタン</string>
+    <string name="app_shortcut_show_floating_button_long">フローティングボタン</string>
+    <string name="pref_title_floating_button">フローティングボタン</string>
 </resources>

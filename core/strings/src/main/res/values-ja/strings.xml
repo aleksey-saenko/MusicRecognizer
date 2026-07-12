@@ -270,4 +270,24 @@
     <string name="app_shortcut_show_floating_button_short">ボタン</string>
     <string name="app_shortcut_show_floating_button_long">フローティングボタン</string>
     <string name="pref_title_floating_button">フローティングボタン</string>
+    <string name="pref_subtitle_floating_button">他のアプリの上にフローティングボタンを重ねて表示し、認識機能にすばやくアクセスできるようにする</string>
+    <string name="theme_use_pure_black">純黒</string>
+    <string name="pref_title_music_services_links">音楽配信サービスへのリンク</string>
+    <string name="pref_subtitle_format_more_services">%1$s、およびその他の%2$d件</string>
+    <string name="music_services_links_dialog">リンクを表示したい音楽配信サービスを選択してください（利用可能な場合のみ）：</string>
+    <string name="pref_group_misc">その他</string>
+    <string name="pref_title_vibration_feedback">触覚フィードバック</string>
+    <string name="vibration_feedback_dialog_title">触覚フィードバック</string>
+    <string name="vibration_feedback_dialog_message">アプリ内の特定の操作に対する触覚フィードバックを設定します︰</string>
+    <string name="vibration_feedback_dialog_vibrate_on_tap">タップ時</string>
+    <string name="vibration_feedback_dialog_vibrate_on_result">認識結果時</string>
+    <string name="pref_title_experimental_features">実験的な機能</string>
+    <string name="pref_subtitle_experimental_features">開発中の機能</string>
+    <string name="pref_title_backup_and_restore">バックアップと復元</string>
+    <string name="pref_subtitle_backup_and_restore">アプリのデータのバックアップを作成する</string>
+    <string name="pref_subtitle_backup">データベースとアプリ設定をバックします</string>
+    <string name="pref_subtitle_restore">バックアップファイルからアプリのデータを復元する</string>
+    <string name="backup_dialog_button_backup">実行</string>
+    <string name="backup_entry_data">データベースと音声サンプル</string>
+    <string name="backup_entry_preferences">アプリ設定</string>
 </resources>

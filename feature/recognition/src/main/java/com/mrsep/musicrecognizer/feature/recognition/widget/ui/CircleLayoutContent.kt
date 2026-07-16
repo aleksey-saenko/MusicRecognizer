@@ -87,12 +87,16 @@ internal fun CircleLayoutContent(
                         )
 
                         is RecognitionResult.Success -> if (layout.showArtwork && uiState.artwork != null) {
-                            Box { // Somehow this useless Box helps to avoid glitches when changing the size of the widget with artwork. Glance...
+                            // Wrapping the Image in a fixed-size Box prevents rendering glitches
+                            Box(
+                                modifier = GlanceModifier.size(layout.artworkSize),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Image(
                                     provider = ImageProvider(uiState.artwork),
                                     contentDescription = context.getString(StringsR.string.show_track),
                                     contentScale = ContentScale.Fit,
-                                    modifier = GlanceModifier.size(layout.artworkSize)
+                                    modifier = GlanceModifier.fillMaxSize()
                                 )
                             }
                         } else {

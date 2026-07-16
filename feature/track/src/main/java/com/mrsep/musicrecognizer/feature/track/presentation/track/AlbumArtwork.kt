@@ -24,7 +24,7 @@ import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.toBitmap
 import com.mrsep.musicrecognizer.core.ui.util.forwardingPainter
-import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
+import com.mrsep.musicrecognizer.core.ui.util.generateThemeSeedColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,7 +61,7 @@ internal fun AlbumArtwork(
         onSuccess = { state ->
             if (createSeedColor && !state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
-                    val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
+                    val seedColor = state.result.image.toBitmap().generateThemeSeedColor() ?: return@launch
                     withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
                 }
             }
@@ -80,7 +80,7 @@ internal fun AlbumArtwork(
         onSuccess = { state ->
             if (createSeedColor && !state.result.request.allowHardware) {
                 scope.launch(Dispatchers.Default) {
-                    val seedColor = state.result.image.toBitmap().getDominantColor() ?: return@launch
+                    val seedColor = state.result.image.toBitmap().generateThemeSeedColor() ?: return@launch
                     withContext(Dispatchers.Main) { onSeedColorCreated(seedColor) }
                 }
             }

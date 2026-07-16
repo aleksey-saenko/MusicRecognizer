@@ -11,7 +11,7 @@ import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import coil3.toBitmap
-import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
+import com.mrsep.musicrecognizer.core.ui.util.generateThemeSeedColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -60,7 +60,7 @@ internal suspend fun Context.prefetchArtworkAndGenerateSeedColor(
     val downloaded = downloadImageToDiskCache(artworkUrl)
     if (downloaded) {
         getCachedImageOrNull(artworkUrl, allowHardware = false)
-            ?.getDominantColor()
+            ?.generateThemeSeedColor()
             ?.let { seedColor -> onSeedColorCreated(seedColor) }
     }
     downloaded

@@ -14,7 +14,7 @@ import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvid
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RemoteRecognitionResult
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
-import com.mrsep.musicrecognizer.core.ui.util.getDominantColor
+import com.mrsep.musicrecognizer.core.ui.util.generateThemeSeedColor
 import com.mrsep.musicrecognizer.feature.recognition.service.ResultNotificationHelper
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.getCachedImageOrNull
@@ -157,7 +157,7 @@ internal class EnqueuedRecognitionWorker @AssistedInject constructor(
             .awaitAll()
         track.artworkUrl?.let { artworkUrl ->
             appContext.getCachedImageOrNull(artworkUrl, allowHardware = false)
-                ?.getDominantColor()
+                ?.generateThemeSeedColor()
                 ?.let { themeColor -> trackRepository.setThemeSeedColor(track.id, themeColor) }
         }
     }

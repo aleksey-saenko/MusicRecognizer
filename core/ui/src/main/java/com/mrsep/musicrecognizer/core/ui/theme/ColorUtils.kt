@@ -1,8 +1,9 @@
-package com.mrsep.musicrecognizer.feature.track.presentation.utils
+package com.mrsep.musicrecognizer.core.ui.theme
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,11 +15,11 @@ import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 
 @Composable
-internal fun SwitchingMusicRecognizerTheme(
+fun SwitchingMusicRecognizerTheme(
     seedColor: Color?,
-    artworkBasedThemeEnabled: Boolean,
-    useDarkTheme: Boolean,
-    usePureBlackForDarkTheme: Boolean,
+    artworkBasedThemeEnabled: Boolean = true,
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    usePureBlackForDarkTheme: Boolean = false,
     highContrastMode: Boolean = false,
     style: PaletteStyle = PaletteStyle.Vibrant,
     contrastLevel: Double = 0.0,
@@ -31,7 +32,9 @@ internal fun SwitchingMusicRecognizerTheme(
         seedColor,
         useDarkTheme,
         usePureBlackForDarkTheme,
-        highContrastMode
+        highContrastMode,
+        style,
+        contrastLevel,
     ) {
         derivedStateOf {
             val scheme = if (!artworkBasedThemeEnabled || seedColor == null) {
@@ -66,7 +69,7 @@ internal fun SwitchingMusicRecognizerTheme(
 }
 
 @Composable
-internal fun ColorScheme.switch(animationSpec: AnimationSpec<Color>) = copy(
+private fun ColorScheme.switch(animationSpec: AnimationSpec<Color>) = copy(
     primary = animateColorAsState(primary, animationSpec, "").value,
     onPrimary = animateColorAsState(onPrimary, animationSpec, "").value,
     primaryContainer = animateColorAsState(primaryContainer, animationSpec, "").value,

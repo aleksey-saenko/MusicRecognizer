@@ -26,7 +26,6 @@ internal fun TrackInfoColumn(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val metadataToCopy = "$title - $artist"
     var expandedInfo by rememberSaveable { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -35,7 +34,7 @@ internal fun TrackInfoColumn(
                 interactionSource = null,
                 indication = null,
                 onClick = { expandedInfo = !expandedInfo },
-                onLongClick = { context.copyTextToClipboard(metadataToCopy) }
+                onLongClick = { context.copyTextToClipboard("$title - $artist") }
             )
     ) {
         Text(

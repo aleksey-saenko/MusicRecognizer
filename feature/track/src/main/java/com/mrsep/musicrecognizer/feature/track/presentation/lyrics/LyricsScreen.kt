@@ -31,7 +31,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
 import com.mrsep.musicrecognizer.core.ui.components.LoadingStub
 import com.mrsep.musicrecognizer.feature.track.presentation.track.TrackNotFoundMessage
 import com.mrsep.musicrecognizer.feature.track.presentation.track.shouldUseDarkTheme
-import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
+import com.mrsep.musicrecognizer.core.ui.theme.SwitchingMusicRecognizerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

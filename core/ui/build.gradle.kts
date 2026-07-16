@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.core.strings)
     implementation(projects.core.domain)
 
+    api(libs.materialKolor)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)

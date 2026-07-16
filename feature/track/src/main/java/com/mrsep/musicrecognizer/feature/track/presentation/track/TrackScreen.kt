@@ -33,7 +33,7 @@ import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.openUrlImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.openWebSearchImplicitly
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.track.presentation.utils.SwitchingMusicRecognizerTheme
+import com.mrsep.musicrecognizer.core.ui.theme.SwitchingMusicRecognizerTheme
 import kotlinx.coroutines.launch
 import java.util.Locale
 

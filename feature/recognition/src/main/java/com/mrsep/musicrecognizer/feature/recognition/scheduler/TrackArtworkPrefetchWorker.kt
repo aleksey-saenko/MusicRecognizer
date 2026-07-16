@@ -17,7 +17,7 @@ import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
 import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackMetadataFetchManagerImpl.Companion.buildWorkTagForTrack
-import com.mrsep.musicrecognizer.feature.recognition.service.ext.prefetchArtworkAndGenerateSeedColor
+import com.mrsep.musicrecognizer.feature.recognition.service.ext.downloadImageToDiskCache
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -34,9 +34,7 @@ internal class TrackArtworkPrefetchWorker @AssistedInject constructor(
         val trackId = inputData.getString(KEY_TRACK_ID) ?: return Result.failure()
         val artworkUrl = inputData.getString(KEY_ARTWORK_URL) ?: return Result.failure()
 
-        val isSuccess = appContext.prefetchArtworkAndGenerateSeedColor(artworkUrl) { seedColor ->
-            trackRepository.setThemeSeedColor(trackId, seedColor)
-        }
+        val isSuccess = appContext.downloadImageToDiskCache(artworkUrl)
 
         if (isSuccess && hasActiveWidgets() && isWidgetStatusForTrack(trackId)) {
             RecognitionWidget().updateAll(appContext)

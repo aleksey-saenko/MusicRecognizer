@@ -369,7 +369,11 @@ class ResultNotificationHelper @Inject constructor(
         artworkUrl: String?,
     ): NotificationCompat.Builder {
         var largeIcon: Bitmap? = null
-        val imageSizePx = appContext.dpToPx(64f).toInt()
+        // These resources return 64dp, which causes StrictMode policy violation "Downscaling oversized Icon Bitmap"
+//        val iconWidth = appContext.resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_width)
+//        val iconHeight = appContext.resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_height)
+        // 48dp looks like the standard icon size, preventing StrictMode violation
+        val imageSizePx = appContext.dpToPx(48f).toInt()
         val urlsInPriorityOrder = listOfNotNull(artworkThumbUrl, artworkUrl)
         for (url in urlsInPriorityOrder) {
             largeIcon = appContext.getCachedImageOrNull(

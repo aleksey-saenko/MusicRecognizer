@@ -9,6 +9,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
 import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.http.HttpMethod
@@ -50,6 +51,14 @@ internal class LyricsFetcherImpl @Inject constructor(
 
     private suspend fun fetchFromLrcLib(track: Track): NetworkResult<Lyrics?> {
         val request = HttpRequestBuilder().apply {
+            // https://github.com/tranxuanthang/lrclib/discussions/91
+            // Increase timeouts because LRCLIB has been experiencing high load recently,
+            // resulting in longer response times than usual
+            timeout {
+                requestTimeoutMillis = 20_000
+                connectTimeoutMillis = 20_000
+                socketTimeoutMillis = 20_000
+            }
             method = HttpMethod.Get
             url {
                 takeFrom("https://lrclib.net/api/get")

@@ -3446,7 +3446,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-parcelize-runtime",
-            "artifactVersion": "2.4.0",
+            "artifactVersion": "2.4.10",
             "name": "Parcelize Runtime",
             "description": "Runtime library for the Parcelize compiler plugin",
             "website": "https://kotlinlang.org/",
@@ -3462,7 +3462,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib",
-            "artifactVersion": "2.4.0",
+            "artifactVersion": "2.4.10",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
             "website": "https://kotlinlang.org/",
@@ -3478,7 +3478,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
-            "artifactVersion": "2.4.0",
+            "artifactVersion": "2.4.10",
             "name": "Kotlin Stdlib Common",
             "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
             "website": "https://kotlinlang.org/",

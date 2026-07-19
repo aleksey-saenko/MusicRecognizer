@@ -333,4 +333,8 @@
     <string name="button_retry_recognition_hint">Tartsd nyomva az újrapróbálkozáshoz</string>
     <string name="pref_title_prerecording_buffer">Előfelvételi puffer</string>
     <string name="pref_subtitle_prerecording_buffer">Rövid hangpuffer rögzítése a gyorsabb felismeréshez, amíg az alkalmazás nyitva van</string>
+    <string name="app_shortcut_show_floating_button_short">Gomb</string>
+    <string name="app_shortcut_show_floating_button_long">Lebegő gomb</string>
+    <string name="pref_title_floating_button">Lebegő gomb</string>
+    <string name="pref_subtitle_floating_button">Lebegő gomb megjelenítése más alkalmazások fölött a felismerés gyors eléréséhez</string>
 </resources>

@@ -333,4 +333,8 @@
     <string name="pref_title_prerecording_buffer">Vooropnamebuffer</string>
     <string name="pref_subtitle_prerecording_buffer">Neem een korte audiobuffer op terwijl de app open is voor snellere herkenning</string>
     <string name="button_retry_recognition_hint">Houd ingedrukt om opnieuw te proberen</string>
+    <string name="app_shortcut_show_floating_button_short">Knop</string>
+    <string name="app_shortcut_show_floating_button_long">Zwevende knop</string>
+    <string name="pref_title_floating_button">Zwevende knop</string>
+    <string name="pref_subtitle_floating_button">Zwevende knop weergeven boven andere apps voor snelle toegang tot herkenning</string>
 </resources>

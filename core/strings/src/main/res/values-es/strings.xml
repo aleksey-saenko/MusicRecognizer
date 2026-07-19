@@ -333,4 +333,8 @@
     <string name="button_retry_recognition_hint">Mantén presionado para reintentar</string>
     <string name="pref_title_prerecording_buffer">Búfer de pregrabación</string>
     <string name="pref_subtitle_prerecording_buffer">Graba un búfer corto mientras la app está abierta para acelerar el reconocimiento</string>
+    <string name="app_shortcut_show_floating_button_short">Botón</string>
+    <string name="app_shortcut_show_floating_button_long">Botón flotante</string>
+    <string name="pref_title_floating_button">Botón flotante</string>
+    <string name="pref_subtitle_floating_button">Muestra un botón flotante sobre otras apps para acceso rápido para reconocimiento</string>
 </resources>

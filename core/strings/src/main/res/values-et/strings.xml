@@ -333,4 +333,8 @@
     <string name="pref_title_prerecording_buffer">Eelsalvestuse puhver</string>
     <string name="pref_subtitle_prerecording_buffer">Kiirema tuvastamise nimel salvesta rakenduse avades lühike helilõik</string>
     <string name="button_retry_recognition_hint">Hoia all proovimaks uuesti tuvastamist</string>
+    <string name="app_shortcut_show_floating_button_short">Nupp</string>
+    <string name="app_shortcut_show_floating_button_long">Ujuv nupp</string>
+    <string name="pref_title_floating_button">Ujuv nupp</string>
+    <string name="pref_subtitle_floating_button">Kiireks ligipääsuks tuvastusele kuva teiste rakenduste peal ujuvat nuppu</string>
 </resources>

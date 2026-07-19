@@ -342,4 +342,8 @@
     <string name="pref_title_prerecording_buffer">Tampon de pré-enregistrement</string>
     <string name="pref_subtitle_prerecording_buffer">Enregistrez un court extrait audio pendant que l\'application est ouverte pour accélérer la reconnaissance</string>
     <string name="button_retry_recognition_hint">Maintenez enfoncé pour relancer la reconnaissance</string>
+    <string name="app_shortcut_show_floating_button_short">Bouton</string>
+    <string name="app_shortcut_show_floating_button_long">Bouton flottant</string>
+    <string name="pref_title_floating_button">Bouton flottant</string>
+    <string name="pref_subtitle_floating_button">Afficher un bouton flottant au-dessus des autres applications pour accéder rapidement à la fonction de reconnaissance</string>
 </resources>

@@ -48,6 +48,7 @@
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
     <string name="share">Share</string>
+    <string name="qr_code">QR code</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
     <string name="cannot_share_toast">Can\'t find any app to share to</string>
     <string name="help">Help</string>
@@ -333,6 +334,9 @@
     <string name="about_pref_subtitle_github_repo">Source code, issues and other information</string>
     <string name="about_pref_title_privacy_policy">Privacy policy</string>
     <string name="about_pref_subtitle_privacy_policy">Learn more about how the app handles your data</string>
+    <string name="about_pref_title_donation">Donation</string>
+    <string name="about_pref_subtitle_donation">Support the project</string>
+    <string name="about_pref_donation_message">This app is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development or simply say thanks, consider making a donation. Thank you for your support!</string>
     <string name="about_pref_title_license">License</string>
     <string name="about_pref_title_licenses">Licenses</string>
     <string name="about_pref_subtitle_license">Audile is licensed under GNU GPLv3 or later</string>
@@ -383,6 +387,8 @@
     <string name="shazam" translatable="false">Shazam</string>
     <string name="odesli" translatable="false">Odesli</string>
     <string name="wikipedia" translatable="false">Wikipedia</string>
+    <string name="bitcoin" translatable="false">Bitcoin</string>
+    <string name="monero" translatable="false">Monero</string>
     <!-- Untranslatable, as these terms are used only in English on recognition provider websites (dashboards, guides) -->
     <string name="api_token" translatable="false">API token</string>
     <string name="host" translatable="false">Host</string>

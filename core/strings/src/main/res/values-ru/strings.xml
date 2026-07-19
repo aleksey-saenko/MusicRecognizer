@@ -46,6 +46,7 @@
     <string name="copy">Копировать</string>
     <string name="copied">Скопировано</string>
     <string name="share">Поделиться</string>
+    <string name="qr_code">QR-код</string>
     <string name="web_browser_not_found_toast">Веб-браузер не найден</string>
     <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
     <string name="help">Помощь</string>
@@ -319,6 +320,9 @@
     <string name="about_pref_title_third_licenses">Сторонние лицензии</string>
     <string name="about_pref_subtitle_third_licenses">Лицензии сторонних библиотек, используемых в Audile</string>
     <string name="about_pref_subtitle_privacy_policy">Узнайте больше о том, как приложение работает с вашими данными</string>
+    <string name="about_pref_title_donation">Пожертвование</string>
+    <string name="about_pref_subtitle_donation">Поддержать проект</string>
+    <string name="about_pref_donation_message">Это приложение полностью бесплатно, оно не показывает рекламу и не монетизируется никаким другим образом. Чтобы поддержать дальнейшую разработку или просто сказать спасибо разработчику, вы можете сделать пожертвование. Спасибо за вашу поддержку!</string>
     <string name="notification_title_match_found">Песня найдена!</string>
     <string name="notification_button_disable_service">Отключить</string>
     <string name="notification_button_show_lyrics">Текст песни</string>

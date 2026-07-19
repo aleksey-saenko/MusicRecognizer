@@ -11,8 +11,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,6 +56,8 @@ internal fun AboutScreen(
 ) {
     val context = LocalContext.current
     val topBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val donationSheetState = rememberModalBottomSheetState(true)
+    var showDonationBottomSheet by rememberSaveable { mutableStateOf(false) }
     val version = rememberSaveable {
         context.getAppVersionName() ?: context.getAppVersionCode().toString()
     }
@@ -102,6 +108,11 @@ internal fun AboutScreen(
                     onItemClick = { context.openUrlImplicitly(PRIVACY_POLICY_URL) }
                 )
                 PreferenceClickableItem(
+                    title = stringResource(StringsR.string.about_pref_title_donation),
+                    subtitle = stringResource(StringsR.string.about_pref_subtitle_donation),
+                    onItemClick = { showDonationBottomSheet = true }
+                )
+                PreferenceClickableItem(
                     title = stringResource(StringsR.string.about_pref_title_third_licenses),
                     subtitle = stringResource(StringsR.string.about_pref_subtitle_third_licenses),
                     onItemClick = onNavigateToSoftwareScreen
@@ -137,6 +148,12 @@ internal fun AboutScreen(
                 )
             }
         }
+    }
+    if (showDonationBottomSheet) {
+        DonationBottomSheet(
+            sheetState = donationSheetState,
+            onDismissRequest = { showDonationBottomSheet = false },
+        )
     }
 }
 

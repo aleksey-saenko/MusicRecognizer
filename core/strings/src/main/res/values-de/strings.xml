@@ -299,4 +299,8 @@
     <string name="backup_restore_unhandled_error_message">Bitte stelle sicher, dass du über genügend freien Speicherplatz verfügst, und versuche es erneut.</string>
     <string name="toast_failed_delete_incomplete_backup_file">Unvollständige Sicherungsdatei konnte nicht gelöscht werden</string>
     <string name="toast_press_again_to_confirm">Zum Bestätigen erneut drücken</string>
+    <string name="app_shortcut_show_floating_button_short">Taste</string>
+    <string name="app_shortcut_show_floating_button_long">schwebende Taste</string>
+    <string name="button_retry_recognition_hint">Halten zur nochmaligen Erkennung</string>
+    <string name="deselect_all">Alle Abwählen</string>
 </resources>

@@ -337,4 +337,8 @@
     <string name="app_shortcut_show_floating_button_long">Плавуча кнопка</string>
     <string name="pref_title_floating_button">Плавуча кнопка</string>
     <string name="pref_subtitle_floating_button">Показувати плавучу кнопку над іншими застосунками для швидкого доступу до функції розпізнавання</string>
+    <string name="qr_code">QR-код</string>
+    <string name="about_pref_title_donation">Донат</string>
+    <string name="about_pref_subtitle_donation">Підтримати проєкт</string>
+    <string name="about_pref_donation_message">Цей застосунок повністю безплатний. У ньому немає реклами чи інших форм комерційної монетизації. Щоби підтримати подальшу розробку або просто подякувати, ви можете зробити пожертву. Дякуємо за вашу підтримку!</string>
 </resources>

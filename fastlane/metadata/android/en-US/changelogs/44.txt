@@ -1,0 +1,6 @@
+* Add a floating button that shows above other apps for quick access to recognition
+* Add Japanese translation (Thanks @ajuckler!)
+* Add a donation screen to support the project
+* Refine synced lyrics timing so line transitions start slightly earlier
+* Fix a bug that caused track artwork to shift in the circular home screen widget
+* Update translations

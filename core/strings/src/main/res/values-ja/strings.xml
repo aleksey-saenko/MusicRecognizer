@@ -328,4 +328,17 @@
     <string name="crash_dialog_comment_prompt">こちらで補足情報を追加できます：</string>
     <string name="crash_dialog_button_send">送信する</string>
     <string name="crash_dialog_button_cancel">やめる</string>
+    <string name="qr_code">QRコード</string>
+    <string name="about_pref_title_donation">寄付</string>
+    <string name="about_pref_subtitle_donation">このプロジェクトを応援する</string>
+    <string name="about_pref_donation_message">このアプリは完全に無料であり、広告やその他の商業的な収益化は一切行われていません。今後の開発を支援するため、あるいは単に感謝の気持ちを伝えるために、寄付をご検討ください。ご支援ありがとうございます！</string>
+    <string name="notification_channel_desc_control">通知により、認識の処理を制御できます</string>
+    <string name="notification_channel_name_foreground_result">認識の結果をフォアグラウンドで表示</string>
+    <string name="notification_channel_desc_foreground_result">認識画面が開いてる時に、認識の結果を表示します</string>
+    <string name="notification_channel_name_background_result">認識の結果をバックグランウンドで表示</string>
+    <string name="notification_channel_desc_background_result">アプリが最小化されている場合や、認識画面が開いてない場合でも、認識の結果を表示します</string>
+    <string name="notification_channel_name_scheduled_result">予約した認識の結果</string>
+    <string name="notification_channel_desc_scheduled_result">オフラインの時などに予約した曲の認識の結果を表示します</string>
+    <string name="toast_failed_delete_incomplete_backup_file">不完全なバックアップファイルを削除できませんでした</string>
+    <string name="notification_title_match_found">一致する曲が見つかりました！</string>
 </resources>

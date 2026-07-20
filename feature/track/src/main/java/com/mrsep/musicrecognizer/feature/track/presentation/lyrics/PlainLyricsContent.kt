@@ -52,6 +52,7 @@ import com.mrsep.musicrecognizer.core.ui.util.shareText
 import com.mrsep.musicrecognizer.feature.track.presentation.track.verticalFadingEdges
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 internal fun PlainLyricsContent(
@@ -229,7 +230,7 @@ internal fun PlainLyricsContent(
                 }
 
                 else -> {
-                    delay(3000)
+                    delay(3.seconds)
                     showAutoScrollPanel = false
                 }
             }
@@ -267,7 +268,7 @@ private fun LyricLine(
 ) {
     val selectionContainerAlpha by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
-        animationSpec = spring(stiffness = ColorAnimationStiffness),
+        animationSpec = spring(stiffness = SelectionAnimationStiffness),
         label = "selectionContainerAlpha"
     )
     Text(

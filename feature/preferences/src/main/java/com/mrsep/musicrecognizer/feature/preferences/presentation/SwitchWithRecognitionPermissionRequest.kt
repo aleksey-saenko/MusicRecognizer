@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsBlockedDialog
@@ -17,14 +16,15 @@ import com.mrsep.musicrecognizer.core.ui.components.RecognitionPermissionsRation
 import com.mrsep.musicrecognizer.core.ui.findActivity
 import com.mrsep.musicrecognizer.core.ui.shouldShowRationale
 import com.mrsep.musicrecognizer.core.ui.components.preferences.PreferenceSwitchItem
-import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-internal fun NotificationServiceSwitch(
+internal fun SwitchWithRecognitionPermissionRequest(
     modifier: Modifier = Modifier,
-    serviceEnabled: Boolean,
-    setServiceEnabled: (Boolean) -> Unit
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    setChecked: (Boolean) -> Unit,
 ) {
     //region <permission handling block>
     val context = LocalContext.current
@@ -38,7 +38,7 @@ internal fun NotificationServiceSwitch(
         }
     ) { results ->
         if (results.all { (_, isGranted) -> isGranted }) {
-            setServiceEnabled(true)
+            setChecked(true)
         } else {
             val activity = context.findActivity()
             showPermissionsBlockedDialog = results
@@ -65,19 +65,19 @@ internal fun NotificationServiceSwitch(
     //endregion
     PreferenceSwitchItem(
         modifier = modifier,
-        title = stringResource(StringsR.string.pref_title_notification_service),
-        subtitle = stringResource(StringsR.string.pref_subtitle_notification_service),
+        title = title,
+        subtitle = subtitle,
         onClick = {
-            if (serviceEnabled) {
-                setServiceEnabled(false)
+            if (checked) {
+                setChecked(false)
             } else if (requiredPermissionsState.allPermissionsGranted) {
-                setServiceEnabled(true)
+                setChecked(true)
             } else if (requiredPermissionsState.shouldShowRationale) {
                 showPermissionsRationaleDialog = true
             } else {
                 requiredPermissionsState.launchMultiplePermissionRequest()
             }
         },
-        checked = serviceEnabled
+        checked = checked
     )
 }

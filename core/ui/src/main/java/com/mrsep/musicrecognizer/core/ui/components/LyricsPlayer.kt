@@ -1,4 +1,4 @@
-package com.mrsep.musicrecognizer.feature.track.presentation.lyrics
+package com.mrsep.musicrecognizer.core.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -7,13 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
 
 @Stable
-internal class LyricsPlayer private constructor(
+class LyricsPlayer private constructor(
     private val scope: CoroutineScope,
     private val positionUpdateInterval: Duration,
 ) {
@@ -54,8 +58,8 @@ internal class LyricsPlayer private constructor(
     companion object {
 
         @Composable
-        internal fun rememberLyricsPlayer(
-            positionUpdateInterval: Duration = 50.milliseconds,
+        fun rememberLyricsPlayer(
+            positionUpdateInterval: Duration = 20.milliseconds,
         ): LyricsPlayer {
             val scope = rememberCoroutineScope()
             return remember(positionUpdateInterval) {

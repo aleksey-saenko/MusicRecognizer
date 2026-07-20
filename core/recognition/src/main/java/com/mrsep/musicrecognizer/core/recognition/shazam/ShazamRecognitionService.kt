@@ -112,7 +112,10 @@ internal class ShazamRecognitionService @Inject constructor(
             } else {
                 RemoteRecognitionResult.Error.HttpError(
                     code = response.status.value,
-                    message = response.status.description
+                    message = when (response.status.value) {
+                        429 -> "Rate limit exceeded. Please try again later."
+                        else -> response.status.description
+                    }
                 )
             }
         }

@@ -62,6 +62,7 @@ internal object UserPreferencesProtoSerializer : Serializer<UserPreferencesProto
                 )
             )
             notificationServiceEnabled = false
+            floatingButtonEnabled = false
             dynamicColorsEnabled = true
             artworkBasedThemeEnabled = true
             useGridForLibrary = false

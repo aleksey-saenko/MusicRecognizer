@@ -19,6 +19,7 @@ interface PreferencesRepository {
     suspend fun setFallbackPolicy(value: FallbackPolicy)
     suspend fun setRecognizeOnStartup(value: Boolean)
     suspend fun setNotificationServiceEnabled(value: Boolean)
+    suspend fun setFloatingButtonEnabled(value: Boolean)
     suspend fun setDynamicColorsEnabled(value: Boolean)
     suspend fun setArtworkBasedThemeEnabled(value: Boolean)
     suspend fun setRequiredMusicServices(services: List<MusicService>)

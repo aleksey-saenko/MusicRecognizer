@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -137,6 +138,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        RecognitionControlService.isFloatingButtonAllowed.update { false }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        RecognitionControlService.isFloatingButtonAllowed.update { true }
     }
 
     private fun handleRecognitionRequest(intent: Intent) {

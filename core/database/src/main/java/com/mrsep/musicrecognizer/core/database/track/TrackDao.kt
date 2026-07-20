@@ -51,13 +51,13 @@ interface TrackDao {
     @Query("DELETE FROM track")
     suspend fun deleteAll()
 
-    @Query("UPDATE track SET is_favorite = :isFavorite WHERE id = :trackId")
+    @Query("UPDATE track SET is_favorite = :isFavorite WHERE id = :trackId AND is_favorite IS NOT :isFavorite")
     suspend fun setFavorite(trackId: String, isFavorite: Boolean)
 
-    @Query("UPDATE track SET is_viewed = :isViewed WHERE id = :trackId")
+    @Query("UPDATE track SET is_viewed = :isViewed WHERE id = :trackId AND is_viewed IS NOT :isViewed")
     suspend fun setViewed(trackId: String, isViewed: Boolean)
 
-    @Query("UPDATE track SET theme_seed_color = :color WHERE id = :trackId")
+    @Query("UPDATE track SET theme_seed_color = :color WHERE id = :trackId AND theme_seed_color IS NOT :color")
     suspend fun setThemeSeedColor(trackId: String, color: Int?)
 
     @Query("UPDATE track SET lyrics = :lyrics, is_lyrics_synced = :isSynced WHERE id = :trackId")

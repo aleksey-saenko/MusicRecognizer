@@ -77,10 +77,11 @@ import androidx.compose.ui.util.fastFirstOrNull
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.mrsep.musicrecognizer.core.domain.preferences.LyricsStyle
 import com.mrsep.musicrecognizer.core.domain.track.model.SyncedLyrics
+import com.mrsep.musicrecognizer.core.ui.components.LyricsPlayer
 import com.mrsep.musicrecognizer.core.ui.components.rememberMultiSelectionState
 import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.core.ui.util.shareText
-import com.mrsep.musicrecognizer.feature.track.presentation.lyrics.LyricsPlayer.Companion.rememberLyricsPlayer
+import com.mrsep.musicrecognizer.core.ui.components.LyricsPlayer.Companion.rememberLyricsPlayer
 import com.mrsep.musicrecognizer.feature.track.presentation.track.verticalFadingEdges
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -95,9 +96,10 @@ import kotlin.time.toKotlinDuration
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 
-private const val ScrollAnimationStiffness = Spring.StiffnessMediumLow
-internal const val ColorAnimationStiffness = Spring.StiffnessMedium
+internal const val SelectionAnimationStiffness = Spring.StiffnessMedium
 private const val InactiveTextAlpha = 0.5f
+private const val ScrollAnimationDurationMs = 350
+private val ScrollAnimationEasing = FastOutSlowInEasing
 
 @Composable
 internal fun SyncedLyricsContent(
@@ -123,16 +125,23 @@ internal fun SyncedLyricsContent(
     val coroutineScope = rememberCoroutineScope()
 
     // It's expected that the lyrics should start from zero
-    val lines = remember(lyrics.lines) {
-        if (lyrics.lines.first().timestamp == Duration.ZERO) {
-            lyrics.lines
-        } else {
-            lyrics.lines.toMutableList()
-                .apply { add(0, SyncedLyrics.Line(Duration.ZERO, "")) }
+    val lyrics = remember(lyrics) {
+        val originalLines = lyrics.lines
+        val firstLine = originalLines.firstOrNull()
+        when {
+            firstLine == null || firstLine.timestamp == Duration.ZERO -> lyrics
+            else -> SyncedLyrics(
+                buildList(capacity = originalLines.size + 1) {
+                    add(SyncedLyrics.Line(Duration.ZERO, ""))
+                    addAll(originalLines)
+                }
+            )
         }
     }
+    val lines = lyrics.lines
+
     val trackDuration = remember(trackDuration) {
-        val minLyricsDuration = lines.last().timestamp + 100.milliseconds
+        val minLyricsDuration = lines.last().timestamp + 2.seconds
         trackDuration?.coerceAtLeast(minLyricsDuration) ?: minLyricsDuration
     }
 
@@ -165,10 +174,9 @@ internal fun SyncedLyricsContent(
         if (multiSelectionState.hasSelected || lyricsPlayer.isPlaying) return@effect disposeAction
         val currentPlaybackOffset = syncPosition + durationBetween(syncTime, Instant.now())
         if (currentPlaybackOffset !in Duration.ZERO.rangeUntil(trackDuration)) return@effect disposeAction
-        val currentLineIndex =
-            lines.currentLineIndex(currentPlaybackOffset) ?: return@effect disposeAction
+        val currentLineIndex = lyrics.currentLineIndex(currentPlaybackOffset) ?: return@effect disposeAction
 
-        if (lines.hasMeaningfulRemainingDuration(currentLineIndex, trackDuration)) {
+        if (lyrics.hasMeaningfulRemainingDuration(currentLineIndex, trackDuration)) {
             lyricsPlayer.start(currentPlaybackOffset, trackDuration)
             coroutineScope.launch {
                 listState.scrollToItem(
@@ -182,7 +190,7 @@ internal fun SyncedLyricsContent(
 
     val currentLineIndex = rememberSaveable { mutableIntStateOf(0) }
     // Scroll to the current line if it is in the viewport area
-    // Warn: we can't click on line to seek lyrics while scrolling animation is playing
+    // Warn: we can't click on a line to seek lyrics while scrolling animation is playing
     LaunchedEffect(lyricsPlayer.isPlaying, lyricsTextStyle) {
         if (!lyricsPlayer.isPlaying) return@LaunchedEffect
         if (!listState.canScrollForward && !listState.canScrollBackward) return@LaunchedEffect
@@ -199,9 +207,9 @@ internal fun SyncedLyricsContent(
                 if (distance > 0 && !listState.canScrollForward) return@collectLatest
                 listState.animateScrollBy(
                     value = distance * 1f,
-                    animationSpec = spring(
-                        stiffness = ScrollAnimationStiffness,
-                        visibilityThreshold = distance * 0.01f
+                    animationSpec = tween(
+                        durationMillis = ScrollAnimationDurationMs,
+                        easing = ScrollAnimationEasing
                     )
                 )
             }
@@ -279,14 +287,29 @@ internal fun SyncedLyricsContent(
                 }
             ) {
                 itemsIndexed(items = lines) { index, (timestamp, line) ->
-                    val nextTimestamp = remember {
+                    val nextTimestamp = remember(index, timestamp) {
                         lines.getOrNull(index + 1)?.timestamp ?: trackDuration
                     }
+
+                    // Shift active line to compensate for scroll and highlight animation duration
+                    // Capped to half of the previous line's duration to prevent overlaps
+                    val activeStart = remember(index, timestamp) {
+                        if (index == 0) return@remember timestamp
+                        val prevDuration = timestamp - lines[index - 1].timestamp
+                        timestamp - minOf(ScrollAnimationDurationMs.milliseconds, prevDuration / 2)
+                    }
+                    val activeEnd = remember(index, timestamp, nextTimestamp) {
+                        val currentDuration = nextTimestamp - timestamp
+                        nextTimestamp - minOf(ScrollAnimationDurationMs.milliseconds, currentDuration / 2)
+                    }
+
                     if (line.isNotBlank()) {
                         LyricLine(
                             line = line,
                             time = timestamp,
                             nextTime = nextTimestamp,
+                            activeStart = activeStart,
+                            activeEnd = activeEnd,
                             style = lyricsTextStyle,
                             lyricsPlayer = lyricsPlayer,
                             onBecomeCurrent = { currentLineIndex.intValue = index },
@@ -311,6 +334,8 @@ internal fun SyncedLyricsContent(
                             time = timestamp,
                             nextTime = nextTimestamp,
                             lastLine = index == lines.lastIndex,
+                            activeStart = activeStart,
+                            activeEnd = activeEnd,
                             textStyle = lyricsTextStyle,
                             lyricsPlayer = lyricsPlayer,
                             onBecomeCurrent = { currentLineIndex.intValue = index },
@@ -342,7 +367,7 @@ internal fun SyncedLyricsContent(
                 }
 
                 lyricsPlayer.isPlaying -> {
-                    delay(3000)
+                    delay(3.seconds)
                     floatingButtonVisible = false
                 }
             }
@@ -399,6 +424,8 @@ private fun LyricLine(
     line: String,
     time: Duration,
     nextTime: Duration,
+    activeStart: Duration,
+    activeEnd: Duration,
     style: TextStyle,
     lyricsPlayer: LyricsPlayer,
     onBecomeCurrent: () -> Unit,
@@ -408,7 +435,7 @@ private fun LyricLine(
     onLongPress: () -> Unit,
 ) {
     val isCurrentLine by remember {
-        derivedStateOf { lyricsPlayer.currentPosition in time.rangeUntil(nextTime) }
+        derivedStateOf { lyricsPlayer.currentPosition in activeStart.rangeUntil(activeEnd) }
     }
     LaunchedEffect(isCurrentLine) {
         if (isCurrentLine) onBecomeCurrent()
@@ -423,12 +450,12 @@ private fun LyricLine(
             isCurrentLine || !lyricsPlayer.isPlaying -> 1f
             else -> InactiveTextAlpha
         },
-        animationSpec = spring(stiffness = ColorAnimationStiffness),
+        animationSpec = tween(durationMillis = ScrollAnimationDurationMs, easing = ScrollAnimationEasing),
         label = "lyricsTextAlpha"
     )
     val selectionContainerAlpha by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
-        animationSpec = spring(stiffness = ColorAnimationStiffness),
+        animationSpec = spring(stiffness = SelectionAnimationStiffness),
         label = "selectionContainerAlpha"
     )
     Text(
@@ -460,13 +487,15 @@ private fun BubblesLine(
     modifier: Modifier = Modifier,
     time: Duration,
     nextTime: Duration,
+    activeStart: Duration,
+    activeEnd: Duration,
     lastLine: Boolean,
     textStyle: TextStyle,
     lyricsPlayer: LyricsPlayer,
     onBecomeCurrent: () -> Unit,
 ) {
     val isCurrentLine by remember {
-        derivedStateOf { lyricsPlayer.currentPosition in time.rangeUntil(nextTime) }
+        derivedStateOf { lyricsPlayer.currentPosition in activeStart.rangeUntil(activeEnd) }
     }
     LaunchedEffect(isCurrentLine) {
         if (isCurrentLine) onBecomeCurrent()
@@ -493,7 +522,7 @@ private fun BubblesLine(
             in 500..1000 -> 1.2f
             else -> 1f
         }
-        with(density) { (textStyle.fontSize.toDp() * weightFactor * 0.45f).coerceAtLeast(4.dp) }
+        with(density) { (textStyle.fontSize.toDp() * weightFactor * 0.35f).coerceAtLeast(4.dp) }
     }
     val infiniteTransition = rememberInfiniteTransition(label = "bubblesTransition")
     val maxTranslationX = with(LocalDensity.current) { bubbleMaxSize.toPx() / 12 }
@@ -560,7 +589,7 @@ private fun BubblesLine(
         ) {
             Row(
                 modifier = Modifier.fillMaxHeight(),
-                horizontalArrangement = Arrangement.spacedBy(bubbleMaxSize / 2),
+                horizontalArrangement = Arrangement.spacedBy(bubbleMaxSize * 0.75f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Bubble(
@@ -649,34 +678,6 @@ private data class SyncPoint(
 
 private fun durationBetween(startInclusive: Instant, endExclusive: Instant): Duration {
     return java.time.Duration.between(startInclusive, endExclusive).toKotlinDuration()
-}
-
-// The first line must be empty or start from zero, otherwise we can get null for early positions
-private fun List<SyncedLyrics.Line>.currentLineIndex(currentOffset: Duration): Int? {
-    if (isEmpty()) return null
-    if (currentOffset < first().timestamp) return null
-    if (currentOffset >= last().timestamp) return lastIndex
-    return binarySearch { line ->
-        line.timestamp.compareTo(currentOffset)
-    }.let { result ->
-        // Exact match or (insertion point - 1)
-        if (result >= 0) result else -(result + 1) - 1
-    }.takeIf { it >= 0 }
-}
-
-private fun List<SyncedLyrics.Line>.hasMeaningfulRemainingDuration(
-    currentLineIndex: Int,
-    trackDuration: Duration
-): Boolean {
-    val lastMeaningfulLineIndex = lastIndex - asReversed().indexOfFirst { it.content.isNotBlank() }
-    var meaningfulRemainingDuration = Duration.ZERO
-    for (index in currentLineIndex..lastMeaningfulLineIndex) {
-        val nextLineTimestamp = getOrNull(index + 1)?.timestamp ?: trackDuration
-        val thisLineDuration = nextLineTimestamp - get(index).timestamp
-        meaningfulRemainingDuration += thisLineDuration
-        if (meaningfulRemainingDuration > 3.seconds) return true
-    }
-    return false
 }
 
 private fun List<SyncedLyrics.Line>.joinLines(indexes: Set<Int>): String {

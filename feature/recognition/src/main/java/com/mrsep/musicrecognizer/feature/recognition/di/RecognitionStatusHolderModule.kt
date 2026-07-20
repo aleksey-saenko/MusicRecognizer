@@ -36,6 +36,17 @@ internal interface RecognitionStatusHolderModule {
     @Binds
     fun bindWidgetHolder(@WidgetStatusHolder impl: MutableRecognitionStatusHolder):
             RecognitionStatusHolder
+
+    @FloatingButtonStatusHolder
+    @Binds
+    @Singleton
+    fun bindFloatingButtonMutableHolder(impl: RecognitionStatusHolderImpl):
+            MutableRecognitionStatusHolder
+
+    @FloatingButtonStatusHolder
+    @Binds
+    fun bindFloatingButtonHolder(@FloatingButtonStatusHolder impl: MutableRecognitionStatusHolder):
+            RecognitionStatusHolder
 }
 
 @Retention(AnnotationRetention.BINARY)
@@ -45,3 +56,7 @@ internal annotation class MainScreenStatusHolder
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 internal annotation class WidgetStatusHolder
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+internal annotation class FloatingButtonStatusHolder

@@ -88,14 +88,16 @@ private fun RecognitionButton(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        RippleAnimated(
+        RippleEffect(
             activated = activated,
             modifier = Modifier.size(256.dp),
-            startOffset = 0.5f, // Should be a bit less than buttonSize/rippleSize
-            baseColor = MaterialTheme.colorScheme.primary,
-            activatedColor = MaterialTheme.colorScheme.primary,
+            startOffsetFraction = 0.5f, // Should be a bit less than buttonSize/rippleSize
+            baseColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+            activatedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f),
             circlesCount = 7,
-            animationSpeed = 12_000
+            animationSpeed = 12_000,
+            scaleEasing = LinearEasing,
+            fadeEasing = LinearEasing,
         )
         BasicRecognitionButton(
             modifier = Modifier

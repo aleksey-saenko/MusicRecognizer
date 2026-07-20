@@ -27,7 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.acra.ACRA
 import org.acra.ACRAConstants
-import org.acra.ReportField
 import org.acra.config.dialog
 import org.acra.config.mailSender
 import org.acra.data.StringFormat
@@ -96,6 +95,7 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     private fun getShortcuts() = listOf(
         recognitionShortcut(),
         backgroundRecognitionShortcut(),
+        showFloatingButtonShortcut(),
     )
         .also { check(it.size <= 4) { "The guideline recommends publishing only 4 distinct shortcuts" } }
         .take(ShortcutManagerCompat.getMaxShortcutCountPerActivity(this))
@@ -118,6 +118,17 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
             .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
             .setIntent(
                 RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(this)
+            )
+            .build()
+    }
+
+    private fun showFloatingButtonShortcut(): ShortcutInfoCompat {
+        return ShortcutInfoCompat.Builder(this, SHORTCUT_ID_SHOW_FLOATING_BUTTON)
+            .setShortLabel(getString(StringsR.string.app_shortcut_show_floating_button_short))
+            .setLongLabel(getString(StringsR.string.app_shortcut_show_floating_button_long))
+            .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_recognize))
+            .setIntent(
+                RecognitionControlActivity.showFloatingButtonIntent(this)
             )
             .build()
     }
@@ -187,5 +198,6 @@ class MusicRecognizerApp : Application(), SingletonImageLoader.Factory, Configur
     companion object {
         private const val SHORTCUT_ID_OPEN_AND_RECOGNIZE = "RecognizeShortcutId"
         private const val SHORTCUT_ID_RECOGNIZE_IN_BACKGROUND = "RecognizeInBackgroundShortcutId"
+        private const val SHORTCUT_ID_SHOW_FLOATING_BUTTON = "ShowFloatingButtonShortcutId"
     }
 }

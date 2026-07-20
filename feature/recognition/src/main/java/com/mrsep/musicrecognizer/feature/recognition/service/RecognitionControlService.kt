@@ -13,6 +13,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.Parcelable
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -32,6 +33,7 @@ import com.mrsep.musicrecognizer.feature.recognition.di.MainScreenStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.WidgetStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.MutableRecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.service.ServiceNotificationHelper.Companion.NOTIFICATION_ID_STATUS
+import com.mrsep.musicrecognizer.feature.recognition.service.floating.FloatingWindowController
 import com.mrsep.musicrecognizer.feature.recognition.widget.RecognitionWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -51,10 +53,19 @@ import java.util.UUID
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
+import com.mrsep.musicrecognizer.feature.recognition.di.FloatingButtonStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackArtworkPrefetchWorker
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity.Companion.getRequiredPermissionsForRecognition
 import com.mrsep.musicrecognizer.feature.recognition.service.ext.prefetchArtworkAndGenerateSeedColor
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import javax.inject.Provider
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "RecognitionControlService"
 
@@ -77,6 +88,10 @@ class RecognitionControlService : Service() {
     internal lateinit var widgetStatusHolder: MutableRecognitionStatusHolder
 
     @Inject
+    @FloatingButtonStatusHolder
+    internal lateinit var floatingButtonStatusHolder: MutableRecognitionStatusHolder
+
+    @Inject
     lateinit var trackRepository: TrackRepository
 
     @Inject
@@ -87,6 +102,9 @@ class RecognitionControlService : Service() {
 
     @Inject
     internal lateinit var serviceNotificationHelper: ServiceNotificationHelper
+
+    @Inject
+    internal lateinit var floatingWindowControllerProvider: Provider<FloatingWindowController>
 
     @Inject
     @ApplicationScope
@@ -109,6 +127,7 @@ class RecognitionControlService : Service() {
     private val isCancelRecognitionJobCompleted get() = cancelRecognitionJob?.isCompleted ?: true
 
     private var isStartedForeground = false
+    private var floatingButtonMonitorJob: Job? = null
 
     // Hold mode keeps the service in running state with an ongoing ready notification, waiting for new requests
     private var isHoldModeActive = false
@@ -230,6 +249,9 @@ class RecognitionControlService : Service() {
                 startForeground(NOTIFICATION_ID_STATUS, initialNotification)
             }
             isStartedForeground = true
+            if (floatingButtonMonitorJob == null) {
+                manageFloatingWindow()
+            }
         } catch (e: SecurityException) {
             val msg = "Foreground service cannot start due to denied permissions"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -259,6 +281,38 @@ class RecognitionControlService : Service() {
             }
             is RecognitionStatus.Recognizing -> {
                 serviceNotificationHelper.buildListeningNotification(status.extraTime)
+            }
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun manageFloatingWindow() {
+        var currentFloatingWindowController: FloatingWindowController? = null
+        floatingButtonMonitorJob = serviceScope.launch {
+            try {
+                combine(
+                    flow = preferencesRepository.userPreferencesFlow
+                        .map { it.floatingButtonEnabled }
+                        .distinctUntilChanged()
+                        .debounce { enabled -> if (enabled) 500.milliseconds else Duration.ZERO }
+                    ,
+                    flow2 = isFloatingButtonAllowed
+                ) { requested, allowed ->
+                    requested && allowed && Settings.canDrawOverlays(appContext)
+                }
+                    .distinctUntilChanged()
+                    .collect { showFloatingWindow ->
+                        if (showFloatingWindow) {
+                            currentFloatingWindowController?.destroy()
+                            currentFloatingWindowController = floatingWindowControllerProvider
+                                .get()
+                                .apply { show() }
+                        } else {
+                            currentFloatingWindowController?.destroy()
+                        }
+                    }
+            } finally {
+                currentFloatingWindowController?.destroy()
             }
         }
     }
@@ -318,6 +372,7 @@ class RecognitionControlService : Service() {
                         resultNotificationHelper.cancelUnsuccessfulBackgroundAndForegroundResults()
                         screenStatusHolder.updateStatus(status)
                         widgetStatusHolder.updateStatus(status)
+                        floatingButtonStatusHolder.updateStatus(status)
                         requestWidgetsUpdate()
                         requestQuickTileUpdate()
                         serviceNotificationHelper.notifyListeningStatus(status.extraTime)
@@ -330,16 +385,25 @@ class RecognitionControlService : Service() {
                         }
                         val isScreenUpdated = screenStatusHolder.updateStatusIfObserving(status)
                         if (isScreenUpdated) {
+                            floatingButtonStatusHolder.updateStatus(RecognitionStatus.Ready)
                             widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
                             resultNotificationHelper.notifyForegroundResult(status.result)
                         } else {
+                            val isFloatingButtonUpdated = floatingButtonStatusHolder.updateStatusIfObserving(status)
+                            if (!isFloatingButtonUpdated) {
+                                floatingButtonStatusHolder.updateStatus(RecognitionStatus.Ready)
+                            }
                             screenStatusHolder.updateStatus(RecognitionStatus.Ready)
                             if (hasActiveWidgets()) {
                                 widgetStatusHolder.updateStatus(status)
                             } else {
                                 widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
                             }
-                            resultNotificationHelper.notifyBackgroundResult(status.result)
+                            if (isFloatingButtonUpdated) {
+                                resultNotificationHelper.notifyForegroundResult(status.result)
+                            } else {
+                                resultNotificationHelper.notifyBackgroundResult(status.result)
+                            }
                         }
                         requestWidgetsUpdate()
                         requestQuickTileUpdate()
@@ -424,6 +488,7 @@ class RecognitionControlService : Service() {
             stopMediaProjection()
             screenStatusHolder.updateStatus(RecognitionStatus.Ready)
             widgetStatusHolder.updateStatus(RecognitionStatus.Ready)
+            floatingButtonStatusHolder.updateStatus(RecognitionStatus.Ready)
             requestWidgetsUpdate()
             requestQuickTileUpdate()
 
@@ -501,12 +566,36 @@ class RecognitionControlService : Service() {
 
         private const val KEY_AUDIO_CAPTURE_SERVICE_MODE = "KEY_AUDIO_CAPTURE_SERVICE_MODE"
 
+        // Default to 'true' so it can be shown even if the activity has never been launched (shortcut launches)
+        val isFloatingButtonAllowed = MutableStateFlow(true)
+
         fun startRecognition(context: Context, audioCaptureServiceMode: AudioCaptureServiceMode) {
             context.startForegroundService(
                 Intent(context, RecognitionControlService::class.java)
                     .setAction(ACTION_LAUNCH_RECOGNITION)
                     .putExtra(KEY_AUDIO_CAPTURE_SERVICE_MODE, audioCaptureServiceMode)
             )
+        }
+
+        fun startRecognitionWithPermissionFlow(
+            context: Context,
+            audioCaptureMode: AudioCaptureMode,
+            useAltDeviceSoundSource: Boolean,
+        ) {
+            val skipMediaProjectionRequest = when (audioCaptureMode) {
+                AudioCaptureMode.Microphone -> true
+                AudioCaptureMode.Device,
+                AudioCaptureMode.Auto -> useAltDeviceSoundSource
+            }
+            val skipPermissionsRequests = skipMediaProjectionRequest &&
+                    context.checkPermissionsGranted(getRequiredPermissionsForRecognition())
+            if (skipPermissionsRequests) {
+                val captureMode = audioCaptureMode.toServiceMode(null)
+                startRecognition(context, captureMode)
+            } else {
+                val recognitionIntent = RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context, audioCaptureMode)
+                context.startActivity(recognitionIntent)
+            }
         }
 
         fun cancelRecognition(context: Context) {
@@ -525,6 +614,7 @@ class RecognitionControlService : Service() {
         private fun cancelRecognitionBroadcastIntent(context: Context): Intent {
             return Intent(LOCAL_ACTION_CANCEL_RECOGNITION)
                 .setPackage(context.packageName)
+                .addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         }
 
         fun bindMainScreenIntent(context: Context): Intent {
@@ -548,6 +638,7 @@ class RecognitionControlService : Service() {
             context.sendBroadcast(
                 Intent(LOCAL_ACTION_STOP_HOLD_MODE)
                     .setPackage(context.packageName)
+                    .addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
             )
         }
 
@@ -555,6 +646,7 @@ class RecognitionControlService : Service() {
             context.sendBroadcast(
                 Intent(LOCAL_ACTION_DISABLE_SERVICE)
                     .setPackage(context.packageName)
+                    .addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
             )
         }
     }

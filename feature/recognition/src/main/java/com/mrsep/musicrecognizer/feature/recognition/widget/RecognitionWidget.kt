@@ -18,17 +18,12 @@ import androidx.glance.appwidget.updateAll
 import androidx.glance.material3.ColorProviders
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionResult
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.darkColorScheme
 import com.mrsep.musicrecognizer.core.ui.theme.lightColorScheme
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackArtworkPrefetchWorker
-import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity
-import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity.Companion.getRequiredPermissionsForRecognition
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
-import com.mrsep.musicrecognizer.feature.recognition.service.checkPermissionsGranted
-import com.mrsep.musicrecognizer.feature.recognition.service.toServiceMode
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.CircleLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.HorizontalLayoutContent
 import com.mrsep.musicrecognizer.feature.recognition.widget.ui.RecognitionWidgetLayout
@@ -245,20 +240,11 @@ internal class LaunchRecognition : ActionCallback {
             RecognitionWidgetEntryPoint::class.java
         )
         val preferences = hiltEntryPoint.preferencesRepository().userPreferencesFlow.first()
-        val skipMediaProjectionRequest = when (preferences.defaultAudioCaptureMode) {
-            AudioCaptureMode.Microphone -> true
-            AudioCaptureMode.Device,
-            AudioCaptureMode.Auto -> preferences.useAltDeviceSoundSource
-        }
-        val skipPermissionsRequests = skipMediaProjectionRequest &&
-                context.checkPermissionsGranted(getRequiredPermissionsForRecognition())
-        if (skipPermissionsRequests) {
-            val captureMode = preferences.defaultAudioCaptureMode.toServiceMode(null)
-            RecognitionControlService.startRecognition(context, captureMode)
-        } else {
-            val recognitionIntent = RecognitionControlActivity.startRecognitionWithPermissionRequestIntent(context)
-            context.startActivity(recognitionIntent)
-        }
+        RecognitionControlService.startRecognitionWithPermissionFlow(
+            context = context,
+            audioCaptureMode = preferences.defaultAudioCaptureMode,
+            useAltDeviceSoundSource = preferences.useAltDeviceSoundSource,
+        )
     }
 }
 

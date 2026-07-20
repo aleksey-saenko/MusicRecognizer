@@ -14,6 +14,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlin.time.Duration.Companion.seconds
 
 @HiltWorker
 internal class ResetWidgetStatusWorker @AssistedInject constructor(
@@ -32,11 +33,11 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
 
         val result = statusSnapshot.result
         if (result is RecognitionResult.Success) {
-            withTimeoutOrNull(RESULT_RESET_DELAY_MILLIS) {
+            withTimeoutOrNull(RESULT_RESET_DELAY) {
                 suspendWhileTrackIsNotViewed(result.track.id)
             }
         } else {
-            delay(RESULT_RESET_DELAY_MILLIS)
+            delay(RESULT_RESET_DELAY)
         }
 
         statusHolder.resetFinalStatus()
@@ -52,7 +53,7 @@ internal class ResetWidgetStatusWorker @AssistedInject constructor(
 
     companion object {
         private const val TAG = "ResetWidgetStatusWorker"
-        private const val RESULT_RESET_DELAY_MILLIS = 25_000L
+        private val RESULT_RESET_DELAY = 25.seconds
 
         fun enqueue(context: Context) {
             WorkManager.getInstance(context).enqueueUniqueWork(

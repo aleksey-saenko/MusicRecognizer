@@ -73,6 +73,7 @@ internal fun UserPreferencesProto.toDomain() = UserPreferences(
         }
     },
     notificationServiceEnabled = notificationServiceEnabled,
+    floatingButtonEnabled = floatingButtonEnabled,
     dynamicColorsEnabled = dynamicColorsEnabled,
     artworkBasedThemeEnabled = artworkBasedThemeEnabled,
     lyricsStyle = LyricsStyle(

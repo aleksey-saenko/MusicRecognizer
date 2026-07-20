@@ -88,6 +88,15 @@ internal class PreferencesViewModel @Inject constructor(
         }
     }
 
+    fun setFloatingButtonEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setFloatingButtonEnabled(value)
+            if (value) {
+                recognitionServiceStarter.startServiceHoldMode()
+            }
+        }
+    }
+
     fun setDynamicColorsEnabled(value: Boolean) {
         viewModelScope.launch {
             preferencesRepository.setDynamicColorsEnabled(value)

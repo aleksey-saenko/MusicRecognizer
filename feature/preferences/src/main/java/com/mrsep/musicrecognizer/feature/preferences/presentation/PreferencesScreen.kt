@@ -15,7 +15,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrsep.musicrecognizer.core.common.util.getDefaultVibrator
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionProvider
@@ -182,9 +184,52 @@ internal fun PreferencesScreen(
                     HorizontalDivider(modifier = Modifier.alpha(0.2f))
                     Spacer(Modifier.height(16.dp))
                     PreferenceGroup(title = stringResource(StringsR.string.pref_group_notifications)) {
-                        NotificationServiceSwitch(
-                            serviceEnabled = uiState.preferences.notificationServiceEnabled,
-                            setServiceEnabled = viewModel::setNotificationServiceEnabled
+                        SwitchWithRecognitionPermissionRequest(
+                            title = stringResource(StringsR.string.pref_title_notification_service),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_notification_service),
+                            setChecked = viewModel::setNotificationServiceEnabled,
+                            checked = uiState.preferences.notificationServiceEnabled
+                        )
+                        var floatingButtonRequested by rememberSaveable { mutableStateOf(false) }
+                        LifecycleStartEffect(
+                            floatingButtonRequested,
+                            uiState.preferences.floatingButtonEnabled,
+                            uiState.preferences.notificationServiceEnabled
+                        ) {
+                            if (
+                                floatingButtonRequested &&
+                                !uiState.preferences.floatingButtonEnabled &&
+                                uiState.preferences.notificationServiceEnabled &&
+                                Settings.canDrawOverlays(context)
+                            ) {
+                                floatingButtonRequested = false
+                                viewModel.setFloatingButtonEnabled(true)
+                            }
+                            onStopOrDispose {}
+                        }
+                        SwitchWithRecognitionPermissionRequest(
+                            title = stringResource(StringsR.string.pref_title_floating_button),
+                            subtitle = stringResource(StringsR.string.pref_subtitle_floating_button),
+                            setChecked = { checked ->
+                                if (checked) {
+                                    viewModel.setNotificationServiceEnabled(true)
+                                    if (!Settings.canDrawOverlays(context)) {
+                                        floatingButtonRequested = true
+                                        val intent = Intent(
+                                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                            "package:${context.packageName}".toUri(),
+                                        )
+                                        context.startActivity(intent)
+                                    } else {
+                                        floatingButtonRequested = false
+                                        viewModel.setFloatingButtonEnabled(true)
+                                    }
+                                } else {
+                                    floatingButtonRequested = false
+                                    viewModel.setFloatingButtonEnabled(false)
+                                }
+                            },
+                            checked = uiState.preferences.floatingButtonEnabled
                         )
                         PreferenceClickableItem(
                             title = stringResource(StringsR.string.pref_title_manage_notifications),

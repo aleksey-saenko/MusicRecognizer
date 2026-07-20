@@ -84,6 +84,10 @@ internal class PreferencesRepositoryImpl @Inject constructor(
         safeWriter { notificationServiceEnabled = value }
     }
 
+    override suspend fun setFloatingButtonEnabled(value: Boolean) {
+        safeWriter { floatingButtonEnabled = value }
+    }
+
     override suspend fun setDynamicColorsEnabled(value: Boolean) {
         safeWriter { dynamicColorsEnabled = value }
     }

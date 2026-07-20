@@ -337,4 +337,8 @@
     <string name="app_shortcut_show_floating_button_long">Ujuv nupp</string>
     <string name="pref_title_floating_button">Ujuv nupp</string>
     <string name="pref_subtitle_floating_button">Kiireks ligipääsuks tuvastusele kuva teiste rakenduste peal ujuvat nuppu</string>
+    <string name="qr_code">QR-kood</string>
+    <string name="about_pref_title_donation">Rahaline toetus</string>
+    <string name="about_pref_subtitle_donation">Toeta meie projekti</string>
+    <string name="about_pref_donation_message">See rakendus on saadaval täiesti tasuta. Selles ei ole reklaame ega muid kommertslikke tulude teenimise viise. Jätkuva arendustöö toetamiseks või lihtsalt tänuavalduseks võid kaaluda sobiliku rahalise toetuse saatmist meile. Täname toetuse eest!</string>
 </resources>

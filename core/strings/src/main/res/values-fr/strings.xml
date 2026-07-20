@@ -346,4 +346,8 @@
     <string name="app_shortcut_show_floating_button_long">Bouton flottant</string>
     <string name="pref_title_floating_button">Bouton flottant</string>
     <string name="pref_subtitle_floating_button">Afficher un bouton flottant au-dessus des autres applications pour accéder rapidement à la fonction de reconnaissance</string>
+    <string name="qr_code">QR code</string>
+    <string name="about_pref_title_donation">Don</string>
+    <string name="about_pref_subtitle_donation">Soutenez le projet</string>
+    <string name="about_pref_donation_message">Cette application est entièrement gratuite. Elle ne contient aucune publicité ni aucune autre forme de monétisation commerciale. Pour soutenir son développement continu ou simplement pour nous remercier, n\'hésitez pas à faire un don. Merci pour votre soutien !</string>
 </resources>

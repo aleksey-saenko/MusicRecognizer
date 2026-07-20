@@ -337,4 +337,8 @@
     <string name="app_shortcut_show_floating_button_long">浮动按钮</string>
     <string name="pref_title_floating_button">浮动按钮</string>
     <string name="pref_subtitle_floating_button">在其他应用上方显示浮动按钮用于快速识别</string>
+    <string name="qr_code">二维码</string>
+    <string name="about_pref_title_donation">捐赠</string>
+    <string name="about_pref_subtitle_donation">支持项目</string>
+    <string name="about_pref_donation_message">本应用完全免费，没有任何广告或其他形式的商业变现。要支持持续开发或表示感谢，请考虑捐赠。感谢您的支持！</string>
 </resources>

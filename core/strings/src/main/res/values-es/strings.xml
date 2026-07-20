@@ -337,4 +337,8 @@
     <string name="app_shortcut_show_floating_button_long">Botón flotante</string>
     <string name="pref_title_floating_button">Botón flotante</string>
     <string name="pref_subtitle_floating_button">Muestra un botón flotante sobre otras apps para acceso rápido para reconocimiento</string>
+    <string name="qr_code">Código QR</string>
+    <string name="about_pref_title_donation">Donación</string>
+    <string name="about_pref_subtitle_donation">Asistencia del proyecto</string>
+    <string name="about_pref_donation_message">Esta aplicación es completamente libre. No contiene anuncios ni ningún otro tipo de monetización comercial. Para apoyar su desarrollo continuo o simplemente para dar las gracias, considera hacer una donación. ¡Gracias por tu apoyo!</string>
 </resources>

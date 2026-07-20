@@ -337,4 +337,8 @@
     <string name="app_shortcut_show_floating_button_long">Zwevende knop</string>
     <string name="pref_title_floating_button">Zwevende knop</string>
     <string name="pref_subtitle_floating_button">Zwevende knop weergeven boven andere apps voor snelle toegang tot herkenning</string>
+    <string name="qr_code">QR-code</string>
+    <string name="about_pref_title_donation">Donatie</string>
+    <string name="about_pref_subtitle_donation">Ondersteun het project</string>
+    <string name="about_pref_donation_message">Deze app is volledig gratis. Geen advertenties of andere vormen van commerciële inkomsten. Om verdere ontwikkeling te steunen of gewoon om je dankbaarheid te tonen, kun je overwegen een donatie te doen. Bedankt voor je steun!</string>
 </resources>

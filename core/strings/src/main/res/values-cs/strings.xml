@@ -346,4 +346,8 @@
     <string name="app_shortcut_show_floating_button_long">Plovoucí tlačítko</string>
     <string name="pref_title_floating_button">Plovoucí tlačítko</string>
     <string name="pref_subtitle_floating_button">Zobrazit plovoucí tlačítko nad ostatními aplikacemi pro rychlý přístup k rozpoznávání</string>
+    <string name="qr_code">QR kód</string>
+    <string name="about_pref_title_donation">Dar</string>
+    <string name="about_pref_subtitle_donation">Podpořte projekt</string>
+    <string name="about_pref_donation_message">Tato aplikace je kompletně zdarma. Je bez reklam a dalších způsobů komerční monetizace. Pro podpoření dalšího vývoje nebo jednoduchého poděkování prosím zvažte podpoření projektu. Děkujeme za vaši podporu!</string>
 </resources>

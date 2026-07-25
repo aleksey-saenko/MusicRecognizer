@@ -83,7 +83,7 @@
     <string name="font_size_small">小</string>
     <string name="font_size_normal">中</string>
     <string name="font_size_large">大</string>
-    <string name="font_size_huge">超大</string>
+    <string name="font_size_huge">最大</string>
     <string name="pref_group_recognition">認識</string>
     <string name="audio_source_dialog_default_mode_title">デフォルト</string>
     <string name="audio_capture_mode_microphone">マイク</string>
@@ -213,7 +213,7 @@
     <string name="audio_capture_mode_device">内部音源</string>
     <string name="audio_source_dialog_use_alt_device_source">代替の内部音源を使用する</string>
     <string name="audio_source_dialog_device_audio_limited">Android 9及びその以前のバージョンにおいて、内部音源からの録音が限定的です</string>
-    <string name="audio_source_dialog_methods">内部音源からの録音には二つの方法を用意します</string>
+    <string name="audio_source_dialog_methods">内部音源からの録音には二つの方法があります︰</string>
     <string name="audio_source_dialog_screen_casting_title">１．スクリーンキャスト（主な方法）</string>
     <string name="audio_source_dialog_screen_casting_bullet_1">この方法は最高の音質を実現し、Android 10以降を搭載したすべてのデバイスで動作します</string>
     <string name="pref_subtitle_fallback_policy">認識に失敗した際の代替処理を設定する</string>

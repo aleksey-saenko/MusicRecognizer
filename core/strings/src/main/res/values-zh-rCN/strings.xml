@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">您已拒绝权限请求，可在设置中重新授权。</string>
     <string name="permissions_denied_open_settings">打开设置</string>
     <string name="permission_granted">已授予权限</string>
-    <string name="onboarding_welcome">欢迎使用</string>
-    <string name="onboarding_welcome_message">Audile 是一款音乐识别应用，可帮助您快速准确地识别周围播放的音乐。</string>
-    <string name="onboarding_permission_message">应用需要录音权限才能正常运行。授予此权限即表示您同意将录音数据用于由<![CDATA[<a href="%1$s">远程服务</a>]]>进行音乐识别。应用不会将这些数据用于其他用途。</string>
-    <string name="onboarding_token_message">应用使用 AudD 音乐识别服务，该服务并非免费，需要专用 API 令牌。若您尚未拥有令牌，请在<![CDATA[<a href="%1$s">此处</a>]]>注册以获取 14 天试用令牌。</string>
-    <string name="onboarding_token_skip_message">跳过此步骤将限制您的每日识别次数，但您仍可稍后在偏好设置中填写个人令牌。</string>
-    <string name="onboarding_token_validating">正在验证令牌</string>
-    <string name="onboarding_final_title">一切准备就绪</string>
-    <string name="onboarding_final_message">设置已成功完成</string>
-    <string name="onboarding_final_get_started">立即开始</string>
     <string name="recognition">识别</string>
     <string name="popup_offline_mode">离线模式</string>
     <string name="button_retry_recognition">重试</string>

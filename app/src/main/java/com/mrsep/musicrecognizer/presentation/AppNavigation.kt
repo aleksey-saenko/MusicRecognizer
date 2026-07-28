@@ -45,8 +45,6 @@ import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScr
 import com.mrsep.musicrecognizer.feature.library.presentation.library.LibraryScreen.libraryScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.search.LibrarySearchScreen.librarySearchScreen
 import com.mrsep.musicrecognizer.feature.library.presentation.search.LibrarySearchScreen.navigateToLibrarySearchScreen
-import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen
-import com.mrsep.musicrecognizer.feature.onboarding.presentation.OnboardingScreen.onboardingScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.navigateToPreferencesScreen
 import com.mrsep.musicrecognizer.feature.preferences.presentation.PreferencesScreen.preferencesScreen
@@ -78,8 +76,6 @@ internal fun AppNavigation(
     setRecognitionRequested: (Boolean) -> Unit,
     shouldShowNavRail: Boolean,
     isExpandedScreen: Boolean,
-    onboardingCompleted: Boolean?,
-    onOnboardingClose: () -> Unit,
     hideSplashScreen: () -> Unit
 ) {
     val outerNavController = rememberNavController()
@@ -98,40 +94,28 @@ internal fun AppNavigation(
             activity.removeOnNewIntentListener(deeplinkListener)
         }
     }
-    // Conditional navigation for onboarding and recognition request
+    // Conditional navigation for recognition request
     LaunchedEffect(
         optionalOuterEntry,
         optionalInnerEntry,
-        onboardingCompleted,
-        recognitionRequested
+        recognitionRequested,
     ) {
         // optionalInnerEntry can be null, for example if nav graph is created with track deeplink
         val outerEntry = optionalOuterEntry ?: return@LaunchedEffect
-        onboardingCompleted ?: return@LaunchedEffect
-        val onOnboarding = outerEntry.destination.route == OnboardingScreen.ROUTE
-        when {
-            !onboardingCompleted && !onOnboarding -> {
-                outerNavController.navigate(OnboardingScreen.ROUTE)
+        // navigate to recognition screen if recognition requested
+        if (recognitionRequested) {
+            if (outerEntry.destination.route != BAR_HOST_ROUTE) {
+                outerNavController.popBackStack(BAR_HOST_ROUTE, inclusive = false)
+            } else if (optionalInnerEntry?.destination?.route != RecognitionScreen.ROUTE) {
+                innerNavController.popBackStack(RecognitionScreen.ROUTE, inclusive = false)
             }
-            onboardingCompleted && onOnboarding -> {
-                outerNavController.popBackStack()
-            }
-            else -> {
-                // navigate to recognition screen if recognition requested
-                if (recognitionRequested) {
-                    if (outerEntry.destination.route != BAR_HOST_ROUTE) {
-                        outerNavController.popBackStack(BAR_HOST_ROUTE, inclusive = false)
-                    } else if (optionalInnerEntry?.destination?.route != RecognitionScreen.ROUTE) {
-                        innerNavController.popBackStack(RecognitionScreen.ROUTE, inclusive = false)
-                    }
-                }
-                // hide splash screen if onboarding navigation is finished and result screen is resumed
-                if (outerEntry.destination.route == BAR_HOST_ROUTE) {
-                    optionalInnerEntry?.lifecycle?.withResumed(hideSplashScreen)
-                } else {
-                    outerEntry.lifecycle.withResumed(hideSplashScreen)
-                }
-            }
+            return@LaunchedEffect
+        }
+        // hide splash screen if result screen is resumed
+        if (outerEntry.destination.route == BAR_HOST_ROUTE) {
+            optionalInnerEntry?.lifecycle?.withResumed(hideSplashScreen)
+        } else {
+            outerEntry.lifecycle.withResumed(hideSplashScreen)
         }
     }
     NavHost(
@@ -141,7 +125,6 @@ internal fun AppNavigation(
         exitTransition = { fadeOut(animationSpec = tween(SCREEN_TRANSITION_DURATION)) },
         modifier = Modifier.fillMaxSize(),
     ) {
-        onboardingScreen(onOnboardingClose = onOnboardingClose)
         barNavHost(
             unviewedTracksCount = unviewedTracksCount,
             recognitionRequested = recognitionRequested,

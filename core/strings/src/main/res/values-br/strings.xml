@@ -51,11 +51,6 @@
     <string name="permission_rationale_record_audio">Evit gellout anaout ar sonerezh an arload en deus ezhomm da haeziñ ouzh ho mikrofon.</string>
     <string name="permissions_denied_open_settings">Digeriñ an arventennoù</string>
     <string name="permission_granted">Aotre roet</string>
-    <string name="onboarding_welcome">Donemat</string>
-    <string name="onboarding_token_validating">O wiriañ</string>
-    <string name="onboarding_final_title">Prest omp da loc\'hañ</string>
-    <string name="onboarding_final_message">Kefluniadur echuet gant berzh</string>
-    <string name="onboarding_final_get_started">Kregiñ</string>
     <string name="recognition">Anaout</string>
     <string name="popup_offline_mode">Mod ezlinenn</string>
     <string name="button_retry_recognition">Klask en-dro</string>

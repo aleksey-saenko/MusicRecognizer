@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">S\'han denegat les sol·licituds d\'autorització prèvies. Podeu canviar la vostra decisió a través de la configuració.</string>
     <string name="permissions_denied_open_settings">Obrir configuració</string>
     <string name="permission_granted">Permís concedit</string>
-    <string name="onboarding_welcome">Benvinguts</string>
-    <string name="onboarding_welcome_message">Audile és una aplicació de reconeixement musical, que pot ajudar a reconèixer ràpidament i amb precisió una pista de música que estiga sonant a prop.</string>
-    <string name="onboarding_permission_message">L\'aplicació requereix permís per gravar àudio per funcionar correctament. En concedir aquest permís, accepteu que les dades gravades s\'utilitzaran per <![CDATA[<a href="%1$s">servei remot</a>]]> per al reconeixement musical. L\'aplicació no utilitza aquestes dades per a cap altre propòsit.</string>
-    <string name="onboarding_token_message">L\'aplicació utilitza el servei de reconeixement musical AudD, que no és gratuït i requereix un token d\'API especial. Registreu-vos <![CDATA[<a href="%1$s">aquí</a>]]> per obtenir un token de prova de 14 dies, si encara no en teniu cap.</string>
-    <string name="onboarding_token_skip_message">Ometre aquest pas limitarà els vostres reconeixements diaris, però sempre podreu especificar el token personal més endavant a les preferències.</string>
-    <string name="onboarding_token_validating">Validant</string>
-    <string name="onboarding_final_title">Estem a punt per marxar</string>
-    <string name="onboarding_final_message">Configuració completada amb èxit</string>
-    <string name="onboarding_final_get_started">Començar</string>
     <string name="recognition">Reconeixement</string>
     <string name="popup_offline_mode">Mode fora de línia</string>
     <string name="button_retry_recognition">Reintentar</string>

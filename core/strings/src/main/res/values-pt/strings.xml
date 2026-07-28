@@ -11,7 +11,6 @@
     <string name="delete">Apagar</string>
     <string name="permission_rationale_post_notifications">Para controlar o reconhecimento e conseguir um resultado mesmo quando a app é minimizada, é necessário a permissão para enviar notificações.</string>
     <string name="permissions_denied_message">Solicitações prévias de permissões foram negadas. Pode mudar a sua decisão pelas configurações.</string>
-    <string name="onboarding_permission_message">A app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, concorda que os seus dados gravados serão usados pelo <![CDATA[<a href="%1$s">serviço remoto</a>]]> para o reconhecimento de música. A app não usa esses dados para qualquer outro propósito.</string>
     <string name="result_message_recognition_saved">O clipe de áudio foi gravado, pode iniciar o reconhecimento quando quiser manualmente</string>
     <string name="result_title_recognition_scheduled">Reconhecimento agendado</string>
     <string name="result_title_recording_error">Erro de gravação</string>
@@ -82,15 +81,7 @@
     <string name="permission_rationale_record_audio">Para reconhecer músicas, o app precisa de acesso ao seu microfone.</string>
     <string name="permissions_denied_open_settings">Abrir configurações</string>
     <string name="permission_granted">Permissão concedida</string>
-    <string name="onboarding_welcome">Bem-vindo</string>
-    <string name="onboarding_welcome_message">Audile é uma app para reconhecimento de músicas, que pode-o ajudar a identificar rapidamente e com precisão uma faixa a reproduzir ao redor de si.</string>
-    <string name="onboarding_token_message">O app usa o serviço de reconhecimento de música AudD, que não é grátis e requer um token de API especial. Registe-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter o seu token de avaliação, se ainda não tiver um.</string>
-    <string name="onboarding_token_skip_message">Pular este passo limitará os seus reconhecimentos diários, mas sempre pode especificar o seu token pessoal depois nas preferências.</string>
-    <string name="onboarding_token_validating">A validar</string>
-    <string name="onboarding_final_message">Configuração completada com sucesso</string>
-    <string name="onboarding_final_get_started">Iniciar</string>
     <string name="recognition">Reconhecimento</string>
-    <string name="onboarding_final_title">Estamos prontos para começar</string>
     <string name="popup_offline_mode">Modo off-line</string>
     <string name="button_retry_recognition">Tentar novamente</string>
     <string name="result_title_no_matches">Nenhuma correspondência encontrada</string>

@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">Permintaan izin sebelumnya telah ditolak. Anda dapat mengubah keputusan melalui pengaturan.</string>
     <string name="permissions_denied_open_settings">Buka pengaturan</string>
     <string name="permission_granted">Izin diberikan</string>
-    <string name="onboarding_welcome">Selamat datang</string>
-    <string name="onboarding_welcome_message">Audile adalah aplikasi pengenalan musik yang dapat membantu Anda mengenali musik yang diputar di sekitar Anda dengan cepat dan akurat.</string>
-    <string name="onboarding_permission_message">Aplikasi memerlukan izin untuk merekam audio agar dapat berfungsi dengan baik. Dengan memberikan izin ini, Anda menyetujui bahwa data rekaman Anda akan digunakan oleh <![CDATA[<a href="%1$s">layanan jarak jauh</a>]]> untuk pengenalan musik. Aplikasi tidak menggunakan data ini untuk tujuan lain.</string>
-    <string name="onboarding_token_message">Aplikasi ini menggunakan layanan pengenalan musik AudD, yang tidak gratis dan memerlukan token API khusus. Daftar <![CDATA[<a href="%1$s">di sini</a>]]> untuk mendapatkan token uji coba 14 hari Anda, jika Anda belum memilikinya.</string>
-    <string name="onboarding_token_skip_message">Melewati langkah ini akan membatasi pengenalan harian Anda, tetapi Anda selalu dapat memasukkan token pribadi Anda nanti di preferensi.</string>
-    <string name="onboarding_token_validating">Memvalidasi</string>
-    <string name="onboarding_final_title">Kami siap memulai</string>
-    <string name="onboarding_final_message">Penyiapan berhasil diselesaikan</string>
-    <string name="onboarding_final_get_started">Mulai</string>
     <string name="recognition">Pengenalan</string>
     <string name="popup_offline_mode">Mode offline</string>
     <string name="button_retry_recognition">Coba lagi</string>

@@ -48,16 +48,6 @@
     <string name="permissions_denied_message">Předchozí žádosti o povolení byly zamítnuty. Můžete své rozhodnutí změnit v nastavení.</string>
     <string name="permissions_denied_open_settings">Otevřít nastavení</string>
     <string name="permission_granted">Oprávnění uděleno</string>
-    <!-- Onboarding screen -->
-    <string name="onboarding_welcome">Vítejte</string>
-    <string name="onboarding_welcome_message">Audile je aplikace pro rozpoznávání hudby, která vám rychle a spolehlivě pomůže rozpoznat hudbu, která hraje poblíž vás.</string>
-    <string name="onboarding_permission_message">Tato aplikace pro správnou funkčnost vyžaduje oprávnění k nahrávání zvuku. Udělením tohoto oprávnění souhlasíte s použitím vašich nahraných dat <![CDATA[<a href="%1$s">vzdálenou službou</a>]]> pro účely rozpoznání hudby. Aplikace tato data nevyužívá k žádnému jinému účelu.</string>
-    <string name="onboarding_token_message">Aplikace používá službu rozpoznávání hudby AudD, která vyžaduje speciální token API. Pokud ještě token nemáte, zaregistrujte se <![CDATA[<a href="%1$s">zde</a>]]> pro jeho získání.</string>
-    <string name="onboarding_token_skip_message">Přeskočením tohoto kroku omezíte počet svých denních rozpoznání, token ale můžete kdykoli později přidat v nastavení.</string>
-    <string name="onboarding_token_validating">Ověřování</string>
-    <string name="onboarding_final_title">Jdeme na to</string>
-    <string name="onboarding_final_message">Prvotní nastavení úspěšně dokončeno</string>
-    <string name="onboarding_final_get_started">Začít</string>
     <!-- Recognition screen -->
     <string name="recognition">Rozpoznání</string>
     <string name="popup_offline_mode">Režim offline</string>

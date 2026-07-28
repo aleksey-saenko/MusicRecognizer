@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">A korábbi engedélykérések elutasításra kerültek. A beállításokban módosítható a döntés.</string>
     <string name="permissions_denied_open_settings">Beállítások megnyitása</string>
     <string name="permission_granted">Engedély megadva</string>
-    <string name="onboarding_welcome">Üdvözlet</string>
-    <string name="onboarding_welcome_message">Az Audile egy zenefelismerő alkalmazás, amely gyorsan és pontosan felismeri a közeledben szóló dalokat.</string>
-    <string name="onboarding_permission_message">Az alkalmazásnak engedélyre van szüksége a hang rögzítéséhez a megfelelő működéshez. Az engedély megadásával elfogadod, hogy a rögzített adatokat <![CDATA[<a href="%1$s">távoli szolgáltatás</a>]]> használja az azonosításhoz. Az alkalmazás nem használja ezeket az adatokat más célra.</string>
-    <string name="onboarding_token_message">Az alkalmazás az AudD zeneazonosító szolgáltatást használja, amely fizetős és külön API-tokent igényel. Ha még nincs tokened, regisztrálj <![CDATA[<a href="%1$s">ezen a helyen</a>]]> a 14 napos próbaverzióhoz.</string>
-    <string name="onboarding_token_skip_message">Ha kihagyod ezt a lépést, a napi felismerések száma korlátozott lesz, de a token később a beállításokban is megadható.</string>
-    <string name="onboarding_token_validating">Hitelesítés</string>
-    <string name="onboarding_final_title">Minden készen áll</string>
-    <string name="onboarding_final_message">A beállítás sikeresen befejeződött</string>
-    <string name="onboarding_final_get_started">Kezdés</string>
     <string name="recognition">Felismerés</string>
     <string name="popup_offline_mode">Offline mód</string>
     <string name="button_retry_recognition">Újrapróbálás</string>

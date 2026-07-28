@@ -53,13 +53,6 @@
     <string name="permissions_denied_message">Eelmine kord oled sa oled keeldunud õiguste jagamisest. Seda otsust saad muuta rakenduse seadistustest.</string>
     <string name="permissions_denied_open_settings">Ava seadistused</string>
     <string name="permission_granted">Õigused on olemas</string>
-    <string name="onboarding_welcome_message">Audile on muusika tuvastamise rakendus, mis aitab sul kiiresti ja täpselt ära tunda muusikat, mis sinu lähikonnas kõlab.</string>
-    <string name="onboarding_token_message">Rakendus kasutab muusikatuvastusteenust AudD, mis pole tasuta ja eeldab kasutamiseks API tunnusluba. Liitudes <![CDATA[<a href="%1$s">siin</a>]]> saad 14-päevase ajutise tunnusloa (kui sul seda veel pole).</string>
-    <string name="onboarding_token_skip_message">Kui jätad selle sammu vahele, siis igas päevas lubatud tuvastuste arv on ülipiiratud. Soovi korral saad seadistusest tunnusloa alati lisada.</string>
-    <string name="onboarding_token_validating">Kontrollime õigsust</string>
-    <string name="onboarding_final_title">Valmis… saame alustada</string>
-    <string name="onboarding_final_message">Seadistamine õnnestus</string>
-    <string name="onboarding_final_get_started">Alusta nüüd</string>
     <string name="recognition">Tuvastamine</string>
     <string name="popup_offline_mode">Vallasrežiim</string>
     <string name="button_retry_recognition">Proovi uuesti</string>
@@ -126,9 +119,7 @@
     <string name="crash_dialog_button_cancel">Katkesta</string>
     <string name="recognition_action_show_track">Näita lugu</string>
     <string name="delete_recognitions_title">Kustuta tuvastamised</string>
-    <string name="onboarding_welcome">Tere tulemast</string>
     <string name="recognition_action_rename">Muuda nime</string>
-    <string name="onboarding_permission_message">Selleks, et rakendus toimiks korrektselt, vajab ta õigust heli salvestamiseks. Selle õiguse andmisega sa nõustud samuti, et salvestatud andmed on kasutusel <![CDATA[<a href="%1$s">veebiteenuses</a>]]> muusika tuvastamiseks. See rakendus ei kasuta salvestatud andmeid ühelgi muul eesmärgil.</string>
     <string name="result_message_bad_network_response">Võrgupäringule vastamisel tekkis viga</string>
     <string name="result_title_internal_error">Sisemine viga</string>
     <string name="recording_start_player">Esita</string>

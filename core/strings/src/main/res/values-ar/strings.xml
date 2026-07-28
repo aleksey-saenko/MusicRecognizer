@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">تم رفض طلبات الأذون السابقة. يمكنك تغيير قرارك من خلال الإعدادات.</string>
     <string name="permissions_denied_open_settings">فتح الإعدادات</string>
     <string name="permission_granted">تم منح الإذن</string>
-    <string name="onboarding_welcome">مرحبًا</string>
-    <string name="onboarding_welcome_message">أوديل هو تطبيق للتعرف على الموسيقى يمكنه مساعدتك في التعرف بسرعة ودقة على الموسيقى التي يتم تشغيلها بالقرب منك.</string>
-    <string name="onboarding_permission_message"><![CDATA[يتطلب التطبيق إذنًا لتسجيل الصوت لكي يعمل بشكل صحيح. بمنح هذا الإذن، فإنك توافق على استخدام بياناتك المسجلة من قِبل خدمة خارجية للتعرف على الموسيقى. لا يستخدم التطبيق هذه البيانات لأي غرض آخر.]]></string>
-    <string name="onboarding_token_message"><![CDATA[يستخدم التطبيق خدمة التعرف على الموسيقى AudD، وهي خدمة مدفوعة وتتطلب رمز واجهة برمجة تطبيقات خاص. سجل هنا للحصول على رمز تجريبي لمدة ١٤ يومًا، إن لم يكن لديك واحد بالفعل.]]></string>
-    <string name="onboarding_token_skip_message">سيؤدي تخطي هذه الخطوة إلى الحد من عدد مرات التعرف اليومية، ولكن يمكنك دائمًا تحديد الرمز الشخصي الخاص بك لاحقًا في الإعدادات.</string>
-    <string name="onboarding_token_validating">يجري التحقق</string>
-    <string name="onboarding_final_title">نحن جاهزون</string>
-    <string name="onboarding_final_message">تم الإعداد بنجاح</string>
-    <string name="onboarding_final_get_started">ابدأ</string>
     <string name="recognition">التعرف</string>
     <string name="popup_offline_mode">وضع عدم الاتصال بالإنترنت</string>
     <string name="button_retry_recognition">إعادة المحاولة</string>

@@ -89,7 +89,6 @@ dependencies {
     implementation(projects.feature.recognition)
     implementation(projects.feature.preferences)
     implementation(projects.feature.backup)
-    implementation(projects.feature.onboarding)
     implementation(projects.feature.developerMode)
 
     implementation(libs.androidx.navigation.compose)

@@ -131,8 +131,6 @@ class MainActivity : ComponentActivity() {
                         setRecognitionRequested = viewModel::setRecognitionRequested,
                         shouldShowNavRail = shouldShowNavRail(windowSizeClass),
                         isExpandedScreen = isExpandedScreen(windowSizeClass),
-                        onboardingCompleted = isOnboardingCompleted(uiState),
-                        onOnboardingClose = { this@MainActivity.finish() },
                         hideSplashScreen = { keepSplashScreen = false }
                     )
                 }
@@ -281,14 +279,6 @@ private fun shouldUseDynamicColors(uiState: MainActivityUiState): Boolean {
     return when (uiState) {
         MainActivityUiState.Loading -> false
         is MainActivityUiState.Success -> uiState.dynamicColorsEnabled
-    }
-}
-
-@Stable
-private fun isOnboardingCompleted(uiState: MainActivityUiState): Boolean? {
-    return when (uiState) {
-        MainActivityUiState.Loading -> null
-        is MainActivityUiState.Success -> uiState.onboardingCompleted
     }
 }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_token_message">Die App nutzt den AudD Musikerkennungs-Service, welcher nicht kostenfrei ist und einen speziellen API-Schlüssel benötigt. Melde dich <![CDATA[<a href="%1$s">hier</a>]]> an, um deinen 14-tägigen Test-Schlüssel zu erhalten, sofern du noch keinen hast.</string>
     <string name="recognition">Erkennung</string>
     <string name="main_screen_listening_extra_time">Noch ein Versuch</string>
     <string name="widget_tap_to_try_again">Zum erneuten Versuchen antippen</string>
@@ -41,13 +40,6 @@
     <string name="permissions_denied_message">Vorige Anfragen auf Berechtigungen wurden abgelehnt. Du kannst dies in den Einstellungen ändern.</string>
     <string name="permissions_denied_open_settings">Öffne Einstellungen</string>
     <string name="permission_granted">Berechtigung zugelassen</string>
-    <string name="onboarding_welcome">Willkommen</string>
-    <string name="onboarding_welcome_message">Audile ist eine Musikerkennungs-App, welche dir helfen kann, schnell und präzise Musik zu erkennen, die in deiner Nähe spielt.</string>
-    <string name="onboarding_token_skip_message">Das Überspringen dieses Schritts wird deine täglichen Erkennungen einschränken, aber du kannst deinen persönlichen Schlüssel jederzeit in den Einstellungen festlegen.</string>
-    <string name="onboarding_token_validating">Überprüfen</string>
-    <string name="onboarding_final_title">Wir sind bereit</string>
-    <string name="onboarding_final_message">Einrichtung erfolgreich abgeschlossen</string>
-    <string name="onboarding_final_get_started">Loslegen</string>
     <string name="popup_offline_mode">Offline Modus</string>
     <string name="button_retry_recognition">Erneut versuchen</string>
     <string name="result_title_no_matches">Keine Übereinstimmung gefunden</string>
@@ -224,7 +216,6 @@
     <string name="copied">Kopiert</string>
     <string name="permissions">Berechtigungen</string>
     <string name="permission_rationale_record_audio">Um Musikerkennung durchzuführen, braucht diese App Zugriff zu deinem Mikrofon.</string>
-    <string name="onboarding_permission_message">Die App benötigt die Berechtigung Audio aufzunehmen, um richtig zu funktionieren. Durch das Erteilen der Berechtigung stimmst du zu, dass deine aufgenommenen Daten von <![CDATA[<a href="%1$s">Remote Dienst</a>]]> zur Musikerkennung genutzt wird. Die App nutzt diese Daten für keine weiteren Zwecke.</string>
     <string name="empty_recognition_queue_subtitle">Im Offline–Modus oder bei Fehlern kann eine Erkennung entsprechend der gewählten Alternativmöglichkeit zum Warten angehängt werden</string>
     <string name="recognition_action_rename">Umbenennen</string>
     <string name="select_all">Alles auswählen</string>

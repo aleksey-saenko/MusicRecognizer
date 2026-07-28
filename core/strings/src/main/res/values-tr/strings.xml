@@ -52,16 +52,6 @@
     <string name="permissions_denied_message">Önceki izin istekleri reddedildi. Kararınızı ayarlar üzerinden değiştirebilirsiniz.</string>
     <string name="permissions_denied_open_settings">Ayarları aç</string>
     <string name="permission_granted">İzin verildi</string>
-    <!-- Onboarding screen -->
-    <string name="onboarding_welcome">Hoş Geldiniz</string>
-    <string name="onboarding_welcome_message">Audile, yakınınızda çalan müziği hızlı ve doğru bir şekilde tanımanıza yardımcı olabilecek bir müzik tanıma uygulamasıdır.</string>
-    <string name="onboarding_permission_message">Uygulamanın düzgün çalışabilmesi için ses kaydetme izni gereklidir. Bu izni vererek, kaydedilen verilerinizin müzik tanıma için <![CDATA[<a href="%1$s">uzak hizmet</a>]]> tarafından kullanılmasını kabul etmiş olursunuz. Uygulama bu verileri başka hiçbir amaçla kullanmaz.</string>
-    <string name="onboarding_token_message">Uygulama, ücretsiz olmayan ve özel bir API anahtarı gerektiren AudD müzik tanıma hizmetini kullanır. Henüz bir deneme anahtarınız yoksa <![CDATA[<a href="%1$s">buradan</a>]]> kaydolarak bir tane alabilirsiniz.</string>
-    <string name="onboarding_token_skip_message">Bu adımı atlamak günlük tanıma sayınızı sınırlayacaktır, ancak daha sonra tercihler bölümünden kişisel anahtarınızı her zaman belirtebilirsiniz.</string>
-    <string name="onboarding_token_validating">Doğrulanıyor</string>
-    <string name="onboarding_final_title">Başlamaya hazırız</string>
-    <string name="onboarding_final_message">Kurulum başarıyla tamamlandı</string>
-    <string name="onboarding_final_get_started">Başlayın</string>
     <!-- Recognition screen -->
     <string name="recognition">Tanıma</string>
     <string name="popup_offline_mode">Çevrimdışı mod</string>

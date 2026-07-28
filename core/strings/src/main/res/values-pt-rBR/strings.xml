@@ -52,16 +52,6 @@
     <string name="permissions_denied_message">Solicitações anteriores de permissões foram negadas. Você pode mudar sua decisão pelas configurações.</string>
     <string name="permissions_denied_open_settings">Abrir configurações</string>
     <string name="permission_granted">Permissão concedida</string>
-    <!-- Onboarding screen -->
-    <string name="onboarding_welcome">Boas vindas</string>
-    <string name="onboarding_welcome_message">Audile é um aplicativo para reconhecimento de músicas, que pode te ajudar a rapidamente e com precisão identificar uma faixa tocando ao redor de você.</string>
-    <string name="onboarding_permission_message">O app precisa de permissão para gravar áudio para que funcione corretamente. Ao conceder esta permissão, você concorda que seus dados gravados serão usados pelo <![CDATA[<a href="%1$s">serviço remoto</a>]]> para o reconhecimento de música. O app não usa esses dados para qualquer outro propósito.</string>
-    <string name="onboarding_token_message">O app usa o serviço de reconhecimento de música AudD, que não é grátis e requer um token de API especial. Registre-se <![CDATA[<a href="%1$s">aqui</a>]]> para obter seu token de avaliação de 14 dias, se você ainda não tiver um.</string>
-    <string name="onboarding_token_skip_message">Pular este passo limitará seus reconhecimentos diários, mas você sempre pode especificar seu token pessoal depois nas preferências.</string>
-    <string name="onboarding_token_validating">Validando</string>
-    <string name="onboarding_final_title">Está tudo certo</string>
-    <string name="onboarding_final_message">Configuração concluída com sucesso</string>
-    <string name="onboarding_final_get_started">Iniciar</string>
     <!-- Recognition screen -->
     <string name="recognition">Reconhecimento</string>
     <string name="popup_offline_mode">Modo off-line</string>

@@ -50,11 +50,6 @@
     <string name="permissions_denied_message">בקשות הרשאות קודמות נדחו. באפשרותך לשנות את החלטתך דרך ההגדרות.</string>
     <string name="permissions_denied_open_settings">פתח הגדרות</string>
     <string name="permission_granted">הרשאה ניתנה</string>
-    <string name="onboarding_welcome">ברוך הבא</string>
-    <string name="onboarding_welcome_message">Audile הוא יישומון זיהוי מוזיקה, שיכול לעזור לך לזהות במהירות ובצורה מדויקת מוזיקה המתנגנת בקרבתך.</string>
-    <string name="onboarding_permission_message">האפליקציה דורשת הרשאה להקלטת אודיו על מנת לפעול כראוי. על ידי מתן הרשאה זו, הנך מסכים שהנתונים המוקלטים שלך ישמשו את<![CDATA[<a href="%1$s">שירות מרוחק</a>]]> לזיהוי מוזיקה. האפליקציה אינה משתמשת בנתונים אלה לכל מטרה אחרת.</string>
-    <string name="onboarding_token_message">האפליקציה משתמשת בשירות זיהוי מוזיקה של AudD, שאינו חינמי ודורש API token מיוחד. הירשמו <![CDATA[<a href="%1$s">כאן</a>]]> כדי לקבל את אסימון הניסיון שלכם ל-14 יום, אם עדיין אין לכם אחד.</string>
-    <string name="onboarding_token_skip_message">דילוג על שלב זה יגביל את אפשרויות הזיהוי היומיות שלך, אך תמיד תוכל לציין את האסימון האישי שלך מאוחר יותר בהעדפות.</string>
     <string name="empty_recognition_queue_title">אין זיהויים בתור</string>
     <string name="untitled_recognition">זיהוי ללא שם</string>
     <string name="format_scheduled_recognition_of">זיהוי מתוזמן של %s</string>
@@ -116,10 +111,6 @@
     <string name="audio_source_dialog_use_alt_device_source">השתמש במקור שמע חלופי של התקן</string>
     <string name="pref_title_fallback_policy">מדיניות גיבוי לזיהוי</string>
     <string name="applied">הוחל</string>
-    <string name="onboarding_token_validating">מאמת</string>
-    <string name="onboarding_final_title">אנחנו מוכנים לצאת לדרך</string>
-    <string name="onboarding_final_message">ההתקנה הושלמה בהצלחה</string>
-    <string name="onboarding_final_get_started">התחל</string>
     <string name="recognition">זיהוי</string>
     <string name="popup_offline_mode">מצב לא מקוון</string>
     <string name="button_retry_recognition">נסה שוב</string>

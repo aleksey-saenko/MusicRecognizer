@@ -42,12 +42,6 @@
     <string name="permissions_denied_message">Voorgaande toestemmingsaanvragen zijn afgewezen. Je kan je keuzes aanpassen in de instellingen.</string>
     <string name="permissions_denied_open_settings">Open instellingen</string>
     <string name="permission_granted">Toestemming verleend</string>
-    <string name="onboarding_welcome">Welkom</string>
-    <string name="onboarding_welcome_message">Audile is een muziekherkennings-app die je helpt om snel en nauwkeurig muziek te herkennen die in je omgeving wordt afgespeeld.</string>
-    <string name="onboarding_permission_message">De app vereist toestemming om audio op te nemen. Door het verlenen van deze toestemming stem je ermee in dat de data gebruikt wordt door <![CDATA[<a href="%1$s">remote service</a>]]> voor muziekherkenning. De app gebruikt deze data niet voor andere doeleinden.</string>
-    <string name="onboarding_token_validating">Valideren</string>
-    <string name="onboarding_final_title">We zijn er klaar voor</string>
-    <string name="onboarding_final_get_started">Van start</string>
     <string name="recognition">Herkenning</string>
     <string name="popup_offline_mode">Offline modus</string>
     <string name="button_retry_recognition">Opnieuw</string>
@@ -126,14 +120,11 @@
     <string name="notification_tap_to_recognize_subtitle">Identificeer muziek met apps open</string>
     <string name="apply">Toepassen</string>
     <string name="help">Help</string>
-    <string name="onboarding_final_message">Instellen succesvol afgerond</string>
     <string name="app_shortcut_open_and_recognize_long">Open app en herken</string>
     <string name="edit">Bewerken</string>
     <string name="close">Sluiten</string>
     <string name="save">Opslaan</string>
     <string name="copied">Gekopieerd</string>
-    <string name="onboarding_token_message">De app maakt gebruik van AudD muziekherkenningsservice, welke niet gratis is en een spciale API-token vereist. Abonneer <![CDATA[<a href="%1$s">hier</a>]]> om een 14-dagen proef token te verkrijgen als je er nog geen hebt.</string>
-    <string name="onboarding_token_skip_message">Het overslaan van deze stap beperkt je dagelijks aantal herkenningen, maar je kan altijd je persoonlijke token opgeven in de instellingen.</string>
     <string name="result_title_bad_connection">Matige internetverbinding</string>
     <string name="result_message_bad_connection">Controleer je netwerkstatus a.u.b</string>
     <string name="result_title_recognition_saved">Herkenning bewaard</string>

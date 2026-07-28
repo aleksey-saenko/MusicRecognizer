@@ -53,15 +53,6 @@
     <string name="permissions_denied_message">Попередні запити на дозволи було відхилено. Ви можете змінити своє рішення в налаштуваннях.</string>
     <string name="permissions_denied_open_settings">Відкрити налаштування</string>
     <string name="permission_granted">Дозвіл надано</string>
-    <string name="onboarding_welcome">Ласкаво просимо</string>
-    <string name="onboarding_welcome_message">Audile — це застосунок для розпізнавання музики, який допоможе вам швидко та точно розпізнати музику, що відтворюється поруч.</string>
-    <string name="onboarding_permission_message">Для належної роботи програми потрібен дозвіл на запис аудіо. Надаючи цей дозвіл, ви погоджуєтеся з тим, що ваші записані дані будуть використані <![CDATA[<a href="%1$s">віддаленою службою</a>]]> для розпізнавання музики. Програма не використовує ці дані для жодних інших цілей.</string>
-    <string name="onboarding_token_message">Застосунок використовує службу розпізнавання музики AudD, яка не є безкоштовною та вимагає спеціального токена API. Зареєструйтесь <![CDATA[<a href="%1$s">тут</a>]]>, щоб отримати свій 14-денний пробний токен, якщо у вас його ще немає.</string>
-    <string name="onboarding_token_skip_message">Пропуск цього кроку обмежить ваші щоденні розпізнавання, але ви завжди можете вказати свій особистий токен пізніше в налаштуваннях.</string>
-    <string name="onboarding_token_validating">Перевірка</string>
-    <string name="onboarding_final_title">Ми готові вирушати</string>
-    <string name="onboarding_final_message">Налаштування успішно завершено</string>
-    <string name="onboarding_final_get_started">Почати</string>
     <string name="recognition">Визнання</string>
     <string name="popup_offline_mode">Автономний режим</string>
     <string name="button_retry_recognition">Повторити спробу</string>

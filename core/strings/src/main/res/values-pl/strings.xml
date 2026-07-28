@@ -6,7 +6,6 @@
     <string name="popup_offline_mode">Tryb offline</string>
     <string name="app_shortcut_recognize_long">Rozpoznaj w tle</string>
     <string name="permission_rationale_post_notifications">Aplikacja potrzebuje dostępu do wysyłania powiadomień żeby kontrolować rozpoznawanie i informować o rezultatach nawet jeśli jest zamknięta.</string>
-    <string name="onboarding_token_validating">Walidowanie</string>
     <string name="permissions_denied_message">Poprzednie prośba dostępu została odrzucona. Możesz zmienić decyzję używając ustawień.</string>
     <string name="notification_listening_subtitle">Proszę czekać</string>
     <string name="action_recognize">Rozpoznaj</string>
@@ -55,17 +54,9 @@
     <string name="permission_rationale_record_audio">Aplikacja potrzebuje dostępu do mikrofonu żeby przetwarzać muzykę.</string>
     <string name="permissions_denied_open_settings">Otwórz ustawienia</string>
     <string name="permission_granted">Przyznano uprawnienia</string>
-    <string name="onboarding_welcome">Witaj</string>
-    <string name="onboarding_welcome_message">Audile jest aplikacją służącą do rozpoznawania muzyki, która pomoże Tobie szybko i dokładnie rozpoznać utwory w Twoim otoczeniu.</string>
-    <string name="onboarding_final_title">Jesteśmy gotowi do działania</string>
-    <string name="onboarding_final_message">Konfiguracja zakończyła się pomyślnie</string>
-    <string name="onboarding_final_get_started">Rozpocznij</string>
     <string name="recognition">Rozpoznawanie</string>
     <string name="button_retry_recognition">Ponów</string>
     <string name="result_title_no_matches">Niczego nie znaleziono</string>
-    <string name="onboarding_permission_message">Aplikacja wymaga pozwolenia na nagrywanie dźwięku, aby działać poprawnie. Udzielając tego pozwolenia, zgadzasz się na wykorzystanie Twoich zarejestrowanych danych przez <![CDATA[<a href="%1$s">usługę zdalną</a>]]> do rozpoznawania muzyki. Aplikacja nie wykorzystuje tych danych do żadnych innych celów.</string>
-    <string name="onboarding_token_message">Aplikacja korzysta z usługi rozpoznawania utworów muzycznych AudD, która nie jest darmowa i wymaga specjalnego tokenu API. Zarejestruj się <![CDATA[<a href="%1$s">tutaj</a>]]>, aby otrzymać 14-dniowy token próbny, jeśli jeszcze go nie masz.</string>
-    <string name="onboarding_token_skip_message">Pominięcie tego kroku ograniczy liczbę codziennych rozpoznań, ale zawsze możesz podać swój osobisty token później w ustawieniach.</string>
     <string name="result_message_no_matches">Przepraszamy, aplikacja nie rozpoznała tego utworu</string>
     <string name="result_title_bad_connection">Słabe połączenie z internetem</string>
     <string name="result_message_bad_connection">Sprawdź stan połączenia z internetem</string>

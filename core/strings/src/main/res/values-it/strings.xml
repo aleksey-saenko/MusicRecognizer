@@ -37,12 +37,6 @@
     <string name="permissions_denied_message">Le precedenti richieste di autorizzazione sono state rifiutate. È possibile cambiare decisione attraverso le impostazioni.</string>
     <string name="permissions_denied_open_settings">Apri impostazioni</string>
     <string name="permission_granted">Autorizzazione concessa</string>
-    <string name="onboarding_welcome">Benvenuti</string>
-    <string name="onboarding_token_message">L\'applicazione utilizza il servizio di riconoscimento musicale AudD, che non è gratuito e richiede uno speciale token API. L\'app utilizza il servizio di riconoscimento musicale AudD, che non è gratuito e richiede uno speciale token API. Registratevi <![CDATA[<a href="%1$s">qui</a>]]> per ottenere il vostro token di prova di 14 giorni, se non ne avete ancora uno.</string>
-    <string name="onboarding_token_validating">Convalida</string>
-    <string name="onboarding_final_title">Siamo pronti a iniziare</string>
-    <string name="onboarding_final_message">Impostazione completata con successo</string>
-    <string name="onboarding_final_get_started">Iniziamo</string>
     <string name="recognition">Riconoscimento</string>
     <string name="popup_offline_mode">Non in linea</string>
     <string name="button_retry_recognition">Riprova</string>
@@ -151,9 +145,6 @@
     <string name="web_browser_not_found_toast">Browser web non trovato</string>
     <string name="show_less">Mostra di meno</string>
     <string name="permission_rationale_post_notifications">Per controllare il riconoscimento e ottenere i risultati anche quando l\'applicazione è ridotta a icona, è necessario il permesso di inviare notifiche.</string>
-    <string name="onboarding_welcome_message">Audile è un\'applicazione per il riconoscimento musicale, che può aiutarvi a riconoscere in modo rapido e preciso un brano musicale in riproduzione nelle vostre vicinanze.</string>
-    <string name="onboarding_permission_message">Per funzionare correttamente, l\'applicazione richiede l\'autorizzazione a registrare l\'audio. Concedendo questa autorizzazione, l\'utente accetta che i dati registrati vengano utilizzati per il riconoscimento musicale dal <![CDATA[<a href="%1$s">servizio online</a>]]>. L\'applicazione non utilizza questi dati per altri scopi.</string>
-    <string name="onboarding_token_skip_message">Se si salta questo passaggio, si limitano i riconoscimenti giornalieri, ma si può sempre specificare il proprio token personale in un secondo momento nelle preferenze.</string>
     <string name="result_title_auth_error">Errore di autenticazione</string>
     <string name="recognition_action_rename">Rinomina</string>
     <string name="result_title_service_usage_limited">Utilizzo limitato del servizio</string>

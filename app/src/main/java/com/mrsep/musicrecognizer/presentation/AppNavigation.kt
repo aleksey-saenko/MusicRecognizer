@@ -106,10 +106,17 @@ internal fun AppNavigation(
         if (recognitionRequested) {
             if (outerEntry.destination.route != BAR_HOST_ROUTE) {
                 outerNavController.popBackStack(BAR_HOST_ROUTE, inclusive = false)
+                return@LaunchedEffect
             } else if (optionalInnerEntry?.destination?.route != RecognitionScreen.ROUTE) {
-                innerNavController.popBackStack(RecognitionScreen.ROUTE, inclusive = false)
+                innerNavController.navigate(TopLevelDestination.Recognition.route) {
+                    popUpTo(innerNavController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+                return@LaunchedEffect
             }
-            return@LaunchedEffect
         }
         // hide splash screen if result screen is resumed
         if (outerEntry.destination.route == BAR_HOST_ROUTE) {

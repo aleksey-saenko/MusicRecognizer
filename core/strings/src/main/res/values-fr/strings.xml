@@ -9,13 +9,13 @@
     <string name="widget_listening">Écoute en cours</string>
     <string name="widget_listening_subtitle">Veuillez patienter</string>
     <string name="widget_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
-    <string name="recognition_widget_description">Reconnaître la chanson en un seul clic</string>
+    <string name="recognition_widget_description">Identifiez le morceau d\'un simple clic</string>
     <string name="notification_tap_to_recognize">Appuyez pour reconnaitre</string>
     <string name="notification_tap_to_recognize_subtitle">Identifier un morceau de musique lorsque n\'importe quelle application est ouverte</string>
     <string name="notification_listening">Écoute en cours</string>
     <string name="notification_listening_subtitle">Veuillez patienter</string>
     <string name="notification_listening_subtitle_extra_time">Essayer une nouvelle fois</string>
-    <string name="quick_tile_recognize">Identifier la chanson</string>
+    <string name="quick_tile_recognize">Identifier le morceau</string>
     <string name="quick_tile_cancel_recognition">Annuler la reconnaissance</string>
     <string name="action_recognize">Identifier</string>
     <string name="action_cancel_recognition">Annuler la reconnaissance</string>
@@ -66,12 +66,12 @@
     <string name="popup_offline_mode">Mode hors ligne</string>
     <string name="button_retry_recognition">Réessayer</string>
     <string name="result_title_no_matches">Aucune correspondance trouvée</string>
-    <string name="result_message_no_matches">Désolé, l\'application n\'a pas pu identifier cette chanson</string>
+    <string name="result_message_no_matches">Désolé, l\'application n\'a pas pu identifier ce titre</string>
     <string name="result_title_bad_connection">Mauvaise connexion internet</string>
     <string name="result_message_bad_connection">Veuillez vérifier l\'état de votre réseau</string>
     <string name="result_title_recognition_scheduled">Reconnaissance planifiée</string>
     <string name="result_message_recognition_saved">L\'échantillon audio a été enregistré, Vous pouvez lancer la reconnaissance manuellement à tout moment</string>
-    <string name="result_message_recognition_scheduled">L\'échantillon audio a été enregistré, Lorsque vous serez de nouveau en ligne, l\'application tentera d\'identifier cette chanson</string>
+    <string name="result_message_recognition_scheduled">L\'extrait audio a été enregistré. Dès que vous serez de nouveau connecté, l\'application tentera d\'identifier ce morceau.</string>
     <string name="result_title_recording_error">Erreur d\'enregistrement</string>
     <string name="result_message_recording_error">Une erreur s\'est produite lors de l\'enregistrement audio</string>
     <string name="result_title_bad_network_response">Échec de la requête réseau</string>
@@ -85,8 +85,8 @@
     <string name="result_title_unknown_error">Erreur inconnue</string>
     <!-- Library screen -->
     <string name="library">Bibliothèque</string>
-    <string name="empty_library_title">Aucune chanson reconnue</string>
-    <string name="empty_library_subtitle">Vos chansons récemment reconnues et favorites seront affichées ici</string>
+    <string name="empty_library_title">Aucun morceau reconnu</string>
+    <string name="empty_library_subtitle">Vos morceaux récemment écoutés et vos morceaux préférés s\'afficheront ici</string>
     <string name="format_amount_of_new_tracks">Nouvelles pistes : %s</string>
     <string name="filters">Filtres</string>
     <string name="filter_favorites">Statut favori</string>
@@ -173,7 +173,7 @@
     <!-- Preferences screen -->
     <string name="preferences">Préférences</string>
     <string name="pref_group_recognition">Reconnaissance</string>
-    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage de l\'appli</string>
+    <string name="pref_title_recognize_on_startup">Reconnaître au démarrage de l\'application</string>
     <string name="pref_title_fallback_policy">Solution de secours de la reconnaissance</string>
     <string name="pref_subtitle_fallback_policy">Définir les actions de secours après des reconnaissances infructueuses</string>
     <string name="fallback_policy_dialog_title">Solution de secours</string>
@@ -212,7 +212,7 @@
     <string name="vibration_feedback_dialog_vibrate_on_result">Vibrer lors d\'un résultat</string>
     <string name="pref_title_about_app">À propos</string>
     <string name="about_pref_group_powered_by">Propulsé par</string>
-    <string name="about_purpose_recognition_service">Fournit l\'identification de la chanson et les métadonnées principales</string>
+    <string name="about_purpose_recognition_service">Fournit l\'identification des morceaux et les métadonnées principales</string>
     <string name="about_purpose_track_links_service">Fournit des liens spécifiques à la plateforme pour le titre</string>
     <string name="about_pref_title_github_repo">Dépôt GitHub</string>
     <string name="about_pref_title_privacy_policy">Politique de confidentialité</string>
@@ -221,7 +221,7 @@
     <string name="notification_channel_name_control">Contrôler les notifications</string>
     <string name="notification_channel_desc_control">Permet de contrôler le processus de reconnaissance</string>
     <string name="notification_channel_name_scheduled_result">Résultats musicaux des reconnaissances programmées</string>
-    <string name="notification_channel_desc_scheduled_result">Affiche les résultats des chansons pour lesquelles les reconnaissances étaient programmées hors ligne ou dans d\'autres cas</string>
+    <string name="notification_channel_desc_scheduled_result">Affiche les résultats de reconnaissance de morceaux qui ont été programmés hors ligne ou dans d\'autres cas</string>
     <string name="app_shortcut_recognize_short">Reconnaitre</string>
     <string name="library_menu_mark_all_tracks_as_viewed">Tout marquer comme vu</string>
     <string name="result_title_recognition_saved">Reconnaissance enregistrée</string>
@@ -229,7 +229,7 @@
     <string name="recognition_provider_dialog_message">Sélectionnez le service de reconnaissance :</string>
     <string name="app_shortcut_recognize_long">Reconnaitre en arrière-plan</string>
     <string name="app_shortcut_open_and_recognize_short">Ouvrir et reconnaitre</string>
-    <string name="app_shortcut_open_and_recognize_long">Ouvrir l\'appli et reconnaitre</string>
+    <string name="app_shortcut_open_and_recognize_long">Ouvrir l\'application et reconnaitre</string>
     <string name="help">Aide</string>
     <string name="recognition_provider_dialog_title">Service</string>
     <string name="recognition_provider_dialog_format_auth">Authentification %s :</string>
@@ -262,7 +262,7 @@
     <string name="about_pref_subtitle_privacy_policy">En savoir plus sur la manière dont l\'application traite vos données</string>
     <string name="about_pref_title_license">Licence</string>
     <string name="crash_dialog_title">Audile a planté</string>
-    <string name="crash_dialog_message">Une erreur inattendue s\'est produite, causant l\'arrêt de l\'application. Voulez-vous envoyer un courriel au rapport d\'erreur pour aider à résoudre le problème ?</string>
+    <string name="crash_dialog_message">Une erreur inattendue s\'est produite, entraînant l\'arrêt de l\'application. Souhaitez-vous envoyer le rapport de bogue par e-mail afin de nous aider à résoudre ce problème ?</string>
     <string name="crash_dialog_button_send">Envoyer</string>
     <string name="audio_source_dialog_default_mode_title">Défaut</string>
     <string name="audio_source_dialog_default_mode_message">Sélectionnez la source audio à utiliser par défaut, sauf indication contraire :</string>
@@ -279,13 +279,13 @@
     <string name="audd_help_dialog_message">AudD est un service payant qui propose un essai gratuit de 14 jours. Pour utiliser ce service, vous devez créer un compte et obtenir votre jeton API privé. <![CDATA[<a href="%1$s">S\'inscrire</a>]]> si vous n\'en avez pas encore.</string>
     <string name="about_pref_title_licenses">Licences</string>
     <string name="searching_for_lyrics">Recherche des paroles…</string>
-    <string name="no_lyrics_available">Aucune parole disponible pour cette chanson</string>
+    <string name="no_lyrics_available">Aucune parole disponible pour ce morceau</string>
     <string name="audio_source_dialog_use_alt_device_source">Utiliser une source audio alternative</string>
     <string name="pref_title_manage_notifications">Gérer les notifications</string>
-    <string name="notification_channel_name_foreground_result">Résultats de recherche de chansons trouvés au premier plan</string>
-    <string name="notification_channel_desc_foreground_result">Affiche les résultats des chansons quand vous êtes sur l\'écran de reconnaissance</string>
-    <string name="notification_channel_name_background_result">Résultats de recherche de chansons trouvés en arrière-plan</string>
-    <string name="notification_channel_desc_background_result">Affiche les résultats des chansons quand l\'application est minimisée ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
+    <string name="notification_channel_name_foreground_result">Résultats de recherche de morceaux trouvés au premier plan</string>
+    <string name="notification_channel_desc_foreground_result">Affiche les résultats du morceau lorsque vous êtes sur l\'écran de reconnaissance</string>
+    <string name="notification_channel_name_background_result">Résultats de recherche de morceaux affichés en arrière-plan</string>
+    <string name="notification_channel_desc_background_result">Affiche les résultats de reconnaissance lorsque l\'application est minimisée ou que vous n\'êtes pas sur l\'écran de reconnaissance</string>
     <string name="backup_entry_data">Échantillons de base de données et audio</string>
     <string name="backup_entry_preferences">Préférences</string>
     <string name="backup_entry_picker_title">Sélectionnez les données à sauvegarder :</string>
@@ -310,11 +310,11 @@
     <string name="toast_press_again_to_confirm">Appuyez de nouveau pour confirmer</string>
     <string name="deselect_all">Tout désélectionner</string>
     <string name="track_info_title_format_isrc">%s :</string>
-    <string name="audio_source_dialog_device_audio_limited">L\'application offre une prise en charge limitée de l\'enregistrement audio de l\'appareil sous Android 9 et les versions antérieures</string>
+    <string name="audio_source_dialog_device_audio_limited">L\'application offre une prise en charge limitée de l\'enregistrement audio de l\'appareil sous Android 9 et les versions antérieures.</string>
     <string name="audio_source_dialog_methods">L\'application propose deux méthodes pour enregistrer le son de l\'appareil :</string>
     <string name="audio_source_dialog_screen_casting_title">1. Capture d\'écran (méthode principale)</string>
     <string name="audio_source_dialog_screen_casting_bullet_1">Cette méthode offre la meilleure qualité sonore et fonctionne sur tous les appareils équipés d\'Android 10 ou d\'une version ultérieure</string>
-    <string name="audio_source_dialog_screen_casting_bullet_2">Certaines applications peuvent bloquer la capture audio via des règles de capture ; dans ce cas, Audile recevra un signal silencieux</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Certaines applications peuvent bloquer la capture audio via des règles de capture ; dans ce cas, Audile recevra un signal silencieux.</string>
     <string name="audio_source_dialog_alt_method_title">2. Autre méthode</string>
     <string name="audio_source_dialog_alt_method_bullet_1">Ne nécessite pas d\'autorisation pour la capture d\'écran et contourne les restrictions de capture audio imposées par d\'autres applications</string>
     <string name="audio_source_dialog_alt_method_bullet_2">Compatible avec toutes les versions d\'Android</string>
@@ -340,7 +340,7 @@
     <string name="export_csv_result_success">Le fichier CSV a été créé avec succès !</string>
     <string name="notification_title_match_found">Correspondance trouvée !</string>
     <string name="pref_title_prerecording_buffer">Tampon de pré-enregistrement</string>
-    <string name="pref_subtitle_prerecording_buffer">Enregistrez un court extrait audio pendant que l\'application est ouverte pour accélérer la reconnaissance</string>
+    <string name="pref_subtitle_prerecording_buffer">Enregistrez un court extrait audio tant que l\'application est ouverte pour accélérer la reconnaissance</string>
     <string name="button_retry_recognition_hint">Maintenez enfoncé pour relancer la reconnaissance</string>
     <string name="app_shortcut_show_floating_button_short">Bouton</string>
     <string name="app_shortcut_show_floating_button_long">Bouton flottant</string>

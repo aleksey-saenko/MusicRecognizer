@@ -343,4 +343,12 @@
     <string name="button_retry_recognition_hint">Tanımlamayı yeniden denemek için basılı tutun</string>
     <string name="pref_title_prerecording_buffer">ön kayıt belleği</string>
     <string name="pref_subtitle_prerecording_buffer">Tanımlamanın daha hızlı olabilmesi için dinletilen seslerden ufak kesitleri uygulamada kaydet</string>
+    <string name="app_shortcut_show_floating_button_short">Düğme</string>
+    <string name="app_shortcut_show_floating_button_long">Yüzen düğme</string>
+    <string name="qr_code">QR kodu</string>
+    <string name="pref_title_floating_button">Yüzen düğme</string>
+    <string name="pref_subtitle_floating_button">Tanıma özelliğine hızlı erişim için diğer uygulamaların üzerinde yüzen bir düğme göster</string>
+    <string name="about_pref_title_donation">Bağış</string>
+    <string name="about_pref_subtitle_donation">Projeyi destekleyin</string>
+    <string name="about_pref_donation_message">Bu uygulama tamamen ücretsizdir. İçinde reklam veya başka herhangi bir ticari gelir kaynağı yoktur. Uygulamanın geliştirilmesine destek olmak veya yalnızca teşekkür etmek isterseniz, bağış yapmayı düşünebilirsiniz. Desteğiniz için teşekkür ederiz!</string>
 </resources>

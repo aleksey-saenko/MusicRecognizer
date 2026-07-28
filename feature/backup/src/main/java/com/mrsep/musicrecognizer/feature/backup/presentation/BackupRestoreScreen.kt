@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.backup.presentation
 
+import android.content.ActivityNotFoundException
 import android.content.res.Resources
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -83,7 +84,17 @@ internal fun BackupRestoreScreen(
         BackupDialog(
             backupState = backupState,
             onChangeSelectedBackupEntry = viewModel::onChangeSelectedBackupEntry,
-            onBackupClick = { backupUriLauncher.launch(resources.getBackupFileName()) },
+            onBackupClick = {
+                try {
+                    backupUriLauncher.launch(resources.getBackupFileName())
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(
+                        context,
+                        resources.getString(StringsR.string.file_manager_not_found_toast),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
             onDismissClick = viewModel::cancelBackupScopeJobs,
         )
     }
@@ -121,7 +132,17 @@ internal fun BackupRestoreScreen(
         CsvExportFullScreenDialog(
             modifier = Modifier.fillMaxSize(),
             exportState = exportState,
-            onExportClick = { csvExportUriLauncher.launch(resources.getCsvFileName()) },
+            onExportClick = {
+                try {
+                    csvExportUriLauncher.launch(resources.getCsvFileName())
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(
+                        context,
+                        resources.getString(StringsR.string.file_manager_not_found_toast),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
             onChangeExportState = viewModel::onChangeExportState,
             onDismissClick = viewModel::cancelCsvExportScopeJobs,
         )
@@ -159,7 +180,17 @@ internal fun BackupRestoreScreen(
             PreferenceClickableItem(
                 title = stringResource(StringsR.string.pref_title_restore),
                 subtitle = stringResource(StringsR.string.pref_subtitle_restore),
-                onItemClick = { restoreUriLauncher.launch(arrayOf("*/*")) }
+                onItemClick = {
+                    try {
+                        restoreUriLauncher.launch(arrayOf("*/*"))
+                    } catch (_: ActivityNotFoundException) {
+                        Toast.makeText(
+                            context,
+                            resources.getString(StringsR.string.file_manager_not_found_toast),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             )
         }
         PreferenceGroup(title = stringResource(StringsR.string.pref_group_misc)) {

@@ -50,7 +50,8 @@
     <string name="share">Share</string>
     <string name="qr_code">QR code</string>
     <string name="web_browser_not_found_toast">Web browser not found</string>
-    <string name="cannot_share_toast">Can\'t find any app to share to</string>
+    <string name="cannot_share_toast">Couldn\'t find any app to share this</string>
+    <string name="file_manager_not_found_toast">Couldn\'t find file manager</string>
     <string name="help">Help</string>
     <string name="show_more">Show more</string>
     <string name="show_less">Show less</string>

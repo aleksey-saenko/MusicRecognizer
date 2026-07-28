@@ -48,7 +48,8 @@
     <string name="share">Поделиться</string>
     <string name="qr_code">QR-код</string>
     <string name="web_browser_not_found_toast">Веб-браузер не найден</string>
-    <string name="cannot_share_toast">Не удается найти приложение для обмена</string>
+    <string name="cannot_share_toast">Не удалось найти приложение для обмена</string>
+    <string name="file_manager_not_found_toast">Файловый менеджер не найден</string>
     <string name="help">Помощь</string>
     <string name="show_more">Подробнее</string>
     <string name="show_less">Скрыть</string>

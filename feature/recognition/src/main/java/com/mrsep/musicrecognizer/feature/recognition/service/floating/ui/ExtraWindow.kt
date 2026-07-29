@@ -69,6 +69,7 @@ import com.mrsep.musicrecognizer.core.ui.util.copyTextToClipboard
 import com.mrsep.musicrecognizer.feature.recognition.DeeplinkRouter
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.FloatingWindowSharedModel
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.FloatingWindowUiState
+import com.mrsep.musicrecognizer.feature.recognition.service.floating.StartRecognitionAction
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.core.LocalFloatingWindow
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.ui.components.FloatingSyncedLyrics
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.ui.components.rememberSegmentedTailShapes
@@ -295,13 +296,24 @@ internal fun ExtraWindow(
                                 },
                                 onCloseClickLabel = stringResource(StringsR.string.close),
                                 onContentClick = {
-                                    if (result is RecognitionResult.ScheduledOffline) {
-                                        val intent = deeplinkRouter.getDeepLinkIntentToQueue()
-                                        context.startActivity(intent)
+                                    when (result) {
+                                        is RecognitionResult.NoMatches -> {
+                                            sharedModel.startRecognition(StartRecognitionAction.Retry)
+                                        }
+                                        is RecognitionResult.ScheduledOffline -> {
+                                            context.startActivity(deeplinkRouter.getDeepLinkIntentToQueue())
+                                            sharedModel.dismissRecognitionResult()
+                                        }
+                                        is RecognitionResult.Error -> {
+                                            sharedModel.dismissRecognitionResult()
+                                        }
                                     }
-                                    sharedModel.dismissRecognitionResult()
                                 },
-                                onContentClickLabel = stringResource(StringsR.string.show),
+                                onContentClickLabel = when (result) {
+                                    is RecognitionResult.NoMatches -> stringResource(StringsR.string.button_retry_recognition)
+                                    is RecognitionResult.ScheduledOffline -> stringResource(StringsR.string.show)
+                                    is RecognitionResult.Error -> stringResource(StringsR.string.reset)
+                                }
                             ) {
                                 TextInfo(
                                     title = title,
@@ -505,6 +517,7 @@ private val trackContentTransform: AnimatedContentTransitionScope<TrackContentMo
     )
 }
 
+@Suppress("unused")
 private fun AnimatedContentTransitionScope<TrackContentMode>.trackContentTransform(
     isLeftAnchored: Boolean,
 ): ContentTransform {

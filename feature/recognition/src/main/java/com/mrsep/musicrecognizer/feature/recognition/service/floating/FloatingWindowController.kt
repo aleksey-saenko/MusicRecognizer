@@ -89,6 +89,7 @@ internal class FloatingWindowController @Inject constructor(
             metadataFetchManager,
             coroutineScope = coroutineScope,
             vibrationManager = vibrationManager,
+            context = uiContext
         )
     }
 

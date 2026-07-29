@@ -1,5 +1,6 @@
 package com.mrsep.musicrecognizer.feature.recognition.service.floating
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.HapticFeedback
@@ -12,6 +13,7 @@ import com.mrsep.musicrecognizer.core.domain.track.model.Track
 import com.mrsep.musicrecognizer.feature.recognition.RecognitionStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.di.FloatingButtonStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.platform.VibrationManager
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -32,6 +34,7 @@ internal class FloatingWindowSharedModel(
     private val metadataFetchManager: TrackMetadataFetchManager,
     private val coroutineScope: CoroutineScope,
     private val vibrationManager: VibrationManager,
+    private val context: Context,
 ) {
     val isLeftAnchored = mutableStateOf(false)
     val isShowingLyrics = mutableStateOf(false)
@@ -71,6 +74,23 @@ internal class FloatingWindowSharedModel(
         initialValue = FloatingWindowUiState(RecognitionStatus.Ready)
     )
 
+    private var lastRequestedAudioCaptureMode: AudioCaptureMode? = null
+
+    fun startRecognition(action: StartRecognitionAction) {
+        val preferences = preferences.value ?: return
+        val audioCaptureMode = when (action) {
+            StartRecognitionAction.Default -> preferences.defaultAudioCaptureMode
+            StartRecognitionAction.Alternative -> preferences.mainButtonLongPressAudioCaptureMode
+            StartRecognitionAction.Retry -> lastRequestedAudioCaptureMode ?: preferences.defaultAudioCaptureMode
+        }
+        RecognitionControlService.startRecognitionWithPermissionFlow(
+            context = context,
+            audioCaptureMode = audioCaptureMode,
+            useAltDeviceSoundSource = preferences.useAltDeviceSoundSource,
+        )
+        lastRequestedAudioCaptureMode = audioCaptureMode
+    }
+
     fun dismissRecognitionResult() {
         when (val status = statusHolder.status.value) {
             is RecognitionStatus.Done -> when (val result = status.result) {
@@ -102,6 +122,8 @@ internal class FloatingWindowSharedModel(
         vibrationManager.vibrateFailure()
     }
 }
+
+internal enum class StartRecognitionAction { Default, Alternative, Retry }
 
 internal data class FloatingWindowUserPreferences(
     val defaultAudioCaptureMode: AudioCaptureMode,

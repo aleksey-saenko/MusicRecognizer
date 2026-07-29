@@ -65,6 +65,7 @@ import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlS
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.FloatingWindowSharedModel
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.FloatingWindowUiState
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.DismissWindowState
+import com.mrsep.musicrecognizer.feature.recognition.service.floating.StartRecognitionAction
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.core.draggableFloatingWindow
 import com.mrsep.musicrecognizer.feature.recognition.service.floating.ui.components.AnimatedLines
 import kotlinx.coroutines.flow.filter
@@ -193,8 +194,8 @@ internal fun MainWindow(
                         activated = false,
                         modifier = Modifier.fillMaxSize(),
                         startOffsetFraction = 0.8f, // Should be a bit less than buttonSize/rippleSize
-                        baseColor = MaterialTheme.colorScheme.tertiary,
-                        activatedColor = MaterialTheme.colorScheme.tertiary,
+                        baseColor = MaterialTheme.colorScheme.secondary,
+                        activatedColor = MaterialTheme.colorScheme.secondary,
                         circlesCount = 3,
                         animationSpeed = 6_000,
                         fadeEasing = EaseIn,
@@ -213,13 +214,7 @@ internal fun MainWindow(
                         }
                         when (status) {
                             RecognitionStatus.Ready -> {
-                                preferences?.let { preferences ->
-                                    RecognitionControlService.startRecognitionWithPermissionFlow(
-                                        context = context,
-                                        audioCaptureMode = preferences.defaultAudioCaptureMode,
-                                        useAltDeviceSoundSource = preferences.useAltDeviceSoundSource,
-                                    )
-                                }
+                                sharedModel.startRecognition(StartRecognitionAction.Default)
                             }
                             is RecognitionStatus.Recognizing -> RecognitionControlService.cancelRecognition(context)
                             is RecognitionStatus.Done -> when (val result = status.result) {
@@ -227,11 +222,13 @@ internal fun MainWindow(
                                     context.startActivity(deeplinkRouter.getDeepLinkIntentToTrack(result.track.id))
                                     sharedModel.dismissRecognitionResult()
                                 }
+                                is RecognitionResult.NoMatches -> {
+                                    sharedModel.startRecognition(StartRecognitionAction.Retry)
+                                }
                                 is RecognitionResult.ScheduledOffline -> {
                                     context.startActivity(deeplinkRouter.getDeepLinkIntentToQueue())
                                     sharedModel.dismissRecognitionResult()
                                 }
-                                is RecognitionResult.NoMatches,
                                 is RecognitionResult.Error -> sharedModel.dismissRecognitionResult()
                             }
                         }
@@ -242,22 +239,16 @@ internal fun MainWindow(
                             is RecognitionStatus.Recognizing -> StringsR.string.action_cancel_recognition
                             is RecognitionStatus.Done -> when (status.result) {
                                 is RecognitionResult.Success -> StringsR.string.show_track
+                                is RecognitionResult.NoMatches -> StringsR.string.button_retry_recognition
                                 is RecognitionResult.ScheduledOffline -> StringsR.string.show
-                                is RecognitionResult.NoMatches,
                                 is RecognitionResult.Error -> StringsR.string.reset
                             }
                         }
                     ),
                     onLongClick = when (status) {
                         RecognitionStatus.Ready -> {
-                            preferences?.let { preferences ->
-                                {
-                                    RecognitionControlService.startRecognitionWithPermissionFlow(
-                                        context = context,
-                                        audioCaptureMode = preferences.mainButtonLongPressAudioCaptureMode,
-                                        useAltDeviceSoundSource = preferences.useAltDeviceSoundSource,
-                                    )
-                                }
+                            {
+                                sharedModel.startRecognition(StartRecognitionAction.Alternative)
                             }
                         }
                         is RecognitionStatus.Done -> when (val result = status.result) {

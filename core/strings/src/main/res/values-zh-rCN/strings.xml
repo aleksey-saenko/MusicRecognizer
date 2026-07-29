@@ -42,7 +42,7 @@
     <string name="copied">已复制</string>
     <string name="share">分享</string>
     <string name="web_browser_not_found_toast">未找到网页浏览器</string>
-    <string name="cannot_share_toast">找不到任何可分享的应用</string>
+    <string name="cannot_share_toast">找不到任何应用来分享该内容</string>
     <string name="help">帮助</string>
     <string name="show_more">显示更多</string>
     <string name="show_less">收起</string>
@@ -332,4 +332,5 @@
     <string name="about_pref_title_donation">捐赠</string>
     <string name="about_pref_subtitle_donation">支持项目</string>
     <string name="about_pref_donation_message">本应用完全免费，没有任何广告或其他形式的商业变现。要支持持续开发或表示感谢，请考虑捐赠。感谢您的支持！</string>
+    <string name="file_manager_not_found_toast">找不到文件管理器</string>
 </resources>

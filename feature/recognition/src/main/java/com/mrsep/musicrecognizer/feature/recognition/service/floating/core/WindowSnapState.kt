@@ -62,6 +62,56 @@ internal fun calculateWindowSnapState(
     return WindowSnapState(side, fractionY)
 }
 
+/** Returns the side to which the window is strictly snapped, or null if it's not fully snapped. */
+internal fun calculateStrictWindowSide(
+    currentX: Int,
+    currentGravity: Int,
+    displayWidth: Int,
+    windowWidth: Int
+): WindowSide? {
+    val baseX = convertXForGravityChange(
+        x = currentX,
+        fromGravity = currentGravity,
+        toGravity = Gravity.LEFT,
+        displayWidth = displayWidth,
+        windowWidth = windowWidth
+    )
+    val maxX = maxOf(1, displayWidth - windowWidth)
+    return when {
+        baseX <= 0 -> WindowSide.LEFT
+        baseX >= maxX -> WindowSide.RIGHT
+        else -> null
+    }
+}
+
+/** Calculates the strict snap state. Returns null if the window is not strictly snapped to the left or right edge. */
+internal fun calculateStrictWindowSnapState(
+    currentX: Int,
+    currentY: Int,
+    currentGravity: Int,
+    displayWidth: Int,
+    displayHeight: Int,
+    windowWidth: Int,
+    windowHeight: Int
+): WindowSnapState? {
+    val side = calculateStrictWindowSide(
+        currentX = currentX,
+        currentGravity = currentGravity,
+        displayWidth = displayWidth,
+        windowWidth = windowWidth
+    ) ?: return null
+    val baseY = convertYForGravityChange(
+        y = currentY,
+        fromGravity = currentGravity,
+        toGravity = Gravity.TOP,
+        displayHeight = displayHeight,
+        windowHeight = windowHeight
+    )
+    val maxY = maxOf(1, displayHeight - windowHeight)
+    val fractionY = (baseY.toFloat() / maxY).coerceIn(0f, 1f)
+    return WindowSnapState(side, fractionY)
+}
+
 /** Calculates the final X and Y coordinates to be set in WindowParams based on the snap state. */
 internal fun calculateWindowPosition(
     snapState: WindowSnapState,

@@ -609,6 +609,17 @@ internal class ComposeFloatingWindow internal constructor(
             windowHeight = currentWindowHeight,
         )
 
+    val currentStrictWindowSnapState: WindowSnapState?
+        get() = calculateStrictWindowSnapState(
+            currentX = windowParams.x,
+            currentY = windowParams.y,
+            currentGravity = windowParams.gravity,
+            displayWidth = windowMaxAvailableWidth,
+            displayHeight = windowMaxAvailableHeight,
+            windowWidth = currentWindowWidth,
+            windowHeight = currentWindowHeight,
+        )
+
     fun calculateWindowPositionForState(snapState: WindowSnapState): Pair<Int, Int> {
         return calculateWindowPosition(
             snapState = snapState,

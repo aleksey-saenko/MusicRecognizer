@@ -30,10 +30,18 @@ import com.mrsep.musicrecognizer.feature.recognition.service.floating.ui.GapBetw
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val MainWindowTag = "MainFloatingWindow"
 private const val ExtraWindowTag = "ExtraFloatingWindow"
@@ -74,13 +82,6 @@ internal class FloatingWindowController @Inject constructor(
         }
         uiContext = windowContext
 
-        dismissWindow = createDismissWindow()
-        mainWindow = createMainWindow()
-        extraWindow = createExtraWindow()
-
-        lastScreenWidth = mainWindow.display.metrics.widthPixels
-        lastScreenHeight = mainWindow.display.metrics.heightPixels
-
         dismissWindowState = DismissWindowState()
         sharedModel = FloatingWindowSharedModel(
             statusHolder,
@@ -91,6 +92,15 @@ internal class FloatingWindowController @Inject constructor(
             vibrationManager = vibrationManager,
             context = uiContext
         )
+
+        dismissWindow = createDismissWindow()
+        extraWindow = createExtraWindow()
+        mainWindow = createMainWindow()
+
+        lastScreenWidth = mainWindow.display.metrics.widthPixels
+        lastScreenHeight = mainWindow.display.metrics.heightPixels
+
+        trackMainWindowPosition()
     }
 
     private fun createMainWindow(): ComposeFloatingWindow {
@@ -107,6 +117,7 @@ internal class FloatingWindowController @Inject constructor(
                     WindowSide.RIGHT -> false
                 }
                 syncExtraWindowPosition()
+                mainWindowPositionChangedSignal.trySend(Unit)
             },
             onConfigurationChanged = {
                 updateMainWindowPositionOnConfigurationChanged()
@@ -174,7 +185,7 @@ internal class FloatingWindowController @Inject constructor(
             extraWindow.show()
         }
         if (!mainWindow.isShowing.value) {
-            mainWindow.show(snapState = defaultSnapState)
+            mainWindow.show(snapState = lastSnapState ?: defaultSnapState)
         }
     }
 
@@ -184,6 +195,21 @@ internal class FloatingWindowController @Inject constructor(
         extraWindow.close()
         mainWindow.close()
         statusHolder.resetFinalStatus()
+    }
+
+    private val mainWindowPositionChangedSignal = Channel<Unit>(Channel.CONFLATED)
+
+    @OptIn(FlowPreview::class)
+    private fun trackMainWindowPosition() {
+        coroutineScope.launch {
+            mainWindowPositionChangedSignal
+                .receiveAsFlow()
+                .drop(1) // Drop initial position signal
+                .debounce(500.milliseconds)
+                .collectLatest {
+                    mainWindow.currentStrictWindowSnapState?.let { lastSnapState = it }
+                }
+        }
     }
 
     private fun updateMainWindowPositionOnConfigurationChanged() {
@@ -319,5 +345,6 @@ internal class FloatingWindowController @Inject constructor(
 
     companion object {
         private val defaultSnapState get() = WindowSnapState(side = WindowSide.RIGHT, fractionY = 0.4f)
+        private var lastSnapState: WindowSnapState? = null
     }
 }

@@ -32,12 +32,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioCaptureConfig
 import com.mrsep.musicrecognizer.core.audio.audiorecord.AudioRecordingControllerFactory
+import com.mrsep.musicrecognizer.core.common.util.checkPermissionsGranted
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.recognition.AudioRecordingController
 import com.mrsep.musicrecognizer.core.domain.recognition.RecognitionInteractor
 import com.mrsep.musicrecognizer.core.domain.recognition.model.RecognitionStatus
 import com.mrsep.musicrecognizer.core.ui.theme.MusicRecognizerTheme
+import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlActivity.Companion.getRequiredPermissionsForRecognition
 import com.mrsep.musicrecognizer.feature.recognition.service.RecognitionControlService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -244,11 +246,10 @@ class MainActivity : ComponentActivity() {
                 val shouldTurnOnService = viewModel.uiState
                     .filterIsInstance<MainActivityUiState.Success>()
                     .first().notificationServiceEnabled
+                val permissions = getRequiredPermissionsForRecognition()
+                val permissionsGranted = checkPermissionsGranted(permissions)
                 if (shouldTurnOnService) {
-                    RecognitionControlService.startHoldMode(
-                        this@MainActivity.applicationContext,
-                        false
-                    )
+                    viewModel.setNotificationServiceEnabled(permissionsGranted)
                 }
                 isServiceStartupHandled = true
             }

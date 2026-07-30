@@ -6,6 +6,7 @@ import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.domain.preferences.ThemeMode
 import com.mrsep.musicrecognizer.core.domain.track.TrackRepository
+import com.mrsep.musicrecognizer.di.ServiceStarter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     trackRepository: TrackRepository,
-    preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val recognitionServiceStarter: ServiceStarter,
 ) : ViewModel() {
 
     private val _recognitionRequested = MutableStateFlow(false)
@@ -52,6 +54,17 @@ class MainActivityViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MainActivityUiState.Loading
         )
+
+    fun setNotificationServiceEnabled(value: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setNotificationServiceEnabled(value)
+            if (value) {
+                recognitionServiceStarter.startServiceHoldMode()
+            } else {
+                recognitionServiceStarter.stopServiceHoldMode()
+            }
+        }
+    }
 
     fun setRecognitionRequested(requested: Boolean) {
         if (requested) {

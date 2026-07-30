@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
@@ -18,10 +17,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import com.mrsep.musicrecognizer.core.common.util.checkPermissionsGranted
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.core.domain.preferences.PreferencesRepository
 import com.mrsep.musicrecognizer.core.ui.isDarkUiMode
@@ -343,10 +342,6 @@ class RecognitionControlActivity : ComponentActivity() {
             )
         }
     }
-}
-
-internal fun Context.checkPermissionsGranted(permissions: Array<String>): Boolean = permissions.all {
-    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
 }
 
 internal fun MediaProjectionManager.createScreenCaptureIntentForDisplay(): Intent {

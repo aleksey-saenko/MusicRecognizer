@@ -53,6 +53,7 @@ import java.util.UUID
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.mrsep.musicrecognizer.core.common.util.checkPermissionsGranted
 import com.mrsep.musicrecognizer.core.domain.preferences.AudioCaptureMode
 import com.mrsep.musicrecognizer.feature.recognition.di.FloatingButtonStatusHolder
 import com.mrsep.musicrecognizer.feature.recognition.scheduler.TrackArtworkPrefetchWorker
@@ -198,7 +199,7 @@ class RecognitionControlService : Service() {
 
             else -> error("Unknown service start intent")
         }
-        return if (isHoldModeActive) START_STICKY else START_NOT_STICKY
+        return if (isHoldModeActive && isStartedForeground) START_STICKY else START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent): Binder {
@@ -256,20 +257,20 @@ class RecognitionControlService : Service() {
             val msg = "Foreground service cannot start due to denied permissions"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             Log.w(TAG, msg, e)
-            serviceScope.launch {
-                preferencesRepository.setNotificationServiceEnabled(false)
-                stopSelf()
-            }
+            stopSelf()
+            isStartedForeground = false
             return
         } catch (e: Exception) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) throw e
-            if (e is ForegroundServiceStartNotAllowedException) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                e is ForegroundServiceStartNotAllowedException) {
                 val msg = "Foreground service cannot start from the background"
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, msg, e)
                 stopSelf()
+                isStartedForeground = false
                 return
             }
+            throw e
         }
     }
 

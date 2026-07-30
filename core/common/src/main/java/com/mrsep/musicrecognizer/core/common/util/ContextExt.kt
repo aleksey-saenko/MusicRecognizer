@@ -6,6 +6,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
+import androidx.core.content.ContextCompat
+
+fun Context.checkPermissionsGranted(permissions: Array<String>): Boolean = permissions.all {
+    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+}
 
 fun Context.getAppVersionName(removeDebug: Boolean = false): String? {
     val base = getPackageInfo().versionName

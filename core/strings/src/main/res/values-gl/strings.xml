@@ -42,7 +42,7 @@
     <string name="copied">Copiado</string>
     <string name="share">Compartir</string>
     <string name="web_browser_not_found_toast">Non se atopa o navegador web</string>
-    <string name="cannot_share_toast">Non se atopa ningunha app coa que compartir</string>
+    <string name="cannot_share_toast">Non se atopa unha app coa que compartir isto</string>
     <string name="help">Axuda</string>
     <string name="show_more">Mostrar máis</string>
     <string name="show_less">Mostrar menos</string>
@@ -332,4 +332,5 @@
     <string name="about_pref_title_donation">Doazón</string>
     <string name="about_pref_subtitle_donation">Apoia o proxecto</string>
     <string name="about_pref_donation_message">Esta app é totalmente gratuíta. Non ten publicidade nin outras formas de financiamento comercial. Considera facer unha doazón para apoiar o desenvolvemento ou simplemente como agradecemento. Grazas pola túa axuda!</string>
+    <string name="file_manager_not_found_toast">Non se atopa o xestor de ficheiros</string>
 </resources>

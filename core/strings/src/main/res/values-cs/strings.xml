@@ -340,4 +340,5 @@
     <string name="about_pref_title_donation">Dar</string>
     <string name="about_pref_subtitle_donation">Podpořte projekt</string>
     <string name="about_pref_donation_message">Tato aplikace je kompletně zdarma. Je bez reklam a dalších způsobů komerční monetizace. Pro podpoření dalšího vývoje nebo jednoduchého poděkování prosím zvažte podpoření projektu. Děkujeme za vaši podporu!</string>
+    <string name="file_manager_not_found_toast">Nepodařilo se najít správce souborů</string>
 </resources>

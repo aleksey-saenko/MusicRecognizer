@@ -117,38 +117,31 @@ interface TrackDao {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """
-            SELECT * FROM track 
-            WHERE 
+            SELECT * FROM track
+            WHERE
                 -- Favorites filter
                 CASE :favoritesMode
                     WHEN 'All' THEN 1
                     WHEN 'OnlyFavorites' THEN is_favorite
                     WHEN 'ExcludeFavorites' THEN NOT is_favorite
-                END 
-                AND 
+                END
+                AND
                 -- Date range filter
                 CASE :applyDateFilter
                     WHEN 0 THEN 1
                     WHEN 1 THEN recognition_date BETWEEN :startDate AND :endDate
-                END 
-            ORDER BY 
+                END
+            ORDER BY
                 -- Sort and order
-                CASE WHEN :orderBy = 'Asc' THEN
-                    CASE :sortBy 
-                        WHEN 'RecognitionDate' THEN recognition_date
-                        WHEN 'Title' THEN title
-                        WHEN 'Artist' THEN artist
-                        WHEN 'ReleaseDate' THEN release_date
-                    END 
-                END ASC,
-                CASE WHEN :orderBy = 'Desc' THEN 
-                    CASE :sortBy 
-                        WHEN 'RecognitionDate' THEN recognition_date
-                        WHEN 'Title' THEN title
-                        WHEN 'Artist' THEN artist
-                        WHEN 'ReleaseDate' THEN release_date
-                    END 
-                END DESC
+                CASE WHEN :orderBy = 'Asc' AND :sortBy = 'RecognitionDate' THEN recognition_date END ASC,
+                CASE WHEN :orderBy = 'Asc' AND :sortBy = 'ReleaseDate' THEN release_date END ASC,
+                CASE WHEN :orderBy = 'Asc' AND :sortBy = 'Title' THEN title END COLLATE LOCALIZED ASC,
+                CASE WHEN :orderBy = 'Asc' AND :sortBy = 'Artist' THEN artist END COLLATE LOCALIZED ASC,
+
+                CASE WHEN :orderBy = 'Desc' AND :sortBy = 'RecognitionDate' THEN recognition_date END DESC,
+                CASE WHEN :orderBy = 'Desc' AND :sortBy = 'ReleaseDate' THEN release_date END DESC,
+                CASE WHEN :orderBy = 'Desc' AND :sortBy = 'Title' THEN title END COLLATE LOCALIZED DESC,
+                CASE WHEN :orderBy = 'Desc' AND :sortBy = 'Artist' THEN artist END COLLATE LOCALIZED DESC
         """
     )
     fun getPreviewsFlowByFilter(

@@ -1,0 +1,2 @@
+* Minor bug fixes
+* Update translations

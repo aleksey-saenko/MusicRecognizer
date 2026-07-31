@@ -48,7 +48,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,6 +58,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.toColor
@@ -86,7 +89,10 @@ import com.mrsep.musicrecognizer.core.ui.R as UiR
 
 internal val GapBetweenWindows = 8.dp
 private val CloseButtonFixedWidth = 56.dp
-private val ContentFixedWidth = 176.dp
+private val ContentMaxWidth = 176.dp
+private val ContentPadding = 16.dp
+private val TailDepth = 10.dp
+private val ExtraTailPadding = 4.dp
 private const val SubContentColorAlpha = 0.8f
 
 private val TrackInfoMinTimeout = 7.seconds
@@ -100,6 +106,8 @@ internal fun ExtraWindow(
     deeplinkRouter: DeeplinkRouter,
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
+    val orientation = LocalConfiguration.current.orientation
     val window = LocalFloatingWindow.current
     val uiState by sharedModel.uiState.collectAsStateWithLifecycle()
 
@@ -138,6 +146,17 @@ internal fun ExtraWindow(
                 }
 
                 is RecognitionStatus.Done -> {
+                    val contentWidth = remember(orientation, density) {
+                        with(density) {
+                            val absoluteWidth = window.display.metrics.widthPixels
+                            val leftInset = window.display.safeInsets.left
+                            val rightInset = window.display.safeInsets.right
+                            val safeWidth = (absoluteWidth - (leftInset + rightInset)).toDp()
+                            val remainingWidth = safeWidth - MainWindowSize - GapBetweenWindows -
+                                    CloseButtonFixedWidth - ContentPadding * 2 - TailDepth - ExtraTailPadding
+                            remainingWidth.coerceIn(80.dp, ContentMaxWidth)
+                        }
+                    }
                     when (val result = status.result) {
                         is RecognitionResult.Success -> {
 
@@ -243,7 +262,7 @@ internal fun ExtraWindow(
                                                     subtitleMaxLines = 1,
                                                     modifier = Modifier
                                                         .padding(16.dp)
-                                                        .width(ContentFixedWidth)
+                                                        .width(contentWidth)
                                                 )
                                             }
                                         }
@@ -274,7 +293,7 @@ internal fun ExtraWindow(
                                                         verticalPadding = 16.dp,
                                                         modifier = Modifier
                                                             .padding(horizontal = 16.dp)
-                                                            .width(ContentFixedWidth),
+                                                            .width(contentWidth)
                                                     )
                                                 }
                                             }
@@ -322,7 +341,7 @@ internal fun ExtraWindow(
                                     subtitleMaxLines = 2,
                                     modifier = Modifier
                                         .padding(16.dp)
-                                        .width(ContentFixedWidth)
+                                        .width(contentWidth)
                                 )
                             }
                         }
@@ -346,12 +365,10 @@ private fun ExtraWindowContainer(
     onContentLongClickLabel: String? = null,
     content: @Composable (BoxScope.() -> Unit),
 ) {
-    val tailDepth = 10.dp
-    val extraTailPadding = 4.dp
     val shapes = rememberSegmentedTailShapes(
         isLeftAnchored = isLeftAnchored,
         cornerRadius = 18.dp,
-        tailDepth = tailDepth,
+        tailDepth = TailDepth,
         tailHeight = 24.dp,
         tailTipRadius = 3.dp,
     )
@@ -400,9 +417,9 @@ private fun ExtraWindowContainer(
                         )
                         .run {
                             if (isLeftAnchored)
-                                absolutePadding(left = tailDepth + extraTailPadding)
+                                absolutePadding(left = TailDepth + ExtraTailPadding)
                             else
-                                absolutePadding(right = tailDepth + extraTailPadding)
+                                absolutePadding(right = TailDepth + ExtraTailPadding)
                         }
                         .fillMaxHeight(),
                 ) {

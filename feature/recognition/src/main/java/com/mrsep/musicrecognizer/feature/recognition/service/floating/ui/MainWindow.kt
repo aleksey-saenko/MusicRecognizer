@@ -72,7 +72,7 @@ import kotlinx.coroutines.flow.filter
 import com.mrsep.musicrecognizer.core.strings.R as StringsR
 import com.mrsep.musicrecognizer.core.ui.R as UiR
 
-private val MainWindowSize = 64.dp
+internal val MainWindowSize = 64.dp
 private const val DraggedScale = 0.9f
 private const val RecognizingScale = 0.8f
 

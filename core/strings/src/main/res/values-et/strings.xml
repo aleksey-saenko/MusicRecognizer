@@ -332,4 +332,5 @@
     <string name="about_pref_title_donation">Rahaline toetus</string>
     <string name="about_pref_subtitle_donation">Toeta meie projekti</string>
     <string name="about_pref_donation_message">See rakendus on saadaval täiesti tasuta. Selles ei ole reklaame ega muid kommertslikke tulude teenimise viise. Jätkuva arendustöö toetamiseks või lihtsalt tänuavalduseks võid kaaluda sobiliku rahalise toetuse saatmist meile. Täname toetuse eest!</string>
+    <string name="file_manager_not_found_toast">Ei leidunud failihaldurit</string>
 </resources>

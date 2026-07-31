@@ -40,7 +40,7 @@
     <string name="copied">Copié</string>
     <string name="share">Partager</string>
     <string name="web_browser_not_found_toast">Navigateur Web introuvable</string>
-    <string name="cannot_share_toast">Je ne trouve aucune application pour partager</string>
+    <string name="cannot_share_toast">Je n\'ai trouvé aucune application pour partager ça</string>
     <string name="show_more">Afficher plus</string>
     <string name="show_less">Afficher moins</string>
     <!-- Permissions -->
@@ -340,4 +340,5 @@
     <string name="about_pref_title_donation">Don</string>
     <string name="about_pref_subtitle_donation">Soutenez le projet</string>
     <string name="about_pref_donation_message">Cette application est entièrement gratuite. Elle ne contient aucune publicité ni aucune autre forme de monétisation commerciale. Pour soutenir son développement continu ou simplement pour nous remercier, n\'hésitez pas à faire un don. Merci pour votre soutien !</string>
+    <string name="file_manager_not_found_toast">Impossible de trouver le gestionnaire de fichiers</string>
 </resources>

@@ -42,7 +42,7 @@
     <string name="copied">Скопійовано</string>
     <string name="share">Поділитися</string>
     <string name="web_browser_not_found_toast">Веббраузер не знайдено</string>
-    <string name="cannot_share_toast">Не можу знайти жодного застосунку, аби поділитися</string>
+    <string name="cannot_share_toast">Не вдалося знайти жодного застосунку, щоби поділитися цим</string>
     <string name="help">Допомога</string>
     <string name="show_more">Показати більше</string>
     <string name="show_less">Показати менше</string>
@@ -332,4 +332,5 @@
     <string name="about_pref_title_donation">Донат</string>
     <string name="about_pref_subtitle_donation">Підтримати проєкт</string>
     <string name="about_pref_donation_message">Цей застосунок повністю безплатний. У ньому немає реклами чи інших форм комерційної монетизації. Щоби підтримати подальшу розробку або просто подякувати, ви можете зробити пожертву. Дякуємо за вашу підтримку!</string>
+    <string name="file_manager_not_found_toast">Не вдалося знайти файловий менеджер</string>
 </resources>

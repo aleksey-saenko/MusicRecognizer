@@ -328,4 +328,9 @@
     <string name="app_shortcut_show_floating_button_long">الزر العائم</string>
     <string name="pref_title_floating_button">الزر العائم</string>
     <string name="pref_subtitle_floating_button">عرض زر عائم أعلى التطبيقات الأخرى للوصول السريع إلى ميزة التعرف</string>
+    <string name="qr_code">رمز الاستجابة السريعة</string>
+    <string name="file_manager_not_found_toast">لم يتم العثور على مدير الملفات</string>
+    <string name="about_pref_title_donation">التبرع</string>
+    <string name="about_pref_subtitle_donation">ادعم المشروع</string>
+    <string name="about_pref_donation_message">هذا التطبيق مجاني تمامًا، ولا يحتوي على أي إعلانات أو أي شكل من أشكال الربح التجاري. لدعم التطوير المستمر أو لمجرد التعبير عن الشكر، يُرجى التبرع. شكرًا لدعمكم!</string>
 </resources>

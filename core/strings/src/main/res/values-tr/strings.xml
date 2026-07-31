@@ -40,7 +40,7 @@
     <string name="copied">Kopyalandı</string>
     <string name="share">Paylaş</string>
     <string name="web_browser_not_found_toast">Web tarayıcısı bulunamadı</string>
-    <string name="cannot_share_toast">Paylaşılabilecek herhangi bir uygulama bulunamıyor</string>
+    <string name="cannot_share_toast">Bunu paylaşacak bir uygulama bulunamadı</string>
     <string name="help">Yardım</string>
     <string name="show_more">Daha fazla göster</string>
     <string name="show_less">Daha az göster</string>
@@ -341,4 +341,5 @@
     <string name="about_pref_title_donation">Bağış</string>
     <string name="about_pref_subtitle_donation">Projeyi destekleyin</string>
     <string name="about_pref_donation_message">Bu uygulama tamamen ücretsizdir. İçinde reklam veya başka herhangi bir ticari gelir kaynağı yoktur. Uygulamanın geliştirilmesine destek olmak veya yalnızca teşekkür etmek isterseniz, bağış yapmayı düşünebilirsiniz. Desteğiniz için teşekkür ederiz!</string>
+    <string name="file_manager_not_found_toast">Dosya yöneticisi bulunamadı</string>
 </resources>

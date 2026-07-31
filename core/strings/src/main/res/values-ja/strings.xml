@@ -332,4 +332,5 @@
     <string name="notification_channel_desc_scheduled_result">オフラインの時などに予約した曲の認識の結果を表示します</string>
     <string name="toast_failed_delete_incomplete_backup_file">不完全なバックアップファイルを削除できませんでした</string>
     <string name="notification_title_match_found">一致する曲が見つかりました！</string>
+    <string name="file_manager_not_found_toast">ファイルマネージャーが見つかりませんでした</string>
 </resources>

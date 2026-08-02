@@ -1,10 +1,10 @@
-<b>Audile</b> is an open-source music recognition application that can help you quickly and accurately identify a music track playing near you.
+<b>Audile</b> is an open-source music recognition app that can help you quickly and accurately identify a music track playing near you.
 The app integrates AudD, ACRCloud, and Shazam for song identification, and uses Odesli to retrieve additional platform-specific track links.
 
 <b>Features:</b>
 
-<b>Recognition</b> - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet, and the recognition process will be executed when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
-<b>Background Usage</b> - Use the application seamlessly from the notification drawer, home screen widget, or quick settings tile. Manage the recognition process and obtain track information without launching the app.
-<b>About track</b> - In case of successful recognition, information about the track, such as the name, artist, album and year, artwork, links to this track on popular music services, lyrics is provided.
-<b>Library</b> - All recognized tracks are stored in the application's library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
-<b>Preferences</b> - The app has a number of options for customizing its behavior and appearance, which can be found on the settings screen.
+<b>Recognition</b> - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet connection, and the recognition process will resume when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
+<b>Background Usage</b> - Use the app seamlessly from the notification drawer, home screen widget, floating button, or quick settings tile. Manage the recognition process and obtain track information without launching the app.
+<b>About track</b> - Upon successful recognition, the app provides information about the track, including the title, artist, album, release year, artwork, lyrics, and links to the track on popular music services.
+<b>Library</b> - All recognized tracks are stored in the app library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
+<b>Preferences</b> - The app offers various options to customize its behavior and appearance, accessible from the settings screen.

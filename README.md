@@ -7,7 +7,7 @@
 
 # Audile
 
-Audile is an open-source music recognition application that can help you quickly and accurately identify a music track playing near you.
+Audile is an open-source music recognition app that can help you quickly and accurately identify a music track playing near you.
 The app integrates [AudD](https://audd.io/), [ACRCloud](https://www.acrcloud.com/), and [Shazam](https://www.shazam.com/company/) for song identification, and uses [Odesli](https://odesli.co/) to retrieve platform-specific track links.
 
 [<img src="./img/get-it-on-f-droid.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/en/packages/com.mrsep.musicrecognizer/)
@@ -19,11 +19,11 @@ The app runs on Android 8.0 or later.
 
 ## Features
 
-* **Recognition** - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet, and the recognition process will be executed when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
-* **Background Usage** - Use the application seamlessly from the notification drawer, home screen widget, or quick settings tile. Manage the recognition process and obtain track information without launching the app.
-* **About track** - In case of successful recognition, information about the track, such as the name, artist, album and year, artwork, links to this track on popular music services, lyrics is provided.
-* **Library** - All recognized tracks are stored in the application's library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
-* **Preferences** - The application has a number of options for customizing its behavior and appearance, which can be found on the settings screen.
+* **Recognition** - Audile allows you to perform song recognition in one click. The app will save the recording if there is no internet connection, and the recognition process will resume when you come back online. You can customize the default behavior for unsuccessful recognition (no internet, no matches, another failure) via the preferences.
+* **Background Usage** - Use the app seamlessly from the notification drawer, home screen widget, floating button, or quick settings tile. Manage the recognition process and obtain track information without launching the app.
+* **Track Information** - Upon successful recognition, the app provides information about the track, including the title, artist, album, release year, artwork, lyrics, and links to the track on popular music services.
+* **Library** - All recognized tracks are stored in the app library. You can filter the track list, create a favorites collection, search for tracks, or delete tracks.
+* **Preferences** - The app offers various options to customize its behavior and appearance, accessible from the settings screen.
 
 ## Screenshots
 [<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png" width=200>](./fastlane/metadata/android/en-US/images/phoneScreenshots/00.png "Recognition screen")
@@ -57,19 +57,23 @@ Please pay attention to these steps:
 
 </p></details>
 
+## Contributing
+
+Contributions are welcome and encouraged. Please read [Contributing Guidelines](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/CONTRIBUTING.md) to get started.
+
 ## Translation
 
 [<img src="https://hosted.weblate.org/widget/audile/multi-auto.svg" alt="Translation progress">](https://hosted.weblate.org/engage/audile/)
 
-If you'd like to help translate the app into your language, you can do so through [Weblate](https://hosted.weblate.org/engage/audile/).
+If you would like to help translate the app into your language, you can do so through [Weblate](https://hosted.weblate.org/engage/audile/).
 
-Feel free to correct any errors or suggest better translation options for the current translations.
+Feel free to submit new translations, correct errors, or suggest better phrasing for existing strings.
 
 ## Donation
 This app is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development or simply say thanks, consider making a [donation](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/FUNDING.md).
 
 ## Building from sources
-Please see [BUILDING.md](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/BUILDING.md) for detailed instructions.
+Please refer to the [detailed build instructions](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/BUILDING.md).
 
 ## License
 

@@ -1,10 +1,10 @@
-<b>Audile</b> est une application open source de reconnaissance musicale qui vous aide à identifier rapidement et avec précision un morceau de musique diffusé près de chez vous.
-L'application intègre AudD, ACRCloud et Shazam pour l'identification des morceaux, et utilise Odesli pour récupérer des liens supplémentaires vers les morceaux, spécifiques à chaque plateforme.
+<b>Audile</b> est une application de reconnaissance musicale open source qui vous permet d'identifier rapidement et précisément un morceau diffusé près de vous.
+L'application intègre AudD, ACRCloud et Shazam pour l'identification des chansons, et utilise Odesli pour récupérer des liens supplémentaires vers le titre sur diverses plateformes.
 
 <b>Fonctionnalités :</b>
 
-<b>Reconnaissance</b> - Audile vous permet de reconnaître un morceau en un seul clic. L'application enregistre l'enregistrement en cas d'absence de connexion Internet, et le processus de reconnaissance s'exécute dès que vous êtes de nouveau en ligne. Vous pouvez personnaliser le comportement par défaut en cas d'échec de la reconnaissance (absence d'Internet, aucune correspondance, autre échec) via les préférences.
-<b>Utilisation en arrière-plan</b> - Utilisez l'application en toute transparence depuis le volet de notifications, le widget de l'écran d'accueil ou la vignette des réglages rapides. Gérez le processus de reconnaissance et obtenez des informations sur le morceau sans lancer l'application.
-<b>À propos du morceau</b> - En cas de reconnaissance réussie, des informations sur le morceau, telles que le titre, l'artiste, l'album et l'année, la pochette, des liens vers ce morceau sur les services de musique populaires, ainsi que les paroles, sont fournies.
-<b>Bibliothèque</b> - Tous les morceaux reconnus sont stockés dans la bibliothèque de l'application. Vous pouvez filtrer la liste des morceaux, créer une collection de favoris, rechercher des morceaux ou en supprimer.
-<b>Préférences</b> - L'application propose plusieurs options permettant de personnaliser son comportement et son apparence, accessibles depuis l'écran des paramètres.
+<b>Reconnaissance</b> - Audile vous permet d'identifier une chanson en un seul clic. L'application enregistre le son en cas d'absence de connexion Internet et reprend le processus de reconnaissance une fois la connexion rétablie. Vous pouvez personnaliser le comportement par défaut en cas d'échec de la reconnaissance (absence d'Internet, aucune correspondance ou autre erreur) via les préférences.
+<b>Utilisation en arrière-plan</b> - Utilisez l'application en toute fluidité depuis le volet des notifications, le widget de l'écran d'accueil, le bouton flottant ou la tuile des paramètres rapides. Gérez le processus de reconnaissance et accédez aux informations sur le titre sans lancer l'application.
+<b>Informations sur le titre</b> - Une fois le titre identifié, l'application affiche des informations détaillées : titre, artiste, album, année de sortie, pochette, paroles et liens vers le morceau sur les services musicaux populaires.
+<b>Bibliothèque</b> - Tous les titres reconnus sont conservés dans la bibliothèque de l'application. Vous pouvez filtrer la liste des titres, créer une collection de favoris, effectuer des recherches ou supprimer des morceaux.
+<b>Préférences</b> - L'application propose diverses options pour personnaliser son comportement et son apparence, accessibles depuis l'écran des paramètres.

@@ -39,7 +39,7 @@
     <string name="copied">הועתק</string>
     <string name="share">שתף</string>
     <string name="web_browser_not_found_toast">דפדפן לא נמצא</string>
-    <string name="cannot_share_toast">לא נמצא שום יישומון לשתף אליו</string>
+    <string name="cannot_share_toast">לא נמצא שום יישומון לשיתוף</string>
     <string name="help">עזרה</string>
     <string name="show_more">הצג עוד</string>
     <string name="show_less">הצג פחות</string>
@@ -324,4 +324,13 @@
     <string name="button_retry_recognition_hint">לחץ והחזק כדי לנסות לזהות שוב</string>
     <string name="pref_title_prerecording_buffer">מאגר הקלטה מוקדמת</string>
     <string name="pref_subtitle_prerecording_buffer">הקלט מאגר שמע קצר בזמן שהאפליקציה פתוחה, כדי לאפשר זיהוי מהיר יותר</string>
+    <string name="app_shortcut_show_floating_button_short">כפתור</string>
+    <string name="app_shortcut_show_floating_button_long">כפתור צף</string>
+    <string name="qr_code">קוד QR</string>
+    <string name="file_manager_not_found_toast">לא נמצא מנהל קבצים</string>
+    <string name="pref_title_floating_button">כפתור צף</string>
+    <string name="pref_subtitle_floating_button">הצג כפתור צף מעל יישומונים אחרים לגישה מהירה לזיהוי</string>
+    <string name="about_pref_title_donation">תרומה</string>
+    <string name="about_pref_subtitle_donation">לתמוך בפרוייקט</string>
+    <string name="about_pref_donation_message">היישומון הזה חינמי לגמרי. הוא מגיע ללא פרסומות או סוגים אחרים של פרסום ממומן. על מנת לתמוך בפיתוח המתמשך או פשוט להגיד תודה, קחו בחשבון לתת תרומה. תודה על התמיכה!</string>
 </resources>

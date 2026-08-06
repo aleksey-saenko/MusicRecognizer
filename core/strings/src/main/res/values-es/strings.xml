@@ -332,4 +332,5 @@
     <string name="about_pref_title_donation">Donación</string>
     <string name="about_pref_subtitle_donation">Asistencia del proyecto</string>
     <string name="about_pref_donation_message">Esta aplicación es completamente libre. No contiene anuncios ni ningún otro tipo de monetización comercial. Para apoyar su desarrollo continuo o simplemente para dar las gracias, considera hacer una donación. ¡Gracias por tu apoyo!</string>
+    <string name="file_manager_not_found_toast">No se pudo encontrar ningun explorador de archivos</string>
 </resources>

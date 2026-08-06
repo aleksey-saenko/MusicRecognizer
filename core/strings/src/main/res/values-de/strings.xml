@@ -33,7 +33,7 @@
     <string name="copy">Kopieren</string>
     <string name="share">Teilen</string>
     <string name="web_browser_not_found_toast">Web-Browser nicht gefunden</string>
-    <string name="cannot_share_toast">Kann keine App zum teilen finden</string>
+    <string name="cannot_share_toast">Keine App zum Teilen gefunden</string>
     <string name="help">Hilfe</string>
     <string name="show_more">Mehr anzeigen</string>
     <string name="permission_rationale_post_notifications">Um die Erkennung zu steuern und Ergebnisse zu bekommen während die App geschlossen ist, braucht sie die Berechtigung, Benachrichtigungen zu senden.</string>
@@ -294,4 +294,14 @@
     <string name="app_shortcut_show_floating_button_long">schwebende Taste</string>
     <string name="button_retry_recognition_hint">Halten zur nochmaligen Erkennung</string>
     <string name="deselect_all">Alle Abwählen</string>
+    <string name="qr_code">QR-Code</string>
+    <string name="file_manager_not_found_toast">Kein Dateimanager gefunden</string>
+    <string name="track_info_title_format_isrc">%s:</string>
+    <string name="audio_source_dialog_device_audio_limited">Die App unterstützt begrenzt die Aufnahme von Geräte-Audio auf Android 9 und früher</string>
+    <string name="audio_source_dialog_methods">Die App unterstützt zwei Wege, Geräte-Audio aufzunehmen:</string>
+    <string name="audio_source_dialog_screen_casting_title">1. Bildschirmübertragung (primäre Methode)</string>
+    <string name="audio_source_dialog_screen_casting_bullet_1">Diese Methode bietet die beste Klangqualität und funktioniert auf allen Geräten, mit Android 10 oder neuer</string>
+    <string name="audio_source_dialog_screen_casting_bullet_2">Einige Apps blockieren Audioaufnahmen und in diesem Fall wird Audile nichts hören</string>
+    <string name="audio_source_dialog_alt_method_title">2. Alternative Methode</string>
+    <string name="audio_source_dialog_alt_method_bullet_1">Benötigt keine Berechtigungn zur Bildschirmaufnahme und umgeht die Audio-Einschränkungen von anderen Apps</string>
 </resources>

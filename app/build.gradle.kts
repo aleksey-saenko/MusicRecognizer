@@ -9,6 +9,14 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { stream ->
+        localProperties.load(stream)
+    }
+}
+
 android {
     namespace = "com.mrsep.musicrecognizer"
     ndkVersion = libs.versions.ndk.get()
@@ -20,12 +28,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-        val devOptionsEnabled = localProperties["dev.options"]?.toString() ?: "false"
+        val devOptionsEnabled = localProperties.getProperty("dev.options", "false")
         buildConfigField("boolean", "DEV_OPTIONS", devOptionsEnabled)
     }
 
@@ -64,7 +67,7 @@ android {
 // ./gradlew app:exportLibraryDefinitions
 aboutLibraries {
     license.additionalLicenses = setOf("GPL-3.0-or-later")
-    collect.gitHubApiToken = properties["github.token"] as? String
+    collect.gitHubApiToken = localProperties.getProperty("github.token")
     export.apply {
         prettyPrint = true
         excludeFields = setOf("funding", "scm")

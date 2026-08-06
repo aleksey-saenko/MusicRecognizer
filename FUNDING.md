@@ -27,3 +27,25 @@ Thank you for your support!
 </details>
 
 ---
+
+### ![USDT ERC-20](https://img.shields.io/badge/USDT_(ERC--20)-26A17B?style=for-the-badge&logo=tether&logoColor=white)
+**Address:** `0x0D99a9060e374356Ac2bCb26456d0f33EbB33D31`
+
+<details>
+  <summary><b>Show QR Code</b></summary>
+  <br>
+  <img src="feature/preferences/src/main/assets/usdt-erc20-qr.png" width="200" alt="USDT ERC-20 QR Code">
+</details>
+
+---
+
+### ![USDT TRC-20](https://img.shields.io/badge/USDT_(TRC--20)-26A17B?style=for-the-badge&logo=tether&logoColor=white)
+**Address:** `TZEPGkXT71azVoHKUUrv94eWtLLhpXJeVR`
+
+<details>
+  <summary><b>Show QR Code</b></summary>
+  <br>
+  <img src="feature/preferences/src/main/assets/usdt-trc20-qr.png" width="200" alt="USDT TRC-20 QR Code">
+</details>
+
+---

@@ -37,7 +37,17 @@ private val donationMethods = listOf(
         paymentType = PaymentType.Monero,
         address = "8BEKm3Dd7urgZs1rvYRGLQ8N6jQVkdhZ2VBg6TRdb5BDH87VUGPXThXTTKAM2aUWRmcGTnMX4tC29G5hnvr6mYv2EAxxCP5",
         qrCodeAssetName = "xmr-qr.png",
-    )
+    ),
+    DonationMethod(
+        paymentType = PaymentType.USDT_ERC20,
+        address = "0x0D99a9060e374356Ac2bCb26456d0f33EbB33D31",
+        qrCodeAssetName = "usdt-erc20-qr.png",
+    ),
+    DonationMethod(
+        paymentType = PaymentType.USDT_TRC20,
+        address = "TZEPGkXT71azVoHKUUrv94eWtLLhpXJeVR",
+        qrCodeAssetName = "usdt-trc20-qr.png",
+    ),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +81,7 @@ internal fun DonationBottomSheet(
                 .fillMaxWidth()
                 .padding(16.dp)
                 .weight(1f, false),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             donationMethods.forEachIndexed { index, donationMethod ->
                 DonationMethodCard(
@@ -185,16 +195,20 @@ private fun DonationMethodCard(
     }
 }
 
-private enum class PaymentType { Bitcoin, Monero }
+private enum class PaymentType { Bitcoin, Monero, USDT_ERC20, USDT_TRC20 }
 
 private fun PaymentType.iconRes() = when (this) {
     PaymentType.Bitcoin -> UiR.drawable.outline_currency_bitcoin_24
     PaymentType.Monero -> UiR.drawable.outline_currency_monero_24
+    PaymentType.USDT_ERC20 -> UiR.drawable.outline_currency_usdt_24
+    PaymentType.USDT_TRC20 -> UiR.drawable.outline_currency_usdt_24
 }
 
 private fun PaymentType.titleRes() = when (this) {
     PaymentType.Bitcoin -> StringsR.string.bitcoin
     PaymentType.Monero -> StringsR.string.monero
+    PaymentType.USDT_ERC20 -> StringsR.string.usdt_erc_20
+    PaymentType.USDT_TRC20 -> StringsR.string.usdt_trc_20
 }
 
 private data class DonationMethod(

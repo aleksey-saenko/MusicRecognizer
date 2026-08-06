@@ -380,6 +380,8 @@
     <string name="wikipedia" translatable="false">Wikipedia</string>
     <string name="bitcoin" translatable="false">Bitcoin</string>
     <string name="monero" translatable="false">Monero</string>
+    <string name="usdt_erc_20" translatable="false">USDT (ERC-20)</string>
+    <string name="usdt_trc_20" translatable="false">USDT (TRC-20)</string>
     <!-- Untranslatable, as these terms are used only in English on recognition provider websites (dashboards, guides) -->
     <string name="api_token" translatable="false">API token</string>
     <string name="host" translatable="false">Host</string>

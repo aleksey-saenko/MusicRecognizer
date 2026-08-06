@@ -102,12 +102,13 @@ internal fun AppNavigation(
     ) {
         // optionalInnerEntry can be null, for example if nav graph is created with track deeplink
         val outerEntry = optionalOuterEntry ?: return@LaunchedEffect
+        val innerEntry = optionalInnerEntry
         // navigate to recognition screen if recognition requested
         if (recognitionRequested) {
             if (outerEntry.destination.route != BAR_HOST_ROUTE) {
                 outerNavController.popBackStack(BAR_HOST_ROUTE, inclusive = false)
                 return@LaunchedEffect
-            } else if (optionalInnerEntry?.destination?.route != RecognitionScreen.ROUTE) {
+            } else if (innerEntry != null && innerEntry.destination.route != RecognitionScreen.ROUTE) {
                 innerNavController.navigate(TopLevelDestination.Recognition.route) {
                     popUpTo(innerNavController.graph.findStartDestination().id) {
                         saveState = true

@@ -136,6 +136,7 @@ internal fun MainWindow(
         }
     }
 
+    val vibrateOnTap = preferences?.hapticFeedback?.vibrateOnTap == true
     if (preferences?.hapticFeedback?.vibrateOnResult == true) {
         val vibrated = rememberSaveable { mutableStateOf(false) }
         LaunchedEffect(status) {
@@ -209,20 +210,23 @@ internal fun MainWindow(
                         scaleY = buttonScale.value
                     },
                     onClick = {
-                        if (preferences?.hapticFeedback?.vibrateOnTap == true) {
-                            sharedModel.vibrateOnTap()
-                        }
+                        if (vibrateOnTap) sharedModel.vibrateOnTap()
                         when (status) {
                             RecognitionStatus.Ready -> {
+                                if (vibrateOnTap) sharedModel.vibrateOnTap()
                                 sharedModel.startRecognition(StartRecognitionAction.Default)
                             }
-                            is RecognitionStatus.Recognizing -> RecognitionControlService.cancelRecognition(context)
+                            is RecognitionStatus.Recognizing -> {
+                                if (vibrateOnTap) sharedModel.vibrateOnTap()
+                                RecognitionControlService.cancelRecognition(context)
+                            }
                             is RecognitionStatus.Done -> when (val result = status.result) {
                                 is RecognitionResult.Success -> {
                                     context.startActivity(deeplinkRouter.getDeepLinkIntentToTrack(result.track.id))
                                     sharedModel.dismissRecognitionResult()
                                 }
                                 is RecognitionResult.NoMatches -> {
+                                    if (vibrateOnTap) sharedModel.vibrateOnTap()
                                     sharedModel.startRecognition(StartRecognitionAction.Retry)
                                 }
                                 is RecognitionResult.ScheduledOffline -> {
@@ -248,6 +252,7 @@ internal fun MainWindow(
                     onLongClick = when (status) {
                         RecognitionStatus.Ready -> {
                             {
+                                if (vibrateOnTap) sharedModel.vibrateOnTap()
                                 sharedModel.startRecognition(StartRecognitionAction.Alternative)
                             }
                         }

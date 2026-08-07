@@ -21,7 +21,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "MusicRecognizer"
+rootProject.name = "Audile"
 include(":app")
 include(":core:audio")
 include(":core:common")

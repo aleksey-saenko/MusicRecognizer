@@ -5,8 +5,8 @@ Thank you for your interest in improving Audile. As a free, open source, and non
 ## General Guidelines
 
 * Use English for all communication, including issues, discussions, pull requests, and code comments.
-* Use [GitHub Discussions](https://github.com/aleksey-saenko/MusicRecognizer/discussions) for general questions.
-* Use [GitHub Issues](https://github.com/aleksey-saenko/MusicRecognizer/issues) for bug reports and feature requests.
+* Use [GitHub Discussions](https://github.com/AudileTeam/Audile/discussions) for general questions.
+* Use [GitHub Issues](https://github.com/AudileTeam/Audile/issues) for bug reports and feature requests.
 * Do not use generative AI to write issue descriptions or discussion posts. Using AI for grammar correction or translation is acceptable.
 
 ## Reporting Bugs
@@ -38,7 +38,7 @@ Before starting development, please add a comment to an existing issue or open a
 * Do not upgrade dependencies or build tools without a clear and justified reason.
 * Modify only the English string resources. All other translations belong on Weblate.
 * Do not include any proprietary libraries or assets.
-* Ensure the project builds successfully before committing. Refer to the detailed [build instructions](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/BUILDING.md).
+* Ensure the project builds successfully before committing. Refer to the detailed [build instructions](https://github.com/AudileTeam/Audile/blob/master/BUILDING.md).
 * Test your code thoroughly and include automated tests where applicable.
 
 ### AI Code Policy
@@ -56,7 +56,7 @@ Pull requests that violate this policy will be closed.
 
 ## Donating
 
-Audile is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development consider making a [donation](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/FUNDING.md).
+Audile is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development consider making a [donation](https://github.com/AudileTeam/Audile/blob/master/FUNDING.md).
 
 ## Licensing
 

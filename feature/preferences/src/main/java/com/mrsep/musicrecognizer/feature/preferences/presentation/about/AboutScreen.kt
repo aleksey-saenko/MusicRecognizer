@@ -44,8 +44,8 @@ private const val AUDD_URL = "https://audd.io/"
 private const val ACR_CLOUD_URL = "https://www.acrcloud.com/"
 private const val SHAZAM_URL = "https://www.shazam.com/company/"
 private const val ODESLI_URL = "https://odesli.co/"
-private const val GITHUB_REPO_URL = "https://github.com/aleksey-saenko/MusicRecognizer.git"
-private const val PRIVACY_POLICY_URL = "https://github.com/aleksey-saenko/MusicRecognizer/blob/master/PRIVACY.md"
+private const val GITHUB_REPO_URL = "https://github.com/AudileTeam/Audile"
+private const val PRIVACY_POLICY_URL = "https://github.com/AudileTeam/Audile/blob/master/PRIVACY.md"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

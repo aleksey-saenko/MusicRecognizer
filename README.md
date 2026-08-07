@@ -11,7 +11,7 @@ Audile is an open-source music recognition app that can help you quickly and acc
 The app integrates [AudD](https://audd.io/), [ACRCloud](https://www.acrcloud.com/), and [Shazam](https://www.shazam.com/company/) for song identification, and uses [Odesli](https://odesli.co/) to retrieve platform-specific track links.
 
 [<img src="./img/get-it-on-f-droid.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/en/packages/com.mrsep.musicrecognizer/)
-[<img src="./img/get-it-on-github.png" alt="Get it on GitHub" height="80">](https://github.com/aleksey-saenko/MusicRecognizer/releases/)
+[<img src="./img/get-it-on-github.png" alt="Get it on GitHub" height="80">](https://github.com/AudileTeam/Audile/releases/)
 
 F-Droid releases cannot be upgraded to other releases as they are compiled and signed by [F-Droid](https://f-droid.org/docs/).
 
@@ -59,7 +59,7 @@ Please pay attention to these steps:
 
 ## Contributing
 
-Contributions are welcome and encouraged. Please read [Contributing Guidelines](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/CONTRIBUTING.md) to get started.
+Contributions are welcome and encouraged. Please read [Contributing Guidelines](https://github.com/AudileTeam/Audile/blob/master/CONTRIBUTING.md) to get started.
 
 ## Translation
 
@@ -70,10 +70,10 @@ If you would like to help translate the app into your language, you can do so th
 Feel free to submit new translations, correct errors, or suggest better phrasing for existing strings.
 
 ## Donation
-This app is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development or simply say thanks, consider making a [donation](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/FUNDING.md).
+This app is completely free. It comes without any ads or other forms of commercial monetization. To support ongoing development or simply say thanks, consider making a [donation](https://github.com/AudileTeam/Audile/blob/master/FUNDING.md).
 
 ## Building from sources
-Please refer to the [detailed build instructions](https://github.com/aleksey-saenko/MusicRecognizer/blob/master/BUILDING.md).
+Please refer to the [detailed build instructions](https://github.com/AudileTeam/Audile/blob/master/BUILDING.md).
 
 ## License
 
